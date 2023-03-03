@@ -1,5 +1,6 @@
 #include <iostream>
-#include <sol/sol.hpp>
+#include <Controller/Singleton.hpp>
+#include <Controller/LuaState.hpp>
 
 namespace Vakol {
 
@@ -7,9 +8,6 @@ namespace Vakol {
 	{
 		std::cout << "Hello from core" << std::endl;
 
-		sol::state lua;
-		lua.open_libraries(sol::lib::base);
-
-		lua.script("print('Hello from lua!')");
+		Controller::Singleton<Controller::LuaState>::GetInstance().RunScript("print('Hello from lua!')");
 	}
 }
