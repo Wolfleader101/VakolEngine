@@ -6,10 +6,10 @@
 
 #include <string>
 
-#include <Resources/Mesh/Mesh.hpp>
-#include <Resources/Material/Material.hpp>
-#include <Renderer/Shader/Shader.hpp>
-#include <Resources/Model/Model.hpp>
+#include <src/Model/Mesh.hpp> //don't know why this needs src but sure
+#include <Model/Material.hpp>
+#include <Model/Shader.hpp>
+#include <Model/Model.hpp>
 
 namespace Vakol
 {
