@@ -5,4 +5,6 @@ src/ECS/Entity.hpp
 src/ECS/Entity.cpp
 src/ECS/EntityList.hpp
 src/ECS/EntityList.cpp
+src/ECS/System.hpp
+src/ECS/System.cpp
 PARENT_SCOPE)

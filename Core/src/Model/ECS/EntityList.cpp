@@ -2,6 +2,7 @@
 
 #include "Entity.hpp"
 #include "Components.hpp"
+#include "System.hpp"
 
 #include <Logger/Logger.hpp>
 
@@ -88,5 +89,24 @@ namespace Vakol
 	std::list<Entity>& EntityList::GetEntityList()
 	{
 		return ActiveEntityList;
+	}
+
+
+	//----------------------- ICT397 additions
+	entt::registry& EntityList::GetRegistry()
+	{
+		return m_Registry;
+	}
+
+	void EntityList::Init(entt::registry& toCopy)
+	{
+		//init the list. Once the json is serialized, we transfer to an EntityList
+		//Then call any system init funcs. 
+	}
+
+	void EntityList::Update(double d_t)
+	{
+
+		//use systems functions to update the entt::registry
 	}
 }
