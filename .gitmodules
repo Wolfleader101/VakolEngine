@@ -22,6 +22,6 @@
 [submodule "Core/lib/sol2"]
 	path = Core/lib/sol2
 	url = https://github.com/ThePhD/sol2
-[submodule "Core/lib/lua"]
-	path = Core/lib/lua
-	url = https://github.com/lua/lua
+[submodule "Core/lib/assimp"]
+	path = Core/lib/assimp
+	url = https://github.com/assimp/assimp
