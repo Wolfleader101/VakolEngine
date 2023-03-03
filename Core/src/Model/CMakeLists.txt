@@ -1,5 +1,8 @@
 SET(MODEL
 
+#Mesh
+src/Model/Mesh.hpp
+
 #Shader
 src/Model/Shader.hpp
 
