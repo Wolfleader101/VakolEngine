@@ -1,5 +1,8 @@
 SET(MODEL
 
+#Shader
+src/Model/Shader.hpp
+
 #Math
 src/Model/Math/Math.hpp
 
