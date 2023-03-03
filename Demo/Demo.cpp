@@ -6,12 +6,13 @@
 
 #include <Controller/Singleton.hpp>
 #include <Controller/LuaState.hpp>
+#include <Controller/Logger.hpp>
 
 
 int main()
 {
-	std::cout << "Hello from Demo" << std::endl;
-	Vakol::Main();
+	Vakol::Init();
+	VK_TRACE("Hello from Demo");
 
 	Vakol::Controller::Singleton<Vakol::Controller::LuaState>::GetInstance().RunFile("assets/test.lua");
 	return 0;

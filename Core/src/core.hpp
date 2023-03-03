@@ -2,5 +2,5 @@
 
 namespace Vakol
 {
-	void Main();
+	void Init();
 }
