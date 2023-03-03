@@ -1,12 +1,13 @@
 ﻿// Vakol_Engine.cpp : Defines the entry point for the application.
 //
 
-#include "Vakol_Engine.h"
+#include <iostream>
+#include <core.hpp>
 
-using namespace std;
 
 int main()
 {
-	cout << "Hello CMake." << endl;
+	std::cout << "Hello CMake." << std::endl;
+	Vakol::Main();
 	return 0;
 }
