@@ -1,17 +1,14 @@
-#include <iostream>
+#include <Controller/Application.hpp>
 #include <Controller/Singleton.hpp>
-#include <Controller/LuaState.hpp>
-#include <Controller/Logger.hpp>
+#include <iostream>
 
 namespace Vakol {
 
-	void Init()
-	{
-		// INITIALISE LOGGER
-    	Controller::Logger::Init();
+void Run() {
+    Controller::Singleton<Controller::Application>::GetInstance().Init();
 
-		VK_TRACE("Hello from core");
+    VK_TRACE("Hello from core");
 
-		Controller::Singleton<Controller::LuaState>::GetInstance().RunScript("print('Hello from lua!')");
-	}
+    Controller::Singleton<Controller::Application>::GetInstance().Run();
 }
+}  // namespace Vakol
