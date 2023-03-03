@@ -1,0 +1,27 @@
+[submodule "Core/lib/entt"]
+	path = Core/lib/entt
+	url = https://github.com/skypjack/entt
+[submodule "Core/lib/glfw"]
+	path = Core/lib/glfw
+	url = https://github.com/glfw/glfw
+[submodule "Core/lib/glm"]
+	path = Core/lib/glm
+	url = https://github.com/g-truc/glm
+[submodule "Core/lib/nlohmann_json"]
+	path = Core/lib/nlohmann_json
+	url = https://github.com/nlohmann/json
+[submodule "Core/lib/reactphysics3d"]
+	path = Core/lib/reactphysics3d
+	url = https://github.com/DanielChappuis/reactphysics3d
+[submodule "Core/lib/spdlog"]
+	path = Core/lib/spdlog
+	url = https://github.com/gabime/spdlog
+[submodule "Core/lib/imgui/imgui"]
+	path = Core/lib/imgui/imgui
+	url = https://github.com/ocornut/imgui
+[submodule "Core/lib/sol2"]
+	path = Core/lib/sol2
+	url = https://github.com/ThePhD/sol2
+[submodule "Core/lib/lua"]
+	path = Core/lib/lua
+	url = https://github.com/lua/lua
