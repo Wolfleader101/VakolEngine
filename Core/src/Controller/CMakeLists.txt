@@ -7,5 +7,7 @@ src/Controller/LuaState.cpp
 src/Controller/Logger.hpp
 src/Controller/Logger.cpp
 src/Controller/Time.hpp
+src/Controller/Camera.hpp
+src/Controller/Camera.cpp
 ${EVENTS}
 PARENT_SCOPE)
