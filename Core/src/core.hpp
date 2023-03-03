@@ -1,6 +1,5 @@
 #pragma once
 
-namespace Vakol
-{
-	void Init();
+namespace Vakol {
+void Run();
 }

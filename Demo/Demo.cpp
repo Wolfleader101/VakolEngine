@@ -8,9 +8,7 @@
 #include <iostream>
 
 int main() {
-    Vakol::Init();
-    VK_TRACE("Hello from demo");
-
     Vakol::Controller::Singleton<Vakol::Controller::LuaState>::GetInstance().RunFile("assets/test.lua");
+    Vakol::Run();
     return 0;
 }

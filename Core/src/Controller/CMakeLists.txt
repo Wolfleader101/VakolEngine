@@ -1,8 +1,11 @@
 SET(CONTROLLER
 src/Controller/Singleton.hpp
+src/Controller/Application.hpp
+src/Controller/Application.cpp
 src/Controller/LuaState.hpp
 src/Controller/LuaState.cpp
 src/Controller/Logger.hpp
 src/Controller/Logger.cpp
+src/Controller/Time.hpp
 ${EVENTS}
 PARENT_SCOPE)
