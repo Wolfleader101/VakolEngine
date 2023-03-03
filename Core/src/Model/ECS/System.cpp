@@ -1,6 +1,6 @@
-#include "System.hpp"
+#include <ECS/System.hpp>
 
-#include "Components.hpp"
+#include <ECS/Components.hpp>
 
 namespace Vakol
 {

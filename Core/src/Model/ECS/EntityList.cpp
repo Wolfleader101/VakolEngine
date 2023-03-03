@@ -1,10 +1,10 @@
-#include "EntityList.hpp"
+#include <ECS/EntityList.hpp>
 
-#include "Entity.hpp"
-#include "Components.hpp"
-#include "System.hpp"
+#include <ECS/Entity.hpp>
+#include <ECS/Components.hpp>
+#include <ECS/System.hpp>
 
-#include <Logger/Logger.hpp>
+#include <Controller/Logger.hpp>
 
 
 #include <assert.h>

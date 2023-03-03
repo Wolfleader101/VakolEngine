@@ -1,6 +1,6 @@
-#include "Components.hpp"
+#include <ECS/Components.hpp>
 
-#include "Logger/Logger.hpp"
+#include <Controller/Logger.hpp>
 
 #include <istream>
 #include <sstream>

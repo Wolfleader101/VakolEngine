@@ -5,9 +5,9 @@
 #include <entt/entt.hpp>
 
 
-#include "Logger/Logger.hpp"
-#include "EntityList.hpp"
-#include "Time/Time.hpp"
+#include <Controller/Logger.hpp>
+#include <ECS/EntityList.hpp>
+#include <Controller/Time.hpp>
 
 
 
