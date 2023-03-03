@@ -1,5 +1,8 @@
 SET(MODEL
 
+#Material
+src/Model/Material.hpp
+
 #Mesh
 src/Model/Mesh.hpp
 
