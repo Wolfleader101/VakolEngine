@@ -1,9 +1,8 @@
 #pragma once
 
-// #include <ECS/EntityList.hpp>
-// #include <Renderer/Renderer.hpp>
-
+#include <View/Renderer/Renderer.hpp>
 #include <View/Window/Window.hpp>
+#include <memory>
 
 #include "Events/Event.hpp"
 #include "Events/KeyEvent.hpp"
@@ -88,7 +87,7 @@ class Application {
     /**
      * @brief the window of the application
      */
-    std::unique_ptr<View::Window> m_window;
+    std::shared_ptr<View::Window> m_window;
 
     /**
      * @brief the time data of engine
@@ -103,7 +102,7 @@ class Application {
     /**
      * @brief the renderer instance of the class
      */
-    // Renderer m_renderer;
+    std::shared_ptr<View::Renderer> m_renderer;
 
     /**
      * @brief if the app should be running

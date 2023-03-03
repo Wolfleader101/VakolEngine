@@ -3,6 +3,7 @@
 #include "Logger.hpp"
 #include "LuaState.hpp"
 #include "Singleton.hpp"
+#include "View/Renderer/GLRenderer.hpp"
 
 // #include <ECS/Components.hpp>
 
@@ -12,13 +13,19 @@
 namespace Vakol::Controller {
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
-Application::Application() : m_running(false), m_window(nullptr) { Logger::Init(); };
+Application::Application() : m_running(false), m_window(nullptr), m_renderer(nullptr) { Logger::Init(); };
 
 void Application::Init(const std::string& title, int width, int height) {
     Singleton<LuaState>::GetInstance().RunScript("print('Initialising lua...')");
 
-    m_running = true;
-    m_window = std::unique_ptr<View::Window>(new View::Window(title, width, height));
+    //! call lua init
+    //! READ CONFIG FILE
+    // load type of renderer
+    // get window config
+    // get scripts to load
+
+    m_window = std::make_shared<View::Window>(title, width, height);
+    m_renderer = std::make_shared<View::GLRenderer>(m_window);
 
     m_window->SetEventCallback(BIND_EVENT_FN(OnEvent));
 
@@ -27,7 +34,7 @@ void Application::Init(const std::string& title, int width, int height) {
     // Physics::Debug = false;
 
     // Physics::Init();
-    //! call lua init
+    m_running = true;
 }
 
 Application::~Application() {
@@ -48,6 +55,7 @@ void Application::Run() {
         //     if (ent.OnUpdate) ent.OnUpdate(m_time, ent);
         // }
 
+        m_renderer->Update(m_time);
         // m_renderer.Update(m_time, m_entityList.GetEntityList());
 
         // m_gui.OnUpdate();
