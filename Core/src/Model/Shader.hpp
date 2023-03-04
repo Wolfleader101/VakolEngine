@@ -7,7 +7,10 @@ namespace Vakol::Model
     class Shader 
     {
     public:
-        Shader() = default;
+        virtual ~Shader() = default;
+
+        virtual void Bind() const = 0;
+        virtual void Unbind() const = 0;
 
         // Shader(const std::string& vertex, const std::string& fragment) const;
 
@@ -17,8 +20,8 @@ namespace Vakol::Model
         const unsigned int ID() const { return this->id; }
 
     public:
-        // void SetBool(const std::string& name, const bool value) const;
-        // void SetInt(const std::string& name, const int value) const;
+        // virtual void SetBool(const std::string& name, const bool value) = 0;
+        // virtual void SetInt(const std::string& name, const int value) = 0;
         // void SetFloat(const std::string& name, const float value) const;
 
         // void SetFloat2(const std::string& name, const glm::vec2&) const;
