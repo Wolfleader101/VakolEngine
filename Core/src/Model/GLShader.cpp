@@ -12,7 +12,7 @@ namespace Vakol::Model
 {
 	std::string GLShader::ReadFile(const std::string& name)
 	{
-		const std::string filepath = "assets/" + name;
+		const std::string filepath = "../Core/assets/" + name;
 
 		std::string result;
 
