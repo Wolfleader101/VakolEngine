@@ -2,6 +2,8 @@ SET(MODEL
 
 #OpenGL
 src/Model/GLMesh.hpp
+src/Model/GLMesh.cpp
+
 src/Model/GLTexture.hpp
 
 #Model
