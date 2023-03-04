@@ -19,6 +19,7 @@
 [submodule "Core/lib/imgui/imgui"]
 	path = Core/lib/imgui/imgui
 	url = https://github.com/ocornut/imgui
+	ignore = dirty
 [submodule "Core/lib/sol2"]
 	path = Core/lib/sol2
 	url = https://github.com/ThePhD/sol2
