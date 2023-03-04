@@ -54,12 +54,38 @@ namespace Vakol::Model
 		glBindVertexArray(0);
 	}
 
+	/*********************************************/
+	/*********************************************/
 
+	GLVertexBuffer::GLVertexBuffer(const std::vector<Vertex>& vertices)
+	{
+		glGenBuffers(1, &this->id);
+		glBindBuffer(GL_ARRAY_BUFFER, this->id);
+		glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
+	}
 
+	GLVertexBuffer::GLVertexBuffer(const std::vector<Math::Vec3>& vertices)
+	{
+		glGenBuffers(1, &this->id);
+		glBindBuffer(GL_ARRAY_BUFFER, this->id);
+		glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Math::Vec3), vertices.data(), GL_STATIC_DRAW);
+	}
 
+	GLVertexBuffer::~GLVertexBuffer()
+	{
+		glDeleteBuffers(1, &this->id);
+	}
 
+	void GLVertexBuffer::Bind()
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, this->id);
+	}
 
+	void GLVertexBuffer::Unbind()
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
 
-
-
+	/**************************************/
+	/**************************************/
 }
