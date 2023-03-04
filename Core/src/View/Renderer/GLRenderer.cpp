@@ -5,9 +5,9 @@
 #include "Model/GLMesh.hpp"
 #include "Model/GLShader.hpp"
 
-using Vakol::Model::Shader;
+using Vakol::Model::GLShader;
 
-using Vakol::Model::VertexArray;
+using Vakol::Model::GLVertexArray;
 using Vakol::Model::Vertex;
 
 using Vakol::Model::Math::Vec3;
@@ -20,18 +20,18 @@ namespace Vakol::View
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_TEXTURE_2D);
 
-        auto shader = Shader::Create("basic.vert", "basic.frag");
+        auto shader = std::make_shared<GLShader>("basic.vert", "basic.frag");
 
         std::vector<Vertex> vertices =
         {
-            {Vec3(0.5f, -0.5f, 0.0f), Vec3(0.0f, 0.0f, 0.0f), Vec2(0.0f, 0.0f)},
-            {Vec3(-0.5f, -0.5f, 0.0f), Vec3(0.0f, 0.0f, 0.0f), Vec2(1.0f, 0.0f)},
+            {Vec3(0.5f, -0.5f, 0.0f),   Vec3(0.0f, 0.0f, 0.0f), Vec2(0.0f, 0.0f)},
+            {Vec3(-0.5f, -0.5f, 0.0f),  Vec3(0.0f, 0.0f, 0.0f), Vec2(1.0f, 0.0f)},
             {Vec3(0.0f, 0.5f, 0.0f),    Vec3(0.0f, 0.0f, 0.0f), Vec2(0.5f, 1.0f)}
         };
 
         std::vector<unsigned int> indices = { 0, 1, 3 };
 
-        auto vao = VertexArray::Create(vertices, indices);
+        auto vao = std::make_shared<GLVertexArray>(vertices, indices);
     };
 
     void GLRenderer::Update(const Controller::Time& time) 
