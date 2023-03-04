@@ -39,8 +39,6 @@ namespace Vakol::Model
         virtual void Bind() const = 0;
 
         virtual void Unbind() const = 0;
-
-        static std::shared_ptr<VertexArray> Create(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices);
     };
 
     class VertexBuffer
@@ -51,8 +49,6 @@ namespace Vakol::Model
         virtual void Bind() const = 0;
 
         virtual void Unbind() const = 0;
-
-        static std::shared_ptr<VertexBuffer> Create(const std::vector<Vertex>& vertices);
     };
 
     class IndexBuffer
@@ -63,7 +59,5 @@ namespace Vakol::Model
         virtual void Bind() const = 0;
 
         virtual void Unbind() const = 0;
-
-        static std::shared_ptr<IndexBuffer> Create(const std::vector<unsigned int>& indices);
     };
 }

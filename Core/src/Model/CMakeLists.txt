@@ -15,18 +15,15 @@ src/Model/Model.hpp
 
 #Mesh
 src/Model/Mesh.hpp
-src/Model/Mesh.cpp
 
 #Shader
 src/Model/Shader.hpp
-src/Model/Shader.cpp
 
 #Material
 src/Model/Material.hpp
 
 #Texture
 src/Model/Texture.hpp
-src/Model/Texture.cpp
 
 #Math
 src/Model/Math/Math.hpp

@@ -29,8 +29,5 @@ namespace Vakol::Model
 
         virtual void SetMat3(const std::string& name, const glm::mat3& value) = 0;
         virtual void SetMat4(const std::string& name, const glm::mat4& value) = 0;
-
-        static std::shared_ptr<Shader> Create(const std::string& vertex, const std::string& fragment);
-        static std::shared_ptr<Shader> Create(const std::string& program);
     };
 }

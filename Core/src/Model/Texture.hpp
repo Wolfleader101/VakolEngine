@@ -15,7 +15,5 @@ namespace Vakol::Model
 		virtual void Unbind() const = 0;
 
 		virtual unsigned int GetID() const = 0;
-
-		static std::shared_ptr<Texture> Create(const std::string& name);
 	};
 }
