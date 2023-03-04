@@ -30,15 +30,15 @@ namespace Vakol::Model
         std::vector<unsigned int> indices;
     };
 
-    struct VertexArrayBuffer
+    struct VertexArray
     {
-        virtual ~VertexArrayBuffer() = default;
+        virtual ~VertexArray() = default;
 
         virtual void Bind() = 0;
 
         virtual void Unbind() = 0;
 
-        static std::shared_ptr<VertexArrayBuffer> Create(const Mesh& mesh);
+        static std::shared_ptr<VertexArray> Create(const Mesh& mesh);
     };
 
     struct VertexBuffer
@@ -47,7 +47,7 @@ namespace Vakol::Model
 
         virtual void Bind() = 0;
 
-        [[maybe_unused]] virtual void Unbind() = 0;
+        virtual void Unbind() = 0;
 
         static std::shared_ptr<VertexBuffer> Create(const std::vector<Vertex>& vertices);
     };
