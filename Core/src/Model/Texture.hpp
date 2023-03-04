@@ -1,18 +1,19 @@
 #pragma once
 
+#include <string>
 #include <memory>
 
 namespace Vakol::Model {
 
 struct Texture {
-    Texture() = default;
+	virtual ~Texture() = default;
 
-    int width = 0;
-    int height = 0;
-    int colorDepth = 0;
+	virtual void Bind() = 0;
 
-   private:
-    std::unique_ptr<unsigned char*> data;
-    unsigned int id;
+	virtual void Unbind() = 0;
+
+	virtual unsigned int GetID() = 0;
+
+	static std::shared_ptr<Texture> Create(const std::string& name);
 };
-}  // namespace Vakol::Model
+}
