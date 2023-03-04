@@ -15,8 +15,9 @@ namespace Vakol::Model
         Math::Vec2 uv;
     };
 
-    struct Mesh 
+    class Mesh 
     {
+    public:
         Mesh() = default;
         ~Mesh() { this->Clear(); }
 
@@ -30,36 +31,58 @@ namespace Vakol::Model
         std::vector<unsigned int> indices;
     };
 
-    struct VertexArray
+    class VertexArray
     {
+    public:
         virtual ~VertexArray() = default;
 
-        virtual void Bind() = 0;
+        virtual void Bind() const = 0;
 
-        virtual void Unbind() = 0;
+        virtual void Unbind() const = 0;
 
-        static std::shared_ptr<VertexArray> Create(const Mesh& mesh);
+        static std::shared_ptr<VertexArray> Create(const Mesh& mesh)
+        {
+            return std::make_shared<GLVertexArray>(mesh);
+        }
+
+        static std::shared_ptr<VertexArray> Create(const std::vector<Math::Vec3>& vertices, const std::vector<unsigned int>& indices)
+        {
+            return std::make_shared<GLVertexArray>(vertices, indices);
+        }
     };
 
-    struct VertexBuffer
+    class VertexBuffer
     {
+    public:
         virtual ~VertexBuffer() = default;
 
-        virtual void Bind() = 0;
+        virtual void Bind() const = 0;
 
-        virtual void Unbind() = 0;
+        virtual void Unbind() const = 0;
 
-        static std::shared_ptr<VertexBuffer> Create(const std::vector<Vertex>& vertices);
+        static std::shared_ptr<VertexBuffer> Create(const std::vector<Vertex>& vertices)
+        {
+            return std::make_shared<GLVertexBuffer>(vertices);
+        }
+
+        static std::shared_ptr<VertexBuffer> Create(const std::vector<Math::Vec3>& vertices)
+        {
+            return std::make_shared<GLVertexBuffer>(vertices);
+        }
     };
 
-    struct IndexBuffer
+    class IndexBuffer
     {
+    public:
         virtual ~IndexBuffer() = default;
 
-        virtual void Bind() = 0;
+        virtual void Bind() const = 0;
 
-        virtual void Unbind() = 0;
+        virtual void Unbind() const = 0;
 
-        static std::shared_ptr<IndexBuffer> Create(const std::vector<unsigned int>& indices);
+        static std::shared_ptr<IndexBuffer> Create(const std::vector<unsigned int>& indices)
+        {
+            return std::make_shared<GLIndexBuffer>(indices);
+        }
     };
 }
