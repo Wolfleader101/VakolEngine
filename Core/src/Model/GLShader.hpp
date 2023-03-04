@@ -34,5 +34,12 @@ namespace Vakol::Model
 
     private:
         unsigned int id;
+
+    private:
+        std::string ReadFile(const std::string& name);
+        void CreateProgram(const std::string& vertex, const std::string& fragment);
+
+        void CompileShader(const std::string& vertex, const std::string& fragment);
+        void CheckCompileErrors(const unsigned int shader, const std::string& type);
 	};
 }
