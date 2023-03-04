@@ -1,6 +1,5 @@
 #pragma once
 
-#include <vector>
 #include <memory>
 
 #include "Math/Vector2.hpp"
@@ -13,22 +12,6 @@ namespace Vakol::Model
         Math::Vec3 position;
         Math::Vec3 normal;
         Math::Vec2 uv;
-    };
-
-    class Mesh 
-    {
-    public:
-        Mesh() = default;
-        ~Mesh() { this->Clear(); }
-
-        void Clear() 
-        {
-            vertices.clear();
-            indices.clear();
-        }
-
-        std::vector<Vertex> vertices;
-        std::vector<unsigned int> indices;
     };
 
     class VertexArray

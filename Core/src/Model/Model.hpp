@@ -5,8 +5,11 @@
 
 namespace Vakol::Model
 {
-	struct Model
+	class Model
 	{
+	public:
+		virtual ~Model() = default;
 
+		virtual void Draw() const = 0;
 	};
 }

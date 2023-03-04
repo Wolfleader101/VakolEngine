@@ -1,8 +1,11 @@
 SET(MODEL
 
 #OpenGL
-src/Model/GLMesh.hpp
-src/Model/GLMesh.cpp
+src/Model/GLBuffer.hpp
+src/Model/GLBuffer.cpp
+
+src/Model/GLModel.hpp
+src/Model/GLModel.cpp
 
 src/Model/GLShader.hpp
 src/Model/GLShader.cpp
@@ -13,8 +16,8 @@ src/Model/GLTexture.cpp
 #Model
 src/Model/Model.hpp
 
-#Mesh
-src/Model/Mesh.hpp
+#Buffer
+src/Model/Buffer.hpp
 
 #Shader
 src/Model/Shader.hpp

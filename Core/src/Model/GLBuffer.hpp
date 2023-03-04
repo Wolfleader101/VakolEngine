@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Mesh.hpp"
+#include "Buffer.hpp"
 
 namespace Vakol::Model
 {
