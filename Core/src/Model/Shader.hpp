@@ -2,6 +2,8 @@
 
 #include <string>
 
+#include "Math/Math.hpp"
+
 namespace Vakol::Model 
 {
     class Shader 
@@ -12,29 +14,19 @@ namespace Vakol::Model
         virtual void Bind() const = 0;
         virtual void Unbind() const = 0;
 
-        // Shader(const std::string& vertex, const std::string& fragment) const;
+        virtual void SetBool(const std::string& name, const bool value) = 0;
+        virtual void SetInt(const std::string& name, const int value) = 0;
+        virtual void SetFloat(const std::string& name, const float value) = 0;
 
-        // void Use() const;
-        // void Disable() const;
+        virtual void SetFloat2(const std::string& name, const glm::vec2&) = 0;
+        virtual void SetFloat2(const std::string& name, const float x, const float y) = 0;
 
-        const unsigned int ID() const { return this->id; }
+        virtual void SetFloat3(const std::string& name, const glm::vec3&) = 0;
+        virtual void SetFloat3(const std::string& name, const float x, const float y, const float z) = 0;
 
-    public:
-        // virtual void SetBool(const std::string& name, const bool value) = 0;
-        // virtual void SetInt(const std::string& name, const int value) = 0;
-        // void SetFloat(const std::string& name, const float value) const;
+        virtual void SetFloat4(const std::string& name, const glm::vec4&) = 0;
 
-        // void SetFloat2(const std::string& name, const glm::vec2&) const;
-        // void SetFloat2(const std::string& name, const float x, const float y) const;
-
-        // void SetFloat3(const std::string& name, const glm::vec3&) const;
-        // void SetFloat3(const std::string& name, const float x, const float y, const float z) const;
-
-        // void SetFloat4(const std::string& name, const glm::vec4&) const;
-
-        // void SetMat3(const std::string& name, const glm::mat3&) const;
-        // void SetMat4(const std::string& name, const glm::mat4&) const;
-    private:
-        unsigned int id;
+        virtual void SetMat3(const std::string& name, const glm::mat3&) = 0;
+        virtual void SetMat4(const std::string& name, const glm::mat4&) = 0;
     };
 }
