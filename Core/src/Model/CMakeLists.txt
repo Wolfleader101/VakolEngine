@@ -15,6 +15,7 @@ src/Model/Model.hpp
 
 #Mesh
 src/Model/Mesh.hpp
+src/Model/Mesh.cpp
 
 #Shader
 src/Model/Shader.hpp
