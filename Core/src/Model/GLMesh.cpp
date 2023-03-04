@@ -38,4 +38,28 @@ namespace Vakol::Model
 
 		glBindVertexArray(0);
 	}
+
+	GLVertexArray::~GLVertexArray()
+	{
+		glDeleteVertexArrays(1, &this->id);
+	}
+
+	void GLVertexArray::Bind()
+	{
+		glBindVertexArray(this->id);
+	}
+
+	void GLVertexArray::Unbind()
+	{
+		glBindVertexArray(0);
+	}
+
+
+
+
+
+
+
+
+
 }
