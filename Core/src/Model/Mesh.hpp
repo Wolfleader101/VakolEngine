@@ -40,15 +40,9 @@ namespace Vakol::Model
 
         virtual void Unbind() const = 0;
 
-        static std::shared_ptr<VertexArray> Create(const Mesh& mesh)
-        {
-            return std::make_shared<GLVertexArray>(mesh);
-        }
+        static std::shared_ptr<VertexArray> Create(const Mesh& mesh);
 
-        static std::shared_ptr<VertexArray> Create(const std::vector<Math::Vec3>& vertices, const std::vector<unsigned int>& indices)
-        {
-            return std::make_shared<GLVertexArray>(vertices, indices);
-        }
+        static std::shared_ptr<VertexArray> Create(const std::vector<Math::Vec3>& vertices, const std::vector<unsigned int>& indices);
     };
 
     class VertexBuffer
@@ -60,15 +54,9 @@ namespace Vakol::Model
 
         virtual void Unbind() const = 0;
 
-        static std::shared_ptr<VertexBuffer> Create(const std::vector<Vertex>& vertices)
-        {
-            return std::make_shared<GLVertexBuffer>(vertices);
-        }
+        static std::shared_ptr<VertexBuffer> Create(const std::vector<Vertex>& vertices);
 
-        static std::shared_ptr<VertexBuffer> Create(const std::vector<Math::Vec3>& vertices)
-        {
-            return std::make_shared<GLVertexBuffer>(vertices);
-        }
+        static std::shared_ptr<VertexBuffer> Create(const std::vector<Math::Vec3>& vertices);
     };
 
     class IndexBuffer
@@ -80,9 +68,6 @@ namespace Vakol::Model
 
         virtual void Unbind() const = 0;
 
-        static std::shared_ptr<IndexBuffer> Create(const std::vector<unsigned int>& indices)
-        {
-            return std::make_shared<GLIndexBuffer>(indices);
-        }
+        static std::shared_ptr<IndexBuffer> Create(const std::vector<unsigned int>& indices);
     };
 }
