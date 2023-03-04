@@ -15,15 +15,15 @@ struct Vector3 {
 
 typedef Vector3 Vec3;
 
-Vector3 operator+(const Vector3& left, const Vector3& right) { return Vector3(left.vector + right.vector); }
-
-Vector3 operator-(const Vector3& left, const Vector3& right) { return Vector3(left.vector - right.vector); }
-
-Vector3 operator*(const Vector3& vec, const float k) { return Vector3(vec.vector * k); }
-
-Vector3 operator/(const Vector3& vec, const float k) { return Vector3(vec.vector / k); }
-
-bool operator==(const Vector3& left, const Vector3& right) { return left.vector == right.vector; }
-
-bool operator!=(const Vector3& left, const Vector3& right) { return left.vector != right.vector; }
+//Vector3 operator+(const Vector3& left, const Vector3& right) { return Vector3(left.vector + right.vector); }
+//
+//Vector3 operator-(const Vector3& left, const Vector3& right) { return Vector3(left.vector - right.vector); }
+//
+//Vector3 operator*(const Vector3& vec, const float k) { return Vector3(vec.vector * k); }
+//
+//Vector3 operator/(const Vector3& vec, const float k) { return Vector3(vec.vector / k); }
+//
+//bool operator==(const Vector3& left, const Vector3& right) { return left.vector == right.vector; }
+//
+//bool operator!=(const Vector3& left, const Vector3& right) { return left.vector != right.vector; }
 }  // namespace Vakol::Model::Math
