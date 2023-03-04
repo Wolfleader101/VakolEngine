@@ -10,7 +10,7 @@ namespace Vakol::Model
 		GLVertexBuffer(const std::vector<Vertex>& vertices);
 		GLVertexBuffer(const std::vector<Math::Vec3>& vertices);
 
-		~GLVertexBuffer() = default;
+		~GLVertexBuffer() override;
 
 		void Bind() override;
 		void Unbind() override;
@@ -24,7 +24,7 @@ namespace Vakol::Model
 	public:
 		GLIndexBuffer(const std::vector<unsigned int>& indices);
 
-		~GLIndexBuffer() = default;
+		~GLIndexBuffer() override;
 
 		void Bind() override;
 		void Unbind() override;
