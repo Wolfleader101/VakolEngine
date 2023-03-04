@@ -8,4 +8,9 @@ namespace Vakol::Model
 	{
 		return std::make_shared<GLShader>(vertex, fragment);
 	}
+
+	std::shared_ptr<Shader> Shader::Create(const std::string& program)
+	{
+		return std::make_shared<GLShader>(program);
+	}
 }
