@@ -8,7 +8,6 @@ namespace Vakol::Model
 	{
 	public:
 		GLVertexBuffer(const std::vector<Vertex>& vertices);
-		GLVertexBuffer(const std::vector<Math::Vec3>& vertices);
 
 		~GLVertexBuffer() override;
 
@@ -36,8 +35,7 @@ namespace Vakol::Model
 	class GLVertexArray : public VertexArray
 	{
 	public:
-		GLVertexArray(const Mesh& mesh);
-		GLVertexArray(const std::vector<Math::Vec3>& vertices, const std::vector<unsigned int>& indices);
+		GLVertexArray(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices);
 
 		~GLVertexArray() override;
 
