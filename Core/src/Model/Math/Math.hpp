@@ -24,6 +24,6 @@ namespace Vakol::Model::Math
 	static const inline float FLOAT_MAX = FLT_MAX;
 	static const inline float FLOAT_MIN = FLT_MIN;
 
-	static const inline double Deg2Rad = PI / 180.0f;
-	static const inline double Rad2Deg = 180.0f / PI;
+	static const inline double Deg2Rad = PI / 180.00;
+	static const inline double Rad2Deg = 180.00 / PI;
 }
