@@ -4,7 +4,11 @@ SET(MODEL
 src/Model/GLMesh.hpp
 src/Model/GLMesh.cpp
 
+src/Model/GLShader.hpp
+src/Model/GLShader.cpp
+
 src/Model/GLTexture.hpp
+src/Model/GLTexture.cpp
 
 #Model
 src/Model/Model.hpp
