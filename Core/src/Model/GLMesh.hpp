@@ -51,15 +51,4 @@ namespace Vakol::Model
 		std::shared_ptr<GLVertexBuffer> vertexBuffer;
 		std::shared_ptr<GLIndexBuffer> indexBuffer;
 	};
-
-	class GLMesh
-	{
-	public:
-		GLMesh() = default;
-
-	private:
-		GLVertexArray VAO;
-		GLVertexBuffer VBO;
-		GLIndexBuffer IBO;
-	};
 }
