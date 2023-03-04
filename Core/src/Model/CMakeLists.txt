@@ -1,10 +1,20 @@
 SET(MODEL
 
+#OpenGL
+src/Model/GLMesh.hpp
+src/Model/GLTexture.hpp
+
+#Model
+src/Model/Model.hpp
+
 #Mesh
 src/Model/Mesh.hpp
 
 #Shader
 src/Model/Shader.hpp
+
+#Material
+src/Model/Material.hpp
 
 #Math
 src/Model/Math/Math.hpp
