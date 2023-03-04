@@ -1,13 +1,19 @@
+#define STBI_IMAGE_IMPLEMENTATION
+
+#include <memory>
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 #include "GLTexture.hpp"
 
+#include <stb_image.h>
+
 namespace Vakol::Model
 {
 	GLTexture::GLTexture(const std::string& name)
 	{
-		// TODO: ADD IO LOADER
+		std::
 	}
 
 	GLTexture::~GLTexture()

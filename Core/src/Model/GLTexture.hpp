@@ -17,6 +17,8 @@ namespace Vakol::Model
 
 		unsigned int GetID() const override;
 
+		std::unique_ptr<unsigned char*> GetTexture();
+
 	private:
 		unsigned int id;
 	};

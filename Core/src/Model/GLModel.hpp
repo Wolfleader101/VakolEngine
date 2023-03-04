@@ -4,6 +4,11 @@
 
 namespace Vakol::Model
 {
+	class GLMesh : public Mesh
+	{
+
+	};
+
 	class GLModel : public Model
 	{
 	public:
@@ -14,6 +19,6 @@ namespace Vakol::Model
 		void AddMesh(const GLMesh& mesh);
 
 	private:
-		std::vector<GLMesh& 
+		std::vector<GLMesh>
 	};
 }

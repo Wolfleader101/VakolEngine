@@ -1,10 +1,17 @@
 #pragma once
 
-#include "Mesh.hpp"
 #include "Material.hpp"
 
 namespace Vakol::Model
 {
+	class Mesh
+	{
+	public:
+		virtual ~Mesh() = default;
+
+		virtual void Draw() const = 0;
+	};
+
 	class Model
 	{
 	public:
