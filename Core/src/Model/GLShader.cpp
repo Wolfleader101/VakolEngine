@@ -12,7 +12,7 @@ namespace Vakol::Model
 {
 	std::string GLShader::ReadFile(const std::string& name)
 	{
-		const std::string filepath = "View/Shaders" + name;
+		const std::string filepath = "assets/" + name;
 
 		std::string result;
 
@@ -31,10 +31,10 @@ namespace Vakol::Model
 				in.read(&result[0], size);
 			}
 			else
-				std::cout << "Could not read file " << filepath << std::endl;
+				std::cout << "Could not read file: " << filepath << std::endl;
 		}
 		else
-			std::cout << "Could not open file '{0}'" << filepath << std::endl;
+			std::cout << "Could not open file: " << filepath << std::endl;
 
 		return result;
 	}
@@ -102,7 +102,7 @@ namespace Vakol::Model
 			if (!success)
 			{
 				glGetShaderInfoLog(shader, 1024, NULL, infoLog);
-				std::cout << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << '\n' << infoLog << '\n' << std::endl;
+				std::cout << "\nERROR::SHADER_COMPILATION_ERROR of type: " << type << '\n' << infoLog << '\n' << std::endl;
 			}
 		}
 		else
