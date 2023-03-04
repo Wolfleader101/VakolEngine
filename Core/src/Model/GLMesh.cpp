@@ -44,12 +44,12 @@ namespace Vakol::Model
 		glDeleteVertexArrays(1, &this->id);
 	}
 
-	void GLVertexArray::Bind()
+	void GLVertexArray::Bind() const
 	{
 		glBindVertexArray(this->id);
 	}
 
-	void GLVertexArray::Unbind()
+	void GLVertexArray::Unbind() const
 	{
 		glBindVertexArray(0);
 	}
@@ -76,12 +76,12 @@ namespace Vakol::Model
 		glDeleteBuffers(1, &this->id);
 	}
 
-	void GLVertexBuffer::Bind()
+	void GLVertexBuffer::Bind() const
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, this->id);
 	}
 
-	void GLVertexBuffer::Unbind()
+	void GLVertexBuffer::Unbind() const
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
@@ -101,12 +101,12 @@ namespace Vakol::Model
 		glDeleteBuffers(1, &this->id);
 	}
 
-	void GLIndexBuffer::Bind()
+	void GLIndexBuffer::Bind() const
 	{
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->id);
 	}
 
-	void GLIndexBuffer::Unbind()
+	void GLIndexBuffer::Unbind() const
 	{
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}

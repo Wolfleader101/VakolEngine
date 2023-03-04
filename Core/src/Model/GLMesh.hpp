@@ -12,8 +12,8 @@ namespace Vakol::Model
 
 		~GLVertexBuffer() override;
 
-		void Bind() override;
-		void Unbind() override;
+		void Bind() const override;
+		void Unbind() const override;
 
 	private:
 		unsigned int id;
@@ -26,8 +26,8 @@ namespace Vakol::Model
 
 		~GLIndexBuffer() override;
 
-		void Bind() override;
-		void Unbind() override;
+		void Bind() const override;
+		void Unbind() const override;
 
 	private:
 		unsigned int id;
@@ -41,9 +41,8 @@ namespace Vakol::Model
 
 		~GLVertexArray() override;
 
-		void Bind() override;
-
-		void Unbind() override;
+		void Bind() const override;
+		void Unbind() const override;
 
 	private:
 		unsigned int id;
