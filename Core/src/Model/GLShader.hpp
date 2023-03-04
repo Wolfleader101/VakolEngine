@@ -6,6 +6,7 @@ namespace Vakol::Model
 {
 	class GLShader : public Shader
 	{
+    public:
         GLShader(const std::string& vertex, const std::string& fragment);
         GLShader(const std::string& program);
 

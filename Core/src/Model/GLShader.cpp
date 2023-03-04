@@ -7,6 +7,21 @@
 
 namespace Vakol::Model
 {
+	GLShader::GLShader(const std::string& vertex, const std::string& fragment)
+	{
+
+	}
+
+	GLShader::GLShader(const std::string& program)
+	{
+
+	}
+
+	GLShader::~GLShader()
+	{
+		glDeleteProgram(this->id);
+	}
+
 	void GLShader::Bind() const
 	{
         glUseProgram(this->id);
