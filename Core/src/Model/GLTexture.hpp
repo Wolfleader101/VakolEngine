@@ -11,11 +11,11 @@ namespace Vakol::Model
 
 		~GLTexture() override;
 
-		void Bind() override;
+		void Bind() const override;
 
-		void Unbind() override;
+		void Unbind() const override;
 
-		unsigned int GetID() override;
+		unsigned int GetID() const override;
 
 	private:
 		unsigned int id;
