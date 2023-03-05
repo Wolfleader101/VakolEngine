@@ -10,7 +10,7 @@
 #include "Time.hpp"
 
 //just using this to test if ecs hooked in properly
-
+#include <Model/ECS/Entity.hpp>
 #include <Model/ECS/EntityList.hpp> 
 
 

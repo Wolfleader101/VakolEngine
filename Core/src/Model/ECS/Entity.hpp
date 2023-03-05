@@ -28,6 +28,7 @@ namespace Vakol::Model::ECS
 	{
 	public:
 
+		Entity() = default;
 
 		/**
 			* @brief Construct a new Entity object

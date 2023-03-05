@@ -49,7 +49,7 @@ namespace Vakol::Model::ECS::Components
 		glm::vec3 scale;    /**< XYZ scale */
 	};
 
-	using ModelType = Model;
+	//using ModelType = VakolModel;
 
 	/**
 		* @struct Tag

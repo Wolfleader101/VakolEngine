@@ -5,8 +5,6 @@
 #include "Singleton.hpp"
 #include "View/Renderer/GLRenderer.hpp"
 
-#include <Model/ECS/Entity.hpp> //need entity before entityList - only a msvc thing? 
-#include <Model/ECS/EntityList.hpp> 
 
 
 // #include "JSON/Json.hpp"

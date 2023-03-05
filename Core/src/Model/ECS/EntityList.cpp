@@ -86,7 +86,7 @@ namespace Vakol::Model::ECS
 		return m_Registry.valid((entt::entity)Handle);
 	}
 
-	std::list<Entity>& EntityList::GetEntityList()
+	std::vector<Entity>& EntityList::GetEntityVec()
 	{
 		return ActiveEntityList;
 	}

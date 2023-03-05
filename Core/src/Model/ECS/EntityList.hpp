@@ -76,13 +76,15 @@ namespace Vakol::Model::ECS
 			*
 			* @return std::list<Entity>&
 			*/
-		std::list<Entity>& GetEntityList();
+		std::vector<Entity>& GetEntityVec();
 
 		//-------------- THESE ARE ADDITIONS IN ICT397 ------------------
 
 		entt::registry& GetRegistry();
 
 		void Init();
+		void Init(entt::registry& toCopy);
+
 		void Update(double d_t);
 
 	private:
