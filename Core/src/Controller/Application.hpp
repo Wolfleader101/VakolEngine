@@ -11,7 +11,6 @@
 
 //just using this to test if ecs hooked in properly
 
-#include <Model/ECS/Entity.hpp> //need entity before entityList - only a msvc thing? 
 #include <Model/ECS/EntityList.hpp> 
 
 
@@ -104,7 +103,7 @@ namespace Vakol::Controller {
         /**
          * @brief the entity list of engine
          */
-        Vakol::ECS::EntityList m_entityList; //to be moved to game but for now it all works
+        Vakol::Model::ECS::EntityList m_entityList; //to be moved to game/scene but for now it all works
 
         /**
          * @brief the renderer instance of the class

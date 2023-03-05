@@ -5,7 +5,9 @@
 #include "Singleton.hpp"
 #include "View/Renderer/GLRenderer.hpp"
 
-#include <Model/ECS/EntityList.hpp>
+#include <Model/ECS/Entity.hpp> //need entity before entityList - only a msvc thing? 
+#include <Model/ECS/EntityList.hpp> 
+
 
 // #include "JSON/Json.hpp"
 // #include "Physics/Physics.hpp"
@@ -34,6 +36,9 @@ void Application::Init(const std::string& title, int width, int height) {
     // Physics::Debug = false;
 
     // Physics::Init();
+
+    auto& x = m_entityList.CreateEntity();
+
     m_running = true;
 }
 

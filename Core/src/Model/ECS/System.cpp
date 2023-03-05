@@ -1,31 +1,26 @@
-#include <ECS/System.hpp>
+#include "System.hpp"
 
-#include <ECS/Components.hpp>
+#include <Model/ECS/Components.hpp>
 
-namespace Vakol
+
+namespace Vakol::Model::ECS::System
 {
-	namespace ECS
+	void Model_Draw(reg& registry)
 	{
-		namespace System
-		{
-			void Model_Draw(reg& registry)
-			{
-				registry.view<Components::Transform, Components::ModelType>().each(
-					[&](auto& trans, auto& model) {
-						/* draw model */
+		registry.view<Components::Transform, Components::ModelType>().each(
+			[&](auto& trans, auto& model) {
+				/* draw model */
 						
-					}
-				);
 			}
-
-			void Script_Init(reg& registry)
-			{
-			}
-
-			void Script_Update(reg& registry)
-			{
-			}
-
-		}
+		);
 	}
+
+	void Script_Init(reg& registry)
+	{
+	}
+
+	void Script_Update(reg& registry)
+	{
+	}
+
 }
