@@ -13,6 +13,7 @@ namespace Vakol
 				registry.view<Components::Transform, Components::ModelType>().each(
 					[&](auto& trans, auto& model) {
 						/* draw model */
+						
 					}
 				);
 			}

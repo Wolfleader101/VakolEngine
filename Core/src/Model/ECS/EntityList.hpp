@@ -1,8 +1,9 @@
 #pragma once
 
 #include <entt/entt.hpp>
+#include <memory>
 
-#include <list>
+#include <vector>
 
 
 namespace Vakol
@@ -34,7 +35,7 @@ namespace Vakol
 			 *
 			 * @return Entity created
 			 */
-			Entity& CreateEntity();
+			ECS::Entity& CreateEntity();
 
 			/**
 			 * @brief Create an Entity object
@@ -94,7 +95,7 @@ namespace Vakol
 			/**
 			 * @brief list of entities created and active
 			*/
-			std::list<Entity> ActiveEntityList;
+			std::vector<Entity> ActiveEntityList;
 
 			friend class Entity; //friend to allow the api to entities to be clean.
 		};

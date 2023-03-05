@@ -6,8 +6,7 @@
 
 
 #include <Controller/Logger.hpp>
-#include <ECS/EntityList.hpp>
-#include <Controller/Time.hpp>
+#include <Model/ECS/EntityList.hpp>
 
 
 
@@ -29,14 +28,7 @@ namespace Vakol
 		class Entity
 		{
 		public:
-			using OnStartFn = std::function<void(Entity&)>;
-			using OnUpdateFn = std::function<void(const Time&, Entity&)>;
 
-			/**
-			 * @brief Default constructer for a new Entity object
-			 *
-			 */
-			Entity() = default;
 
 			/**
 			 * @brief Construct a new Entity object
@@ -52,9 +44,6 @@ namespace Vakol
 			*/
 			Entity(const Entity& otherEntity) = default; //may want this to actually copy over the components in the future
 
-
-			OnStartFn OnStart; /**< On start function */
-			OnUpdateFn OnUpdate; /**< On end function */
 
 			/**
 			 * @brief returns true if all components listed are associated with entity

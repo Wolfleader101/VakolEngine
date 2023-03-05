@@ -9,7 +9,11 @@
 #include "Events/WindowEvent.hpp"
 #include "Time.hpp"
 
-#include <Model/ECS/EntityList.hpp> //just using this to test if ecs hooked in properly
+//just using this to test if ecs hooked in properly
+
+#include <Model/ECS/Entity.hpp> //need entity before entityList - only a msvc thing? 
+#include <Model/ECS/EntityList.hpp> 
+
 
 namespace Vakol::Controller {
     /**
@@ -96,12 +100,11 @@ namespace Vakol::Controller {
          */
         Time m_time;
 
-        ECS::EntityList m_entityList; // -------! also just using this to test if entitylist works
-
+       
         /**
          * @brief the entity list of engine
          */
-        // EntityList m_entityList;
+        Vakol::ECS::EntityList m_entityList; //to be moved to game but for now it all works
 
         /**
          * @brief the renderer instance of the class
