@@ -25,7 +25,7 @@ glfw
 spdlog
 glm
 nlohmann_json
-#reactphysics3d
+reactphysics3d
 lua
 sol2
 )
