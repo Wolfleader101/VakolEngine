@@ -4,6 +4,8 @@
 #include <fstream>
 #include <iostream>
 
+#include <cassert>
+
 #include "GLShader.hpp"
 
 namespace Vakol::Model
@@ -133,5 +135,24 @@ namespace Vakol::Model
 	unsigned int GLShader::GetID() const
 	{
 		return this->id;
+	}
+
+	void ShaderLibrary::AddShader(const std::string& name, const std::shared_ptr<GLShader>& shader)
+	{
+		assert(!Contains(name));
+
+		shaders[name] = shader;
+	}
+
+	std::shared_ptr<GLShader> ShaderLibrary::GetShader(const std::string& name) const
+	{
+		assert(Contains(name));
+
+		return shaders[name];
+	}
+
+	bool ShaderLibrary::Contains(const std::string& name) const
+	{
+		return shaders.find(name) != shaders.end();
 	}
 }

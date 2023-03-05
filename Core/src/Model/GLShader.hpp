@@ -1,5 +1,8 @@
 #pragma once
 
+#include <string>
+#include <map>
+
 #include "Shader.hpp"
 
 namespace Vakol::Model
@@ -19,6 +22,7 @@ namespace Vakol::Model
 
     private:
         unsigned int id = 0;
+        std::string name = "null";
     private:
         std::string ReadFile(const std::string& name);
         void CreateProgram(const std::string& vertex, const std::string& fragment);
@@ -26,4 +30,17 @@ namespace Vakol::Model
         void CompileShader(const std::string& vertex, const std::string& fragment);
         void CheckCompileErrors(const unsigned int shader, const std::string& type);
 	};
+
+    class ShaderLibrary
+    {
+    public:
+        void AddShader(const std::string& name, const std::shared_ptr<GLShader>& shader);
+
+        std::shared_ptr<GLShader> GetShader(const std::string& name) const;
+
+        bool Contains(const std::string& name) const;
+
+    private:
+        std::map<std::string, std::shared_ptr<GLShader>> shaders;
+    };
 }
