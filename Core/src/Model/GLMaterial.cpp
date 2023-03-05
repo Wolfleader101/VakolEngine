@@ -17,6 +17,11 @@ namespace Vakol::Model
 			this->textures[i]->~GLTexture();
 	}
 
+	void GLMaterial::AddTexture(const GLTexture& texture)
+	{
+		textures.push_back(std::make_shared<GLTexture>(texture));
+	}
+
 	void GLMaterial::Bind() const
 	{
 		this->shader->Bind();
