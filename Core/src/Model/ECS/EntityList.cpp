@@ -11,102 +11,110 @@
 
 namespace Vakol
 {
-
-	Entity& EntityList::CreateEntity()
+	namespace ECS
 	{
-		Entity newEntity = Entity(m_Registry.create(), this);
 
-		ActiveEntityList.push_back(newEntity);
-
-
-		return ActiveEntityList.back();
-	}
-
-	Entity EntityList::CreateEntity(uint32_t SuggestedHandle)
-	{
-		Entity newEntity = Entity(m_Registry.create((entt::entity)SuggestedHandle), this);
-
-		ActiveEntityList.push_back(newEntity);
-
-		return newEntity;
-
-	}
-
-
-	Entity EntityList::GetEntity(uint32_t Handle)
-	{
-		if (!CheckEntityExistence(Handle)) //ensuring the entity actually exists
+		Entity& EntityList::CreateEntity()
 		{
-			VK_CRITICAL("EntityList.GetEntity(uint32_t): Entity with given handle does not exist");
-			assert(0);
+			Entity newEntity = Entity(m_Registry.create(), this);
+
+			ActiveEntityList.push_back(newEntity);
+
+
+			return ActiveEntityList.back();
 		}
-		Entity newEnt;
 
-		newEnt.m_entityHandle = (entt::entity)Handle; newEnt.m_EntityList = this;
-		return newEnt;
-	}
-
-	void EntityList::RemoveEntity(uint32_t Handle)
-	{
-		entt::entity ID = (entt::entity)Handle;
-
-		if (!CheckEntityExistence(Handle)) //ensuring the entity actually exists
+		Entity EntityList::CreateEntity(uint32_t SuggestedHandle)
 		{
-			VK_ERROR("EntityList.RemoveEntity(uint32_t): Entity with given handle does not exist... skipping");
+			Entity newEntity = Entity(m_Registry.create((entt::entity)SuggestedHandle), this);
+
+			ActiveEntityList.push_back(newEntity);
+
+			return newEntity;
+
 		}
-		else
+
+
+		Entity EntityList::GetEntity(uint32_t Handle)
 		{
-			m_Registry.destroy(ID);
-
-			auto it = ActiveEntityList.begin();
-			auto end = ActiveEntityList.end();
-
-			while (it != end)
+			if (!CheckEntityExistence(Handle)) //ensuring the entity actually exists
 			{
-				if (it->GetHandle() == Handle)
-				{
-					ActiveEntityList.erase(it);
-					break;
-				}
-				it++;
+				VK_CRITICAL("EntityList.GetEntity(uint32_t): Entity with given handle does not exist");
+				assert(0);
 			}
+			Entity newEnt;
+
+			newEnt.m_entityHandle = (entt::entity)Handle; newEnt.m_EntityList = this;
+			return newEnt;
 		}
 
-		
-	}
+		void EntityList::RemoveEntity(uint32_t Handle)
+		{
+			entt::entity ID = (entt::entity)Handle;
 
-	void EntityList::Clear()
-	{
-		m_Registry.clear();
-		ActiveEntityList.clear();
-	}
+			if (!CheckEntityExistence(Handle)) //ensuring the entity actually exists
+			{
+				VK_ERROR("EntityList.RemoveEntity(uint32_t): Entity with given handle does not exist... skipping");
+			}
+			else
+			{
+				m_Registry.destroy(ID);
 
-	bool EntityList::CheckEntityExistence(uint32_t Handle) const
-	{
-		return m_Registry.valid((entt::entity)Handle);
-	}
+				auto it = ActiveEntityList.begin();
+				auto end = ActiveEntityList.end();
 
-	std::list<Entity>& EntityList::GetEntityList()
-	{
-		return ActiveEntityList;
-	}
+				while (it != end)
+				{
+					if (it->GetHandle() == Handle)
+					{
+						ActiveEntityList.erase(it);
+						break;
+					}
+					it++;
+				}
+			}
 
 
-	//----------------------- ICT397 additions
-	entt::registry& EntityList::GetRegistry()
-	{
-		return m_Registry;
-	}
+		}
 
-	void EntityList::Init(entt::registry& toCopy)
-	{
-		//init the list. Once the json is serialized, we transfer to an EntityList
-		//Then call any system init funcs. 
-	}
+		void EntityList::Clear()
+		{
+			m_Registry.clear();
+			ActiveEntityList.clear();
+		}
 
-	void EntityList::Update(double d_t)
-	{
+		bool EntityList::CheckEntityExistence(uint32_t Handle) const
+		{
+			return m_Registry.valid((entt::entity)Handle);
+		}
 
-		//use systems functions to update the entt::registry
+		std::list<Entity>& EntityList::GetEntityList()
+		{
+			return ActiveEntityList;
+		}
+
+
+		//----------------------- ICT397 additions
+		entt::registry& EntityList::GetRegistry()
+		{
+			return m_Registry;
+		}
+
+		void EntityList::Init(entt::registry& toCopy)
+		{
+			//init the list. Once the json is de-serialized, we transfer to an EntityList
+			//Then call any system init funcs. 
+		}
+
+		void EntityList::Init()
+		{
+
+		}
+
+		void EntityList::Update(double d_t)
+		{
+
+			//use systems functions to update the entt::registry
+		}
 	}
 }

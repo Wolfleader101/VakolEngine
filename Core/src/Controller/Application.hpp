@@ -9,104 +9,108 @@
 #include "Events/WindowEvent.hpp"
 #include "Time.hpp"
 
+#include <Model/ECS/EntityList.hpp> //just using this to test if ecs hooked in properly
+
 namespace Vakol::Controller {
-/**
- * @class Application
- * @brief The main application class to launch the game engine, expected use is a singleton
- *
- */
-class Application {
-   public:
     /**
-     * @brief Construct a new Application object
+     * @class Application
+     * @brief The main application class to launch the game engine, expected use is a singleton
      *
      */
-    Application();
+    class Application {
+       public:
+        /**
+         * @brief Construct a new Application object
+         *
+         */
+        Application();
 
-    /**
-     * @brief Application constructor
-     * @param title of the window
-     * @param width of the window
-     * @param height of the window
-     */
-    void Init(const std::string& title = "Vakol Engine", int width = 1280, int height = 720);
+        /**
+         * @brief Application constructor
+         * @param title of the window
+         * @param width of the window
+         * @param height of the window
+         */
+        void Init(const std::string& title = "Vakol Engine", int width = 1280, int height = 720);
 
-    /**
-     * @brief destructor of the application
-     */
-    ~Application();
+        /**
+         * @brief destructor of the application
+         */
+        ~Application();
 
-    /**
-     * @brief run the application
-     */
-    void Run();
+        /**
+         * @brief run the application
+         */
+        void Run();
 
-    /**
-     * @brief handle window events
-     * @param ev event to handle
-     */
-    void OnEvent(Event& ev);
+        /**
+         * @brief handle window events
+         * @param ev event to handle
+         */
+        void OnEvent(Event& ev);
 
-    /**
-     * @brief check if application is still running
-     * @return true if running
-     */
-    bool IsRunning() const;
+        /**
+         * @brief check if application is still running
+         * @return true if running
+         */
+        bool IsRunning() const;
 
-    /**
-     * @brief Get the Width of window
-     *
-     * @return const int
-     */
-    const int GetWidth() const { return m_window->GetWidth(); }
+        /**
+         * @brief Get the Width of window
+         *
+         * @return const int
+         */
+        const int GetWidth() const { return m_window->GetWidth(); }
 
-    /**
-     * @brief Get the Height of window
-     *
-     * @return const int
-     */
-    const int GetHeight() const { return m_window->GetHeight(); }
+        /**
+         * @brief Get the Height of window
+         *
+         * @return const int
+         */
+        const int GetHeight() const { return m_window->GetHeight(); }
 
-   private:
-    /**
-     * @brief on window close event
-     * @param ev event of windowClose
-     * @return true if it was sucessful
-     */
-    bool OnWindowClose(WindowCloseEvent& ev);
+       private:
+        /**
+         * @brief on window close event
+         * @param ev event of windowClose
+         * @return true if it was sucessful
+         */
+        bool OnWindowClose(WindowCloseEvent& ev);
 
-    bool OnWindowResize(WindowResizeEvent& ev);
+        bool OnWindowResize(WindowResizeEvent& ev);
 
-    /**
-     * @brief on keyboard press event
-     * @param kev on key pressed event
-     * @return true if successful
-     */
-    bool Application::OnKeyPressed(KeyPressedEvent& kev);
+        /**
+         * @brief on keyboard press event
+         * @param kev on key pressed event
+         * @return true if successful
+         */
+        bool Application::OnKeyPressed(KeyPressedEvent& kev);
 
-    /**
-     * @brief the window of the application
-     */
-    std::shared_ptr<View::Window> m_window;
+        /**
+         * @brief the window of the application
+         */
+        std::shared_ptr<View::Window> m_window;
 
-    /**
-     * @brief the time data of engine
-     */
-    Time m_time;
+        /**
+         * @brief the time data of engine
+         */
+        Time m_time;
 
-    /**
-     * @brief the entity list of engine
-     */
-    // EntityList m_entityList;
+        ECS::EntityList m_entityList; // -------! also just using this to test if entitylist works
 
-    /**
-     * @brief the renderer instance of the class
-     */
-    std::shared_ptr<View::Renderer> m_renderer;
+        /**
+         * @brief the entity list of engine
+         */
+        // EntityList m_entityList;
 
-    /**
-     * @brief if the app should be running
-     */
-    bool m_running = true;
-};
+        /**
+         * @brief the renderer instance of the class
+         */
+        std::shared_ptr<View::Renderer> m_renderer;
+
+        /**
+         * @brief if the app should be running
+         */
+        bool m_running = true;
+    };
 }  // namespace Vakol::Controller

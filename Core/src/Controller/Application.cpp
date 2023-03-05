@@ -5,7 +5,7 @@
 #include "Singleton.hpp"
 #include "View/Renderer/GLRenderer.hpp"
 
-// #include <ECS/Components.hpp>
+#include <Model/ECS/EntityList.hpp>
 
 // #include "JSON/Json.hpp"
 // #include "Physics/Physics.hpp"

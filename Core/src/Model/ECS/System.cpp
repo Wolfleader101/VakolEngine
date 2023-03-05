@@ -4,20 +4,27 @@
 
 namespace Vakol
 {
-	namespace System
+	namespace ECS
 	{
-		void Vakol::System::Model_Draw(reg& registry)
+		namespace System
 		{
-			registry.view<Components::Transform, Components::ModelType>
-		}
+			void Model_Draw(reg& registry)
+			{
+				registry.view<Components::Transform, Components::ModelType>().each(
+					[&](auto& trans, auto& model) {
+						/* draw model */
+					}
+				);
+			}
 
-		void Vakol::System::Script_Init(reg& registry)
-		{
-		}
+			void Script_Init(reg& registry)
+			{
+			}
 
-		void Vakol::System::Script_Update(reg& registry)
-		{
-		}
+			void Script_Update(reg& registry)
+			{
+			}
 
+		}
 	}
 }
