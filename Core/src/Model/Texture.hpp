@@ -1,8 +1,5 @@
 #pragma once
 
-#include <string>
-#include <memory>
-
 namespace Vakol::Model 
 {
 	class Texture 
@@ -10,7 +7,7 @@ namespace Vakol::Model
 	public:
 		virtual ~Texture() = default;
 
-		virtual void Bind() const = 0;
+		virtual void Bind(const unsigned int) const = 0;
 
 		virtual void Unbind() const = 0;
 
