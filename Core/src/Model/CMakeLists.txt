@@ -10,6 +10,9 @@ src/Model/GLModel.cpp
 src/Model/GLShader.hpp
 src/Model/GLShader.cpp
 
+src/Model/GLMaterial.hpp
+src/Model/GLMaterial.cpp
+
 src/Model/GLTexture.hpp
 src/Model/GLTexture.cpp
 
