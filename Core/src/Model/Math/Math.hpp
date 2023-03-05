@@ -10,7 +10,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <algorithm>
 
-namespace Math
+namespace Vakol::Model::Math
 {
 	/// <summary>
 	/// A simple float comparison function that compares the difference of two float vlaues

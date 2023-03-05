@@ -35,7 +35,6 @@ void Application::Init(const std::string& title, int width, int height) {
 
     // Physics::Init();
 
-    auto& x = m_entityList.CreateEntity();
 
     m_running = true;
 }

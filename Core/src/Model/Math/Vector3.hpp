@@ -1,50 +1,30 @@
 #pragma once
 
 #include "Math.hpp"
-
-struct Vector3
+namespace Vakol::Model::Math
 {
-	Vector3() = default;
 
-	Vector3(const float x, const float y, const float z)
+
+	struct Vector3
 	{
-		this->vector = glm::vec3(x, y, z);
-	}
+		Vector3() = default;
 
-	Vector3(const glm::vec3& vec)
-	{
-		this->vector = vec;
-	}
+		Vector3(const float x, const float y, const float z);
 
-	glm::vec3 vector;
-};
+		Vector3(const glm::vec3& vec);
 
-Vector3 operator+(const Vector3& left, const Vector3& right)
-{
-	return Vector3(left.vector + right.vector);
-}
+		glm::vec3 vector;
+	};
 
-Vector3 operator-(const Vector3& left, const Vector3& right)
-{
-	return Vector3(left.vector - right.vector);
-}
+	Vector3 operator+(const Vector3& left, const Vector3& right);
 
-Vector3 operator*(const Vector3& vec, const float k)
-{
-	return Vector3(vec.vector * k);
-}
+	Vector3 operator-(const Vector3& left, const Vector3& right);
 
-Vector3 operator/(const Vector3& vec, const float k)
-{
-	return Vector3(vec.vector / k);
-}
+	Vector3 operator*(const Vector3& vec, const float k);
 
-bool operator==(const Vector3& left, const Vector3& right)
-{
-	return left.vector == right.vector;
-}
+	Vector3 operator/(const Vector3& vec, const float k);
 
-bool operator!=(const Vector3& left, const Vector3& right)
-{
-	return left.vector != right.vector;
+	bool operator==(const Vector3& left, const Vector3& right);
+
+	bool operator!=(const Vector3& left, const Vector3& right);
 }

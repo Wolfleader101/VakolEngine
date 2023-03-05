@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Math/Vector2.hpp"
-#include "Math/Vector3.hpp"
+#include "Model/Math/Vector2.hpp"
+#include "Model/Math/Vector3.hpp"
 
 #include <vector>
 
@@ -9,9 +9,9 @@ typedef unsigned int uint;
 
 struct Vertex
 {
-	Vector3 position;
+	Vakol::Model::Math::Vector3 position;
 	//ADD THIS LATER//Vector3 normal;
-	Vector2 uv;
+	Vakol::Model::Math::Vector2 uv;
 };
 
 struct Mesh
