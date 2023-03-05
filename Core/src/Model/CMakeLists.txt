@@ -22,16 +22,10 @@ src/Model/Math/Vector2.hpp
 src/Model/Math/Vector2.cpp
 
 #ECS
-src/Model/ECS/Components.hpp
-src/Model/ECS/Components.cpp
+src/Model/Components.hpp
+src/Model/Components.cpp
 
-src/Model/ECS/Entity.hpp
-src/Model/ECS/Entity.cpp
-
-src/Model/ECS/EntityList.hpp
-src/Model/ECS/EntityList.cpp
-
-src/Model/ECS/System.hpp
-src/Model/ECS/System.cpp
+src/Model/Entity.hpp
+src/Model/Entity.cpp
 
 PARENT_SCOPE)

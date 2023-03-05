@@ -1,6 +1,6 @@
 #include "System.hpp"
 
-#include <Model/ECS/Components.hpp>
+#include <Model/Components.hpp>
 
 
 namespace Vakol::Model::ECS::System

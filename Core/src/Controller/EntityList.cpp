@@ -1,8 +1,8 @@
 #include "EntityList.hpp"
 
-#include <Model/ECS/Entity.hpp>
-#include <Model/ECS/Components.hpp>
-#include <Model/ECS/System.hpp>
+#include <Model/Entity.hpp>
+#include <Model/Components.hpp>
+#include <Controller/System.hpp>
 
 #include <Controller/Logger.hpp>
 

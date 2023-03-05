@@ -6,7 +6,7 @@
 
 
 #include <Controller/Logger.hpp>
-#include <Model/ECS/EntityList.hpp>
+#include <Controller/EntityList.hpp>
 
 
 
