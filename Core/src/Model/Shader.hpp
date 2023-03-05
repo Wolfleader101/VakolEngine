@@ -1,10 +1,5 @@
 #pragma once
 
-#include <string>
-#include <memory>
-
-#include "Math/Math.hpp"
-
 namespace Vakol::Model 
 {
     class Shader 
