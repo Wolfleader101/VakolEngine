@@ -11,15 +11,15 @@ namespace Vakol::Model
 
 		~GLTexture() override;
 
-		void Bind() const override;
+		void Bind(const unsigned int unit) const override;
 
 		void Unbind() const override;
 
 		unsigned int GetID() const override;
 
-		std::unique_ptr<unsigned char*> GetTexture();
-
 	private:
-		unsigned int id;
+		unsigned int id = 0;
+	private:
+		std::unique_ptr<unsigned char*> GetTextureFromFile(const std::string& name, int& width, int& height, int& colorDepth) const;
 	};
 }
