@@ -9,6 +9,9 @@ namespace Vakol::Model
 {
 	GLVertexArray::GLVertexArray(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices)
 	{
+		this->vertex_count = vertices.size();
+		this->index_count = indices.size();
+
 		glGenVertexArrays(1, &this->id);
 		glBindVertexArray(this->id);
 
@@ -40,6 +43,16 @@ namespace Vakol::Model
 	void GLVertexArray::Unbind() const
 	{
 		glBindVertexArray(0);
+	}
+
+	const unsigned int GLVertexArray::GetVertexCount() const
+	{
+		return this->vertex_count;
+	}
+
+	const unsigned int GLVertexArray::GetIndexCount() const
+	{
+		return this->index_count;
 	}
 
 	/*********************************************/
