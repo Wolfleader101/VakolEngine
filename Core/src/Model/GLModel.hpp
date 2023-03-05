@@ -3,13 +3,22 @@
 #include "Model.hpp"
 #include "GLMaterial.hpp"
 
+#include "GLBuffer.hpp"
+
+#include <map>
+
 namespace Vakol::Model
 {
 	class GLMesh : public Mesh
 	{
+	public:
+		GLMesh(const std::shared_ptr<GLVertexArray>& VAO);
+
 		~GLMesh() override;
 
 		void Draw() const override;
+
+		std::shared_ptr<GLVertexArray> VAO;
 	};
 
 	class GLModel : public Model
@@ -19,11 +28,9 @@ namespace Vakol::Model
 
 		void Draw() const override;
 
-		void AddMesh(const GLMesh& mesh);
-		void AddMaterial(const GLMaterial& material);
+		void AddMesh(const std::shared_ptr<GLVertexArray>& VAO, const std::string& shader);
 
 	private:
-		std::vector<std::shared_ptr<GLMesh>> meshes;
-		std::vector<std::shared_ptr<GLMaterial>> materials;
+		std::map<GLMesh, GLMaterial> meshes;
 	};
 }
