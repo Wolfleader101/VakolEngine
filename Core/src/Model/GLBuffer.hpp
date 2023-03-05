@@ -15,7 +15,7 @@ namespace Vakol::Model
 		void Unbind() const override;
 
 	private:
-		unsigned int id;
+		unsigned int id = 0;
 	};
 
 	class GLIndexBuffer : public IndexBuffer
@@ -29,7 +29,7 @@ namespace Vakol::Model
 		void Unbind() const override;
 
 	private:
-		unsigned int id;
+		unsigned int id = 0;
 	};
 
 	class GLVertexArray : public VertexArray
@@ -42,8 +42,14 @@ namespace Vakol::Model
 		void Bind() const override;
 		void Unbind() const override;
 
+		const unsigned int GetVertexCount() const;
+		const unsigned int GetIndexCount() const;
+
 	private:
-		unsigned int id;
+		unsigned int id = 0;
+
+		unsigned int vertex_count = 0;
+		unsigned int index_count = 0;
 
 		std::shared_ptr<GLVertexBuffer> vertexBuffer;
 		std::shared_ptr<GLIndexBuffer> indexBuffer;
