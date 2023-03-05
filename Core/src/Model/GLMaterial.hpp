@@ -12,13 +12,13 @@ namespace Vakol::Model
 {
 	class GLMaterial : public Material
 	{
-		GLMaterial(const GLShader& shader);
+	public:
 		~GLMaterial() override;
 
 		void Bind() const override;
 		void Unbind() const override;
 
-		void AddTexture(const GLTexture& texture);
+		void AddTexture(const std::shared_ptr<GLTexture>& texture);
 
 		void SetBool(const std::string& name, const bool value) override;
 		void SetInt(const std::string& name, const int value) override;
