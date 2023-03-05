@@ -144,14 +144,14 @@ namespace Vakol::Model
 		shaders[name] = shader;
 	}
 
-	std::shared_ptr<GLShader> ShaderLibrary::GetShader(const std::string& name) const
+	std::shared_ptr<GLShader> ShaderLibrary::GetShader(const std::string& name)
 	{
 		assert(Contains(name));
 
 		return shaders.at(name);
 	}
 
-	bool ShaderLibrary::Contains(const std::string& name) const
+	bool ShaderLibrary::Contains(const std::string& name)
 	{
 		return shaders.find(name) != shaders.end();
 	}

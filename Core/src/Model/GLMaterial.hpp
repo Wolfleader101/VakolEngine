@@ -13,6 +13,7 @@ namespace Vakol::Model
 	class GLMaterial : public Material
 	{
 	public:
+		GLMaterial(const std::shared_ptr<GLShader>& shader);
 		~GLMaterial() override;
 
 		void Bind() const override;

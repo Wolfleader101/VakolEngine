@@ -34,13 +34,13 @@ namespace Vakol::Model
     class ShaderLibrary
     {
     public:
-        void AddShader(const std::string& name, const std::shared_ptr<GLShader>& shader);
+        static void AddShader(const std::string& name, const std::shared_ptr<GLShader>& shader);
 
-        std::shared_ptr<GLShader> GetShader(const std::string& name) const;
+        static std::shared_ptr<GLShader> GetShader(const std::string& name);
 
-        bool Contains(const std::string& name) const;
+        static bool Contains(const std::string& name);
 
     private:
-        std::map<std::string, std::shared_ptr<GLShader>> shaders;
+        static std::map<std::string, std::shared_ptr<GLShader>> shaders;
     };
 }
