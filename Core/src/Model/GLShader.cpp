@@ -148,7 +148,7 @@ namespace Vakol::Model
 	{
 		assert(Contains(name));
 
-		return shaders[name];
+		return shaders.at(name);
 	}
 
 	bool ShaderLibrary::Contains(const std::string& name) const
