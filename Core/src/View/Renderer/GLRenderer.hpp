@@ -4,9 +4,7 @@
 
 #include <Model/GLModel.hpp>
 
-using Vakol::Model::GLModel;
 using Vakol::Model::GLVertexArray;
-
 using Vakol::Model::GLShader;
 
 namespace Vakol::View 
@@ -19,6 +17,6 @@ namespace Vakol::View
 
     private:
         std::shared_ptr<GLShader> shader;
-        std::shared_ptr<GLVertexArray> VAO;
+        GLVertexArray VAO;
     };
 }

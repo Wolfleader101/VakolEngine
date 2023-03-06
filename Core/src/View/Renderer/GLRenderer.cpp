@@ -41,7 +41,8 @@ namespace Vakol::View
             1, 2, 3
         };
 
-        VAO = std::make_shared<GLVertexArray>(vertices, indices);
+        //VAO = std::make_shared<GLVertexArray>(vertices, indices);
+        VAO = GLVertexArray(vertices, indices);
     };
 
     void GLRenderer::Update(const Controller::Time& time) 
@@ -51,7 +52,8 @@ namespace Vakol::View
 
         shader->Bind();
         
-        VAO->Bind();
+        VAO.Bind();
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        VAO.Unbind();
     };
 }

@@ -5,6 +5,8 @@
 
 #include "GLBuffer.hpp"
 
+#include <iostream>
+
 namespace Vakol::Model
 {
 	GLVertexArray::GLVertexArray(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices)
@@ -38,9 +40,10 @@ namespace Vakol::Model
 		glBindVertexArray(0);
 	}
 
+	// REMINDER TO UN-COMMENT THIS!
 	GLVertexArray::~GLVertexArray()
 	{
-		glDeleteVertexArrays(1, &this->id);
+		//glDeleteVertexArrays(1, &this->id);
 	}
 
 	void GLVertexArray::Bind() const
