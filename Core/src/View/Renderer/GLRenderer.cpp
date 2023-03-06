@@ -11,6 +11,8 @@
 using Vakol::Model::GLShader;
 using Vakol::Model::GLMesh;
 
+using Vakol::Model::DRAW_TYPE;
+
 using Vakol::Model::Vertex;
 
 using Vakol::Model::GLVertexArray;
@@ -27,13 +29,13 @@ namespace Vakol::View
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_TEXTURE_2D);
 
-        auto shader = GLShader("basic.vert", "basic.frag");
+        shader = GLShader("basic.vert", "basic.frag").GetID();
 
         std::vector<Vertex> vertices = { 
             {
-                {Vec3(-0.5f,  -0.5f, 0.0f),  Vec2(0.0f, 0.0f)},
-                {Vec3( 0.5f,  -0.5f, 0.0f),  Vec2(1.0f, 0.0f)},
-                {Vec3( 0.0f,   0.5f, 0.0f),  Vec2(0.5f, 1.0f)}
+                {Vec3(-0.5f,  -0.5f, 0.0f)},
+                {Vec3( 0.5f,  -0.5f, 0.0f)},
+                {Vec3( 0.0f,   0.5f, 0.0f)}
             }
         };
 
@@ -42,11 +44,26 @@ namespace Vakol::View
             0, 1, 3
         };
 
-        const auto vao = GLVertexArray(vertices, indices);
+        VAO = GLVertexArray(vertices, indices);
 
-        model.AddMesh(vao);
+        std::cout << VAO.GetID() << std::endl;
 
-        std::cout << "Mesh Added" << std::endl;
+        //glGenVertexArrays(1, &vao);
+        //glGenBuffers(1, &vbo);
+        //glGenBuffers(1, &ibo);
+
+        //glBindVertexArray(vao);
+
+        //glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        //glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
+
+        //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+        //glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
+
+        //glEnableVertexAttribArray(0);
+        //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+
+        //glBindVertexArray(0);
     };
 
     void GLRenderer::Update(const Controller::Time& time) 
@@ -54,6 +71,10 @@ namespace Vakol::View
         glClearColor(0.52941f, 0.80784f, 0.92157f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        //model->Draw();
+        glUseProgram(shader);
+        
+
+        glBindVertexArray(VAO.GetID());
+        glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
     };
 }

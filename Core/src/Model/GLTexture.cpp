@@ -1,4 +1,4 @@
-#define STBI_IMAGE_IMPLEMENTATION
+#define STB_IMAGE_IMPLEMENTATION
 
 #include <string>
 #include <vector>

@@ -7,8 +7,9 @@ namespace Vakol::Model
 	class GLVertexBuffer : public VertexBuffer
 	{
 	public:
-		GLVertexBuffer() = default;
-		GLVertexBuffer(const std::vector<Vertex>& vertices);
+		GLVertexBuffer();
+
+		void GenerateBuffer(const std::vector<Vertex>& vertices);
 
 		~GLVertexBuffer() override;
 
@@ -22,8 +23,9 @@ namespace Vakol::Model
 	class GLIndexBuffer : public IndexBuffer
 	{
 	public:
-        GLIndexBuffer() = default;
-		GLIndexBuffer(const std::vector<unsigned int>& indices);
+        GLIndexBuffer();
+
+		void GenerateBuffer(const std::vector<unsigned int>& indices);
 
 		~GLIndexBuffer() override;
 

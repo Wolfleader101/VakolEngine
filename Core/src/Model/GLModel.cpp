@@ -1,8 +1,6 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include <vector>
-
 #include <iostream>
 
 #include "GLModel.hpp"
@@ -26,38 +24,32 @@ namespace Vakol::Model
 	void GLMesh::Draw() const
 	{
 		this->VAO.Bind();
-		glDrawArrays(GL_TRIANGLES, 0, this->VAO.GetVertexCount());
+        glDrawElements(GL_TRIANGLES, this->VAO.GetIndexCount(), GL_UNSIGNED_INT, 0);
 		this->VAO.Unbind();
 	}
 
 	GLModel::~GLModel()
 	{
-		//for (const auto& it : meshes)
-		//{
-		//	//it.first->~GLMesh();
-		//	//it.second->~GLMaterial();
-		//}
+		for (const auto& it : meshes)
+		{
+			it.first.~GLMesh();
+			it.second.~GLMaterial();
+		}
 	}
 
-	void GLModel::Draw() const
-	{
-		//for (const auto& it : meshes)
-		//{
-		//	//it.second->Bind();
-
-		//	//it.first->VAO->Bind();
-		//}
-	}
-
-	void GLModel::AddMesh(const GLVertexArray& VAO) 
+	void GLModel::Draw(const DRAW_TYPE type) const 
 	{ 
-		meshes.push_back(GLMesh(VAO));
+		for (const auto& it : meshes) 
+		{
+            if (type == DRAW_TYPE::MATERIAL)
+				it.second.Bind();
+            else
+				it.first.Draw();    
+		}
 	}
 
-	//void GLModel::AddMesh(const std::shared_ptr<GLVertexArray>& VAO, const std::shared_ptr<GLShader>& shader)
-	//{
- //       auto mesh = GLMesh(VAO);
-
-
-	//}
+	void GLModel::AddMesh(const GLVertexArray& VAO, const GLShader& shader)
+	{ 
+		meshes.insert(std::pair<GLMesh, GLMaterial>(VAO, shader));
+	}
 }

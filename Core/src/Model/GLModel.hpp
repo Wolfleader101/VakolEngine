@@ -9,6 +9,7 @@
 
 namespace Vakol::Model
 {
+
 	class GLMesh : public Mesh
 	{
 	public:
@@ -27,7 +28,7 @@ namespace Vakol::Model
 
 	struct MeshCompare
 	{
-            bool operator()(const GLMesh& left, const GLMesh& right) const;
+        bool operator()(const GLMesh& left, const GLMesh& right) const;
 	};
 
 	class GLModel : public Model
@@ -35,13 +36,10 @@ namespace Vakol::Model
 	public:
 		~GLModel() override;
 
-		void Draw() const override;
+		void Draw(const DRAW_TYPE type) const override;
 
-		void AddMesh(const GLVertexArray& VAO);
-		//void AddMesh(const std::shared_ptr<GLVertexArray>& VAO, const std::shared_ptr<GLShader>& shader);
+		void AddMesh(const GLVertexArray& VAO, const GLShader& shader);
 
-	private:
-        std::vector<GLMesh> meshes = std::vector<GLMesh>();
-		//std::map<GLMesh, GLMaterial, MeshCompare> meshes;
+		std::map<GLMesh, GLMaterial, MeshCompare> meshes;
 	};
 }

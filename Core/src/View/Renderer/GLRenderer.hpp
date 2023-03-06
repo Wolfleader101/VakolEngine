@@ -5,6 +5,7 @@
 #include <Model/GLModel.hpp>
 
 using Vakol::Model::GLModel;
+using Vakol::Model::GLVertexArray;
 
 namespace Vakol::View 
 {
@@ -15,6 +16,7 @@ namespace Vakol::View
         void Update(const Controller::Time& time) override;
 
     private:
-        GLModel model;
+        unsigned int shader;
+        GLVertexArray VAO;
     };
 }

@@ -13,10 +13,13 @@ namespace Vakol::Model
 		this->index_count = static_cast<unsigned int>(indices.size());
 
 		glGenVertexArrays(1, &this->id);
-		glBindVertexArray(this->id);
+        this->vertexBuffer = GLVertexBuffer();
+		this->indexBuffer = GLIndexBuffer();
 
-		this->vertexBuffer = GLVertexBuffer(vertices);
-		this->indexBuffer = GLIndexBuffer(indices);
+		glBindVertexArray(this->id);
+                
+		vertexBuffer.GenerateBuffer(vertices);
+        indexBuffer.GenerateBuffer(indices);
 
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
@@ -24,8 +27,8 @@ namespace Vakol::Model
 		//glEnableVertexAttribArray(1);
 		//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
 
-		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, uv));
+		//glEnableVertexAttribArray(1);
+		//glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, uv));
 
 		glBindVertexArray(0);
 	}
@@ -63,9 +66,13 @@ namespace Vakol::Model
 	/*********************************************/
 	/*********************************************/
 
-	GLVertexBuffer::GLVertexBuffer(const std::vector<Vertex>& vertices)
+	GLVertexBuffer::GLVertexBuffer() 
+	{ 
+		glGenBuffers(1, &this->id); 
+	}
+
+	void GLVertexBuffer::GenerateBuffer(const std::vector<Vertex>& vertices)
 	{
-		glGenBuffers(1, &this->id);
 		glBindBuffer(GL_ARRAY_BUFFER, this->id);
 		glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
 	}
@@ -88,11 +95,15 @@ namespace Vakol::Model
 	/**************************************/
 	/**************************************/
 
-	GLIndexBuffer::GLIndexBuffer(const std::vector<unsigned int>& indices)
+	GLIndexBuffer::GLIndexBuffer()
 	{
 		glGenBuffers(1, &this->id);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->id);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
+	}
+
+	void GLIndexBuffer::GenerateBuffer(const std::vector<unsigned int>& indices)
+	{
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->id);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
 	}
 
 	GLIndexBuffer::~GLIndexBuffer()
