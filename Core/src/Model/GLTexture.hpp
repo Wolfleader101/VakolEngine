@@ -15,7 +15,7 @@ namespace Vakol::Model
 
 		void Unbind() const override;
 
-		unsigned int GetID() const override;
+		const unsigned int GetID() const override;
 
 	private:
 		unsigned int id = 0;

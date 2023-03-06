@@ -10,7 +10,7 @@ namespace Vakol::Model
     struct Vertex 
     {
         Math::Vec3 position;
-        Math::Vec3 normal;
+        //Math::Vec3 normal;
         Math::Vec2 uv;
     };
 
@@ -22,6 +22,8 @@ namespace Vakol::Model
         virtual void Bind() const = 0;
 
         virtual void Unbind() const = 0;
+
+        virtual const unsigned int GetID() const = 0;
     };
 
     class VertexBuffer

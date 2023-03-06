@@ -1,6 +1,6 @@
 #pragma once
 
-#include <map>
+#include <unordered_map>
 
 #include "Model.hpp"
 
@@ -18,7 +18,10 @@ namespace Vakol::Model
 
 		void Draw() const override;
 
-		std::shared_ptr<GLVertexArray> VAO;
+		const unsigned int GetID() const override;
+
+	private:
+		std::shared_ptr<GLVertexArray> VAO = nullptr;
 	};
 
 	class GLModel : public Model
@@ -28,9 +31,11 @@ namespace Vakol::Model
 
 		void Draw() const override;
 
-		void AddMesh(const std::shared_ptr<GLVertexArray>& VAO, const std::shared_ptr<GLShader>& shader);
+		void AddMesh(const std::shared_ptr<GLVertexArray>& VAO);
+        void AddMaterial(const std::shared_ptr<GLShader>& shader);
 
 	private:
-		std::map<std::shared_ptr<GLMesh>, std::shared_ptr<GLMaterial>> meshes;
+		std::unordered_map<unsigned int, std::shared_ptr<GLMesh>> meshes;
+        std::unordered_map<unsigned int, std::shared_ptr<GLMaterial>> materials;
 	};
 }

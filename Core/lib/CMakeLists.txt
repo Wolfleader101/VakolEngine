@@ -22,7 +22,7 @@ add_subdirectory(nlohmann_json)
 add_subdirectory(reactphysics3d)
 add_subdirectory(sol2)
 add_subdirectory(lua)
-add_subdirectory(assimp)
+#add_subdirectory(assimp)
 
 target_include_directories(imgui PUBLIC glfw/include)
 
@@ -37,6 +37,6 @@ target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC
     nlohmann_json/include
     reactphysics3d/include
     sol2/include
-    assimp/include
+    #assimp/include
     lua/lua
 )

@@ -19,6 +19,8 @@ namespace Vakol::Model
 		void Bind() const override;
 		void Unbind() const override;
 
+		const unsigned int GetID() const override;
+
 		void AddTexture(const std::shared_ptr<GLTexture>& texture);
 
 		void SetBool(const std::string& name, const bool value) override;
@@ -37,6 +39,6 @@ namespace Vakol::Model
 		void SetMat4(const std::string& name, const glm::mat4& value) override;
 	private:
 		std::vector<std::shared_ptr<GLTexture>> textures;
-		std::shared_ptr<GLShader> shader;
+		std::shared_ptr<GLShader> shader = nullptr;
 	};
 }

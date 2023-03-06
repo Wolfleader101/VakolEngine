@@ -11,6 +11,6 @@ namespace Vakol::Model
 
 		virtual void Unbind() const = 0;
 
-		virtual unsigned int GetID() const = 0;
+		virtual const unsigned int GetID() const = 0;
 	};
 }

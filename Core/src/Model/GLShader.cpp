@@ -12,7 +12,7 @@ namespace Vakol::Model
 {
 	std::string GLShader::ReadFile(const std::string& name)
 	{
-		const std::string filepath = "../Core/assets/" + name;
+		const std::string filepath = "assets/" + name;
 
 		std::string result;
 
@@ -45,11 +45,6 @@ namespace Vakol::Model
 		std::string fsCode = ReadFile(fragment);
 
 		CompileShader(vsCode, fsCode);
-	}
-
-	GLShader::GLShader(const std::string& program)
-	{
-		std::string sCode = ReadFile(program);
 	}
 
 	void GLShader::CompileShader(const std::string& vertex, const std::string& fragment)
@@ -132,7 +127,7 @@ namespace Vakol::Model
         glUseProgram(0);
     }
 
-	unsigned int GLShader::GetID() const
+	const unsigned int GLShader::GetID() const
 	{
 		return this->id;
 	}

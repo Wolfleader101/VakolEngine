@@ -3,6 +3,8 @@
 
 #include <vector>
 
+#include <iostream>
+
 #include "GLModel.hpp"
 
 namespace Vakol::Model
@@ -17,6 +19,8 @@ namespace Vakol::Model
 		this->VAO->~GLVertexArray();
 	}
 
+	const unsigned int GLMesh::GetID() const { return this->VAO->GetID(); }
+
 	void GLMesh::Draw() const
 	{
 		this->VAO->Bind();
@@ -26,27 +30,34 @@ namespace Vakol::Model
 
 	GLModel::~GLModel()
 	{
-		for (const auto& it : meshes)
-		{
-			it.first->~GLMesh();
-			it.second->~GLMaterial();
-		}
+		//for (const auto& it : meshes)
+		//{
+		//	//it.first->~GLMesh();
+		//	//it.second->~GLMaterial();
+		//}
 	}
 
 	void GLModel::Draw() const
 	{
-		for (const auto& it : meshes)
-		{
-			it.second->Bind();
+		//for (const auto& it : meshes)
+		//{
+		//	//it.second->Bind();
 
-			it.first->VAO->Bind();
-		}
+		//	//it.first->VAO->Bind();
+		//}
 	}
 
-	void GLModel::AddMesh(const std::shared_ptr<GLVertexArray>& VAO, const std::shared_ptr<GLShader>& shader)
+	void GLModel::AddMesh(const std::shared_ptr<GLVertexArray>& VAO)
 	{
-		auto pair = std::make_pair <std::shared_ptr<GLMesh>, std::shared_ptr<GLMaterial>>;
+        auto mesh = std::make_shared<GLMesh>(VAO);
 
-		meshes.emplace(pair(std::make_shared<GLMesh>(VAO), std::make_shared<GLMaterial>(shader)));
+        meshes.insert(std::pair<unsigned int, std::shared_ptr<GLMesh>>(mesh->GetID(), mesh));
+	}
+
+	void GLModel::AddMaterial(const std::shared_ptr<GLShader>& shader)
+	{
+        auto material = std::make_shared<GLMaterial>(shader);
+
+		materials.insert(std::pair<unsigned int, std::shared_ptr<GLMaterial>>(material->GetID(), material));
 	}
 }

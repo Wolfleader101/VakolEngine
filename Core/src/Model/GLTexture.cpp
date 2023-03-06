@@ -70,7 +70,7 @@ namespace Vakol::Model
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
-	unsigned int GLTexture::GetID() const
+	const unsigned int GLTexture::GetID() const
 	{
 		return this->id;
 	}

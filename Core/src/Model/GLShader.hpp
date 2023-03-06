@@ -11,14 +11,13 @@ namespace Vakol::Model
 	{
     public:
         GLShader(const std::string& vertex, const std::string& fragment);
-        GLShader(const std::string& program);
 
 		~GLShader() override;
 
         void Bind() const override;
         void Unbind() const override;
 
-        unsigned int GetID() const;
+        const unsigned int GetID() const override;
 
     private:
         unsigned int id = 0;

@@ -22,6 +22,8 @@ namespace Vakol::Model
 			this->textures[i]->~GLTexture();
 	}
 
+	const unsigned int GLMaterial::GetID() const { return shader->GetID(); }
+
 	void GLMaterial::AddTexture(const std::shared_ptr<GLTexture>& texture)
 	{
 		textures.push_back(texture);
