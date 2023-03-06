@@ -79,11 +79,6 @@ namespace Vakol::Model
 		//CreateProgram(vertex, fragment);
 	}
 
-	void GLShader::CreateProgram(const std::string& vertex, const std::string& fragment)
-	{
-
-	}
-
 	void GLShader::CheckCompileErrors(const unsigned int shader, const std::string& type)
 	{
 		int success;

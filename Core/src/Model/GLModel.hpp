@@ -12,7 +12,8 @@ namespace Vakol::Model
 	class GLMesh : public Mesh
 	{
 	public:
-		GLMesh(const std::shared_ptr<GLVertexArray>& VAO);
+        GLMesh() = default;
+		GLMesh(const GLVertexArray& VAO);
 
 		~GLMesh() override;
 
@@ -21,7 +22,7 @@ namespace Vakol::Model
 		const unsigned int GetID() const override;
 
 	private:
-		std::shared_ptr<GLVertexArray> VAO = nullptr;
+		GLVertexArray VAO;
 	};
 
 	struct MeshCompare
@@ -36,9 +37,11 @@ namespace Vakol::Model
 
 		void Draw() const override;
 
-		void AddMesh(const std::shared_ptr<GLVertexArray>& VAO, const std::shared_ptr<GLShader>& shader);
+		void AddMesh(const GLVertexArray& VAO);
+		//void AddMesh(const std::shared_ptr<GLVertexArray>& VAO, const std::shared_ptr<GLShader>& shader);
 
 	private:
-		std::map<GLMesh, GLMaterial, MeshCompare> meshes;
+        std::vector<GLMesh> meshes = std::vector<GLMesh>();
+		//std::map<GLMesh, GLMaterial, MeshCompare> meshes;
 	};
 }

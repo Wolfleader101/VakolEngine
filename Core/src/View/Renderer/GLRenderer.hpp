@@ -15,6 +15,6 @@ namespace Vakol::View
         void Update(const Controller::Time& time) override;
 
     private:
-        std::shared_ptr<GLModel> model;
+        GLModel model;
     };
 }

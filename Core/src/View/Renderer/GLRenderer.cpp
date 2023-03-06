@@ -27,7 +27,7 @@ namespace Vakol::View
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_TEXTURE_2D);
 
-        auto shader = std::make_shared<GLShader>("basic.vert", "basic.frag");
+        auto shader = GLShader("basic.vert", "basic.frag");
 
         std::vector<Vertex> vertices = { 
             {
@@ -42,9 +42,9 @@ namespace Vakol::View
             0, 1, 3
         };
 
-        const auto vao = std::make_shared<GLVertexArray>(vertices, indices);
+        const auto vao = GLVertexArray(vertices, indices);
 
-        model->AddMesh(vao, shader);
+        model.AddMesh(vao);
 
         std::cout << "Mesh Added" << std::endl;
     };

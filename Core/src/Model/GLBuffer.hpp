@@ -7,13 +7,13 @@ namespace Vakol::Model
 	class GLVertexBuffer : public VertexBuffer
 	{
 	public:
+		GLVertexBuffer() = default;
 		GLVertexBuffer(const std::vector<Vertex>& vertices);
 
 		~GLVertexBuffer() override;
 
 		void Bind() const override;
 		void Unbind() const override;
-
 
 	private:
 		unsigned int id = 0;
@@ -22,6 +22,7 @@ namespace Vakol::Model
 	class GLIndexBuffer : public IndexBuffer
 	{
 	public:
+        GLIndexBuffer() = default;
 		GLIndexBuffer(const std::vector<unsigned int>& indices);
 
 		~GLIndexBuffer() override;
@@ -36,6 +37,7 @@ namespace Vakol::Model
 	class GLVertexArray : public VertexArray
 	{
 	public:
+		GLVertexArray() = default;
 		GLVertexArray(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices);
 
 		~GLVertexArray() override;
@@ -53,7 +55,7 @@ namespace Vakol::Model
 		unsigned int vertex_count = 0;
 		unsigned int index_count = 0;
 
-		std::shared_ptr<GLVertexBuffer> vertexBuffer = nullptr;
-		std::shared_ptr<GLIndexBuffer> indexBuffer = nullptr;
+		GLVertexBuffer vertexBuffer;
+        GLIndexBuffer indexBuffer;
 	};
 }

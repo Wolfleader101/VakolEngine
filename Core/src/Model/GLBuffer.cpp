@@ -15,8 +15,8 @@ namespace Vakol::Model
 		glGenVertexArrays(1, &this->id);
 		glBindVertexArray(this->id);
 
-		this->vertexBuffer = std::make_shared<GLVertexBuffer>(vertices);
-		this->indexBuffer = std::make_shared<GLIndexBuffer>(indices);
+		this->vertexBuffer = GLVertexBuffer(vertices);
+		this->indexBuffer = GLIndexBuffer(indices);
 
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
