@@ -38,6 +38,14 @@ namespace Vakol::Controller {
 
         // Physics::Init();
 
+        VK_INFO("Calling main.lua...");
+
+        lua.RunFile("scripts/main.lua");
+
+        sol::function luaMain = lua.GetState()['main'];
+
+        luaMain();
+
         m_running = true;
     }
 
@@ -54,8 +62,24 @@ namespace Vakol::Controller {
             return std::nullopt;
         }
         sol::optional<int> windowWidth = config["window"]["w"];
+        if (!windowWidth) {
+            VK_ERROR("CONFIG ERROR: Window Width Not set");
+            return std::nullopt;
+        }
         sol::optional<int> windowHeight = config["window"]["h"];
+        if (!windowHeight) {
+            VK_ERROR("CONFIG ERROR: Window Height Not Set");
+            return std::nullopt;
+        }
         sol::optional<std::string> rendererType = config["renderer"];
+        if (!rendererType) {
+            VK_ERROR("CONFIG ERROR: Renderer Not Set");
+            return std::nullopt;
+        }
+
+        Model::GameConfig cfg = {name.value(), windowWidth.value(), windowHeight.value(), rendererType.value()};
+
+        return cfg;
     }
 
     Application::~Application() {
