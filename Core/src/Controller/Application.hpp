@@ -15,6 +15,8 @@
 #include <Model/Entity.hpp>
 #include <Model/GameConfig.hpp>
 
+#include "Scene.hpp"
+
 namespace Vakol::Controller {
     /**
      * @class Application
@@ -116,6 +118,8 @@ namespace Vakol::Controller {
          *
          */
         LuaState lua;
+
+        std::vector<Scene> scenes;
 
         /**
          * @brief if the app should be running
