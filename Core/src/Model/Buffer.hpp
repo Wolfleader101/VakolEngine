@@ -25,24 +25,4 @@ namespace Vakol::Model
 
         virtual const unsigned int GetID() const = 0;
     };
-
-    class VertexBuffer
-    {
-    public:
-        virtual ~VertexBuffer() = default;
-
-        virtual void Bind() const = 0;
-
-        virtual void Unbind() const = 0;
-    };
-
-    class IndexBuffer
-    {
-    public:
-        virtual ~IndexBuffer() = default;
-
-        virtual void Bind() const = 0;
-
-        virtual void Unbind() const = 0;
-    };
 }

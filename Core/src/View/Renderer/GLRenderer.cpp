@@ -44,26 +44,7 @@ namespace Vakol::View
             0, 1, 3
         };
 
-        VAO = GLVertexArray(vertices, indices);
-
-        std::cout << VAO.GetID() << std::endl;
-
-        //glGenVertexArrays(1, &vao);
-        //glGenBuffers(1, &vbo);
-        //glGenBuffers(1, &ibo);
-
-        //glBindVertexArray(vao);
-
-        //glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        //glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
-
-        //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-        //glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
-
-        //glEnableVertexAttribArray(0);
-        //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
-
-        //glBindVertexArray(0);
+        VAO = std::make_shared<GLVertexArray>(vertices, indices);
     };
 
     void GLRenderer::Update(const Controller::Time& time) 
@@ -73,8 +54,7 @@ namespace Vakol::View
 
         glUseProgram(shader);
         
-
-        glBindVertexArray(VAO.GetID());
+        VAO->Bind();
         glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
     };
 }

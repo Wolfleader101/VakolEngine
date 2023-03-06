@@ -17,6 +17,6 @@ namespace Vakol::View
 
     private:
         unsigned int shader;
-        GLVertexArray VAO;
+        std::shared_ptr<GLVertexArray> VAO;
     };
 }
