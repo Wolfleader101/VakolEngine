@@ -2,7 +2,6 @@
 
 #include <reactphysics3d/reactphysics3d.h>
 
-#include <Model/Shader.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>
 #include <string>
