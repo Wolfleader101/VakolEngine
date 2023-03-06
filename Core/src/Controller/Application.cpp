@@ -1,9 +1,9 @@
 #include "Application.hpp"
 
+#include <Controller/LuaAccess.hpp>
+#include <View/Renderer/RendererFactory.hpp>
+
 #include "Logger.hpp"
-#include "LuaState.hpp"
-#include "Singleton.hpp"
-#include "View/Renderer/GLRenderer.hpp"
 
 // #include "JSON/Json.hpp"
 // #include "Physics/Physics.hpp"
@@ -13,17 +13,22 @@ namespace Vakol::Controller {
 
     Application::Application() : m_running(false), m_window(nullptr), m_renderer(nullptr) { Logger::Init(); };
 
-    void Application::Init(const std::string& title, int width, int height) {
-        Singleton<LuaState>::GetInstance().RunScript("print('Initialising lua...')");
-
-        //! call lua init
-        //! READ CONFIG FILE
+    void Application::Init() {
+        // Controller::RegisterGameConfig(lua.GetState());
         // load type of renderer
         // get window config
         // get scripts to load
 
-        m_window = std::make_shared<View::Window>(title, width, height);
-        m_renderer = std::make_shared<View::GLRenderer>(m_window);
+        auto config = LoadConfig();
+        if (!config) {
+            VK_CRITICAL("CONFIG COULD NOT BE LOADED");
+            return;
+        }
+
+        m_window = std::make_shared<View::Window>(config.value().name, config.value().windowWidth,
+                                                  config.value().windowHeight);
+
+        m_renderer = CreateRenderer(config.value().rendererType, m_window);
 
         m_window->SetEventCallback(BIND_EVENT_FN(OnEvent));
 
@@ -34,6 +39,23 @@ namespace Vakol::Controller {
         // Physics::Init();
 
         m_running = true;
+    }
+
+    std::optional<Model::GameConfig> Application::LoadConfig() {
+        VK_INFO("Loading game_config.lua...");
+
+        lua.RunFile("scripts/game_config.lua");
+
+        sol::table config = lua.GetState()["game_config"];
+
+        sol::optional<std::string> name = config["name"];
+        if (!name) {
+            VK_ERROR("CONFIG ERROR: Game Name Not Set");
+            return std::nullopt;
+        }
+        sol::optional<int> windowWidth = config["window"]["w"];
+        sol::optional<int> windowHeight = config["window"]["h"];
+        sol::optional<std::string> rendererType = config["renderer"];
     }
 
     Application::~Application() {

@@ -11,7 +11,9 @@
 
 // just using this to test if ecs hooked in properly
 #include <Controller/EntityList.hpp>
+#include <Controller/LuaState.hpp>
 #include <Model/Entity.hpp>
+#include <Model/GameConfig.hpp>
 
 namespace Vakol::Controller {
     /**
@@ -27,13 +29,7 @@ namespace Vakol::Controller {
          */
         Application();
 
-        /**
-         * @brief Application constructor
-         * @param title of the window
-         * @param width of the window
-         * @param height of the window
-         */
-        void Init(const std::string& title = "Vakol Engine", int width = 1280, int height = 720);
+        void Init();
 
         /**
          * @brief destructor of the application
@@ -89,6 +85,13 @@ namespace Vakol::Controller {
         bool Application::OnKeyPressed(KeyPressedEvent& kev);
 
         /**
+         * @brief load the game config
+         *
+         * @return std::optional<GameConfig> return the config
+         */
+        std::optional<Model::GameConfig> LoadConfig();
+
+        /**
          * @brief the window of the application
          */
         std::shared_ptr<View::Window> m_window;
@@ -109,8 +112,14 @@ namespace Vakol::Controller {
         std::shared_ptr<View::Renderer> m_renderer;
 
         /**
+         * @brief holds the lua state
+         *
+         */
+        LuaState lua;
+
+        /**
          * @brief if the app should be running
          */
         bool m_running = true;
-    };
+    };  // namespace Vakol::Controller
 }  // namespace Vakol::Controller
