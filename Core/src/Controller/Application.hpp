@@ -9,10 +9,9 @@
 #include "Events/WindowEvent.hpp"
 #include "Time.hpp"
 
-//just using this to test if ecs hooked in properly
+// just using this to test if ecs hooked in properly
+#include <Controller/EntityList.hpp>
 #include <Model/Entity.hpp>
-#include <Controller/EntityList.hpp> 
-
 
 namespace Vakol::Controller {
     /**
@@ -99,11 +98,10 @@ namespace Vakol::Controller {
          */
         Time m_time;
 
-       
         /**
          * @brief the entity list of engine
          */
-        Vakol::Model::ECS::EntityList m_entityList; //to be moved to game/scene but for now it all works
+        // Vakol::Model::ECS::EntityList m_entityList;  // to be moved to game/scene but for now it all works
 
         /**
          * @brief the renderer instance of the class
