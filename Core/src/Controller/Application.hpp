@@ -104,11 +104,6 @@ namespace Vakol::Controller {
         Time m_time;
 
         /**
-         * @brief the entity list of engine
-         */
-        // Vakol::Model::ECS::EntityList m_entityList;  // to be moved to game/scene but for now it all works
-
-        /**
          * @brief the renderer instance of the class
          */
         std::shared_ptr<View::Renderer> m_renderer;

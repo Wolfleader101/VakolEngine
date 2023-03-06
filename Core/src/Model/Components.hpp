@@ -8,7 +8,7 @@
 #include <glm/gtx/quaternion.hpp>
 #include <string>
 
-namespace Vakol::Model::ECS::Components {
+namespace Vakol::Model::Components {
     /**
      * @struct Transform
      *
@@ -80,4 +80,4 @@ namespace Vakol::Model::ECS::Components {
         EntityType type; /**< Type of entity */
     };
 
-}  // namespace Vakol::Model::ECS::Components
+}  // namespace Vakol::Model::Components
