@@ -1,11 +1,5 @@
 SET(MODEL
 
-#Model
-src/Model/Model.hpp
-
-#Material
-src/Model/Material.hpp
-
 #Mesh
 src/Model/Mesh.hpp
 
