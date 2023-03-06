@@ -9,7 +9,7 @@ namespace Vakol::Model
 {
 	GLMaterial::GLMaterial(const std::shared_ptr<GLShader>& shader)
 	{
-
+		this->shader = shader;
 	}
 
 	GLMaterial::~GLMaterial()

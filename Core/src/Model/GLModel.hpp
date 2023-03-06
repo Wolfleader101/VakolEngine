@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Model.hpp"
-#include "GLMaterial.hpp"
-
-#include "GLBuffer.hpp"
-
 #include <map>
+
+#include "Model.hpp"
+
+#include "GLMaterial.hpp"
+#include "GLBuffer.hpp"
 
 namespace Vakol::Model
 {
@@ -28,9 +28,9 @@ namespace Vakol::Model
 
 		void Draw() const override;
 
-		void AddMesh(const std::shared_ptr<GLVertexArray>& VAO, const std::string& shader);
+		void AddMesh(const std::shared_ptr<GLVertexArray>& VAO, const std::shared_ptr<GLShader>& shader);
 
 	private:
-		std::map<GLMesh, GLMaterial> meshes;
+		std::map<std::shared_ptr<GLMesh>, std::shared_ptr<GLMaterial>> meshes;
 	};
 }

@@ -28,8 +28,8 @@ namespace Vakol::Model
 	{
 		for (const auto& it : meshes)
 		{
-			it.first.~GLMesh();
-			it.second.~GLMaterial();
+			it.first->~GLMesh();
+			it.second->~GLMaterial();
 		}
 	}
 
@@ -37,14 +37,16 @@ namespace Vakol::Model
 	{
 		for (const auto& it : meshes)
 		{
-			it.second.Bind();
+			it.second->Bind();
 
-			it.first.VAO->Bind();
+			it.first->VAO->Bind();
 		}
 	}
 
-	void GLModel::AddMesh(const std::shared_ptr<GLVertexArray>& VAO, const std::string& name)
+	void GLModel::AddMesh(const std::shared_ptr<GLVertexArray>& VAO, const std::shared_ptr<GLShader>& shader)
 	{
-		meshes.emplace(std::make_shared<GLMesh>(VAO), std::make_shared<GLMaterial>(name));
+		auto pair = std::make_pair <std::shared_ptr<GLMesh>, std::shared_ptr<GLMaterial>>;
+
+		meshes.emplace(pair(std::make_shared<GLMesh>(VAO), std::make_shared<GLMaterial>(shader)));
 	}
 }

@@ -137,7 +137,7 @@ namespace Vakol::Model
 		return this->id;
 	}
 
-	void ShaderLibrary::AddShader(const std::string& name, const std::shared_ptr<GLShader>& shader)
+	/*void ShaderLibrary::AddShader(const std::string& name, const std::shared_ptr<GLShader>& shader)
 	{
 		assert(!Contains(name));
 
@@ -154,5 +154,5 @@ namespace Vakol::Model
 	bool ShaderLibrary::Contains(const std::string& name)
 	{
 		return shaders.find(name) != shaders.end();
-	}
+	}*/
 }

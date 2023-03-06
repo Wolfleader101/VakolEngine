@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include <map>
+//#include <map>
 
 #include "Shader.hpp"
 
@@ -31,16 +31,16 @@ namespace Vakol::Model
         void CheckCompileErrors(const unsigned int shader, const std::string& type);
 	};
 
-    class ShaderLibrary
-    {
-    public:
-        static void AddShader(const std::string& name, const std::shared_ptr<GLShader>& shader);
+    //class ShaderLibrary
+    //{
+    //public:
+    //    static void AddShader(const std::string& name, const std::shared_ptr<GLShader>& shader);
 
-        static std::shared_ptr<GLShader> GetShader(const std::string& name);
+    //    static std::shared_ptr<GLShader> GetShader(const std::string& name);
 
-        static bool Contains(const std::string& name);
+    //    static bool Contains(const std::string& name);
 
-    private:
-        static std::map<std::string, std::shared_ptr<GLShader>> shaders;
-    };
+    //private:
+    //    static std::map<std::string, std::shared_ptr<GLShader>> shaders;
+    //};
 }

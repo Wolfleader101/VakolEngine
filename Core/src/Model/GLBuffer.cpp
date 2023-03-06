@@ -9,8 +9,8 @@ namespace Vakol::Model
 {
 	GLVertexArray::GLVertexArray(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices)
 	{
-		this->vertex_count = vertices.size();
-		this->index_count = indices.size();
+		this->vertex_count = static_cast<unsigned int>(vertices.size());
+		this->index_count = static_cast<unsigned int>(indices.size());
 
 		glGenVertexArrays(1, &this->id);
 		glBindVertexArray(this->id);
