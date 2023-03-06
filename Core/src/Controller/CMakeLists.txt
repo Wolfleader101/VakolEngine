@@ -9,5 +9,12 @@ src/Controller/Logger.cpp
 src/Controller/Time.hpp
 src/Controller/Camera.hpp
 src/Controller/Camera.cpp
+
+src/Controller/EntityList.hpp
+src/Controller/EntityList.cpp
+
+src/Controller/System.hpp
+src/Controller/System.cpp
+
 ${EVENTS}
 PARENT_SCOPE)

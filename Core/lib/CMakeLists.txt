@@ -24,8 +24,6 @@ add_subdirectory(sol2)
 add_subdirectory(lua)
 add_subdirectory(assimp)
 
-
-
 target_include_directories(imgui PUBLIC glfw/include)
 
 target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC
