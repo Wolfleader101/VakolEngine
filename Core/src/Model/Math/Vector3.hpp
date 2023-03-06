@@ -3,17 +3,17 @@
 #include "Math.hpp"
 
 namespace Vakol::Model::Math {
-struct Vector3 {
-    Vector3() = default;
+    struct Vector3 {
+        Vector3() = default;
 
-    Vector3(const float x, const float y, const float z) { this->vector = glm::vec3(x, y, z); }
+        Vector3(const float x, const float y, const float z);
 
-    Vector3(const glm::vec3& vec) { this->vector = vec; }
+        Vector3(const glm::vec3& vec);
 
-    glm::vec3 vector;
-};
+        glm::vec3 vector;
+    };
 
-typedef Vector3 Vec3;
+    typedef Vector3 Vec3;
 
 //Vector3 operator+(const Vector3& left, const Vector3& right) { return Vector3(left.vector + right.vector); }
 //
@@ -26,4 +26,4 @@ typedef Vector3 Vec3;
 //bool operator==(const Vector3& left, const Vector3& right) { return left.vector == right.vector; }
 //
 //bool operator!=(const Vector3& left, const Vector3& right) { return left.vector != right.vector; }
-}  // namespace Vakol::Model::Math
+}
