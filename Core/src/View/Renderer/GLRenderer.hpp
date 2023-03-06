@@ -7,6 +7,8 @@
 using Vakol::Model::GLModel;
 using Vakol::Model::GLVertexArray;
 
+using Vakol::Model::GLShader;
+
 namespace Vakol::View 
 {
     class GLRenderer : public Renderer 
@@ -16,7 +18,7 @@ namespace Vakol::View
         void Update(const Controller::Time& time) override;
 
     private:
-        unsigned int shader;
+        std::shared_ptr<GLShader> shader;
         std::shared_ptr<GLVertexArray> VAO;
     };
 }
