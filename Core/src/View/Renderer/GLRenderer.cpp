@@ -44,8 +44,7 @@ namespace Vakol::View
 
         const auto vao = std::make_shared<GLVertexArray>(vertices, indices);
 
-        model->AddMesh(vao);
-        //model->AddMaterial(shader);
+        model->AddMesh(vao, shader);
 
         std::cout << "Mesh Added" << std::endl;
     };

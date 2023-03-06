@@ -9,6 +9,8 @@
 
 namespace Vakol::Model
 {
+    bool MeshCompare::operator()(const GLMesh& left, const GLMesh& right) const { return left.GetID() < right.GetID(); }
+
 	GLMesh::GLMesh(const std::shared_ptr<GLVertexArray>& VAO)
 	{
 		this->VAO = VAO;
@@ -47,17 +49,11 @@ namespace Vakol::Model
 		//}
 	}
 
-	void GLModel::AddMesh(const std::shared_ptr<GLVertexArray>& VAO)
+	void GLModel::AddMesh(const std::shared_ptr<GLVertexArray>& VAO, const std::shared_ptr<GLShader>& shader)
 	{
-        auto mesh = std::make_shared<GLMesh>(VAO);
+        auto mesh = GLMesh(VAO);
+        auto material = GLMaterial(shader);
 
-        meshes.insert(std::pair<unsigned int, std::shared_ptr<GLMesh>>(mesh->GetID(), mesh));
-	}
-
-	void GLModel::AddMaterial(const std::shared_ptr<GLShader>& shader)
-	{
-        auto material = std::make_shared<GLMaterial>(shader);
-
-		materials.insert(std::pair<unsigned int, std::shared_ptr<GLMaterial>>(material->GetID(), material));
+        meshes.insert(std::pair<GLMesh, GLMaterial>(mesh, material));
 	}
 }
