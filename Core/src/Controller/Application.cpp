@@ -15,9 +15,7 @@ namespace Vakol::Controller {
 
     void Application::Init() {
         // Controller::RegisterGameConfig(lua.GetState());
-        // load type of renderer
-        // get window config
-        // get scripts to load
+        Controller::RegisterLogger(lua.GetState());
 
         auto config = LoadConfig();
         if (!config) {
