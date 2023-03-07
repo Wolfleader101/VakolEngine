@@ -2,14 +2,13 @@
 
 #include <map>
 
-#include "Model.hpp"
+#include "../Model.hpp"
 
 #include "GLMaterial.hpp"
 #include "GLBuffer.hpp"
 
 namespace Vakol::Model
 {
-
 	class GLMesh : public Mesh
 	{
 	public:
@@ -36,10 +35,13 @@ namespace Vakol::Model
 	public:
 		~GLModel() override;
 
-		void Draw(const DRAW_TYPE type) const override;
+		void Draw(const unsigned int type) const override;
 
-		void AddMesh(const GLVertexArray& VAO, const GLShader& shader);
+		void AddMesh(const GLMesh& mesh, const GLMaterial& material);
 
+		void AddTexture(const std::string& name);
+
+	private:
 		std::map<GLMesh, GLMaterial, MeshCompare> meshes;
 	};
 }

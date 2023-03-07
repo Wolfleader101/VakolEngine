@@ -1,20 +1,20 @@
 SET(MODEL
 
 #OpenGL
-src/Model/GLBuffer.hpp
-src/Model/GLBuffer.cpp
+src/Model/gl/GLBuffer.hpp
+src/Model/gl/GLBuffer.cpp
 
-src/Model/GLModel.hpp
-src/Model/GLModel.cpp
+src/Model/gl/GLModel.hpp
+src/Model/gl/GLModel.cpp
 
-src/Model/GLShader.hpp
-src/Model/GLShader.cpp
+src/Model/gl/GLShader.hpp
+src/Model/gl/GLShader.cpp
 
-src/Model/GLMaterial.hpp
-src/Model/GLMaterial.cpp
+src/Model/gl/GLMaterial.hpp
+src/Model/gl/GLMaterial.cpp
 
-src/Model/GLTexture.hpp
-src/Model/GLTexture.cpp
+src/Model/gl/GLTexture.hpp
+src/Model/gl/GLTexture.cpp
 
 #Model
 src/Model/Model.hpp
@@ -30,6 +30,9 @@ src/Model/Material.hpp
 
 #Texture
 src/Model/Texture.hpp
+
+#Camera
+src/Model/Camera.hpp
 
 #Math
 src/Model/Math/Math.hpp

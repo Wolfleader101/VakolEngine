@@ -3,7 +3,7 @@
 #include <memory>
 #include <vector>
 
-#include "Material.hpp"
+#include "../Material.hpp"
 
 #include "GLShader.hpp"
 #include "GLTexture.hpp"
@@ -17,12 +17,10 @@ namespace Vakol::Model
 		GLMaterial(const GLShader& shader);
 		~GLMaterial() override;
 
-		void Bind() const override;
+		void Bind(const unsigned int type) const override;
 		void Unbind() const override;
 
 		const unsigned int GetID() const override;
-
-		void AddTexture(const GLTexture& texture);
 
 		void SetBool(const std::string& name, const bool value) override;
 		void SetInt(const std::string& name, const int value) override;
@@ -38,8 +36,9 @@ namespace Vakol::Model
 
 		void SetMat3(const std::string& name, const glm::mat3& value) override;
 		void SetMat4(const std::string& name, const glm::mat4& value) override;
+
+		unsigned int texture;
 	private:
-		std::vector<GLTexture> textures;
 		GLShader shader;
 	};
 }

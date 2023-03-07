@@ -3,7 +3,7 @@
 #include <string>
 //#include <map>
 
-#include "Shader.hpp"
+#include "../Shader.hpp"
 
 namespace Vakol::Model
 {
