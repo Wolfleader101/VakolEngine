@@ -26,11 +26,11 @@ glad
 glfw
 spdlog
 glm
-nlohmann_json
 reactphysics3d
 assimp
 lua
 sol2
+cereal
 )
 
 # Set compile flags.

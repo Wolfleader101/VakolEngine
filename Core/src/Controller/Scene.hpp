@@ -1,6 +1,8 @@
 #pragma once
 
+#include <Model/Entity.hpp> //need before EntityList
 #include "EntityList.hpp"
+
 namespace Vakol::Controller {
     class Scene {
        public:
