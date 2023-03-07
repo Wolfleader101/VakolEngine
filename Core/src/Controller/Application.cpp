@@ -14,7 +14,6 @@ namespace Vakol::Controller {
     Application::Application() : m_running(false), m_window(nullptr), m_renderer(nullptr) { Logger::Init(); };
 
     void Application::Init() {
-        // Controller::RegisterGameConfig(lua.GetState());
         Controller::RegisterLogger(lua.GetState());
 
         auto config = LoadConfig();

@@ -7,8 +7,8 @@ namespace Vakol::Controller {
 
     sol::state& LuaState::GetState() { return lua; }
 
-    void LuaState::RunFile(const std::string& file) { lua.script_file(file); }
+    sol::protected_function_result LuaState::RunFile(const std::string& file) { lua.safe_script_file(file); }
 
-    void LuaState::RunScript(const std::string& script) { lua.script(script); }
+    void LuaState::RunScript(const std::string& script) { lua.safe_script(script); }
 
 }  // namespace Vakol::Controller

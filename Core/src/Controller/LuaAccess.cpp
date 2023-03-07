@@ -1,6 +1,7 @@
 #include "LuaAccess.hpp"
 
 #include "Logger.hpp"
+#include "Scene.hpp"
 
 namespace Vakol::Controller {
     void RegisterGameConfig(sol::state& lua) {
@@ -19,4 +20,15 @@ namespace Vakol::Controller {
         lua.set_function("print_err", &Logger::ScriptPrintError);
         lua.set_function("print_crit", &Logger::ScriptPrintCrit);
     }
+
+    void RegisterApplication(sol::state& lua) {}
+
+    void RegisterScene(sol::state& lua) {
+        // auto
+        lua.set_function("load_script", &Scene::LoadScript);
+    }
+    void RegisterECS(sol::state& lua) {}
+    void RegisterWindow(sol::state& lua) {}
+    void RegisterRenderer(sol::state& lua) {}
+    void RegisterPhysics(sol::state& lua) {}
 }  // namespace Vakol::Controller
