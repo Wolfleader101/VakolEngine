@@ -11,7 +11,7 @@ namespace Vakol::Model
 	public:
 		virtual ~Material() = default;
 
-		virtual void Bind() const = 0;
+		virtual void Bind(const unsigned int type) const = 0;
         virtual void Unbind() const = 0;
 
         virtual const unsigned int GetID() const = 0;
