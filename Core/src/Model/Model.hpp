@@ -4,8 +4,6 @@
 
 namespace Vakol::Model
 {
-    enum DRAW_TYPE { MESH, MATERIAL };
-
 	class Mesh
 	{
 	public:
@@ -21,6 +19,6 @@ namespace Vakol::Model
 	public:
 		virtual ~Model() = default;
 
-		virtual void Draw(const DRAW_TYPE type) const = 0;
+		virtual void Draw(const unsigned int type) const = 0;
 	};
 }
