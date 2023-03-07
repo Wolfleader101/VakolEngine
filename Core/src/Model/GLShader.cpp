@@ -109,7 +109,7 @@ namespace Vakol::Model
 
 	GLShader::~GLShader()
 	{
-		glDeleteProgram(this->id);
+		//glDeleteProgram(this->id);
 	}
 
 	void GLShader::Bind() const
