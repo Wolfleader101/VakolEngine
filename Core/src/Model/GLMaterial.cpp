@@ -10,43 +10,37 @@ namespace Vakol::Model
 	GLMaterial::GLMaterial(const GLShader& shader)
 	{
 		this->shader = shader;
+		this->texture = GLTexture::GetTexture("smile.png");
 	}
 
 	GLMaterial::~GLMaterial()
 	{
-		this->shader.~GLShader();
-		
-		const auto textureCount = this->textures.size();
+		//this->shader.~GLShader();
+		//
+		//const auto textureCount = this->textures.size();
 
-		for (auto i = 0; i < textureCount; ++i)
-			this->textures[i].~GLTexture();
+		//for (auto i = 0; i < textureCount; ++i)
+		//	this->textures[i].~GLTexture();
 	}
 
 	const unsigned int GLMaterial::GetID() const { return shader.GetID(); }
 
-	void GLMaterial::AddTexture(const GLTexture& texture)
+	void GLMaterial::Bind(const unsigned int type) const
 	{
-		textures.push_back(texture);
-	}
-
-	void GLMaterial::Bind() const
-	{
-		this->shader.Bind();
-
-		const auto textureCount = this->textures.size();
-
-		for (auto i = 0; i < textureCount; ++i)
-			this->textures[i].Bind(i);
+		if (type == GL_SHADER)
+			this->shader.Bind();
+		else
+			glBindTexture(GL_TEXTURE_2D, static_cast<GLuint>(this->texture));
 	}
 
 	void GLMaterial::Unbind() const
 	{
-		this->shader.Unbind();
+		//this->shader.Unbind();
 
-		const auto textureCount = this->textures.size();
+		//const auto textureCount = this->textures.size();
 
-		for (auto i = 0; i < textureCount; ++i)
-			this->textures[i].Unbind();
+		//for (auto i = 0; i < textureCount; ++i)
+		//	this->textures[i].Unbind();
 	}
 
 	void GLMaterial::SetBool(const std::string& name, const bool value)
