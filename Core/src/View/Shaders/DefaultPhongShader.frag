@@ -6,9 +6,9 @@ uniform vec3 lightColour; // The colour of the light hitting the model
 uniform vec3 lightPos; // The position of the light affecting the shader
 uniform vec3 camPos; // The position of the camera
 
-uniform sampler2D inputTexture; // The texture to be applied to the model
+uniform sampler2D inputTexture0; // The texture to be applied to the model
 
-uniform float uvScale = 1.0; // The scale of the model's UVs (Useful for resizing the tetxure on the model)
+uniform float uvScale0 = 1.0; // The scale of the model's UVs (Useful for resizing the tetxure on the model)
 uniform float ambientMultiplier; // The strength of the ambient light colour (0 is none, 1 is full)
 uniform float diffuseMultiplier; // The strength of the ambient light colour (0 is none, 1 is full)
 uniform float specularMultiplier; // The strength of the ambient light colour (0 is none, 1 is full)
@@ -46,7 +46,7 @@ void main(void)
 
     if(enableTexture == true) //Checks to see if textures are enabled
     {
-        fragColor = texture(inputTexture, inData.v_texcoord * uvScale) * (vec4((ambientValue * ambientMultiplier) + (diffuse * diffuseMultiplier) + (specularStrength * specularMultiplier), 1.0) * rgba);
+        fragColor = texture(inputTexture0, inData.v_texcoord * uvScale0) * (vec4((ambientValue * ambientMultiplier) + (diffuse * diffuseMultiplier) + (specularStrength * specularMultiplier), 1.0) * rgba);
     }
     else
         fragColor = vec4((ambientValue * ambientMultiplier) + (diffuse * diffuseMultiplier) + (specularStrength * specularMultiplier), 1.0) * rgba;
