@@ -1,8 +1,5 @@
 #pragma once
 
-#include <string>
-//#include <map>
-
 #include "../Shader.hpp"
 
 namespace Vakol::Model
@@ -11,7 +8,7 @@ namespace Vakol::Model
 	{
     public:
         GLShader() = default;
-        GLShader(const std::string& vertex, const std::string& fragment);
+        GLShader(const std::string& vertexPath, const std::string& fragmentPath);
 
 		~GLShader() override;
 
@@ -24,8 +21,6 @@ namespace Vakol::Model
         unsigned int id = 0;
         std::string name = "null";
     private:
-        std::string ReadFile(const std::string& name);
-
         void CompileShader(const std::string& vertex, const std::string& fragment);
         void CheckCompileErrors(const unsigned int shader, const std::string& type);
 	};

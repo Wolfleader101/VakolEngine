@@ -24,6 +24,7 @@ src/Model/Buffer.hpp
 
 #Shader
 src/Model/Shader.hpp
+src/Model/Shader.cpp
 
 #Material
 src/Model/Material.hpp

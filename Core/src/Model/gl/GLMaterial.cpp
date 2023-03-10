@@ -10,7 +10,7 @@ namespace Vakol::Model
 	GLMaterial::GLMaterial(const GLShader& shader)
 	{
 		this->shader = shader;
-		this->texture = GLTexture::GetTexture("smile.png");
+		this->texture = GLTexture::GetTexture("assets/smile.png");
 	}
 
 	GLMaterial::~GLMaterial()

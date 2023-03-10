@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 namespace Vakol::Model 
 {
     class Shader 
@@ -11,5 +13,7 @@ namespace Vakol::Model
         virtual void Unbind() const = 0;
 
         virtual const unsigned int GetID() const = 0;
+
+        std::string ReadFile(const std::string& path);
     };
 }

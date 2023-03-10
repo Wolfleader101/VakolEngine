@@ -26,7 +26,7 @@ namespace Vakol::View
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_TEXTURE_2D);
 
-        GLShader shader("basic.vert", "basic.frag");
+        GLShader shader("assets/basic.vert", "assets/basic.frag");
 
         std::vector<Vertex> vertices = { 
             {

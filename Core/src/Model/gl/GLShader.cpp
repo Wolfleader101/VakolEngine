@@ -1,40 +1,12 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include <fstream>
 #include <Controller/Logger.hpp>
 
 #include "GLShader.hpp"
 
 namespace Vakol::Model
 {
-	std::string GLShader::ReadFile(const std::string& path)
-	{
-		std::string result;
-
-		std::ifstream in(path, std::ios::in | std::ios::binary); // ifstream closes itself due to RAII
-
-		if (in)
-		{
-			in.seekg(0, std::ios::end);
-
-			size_t size = in.tellg();
-
-			if (size != -1)
-			{
-				result.resize(size);
-				in.seekg(0, std::ios::beg);
-				in.read(&result[0], size);
-			}
-			else
-				VK_ERROR("Could not read file: {0}", path);
-		}
-		else
-			VK_ERROR("Could not open file: {0}", path);
-
-		return result;
-	}
-
 	GLShader::GLShader(const std::string& vertex, const std::string& fragment)
 	{
 		std::string vsCode = ReadFile(vertex);
@@ -71,9 +43,6 @@ namespace Vakol::Model
 
 		glDeleteShader(vert);
 		glDeleteShader(frag);
-
-		delete v_code;
-		delete f_code;
 	}
 
 	void GLShader::CheckCompileErrors(const unsigned int shader, const std::string& type)
