@@ -6,6 +6,6 @@ namespace Vakol::Model
 {
 	struct GLTexture
 	{
-		static unsigned int GetTexture(const std::string& name);
+		static unsigned int GetTexture(const std::string& path);
 	};
 }

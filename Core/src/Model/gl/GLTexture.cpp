@@ -7,16 +7,14 @@
 
 #include <stb_image.h>
 
-#include <iostream>
+#include <Controller/Logger.hpp>
 
 #include "GLTexture.hpp"
 
 namespace Vakol::Model
 {
-	unsigned int GLTexture::GetTexture(const std::string& name)
+	unsigned int GLTexture::GetTexture(const std::string& path)
 	{
-		const std::string path = "assets/" + name;
-
 		unsigned int textureID;
 
 		glEnable(GL_TEXTURE_2D);
@@ -47,7 +45,7 @@ namespace Vakol::Model
 		}
 		else
 		{
-			std::cout << "Texture File: " << name << " Failed to Load!" << std::endl;
+			VK_ERROR("Failed to load file {0}", path);
 			stbi_image_free(data);
 
 			textureID = GetTexture("default.png");

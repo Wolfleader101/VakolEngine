@@ -2,21 +2,17 @@
 #include <GLFW/glfw3.h>
 
 #include <fstream>
-#include <iostream>
-
-#include <cassert>
+#include <Controller/Logger.hpp>
 
 #include "GLShader.hpp"
 
 namespace Vakol::Model
 {
-	std::string GLShader::ReadFile(const std::string& name)
+	std::string GLShader::ReadFile(const std::string& path)
 	{
-		const std::string filepath = "assets/" + name;
-
 		std::string result;
 
-		std::ifstream in(filepath, std::ios::in | std::ios::binary); // ifstream closes itself due to RAII
+		std::ifstream in(path, std::ios::in | std::ios::binary); // ifstream closes itself due to RAII
 
 		if (in)
 		{
@@ -31,10 +27,10 @@ namespace Vakol::Model
 				in.read(&result[0], size);
 			}
 			else
-				std::cout << "Could not read file: " << filepath << std::endl;
+				VK_ERROR("Could not read file: {0}", path);
 		}
 		else
-			std::cout << "Could not open file: " << filepath << std::endl;
+			VK_ERROR("Could not open file: {0}", path);
 
 		return result;
 	}
@@ -51,17 +47,17 @@ namespace Vakol::Model
 	{
 		GLuint vert, frag;
 
-		const auto v_code = std::make_unique<const char*>(vertex.c_str());
-		const auto f_code = std::make_unique<const char*>(fragment.c_str());
+		const auto v_code = vertex.c_str();
+		const auto f_code = fragment.c_str();
 
 		vert = glCreateShader(GL_VERTEX_SHADER);
-		glShaderSource(vert, 1, v_code.get(), NULL);
+		glShaderSource(vert, 1, &v_code, NULL);
 		glCompileShader(vert);
 
 		CheckCompileErrors(vert, "VERTEX");
 
 		frag = glCreateShader(GL_FRAGMENT_SHADER);
-		glShaderSource(frag, 1, f_code.get(), NULL);
+		glShaderSource(frag, 1, &f_code, NULL);
 		glCompileShader(frag);
 
 		CheckCompileErrors(frag, "FRAGMENT");
@@ -76,7 +72,8 @@ namespace Vakol::Model
 		glDeleteShader(vert);
 		glDeleteShader(frag);
 
-		//CreateProgram(vertex, fragment);
+		delete v_code;
+		delete f_code;
 	}
 
 	void GLShader::CheckCompileErrors(const unsigned int shader, const std::string& type)
@@ -92,7 +89,7 @@ namespace Vakol::Model
 			if (!success)
 			{
 				glGetShaderInfoLog(shader, 1024, NULL, infoLog);
-				std::cout << "\nERROR::SHADER_COMPILATION_ERROR of type: " << type << '\n' << infoLog << '\n' << std::endl;
+				VK_ERROR("\nERROR::SHADER_COMPILATION_ERROR of type: {0}\n{1}\n", type, infoLog);
 			}
 		}
 		else
@@ -102,7 +99,7 @@ namespace Vakol::Model
 			if (!success)
 			{
 				glGetProgramInfoLog(shader, 1024, NULL, infoLog);
-				std::cout << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << '\n' << infoLog << '\n' << std::endl;
+				VK_ERROR("ERROR::PROGRAM_LINKING_ERROR of type: {0}\n{1}\n ", type, infoLog);
 			}
 		}
 	}

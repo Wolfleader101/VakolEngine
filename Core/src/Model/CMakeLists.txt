@@ -31,9 +31,6 @@ src/Model/Material.hpp
 #Texture
 src/Model/Texture.hpp
 
-#Camera
-src/Model/Camera.hpp
-
 #Math
 src/Model/Math/Math.hpp
 

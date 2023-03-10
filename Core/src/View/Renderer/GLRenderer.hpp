@@ -2,7 +2,7 @@
 
 #include "Renderer.hpp"
 
-#include <Model/GLModel.hpp>
+#include <Model/gl/GLModel.hpp>
 
 using Vakol::Model::GLModel;
 

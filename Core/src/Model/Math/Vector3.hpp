@@ -2,8 +2,10 @@
 
 #include "Math.hpp"
 
-namespace Vakol::Model::Math {
-    struct Vector3 {
+namespace Vakol::Model::Math 
+{
+    struct Vector3 
+    {
         Vector3() = default;
 
         Vector3(const float x, const float y, const float z);
@@ -13,17 +15,17 @@ namespace Vakol::Model::Math {
         glm::vec3 vector;
     };
 
-    typedef Vector3 Vec3;
+    Vector3 operator+(const Vector3& left, const Vector3& right);
 
-//Vector3 operator+(const Vector3& left, const Vector3& right) { return Vector3(left.vector + right.vector); }
-//
-//Vector3 operator-(const Vector3& left, const Vector3& right) { return Vector3(left.vector - right.vector); }
-//
-//Vector3 operator*(const Vector3& vec, const float k) { return Vector3(vec.vector * k); }
-//
-//Vector3 operator/(const Vector3& vec, const float k) { return Vector3(vec.vector / k); }
-//
-//bool operator==(const Vector3& left, const Vector3& right) { return left.vector == right.vector; }
-//
-//bool operator!=(const Vector3& left, const Vector3& right) { return left.vector != right.vector; }
+    Vector3 operator-(const Vector3& left, const Vector3& right);
+
+    Vector3 operator*(const Vector3& vec, const float k);
+
+    Vector3 operator/(const Vector3& vec, const float k);
+
+    bool operator==(const Vector3& left, const Vector3& right);
+
+    bool operator!=(const Vector3& left, const Vector3& right);
+
+    typedef Vector3 Vec3;
 }
