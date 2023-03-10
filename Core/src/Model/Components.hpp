@@ -3,8 +3,6 @@
 #include <reactphysics3d/reactphysics3d.h>
 
 #include <Controller/LuaState.hpp>
-#include <Model/Mesh.hpp>  //don't know why this needs src but sure
-#include <Model/Shader.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>
 #include <string>
