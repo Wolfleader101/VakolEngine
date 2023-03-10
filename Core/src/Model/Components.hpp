@@ -2,8 +2,7 @@
 
 #include <reactphysics3d/reactphysics3d.h>
 
-#include <Model/Mesh.hpp>  //don't know why this needs src but sure
-#include <Model/Shader.hpp>
+#include <Controller/LuaState.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>
 #include <string>
@@ -78,6 +77,17 @@ namespace Vakol::Model::Components {
      */
     struct TagType {
         EntityType type; /**< Type of entity */
+    };
+
+    /**
+     * @struct Script
+     *
+     * @brief script component that holds reference to file
+     */
+    struct Script {
+        std::string script_name;
+
+        Script(const std::string& script, Controller::LuaState& lua);
     };
 
 }  // namespace Vakol::Model::Components

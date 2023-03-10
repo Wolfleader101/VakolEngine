@@ -14,8 +14,9 @@ namespace Vakol::Controller {
     Application::Application() : m_running(false), m_window(nullptr), m_renderer(nullptr) { Logger::Init(); };
 
     void Application::Init() {
-        // Controller::RegisterGameConfig(lua.GetState());
         Controller::RegisterLogger(lua.GetState());
+        Controller::RegisterApplication(lua.GetState(), this);
+        Controller::RegisterScene(lua.GetState());
 
         auto config = LoadConfig();
         if (!config) {
@@ -40,7 +41,7 @@ namespace Vakol::Controller {
 
         lua.RunFile("scripts/main.lua");
 
-        sol::function luaMain = lua.GetState()['main'];
+        sol::function luaMain = lua.GetState()["main"];
 
         luaMain();
 
@@ -88,18 +89,14 @@ namespace Vakol::Controller {
         while (m_running) {
             m_time.Update();
 
-            //! update lua
-
             // Physics::FixedUpdate(m_time, m_entityList.GetEntityList());
 
-            // for (Layer* layer : m_layerStack) layer->OnUpdate(m_time, m_entityList);
-
-            // for (auto& ent : m_entityList.GetEntityList()) {
-            //     if (ent.OnUpdate) ent.OnUpdate(m_time, ent);
-            // }
+            //! update scenes lua
+            for (auto& scene : scenes) {
+                scene.Update(m_time);
+            }
 
             m_renderer->Update(m_time);
-            // m_renderer.Update(m_time, m_entityList.GetEntityList());
 
             // m_gui.OnUpdate();
 
@@ -109,6 +106,11 @@ namespace Vakol::Controller {
         // ImGui_ImplOpenGL3_Shutdown();
         // ImGui_ImplGlfw_Shutdown();
         // ImGui::DestroyContext();
+    }
+
+    void Application::AddScene(std::string scriptName, std::string scene_name) {
+        std::string sceneName = scene_name.length() == 0 ? "Scene" + std::to_string(scenes.size()) : scene_name;
+        scenes.push_back(Scene(sceneName, scriptName, lua));
     }
 
     void Application::OnEvent(Event& ev) {

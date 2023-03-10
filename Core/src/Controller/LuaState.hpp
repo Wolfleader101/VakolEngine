@@ -10,7 +10,7 @@ namespace Vakol::Controller {
         const sol::state& GetState() const;
         sol::state& GetState();
 
-        void RunFile(const std::string& file);
+        sol::protected_function_result RunFile(const std::string& file);
 
         void RunScript(const std::string& script);
 

@@ -69,6 +69,8 @@ namespace Vakol::Controller {
          */
         const int GetHeight() const { return m_window->GetHeight(); }
 
+        void AddScene(std::string scriptName, std::string scene_name = "");
+
        private:
         /**
          * @brief on window close event
