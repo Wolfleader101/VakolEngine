@@ -16,5 +16,11 @@ src/Controller/EntityList.cpp
 src/Controller/System.hpp
 src/Controller/System.cpp
 
+src/Controller/LuaAccess.hpp
+src/Controller/LuaAccess.cpp
+
+src/Controller/Scene.hpp
+src/Controller/Scene.cpp
+
 ${EVENTS}
 PARENT_SCOPE)

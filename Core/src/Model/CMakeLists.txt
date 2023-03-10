@@ -49,4 +49,6 @@ src/Model/Components.cpp
 src/Model/Entity.hpp
 src/Model/Entity.cpp
 
+src/Model/GameConfig.hpp
+
 PARENT_SCOPE)

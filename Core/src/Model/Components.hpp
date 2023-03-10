@@ -2,11 +2,12 @@
 
 #include <reactphysics3d/reactphysics3d.h>
 
+#include <Controller/LuaState.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>
 #include <string>
 
-namespace Vakol::Model::ECS::Components {
+namespace Vakol::Model::Components {
     /**
      * @struct Transform
      *
@@ -78,4 +79,15 @@ namespace Vakol::Model::ECS::Components {
         EntityType type; /**< Type of entity */
     };
 
-}  // namespace Vakol::Model::ECS::Components
+    /**
+     * @struct Script
+     *
+     * @brief script component that holds reference to file
+     */
+    struct Script {
+        std::string script_name;
+
+        Script(const std::string& script, Controller::LuaState& lua);
+    };
+
+}  // namespace Vakol::Model::Components

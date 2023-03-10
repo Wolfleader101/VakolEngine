@@ -6,6 +6,5 @@ SET(SOURCES
 ${MODEL}
 ${VIEW}
 ${CONTROLLER}
-src/core.hpp
 src/core.cpp
 PARENT_SCOPE)
