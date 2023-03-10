@@ -1,6 +1,5 @@
 #pragma once
 
-#include <Model/Entity.hpp> //need before EntityList
 #include "EntityList.hpp"
 #include "LuaState.hpp"
 #include "Time.hpp"
@@ -11,7 +10,6 @@ namespace Vakol::Controller {
          * @brief Construct a new Scene object
          *
          */
-        Scene();
         Scene(const std::string& name, const std::string& scriptName, LuaState& lua);
         /**
          * @brief the entity list of engine
