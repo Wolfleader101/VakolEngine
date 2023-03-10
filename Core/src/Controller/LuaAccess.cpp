@@ -1,8 +1,5 @@
 #include "LuaAccess.hpp"
 
-#include "Logger.hpp"
-#include "Scene.hpp"
-
 namespace Vakol::Controller {
     void RegisterGameConfig(sol::state& lua) {
         // auto gameConfigType = lua.new_usertype<GameConfig>("game_config");
@@ -21,11 +18,8 @@ namespace Vakol::Controller {
         lua.set_function("print_crit", &Logger::ScriptPrintCrit);
     }
 
-    void RegisterApplication(sol::state& lua) {}
-
-    void RegisterScene(sol::state& lua) {
-        // auto
-        lua.set_function("load_script", &Scene::LoadScript);
+    void RegisterApplication(sol::state& lua, Application* app) {
+        lua.set_function("add_scene", &Application::AddScene, app);
     }
     void RegisterECS(sol::state& lua) {}
     void RegisterWindow(sol::state& lua) {}
