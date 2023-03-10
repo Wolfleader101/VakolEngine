@@ -10,7 +10,7 @@ namespace Vakol::Model
 	GLMaterial::GLMaterial(const GLShader& shader)
 	{
 		this->shader = shader;
-		this->texture = GLTexture::GetTexture("assets/smile.png");
+		this->textures["default"] = GLTexture::GetTexture("assets/textures/white.png");
 	}
 
 	GLMaterial::~GLMaterial()
@@ -23,16 +23,46 @@ namespace Vakol::Model
 		//	this->textures[i].~GLTexture();
 	}
 
+	void GLMaterial::AddTexture(const std::string& path)
+	{
+		const std::string name = GetName(path);
+
+		if (textures.find(name) == textures.end())
+			textures.insert({name, GLTexture::GetTexture(path)});
+	}
+
+	void GLMaterial::ReplaceTexture(const std::string& src, const std::string& dst)
+	{
+		const std::string src_name = GetName(src);
+		const std::string dst_name = GetName(dst);
+
+		if (textures.find(src_name) != textures.end())
+		{
+			textures.erase(src_name);
+			AddTexture(dst_name);
+		}
+	}
+
 	const unsigned int GLMaterial::GetID() const { return shader.GetID(); }
+	const std::string GLMaterial::GetName(const std::string& str) const 
+	{ 
+		return str.substr(str.find_last_of('/'),
+						  str.find_last_of('.'));
+	}
 
 	void GLMaterial::Bind(const unsigned int type) const
 	{
+		auto size = textures.size();
+
 		if (type == GL_SHADER)
 			this->shader.Bind();
 		else
 		{
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, static_cast<GLuint>(this->texture));
+			for (auto i = 0; i < size; i++)
+			{
+				glActiveTexture(GL_TEXTURE0 + i);
+				glBindTexture(GL_TEXTURE_2D, static_cast<GLuint>(textures.begin()->second));
+			}
 		}
 	}
 

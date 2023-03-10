@@ -10,8 +10,8 @@ namespace Vakol::Model
     struct Vertex 
     {
         Math::Vec3 position;
+        Math::Vec3 normal;
         Math::Vec2 uv;
-        //Math::Vec3 normal;
     };
 
     class VertexArray

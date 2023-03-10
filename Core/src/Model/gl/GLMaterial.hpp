@@ -1,5 +1,7 @@
 #pragma once
 
+#include <map>
+
 #include <memory>
 #include <vector>
 
@@ -20,6 +22,9 @@ namespace Vakol::Model
 		void Bind(const unsigned int type) const override;
 		void Unbind() const override;
 
+		void AddTexture(const std::string& path);
+		void ReplaceTexture(const std::string& src, const std::string& dst);
+
 		const unsigned int GetID() const override;
 
 	public:
@@ -38,8 +43,10 @@ namespace Vakol::Model
 		void SetMat3(const std::string& name, const glm::mat3& value) override;
 		void SetMat4(const std::string& name, const glm::mat4& value) override;
 
-		unsigned int texture;
+	private:
+		const std::string GetName(const std::string& str) const;
 	private:
 		GLShader shader;
+		std::map<std::string, unsigned int> textures;
 	};
 }

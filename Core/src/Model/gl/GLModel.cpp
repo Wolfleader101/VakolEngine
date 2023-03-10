@@ -42,7 +42,6 @@ namespace Vakol::Model
 		else
 		{
 			meshes.begin()->second.Bind(GL_TEXTURE_2D);
-			//glBindTexture(GL_TEXTURE_2D, meshes.begin()->second.texture);
 			meshes.begin()->first.Draw();
 		}
 	}
@@ -50,10 +49,5 @@ namespace Vakol::Model
 	void GLModel::AddMesh(const GLMesh& mesh, const GLMaterial& material)
 	{ 
 		meshes.insert(std::make_pair(mesh, material));
-	}
-
-	void GLModel::AddTexture(const std::string& name)
-	{
-		//meshes.begin()->second.AddTexture(name);
 	}
 }

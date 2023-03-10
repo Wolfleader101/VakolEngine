@@ -39,8 +39,9 @@ namespace Vakol::Model
 
 		void AddMesh(const GLMesh& mesh, const GLMaterial& material);
 
-		void AddTexture(const std::string& name);
+		GLMaterial Get() const { return meshes.begin()->second; }
 		
+	private:
 		std::map<GLMesh, GLMaterial, MeshCompare> meshes;
 	};
 }
