@@ -7,10 +7,10 @@
 
 namespace Vakol::Model
 {
-	GLShader::GLShader(const std::string& vertex, const std::string& fragment)
+	GLShader::GLShader(const std::string& vertexPath, const std::string& fragmentPath)
 	{
-		std::string vsCode = ReadFile(vertex);
-		std::string fsCode = ReadFile(fragment);
+		std::string vsCode = Shader::ReadFile(vertexPath);
+		std::string fsCode = Shader::ReadFile(fragmentPath);
 
 		CompileShader(vsCode, fsCode);
 	}
