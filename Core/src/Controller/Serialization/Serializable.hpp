@@ -1,20 +1,48 @@
 #pragma once
 
 #include <string>
-#include <fstream>
+#include <memory>
 
 namespace Vakol::Controller
 {
-	class Serializable
+	class Serializable //Type Erasure
 	{
        public:
-        virtual void Serialize(const std::string& file) = 0;
-        virtual void Deserialize(const std::string& file) = 0;
+
+		template<class T>
+        Serializable(T&& type) { *this = type;}
+
+		template<class T>
+		Serializable& operator=(T&& type)
+		{
+            value.reset(new StoredValue<T>(type));
+			return *this;
+		}
+
+        void Serialize(const std::string &file) const;
+        void Deserialize(const std::string &file);
 
 	   private:
-		    //Kind of unnecessary but follows the "facade everything" mindset
-		    void OpenFile(const std::string& file, std::fstream& stream, std::fstream::open_mode Mode);
-            void CloseFile(std::fstream& stream);
-            bool StreamCheck(std::fstream& stream);
+
+		   struct SerializableType //base for actual storage
+		   {
+                virtual ~SerializableType(){};
+
+                virtual void Serialize(const std::string& file) const = 0;
+                virtual void Deserialize(const std::string& file) = 0;
+		   };
+
+		   template <class T>
+		   struct StoredValue : SerializableType //type to actually store T
+		   {
+                StoredValue(const T& intake) : actualStorage(intake){};
+
+				void Serialize(const std::string& file) const { actualStorage.Serialize(file); }
+				void Deserialize(const std::string& file) { actualStorage.Deserialize(file); }
+
+                T actualStorage;
+		   };
+
+			std::unique_ptr<SerializableType> value;
 	};
 }

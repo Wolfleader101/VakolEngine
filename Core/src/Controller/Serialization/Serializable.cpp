@@ -2,18 +2,6 @@
 
 namespace Vakol::Controller
 {
-    void Serializable::OpenFile(const std::string& file, std::fstream& stream, std::fstream::open_mode Mode)
-    {
-        stream.open(file, Mode);
-    }
-
-    void Serializable::CloseFile(std::fstream& stream) 
-    { 
-        stream.close(); 
-    }
-
-    bool Serializable::StreamCheck(const std::fstream& stream) 
-    { 
-        return stream.good();
-    }
+    void Serializable::Serialize(const std::string &file) const { value->Serialize(file); };
+    void Serializable::Deserialize(const std::string &file) { value->Deserialize(file); };
 }  // namespace Vakol::Controller
