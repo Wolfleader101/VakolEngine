@@ -1,18 +1,18 @@
 #version 460 core
 out vec4 FragColor;
 
-in vec2 uv;
+in vec3 TexCoords;
 
 uniform vec4 rgba;
 
-uniform samplerCube inputTexture0;
+uniform samplerCube skybox;
 
 uniform bool enableTexture;
 
 void main()
 {
     if (enableTexture)
-        FragColor = texture(inputTexture0, uv) * rgba;
+        FragColor = texture(skybox, TexCoords) * rgba;
     else
         FragColor = rgba;
 }

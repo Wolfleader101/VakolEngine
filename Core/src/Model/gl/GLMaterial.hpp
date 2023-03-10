@@ -23,6 +23,9 @@ namespace Vakol::Model
 		void Unbind() const override;
 
 		void AddTexture(const std::string& path);
+		
+		void AddSkybox(const std::vector<std::string>& paths);
+
 		void ReplaceTexture(const std::string& src, const std::string& dst);
 
 		const unsigned int GetID() const override;

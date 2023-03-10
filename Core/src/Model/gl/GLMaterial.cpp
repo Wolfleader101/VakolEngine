@@ -2,6 +2,7 @@
 #include <GLFW/glfw3.h>
 
 #include <glm/gtc/type_ptr.hpp>
+#include <Controller/Logger.hpp>
 
 #include "GLMaterial.hpp"
 
@@ -10,7 +11,7 @@ namespace Vakol::Model
 	GLMaterial::GLMaterial(const GLShader& shader)
 	{
 		this->shader = shader;
-		this->textures["default"] = GLTexture::GetTexture("assets/textures/white.png");
+		//this->textures["default"] = GLTexture::GetTexture("assets/textures/white.png");
 	}
 
 	GLMaterial::~GLMaterial()
@@ -29,6 +30,11 @@ namespace Vakol::Model
 
 		if (textures.find(name) == textures.end())
 			textures.insert({name, GLTexture::GetTexture(path)});
+	}
+
+	void GLMaterial::AddSkybox(const std::vector<std::string>& paths)
+	{
+		textures.insert({"skybox", GLTexture::GetTextureCubemap(paths)});
 	}
 
 	void GLMaterial::ReplaceTexture(const std::string& src, const std::string& dst)
@@ -52,16 +58,16 @@ namespace Vakol::Model
 
 	void GLMaterial::Bind(const unsigned int type) const
 	{
-		auto size = textures.size();
+		unsigned int size = static_cast<unsigned int>(textures.size());
 
 		if (type == GL_SHADER)
 			this->shader.Bind();
 		else
 		{
-			for (auto i = 0; i < size; i++)
+			if (size > 0)
 			{
-				glActiveTexture(GL_TEXTURE0 + i);
-				glBindTexture(GL_TEXTURE_2D, static_cast<GLuint>(textures.begin()->second));
+				glActiveTexture(GL_TEXTURE0 + size - 1);
+				glBindTexture(type, static_cast<GLuint>(textures.begin()->second));
 			}
 		}
 	}

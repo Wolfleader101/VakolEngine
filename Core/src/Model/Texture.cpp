@@ -10,7 +10,7 @@ namespace Vakol::Model
 {
 	unsigned char* Texture::GetImage(const std::string& path, int& width, int& height, int& colorDepth)
 	{
-		stbi_set_flip_vertically_on_load(true);
+		stbi_set_flip_vertically_on_load(false);
 
 		unsigned char* image = stbi_load(path.c_str(), &width, &height, &colorDepth, 0);
 
@@ -19,7 +19,7 @@ namespace Vakol::Model
 			VK_ERROR("Failed to load file {0}", path);
 			stbi_image_free(image);
 
-			return stbi_load("assets/DEBUG_ErrorTex_Var1_64.png", &width, &height, &colorDepth, 0);
+			return stbi_load("assets/textures/Error/DEBUG_ErrorTex_Var1_64.png", &width, &height, &colorDepth, 0);
 		}
 
 		return image;

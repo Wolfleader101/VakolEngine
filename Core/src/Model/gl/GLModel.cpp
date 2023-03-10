@@ -22,7 +22,8 @@ namespace Vakol::Model
 	void GLMesh::Draw() const
 	{
 		this->VAO.Bind();
-        glDrawElements(GL_TRIANGLES, static_cast<unsigned int>(this->VAO.GetIndexCount()), GL_UNSIGNED_INT, 0);
+        //glDrawElements(GL_TRIANGLES, static_cast<unsigned int>(this->VAO.GetIndexCount()), GL_UNSIGNED_INT, 0);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
 		this->VAO.Unbind();
 	}
 
@@ -38,10 +39,11 @@ namespace Vakol::Model
 	void GLModel::Draw(const unsigned int type) const 
 	{ 
 		if (type == GL_SHADER)
-			meshes.begin()->second.Bind(GL_SHADER);
+			meshes.begin()->second.Bind(type); // Bind Shader
 		else
 		{
-			meshes.begin()->second.Bind(GL_TEXTURE_2D);
+			// Bind Texture
+			meshes.begin()->second.Bind(type);
 			meshes.begin()->first.Draw();
 		}
 	}

@@ -8,7 +8,11 @@ namespace Vakol::Model
 	{
 	public:
 		GLVertexArray() = default;
-		GLVertexArray(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices);
+		GLVertexArray(const std::vector<Vakol::Model::Vertex3>& vertices, const std::vector<unsigned int>& indices);
+		GLVertexArray(const std::vector<Vakol::Model::Vertex2N>& vertices, const std::vector<unsigned int>& indices);
+		GLVertexArray(const std::vector<Vakol::Model::Vertex2U>& vertices, const std::vector<unsigned int>& indices);
+		GLVertexArray(const std::vector<Vakol::Model::Math::Vec3>& vertices, const std::vector<unsigned int>& indices);
+		GLVertexArray(const std::vector<float>& vertices);
 
 		~GLVertexArray() override;
 
