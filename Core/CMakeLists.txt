@@ -27,7 +27,7 @@ spdlog
 glm
 nlohmann_json
 reactphysics3d
-#assimp
+assimp
 lua
 sol2
 )
