@@ -35,10 +35,11 @@ namespace Vakol::Controller
 		   template <class T>
 		   struct StoredValue : SerializableType //type to actually store T
 		   {
-                StoredValue(const T& intake) : actualStorage(intake){};
+                StoredValue(const T& intake) : actualStorage(intake) {}
+				StoredValue(T&& intake) : actualStorage(std::move(intake)) {}
 
-				void Serialize(const std::string& file) const { actualStorage.Serialize(file); }
-				void Deserialize(const std::string& file) { actualStorage.Deserialize(file); }
+				void Serialize(const std::string& file) const override { actualStorage.Serialize(file); }
+				void Deserialize(const std::string& file) override { actualStorage.Deserialize(file); }
 
                 T actualStorage;
 		   };
