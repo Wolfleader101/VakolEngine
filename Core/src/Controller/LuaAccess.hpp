@@ -14,4 +14,5 @@ namespace Vakol::Controller {
     void RegisterWindow(sol::state& lua);
     void RegisterRenderer(sol::state& lua);
     void RegisterPhysics(sol::state& lua);
+    void RegisterScene(sol::state& lua);
 }  // namespace Vakol::Controller

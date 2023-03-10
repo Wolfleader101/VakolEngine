@@ -3,8 +3,8 @@
 #include <Model/Components.hpp>
 #include <Model/Entity.hpp>
 
+#include "LuaAccess.hpp"
 #include "System.hpp"
-
 namespace Vakol::Controller {
     Scene::Scene(const std::string& name, const std::string& scriptName, LuaState& lua)
         : name(name), scriptName(scriptName), lua(lua), entityList() {
@@ -12,22 +12,12 @@ namespace Vakol::Controller {
 
         sol::function init = lua.GetState()["init"];
 
-        init();
+        init(*this);
     }
 
-    void Scene::LoadScript(Entity& entity, std::string scriptName) {
-        entity.AddComponent<Model::Components::Script>(scriptName);
-
-        lua.RunFile("scripts/" + scriptName);
-
-        sol::function init = lua.GetState()["init"];
-
-        init();
-    }
-
-    void Scene::AddEntity(const std::string scriptName = "") {
+    void Scene::CreateEntity(const std::string scriptName) {
         auto ent = entityList.CreateEntity();
-        ent.AddComponent<Model::Components::Script>(scriptName);
+        if (scriptName.length() != 0) ent.AddComponent<Model::Components::Script>(scriptName, lua);
     }
 
     void Scene::Update(const Controller::Time& time) {

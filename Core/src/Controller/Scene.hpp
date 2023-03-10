@@ -16,11 +16,9 @@ namespace Vakol::Controller {
          */
         EntityList entityList;  // to be moved to game/scene but for now it all works
 
-        void LoadScript(Entity& entity, std::string scriptName);
-
         void Update(const Time& time);
 
-        void AddEntity(const std::string scriptName = "");
+        void CreateEntity(const std::string scriptName = "");
 
        private:
         LuaState& lua;

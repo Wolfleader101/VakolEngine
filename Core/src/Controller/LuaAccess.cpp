@@ -25,4 +25,10 @@ namespace Vakol::Controller {
     void RegisterWindow(sol::state& lua) {}
     void RegisterRenderer(sol::state& lua) {}
     void RegisterPhysics(sol::state& lua) {}
+
+    void RegisterScene(sol::state& lua) {
+        auto sceneType = lua.new_usertype<Scene>("scene");
+
+        sceneType.set_function("create_entity", &Scene::CreateEntity);
+    }
 }  // namespace Vakol::Controller

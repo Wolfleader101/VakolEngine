@@ -16,6 +16,7 @@ namespace Vakol::Controller {
     void Application::Init() {
         Controller::RegisterLogger(lua.GetState());
         Controller::RegisterApplication(lua.GetState(), this);
+        Controller::RegisterScene(lua.GetState());
 
         auto config = LoadConfig();
         if (!config) {

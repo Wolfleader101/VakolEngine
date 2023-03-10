@@ -89,7 +89,7 @@ namespace Vakol::Model::Components {
     struct Script {
         std::string script_name;
 
-        Script(const std::string& script);
+        Script(const std::string& script, Controller::LuaState& lua);
     };
 
 }  // namespace Vakol::Model::Components
