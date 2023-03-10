@@ -31,6 +31,7 @@ src/Model/Material.hpp
 
 #Texture
 src/Model/Texture.hpp
+src/Model/Texture.cpp
 
 #Math
 src/Model/Math/Math.hpp

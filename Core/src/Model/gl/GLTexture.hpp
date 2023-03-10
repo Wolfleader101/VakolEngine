@@ -1,11 +1,12 @@
 #pragma once
 
-#include <string>
+#include "../Texture.hpp"
 
 namespace Vakol::Model
 {
-	struct GLTexture
+	class GLTexture
 	{
+	public:
 		static unsigned int GetTexture(const std::string& path);
 	};
 }

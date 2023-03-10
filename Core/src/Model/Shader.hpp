@@ -4,7 +4,7 @@
 
 namespace Vakol::Model 
 {
-    class Shader 
+    class Shader
     {
     public:
         virtual ~Shader() = default;
@@ -14,6 +14,6 @@ namespace Vakol::Model
 
         virtual const unsigned int GetID() const = 0;
 
-        std::string ReadFile(const std::string& path);
+        static std::string ReadFile(const std::string& path);
     };
 }
