@@ -3,6 +3,7 @@
 namespace Vakol::Model::Math {
 
     Vector2::Vector2(const float x, const float y) { this->vector = glm::vec2(x, y); }
+
     Vector2::Vector2(const glm::vec2& vec) { this->vector = vec; }
 
     Vector2 operator+(const Vector2& left, const Vector2& right) { return Vector2(left.vector + right.vector); }
@@ -16,4 +17,4 @@ namespace Vakol::Model::Math {
     bool operator==(const Vector2& left, const Vector2& right) { return left.vector == right.vector; }
 
     bool operator!=(const Vector2& left, const Vector2& right) { return left.vector != right.vector; }
-}  // namespace Vakol::Model::Math
+}

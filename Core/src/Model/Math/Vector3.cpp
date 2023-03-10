@@ -1,7 +1,7 @@
 #include <Model/Math/Vector3.hpp>
 
-namespace Vakol::Model::Math {
-
+namespace Vakol::Model::Math
+{
     Vector3::Vector3(const float x, const float y, const float z) { this->vector = glm::vec3(x, y, z); }
 
     Vector3::Vector3(const glm::vec3& vec) { this->vector = vec; }
@@ -17,4 +17,4 @@ namespace Vakol::Model::Math {
     bool operator==(const Vector3& left, const Vector3& right) { return left.vector == right.vector; }
 
     bool operator!=(const Vector3& left, const Vector3& right) { return left.vector != right.vector; }
-}  // namespace Vakol::Model::Math
+}
