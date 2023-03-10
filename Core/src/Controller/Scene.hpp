@@ -20,6 +20,8 @@ namespace Vakol::Controller {
 
         void Update(const Time& time);
 
+        void AddEntity(const std::string scriptName = "");
+
        private:
         LuaState& lua;
         std::string scriptName;

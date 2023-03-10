@@ -25,6 +25,11 @@ namespace Vakol::Controller {
         init();
     }
 
+    void Scene::AddEntity(const std::string scriptName = "") {
+        auto ent = entityList.CreateEntity();
+        ent.AddComponent<Model::Components::Script>(scriptName);
+    }
+
     void Scene::Update(const Controller::Time& time) {
         lua.RunFile("scripts/" + scriptName);
 

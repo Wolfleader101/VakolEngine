@@ -88,21 +88,14 @@ namespace Vakol::Controller {
         while (m_running) {
             m_time.Update();
 
-            //! update lua
+            // Physics::FixedUpdate(m_time, m_entityList.GetEntityList());
+
+            //! update scenes lua
             for (auto& scene : scenes) {
                 scene.Update(m_time);
             }
 
-            // Physics::FixedUpdate(m_time, m_entityList.GetEntityList());
-
-            // for (Layer* layer : m_layerStack) layer->OnUpdate(m_time, m_entityList);
-
-            // for (auto& ent : m_entityList.GetEntityList()) {
-            //     if (ent.OnUpdate) ent.OnUpdate(m_time, ent);
-            // }
-
             m_renderer->Update(m_time);
-            // m_renderer.Update(m_time, m_entityList.GetEntityList());
 
             // m_gui.OnUpdate();
 
