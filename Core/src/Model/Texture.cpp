@@ -19,7 +19,7 @@ namespace Vakol::Model
 			VK_ERROR("Failed to load file {0}", path);
 			stbi_image_free(image);
 
-			return stbi_load("assets/default.png", &width, &height, &colorDepth, 0);
+			return stbi_load("assets/DEBUG_ErrorTex_Var1_64.png", &width, &height, &colorDepth, 0);
 		}
 
 		return image;

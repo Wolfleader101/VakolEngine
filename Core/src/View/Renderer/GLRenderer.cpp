@@ -55,6 +55,22 @@ namespace Vakol::View
 
         model.Draw(GL_SHADER);
 
+        glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)1280 / (float) 720, 0.1f, 100.0f);
+        glm::mat4 view = glm::lookAt(glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+        model.meshes.begin()->second.SetMat4("projection", projection);
+        model.meshes.begin()->second.SetMat4("view", view);
+
+        model.meshes.begin()->second.SetFloat4("rgba", glm::vec4(0.5f, 0.5f, 0.5f, 0.5f));
+        model.meshes.begin()->second.SetBool("enableTexture", true);
+
+        glm::mat4 model_matrix = glm::mat4(1.0f);
+
+        model_matrix = glm::translate(model_matrix, glm::vec3(0.0f, 0.0f, 2.0f));
+        model_matrix = glm::scale(model_matrix, glm::vec3(1.0f));
+
+        model.meshes.begin()->second.SetMat4("model", model_matrix);
+
         model.Draw(GL_VERTEX_ARRAY);
     };
 }

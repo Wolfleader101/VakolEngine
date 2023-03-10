@@ -22,6 +22,7 @@ namespace Vakol::Model
 
 		const unsigned int GetID() const override;
 
+	public:
 		void SetBool(const std::string& name, const bool value) override;
 		void SetInt(const std::string& name, const int value) override;
 		void SetFloat(const std::string& name, const float value) override;

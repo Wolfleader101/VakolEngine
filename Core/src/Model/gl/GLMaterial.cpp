@@ -30,7 +30,10 @@ namespace Vakol::Model
 		if (type == GL_SHADER)
 			this->shader.Bind();
 		else
+		{
+			glActiveTexture(GL_TEXTURE0);
 			glBindTexture(GL_TEXTURE_2D, static_cast<GLuint>(this->texture));
+		}
 	}
 
 	void GLMaterial::Unbind() const
