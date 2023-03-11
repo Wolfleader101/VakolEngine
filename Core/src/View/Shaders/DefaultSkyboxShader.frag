@@ -1,10 +1,10 @@
 #version 330
 
-uniform vec4 rgba; // The tint colour to be applied to the shader
+uniform vec4 rgba = vec4(1.0, 1.0, 1.0, 1.0); // The tint colour to be applied to the shader
 
 uniform samplerCube inputTexture0; // The texture to be applied to the sky
 
-uniform bool enableTexture; // A boolean which lets you switch textures on and off when displaying the model
+uniform bool enableTexture = true; // A boolean which lets you switch textures on and off when displaying the model
 
 in VertexData //Data from the Vertex Shader
 {
