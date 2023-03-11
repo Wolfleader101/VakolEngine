@@ -8,9 +8,9 @@
 
 namespace Vakol::Model
 {
-	unsigned char* Texture::GetImage(const std::string& path, int& width, int& height, int& colorDepth)
+	unsigned char* Texture::GetImage(const std::string& path, const bool flip, int& width, int& height, int& colorDepth)
 	{
-		stbi_set_flip_vertically_on_load(false);
+		stbi_set_flip_vertically_on_load(flip);
 
 		unsigned char* image = stbi_load(path.c_str(), &width, &height, &colorDepth, 0);
 

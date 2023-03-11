@@ -28,24 +28,24 @@ namespace Vakol::View
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_TEXTURE_2D);
 
-        GLShader shader("assets/skybox.vert", "assets/skybox.frag");
+        std::vector<Vertex3> quad_vertices = 
+        { 
+            {
+                {Vec3( 0.5f,   0.5f, 0.0f), Vec3(0.0f, 0.0f, -1.0f), Vec2(1.0f, 1.0f)},
+                {Vec3( 0.5f,  -0.5f, 0.0f), Vec3(0.0f, 0.0f, -1.0f), Vec2(1.0f, 0.0f)},
+                {Vec3(-0.5f,  -0.5f, 0.0f), Vec3(0.0f, 0.0f, -1.0f), Vec2(0.0f, 0.0f)},
+                {Vec3(-0.5f,   0.5f, 0.0f), Vec3(0.0f, 0.0f, -1.0f), Vec2(0.0f, 1.0f)}
+            }
+        };
 
-        // std::vector<Vertex3> vertices = { 
-        //     {
-        //         {Vec3( 0.5f,   0.5f, 0.0f), Vec3(0.0f, 0.0f, -1.0f), Vec2(1.0f, 1.0f)},
-        //         {Vec3( 0.5f,  -0.5f, 0.0f), Vec3(0.0f, 0.0f, -1.0f), Vec2(1.0f, 0.0f)},
-        //         {Vec3(-0.5f,  -0.5f, 0.0f), Vec3(0.0f, 0.0f, -1.0f), Vec2(0.0f, 0.0f)},
-        //         {Vec3(-0.5f,   0.5f, 0.0f), Vec3(0.0f, 0.0f, -1.0f), Vec2(0.0f, 1.0f)}
-        //     }
-        // };
-
-        std::vector<float> vertices = 
+        // skybox vertices
+        std::vector<float> skybox_vertices = 
         {
             -1.0f,  1.0f, -1.0f,
             -1.0f, -1.0f, -1.0f,
-            1.0f, -1.0f, -1.0f,
-            1.0f, -1.0f, -1.0f,
-            1.0f,  1.0f, -1.0f,
+             1.0f, -1.0f, -1.0f,
+             1.0f, -1.0f, -1.0f,
+             1.0f,  1.0f, -1.0f,
             -1.0f,  1.0f, -1.0f,
 
             -1.0f, -1.0f,  1.0f,
@@ -64,71 +64,93 @@ namespace Vakol::View
 
             -1.0f, -1.0f,  1.0f,
             -1.0f,  1.0f,  1.0f,
-            1.0f,  1.0f,  1.0f,
-            1.0f,  1.0f,  1.0f,
-            1.0f, -1.0f,  1.0f,
+             1.0f,  1.0f,  1.0f,
+             1.0f,  1.0f,  1.0f,
+             1.0f, -1.0f,  1.0f,
             -1.0f, -1.0f,  1.0f,
 
             -1.0f,  1.0f, -1.0f,
-            1.0f,  1.0f, -1.0f,
-            1.0f,  1.0f,  1.0f,
-            1.0f,  1.0f,  1.0f,
+             1.0f,  1.0f, -1.0f,
+             1.0f,  1.0f,  1.0f,
+             1.0f,  1.0f,  1.0f,
             -1.0f,  1.0f,  1.0f,
             -1.0f,  1.0f, -1.0f,
 
             -1.0f, -1.0f, -1.0f,
             -1.0f, -1.0f,  1.0f,
-            1.0f, -1.0f, -1.0f,
-            1.0f, -1.0f, -1.0f,
+             1.0f, -1.0f, -1.0f,
+             1.0f, -1.0f, -1.0f,
             -1.0f, -1.0f,  1.0f,
-            1.0f, -1.0f,  1.0f
+             1.0f, -1.0f,  1.0f
         };
 
-        // std::vector<Vec3> vertices = 
-        // {
-        //     // Front
-        //     Vec3(-1.0f, -1.0f, 1.0f),
-        //     Vec3( 1.0f, -1.0f, 1.0f),
-        //     Vec3( 1.0f,  1.0f, 1.0f),
-        //     Vec3(-1.0f,  1.0f, 1.0f),
+        // simple cube
+        std::vector<Vertex3> cube_vertices = 
+        {
+            {
+                // front
+                {{-1.0f, -1.0f, 1.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}},
+                {{ 1.0f, -1.0f, 1.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.0f}},
+                {{ 1.0f,  1.0f, 1.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}},
+                {{-1.0f,  1.0f, 1.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}},
+                // top
+                {{-1.0f,  1.0f,  1.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
+                {{ 1.0f,  1.0f,  1.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f}},
+                {{ 1.0f,  1.0f, -1.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 1.0f}},
+                {{-1.0f,  1.0f, -1.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 1.0f}},
+                // back
+                {{ 1.0f, -1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}},
+                {{-1.0f, -1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}, {1.0f, 0.0f}},
+                {{-1.0f,  1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}, {1.0f, 1.0f}},
+                {{ 1.0f,  1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f}},
+                // bottom
+                {{-1.0f, -1.0f, -1.0f}, {0.0f, -1.0f, 0.0f}, {0.0f, 0.0f}},
+                {{ 1.0f, -1.0f, -1.0f}, {0.0f, -1.0f, 0.0f}, {1.0f, 0.0f}},
+                {{ 1.0f, -1.0f,  1.0f}, {0.0f, -1.0f, 0.0f}, {1.0f, 1.0f}},
+                {{-1.0f, -1.0f,  1.0f}, {0.0f, -1.0f, 0.0f}, {0.0f, 1.0f}},
+                // left
+                {{-1.0f, -1.0f, -1.0f}, {-1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}},
+                {{-1.0f, -1.0f,  1.0f}, {-1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
+                {{-1.0f,  1.0f,  1.0f}, {-1.0f, 0.0f, 0.0f}, {1.0f, 1.0f}},
+                {{-1.0f,  1.0f, -1.0f}, {-1.0f, 0.0f, 0.0f}, {0.0f, 1.0f}},
+                // right
+                {{1.0f, -1.0f,  1.0f}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}},
+                {{1.0f, -1.0f, -1.0f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
+                {{1.0f,  1.0f, -1.0f}, {1.0f, 0.0f, 0.0f}, {1.0f, 1.0f}},
+                {{1.0f,  1.0f,  1.0f}, {1.0f, 0.0f, 0.0f}, {0.0f, 1.0f}}
+            }
+        };
 
-        //     // Back
-        //     Vec3(-1.0f, -1.0f,  -1.0f),
-        //     Vec3( 1.0f, -1.0f,  -1.0f),
-        //     Vec3( 1.0f,  1.0f,  -1.0f),
-        //     Vec3(-1.0f,  1.0f,  -1.0f)
-        // };
+        std::vector<unsigned int> cube_indices =
+        {
+            // front
+            0,  1,  2,
+            2,  3,  0,
+            // top
+            4,  5,  6,
+            6,  7,  4,
+            // back
+            8,  9, 10,
+            10, 11,  8,
+            // bottom
+            12, 13, 14,
+            14, 15, 12,
+            // left
+            16, 17, 18,
+            18, 19, 16,
+            // right
+            20, 21, 22,
+            22, 23, 20,
+        };
 
-        // std::vector<Vec3> vertices = {
-        //     Vec3(0.5f, 0.5f, 0.0f),
-        //     Vec3(0.5f, -0.5f, 0.0f),
-        //     Vec3(-0.5f, -0.5f, 0.0f),
-        //     Vec3(-0.5f, 0.5f, 0.0f)
-        // };
+        std::vector<unsigned int> quad_indices =
+        {
+            0, 1, 2,
+            0, 2, 3  
+        };
 
-        // std::vector<unsigned int> indices =
-        // {
-        //     // front
-        //     0, 1, 2,
-        //     2, 3, 0, 
-        //     // right
-        //     1, 5, 6,
-        //     6, 2, 1,
-        //     // back
-        //     7, 6, 5,
-        //     5, 4, 7,
-        //     // left
-        //     4, 0, 3,
-        //     3, 7, 4,
-        //     // bottom
-        //     4, 5, 1,
-        //     1, 0, 4,
-        //     // top
-        //     3, 2, 6,
-        //     6, 7, 3
-        // };
-
-        std::vector<std::string> faces =
+        // different texture files that make up the cubemap texture of a skybox
+        std::vector<std::string> skybox_faces =
         {
             "assets/textures/Skybox/right.png",
             "assets/textures/Skybox/left.png",
@@ -138,48 +160,58 @@ namespace Vakol::View
             "assets/textures/Skybox/back.png",
         };
 
-        auto mesh = GLMesh(GLVertexArray(vertices));
+        // add mesh and material to the model's map
+        model.AddMesh(GLMesh(GLVertexArray(cube_vertices, cube_indices)), GLMaterial(GLShader("assets/unused/custom.vert", "assets/unused/custom.frag")));
 
-        model.AddMesh(mesh, GLMaterial(shader));
-
-        model.Get().AddSkybox(faces);
+        model.Get().SetInt("material.diffuse", 0);
+        model.Get().SetInt("material.specular", 1);
     };
 
     void GLRenderer::Update(const Controller::Time& time) 
     {
-        glClearColor(0.52941f, 0.80784f, 0.92157f, 1.0f);
+        //glClearColor(0.52941f, 0.80784f, 0.92157f, 1.0f);
+        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        glDepthFunc(GL_LEQUAL);
 
         model.Draw(GL_SHADER);
 
-        glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)1280 / (float) 720, 0.1f, 100.0f);
-        glm::mat4 view = glm::mat4(glm::mat3(glm::lookAt(glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f))));
+        glm::mat4 proj_mat = glm::perspective(glm::radians(45.0f), (float) 1280 / (float) 720, 0.01f, 100.0f);
+        glm::mat4 view_mat = glm::lookAt(glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
-        model.Get().SetMat4("projection", projection);
-        model.Get().SetMat4("view", view);
+        model.Get().SetMat4("projection", proj_mat);
+        model.Get().SetMat4("view", view_mat);
 
-        model.Get().SetFloat4("rgba", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-        model.Get().SetBool("enableTexture", true);
+        glm::mat4 mdl_mat = glm::mat4(1.0f);
 
-        model.Draw(GL_TEXTURE_CUBE_MAP);
+        mdl_mat = glm::translate(mdl_mat, glm::vec3(0.0f, 0.0f, -5.0f));
 
-        glDepthFunc(GL_LESS);
+        mdl_mat = glm::scale(mdl_mat, glm::vec3(1.0f));
 
-        //glm::mat4 model_matrix = glm::mat4(1.0f);
+        mdl_mat = glm::rotate(mdl_mat, 0.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+        mdl_mat = glm::rotate(mdl_mat, 15.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+        mdl_mat = glm::rotate(mdl_mat, 0.0f, glm::vec3(0.0f, 0.0f, 1.0f));
 
-        //model_matrix = glm::translate(model_matrix, glm::vec3(0.0f, 0.0f, -5.0f));
+        model.Get().SetMat4("model", mdl_mat);
 
-        //model_matrix = glm::scale(model_matrix, glm::vec3(1.0f));
+        /************* Vert Shader *********/ 
+        model.Get().SetMat3("normal_matrix", glm::mat3(glm::transpose(glm::inverse(mdl_mat))));
+        /***********************************/
 
-        //model_matrix = glm::rotate(model_matrix, 0.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-        //model_matrix = glm::rotate(model_matrix, 45.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-        //model_matrix = glm::rotate(model_matrix, 0.0f, glm::vec3(0.0f, 0.0f, 1.0f));
 
-        //model.Get().SetMat4("model", model_matrix);
-        //model.Get().SetMat3("normalMatrix", glm::transpose(glm::inverse(model_matrix)));
+        /************** Frag Shader ***********************/
+        model.Get().SetFloat("material.shininess", 32.0f);
 
-        //model.Draw(GL_TEXTURE_CUBE_MAP);
+        model.Get().SetVec3("light.position", glm::vec3(0.0f, 0.5f, -2.0f));
+        //model.Get().SetVec3("light.color", glm::vec3(1.0f, 1.0f, 1.0f)); // not used as the color is determined by the texture
+
+        model.Get().SetVec3("light.ambient", glm::vec3(0.2f, 0.2f, 0.2f));
+        model.Get().SetVec3("light.diffuse", glm::vec3(0.4f, 0.4f, 0.4f));
+        model.Get().SetVec3("light.specular", glm::vec3(0.6f, 0.6f, 0.6f));
+        
+        model.Get().SetVec3("viewPos", glm::vec3(0.0f));
+
+        /***************************************************/
+
+        model.Draw(GL_TEXTURE_2D);
     };
 }

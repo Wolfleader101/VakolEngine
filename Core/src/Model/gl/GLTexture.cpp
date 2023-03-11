@@ -5,7 +5,7 @@
 
 namespace Vakol::Model
 {
-	unsigned int GLTexture::GetTextureCubemap(const std::vector<std::string>& faces)
+	unsigned int GLTexture::GetTextureCubemap(const std::vector<std::string>& faces, const bool flip)
 	{
 		unsigned int textureID;
 
@@ -16,7 +16,7 @@ namespace Vakol::Model
 		
 		for (auto i = 0; i < faces.size(); i++)
 		{
-			unsigned char* data = Texture::GetImage(faces[i], width, height, colorDepth);
+			unsigned char* data = Texture::GetImage(faces[i], flip, width, height, colorDepth);
 
 			GLenum format = (colorDepth > 3) ? GL_RGBA : GL_RGB;
 
@@ -35,7 +35,7 @@ namespace Vakol::Model
 		return textureID;
 	}
 
-	unsigned int GLTexture::GetTexture(const std::string& path)
+	unsigned int GLTexture::GetTexture(const std::string& path, const bool flip)
 	{
 		unsigned int textureID;
 
@@ -43,7 +43,7 @@ namespace Vakol::Model
 		glGenTextures(1, &textureID);
 
 		int width, height, colorDepth;
-		unsigned char* data = Texture::GetImage(path, width, height, colorDepth);
+		unsigned char* data = Texture::GetImage(path, flip, width, height, colorDepth);
 
 		GLenum format = (colorDepth > 3) ? GL_RGBA : GL_RGB;
 

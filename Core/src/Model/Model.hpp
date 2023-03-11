@@ -9,7 +9,7 @@ namespace Vakol::Model
 	public:
 		virtual ~Mesh() = default;
 
-		virtual void Draw() const = 0;
+		virtual void Draw(const unsigned int type) const = 0;
 
 		virtual const unsigned int GetID() const = 0;
 	};

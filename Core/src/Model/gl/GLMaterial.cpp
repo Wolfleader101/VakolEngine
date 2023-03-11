@@ -24,32 +24,8 @@ namespace Vakol::Model
 		//	this->textures[i].~GLTexture();
 	}
 
-	void GLMaterial::AddTexture(const std::string& path)
-	{
-		const std::string name = GetName(path);
-
-		if (textures.find(name) == textures.end())
-			textures.insert({name, GLTexture::GetTexture(path)});
-	}
-
-	void GLMaterial::AddSkybox(const std::vector<std::string>& paths)
-	{
-		textures.insert({"skybox", GLTexture::GetTextureCubemap(paths)});
-	}
-
-	void GLMaterial::ReplaceTexture(const std::string& src, const std::string& dst)
-	{
-		const std::string src_name = GetName(src);
-		const std::string dst_name = GetName(dst);
-
-		if (textures.find(src_name) != textures.end())
-		{
-			textures.erase(src_name);
-			AddTexture(dst_name);
-		}
-	}
-
 	const unsigned int GLMaterial::GetID() const { return shader.GetID(); }
+
 	const std::string GLMaterial::GetName(const std::string& str) const 
 	{ 
 		return str.substr(str.find_last_of('/'),
@@ -64,10 +40,12 @@ namespace Vakol::Model
 			this->shader.Bind();
 		else
 		{
-			if (size > 0)
+			if (!textures.empty())
 			{
 				glActiveTexture(GL_TEXTURE0 + size - 1);
-				glBindTexture(type, static_cast<GLuint>(textures.begin()->second));
+
+				for (const auto& tex : textures)
+					glBindTexture(type, static_cast<GLuint>(tex));
 			}
 		}
 	}
@@ -97,27 +75,27 @@ namespace Vakol::Model
 		glUniform1f(glGetUniformLocation(this->shader.GetID(), name.c_str()), value);
 	}
 
-	void GLMaterial::SetFloat2(const std::string& name, const glm::vec2& value)
+	void GLMaterial::SetVec2(const std::string& name, const glm::vec2& value)
 	{
 		glUniform2fv(glGetUniformLocation(this->shader.GetID(), name.c_str()), 1, &value[0]);
 	}
 
-	void GLMaterial::SetFloat2(const std::string& name, const float x, const float y)
+	void GLMaterial::SetVec2(const std::string& name, const float x, const float y)
 	{
 		glUniform2f(glGetUniformLocation(this->shader.GetID(), name.c_str()), x, y);
 	}
 
-	void GLMaterial::SetFloat3(const std::string& name, const glm::vec3& value)
+	void GLMaterial::SetVec3(const std::string& name, const glm::vec3& value)
 	{
 		glUniform3fv(glGetUniformLocation(this->shader.GetID(), name.c_str()), 1, &value[0]);
 	}
 
-	void GLMaterial::SetFloat3(const std::string& name, const float x, const float y, const float z)
+	void GLMaterial::SetVec3(const std::string& name, const float x, const float y, const float z)
 	{
 		glUniform3f(glGetUniformLocation(this->shader.GetID(), name.c_str()), x, y, z);
 	}
 
-	void GLMaterial::SetFloat4(const std::string& name, const glm::vec4& value)
+	void GLMaterial::SetVec4(const std::string& name, const glm::vec4& value)
 	{
 		glUniform4fv(glGetUniformLocation(this->shader.GetID(), name.c_str()), 1, &value[0]);
 	}

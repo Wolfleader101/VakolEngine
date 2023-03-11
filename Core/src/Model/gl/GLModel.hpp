@@ -17,7 +17,7 @@ namespace Vakol::Model
 
 		~GLMesh() override;
 
-		void Draw() const override;
+		void Draw(const unsigned int type) const override;
 
 		const unsigned int GetID() const override;
 
@@ -40,8 +40,11 @@ namespace Vakol::Model
 		void AddMesh(const GLMesh& mesh, const GLMaterial& material);
 
 		GLMaterial Get() const { return meshes.begin()->second; }
+
+		void SetDepthFunc(const unsigned int _depthCompare) { depthCompare = _depthCompare; }
 		
 	private:
 		std::map<GLMesh, GLMaterial, MeshCompare> meshes;
+		unsigned int depthCompare;
 	};
 }

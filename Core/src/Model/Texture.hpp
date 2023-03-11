@@ -15,7 +15,7 @@ namespace Vakol::Model
 
 		virtual const unsigned int GetID() const = 0;
 
-		static unsigned char* GetImage(const std::string& path, int& width, int& height, int& colorDepth);
+		static unsigned char* GetImage(const std::string& path, const bool flip, int& width, int& height, int& colorDepth);
 
 		static void FreeImage(unsigned char* image);
 	};

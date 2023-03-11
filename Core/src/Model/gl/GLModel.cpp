@@ -1,6 +1,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include <Controller/Logger.hpp>
+
 #include "GLModel.hpp"
 
 namespace Vakol::Model
@@ -19,11 +21,15 @@ namespace Vakol::Model
 
 	const unsigned int GLMesh::GetID() const { return this->VAO.GetID(); }
 
-	void GLMesh::Draw() const
+	void GLMesh::Draw(const unsigned int type) const
 	{
 		this->VAO.Bind();
-        //glDrawElements(GL_TRIANGLES, static_cast<unsigned int>(this->VAO.GetIndexCount()), GL_UNSIGNED_INT, 0);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+
+		if (type == GL_INDEX_ARRAY)
+        	glDrawElements(GL_TRIANGLES, this->VAO.GetIndexCount(), GL_UNSIGNED_INT, 0);
+		else if (type == GL_VERTEX_ARRAY)
+			glDrawArrays(GL_TRIANGLES, 0, this->VAO.GetVertexCount());
+
 		this->VAO.Unbind();
 	}
 
@@ -37,15 +43,25 @@ namespace Vakol::Model
 	}
 
 	void GLModel::Draw(const unsigned int type) const 
-	{ 
+	{
+		glDepthFunc(static_cast<GLenum>(depthCompare));
+			
 		if (type == GL_SHADER)
 			meshes.begin()->second.Bind(type); // Bind Shader
-		else
+		else // if not binding the shader
 		{
 			// Bind Texture
 			meshes.begin()->second.Bind(type);
-			meshes.begin()->first.Draw();
+
+			// Determine if we want to draw mesh using indices, or just vertices.
+			// Indexed vertices usually has better performance results due to re-use of vertices
+			if (type == GL_TEXTURE_2D)
+				meshes.begin()->first.Draw(GL_INDEX_ARRAY);
+			else if (type == GL_TEXTURE_CUBE_MAP)
+				meshes.begin()->first.Draw(GL_VERTEX_ARRAY);
 		}
+
+		glDepthFunc(GL_LESS); // set depth back to normal *regardless if the depth has been shifted or not*
 	}
 
 	void GLModel::AddMesh(const GLMesh& mesh, const GLMaterial& material)
