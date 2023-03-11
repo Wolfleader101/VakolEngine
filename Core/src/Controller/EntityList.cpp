@@ -2,10 +2,14 @@
 
 #include <assert.h>
 
+#include <cereal/cereal.hpp>
+
 #include <Controller/Logger.hpp>
 #include <Controller/System.hpp>
 #include <Model/Components.hpp>
 #include <Model/Entity.hpp>
+
+
 
 namespace Vakol::Controller {
 
@@ -82,6 +86,28 @@ namespace Vakol::Controller {
 
     void EntityList::Update(double d_t) {
         // use systems functions to update the entt::registry
+    }
+
+    void EntityList::Serialize(const std::string& file) const 
+    {
+        // std::ofstream output(file);
+
+        // if(output.good())
+        // {
+        //     cereal::BinaryOutputArchive json(output);
+        //     auto& x = entt::basic_snapshot<entt::registry>(m_Registry);
+        //     //entt::snapshot{m_Registry.get()}.entities(output).component<Components::Tag>(output);
+        //     //json(x);
+        // }
+
+        // output.close();   
+
+        std::cout << "Yeet\n";
+    }
+
+    void EntityList::Deserialize(const std::string& file) 
+    {
+
     }
 
 }  // namespace Vakol::Controller

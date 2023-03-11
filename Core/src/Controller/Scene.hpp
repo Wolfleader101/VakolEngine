@@ -20,6 +20,9 @@ namespace Vakol::Controller {
 
         void CreateEntity(const std::string scriptName = "");
 
+        void Serialize(const std::string& folder) const;
+        void Deserialize(const std::string& folder);
+
        private:
         LuaState& lua;
         std::string scriptName;

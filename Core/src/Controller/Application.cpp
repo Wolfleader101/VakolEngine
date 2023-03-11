@@ -11,7 +11,22 @@
 namespace Vakol::Controller {
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
-    Application::Application() : m_running(false), m_window(nullptr), m_renderer(nullptr) { Logger::Init(); };
+    Application::Application() : m_running(false), m_window(nullptr), m_renderer(nullptr) 
+    { 
+        Logger::Init(); 
+        
+        scenes.push_back(Scene("First Scene", "sample.lua", LuaState()));
+
+        auto& x = scenes.at(0);
+
+        for(int i = 0; i < 5; i++)
+        {
+            x.entityList.CreateEntity();
+        }
+
+        x.Serialize("assets/Scenes");
+        
+    };
 
     void Application::Init() {
         Controller::RegisterLogger(lua.GetState());

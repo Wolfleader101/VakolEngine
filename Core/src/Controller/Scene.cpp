@@ -3,8 +3,12 @@
 #include <Model/Components.hpp>
 #include <Model/Entity.hpp>
 
+#include <Controller/Serialization/Serializable.hpp>
+
 #include "LuaAccess.hpp"
 #include "System.hpp"
+
+
 namespace Vakol::Controller {
     Scene::Scene(const std::string& name, const std::string& scriptName, LuaState& lua)
         : name(name), scriptName(scriptName), lua(lua), entityList() {
@@ -29,4 +33,21 @@ namespace Vakol::Controller {
 
         System::ScriptUpdate(entityList.GetRegistry(), lua);
     }
+
+
+    void Scene::Serialize(const std::string& folder) const
+    {
+        Serializable json(entityList);
+
+        json.Serialize("/" + folder + "/" + name + "/EntityList.json");
+        
+        //json.Serialize camera...
+        
+    }
+
+    void Scene::Deserialize(const std::string& folder)
+    {
+            
+    }
+
 }  // namespace Vakol::Controller

@@ -85,6 +85,10 @@ namespace Vakol::Controller {
 
         void Update(double d_t);
 
+
+        void Serialize(const std::string& file) const;
+        void Deserialize(const std::string& file);
+
        private:
         /**
          * @brief EnTT registry actually containing all the entity and comp data
