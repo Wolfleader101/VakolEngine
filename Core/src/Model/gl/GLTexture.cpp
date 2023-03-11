@@ -45,7 +45,7 @@ namespace Vakol::Model
 		int width, height, colorDepth;
 		unsigned char* data = Texture::GetImage(path, flip, width, height, colorDepth);
 
-		GLenum format = (colorDepth > 3) ? GL_RGBA : GL_RGB;
+		GLenum format = (colorDepth == 1) ? GL_RED : (colorDepth > 3) ? GL_RGBA : GL_RGB;
 
 		glBindTexture(GL_TEXTURE_2D, textureID);
 		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
