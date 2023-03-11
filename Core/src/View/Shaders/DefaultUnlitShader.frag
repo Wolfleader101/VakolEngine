@@ -1,4 +1,4 @@
-#version 330
+#version 460
 
 uniform vec4 rgba = vec4(1.0, 1.0, 1.0, 1.0); // The tint colour to be applied to the shader
 

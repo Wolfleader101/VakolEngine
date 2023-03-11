@@ -1,4 +1,4 @@
-#version 330
+#version 460
 
 uniform mat4 mvp; //The Model View Projection matrix
 
