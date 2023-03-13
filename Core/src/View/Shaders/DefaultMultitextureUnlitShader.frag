@@ -1,6 +1,6 @@
-#version 330
+#version 460
 
-uniform vec4 rgba; // The tint colour to be applied to the shader
+uniform vec4 rgba = vec4(1.0, 1.0, 1.0, 1.0); // The tint colour to be applied to the shader
 
 uniform sampler2D inputTexture0; // The first texture to be applied to the model
 uniform sampler2D inputTexture1; // The second texture to be applied to the model
