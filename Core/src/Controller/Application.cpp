@@ -15,7 +15,7 @@ namespace Vakol::Controller {
     { 
         Logger::Init(); 
         
-        scenes.push_back(Scene("First Scene", "sample.lua", LuaState()));
+        scenes.push_back(Scene("First Scene", "testScene.lua", LuaState()));
 
         auto& x = scenes.at(0);
 
@@ -24,7 +24,7 @@ namespace Vakol::Controller {
             x.entityList.CreateEntity();
         }
 
-        x.Serialize("assets/Scenes");
+        x.Serialize("assets/scenes");
         
     };
 

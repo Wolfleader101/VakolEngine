@@ -40,6 +40,14 @@ namespace Vakol::Model::Components {
         glm::vec3 pos;   /**< XYZ position */
         glm::quat rot;   /**< XYZ rotation */
         glm::vec3 scale; /**< XYZ scale */
+
+        template<class Archive>
+        void serialize(Archive& ar)
+        {
+            ar(pos.x, pos.y, pos.z,
+               rot.w, rot.x, rot.y, rot.z, 
+               scale.x, scale.y, scale.z);
+        }
     };
 
     // using ModelType = VakolModel;
@@ -59,6 +67,11 @@ namespace Vakol::Model::Components {
         bool IsEmpty() { return tag.size() == 0; }
 
         std::string tag; /**< String object containing data*/
+
+        template <class Archive>
+        void serialize(Archive& ar) {
+            ar(tag);
+        }
     };
 
     /**
@@ -77,6 +90,11 @@ namespace Vakol::Model::Components {
      */
     struct TagType {
         EntityType type; /**< Type of entity */
+
+        template <class Archive>
+        void serialize(Archive& ar) {
+            ar(type);
+        }
     };
 
     /**
@@ -88,6 +106,11 @@ namespace Vakol::Model::Components {
         std::string script_name;
 
         Script(const std::string& script, Controller::LuaState& lua);
+
+        template <class Archive>
+        void serialize(Archive& ar) {
+            ar(script_name);
+        }
     };
 
 }  // namespace Vakol::Model::Components

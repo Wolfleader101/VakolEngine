@@ -1,6 +1,7 @@
 #pragma once
 
 #include <entt/entt.hpp>
+#include <cereal/archives/json.hpp>
 #include <memory>
 #include <vector>
 
@@ -26,8 +27,6 @@ namespace Vakol::Controller {
          *
          */
         EntityList() = default;
-
-        EntityList(const EntityList& other);
 
         /**
          * @brief Create an Entity object
@@ -103,6 +102,18 @@ namespace Vakol::Controller {
         std::vector<Entity> ActiveEntityList;
 
         friend class Entity;  // friend to allow the api to entities to be clean.
+
+        template <typename Archive, typename ...Args>
+        void privateSerialize(const std::string& file) const
+        {
+            std::ofstream out(file);
+            Archive json{out};
+            entt::snapshot snapshot(m_Registry);
+            snapshot.entities(json).component<Args...>(json);
+            
+            //m_Registry..entities(output).component<T, Args...>(output);
+            out.close();
+        }
     };
 
 }  // namespace Vakol::Controller

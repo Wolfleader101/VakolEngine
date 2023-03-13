@@ -1,9 +1,12 @@
 #include "Scene.hpp"
 
+#include <filesystem>
+
 #include <Model/Components.hpp>
 #include <Model/Entity.hpp>
 
 #include <Controller/Serialization/Serializable.hpp>
+
 
 #include "LuaAccess.hpp"
 #include "System.hpp"
@@ -37,9 +40,13 @@ namespace Vakol::Controller {
 
     void Scene::Serialize(const std::string& folder) const
     {
-        //Serializable json(entityList);
+        std::string SceneFolderLoc = folder + "/" + name;
+        // makes assets/scenes if it doesn't exist
+        if (!std::filesystem::exists(folder)) std::filesystem::create_directory(folder);
+        // makes assets/scenes/scene_name if it doesn't exist
+        if (!std::filesystem::exists(SceneFolderLoc)) std::filesystem::create_directory(SceneFolderLoc);
 
-        entityList.Serialize("/" + folder + "/" + name + "/EntityList.json");
+        entityList.Serialize(SceneFolderLoc + "EntityList.json");
         
         //json.Serialize camera...
         

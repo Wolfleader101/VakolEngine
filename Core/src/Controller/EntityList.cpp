@@ -8,15 +8,11 @@
 #include <Controller/System.hpp>
 #include <Model/Components.hpp>
 #include <Model/Entity.hpp>
+#include <Model/Components.hpp>
 
 
 
 namespace Vakol::Controller {
-    EntityList::EntityList(const EntityList& other) 
-    {
-        // m_Registry.swap(other.m_Registry);
-        // ActiveEntityList = other.ActiveEntityList;
-    }
 
     Entity& EntityList::CreateEntity() {
         Entity newEntity = Entity(m_Registry.create(), this);
@@ -85,34 +81,29 @@ namespace Vakol::Controller {
     void EntityList::Init(entt::registry& toCopy) {
         // init the list. Once the json is de-serialized, we transfer to an EntityList
         // Then call any system init funcs.
+        toCopy;
     }
 
     void EntityList::Init() {}
 
     void EntityList::Update(double d_t) {
         // use systems functions to update the entt::registry
+        d_t;
     }
 
     void EntityList::Serialize(const std::string& file) const 
     {
-        // std::ofstream output(file);
-
-        // if(output.good())
-        // {
-        //     cereal::BinaryOutputArchive json(output);
-        //     auto& x = entt::basic_snapshot<entt::registry>(m_Registry);
-        //     //entt::snapshot{m_Registry.get()}.entities(output).component<Components::Tag>(output);
-        //     //json(x);
-        // }
-
-        // output.close();   
-
-        std::cout << "Yeet\n";
+        privateSerialize<cereal::JSONOutputArchive,   
+                            Model::Components::Transform,
+                            Model::Components::Tag,
+                            Model::Components::EntityType,
+                            Model::Components::TagType,
+                            Model::Components::Script>(file);
     }
 
     void EntityList::Deserialize(const std::string& file) 
     {
-
+        file;
     }
 
 }  // namespace Vakol::Controller
