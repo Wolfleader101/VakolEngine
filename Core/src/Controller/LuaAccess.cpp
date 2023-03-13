@@ -11,15 +11,62 @@ namespace Vakol::Controller {
     }
 
     void RegisterLogger(sol::state& lua) {
-        lua.set_function("print", &Logger::ScriptPrintTrace);
-        lua.set_function("print_info", &Logger::ScriptPrintInfo);
-        lua.set_function("print_warn", &Logger::ScriptPrintWarn);
-        lua.set_function("print_err", &Logger::ScriptPrintError);
-        lua.set_function("print_crit", &Logger::ScriptPrintCrit);
+        lua.set_function("print", [](sol::variadic_args va) {
+            auto arg = va[0];
+
+            if (arg.get_type() == sol::type::string) {
+                Logger::ScriptPrintTrace(va[0].get<std::string>());
+            } else if (arg.get_type() == sol::type::number) {
+                Logger::ScriptPrintTrace(std::to_string(va[0].get<float>()));
+            }
+        });
+        lua.set_function("print_info", [](sol::variadic_args va) {
+            auto arg = va[0];
+
+            if (arg.get_type() == sol::type::string) {
+                Logger::ScriptPrintInfo(va[0].get<std::string>());
+            } else if (arg.get_type() == sol::type::number) {
+                Logger::ScriptPrintInfo(std::to_string(va[0].get<float>()));
+            }
+        });
+        lua.set_function("print_warn", [](sol::variadic_args va) {
+            auto arg = va[0];
+
+            if (arg.get_type() == sol::type::string) {
+                Logger::ScriptPrintWarn(va[0].get<std::string>());
+            } else if (arg.get_type() == sol::type::number) {
+                Logger::ScriptPrintWarn(std::to_string(va[0].get<float>()));
+            }
+        });
+        lua.set_function("print_err", [](sol::variadic_args va) {
+            auto arg = va[0];
+
+            if (arg.get_type() == sol::type::string) {
+                Logger::ScriptPrintError(va[0].get<std::string>());
+            } else if (arg.get_type() == sol::type::number) {
+                Logger::ScriptPrintError(std::to_string(va[0].get<float>()));
+            }
+        });
+        lua.set_function("print_crit", [](sol::variadic_args va) {
+            auto arg = va[0];
+
+            if (arg.get_type() == sol::type::string) {
+                Logger::ScriptPrintCrit(va[0].get<std::string>());
+            } else if (arg.get_type() == sol::type::number) {
+                Logger::ScriptPrintCrit(std::to_string(va[0].get<float>()));
+            }
+        });
     }
 
     void RegisterApplication(sol::state& lua, Application* app) {
         lua.set_function("add_scene", &Application::AddScene, app);
+
+        auto TimeType = lua.new_usertype<Time>("Time");
+        TimeType["delta_time"] = &Time::deltaTime;
+        TimeType["curr_time"] = &Time::curTime;
+        TimeType["prev_time"] = &Time::prevTime;
+
+        lua["Time"] = &app->GetTime();
     }
     void RegisterECS(sol::state& lua) {}
     void RegisterWindow(sol::state& lua) {}

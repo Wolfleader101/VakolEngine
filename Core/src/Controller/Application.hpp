@@ -71,6 +71,8 @@ namespace Vakol::Controller {
 
         void AddScene(std::string scriptName, std::string scene_name = "");
 
+        const Time& GetTime() const { return m_time; }
+
        private:
         /**
          * @brief on window close event

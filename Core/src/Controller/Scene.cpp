@@ -20,7 +20,7 @@ namespace Vakol::Controller {
         if (scriptName.length() != 0) ent.AddComponent<Model::Components::Script>(scriptName, lua);
     }
 
-    void Scene::Update(const Controller::Time& time) {
+    void Scene::Update(const Time& time) {
         lua.RunFile("scripts/" + scriptName);
 
         sol::function update = lua.GetState()["update"];
