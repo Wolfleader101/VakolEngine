@@ -12,6 +12,11 @@
 
 
 namespace Vakol::Controller {
+    EntityList::EntityList(const EntityList& other) 
+    {
+        // m_Registry.swap(other.m_Registry);
+        // ActiveEntityList = other.ActiveEntityList;
+    }
 
     Entity& EntityList::CreateEntity() {
         Entity newEntity = Entity(m_Registry.create(), this);

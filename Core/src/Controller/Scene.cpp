@@ -37,9 +37,9 @@ namespace Vakol::Controller {
 
     void Scene::Serialize(const std::string& folder) const
     {
-        Serializable json(entityList);
+        //Serializable json(entityList);
 
-        json.Serialize("/" + folder + "/" + name + "/EntityList.json");
+        entityList.Serialize("/" + folder + "/" + name + "/EntityList.json");
         
         //json.Serialize camera...
         
@@ -47,7 +47,7 @@ namespace Vakol::Controller {
 
     void Scene::Deserialize(const std::string& folder)
     {
-            
+            folder;
     }
 
 }  // namespace Vakol::Controller

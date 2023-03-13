@@ -27,6 +27,8 @@ namespace Vakol::Controller {
          */
         EntityList() = default;
 
+        EntityList(const EntityList& other);
+
         /**
          * @brief Create an Entity object
          *

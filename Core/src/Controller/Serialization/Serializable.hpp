@@ -10,12 +10,13 @@ namespace Vakol::Controller
        public:
 
 		template<class T>
-        Serializable(T&& type) { *this = type;}
+        Serializable(T&& type) { *this = std::forward<T>(type);}
 
 		template<class T>
 		Serializable& operator=(T&& type)
 		{
-            value.reset(new StoredValue<T>(type));
+			//decay the type 
+            value.reset(new StoredValue<std::decay_t<T>>(std::forward<T>(type)));
 			return *this;
 		}
 
@@ -35,13 +36,13 @@ namespace Vakol::Controller
 		   template <class T>
 		   struct StoredValue : SerializableType //type to actually store T
 		   {
-                StoredValue(const T& intake) : actualStorage(intake) {}
-				//StoredValue(T&& intake) : actualStorage(std::move(intake)) {}
+                StoredValue(T intake) : actualStorage(intake) {}
+				StoredValue(T&& intake) : actualStorage(std::move(intake)) {}
 
 				void Serialize(const std::string& file) const override { actualStorage.Serialize(file); }
 				void Deserialize(const std::string& file) override { actualStorage.Deserialize(file); }
 
-                T actualStorage;
+                T& actualStorage;
 		   };
 
 			std::unique_ptr<SerializableType> value;
