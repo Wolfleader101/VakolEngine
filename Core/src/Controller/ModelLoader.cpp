@@ -6,16 +6,14 @@
 #include "Logger.hpp"
 #include "ModelLoader.hpp"
 
-using Vakol::Model::GLTexture;
+using Vakol::Model::GetTexture;
 
 namespace Vakol::Controller
 {
-    Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const std::vector<Texture>& textures)
-    {
-        this->vertices = vertices;
-        this->indices = indices;
-        this->textures = textures;
-    }
+    std::vector<Texture> ModelLoader::textures_loaded;
+    std::vector<Mesh> ModelLoader::meshes;
+
+    std::string ModelLoader::directory;
 
     void ModelLoader::LoadModel(const std::string& path)
     {
@@ -130,6 +128,8 @@ namespace Vakol::Controller
         std::vector<Texture> emissiveMaps = LoadMaterialTextures(material, aiTextureType_EMISSIVE, "texture_emissive");
         textures.insert(textures.end(), emissiveMaps.begin(), emissiveMaps.end());
 
+        VK_TRACE("{0}", textures.size());
+
         return Mesh(vertices, indices, textures);
     }
 
@@ -159,9 +159,9 @@ namespace Vakol::Controller
             if (!skip) // if texture has not already been loaded
             {
                 Texture texture;
-                texture.id = GLTexture::GetTexture(str.C_Str(), true);
+                texture.id = GetTexture((directory + "/textures/" + str.C_Str()).c_str(), true); // this might need to change
                 texture.type = typeName;
-                texture.path = directory;
+                texture.path = str.C_Str();
 
                 textures.push_back(texture);
                 textures_loaded.push_back(texture);

@@ -6,10 +6,11 @@
 
 namespace Vakol::Model
 {
-	class GLTexture
+	struct GLTexture : public Texture
 	{
-	public:
-		static unsigned int GetTextureCubemap(const std::vector<std::string>& faces, const bool flip);
-		static unsigned int GetTexture(const std::string& path, const bool flip);
+		
 	};
+
+	unsigned int GetTextureCubemap(const std::vector<std::string>& faces, const bool flip);
+	unsigned int GetTexture(const std::string& path, const bool flip);
 }

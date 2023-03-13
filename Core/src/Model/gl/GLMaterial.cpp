@@ -8,10 +8,10 @@
 
 namespace Vakol::Model
 {
-	GLMaterial::GLMaterial(const GLShader& shader)
+	GLMaterial::GLMaterial(const GLShader& shader, const std::vector<Texture>& textures)
 	{
 		this->shader = shader;
-		//this->textures["default"] = GLTexture::GetTexture("assets/textures/white.png");
+		this->textures = textures;
 	}
 
 	GLMaterial::~GLMaterial()
@@ -38,15 +38,20 @@ namespace Vakol::Model
 
 		if (type == GL_SHADER)
 			this->shader.Bind();
-		else
+		else if (type == GL_TEXTURE_2D || type == GL_TEXTURE_CUBE_MAP)
 		{
 			if (!textures.empty())
 			{
 				glActiveTexture(GL_TEXTURE0 + size - 1);
 
 				for (const auto& tex : textures)
-					glBindTexture(type, static_cast<GLuint>(tex));
+					glBindTexture(type, static_cast<GLuint>(tex.id));
 			}
+		}
+		else
+		{
+			VK_ERROR("ERROR:: UNKNOWN DRAW TYPE\n");
+			return;
 		}
 	}
 

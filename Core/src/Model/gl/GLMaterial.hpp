@@ -1,8 +1,5 @@
 #pragma once
 
-#include <map>
-
-#include <memory>
 #include <vector>
 
 #include "../Material.hpp"
@@ -16,7 +13,7 @@ namespace Vakol::Model
 	{
 	public:
         GLMaterial() = default;
-		GLMaterial(const GLShader& shader);
+		GLMaterial(const GLShader& shader, const std::vector<Texture>& textures);
 		~GLMaterial() override;
 
 		void Bind(const unsigned int type) const override;
@@ -44,6 +41,6 @@ namespace Vakol::Model
 		const std::string GetName(const std::string& str) const;
 	private:
 		GLShader shader;
-		std::vector<unsigned int> textures;
+		std::vector<Texture> textures;
 	};
 }

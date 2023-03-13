@@ -1,6 +1,10 @@
 #pragma once
 
+#include <vector>
+
 #include "../Buffer.hpp"
+
+using Vakol::Model::Vertex;
 
 namespace Vakol::Model
 {
@@ -8,13 +12,7 @@ namespace Vakol::Model
 	{
 	public:
 		GLVertexArray() = default;
-		GLVertexArray(const std::vector<Vakol::Model::Vertex>& vertices, const std::vector<unsigned int>& indices);
-		GLVertexArray(const std::vector<Vakol::Model::Vertex3>& vertices, const std::vector<unsigned int>& indices);
-		GLVertexArray(const std::vector<Vakol::Model::Vertex2N>& vertices, const std::vector<unsigned int>& indices);
-		GLVertexArray(const std::vector<Vakol::Model::Vertex2U>& vertices, const std::vector<unsigned int>& indices);
-		GLVertexArray(const std::vector<Vakol::Model::Math::Vec3>& vertices, const std::vector<unsigned int>& indices);
-		GLVertexArray(const std::vector<float>& vertices);
-
+		GLVertexArray(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices);
 		~GLVertexArray() override;
 
 		void Bind() const override;

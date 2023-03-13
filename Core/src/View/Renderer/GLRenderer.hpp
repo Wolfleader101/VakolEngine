@@ -2,9 +2,9 @@
 
 #include "Renderer.hpp"
 
-#include <Controller/ModelLoader.hpp>
+#include <Controller/MeshRenderer.hpp>
 
-using Vakol::Controller::ModelLoader;
+using Vakol::Controller::MeshRenderer;
 
 namespace Vakol::View 
 {
@@ -13,7 +13,8 @@ namespace Vakol::View
     public:
         GLRenderer(const std::shared_ptr<Window> window);
         void Update(const Controller::Time& time) override;
+
     private:
-        ModelLoader ml;
+        MeshRenderer render;
     };
 }

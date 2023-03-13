@@ -2,11 +2,12 @@
 
 #include <glad/glad.h>
 
+#include <Controller/Logger.hpp>
+
 #include <Model/Math/Vector3.hpp>
 #include <Model/Math/Vector2.hpp>
 
 #include <vector>
-
 
 using Vakol::Model::Math::Vec3;
 using Vakol::Model::Math::Vec2;
@@ -76,8 +77,6 @@ namespace Vakol::View
         //     20, 21, 22,
         //     22, 23, 20,
         // };
-
-
         // // different texture files that make up the cubemap texture of a skybox
         // std::vector<std::string> skybox_faces =
         // {
@@ -89,22 +88,24 @@ namespace Vakol::View
         //     "assets/textures/Skybox/back.png",
         // };
     
+        render.SetMesh("assets/models/cube.obj");
 
+        //VK_TRACE("{0}", render.materials[0].);
     };
 
     void GLRenderer::Update(const Controller::Time& time) 
     {
-        //glClearColor(0.52941f, 0.80784f, 0.92157f, 1.0f);
-        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        glClearColor(0.52941f, 0.80784f, 0.92157f, 1.0f);
+        //glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        //model.Draw(GL_SHADER);
+        
+        render.Draw(GL_SHADER);
 
         glm::mat4 proj_mat = glm::perspective(glm::radians(45.0f), (float) 1280 / (float) 720, 0.01f, 100.0f);
         glm::mat4 view_mat = glm::lookAt(glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
-        //model.Get().SetMat4("projection", proj_mat);
-        //model.Get().SetMat4("view", view_mat);
+        render.Get(0).SetMat4("projection", proj_mat);
+        render.Get(0).SetMat4("view", view_mat);
 
         glm::mat4 mdl_mat = glm::mat4(1.0f);
 
@@ -116,27 +117,27 @@ namespace Vakol::View
         mdl_mat = glm::rotate(mdl_mat, 0.0f, glm::vec3(0.0f, 1.0f, 0.0f));
         mdl_mat = glm::rotate(mdl_mat, 0.0f, glm::vec3(0.0f, 0.0f, 1.0f));
 
-        // model.Get().SetMat4("model", mdl_mat);
+        render.Get(0).SetMat4("model", mdl_mat);
 
         // /************* Vert Shader *********/ 
-        // model.Get().SetMat3("normal_matrix", glm::mat3(glm::transpose(glm::inverse(mdl_mat))));
+        render.Get(0).SetMat3("normal_matrix", glm::mat3(glm::transpose(glm::inverse(mdl_mat))));
         // /***********************************/
 
 
         // /************** Frag Shader ***********************/
-        // model.Get().SetFloat("material.shininess", 32.0f);
+        render.Get(0).SetFloat("material.shininess", 32.0f);
 
-        // model.Get().SetVec3("light.position", glm::vec3(0.0f, 0.5f, -2.0f));
-        // //model.Get().SetVec3("light.color", glm::vec3(1.0f, 1.0f, 1.0f)); // not used as the color is determined by the texture
+        render.Get(0).SetVec3("light.position", glm::vec3(0.0f, 0.5f, -2.0f));
+        render.Get(0).SetVec3("light.color", glm::vec3(1.0f, 1.0f, 1.0f)); // not used as the color is determined by the texture
 
-        // model.Get().SetVec3("light.ambient", glm::vec3(0.2f, 0.2f, 0.2f));
-        // model.Get().SetVec3("light.diffuse", glm::vec3(0.4f, 0.4f, 0.4f));
-        // model.Get().SetVec3("light.specular", glm::vec3(0.6f, 0.6f, 0.6f));
+        render.Get(0).SetVec3("light.ambient", glm::vec3(0.2f, 0.2f, 0.2f));
+        render.Get(0).SetVec3("light.diffuse", glm::vec3(0.4f, 0.4f, 0.4f));
+        render.Get(0).SetVec3("light.specular", glm::vec3(0.6f, 0.6f, 0.6f));
         
-        // model.Get().SetVec3("viewPos", glm::vec3(0.0f));
+        render.Get(0).SetVec3("viewPos", glm::vec3(0.0f));
 
         // /***************************************************/
 
-        // model.Draw(GL_TEXTURE_2D);
+        render.Draw(GL_TEXTURE_2D);
     };
 }

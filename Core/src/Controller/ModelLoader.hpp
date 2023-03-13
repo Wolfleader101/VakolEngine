@@ -5,29 +5,29 @@
 #include <assimp/scene.h>
 
 #include <Model/Buffer.hpp>
+#include <Model/Texture.hpp>
 
 using Vakol::Model::Math::Vec3;
 using Vakol::Model::Math::Vec2;
 
 using Vakol::Model::Vertex;
+using Vakol::Model::Texture;
 
 namespace Vakol::Controller
 {
-    struct Texture
-    {
-        unsigned int id;
-        std::string type;
-        std::string path;
-    };
-
     class Mesh
     {
     public:
+        Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const std::vector<Texture>& textures)
+        {
+            this->vertices = vertices;
+            this->indices = indices;
+            this->textures = textures;
+        }
+
         std::vector<Vertex> vertices;
         std::vector<unsigned int> indices;
         std::vector<Texture> textures;
-
-        Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const std::vector<Texture>& textures);
     };
 
     class ModelLoader
@@ -35,8 +35,6 @@ namespace Vakol::Controller
     public:
         static std::vector<Texture> textures_loaded;
         static std::vector<Mesh> meshes;
-
-        static std::string directory;
 
         static void LoadModel(const std::string& path);
     private:
@@ -47,5 +45,8 @@ namespace Vakol::Controller
         static Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
 
         static std::vector<Texture> LoadMaterialTextures(aiMaterial* mat, aiTextureType type, const std::string& typeName);
+
+    private:
+        static std::string directory;
     };
 }
