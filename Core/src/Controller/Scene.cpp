@@ -37,16 +37,25 @@ namespace Vakol::Controller {
         System::ScriptUpdate(entityList.GetRegistry(), lua);
     }
 
+    namespace fs = std::filesystem;
 
     void Scene::Serialize(const std::string& folder) const
     {
-        std::string SceneFolderLoc = folder + "/" + name;
-        // makes assets/scenes if it doesn't exist
-        if (!std::filesystem::exists(folder)) std::filesystem::create_directory(folder);
-        // makes assets/scenes/scene_name if it doesn't exist
-        if (!std::filesystem::exists(SceneFolderLoc)) std::filesystem::create_directory(SceneFolderLoc);
+        
+        std::string folderPath = "\\" + folder + "\\" + name;
+        fs::path currentPath = fs::current_path();
 
-        entityList.Serialize(SceneFolderLoc + "EntityList.json");
+        try
+        {
+            currentPath += folderPath;
+            fs::create_directory(currentPath);  // creates directory for scene if it doesnt exist
+        }
+        catch (std::exception e)
+        {
+            //directory already exists
+        }
+
+        entityList.Serialize(folderPath + "/EntityList.json");
         
         //json.Serialize camera...
         
