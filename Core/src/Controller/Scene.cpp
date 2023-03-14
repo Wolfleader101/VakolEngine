@@ -45,6 +45,7 @@ namespace Vakol::Controller {
         std::string folderPath = "\\" + folder + "\\" + name;
         fs::path currentPath = fs::current_path();
 
+
         try
         {
             currentPath += folderPath;
@@ -54,6 +55,7 @@ namespace Vakol::Controller {
         {
             //directory already exists
         }
+        
 
         entityList.Serialize(folderPath + "/EntityList.json");
         
