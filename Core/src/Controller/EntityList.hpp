@@ -134,9 +134,8 @@ namespace Vakol::Controller {
 
                 Archive json(inp);
 
-                json(ActiveEntityList);
+                json(ActiveEntityList); //fills vector again
 
-                //json(cereal::make_nvp("vector", ActiveEntityList));
 
                 entt::snapshot_loader snapLoad(m_Registry);
                 snapLoad.entities(json);

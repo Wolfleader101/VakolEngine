@@ -16,33 +16,7 @@ namespace Vakol::Controller {
     { 
         Logger::Init(); 
         
-        //SERIALIZATION TESTING
-        scenes.push_back(Scene("First Scene", "testScene.lua", LuaState()));
-
-        auto& x = scenes.at(0);
-
-        for(int i = 0; i < 5; i++)
-        {
-            auto entity = x.entityList.CreateEntity();
-            auto& tag = entity.GetComponent<Model::Components::Tag>();
-                tag.tag = "Yope" + std::to_string(i);
-        }
-
-        x.Serialize("assets/scenes");
-
-        scenes.push_back(Scene("Second Scene", "testScene.lua", LuaState()));
-        auto& y = scenes.at(1);
-
-        y.Deserialize("assets/scenes/First Scene");
-
-        bool test = y.entityList.CheckEntityExistence(4);
-
-        int lmao = 0;
-
-        y.entityList.GetEntity(4).GetComponent<Model::Components::Tag>().tag = "Entity 4";
-                                                     
-        y.setName("Second Scene");
-        y.Serialize("assets/scenes");
+        
 
         
     };
