@@ -44,9 +44,19 @@ namespace Vakol::Model::Components {
         template<class Archive>
         void serialize(Archive& ar)
         {
-            ar(pos.x, pos.y, pos.z,
-               rot.w, rot.x, rot.y, rot.z, 
-               scale.x, scale.y, scale.z);
+            ar(cereal::make_nvp("pos.x",pos.x),
+               cereal::make_nvp("pos.y", pos.y),
+               cereal::make_nvp("pos.z", pos.z),
+
+               cereal::make_nvp("rot.w", rot.w), 
+               cereal::make_nvp("rot.x", rot.x), 
+               cereal::make_nvp("rot.y", rot.y),
+               cereal::make_nvp("rot.z", rot.z), 
+
+               cereal::make_nvp("scale.x",scale.x), 
+               cereal::make_nvp("scale.y", scale.y),
+               cereal::make_nvp("scale.z", scale.z)
+               );
         }
     };
 
@@ -66,11 +76,14 @@ namespace Vakol::Model::Components {
          */
         bool IsEmpty() { return tag.size() == 0; }
 
+        Tag() = default;
+        Tag(const std::string&);
+
         std::string tag; /**< String object containing data*/
 
         template <class Archive>
         void serialize(Archive& ar) {
-            ar(tag);
+            ar(cereal::make_nvp("tag",tag));
         }
     };
 
@@ -91,9 +104,12 @@ namespace Vakol::Model::Components {
     struct TagType {
         EntityType type; /**< Type of entity */
 
+        TagType() = default;
+        TagType(uint8_t);
+
         template <class Archive>
         void serialize(Archive& ar) {
-            ar(type);
+            ar(cereal::make_nvp("TagType", type));
         }
     };
 
@@ -105,11 +121,14 @@ namespace Vakol::Model::Components {
     struct Script {
         std::string script_name;
 
+        Script() = default;
+        Script(const std::string& name);
+
         Script(const std::string& script, Controller::LuaState& lua);
 
         template <class Archive>
         void serialize(Archive& ar) {
-            ar(script_name);
+            ar(cereal::make_nvp("ScriptName",script_name));
         }
     };
 

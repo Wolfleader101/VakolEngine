@@ -24,7 +24,7 @@ namespace Vakol::Controller {
             x.entityList.CreateEntity();
         }
 
-        x.Serialize("assets\\scenes"); //must use \\
+        x.Serialize("assets/scenes"); 
         
     };
 

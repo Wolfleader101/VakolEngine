@@ -103,7 +103,12 @@ namespace Vakol::Controller {
 
     void EntityList::Deserialize(const std::string& file) 
     {
-        file;
+        privateDeserialize<cereal::JSONInputArchive, 
+                            Model::Components::Transform, 
+                            Model::Components::Tag,
+                            Model::Components::EntityType, 
+                            Model::Components::TagType, 
+                            Model::Components::Script>(file);
     }
 
 }  // namespace Vakol::Controller

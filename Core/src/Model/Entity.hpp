@@ -3,6 +3,7 @@
 #include <Controller/EntityList.hpp>
 #include <Controller/Logger.hpp>
 #include <entt/entt.hpp>
+#include <cereal/archives/json.hpp>
 #include <functional>
 #include <string>
 
@@ -100,6 +101,12 @@ namespace Vakol::Model {
          *
          */
         operator bool() const;
+
+        template<class Archive>
+        void serialize(Archive& ar)
+        {
+            ar(cereal::make_nvp("handle", uint8_t(m_entityHandle)));
+        }
 
        private:
         /**

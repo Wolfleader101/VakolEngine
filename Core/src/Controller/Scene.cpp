@@ -41,15 +41,17 @@ namespace Vakol::Controller {
 
     void Scene::Serialize(const std::string& folder) const
     {
-        
-        std::string folderPath = "\\" + folder + "\\" + name;
+        std::string temp = folder;
+        std::replace(temp.begin(), temp.end(), '/', '\\'); //replace / with \\ for filesystem
+
+        std::string folderPath = "\\" + temp + "\\" + name;
         fs::path currentPath = fs::current_path();
 
 
         try
         {
             currentPath += folderPath;
-            fs::create_directory(currentPath);  // creates directory for scene if it doesnt exist
+            fs::create_directories(currentPath);  // creates directory for scene if it doesnt exist
         }
         catch (std::exception e)
         {
@@ -57,7 +59,7 @@ namespace Vakol::Controller {
         }
         
 
-        entityList.Serialize(folderPath + "/EntityList.json");
+        entityList.Serialize(folder + "/" + name + "/EntityList.json");
         
         //json.Serialize camera...
         
