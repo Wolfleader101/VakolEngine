@@ -12,6 +12,9 @@ namespace Vakol::Model::Components {
     Transform::Transform(const glm::vec3& pos, const glm::quat& rot, const glm::vec3& scale)
         : pos(pos), rot(rot), scale(scale){};
 
+    Script::Script(const std::string& name)
+     : script_name(name){}
+
     Script::Script(const std::string& scriptName, Controller::LuaState& lua) : script_name(scriptName) {
         lua.RunFile("scripts/" + scriptName);
 
@@ -19,4 +22,6 @@ namespace Vakol::Model::Components {
 
         init();
     };
+    TagType::TagType(uint8_t type) : type(EntityType(type)){}
+    Tag::Tag(const std::string& tag) : tag(tag) {}
 }  // namespace Vakol::Model::Components

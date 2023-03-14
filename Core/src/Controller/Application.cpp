@@ -5,13 +5,21 @@
 
 #include "Logger.hpp"
 
+#include <Model/Components.hpp>
 // #include "JSON/Json.hpp"
 // #include "Physics/Physics.hpp"
 
 namespace Vakol::Controller {
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
-    Application::Application() : m_running(false), m_window(nullptr), m_renderer(nullptr) { Logger::Init(); };
+    Application::Application() : m_running(false), m_window(nullptr), m_renderer(nullptr) 
+    { 
+        Logger::Init(); 
+        
+        
+
+        
+    };
 
     void Application::Init() {
         Controller::RegisterLogger(lua.GetState());

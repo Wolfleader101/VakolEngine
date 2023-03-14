@@ -22,5 +22,8 @@ src/Controller/LuaAccess.cpp
 src/Controller/Scene.hpp
 src/Controller/Scene.cpp
 
+
+${SERIALIZABLE}
 ${EVENTS}
+
 PARENT_SCOPE)

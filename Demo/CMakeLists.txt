@@ -16,16 +16,20 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
 VakolCore
 )
 
-# add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD
-#                 COMMAND ${CMAKE_COMMAND} -E copy_directory
-#                 ${CMAKE_SOURCE_DIR}/Demo/assets $<TARGET_FILE_DIR:${PROJECT_NAME}>/assets)
-
 if (NOT CopyResources)
     add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E create_symlink
             ${CMAKE_SOURCE_DIR}/Demo/scripts $<TARGET_FILE_DIR:${PROJECT_NAME}>/scripts)
+
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+                 COMMAND ${CMAKE_COMMAND} -E create_symlink
+                 ${CMAKE_SOURCE_DIR}/Demo/assets $<TARGET_FILE_DIR:${PROJECT_NAME}>/assets)
 else()
     add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy_directory
             ${CMAKE_SOURCE_DIR}/Demo/scripts $<TARGET_FILE_DIR:${PROJECT_NAME}>/scripts)
+
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+                 COMMAND ${CMAKE_COMMAND} -E copy_directory
+                 ${CMAKE_SOURCE_DIR}/Demo/assets $<TARGET_FILE_DIR:${PROJECT_NAME}>/assets)
 endif()

@@ -1,6 +1,8 @@
 #pragma once
 
 #include <entt/entt.hpp>
+#include <cereal/archives/json.hpp>
+#include <cereal/types/vector.hpp>
 #include <memory>
 #include <vector>
 
@@ -81,9 +83,12 @@ namespace Vakol::Controller {
         entt::registry& GetRegistry();
 
         void Init();
-        void Init(entt::registry& toCopy);
 
         void Update(double d_t);
+
+
+        void Serialize(const std::string& file) const;
+        void Deserialize(const std::string& file);
 
        private:
         /**
@@ -96,7 +101,53 @@ namespace Vakol::Controller {
          */
         std::vector<Entity> ActiveEntityList;
 
-        friend class Entity;  // friend to allow the api to entities to be clean.
+       
+
+        template <typename Archive, typename ...Args>
+        void privateSerialize(const std::string& file) const
+        {
+            std::ofstream out(file);
+            if (out.good()) 
+            {
+
+                Archive json(out);
+
+                json(CEREAL_NVP(ActiveEntityList));
+
+                entt::snapshot snapshot(m_Registry);
+                snapshot.entities(json).component<Args...>(json);
+
+                out << "\n}"; //doesn't close off?
+
+                out.close();
+            }
+        }
+
+        template <typename Archive, typename... Args>
+        void privateDeserialize(const std::string& file)
+        {
+            std::ifstream inp(file);
+
+            if (inp.good())
+            {
+                m_Registry.clear();
+
+                Archive json(inp);
+
+                json(ActiveEntityList); //fills vector again
+
+
+                entt::snapshot_loader snapLoad(m_Registry);
+                snapLoad.entities(json);
+                snapLoad.component<Args...>(json);
+                
+
+                inp.close();
+            }
+                
+        }
+
+         friend class Entity;  // friend to allow the api for entities to be clean.
     };
 
 }  // namespace Vakol::Controller
