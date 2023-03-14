@@ -1,6 +1,7 @@
 #include "Scene.hpp"
 
 #include <filesystem>
+#include <cereal/archives/json.hpp>
 
 #include <Model/Components.hpp>
 #include <Model/Entity.hpp>
@@ -20,6 +21,15 @@ namespace Vakol::Controller {
         sol::function init = lua.GetState()["init"];
 
         init(*this);
+    }
+
+    const std::string& Scene::getName() const
+    { 
+        return name; }
+
+    void Scene::setName(const std::string& newName) 
+    { 
+        name = newName;
     }
 
     void Scene::CreateEntity(const std::string scriptName) {
@@ -46,8 +56,6 @@ namespace Vakol::Controller {
 
         std::string folderPath = "\\" + temp + "\\" + name;
         fs::path currentPath = fs::current_path();
-
-
         try
         {
             currentPath += folderPath;
@@ -58,16 +66,39 @@ namespace Vakol::Controller {
             //directory already exists
         }
         
+        std::string FinalFolder = folder + "/" + name;
 
-        entityList.Serialize(folder + "/" + name + "/EntityList.json");
+        entityList.Serialize(FinalFolder + "/EntityList.json");
         
         //json.Serialize camera...
+
+
+        //-- Serialize Scene info
+        std::ofstream output(FinalFolder + "/Scene.json");
+        if (output.good())
+        {
+            cereal::JSONOutputArchive json(output);
+
+            json(cereal::make_nvp("Scene Name", name));
+            json(cereal::make_nvp("Script Name", scriptName));
+        }
+        
         
     }
 
     void Scene::Deserialize(const std::string& folder)
     {
-            folder;
+
+        entityList.Deserialize(folder + "/EntityList.json");
+
+        std::ifstream input(folder + "/Scene.json");
+        if (input.good())
+        {
+            cereal::JSONInputArchive json(input);
+            json(name);
+            json(scriptName);
+        }
+
     }
 
 }  // namespace Vakol::Controller

@@ -105,7 +105,7 @@ namespace Vakol::Model {
         template<class Archive>
         void serialize(Archive& ar)
         {
-            ar(cereal::make_nvp("handle", uint8_t(m_entityHandle)));
+            ar(cereal::make_nvp("handle", m_entityHandle));
         }
 
        private:

@@ -16,6 +16,9 @@ namespace Vakol::Controller {
          */
         EntityList entityList;  // to be moved to game/scene but for now it all works
 
+        const std::string& getName() const;
+        void setName(const std::string& newName);
+
         void Update(const Time& time);
 
         void CreateEntity(const std::string scriptName = "");

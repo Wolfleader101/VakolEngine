@@ -83,7 +83,6 @@ namespace Vakol::Controller {
         entt::registry& GetRegistry();
 
         void Init();
-        void Init(entt::registry& toCopy);
 
         void Update(double d_t);
 
@@ -134,6 +133,8 @@ namespace Vakol::Controller {
                 m_Registry.clear();
 
                 Archive json(inp);
+
+                json(ActiveEntityList);
 
                 //json(cereal::make_nvp("vector", ActiveEntityList));
 

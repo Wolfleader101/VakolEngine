@@ -78,11 +78,6 @@ namespace Vakol::Controller {
 
     entt::registry& EntityList::GetRegistry() { return m_Registry; }
 
-    void EntityList::Init(entt::registry& toCopy) {
-        // init the list. Once the json is de-serialized, we transfer to an EntityList
-        // Then call any system init funcs.
-        toCopy;
-    }
 
     void EntityList::Init() {}
 
