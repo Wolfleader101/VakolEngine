@@ -24,6 +24,7 @@ src/Controller/Scene.cpp
 
 
 ${SERIALIZABLE}
+${PHYSICS}
 ${EVENTS}
 
 PARENT_SCOPE)
