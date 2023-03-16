@@ -1,8 +1,8 @@
-#version 330
+#version 460
 
-uniform vec4 rgba; // The tint colour to be applied to the shader
+uniform vec4 rgba = vec4(1.0, 1.0, 1.0, 1.0); // The tint colour to be applied to the shader
 
-uniform vec3 lightColour; // The colour of the light hitting the model
+uniform vec3 lightColour = vec3(1.0, 1.0, 1.0); // The colour of the light hitting the model
 uniform vec3 lightPos; // The position of the light affecting the shader
 uniform vec3 camPos; // The position of the camera
 
@@ -14,9 +14,9 @@ uniform float uvScale0 = 1.0; // The scale of the UVs for the first texture
 uniform float uvScale1 = 1.0; // The scale of the UVs for the second texture
 uniform float alphaUVScale0 = 1.0; // The scale of the the UVs for the first texture
 
-uniform float ambientMultiplier; // The strength of the ambient light colour (0 is none, 1 is full)
-uniform float diffuseMultiplier; // The strength of the ambient light colour (0 is none, 1 is full)
-uniform float specularMultiplier; // The strength of the ambient light colour (0 is none, 1 is full)
+uniform float ambientMultiplier = 1.0; // The strength of the ambient light colour (0 is none, 1 is full)
+uniform float diffuseMultiplier = 0.4; // The strength of the ambient light colour (0 is none, 1 is full)
+uniform float specularMultiplier = 3.0; // The strength of the ambient light colour (0 is none, 1 is full)
 
 in VertexData //Data from the Vertex Shader
 {

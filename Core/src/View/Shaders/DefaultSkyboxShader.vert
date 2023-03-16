@@ -1,4 +1,4 @@
-#version 330
+#version 460
 
 uniform mat4 projectionMatrix; //The projection matrix for the engine
 uniform mat4 viewMatrix; //The view matrix for the engine

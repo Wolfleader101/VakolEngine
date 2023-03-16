@@ -30,5 +30,14 @@ src/Controller/ModelLoader.cpp
 src/Controller/System.hpp
 src/Controller/System.cpp
 
+src/Controller/LuaAccess.hpp
+src/Controller/LuaAccess.cpp
+
+src/Controller/Scene.hpp
+src/Controller/Scene.cpp
+
+
+${SERIALIZABLE}
 ${EVENTS}
+
 PARENT_SCOPE)

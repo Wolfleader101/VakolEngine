@@ -10,4 +10,4 @@ namespace Vakol::View
         GLRenderer(const std::shared_ptr<Window> window);
         void Update(const Controller::Time& time) override;
     };
-}
+}  // namespace Vakol::View

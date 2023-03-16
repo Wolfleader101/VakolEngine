@@ -1,29 +1,41 @@
 #include "Application.hpp"
 
-#include "Logger.hpp"
-#include "LuaState.hpp"
-#include "Singleton.hpp"
-#include "View/Renderer/GLRenderer.hpp"
+#include <Controller/LuaAccess.hpp>
+#include <View/Renderer/RendererFactory.hpp>
 
+#include "Logger.hpp"
+
+#include <Model/Components.hpp>
 // #include "JSON/Json.hpp"
 // #include "Physics/Physics.hpp"
 
 namespace Vakol::Controller {
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
-    Application::Application() : m_running(false), m_window(nullptr), m_renderer(nullptr) { Logger::Init(); };
+    Application::Application() : m_running(false), m_window(nullptr), m_renderer(nullptr) 
+    { 
+        Logger::Init(); 
+        
+        
 
-    void Application::Init(const std::string& title, int width, int height) {
-        Singleton<LuaState>::GetInstance().RunScript("print('Initialising lua...')");
+        
+    };
 
-        //! call lua init
-        //! READ CONFIG FILE
-        // load type of renderer
-        // get window config
-        // get scripts to load
+    void Application::Init() {
+        Controller::RegisterLogger(lua.GetState());
+        Controller::RegisterApplication(lua.GetState(), this);
+        Controller::RegisterScene(lua.GetState());
 
-        m_window = std::make_shared<View::Window>(title, width, height);
-        m_renderer = std::make_shared<View::GLRenderer>(m_window);
+        auto config = LoadConfig();
+        if (!config) {
+            VK_CRITICAL("CONFIG COULD NOT BE LOADED");
+            return;
+        }
+
+        m_window = std::make_shared<View::Window>(config.value().name, config.value().windowWidth,
+                                                  config.value().windowHeight);
+
+        m_renderer = CreateRenderer(config.value().rendererType, m_window);
 
         m_window->SetEventCallback(BIND_EVENT_FN(OnEvent));
 
@@ -33,7 +45,48 @@ namespace Vakol::Controller {
 
         // Physics::Init();
 
+        VK_INFO("Calling main.lua...");
+
+        lua.RunFile("scripts/main.lua");
+
+        sol::function luaMain = lua.GetState()["main"];
+
+        luaMain();
+
         m_running = true;
+    }
+
+    std::optional<Model::GameConfig> Application::LoadConfig() {
+        VK_INFO("Loading game_config.lua...");
+
+        lua.RunFile("scripts/game_config.lua");
+
+        sol::table config = lua.GetState()["game_config"];
+
+        sol::optional<std::string> name = config["name"];
+        if (!name) {
+            VK_ERROR("CONFIG ERROR: Game Name Not Set");
+            return std::nullopt;
+        }
+        sol::optional<int> windowWidth = config["window"]["w"];
+        if (!windowWidth) {
+            VK_ERROR("CONFIG ERROR: Window Width Not set");
+            return std::nullopt;
+        }
+        sol::optional<int> windowHeight = config["window"]["h"];
+        if (!windowHeight) {
+            VK_ERROR("CONFIG ERROR: Window Height Not Set");
+            return std::nullopt;
+        }
+        sol::optional<std::string> rendererType = config["renderer"];
+        if (!rendererType) {
+            VK_ERROR("CONFIG ERROR: Renderer Not Set");
+            return std::nullopt;
+        }
+
+        Model::GameConfig cfg = {name.value(), windowWidth.value(), windowHeight.value(), rendererType.value()};
+
+        return cfg;
     }
 
     Application::~Application() {
@@ -44,18 +97,14 @@ namespace Vakol::Controller {
         while (m_running) {
             m_time.Update();
 
-            //! update lua
-
             // Physics::FixedUpdate(m_time, m_entityList.GetEntityList());
 
-            // for (Layer* layer : m_layerStack) layer->OnUpdate(m_time, m_entityList);
-
-            // for (auto& ent : m_entityList.GetEntityList()) {
-            //     if (ent.OnUpdate) ent.OnUpdate(m_time, ent);
-            // }
+            //! update scenes lua
+            for (auto& scene : scenes) {
+                scene.Update(m_time);
+            }
 
             m_renderer->Update(m_time);
-            // m_renderer.Update(m_time, m_entityList.GetEntityList());
 
             // m_gui.OnUpdate();
 
@@ -65,6 +114,11 @@ namespace Vakol::Controller {
         // ImGui_ImplOpenGL3_Shutdown();
         // ImGui_ImplGlfw_Shutdown();
         // ImGui::DestroyContext();
+    }
+
+    void Application::AddScene(std::string scriptName, std::string scene_name) {
+        std::string sceneName = scene_name.length() == 0 ? "Scene" + std::to_string(scenes.size()) : scene_name;
+        scenes.push_back(Scene(sceneName, scriptName, lua));
     }
 
     void Application::OnEvent(Event& ev) {
