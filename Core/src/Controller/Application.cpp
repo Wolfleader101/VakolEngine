@@ -62,7 +62,7 @@ namespace Vakol::Controller {
 
             // m_renderer.Update(m_time, m_entityList.GetEntityList());
 
-            uiData.CreateWindow("Test Window");
+            uiData.CreateWindow("Test Window", 640, 480);
 
             m_window->OnUpdate();
         }

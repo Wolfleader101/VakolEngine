@@ -1,6 +1,6 @@
 SET(VIEW
-src/View/GUI/UI.hpp
-src/View/GUI/UI.cpp
+src/View/GUI/GUIWindow.hpp
+src/View/GUI/GUIWindow.cpp
 src/View/Window/Window.hpp
 src/View/Window/Window.cpp
 src/View/Renderer/Renderer.hpp

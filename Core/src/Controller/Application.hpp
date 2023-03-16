@@ -1,6 +1,6 @@
 #pragma once
 
-#include <View/GUI/UI.hpp>
+#include <View/GUI/GUIWindow.hpp>
 
 #include <View/Renderer/Renderer.hpp>
 #include <View/Window/Window.hpp>
@@ -115,6 +115,6 @@ namespace Vakol::Controller {
          */
         bool m_running = true;
 
-        Vakol::View::UI uiData;
+        Vakol::View::GUIWindow uiData;
     };
 }  // namespace Vakol::Controller
