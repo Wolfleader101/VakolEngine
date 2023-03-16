@@ -41,14 +41,14 @@ namespace Vakol::View
             * @param width The width of the window
             * @param height The height of the window
             */
-            void StartWindowCreation(std::string& windowName, float width, float height);
+            void StartWindowCreation(std::string& windowName, float width, float height, float xPosition, float yPosition);
             /**
-            * @brief Allows you to start drawing from a specific position
+            * @brief Allows you to start drawing from a specific position inside the window
             *
             * @param xPosition Sets the X-Position of the drawing cursor
             * @param yPosition Sets the Y-Position of the drawing cursor
             */
-            void SetPosition(float xPosition, float yPosition);
+            void SetPositionInsideWIndow(float xPosition, float yPosition);
             /**
             * @brief Adds a button to a given window
             *
@@ -65,6 +65,24 @@ namespace Vakol::View
              * @param checkBoxValue The boolean value of the checkbox
              */
             void AddCheckbox(std::string& checkboxName, bool &checkBoxValue);
+            /**
+             * @brief Adds an Integer Slider to the window
+             *
+             * @param sliderName The name of the slider
+             * @param sliderValue The parameter containing the current slider value
+             * @param minValue The minimum value of the slider
+             * @param maxValue the maximum value of the slider
+             */
+            void AddIntSlider(std::string& sliderName, int &sliderValue, int minValue, int maxValue);
+            /**
+             * @brief Adds a Float Slider to the window
+             *
+             * @param sliderName The name of the slider
+             * @param sliderValue The parameter containing the current slider value
+             * @param minValue The minimum value of the slider
+             * @param maxValue the maximum value of the slider
+             */
+            void AddFloatSlider(std::string& sliderName, float& sliderValue, float minValue, float maxValue);
             /**
             * @brief Ends the creation of a GUI window
             */

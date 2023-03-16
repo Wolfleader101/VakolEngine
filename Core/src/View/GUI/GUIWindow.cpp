@@ -24,14 +24,16 @@ namespace Vakol::View
         ImGui::NewFrame(); //Creates a new frame
     };
 
-    void GUIWindow::StartWindowCreation(std::string& windowName, float width, float height) 
+    void GUIWindow::StartWindowCreation(std::string& windowName, float width, float height, float xPosition, float yPosition) 
     { 
         ImGui::Begin(windowName.c_str());  // Begins the creation of the Window
+            
+        ImGui::SetWindowPos({xPosition, yPosition});
 
         ImGui::SetWindowSize({width, height});  // Sets the size of the window (Width, Height) in pixels
     };
 
-    void GUIWindow::SetPosition(float xPosition, float yPosition) { ImGui::SetCursorPos({xPosition, yPosition}); }; //Sets the position of the cursor when drawing an object
+    void GUIWindow::SetPositionInsideWIndow(float xPosition, float yPosition) { ImGui::SetCursorPos({xPosition, yPosition}); };
 
     void GUIWindow::AddButton(std::string& buttonName, float width, float height, std::function<void()> inputFunction) 
     { 
@@ -42,6 +44,10 @@ namespace Vakol::View
     };
 
     void GUIWindow::AddCheckbox(std::string& checkboxName, bool &checkBoxValue) { ImGui::Checkbox(checkboxName.c_str(), &checkBoxValue); };
+
+    void GUIWindow::AddIntSlider(std::string& sliderName, int &sliderValue, int minValue, int maxValue) { ImGui::SliderInt(sliderName.c_str(), &sliderValue, minValue, maxValue); };
+
+    void GUIWindow::AddFloatSlider(std::string& sliderName, float &sliderValue, float minValue, float maxValue) { ImGui::SliderFloat(sliderName.c_str(), &sliderValue, minValue, maxValue); };
 
     void GUIWindow::EndWindowCreation() 
     {

@@ -12,6 +12,8 @@ namespace Vakol::Controller {
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
     bool testBoolean = false;
+    int testInteger = 0;
+    float testFloat = 0.0f;
 
     Application::Application() : m_running(false), m_window(nullptr), m_renderer(nullptr) { Logger::Init(); };
 
@@ -66,12 +68,14 @@ namespace Vakol::Controller {
 
             // m_renderer.Update(m_time, m_entityList.GetEntityList());
 
-            uiData.StartWindowCreation(std::string("A Very Cool Window"), 640, 480);
+            uiData.StartWindowCreation(std::string("A Very Cool Window"), 640, 480, 100, 100);
             uiData.AddButton(std::string("Cool Button"), 100, 20, PrintStuff);
             uiData.AddCheckbox(std::string("Cool Checkbox"), testBoolean);
+            uiData.AddIntSlider(std::string("Cool Slider Int"), testInteger, -10, 10);
+            uiData.AddFloatSlider(std::string("Cool Slider Float"), testFloat, -10.0, 10.0);
             uiData.EndWindowCreation();
 
-            if (testBoolean) 
+            if (testBoolean || testInteger == 10) 
             {
                 PrintStuff();
             }
