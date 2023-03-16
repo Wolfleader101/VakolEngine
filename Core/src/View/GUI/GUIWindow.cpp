@@ -26,11 +26,11 @@ namespace Vakol::View
 
     void GUIWindow::StartWindowCreation(std::string& windowName, float width, float height, float xPosition, float yPosition) 
     { 
-        ImGui::Begin(windowName.c_str());  // Begins the creation of the Window
-            
-        ImGui::SetWindowPos({xPosition, yPosition});
+        ImGui::Begin(windowName.c_str()); //Begins the creation of the Window
 
-        ImGui::SetWindowSize({width, height});  // Sets the size of the window (Width, Height) in pixels
+        ImGui::SetWindowPos({xPosition, yPosition}, ImGuiCond_Once);  // Sets the position of the window
+
+        ImGui::SetWindowSize({width, height}, ImGuiCond_Once ); //Sets the size of the window (Width, Height) in pixels
     };
 
     void GUIWindow::SetPositionInsideWIndow(float xPosition, float yPosition) { ImGui::SetCursorPos({xPosition, yPosition}); };

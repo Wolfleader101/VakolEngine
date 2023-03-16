@@ -68,7 +68,7 @@ namespace Vakol::Controller {
 
             // m_renderer.Update(m_time, m_entityList.GetEntityList());
 
-            uiData.StartWindowCreation(std::string("A Very Cool Window"), 640, 480, 100, 100);
+            uiData.StartWindowCreation(std::string("A Very New Window"), 640, 480, 0, 0);
             uiData.AddButton(std::string("Cool Button"), 100, 20, PrintStuff);
             uiData.AddCheckbox(std::string("Cool Checkbox"), testBoolean);
             uiData.AddIntSlider(std::string("Cool Slider Int"), testInteger, -10, 10);
