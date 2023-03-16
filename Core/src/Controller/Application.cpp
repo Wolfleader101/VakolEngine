@@ -11,6 +11,8 @@
 namespace Vakol::Controller {
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
+    bool testBoolean = false;
+
     Application::Application() : m_running(false), m_window(nullptr), m_renderer(nullptr) { Logger::Init(); };
 
     void Application::Init(const std::string& title, int width, int height) {
@@ -42,6 +44,8 @@ namespace Vakol::Controller {
         // json::SerializeScene("assets/json/Deserialize.json", m_entityList);
     }
 
+    void PrintStuff() { std::cout << "This is a test!" << std::endl; }
+
     void Application::Run() {
         while (m_running) {
             m_time.Update();
@@ -62,10 +66,15 @@ namespace Vakol::Controller {
 
             // m_renderer.Update(m_time, m_entityList.GetEntityList());
 
-            uiData.StartWindowCreation("A Very Cool Window", 640, 480);
-            uiData.SetPosition(50, 200);
-            uiData.AddButton("Cool Button", 100, 20);
+            uiData.StartWindowCreation(std::string("A Very Cool Window"), 640, 480);
+            uiData.AddButton(std::string("Cool Button"), 100, 20, PrintStuff);
+            uiData.AddCheckbox(std::string("Cool Checkbox"), testBoolean);
             uiData.EndWindowCreation();
+
+            if (testBoolean) 
+            {
+                PrintStuff();
+            }
 
             m_window->OnUpdate();
         }

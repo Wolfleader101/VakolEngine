@@ -9,6 +9,7 @@
 
 #include <iostream>
 #include <string>
+#include <functional> //Gives acces to std::function
 
 namespace Vakol::View 
 {
@@ -40,7 +41,7 @@ namespace Vakol::View
             * @param width The width of the window
             * @param height The height of the window
             */
-            void StartWindowCreation(const char* windowName, float width, float height);
+            void StartWindowCreation(std::string& windowName, float width, float height);
             /**
             * @brief Allows you to start drawing from a specific position
             *
@@ -54,8 +55,16 @@ namespace Vakol::View
             * @param buttonName The name of the button
             * @param width The width of the button
             * @param height The height of the button
+            * @param inputFunction A function passed into the button to be run when the button is pressed
             */
-            void AddButton(const char* buttonName, float width, float height);
+            void AddButton(std::string& buttonName, float width, float height, std::function<void()> inputFunction);
+            /**
+             * @brief Adds a checkbox to a given window
+             *
+             * @param checkboxName The name of the checkbox
+             * @param checkBoxValue The boolean value of the checkbox
+             */
+            void AddCheckbox(std::string& checkboxName, bool &checkBoxValue);
             /**
             * @brief Ends the creation of a GUI window
             */

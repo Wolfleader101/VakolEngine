@@ -24,25 +24,24 @@ namespace Vakol::View
         ImGui::NewFrame(); //Creates a new frame
     };
 
-    void GUIWindow::StartWindowCreation(const char* windowName, float width, float height) 
+    void GUIWindow::StartWindowCreation(std::string& windowName, float width, float height) 
     { 
-        ImGui::Begin(windowName); //Begins the creation of the Window
+        ImGui::Begin(windowName.c_str());  // Begins the creation of the Window
 
         ImGui::SetWindowSize({width, height});  // Sets the size of the window (Width, Height) in pixels
     };
 
-    void GUIWindow::SetPosition(float xPosition, float yPosition) 
-    { 
-        ImGui::SetCursorPos({xPosition, yPosition}); //Sets the position of the cursor when drawing an object
-    }
+    void GUIWindow::SetPosition(float xPosition, float yPosition) { ImGui::SetCursorPos({xPosition, yPosition}); }; //Sets the position of the cursor when drawing an object
 
-    void GUIWindow::AddButton(const char* buttonName, float width, float height) 
+    void GUIWindow::AddButton(std::string& buttonName, float width, float height, std::function<void()> inputFunction) 
     { 
-        if (ImGui::Button(buttonName, {width, height})) 
+        if (ImGui::Button(buttonName.c_str(), {width, height})) 
         {
-            
+            inputFunction(); //Runs the given input function
         }
     };
+
+    void GUIWindow::AddCheckbox(std::string& checkboxName, bool &checkBoxValue) { ImGui::Checkbox(checkboxName.c_str(), &checkBoxValue); };
 
     void GUIWindow::EndWindowCreation() 
     {
