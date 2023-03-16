@@ -24,16 +24,27 @@ namespace Vakol::View
         ImGui::NewFrame(); //Creates a new frame
     };
 
-    void GUIWindow::CreateWindow(const char* windowName, float width, float height) 
+    void GUIWindow::StartWindowCreation(const char* windowName, float width, float height) 
     { 
         ImGui::Begin(windowName); //Begins the creation of the Window
 
         ImGui::SetWindowSize({width, height});  // Sets the size of the window (Width, Height) in pixels
+    };
 
-        ImGui::End(); //Ends the creation of the window
+    void GUIWindow::AddButton(const char* buttonName, float width, float height) 
+    { 
+        if (ImGui::Button(buttonName, {width, height})) 
+        {
+            
+        }
+    };
 
-        ImGui::Render(); //Renders the window
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData()); //Retreives the data needed for OpenGL
+    void GUIWindow::EndWindowCreation() 
+    {
+        ImGui::End();  // Ends the creation of the window
+
+        ImGui::Render();                                         // Renders the window
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());  // Retreives the data needed for OpenGL
     };
 
     GUIWindow::~GUIWindow() 
