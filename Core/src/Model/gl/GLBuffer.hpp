@@ -12,7 +12,12 @@ namespace Vakol::Model
 	{
 	public:
 		GLVertexArray() = default;
+
 		GLVertexArray(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices);
+
+		static void GenInstancedArrayBuffer(const unsigned int size, const unsigned int amount, void* ptr);
+		static void CreateInstancedVertexArray(const unsigned int VAO);
+
 		~GLVertexArray() override;
 
 		void Bind() const override;

@@ -4,14 +4,24 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <Controller/Logger.hpp>
 
+#include <iostream>
+
 #include "GLMaterial.hpp"
 
 namespace Vakol::Model
 {
-	GLMaterial::GLMaterial(const GLShader& shader, const std::vector<Texture>& textures)
+	GLMaterial::GLMaterial(const GLShader& shader, const Info& data)
 	{
 		this->shader = shader;
-		this->textures = textures;
+
+		this->_AMBIENT = data._AMBIENT;
+		this->_DIFFUSE = data._DIFFUSE;
+		this->_SPECULAR = data._SPECULAR;
+		this->_EMISSIVE = data._EMISSIVE;
+
+		this->_SHININESS = data._SHININESS;
+
+		this->textures = data.textures;
 	}
 
 	GLMaterial::~GLMaterial()
@@ -34,19 +44,22 @@ namespace Vakol::Model
 
 	void GLMaterial::Bind(const unsigned int type) const
 	{
-		unsigned int size = static_cast<unsigned int>(textures.size());
+		auto size = static_cast<unsigned int>(textures.size());
 
 		if (type == GL_SHADER)
 			this->shader.Bind();
 		else if (type == GL_TEXTURE_2D || type == GL_TEXTURE_CUBE_MAP)
 		{
-			if (!textures.empty())
-			{
-				glActiveTexture(GL_TEXTURE0 + size - 1);
+			//VK_TRACE("{0} {1} {2}", this->_SPECULAR.x, this->_SPECULAR.y, this->_SPECULAR.z);
 
-				for (const auto& tex : textures)
-					glBindTexture(type, static_cast<GLuint>(tex.id));
-			}
+			this->SetFloat("material.shininess", _SHININESS);
+
+			this->SetVec3("light.ambient",  _AMBIENT);
+			this->SetVec3("light.diffuse",  _DIFFUSE);
+			this->SetVec3("light.specular", _SPECULAR);
+
+			for (unsigned int i = 0; i < size; i++)
+				glBindTexture(type, textures[i].id);
 		}
 		else
 		{
@@ -65,52 +78,52 @@ namespace Vakol::Model
 		//	this->textures[i].Unbind();
 	}
 
-	void GLMaterial::SetBool(const std::string& name, const bool value)
+	void GLMaterial::SetBool(const std::string& name, const bool value) const
 	{
 		glUniform1i(glGetUniformLocation(this->shader.GetID(), name.c_str()), (int)value);
 	}
 
-	void GLMaterial::SetInt(const std::string& name, const int value)
+	void GLMaterial::SetInt(const std::string& name, const int value) const
 	{
 		glUniform1i(glGetUniformLocation(this->shader.GetID(), name.c_str()), value);
 	}
 
-	void GLMaterial::SetFloat(const std::string& name, const float value)
+	void GLMaterial::SetFloat(const std::string& name, const float value) const
 	{
 		glUniform1f(glGetUniformLocation(this->shader.GetID(), name.c_str()), value);
 	}
 
-	void GLMaterial::SetVec2(const std::string& name, const glm::vec2& value)
+	void GLMaterial::SetVec2(const std::string& name, const glm::vec2& value) const
 	{
 		glUniform2fv(glGetUniformLocation(this->shader.GetID(), name.c_str()), 1, &value[0]);
 	}
 
-	void GLMaterial::SetVec2(const std::string& name, const float x, const float y)
+	void GLMaterial::SetVec2(const std::string& name, const float x, const float y) const
 	{
 		glUniform2f(glGetUniformLocation(this->shader.GetID(), name.c_str()), x, y);
 	}
 
-	void GLMaterial::SetVec3(const std::string& name, const glm::vec3& value)
+	void GLMaterial::SetVec3(const std::string& name, const glm::vec3& value) const
 	{
 		glUniform3fv(glGetUniformLocation(this->shader.GetID(), name.c_str()), 1, &value[0]);
 	}
 
-	void GLMaterial::SetVec3(const std::string& name, const float x, const float y, const float z)
+	void GLMaterial::SetVec3(const std::string& name, const float x, const float y, const float z) const
 	{
 		glUniform3f(glGetUniformLocation(this->shader.GetID(), name.c_str()), x, y, z);
 	}
 
-	void GLMaterial::SetVec4(const std::string& name, const glm::vec4& value)
+	void GLMaterial::SetVec4(const std::string& name, const glm::vec4& value) const
 	{
 		glUniform4fv(glGetUniformLocation(this->shader.GetID(), name.c_str()), 1, &value[0]);
 	}
 
-	void GLMaterial::SetMat3(const std::string& name, const glm::mat3& mat)
+	void GLMaterial::SetMat3(const std::string& name, const glm::mat3& mat) const
 	{
 		glUniformMatrix3fv(glGetUniformLocation(this->shader.GetID(), name.c_str()), 1, GL_FALSE, glm::value_ptr(mat));
 	}
 
-	void GLMaterial::SetMat4(const std::string& name, const glm::mat4& mat)
+	void GLMaterial::SetMat4(const std::string& name, const glm::mat4& mat) const
 	{
 		glUniformMatrix4fv(glGetUniformLocation(this->shader.GetID(), name.c_str()), 1, GL_FALSE, glm::value_ptr(mat));
 	}

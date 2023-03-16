@@ -18,6 +18,9 @@ src/Controller/Camera.cpp
 src/Controller/EntityList.hpp
 src/Controller/EntityList.cpp
 
+src/Controller/MeshFilter.hpp
+src/Controller/MeshFilter.cpp
+
 src/Controller/MeshRenderer.hpp
 src/Controller/MeshRenderer.cpp
 

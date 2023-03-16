@@ -14,7 +14,9 @@ namespace Vakol::Model
 
         const unsigned int GetSize(const unsigned int type) const;
 
-        void Draw() const override;
+        void Draw(const unsigned int mode) const override;
+
+        const unsigned int GetID() const override;
     private:
         GLVertexArray VAO;
     };

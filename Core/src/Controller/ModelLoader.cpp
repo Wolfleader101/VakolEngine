@@ -11,9 +11,15 @@ using Vakol::Model::GetTexture;
 namespace Vakol::Controller
 {
     std::vector<Texture> ModelLoader::textures_loaded;
+
     std::vector<Mesh> ModelLoader::meshes;
 
     std::string ModelLoader::directory;
+
+    glm::vec3 to_glm(const aiColor3D& val)
+    {
+        return glm::vec3(val.r, val.g, val.b);
+    }
 
     void ModelLoader::LoadModel(const std::string& path)
     {
@@ -127,10 +133,33 @@ namespace Vakol::Controller
         // Emissive Maps
         std::vector<Texture> emissiveMaps = LoadMaterialTextures(material, aiTextureType_EMISSIVE, "texture_emissive");
         textures.insert(textures.end(), emissiveMaps.begin(), emissiveMaps.end());
+        
+        return Mesh(vertices, indices, ProcessMaterial(material, textures));
+    }
 
-        VK_TRACE("{0}", textures.size());
+    Info ModelLoader::ProcessMaterial(aiMaterial* mat, const std::vector<Texture>& textures)
+    {
+        Info material;
 
-        return Mesh(vertices, indices, textures);
+        aiColor3D ambient, diffuse, specular, emissive;
+
+        mat->Get(AI_MATKEY_COLOR_AMBIENT, ambient);
+        material._AMBIENT = to_glm(ambient);
+
+        mat->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse);
+        material._DIFFUSE = to_glm(diffuse);
+
+        mat->Get(AI_MATKEY_COLOR_SPECULAR, specular);
+        material._SPECULAR = to_glm(specular);
+
+        mat->Get(AI_MATKEY_COLOR_EMISSIVE, emissive);
+        material._EMISSIVE = to_glm(emissive);
+
+        mat->Get(AI_MATKEY_SHININESS, material._SHININESS);
+        
+        material.textures = textures;
+
+        return material;
     }
 
     std::vector<Texture> ModelLoader::LoadMaterialTextures(aiMaterial* mat, aiTextureType type, const std::string& typeName)

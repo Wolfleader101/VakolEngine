@@ -2,15 +2,22 @@
 
 #include <glad/glad.h>
 
+#include <Controller/MeshFilter.hpp>
+#include <Controller/MeshRenderer.hpp>
+
 #include <Controller/Logger.hpp>
 
 #include <Model/Math/Vector3.hpp>
 #include <Model/Math/Vector2.hpp>
 
+
 #include <vector>
 
 using Vakol::Model::Math::Vec3;
 using Vakol::Model::Math::Vec2;
+
+using Vakol::Controller::MeshFilter;
+using Vakol::Controller::MeshRenderer;
 
 namespace Vakol::View 
 {
@@ -88,9 +95,8 @@ namespace Vakol::View
         //     "assets/textures/Skybox/back.png",
         // };
     
-        render.SetMesh("assets/models/cube.obj");
-
-        //VK_TRACE("{0}", render.materials[0].);
+        MeshFilter::LoadMesh("assets/models/cube.obj");
+        MeshRenderer::LoadMaterials();
     };
 
     void GLRenderer::Update(const Controller::Time& time) 
@@ -99,13 +105,13 @@ namespace Vakol::View
         //glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
-        render.Draw(GL_SHADER);
+        MeshRenderer::Draw(GL_SHADER);
 
         glm::mat4 proj_mat = glm::perspective(glm::radians(45.0f), (float) 1280 / (float) 720, 0.01f, 100.0f);
         glm::mat4 view_mat = glm::lookAt(glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
-        render.Get(0).SetMat4("projection", proj_mat);
-        render.Get(0).SetMat4("view", view_mat);
+        MeshRenderer::Get(0).SetMat4("projection", proj_mat);
+        MeshRenderer::Get(0).SetMat4("view", view_mat);
 
         glm::mat4 mdl_mat = glm::mat4(1.0f);
 
@@ -114,30 +120,25 @@ namespace Vakol::View
         mdl_mat = glm::scale(mdl_mat, glm::vec3(1.0f));
 
         mdl_mat = glm::rotate(mdl_mat, 0.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-        mdl_mat = glm::rotate(mdl_mat, 0.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+        mdl_mat = glm::rotate(mdl_mat, 45.0f, glm::vec3(0.0f, 1.0f, 0.0f));
         mdl_mat = glm::rotate(mdl_mat, 0.0f, glm::vec3(0.0f, 0.0f, 1.0f));
 
-        render.Get(0).SetMat4("model", mdl_mat);
+        MeshRenderer::Get(0).SetMat4("model", mdl_mat);
 
         // /************* Vert Shader *********/ 
-        render.Get(0).SetMat3("normal_matrix", glm::mat3(glm::transpose(glm::inverse(mdl_mat))));
+        MeshRenderer::Get(0).SetMat3("normal_matrix", glm::mat3(glm::transpose(glm::inverse(mdl_mat))));
         // /***********************************/
 
 
-        // /************** Frag Shader ***********************/
-        render.Get(0).SetFloat("material.shininess", 32.0f);
+        // // /************** Frag Shader ***********************/
 
-        render.Get(0).SetVec3("light.position", glm::vec3(0.0f, 0.5f, -2.0f));
-        render.Get(0).SetVec3("light.color", glm::vec3(1.0f, 1.0f, 1.0f)); // not used as the color is determined by the texture
-
-        render.Get(0).SetVec3("light.ambient", glm::vec3(0.2f, 0.2f, 0.2f));
-        render.Get(0).SetVec3("light.diffuse", glm::vec3(0.4f, 0.4f, 0.4f));
-        render.Get(0).SetVec3("light.specular", glm::vec3(0.6f, 0.6f, 0.6f));
+        MeshRenderer::Get(0).SetVec3("light.position", glm::vec3(0.0f, 0.5f, -2.0f));
         
-        render.Get(0).SetVec3("viewPos", glm::vec3(0.0f));
+        MeshRenderer::Get(0).SetVec3("viewPos", glm::vec3(0.0f));
 
-        // /***************************************************/
+        // // /***************************************************/
 
-        render.Draw(GL_TEXTURE_2D);
+        MeshRenderer::Draw(GL_TEXTURE_2D);
+        MeshFilter::Draw(0);
     };
 }

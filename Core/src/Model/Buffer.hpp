@@ -14,25 +14,6 @@ namespace Vakol::Model
         Math::Vec3 bitangent;
     };
 
-    struct Vertex3
-    {
-        Math::Vec3 position;
-        Math::Vec3 normal;
-        Math::Vec2 uv;
-    };
-
-    struct Vertex2N
-    {
-        Math::Vec3 position;
-        Math::Vec3 normal;
-    };
-
-    struct Vertex2U
-    {
-        Math::Vec3 position;
-        Math::Vec2 uv;
-    };
-
     class VertexArray
     {
     public:

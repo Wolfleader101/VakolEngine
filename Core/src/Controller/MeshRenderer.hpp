@@ -1,10 +1,9 @@
 #pragma once
 
-#include <Model/GL/GLMesh.hpp>
 #include <Model/GL/GLTexture.hpp>
 #include <Model/GL/GLMaterial.hpp>
 
-using Vakol::Model::GLMesh;
+
 using Vakol::Model::GLMaterial;
 
 namespace Vakol::Controller
@@ -14,13 +13,12 @@ namespace Vakol::Controller
     public:
         MeshRenderer() = default;
         ~MeshRenderer() {};
- 
-        void SetMesh(const std::string& path);
 
-        void Draw(const unsigned int type) const;
-        GLMaterial Get(const unsigned int index) const;
+        static void LoadMaterials(); 
+        
+        static void Draw(const unsigned int type);
+        static GLMaterial Get(const unsigned int index);
 
-        std::vector<GLMesh> meshes;
-        std::vector<GLMaterial> materials;
+        static std::vector<GLMaterial> materials;
     };
 }

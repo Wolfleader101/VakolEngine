@@ -6,9 +6,6 @@
 #include "GLBuffer.hpp"
 
 using Vakol::Model::Vertex;
-using Vakol::Model::Vertex3;
-using Vakol::Model::Vertex2N;
-using Vakol::Model::Vertex2U;
 
 using Vakol::Model::Math::Vec3;
 
@@ -20,7 +17,6 @@ namespace Vakol::Model
 		this->index_count = static_cast<unsigned int>(indices.size());
 
 		unsigned int VBO, EBO;
-
 		glGenVertexArrays(1, &this->id);
 		glGenBuffers(1, &VBO);
 		glGenBuffers(1, &EBO);
@@ -63,6 +59,40 @@ namespace Vakol::Model
 
 	void GLVertexArray::Unbind() const
 	{
+		glBindVertexArray(0);
+	}
+
+	void GLVertexArray::GenInstancedArrayBuffer(const unsigned int size, const unsigned int amount, void* ptr)
+	{
+		unsigned int buffer;
+		glGenBuffers(1, &buffer);
+		glBindBuffer(GL_ARRAY_BUFFER, buffer);
+		glBufferData(GL_ARRAY_BUFFER, amount * sizeof(glm::mat4), &ptr, GL_STATIC_DRAW);
+	}
+
+	void GLVertexArray::CreateInstancedVertexArray(const unsigned int VAO)
+	{
+		glBindVertexArray(VAO);
+
+		// Assigned the vertex atribute location in the shader at 3
+		// 1 Matrix (mat4) = 4 * vec4 (vec4 is the max data size of a vertex attribute)
+		glEnableVertexAttribArray(3);
+		glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)0);
+
+		glEnableVertexAttribArray(4);
+		glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(sizeof(glm::mat4)));
+
+		glEnableVertexAttribArray(5);
+		glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(2 * sizeof(glm::mat4)));
+
+		glEnableVertexAttribArray(6);
+		glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(3 * sizeof(glm::mat4)));
+
+		glVertexAttribDivisor(3, 1);
+		glVertexAttribDivisor(4, 1);
+		glVertexAttribDivisor(5, 1);
+		glVertexAttribDivisor(6, 1);
+
 		glBindVertexArray(0);
 	}
 

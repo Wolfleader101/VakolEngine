@@ -27,11 +27,18 @@ namespace Vakol::Model
         return 0;
     }
 
+    const unsigned int GLMesh::GetID() const { return this->VAO.GetID(); }
 
-    void GLMesh::Draw() const
+
+    void GLMesh::Draw(const unsigned int mode) const
     {
         VAO.Bind();
-        glDrawElements(GL_TRIANGLES, VAO.GetIndexCount(), GL_UNSIGNED_INT, 0);
+
+        if (mode == DRAW_MODE_INDEXED)
+            glDrawElements(GL_TRIANGLES, VAO.GetIndexCount(), GL_UNSIGNED_INT, 0);
+        else if (mode == DRAW_MODE_NON_INDEXED)
+            glDrawArrays(GL_TRIANGLES, 0, VAO.GetVertexCount());
+
         VAO.Unbind();
     }
 }
