@@ -63,6 +63,7 @@ namespace Vakol::Controller {
             // m_renderer.Update(m_time, m_entityList.GetEntityList());
 
             uiData.StartWindowCreation("A Very Cool Window", 640, 480);
+            uiData.SetPosition(50, 200);
             uiData.AddButton("Cool Button", 100, 20);
             uiData.EndWindowCreation();
 

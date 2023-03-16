@@ -31,6 +31,11 @@ namespace Vakol::View
         ImGui::SetWindowSize({width, height});  // Sets the size of the window (Width, Height) in pixels
     };
 
+    void GUIWindow::SetPosition(float xPosition, float yPosition) 
+    { 
+        ImGui::SetCursorPos({xPosition, yPosition}); //Sets the position of the cursor when drawing an object
+    }
+
     void GUIWindow::AddButton(const char* buttonName, float width, float height) 
     { 
         if (ImGui::Button(buttonName, {width, height})) 

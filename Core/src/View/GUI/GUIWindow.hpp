@@ -42,6 +42,13 @@ namespace Vakol::View
             */
             void StartWindowCreation(const char* windowName, float width, float height);
             /**
+            * @brief Allows you to start drawing from a specific position
+            *
+            * @param xPosition Sets the X-Position of the drawing cursor
+            * @param yPosition Sets the Y-Position of the drawing cursor
+            */
+            void SetPosition(float xPosition, float yPosition);
+            /**
             * @brief Adds a button to a given window
             *
             * @param buttonName The name of the button
