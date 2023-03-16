@@ -11,5 +11,6 @@ int main()
 {
     Vakol::Controller::Singleton<Vakol::Controller::LuaState>::GetInstance().RunFile("assets/test.lua");
     Vakol::Run();
+
     return 0;
 }

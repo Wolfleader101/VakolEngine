@@ -27,6 +27,8 @@ namespace Vakol::Controller {
 
         m_window->SetEventCallback(BIND_EVENT_FN(OnEvent));
 
+        uiData.InitUI(m_window->GetWindow()); //Initialises the ImGui Window
+
         // m_gui.Init(m_window.GetWindow());
 
         // Physics::Debug = false;
@@ -55,9 +57,12 @@ namespace Vakol::Controller {
             // }
 
             m_renderer->Update(m_time);
+
+            uiData.CreateNewFrame();
+
             // m_renderer.Update(m_time, m_entityList.GetEntityList());
 
-            // m_gui.OnUpdate();
+            uiData.CreateWindow("Test Window");
 
             m_window->OnUpdate();
         }

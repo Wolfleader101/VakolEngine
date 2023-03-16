@@ -1,5 +1,7 @@
 #pragma once
 
+#include <View/GUI/UI.hpp>
+
 #include <View/Renderer/Renderer.hpp>
 #include <View/Window/Window.hpp>
 #include <memory>
@@ -112,5 +114,7 @@ namespace Vakol::Controller {
          * @brief if the app should be running
          */
         bool m_running = true;
+
+        Vakol::View::UI uiData;
     };
 }  // namespace Vakol::Controller
