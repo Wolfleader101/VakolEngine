@@ -21,11 +21,7 @@ namespace Vakol::Controller
 
     void MeshFilter::Draw(const unsigned int mode)
     {
-        if (mode == DRAW_MODE_INDEXED)
-            for (const auto& mesh : meshes)
-                mesh.Draw(mode);
-        else if (mode == DRAW_MODE_NON_INDEXED)
-            for (const auto& mesh : meshes)
-                mesh.Draw(mode);
+        for (const auto& mesh : meshes)
+            mesh.Draw(mode);
     }
 }

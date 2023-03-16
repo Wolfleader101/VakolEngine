@@ -26,15 +26,7 @@ namespace Vakol::Controller
 
     void MeshRenderer::Draw(const unsigned int type)
     {
-        if (type == GL_SHADER)
-        {
-            for (const auto& material : materials)
-                material.Bind(type);
-        }
-        else
-        {
-            for (const auto& material : materials)
-                material.Bind(type);
-        }
+        for (const auto& material : materials)
+            material.Bind(type);
     }
 }
