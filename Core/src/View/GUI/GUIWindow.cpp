@@ -5,6 +5,8 @@ namespace Vakol::View
     GUIWindow::GUIWindow() 
     {
         IMGUI_CHECKVERSION();  // Checks the version of IMGUI
+
+        windowFlags = 0;
     };
     
     void GUIWindow::InitUI(GLFWwindow* window) 
@@ -17,7 +19,7 @@ namespace Vakol::View
         ImGui_ImplOpenGL3_Init("#version 460"); //Sets the version of GLSL being used
     };
 
-    void GUIWindow::CreateNewFrame() 
+    void GUIWindow::CreateNewFrame()
     { 
         ImGui_ImplOpenGL3_NewFrame(); //Sets up the new frame to be used within OpenGL
         ImGui_ImplGlfw_NewFrame(); //Sets up the new frame to be used within GLFW
@@ -26,7 +28,7 @@ namespace Vakol::View
 
     void GUIWindow::StartWindowCreation(std::string& windowName, float width, float height, float xPosition, float yPosition) 
     { 
-        ImGui::Begin(windowName.c_str()); //Begins the creation of the Window
+        ImGui::Begin(windowName.c_str(), 0, windowFlags);  // Begins the creation of the Window
 
         ImGui::SetWindowPos({xPosition, yPosition}, ImGuiCond_Once);  // Sets the position of the window
 

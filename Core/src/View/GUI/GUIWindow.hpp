@@ -92,5 +92,6 @@ namespace Vakol::View
             */
             ~GUIWindow();
         private:
+            ImGuiWindowFlags windowFlags;
     };
 }  // namespace Vakol::View
