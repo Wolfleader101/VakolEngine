@@ -2,9 +2,6 @@
 
 #include "ModelLoader.hpp"
 
-using Vakol::Model::DRAW_MODE_INDEXED;
-using Vakol::Model::DRAW_MODE_NON_INDEXED;
-
 namespace Vakol::Controller
 {
     std::vector<GLMesh> MeshFilter::meshes;

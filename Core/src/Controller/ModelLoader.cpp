@@ -137,9 +137,9 @@ namespace Vakol::Controller
         return Mesh(vertices, indices, ProcessMaterial(material, textures));
     }
 
-    Info ModelLoader::ProcessMaterial(aiMaterial* mat, const std::vector<Texture>& textures)
+    MaterialInfo ModelLoader::ProcessMaterial(aiMaterial* mat, const std::vector<Texture>& textures)
     {
-        Info material;
+        MaterialInfo material;
 
         aiColor3D ambient, diffuse, specular, emissive;
 

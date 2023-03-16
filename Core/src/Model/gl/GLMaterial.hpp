@@ -14,7 +14,7 @@ namespace Vakol::Model
 	{
 	public:
         GLMaterial() = default;
-		GLMaterial(const GLShader& shader, const Info& data);
+		GLMaterial(const GLShader& shader, const MaterialInfo& data);
 		~GLMaterial() override;
 
 		void Bind(const unsigned int type) const override;

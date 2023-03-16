@@ -13,23 +13,23 @@ using Vakol::Model::Math::Vec2;
 using Vakol::Model::Vertex;
 using Vakol::Model::Texture;
 
-using Vakol::Model::Info;
+using Vakol::Model::MaterialInfo;
 
 namespace Vakol::Controller
 {
     class Mesh
     {
     public:
-        Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const Info& material)
+        Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const MaterialInfo& materialInfo)
         {
             this->vertices = vertices;
             this->indices = indices;
-            this->material = material;
+            this->materialInfo = materialInfo;
         }
 
         std::vector<Vertex> vertices;
         std::vector<unsigned int> indices;
-        Info material;
+        MaterialInfo materialInfo;
     };
 
     class ModelLoader
@@ -47,7 +47,7 @@ namespace Vakol::Controller
 
         static Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
 
-        static Info ProcessMaterial(aiMaterial* material, const std::vector<Texture>& textures);
+        static MaterialInfo ProcessMaterial(aiMaterial* material, const std::vector<Texture>& textures);
 
         static std::vector<Texture> LoadMaterialTextures(aiMaterial* mat, aiTextureType type, const std::string& typeName);
 

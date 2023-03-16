@@ -7,9 +7,6 @@
 
 namespace Vakol::Model
 {
-    const unsigned int DRAW_MODE_INDEXED = 0;
-    const unsigned int DRAW_MODE_NON_INDEXED = 1;
-
     class Mesh
     {
     public:

@@ -10,7 +10,7 @@
 
 namespace Vakol::Model
 {
-	GLMaterial::GLMaterial(const GLShader& shader, const Info& data)
+	GLMaterial::GLMaterial(const GLShader& shader, const MaterialInfo& data)
 	{
 		this->shader = shader;
 

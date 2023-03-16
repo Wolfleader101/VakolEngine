@@ -8,7 +8,7 @@
 
 namespace Vakol::Model
 {
-    struct Info
+    struct MaterialInfo
     {
         glm::vec3 _AMBIENT;
         glm::vec3 _DIFFUSE;
