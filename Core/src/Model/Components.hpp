@@ -132,4 +132,15 @@ namespace Vakol::Model::Components {
         }
     };
 
+   /* using namespace Vakol::Controller::Physics;
+
+    struct PhysicsModule {
+
+        std::shared_ptr<PhysicsWorld> m_owningWorld;
+        std::unique_ptr<rp3d::RigidBody> m_RigidBody;
+        std::unique_ptr<rp3d::Collider> m_CollisionBody;
+        std::unique_ptr<rp3d::CollisionShape> m_Shape;
+
+    };*/
+
 }  // namespace Vakol::Model::Components

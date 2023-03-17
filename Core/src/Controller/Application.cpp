@@ -1,9 +1,14 @@
 #include "Application.hpp"
 
+
 #include <Controller/LuaAccess.hpp>
 #include <View/Renderer/RendererFactory.hpp>
 
 #include "Logger.hpp"
+
+
+#include <Controller/Physics/ScenePhysics.hpp>
+#include <Controller/Physics/PhysicsPool.hpp>
 
 #include <Model/Components.hpp>
 // #include "JSON/Json.hpp"
@@ -16,7 +21,7 @@ namespace Vakol::Controller {
     { 
         Logger::Init(); 
         
-        
+        auto x = Vakol::Controller::Physics::PhysicsPool::CreatePhysicsWorld();
 
         
     };
