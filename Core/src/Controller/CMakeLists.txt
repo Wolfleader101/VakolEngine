@@ -1,3 +1,7 @@
+add_subdirectory(Serialization)
+add_subdirectory(Events)
+add_subdirectory(Physics)
+
 SET(CONTROLLER
 
 
