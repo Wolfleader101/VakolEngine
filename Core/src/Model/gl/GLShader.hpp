@@ -24,17 +24,4 @@ namespace Vakol::Model
         void CompileShader(const std::string& vertex, const std::string& fragment);
         void CheckCompileErrors(const unsigned int shader, const std::string& type);
 	};
-
-    //class ShaderLibrary
-    //{
-    //public:
-    //    static void AddShader(const std::string& name, const std::shared_ptr<GLShader>& shader);
-
-    //    static std::shared_ptr<GLShader> GetShader(const std::string& name);
-
-    //    static bool Contains(const std::string& name);
-
-    //private:
-    //    static std::map<std::string, std::shared_ptr<GLShader>> shaders;
-    //};
 }

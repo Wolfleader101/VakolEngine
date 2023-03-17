@@ -1,17 +1,17 @@
 #pragma once
 
-#include <memory>
-
 #include "Math/Vector2.hpp"
 #include "Math/Vector3.hpp"
 
 namespace Vakol::Model 
 {
-    struct Vertex 
+    struct Vertex
     {
         Math::Vec3 position;
+        Math::Vec3 normal;
         Math::Vec2 uv;
-        //Math::Vec3 normal;
+        Math::Vec3 tangent;
+        Math::Vec3 bitangent;
     };
 
     class VertexArray
