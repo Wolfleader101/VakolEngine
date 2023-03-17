@@ -24,7 +24,7 @@ namespace Vakol::Controller {
 
     void MeshRenderer::LoadMaterials() {
         for (const auto& mesh : ModelLoader::meshes) {
-            materials.push_back(GLMaterial(GLShader("coreAssets/unused/custom.vert", "coreAssets/unused/custom.frag"),
+            materials.push_back(GLMaterial(GLShader("coreAssets/shaders/custom.vert", "coreAssets/shaders/custom.frag"),
                                            mesh.materialInfo));
         }
     }
