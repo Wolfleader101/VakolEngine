@@ -21,6 +21,7 @@ namespace Vakol::Model
 		void Unbind() const override;
 
 		const unsigned int GetID() const override;
+		const unsigned int GetTextureCount() const;
 
 	public:
 		void SetBool(const std::string& name, const bool value) const override;

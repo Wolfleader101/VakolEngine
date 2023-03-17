@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Model/GL/GLMesh.hpp>
+#include <string>
 
 using Vakol::Model::GLMesh;
 

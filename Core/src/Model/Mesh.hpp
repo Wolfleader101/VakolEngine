@@ -1,10 +1,5 @@
 #pragma once
 
-#include <vector>
-
-#include "Buffer.hpp"
-#include "Texture.hpp"
-
 namespace Vakol::Model
 {
     class Mesh

@@ -35,6 +35,9 @@ namespace Vakol::Model
 	}
 
 	const unsigned int GLMaterial::GetID() const { return shader.GetID(); }
+	
+	const unsigned int GLMaterial::GetTextureCount() const { return static_cast<unsigned int>(textures.size()); }
+
 
 	const std::string GLMaterial::GetName(const std::string& str) const 
 	{ 
@@ -50,7 +53,8 @@ namespace Vakol::Model
 			this->shader.Bind();
 		else if (type == GL_TEXTURE_2D || type == GL_TEXTURE_CUBE_MAP)
 		{
-			//VK_TRACE("{0} {1} {2}", this->_SPECULAR.x, this->_SPECULAR.y, this->_SPECULAR.z);
+			this->SetInt("matieral.specular", 0);
+			this->SetInt("material.diffuse", 1);
 
 			this->SetFloat("material.shininess", _SHININESS);
 
@@ -59,7 +63,10 @@ namespace Vakol::Model
 			this->SetVec3("light.specular", _SPECULAR);
 
 			for (unsigned int i = 0; i < size; i++)
+			{
+				glActiveTexture(GL_TEXTURE0 + i);
 				glBindTexture(type, textures[i].id);
+			}
 		}
 		else
 		{
