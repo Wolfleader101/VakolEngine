@@ -3,7 +3,7 @@
 
 namespace Vakol::Controller::Physics
 {
-    
+    rp3d::PhysicsCommon PhysicsPool::m_Common;
 
     ScenePhysics PhysicsPool::CreatePhysicsWorld() 
     { 

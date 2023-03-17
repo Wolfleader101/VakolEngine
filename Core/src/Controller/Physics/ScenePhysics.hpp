@@ -2,8 +2,6 @@
 
 #include <reactphysics3d/reactphysics3d.h>
 
-#include <memory>
-
 #include <Controller/Time.hpp>
 
 namespace Vakol::Controller::Physics
@@ -19,12 +17,12 @@ namespace Vakol::Controller::Physics
 
 			void Update(const Vakol::Controller::Time& time);
 
-			void SetGrav(); //..just an example, potentially more
+			void SetGrav(); 
             void GetGrav();
 		
 		private:
 
-			ScenePhysics(rp3d::PhysicsWorld*& newWorld);
+			ScenePhysics(rp3d::PhysicsWorld* newWorld);
 
 			
 			rp3d::PhysicsWorld* m_World;
