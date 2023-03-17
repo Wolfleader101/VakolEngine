@@ -1,11 +1,25 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 #include "Math/Math.hpp"
+#include "Texture.hpp"
 
 namespace Vakol::Model
 {
+    struct MaterialInfo
+    {
+        glm::vec3 _AMBIENT;
+        glm::vec3 _DIFFUSE;
+        glm::vec3 _SPECULAR;
+        glm::vec3 _EMISSIVE;
+
+        float _SHININESS;
+
+        std::vector<Texture> textures;
+    };
+
 	class Material
 	{
 	public:
@@ -16,19 +30,19 @@ namespace Vakol::Model
 
         virtual const unsigned int GetID() const = 0;
         
-        virtual void SetBool(const std::string& name, const bool value) = 0;
-        virtual void SetInt(const std::string& name, const int value) = 0;
-        virtual void SetFloat(const std::string& name, const float value) = 0;
+        virtual void SetBool(const std::string& name, const bool value) const = 0;
+        virtual void SetInt(const std::string& name, const int value) const = 0;
+        virtual void SetFloat(const std::string& name, const float value) const = 0;
 
-        virtual void SetFloat2(const std::string& name, const glm::vec2& value) = 0;
-        virtual void SetFloat2(const std::string& name, const float x, const float y) = 0;
+        virtual void SetVec2(const std::string& name, const glm::vec2& value) const = 0;
+        virtual void SetVec2(const std::string& name, const float x, const float y) const = 0;
 
-        virtual void SetFloat3(const std::string& name, const glm::vec3& value) = 0;
-        virtual void SetFloat3(const std::string& name, const float x, const float y, const float z) = 0;
+        virtual void SetVec3(const std::string& name, const glm::vec3& value) const = 0;
+        virtual void SetVec3(const std::string& name, const float x, const float y, const float z) const = 0;
 
-        virtual void SetFloat4(const std::string& name, const glm::vec4& value) = 0;
+        virtual void SetVec4(const std::string& name, const glm::vec4& value) const = 0;
 
-        virtual void SetMat3(const std::string& name, const glm::mat3& value) = 0;
-        virtual void SetMat4(const std::string& name, const glm::mat4& value) = 0;
+        virtual void SetMat3(const std::string& name, const glm::mat3& value) const = 0;
+        virtual void SetMat4(const std::string& name, const glm::mat4& value) const = 0;
 	};
 }

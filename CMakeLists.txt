@@ -26,6 +26,7 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG    ${PROJECT_BINARY_DIR}/lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE  ${PROJECT_BINARY_DIR}/lib)
 
 set(CMAKE_DEBUG_POSTFIX "")
+option(CopyFiles "CopyFiles" OFF)
 
 if (MSVC)
     string(REGEX REPLACE "/W[0-4]" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
@@ -41,3 +42,4 @@ endif()
 
 add_subdirectory(Core)
 add_subdirectory(Demo)
+
