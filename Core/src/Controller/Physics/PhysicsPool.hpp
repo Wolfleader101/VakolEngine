@@ -10,7 +10,7 @@ namespace Vakol::Controller::Physics {
         PhysicsPool() = delete;
 
         static ScenePhysics CreatePhysicsWorld();
-        static void DeletePhysicsWorld();
+        static void DeletePhysicsWorld(ScenePhysics& toDestroy);
 
        private:
         static rp3d::PhysicsCommon m_Common;

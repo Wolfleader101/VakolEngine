@@ -16,9 +16,6 @@ namespace Vakol::Controller::Physics
 			void Init();
 
 			void Update(const Vakol::Controller::Time& time);
-
-			void SetGrav(); 
-            void GetGrav();
 		
 		private:
 

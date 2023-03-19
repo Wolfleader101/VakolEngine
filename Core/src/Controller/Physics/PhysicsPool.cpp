@@ -1,5 +1,6 @@
 #include <Controller/Physics/PhysicsPool.hpp>
 #include <Controller/Physics/ScenePhysics.hpp>
+#include <Controller/Logger.hpp>
 
 namespace Vakol::Controller::Physics
 {
@@ -10,7 +11,18 @@ namespace Vakol::Controller::Physics
         return ScenePhysics(m_Common.createPhysicsWorld()); 
     }
 
-    void PhysicsPool::DeletePhysicsWorld() {}
+    void PhysicsPool::DeletePhysicsWorld(ScenePhysics& toDestroy) 
+    { 
+        if (toDestroy.m_World != nullptr)
+        {
+            m_Common.destroyPhysicsWorld(toDestroy.m_World);
+            toDestroy.m_World = nullptr;
+        }
+        else
+        {
+            VK_ERROR("Trying to delete PhysicsWorld that is already null");
+        }
+    }
 
 
 

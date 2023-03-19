@@ -6,6 +6,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>
 #include <string>
+#include <Controller/Physics/ScenePhysics.hpp>
 
 namespace Vakol::Model::Components {
     /**
@@ -132,15 +133,17 @@ namespace Vakol::Model::Components {
         }
     };
 
-   /* using namespace Vakol::Controller::Physics;
+    using namespace Vakol::Controller::Physics;
 
-    struct PhysicsModule {
+    struct PhysicsObject {
 
-        std::shared_ptr<PhysicsWorld> m_owningWorld;
-        std::unique_ptr<rp3d::RigidBody> m_RigidBody;
-        std::unique_ptr<rp3d::Collider> m_CollisionBody;
-        std::unique_ptr<rp3d::CollisionShape> m_Shape;
+        std::weak_ptr<ScenePhysics> owningWorld;
+        rp3d::RigidBody* RigidBody;
+        rp3d::Collider* CollisionBody;
+        rp3d::CollisionShape* Shape;
 
-    };*/
+        rp3d::Transform prevTransform;
+
+    };
 
 }  // namespace Vakol::Model::Components
