@@ -13,6 +13,7 @@ namespace Vakol::Controller::Physics
 		public:
 
 			ScenePhysics() = delete;
+            ~ScenePhysics();
 			void Init();
 
 			void Update(const Vakol::Controller::Time& time);

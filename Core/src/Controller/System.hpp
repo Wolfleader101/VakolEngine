@@ -1,22 +1,32 @@
 #pragma once
 
-#include <entt/entt.hpp>
+#include <Controller/EntityList.hpp>
 #include <reactphysics3d/reactphysics3d.h>
 
 #include "LuaState.hpp"
 
-namespace Vakol::Controller::System {
+namespace Vakol::Controller {
+    
+    class System {
 
-    using reg = entt::registry;
+       public:
 
-    // -- READ --
-    // if you add a function use the convention Type_Action()
-    // will make it more intuitive to find names of funcs
+        System() = delete;
 
-    void Model_Draw(reg& registry);
+        static void SetEntityList(EntityList& EL);
 
-    void ScriptUpdate(reg& registry, LuaState& lua);
+        // -- READ --
+        // if you add a function use the convention Type_Action()
+        // will make it more intuitive to find names of funcs
 
-    void PhysicsTransformUpdate(reg& registry, float factor);
+        static void Model_Draw();
 
-}  // namespace Vakol::Controller::System
+        static void ScriptUpdate(LuaState& lua);
+
+        static void Physics_UpdateTransforms(float factor);
+
+       private:
+        static entt::registry* registry; 
+
+    }; 
+}  // namespace Vakol::Controller

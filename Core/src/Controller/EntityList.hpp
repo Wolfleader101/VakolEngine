@@ -14,6 +14,8 @@ namespace Vakol::Model {
 using namespace Vakol::Model;
 namespace Vakol::Controller {
 
+    class System;
+
     /**
      * @class EntityList
      *
@@ -148,6 +150,7 @@ namespace Vakol::Controller {
         }
 
          friend class Entity;  // friend to allow the api for entities to be clean.
+         friend class System;
     };
 
 }  // namespace Vakol::Controller

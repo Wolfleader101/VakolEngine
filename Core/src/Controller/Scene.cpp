@@ -38,13 +38,15 @@ namespace Vakol::Controller {
     }
 
     void Scene::Update(const Controller::Time& time) {
+
+        System::SetEntityList(entityList);
         lua.RunFile("scripts/" + scriptName);
 
         sol::function update = lua.GetState()["update"];
 
         update();
 
-        System::ScriptUpdate(entityList.GetRegistry(), lua);
+        System::ScriptUpdate(lua);
     }
 
     namespace fs = std::filesystem;

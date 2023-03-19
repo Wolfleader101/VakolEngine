@@ -6,10 +6,17 @@
 #include <Model/Math/Math.hpp>
 
 using namespace Vakol::Model::Components;
-using namespace Vakol::Model::Math;
 
-namespace Vakol::Controller::System {
-    void Model_Draw(reg& registry) {
+namespace Vakol::Controller 
+{
+    entt::registry* System::registry = nullptr;
+
+    void System::SetEntityList(EntityList& EL) 
+    { 
+        registry = &EL.m_Registry;
+    }
+
+    void System::Model_Draw() {
         // registry.view<Components::Transform, Components::ModelType>().each(
         //	[&](auto& trans, auto& model) {
         //		/* draw model */
@@ -18,8 +25,8 @@ namespace Vakol::Controller::System {
         //);
     }
 
-    void ScriptUpdate(reg& registry, LuaState& lua) {
-        registry.view<Model::Components::Script>().each([&](auto& script) {
+    void System::ScriptUpdate(LuaState& lua) {
+        registry->view<Script>().each([&](auto& script) {
             lua.RunFile("scripts/" + script.script_name);
 
             sol::function update = lua.GetState()["update"];
@@ -28,9 +35,10 @@ namespace Vakol::Controller::System {
         });
     }
 
-    void PhysicsTransformUpdate(reg& registry, float factor) 
-    { registry.view<Transform, PhysicsObject>().each(
-        [&](Transform& trans, PhysicsObject& PhyObj) {
+    void System::Physics_UpdateTransforms(float factor) 
+    { 
+        registry->view<Transform, PhysicsObject>().each(
+        [&](auto& trans, auto& PhyObj) {
 
 
             rp3d::Transform currTransform = PhyObj.RigidBody->getTransform();
@@ -50,4 +58,4 @@ namespace Vakol::Controller::System {
         );
     }
 
-}  // namespace Vakol::Controller::System
+}  // namespace Vakol::Controller
