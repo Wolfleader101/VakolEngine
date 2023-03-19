@@ -7,6 +7,7 @@
 namespace Vakol::Controller::Physics
 {
     class PhysicsPool;
+    class PhysicsObject;
 
 	class ScenePhysics
 	{

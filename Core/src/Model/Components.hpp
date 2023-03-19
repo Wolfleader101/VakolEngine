@@ -137,12 +137,18 @@ namespace Vakol::Model::Components {
 
     struct PhysicsObject {
 
-        std::weak_ptr<ScenePhysics> owningWorld;
+        ScenePhysics* owningWorld;
         rp3d::RigidBody* RigidBody;
         rp3d::Collider* CollisionBody;
         rp3d::CollisionShape* Shape;
 
         rp3d::Transform prevTransform;
+
+        template <class Archive>
+        void serialize(Archive& ar)
+        {
+            
+        }
 
     };
 
