@@ -47,7 +47,7 @@ namespace Vakol::View
 
     void GUIWindow::AddCheckbox(std::string& checkboxName, bool &checkBoxValue) { ImGui::Checkbox(checkboxName.c_str(), &checkBoxValue); };
 
-    void GUIWindow::AddIntSlider(std::string& sliderName, int &sliderValue, int minValue, int maxValue) { ImGui::SliderInt(sliderName.c_str(), &sliderValue, minValue, maxValue); };
+    void GUIWindow::AddIntSlider(std::string& sliderName, std::unique_ptr<int> sliderValue, int minValue, int maxValue) { ImGui::SliderInt(sliderName.c_str(), sliderValue.get(), minValue, maxValue); };
 
     void GUIWindow::AddVecIntSlider(std::string& sliderName, int *sliderValue, unsigned arraySize, int minValue, int maxValue) 
     { 

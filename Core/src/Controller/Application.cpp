@@ -12,7 +12,7 @@ namespace Vakol::Controller {
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
     bool testBoolean = false;
-    int testInteger = 0;
+    int testInteger = 2;
     int testIntegerArray[] = {2, 3};
     int testIntegerArrayTwo[] = {3, 1, 4};
     int testIntegerArrayThree[] = {3, 1, 4, 2};
@@ -77,7 +77,7 @@ namespace Vakol::Controller {
             uiData.StartWindowCreation(std::string("A Very New Window"), 640, 480, 0, 0);
             uiData.AddButton(std::string("Cool Button"), 100, 20, PrintStuff);
             uiData.AddCheckbox(std::string("Cool Checkbox"), testBoolean);
-            uiData.AddIntSlider(std::string("Cool Slider Int"), testInteger, -10, 10);
+            uiData.AddIntSlider(std::string("Cool Slider Int"), std::make_unique<int>(testInteger), -10, 10);
             uiData.AddVecIntSlider(std::string("Cool Slider Vec 2 Int"), testIntegerArray, 2, -2, 5);
             uiData.AddVecIntSlider(std::string("Cool Slider Vec 3 Int"), testIntegerArrayTwo, 3, -2, 5);
             uiData.AddVecIntSlider(std::string("Cool Slider Vec 4 Int"), testIntegerArrayThree, 4, -2, 5);

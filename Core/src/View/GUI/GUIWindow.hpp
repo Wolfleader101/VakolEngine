@@ -73,7 +73,7 @@ namespace Vakol::View
              * @param minValue The minimum value of the slider
              * @param maxValue the maximum value of the slider
              */
-            void AddIntSlider(std::string& sliderName, int &sliderValue, int minValue, int maxValue);
+            void AddIntSlider(std::string& sliderName, std::unique_ptr<int> sliderValue, int minValue, int maxValue);
             /**
              * @brief Adds a Vecotr based Integer Slider to the window
              *
