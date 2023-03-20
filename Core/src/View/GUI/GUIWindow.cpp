@@ -49,7 +49,53 @@ namespace Vakol::View
 
     void GUIWindow::AddIntSlider(std::string& sliderName, int &sliderValue, int minValue, int maxValue) { ImGui::SliderInt(sliderName.c_str(), &sliderValue, minValue, maxValue); };
 
+    void GUIWindow::AddVecIntSlider(std::string& sliderName, int *sliderValue, unsigned arraySize, int minValue, int maxValue) 
+    { 
+        switch (arraySize) 
+        {
+            case 2:
+                ImGui::SliderInt2(sliderName.c_str(), sliderValue, minValue, maxValue); 
+
+                break;
+            case 3:
+                ImGui::SliderInt3(sliderName.c_str(), sliderValue, minValue, maxValue);
+
+                break;
+            case 4:
+                ImGui::SliderInt4(sliderName.c_str(), sliderValue, minValue, maxValue);
+
+                break;
+            default:
+                std::cout << "ERROR: Outside of the bounds of a Vector 2, 3 or 4. Please enter a correct array!" << std::endl;
+
+                break;
+        }
+    };
+
     void GUIWindow::AddFloatSlider(std::string& sliderName, float &sliderValue, float minValue, float maxValue) { ImGui::SliderFloat(sliderName.c_str(), &sliderValue, minValue, maxValue); };
+
+    void GUIWindow::AddVecFloatSlider(std::string& sliderName, float *sliderValue, unsigned arraySize, float minValue, float maxValue) 
+    { 
+        switch (arraySize) 
+        {
+            case 2:
+                ImGui::SliderFloat2(sliderName.c_str(), sliderValue, minValue, maxValue); 
+
+                break;
+            case 3:
+                ImGui::SliderFloat3(sliderName.c_str(), sliderValue, minValue, maxValue);
+
+                break;
+            case 4:
+                ImGui::SliderFloat4(sliderName.c_str(), sliderValue, minValue, maxValue);
+
+                break;
+            default:
+                std::cout << "ERROR: Outside of the bounds of a Vector 2, 3 or 4. Please enter a correct array!" << std::endl;
+
+                break;
+        }
+    };
 
     void GUIWindow::EndWindowCreation() 
     {

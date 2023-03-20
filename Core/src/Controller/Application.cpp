@@ -13,7 +13,13 @@ namespace Vakol::Controller {
 
     bool testBoolean = false;
     int testInteger = 0;
+    int testIntegerArray[] = {2, 3};
+    int testIntegerArrayTwo[] = {3, 1, 4};
+    int testIntegerArrayThree[] = {3, 1, 4, 2};
     float testFloat = 0.0f;
+    float testFloatArray[] = {2.0f, 3.0f};
+    float testFloatArrayTwo[] = {3.0f, 1.0f, 4.0f};
+    float testFloatArrayThree[] = {3.0f, 1.0f, 4.0f, 2.0f};
 
     Application::Application() : m_running(false), m_window(nullptr), m_renderer(nullptr) { Logger::Init(); };
 
@@ -72,7 +78,13 @@ namespace Vakol::Controller {
             uiData.AddButton(std::string("Cool Button"), 100, 20, PrintStuff);
             uiData.AddCheckbox(std::string("Cool Checkbox"), testBoolean);
             uiData.AddIntSlider(std::string("Cool Slider Int"), testInteger, -10, 10);
+            uiData.AddVecIntSlider(std::string("Cool Slider Vec 2 Int"), testIntegerArray, 2, -2, 5);
+            uiData.AddVecIntSlider(std::string("Cool Slider Vec 3 Int"), testIntegerArrayTwo, 3, -2, 5);
+            uiData.AddVecIntSlider(std::string("Cool Slider Vec 4 Int"), testIntegerArrayThree, 4, -2, 5);
             uiData.AddFloatSlider(std::string("Cool Slider Float"), testFloat, -10.0, 10.0);
+            uiData.AddVecFloatSlider(std::string("Cool Slider Vec 2 Float"), testFloatArray, 2, -2.0f, 5.0f);
+            uiData.AddVecFloatSlider(std::string("Cool Slider Vec 3 Float"), testFloatArrayTwo, 3, -2.0f, 5.0f);
+            uiData.AddVecFloatSlider(std::string("Cool Slider Vec 4 Float"), testFloatArrayThree, 4, -2.0f, 5.0f);
             uiData.EndWindowCreation();
 
             if (testBoolean || testInteger == 10) 
