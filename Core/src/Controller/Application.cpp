@@ -1,29 +1,22 @@
 #include "Application.hpp"
 
-
 #include <Controller/LuaAccess.hpp>
+#include <Controller/Physics/PhysicsPool.hpp>
+#include <Controller/Physics/ScenePhysics.hpp>
+#include <Model/Components.hpp>
 #include <View/Renderer/RendererFactory.hpp>
 
 #include "Logger.hpp"
-
-
-#include <Controller/Physics/ScenePhysics.hpp>
-#include <Controller/Physics/PhysicsPool.hpp>
-
-#include <Model/Components.hpp>
 // #include "JSON/Json.hpp"
 // #include "Physics/Physics.hpp"
 
 namespace Vakol::Controller {
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
-    Application::Application() : m_running(false), m_window(nullptr), m_renderer(nullptr) 
-    { 
-        Logger::Init(); 
-        
-        auto x = Vakol::Controller::Physics::PhysicsPool::CreatePhysicsWorld();
+    Application::Application() : m_running(false), m_window(nullptr), m_renderer(nullptr) {
+        Logger::Init();
 
-        
+        auto x = Vakol::Controller::Physics::PhysicsPool::CreatePhysicsWorld();
     };
 
     void Application::Init() {
@@ -105,9 +98,12 @@ namespace Vakol::Controller {
             // Physics::FixedUpdate(m_time, m_entityList.GetEntityList());
 
             //! update scenes lua
+            //! only update if the scene is active
             for (auto& scene : scenes) {
-                scene.Update(m_time);
+                if (scene.active) scene.Update(m_time);
             }
+
+            // run ai agents on seperate thread
 
             m_renderer->Update(m_time);
 
@@ -121,7 +117,7 @@ namespace Vakol::Controller {
         // ImGui::DestroyContext();
     }
 
-    void Application::AddScene(std::string scriptName, std::string scene_name) {
+    void Application::AddScene(std::string scriptName, std::string scene_name, bool setActive) {
         std::string sceneName = scene_name.length() == 0 ? "Scene" + std::to_string(scenes.size()) : scene_name;
         scenes.push_back(Scene(sceneName, scriptName, lua));
     }

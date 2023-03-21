@@ -10,7 +10,7 @@ namespace Vakol::Controller {
          * @brief Construct a new Scene object
          *
          */
-        Scene(const std::string& name, const std::string& scriptName, LuaState& lua);
+        Scene(const std::string& name, const std::string& scriptName, LuaState& lua, bool active = false);
         /**
          * @brief the entity list of engine
          */
@@ -25,6 +25,8 @@ namespace Vakol::Controller {
 
         void Serialize(const std::string& folder) const;
         void Deserialize(const std::string& folder);
+
+        bool active = false;
 
        private:
         LuaState& lua;

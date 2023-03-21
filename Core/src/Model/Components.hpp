@@ -3,11 +3,12 @@
 #include <reactphysics3d/reactphysics3d.h>
 
 #include <Controller/LuaState.hpp>
+#include <Controller/Physics/ScenePhysics.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>
 #include <string>
-#include <Controller/Physics/ScenePhysics.hpp>
 
+#include "Mesh.hpp"
 namespace Vakol::Model::Components {
     /**
      * @struct Transform
@@ -42,22 +43,15 @@ namespace Vakol::Model::Components {
         glm::quat rot;   /**< XYZ rotation */
         glm::vec3 scale; /**< XYZ scale */
 
-        template<class Archive>
-        void serialize(Archive& ar)
-        {
-            ar(cereal::make_nvp("pos.x",pos.x),
-               cereal::make_nvp("pos.y", pos.y),
-               cereal::make_nvp("pos.z", pos.z),
+        template <class Archive>
+        void serialize(Archive& ar) {
+            ar(cereal::make_nvp("pos.x", pos.x), cereal::make_nvp("pos.y", pos.y), cereal::make_nvp("pos.z", pos.z),
 
-               cereal::make_nvp("rot.w", rot.w), 
-               cereal::make_nvp("rot.x", rot.x), 
-               cereal::make_nvp("rot.y", rot.y),
-               cereal::make_nvp("rot.z", rot.z), 
+               cereal::make_nvp("rot.w", rot.w), cereal::make_nvp("rot.x", rot.x), cereal::make_nvp("rot.y", rot.y),
+               cereal::make_nvp("rot.z", rot.z),
 
-               cereal::make_nvp("scale.x",scale.x), 
-               cereal::make_nvp("scale.y", scale.y),
-               cereal::make_nvp("scale.z", scale.z)
-               );
+               cereal::make_nvp("scale.x", scale.x), cereal::make_nvp("scale.y", scale.y),
+               cereal::make_nvp("scale.z", scale.z));
         }
     };
 
@@ -84,7 +78,7 @@ namespace Vakol::Model::Components {
 
         template <class Archive>
         void serialize(Archive& ar) {
-            ar(cereal::make_nvp("tag",tag));
+            ar(cereal::make_nvp("tag", tag));
         }
     };
 
@@ -129,14 +123,17 @@ namespace Vakol::Model::Components {
 
         template <class Archive>
         void serialize(Archive& ar) {
-            ar(cereal::make_nvp("ScriptName",script_name));
+            ar(cereal::make_nvp("ScriptName", script_name));
         }
+    };
+
+    struct Drawable {
+        std::vector<std::string> meshes;
     };
 
     using namespace Vakol::Controller::Physics;
 
     struct PhysicsObject {
-
         ScenePhysics* owningWorld;
         rp3d::RigidBody* RigidBody;
         rp3d::Collider* CollisionBody;
@@ -145,11 +142,7 @@ namespace Vakol::Model::Components {
         rp3d::Transform prevTransform;
 
         template <class Archive>
-        void serialize(Archive& ar)
-        {
-            
-        }
-
+        void serialize(Archive& ar) {}
     };
 
 }  // namespace Vakol::Model::Components

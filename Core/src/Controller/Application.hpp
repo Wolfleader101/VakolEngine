@@ -15,8 +15,6 @@
 #include <Model/Entity.hpp>
 #include <Model/GameConfig.hpp>
 
-
-
 #include "Scene.hpp"
 
 namespace Vakol::Controller {
@@ -71,10 +69,13 @@ namespace Vakol::Controller {
          */
         const int GetHeight() const { return m_window->GetHeight(); }
 
-        void AddScene(std::string scriptName, std::string scene_name = "");
-
+        void AddScene(std::string scriptName, std::string scene_name = "", bool setActive = false);
+        // void SetActiveScene(std::string scene_name);
+        // void DisableAllScenes()
        private:
         /**
+         * @brief
+         *
          * @brief on window close event
          * @param ev event of windowClose
          * @return true if it was sucessful
