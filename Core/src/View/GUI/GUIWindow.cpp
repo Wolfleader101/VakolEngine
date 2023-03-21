@@ -9,13 +9,13 @@ namespace Vakol::View
         windowFlags = 0;
     };
     
-    void GUIWindow::InitUI(GLFWwindow* window) 
+    void GUIWindow::Init(std::shared_ptr<View::Window> m_window) 
     { 
         ImGui::CreateContext();
 
         ImGui::StyleColorsDark(); //Chooses the Dark style
 
-        ImGui_ImplGlfw_InitForOpenGL(window, true); //Takes in the GLFW Window
+        ImGui_ImplGlfw_InitForOpenGL(m_window->GetWindow(), true);  // Takes in the GLFW Window
         ImGui_ImplOpenGL3_Init("#version 460"); //Sets the version of GLSL being used
     };
 

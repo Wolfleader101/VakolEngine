@@ -4,8 +4,7 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
+#include <View/Window/Window.hpp>
 
 #include <iostream>
 #include <string>
@@ -29,7 +28,7 @@ namespace Vakol::View
             * 
             * @param window The GLFW window the UI will be inside of
             */
-            void InitUI(GLFWwindow* window);
+            void Init(std::shared_ptr<View::Window> m_window);
             /**
             * @brief Creates a new frame for the window
             */
