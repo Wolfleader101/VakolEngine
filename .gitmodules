@@ -7,9 +7,6 @@
 [submodule "Core/lib/glm"]
 	path = Core/lib/glm
 	url = https://github.com/g-truc/glm
-[submodule "Core/lib/nlohmann_json"]
-	path = Core/lib/nlohmann_json
-	url = https://github.com/nlohmann/json
 [submodule "Core/lib/reactphysics3d"]
 	path = Core/lib/reactphysics3d
 	url = https://github.com/DanielChappuis/reactphysics3d
@@ -25,3 +22,6 @@
 [submodule "Core/lib/assimp"]
 	path = Core/lib/assimp
 	url = https://github.com/assimp/assimp
+[submodule "Core/lib/cereal"]
+	path = Core/lib/cereal
+	url = https://github.com/USCiLab/cereal.git

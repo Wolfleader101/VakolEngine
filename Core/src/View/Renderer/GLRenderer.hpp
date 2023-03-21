@@ -2,10 +2,6 @@
 
 #include "Renderer.hpp"
 
-#include <Model/gl/GLModel.hpp>
-
-using Vakol::Model::GLModel;
-
 namespace Vakol::View 
 {
     class GLRenderer : public Renderer 
@@ -13,8 +9,5 @@ namespace Vakol::View
     public:
         GLRenderer(const std::shared_ptr<Window> window);
         void Update(const Controller::Time& time) override;
-
-    private:
-        GLModel model;
     };
-}
+}  // namespace Vakol::View

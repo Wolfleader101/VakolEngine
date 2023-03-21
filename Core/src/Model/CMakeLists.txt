@@ -4,8 +4,8 @@ SET(MODEL
 src/Model/gl/GLBuffer.hpp
 src/Model/gl/GLBuffer.cpp
 
-src/Model/gl/GLModel.hpp
-src/Model/gl/GLModel.cpp
+src/Model/gl/GLMesh.hpp
+src/Model/gl/GLMesh.cpp
 
 src/Model/gl/GLShader.hpp
 src/Model/gl/GLShader.cpp
@@ -16,9 +16,6 @@ src/Model/gl/GLMaterial.cpp
 src/Model/gl/GLTexture.hpp
 src/Model/gl/GLTexture.cpp
 
-#Model
-src/Model/Model.hpp
-
 #Buffer
 src/Model/Buffer.hpp
 
@@ -28,6 +25,9 @@ src/Model/Shader.cpp
 
 #Material
 src/Model/Material.hpp
+
+#Mesh
+src/Model/Mesh.hpp
 
 #Texture
 src/Model/Texture.hpp
@@ -48,5 +48,7 @@ src/Model/Components.cpp
 
 src/Model/Entity.hpp
 src/Model/Entity.cpp
+
+src/Model/GameConfig.hpp
 
 PARENT_SCOPE)

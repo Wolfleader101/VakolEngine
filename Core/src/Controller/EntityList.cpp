@@ -1,119 +1,109 @@
 #include "EntityList.hpp"
 
-#include <Model/Entity.hpp>
-#include <Model/Components.hpp>
-#include <Controller/System.hpp>
-
-#include <Controller/Logger.hpp>
-
-
 #include <assert.h>
 
-namespace Vakol::Model::ECS
-{
+#include <cereal/cereal.hpp>
 
-	Entity& EntityList::CreateEntity()
-	{
-		Entity newEntity = Entity(m_Registry.create(), this);
-
-		ActiveEntityList.push_back(newEntity);
-
-
-		return ActiveEntityList.back();
-	}
-
-	Entity EntityList::CreateEntity(uint32_t SuggestedHandle)
-	{
-		Entity newEntity = Entity(m_Registry.create((entt::entity)SuggestedHandle), this);
-
-		ActiveEntityList.push_back(newEntity);
-
-		return newEntity;
-
-	}
+#include <Controller/Logger.hpp>
+#include <Controller/System.hpp>
+#include <Model/Components.hpp>
+#include <Model/Entity.hpp>
+#include <Model/Components.hpp>
 
 
-	Entity EntityList::GetEntity(uint32_t Handle)
-	{
-		if (!CheckEntityExistence(Handle)) //ensuring the entity actually exists
-		{
-			VK_CRITICAL("EntityList.GetEntity(uint32_t): Entity with given handle does not exist");
-			assert(0);
-		}
-		Entity newEnt;
 
-		newEnt.m_entityHandle = (entt::entity)Handle; newEnt.m_EntityList = this;
-		return newEnt;
-	}
+namespace Vakol::Controller {
 
-	void EntityList::RemoveEntity(uint32_t Handle)
-	{
-		entt::entity ID = (entt::entity)Handle;
+    Entity& EntityList::CreateEntity() {
+        Entity newEntity = Entity(m_Registry.create(), this);
 
-		if (!CheckEntityExistence(Handle)) //ensuring the entity actually exists
-		{
-			VK_ERROR("EntityList.RemoveEntity(uint32_t): Entity with given handle does not exist... skipping");
-		}
-		else
-		{
-			m_Registry.destroy(ID);
+        ActiveEntityList.push_back(newEntity);
 
-			auto it = ActiveEntityList.begin();
-			auto end = ActiveEntityList.end();
+        return ActiveEntityList.back();
+    }
 
-			while (it != end)
-			{
-				if (it->GetHandle() == Handle)
-				{
-					ActiveEntityList.erase(it);
-					break;
-				}
-				it++;
-			}
-		}
+    Entity EntityList::CreateEntity(uint32_t SuggestedHandle) {
+        Entity newEntity = Entity(m_Registry.create((entt::entity)SuggestedHandle), this);
+
+        ActiveEntityList.push_back(newEntity);
+
+        return newEntity;
+    }
+
+    Entity EntityList::GetEntity(uint32_t Handle) {
+        if (!CheckEntityExistence(Handle))  // ensuring the entity actually exists
+        {
+            VK_CRITICAL("EntityList.GetEntity(uint32_t): Entity with given handle does not exist");
+            assert(0);
+        }
+        Entity newEnt;
+
+        newEnt.m_entityHandle = (entt::entity)Handle;
+        newEnt.m_EntityList = this;
+        return newEnt;
+    }
+
+    void EntityList::RemoveEntity(uint32_t Handle) {
+        entt::entity ID = (entt::entity)Handle;
+
+        if (!CheckEntityExistence(Handle))  // ensuring the entity actually exists
+        {
+            VK_ERROR("EntityList.RemoveEntity(uint32_t): Entity with given handle does not exist... skipping");
+        } else {
+            m_Registry.destroy(ID);
+
+            auto it = ActiveEntityList.begin();
+            auto end = ActiveEntityList.end();
+
+            while (it != end) {
+                if (it->GetHandle() == Handle) {
+                    ActiveEntityList.erase(it);
+                    break;
+                }
+                it++;
+            }
+        }
+    }
+
+    void EntityList::Clear() {
+        m_Registry.clear();
+        ActiveEntityList.clear();
+    }
+
+    bool EntityList::CheckEntityExistence(uint32_t Handle) const { return m_Registry.valid((entt::entity)Handle); }
+
+    std::vector<Entity>& EntityList::GetEntityVec() { return ActiveEntityList; }
+
+    //----------------------- ICT397 additions
+
+    entt::registry& EntityList::GetRegistry() { return m_Registry; }
 
 
-	}
+    void EntityList::Init() {}
 
-	void EntityList::Clear()
-	{
-		m_Registry.clear();
-		ActiveEntityList.clear();
-	}
+    void EntityList::Update(double d_t) {
+        // use systems functions to update the entt::registry
+        d_t;
+    }
 
-	bool EntityList::CheckEntityExistence(uint32_t Handle) const
-	{
-		return m_Registry.valid((entt::entity)Handle);
-	}
+    void EntityList::Serialize(const std::string& file) const 
+    {
+        privateSerialize<cereal::JSONOutputArchive,   
+                            Model::Components::Transform,
+                            Model::Components::Tag,
+                            Model::Components::EntityType,
+                            Model::Components::TagType,
+                            Model::Components::Script>(file);
+    }
 
-	std::vector<Entity>& EntityList::GetEntityVec()
-	{
-		return ActiveEntityList;
-	}
+    void EntityList::Deserialize(const std::string& file) 
+    {
+        privateDeserialize<cereal::JSONInputArchive, 
+                            Model::Components::Transform, 
+                            Model::Components::Tag,
+                            Model::Components::EntityType, 
+                            Model::Components::TagType, 
+                            Model::Components::Script>(file);
+    }
 
-
-	//----------------------- ICT397 additions
-
-	entt::registry& EntityList::GetRegistry()
-	{
-		return m_Registry;
-	}
-
-	void EntityList::Init(entt::registry& toCopy)
-	{
-		//init the list. Once the json is de-serialized, we transfer to an EntityList
-		//Then call any system init funcs. 
-	}
-
-	void EntityList::Init()
-	{
-
-	}
-
-	void EntityList::Update(double d_t)
-	{
-
-		//use systems functions to update the entt::registry
-	}
-	
-}
+}  // namespace Vakol::Controller
