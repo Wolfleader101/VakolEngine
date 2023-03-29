@@ -459,3 +459,4 @@ out/
 # Vakol Specific Files/Folders
 
 !**/[Aa]ssets/*
+!**/[Cc]ore[Aa]ssets/*
