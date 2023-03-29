@@ -458,5 +458,4 @@ out/
 
 # Vakol Specific Files/Folders
 
-!VakolEngine/Core/assets/
-!VakolEngine/Core/assets/*
+!**/[Aa]ssets/*
