@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_executable (${PROJECT_NAME} "Demo.cpp")
 
 target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC
-    VakolCore/src
+    VakolCore/include
 )
 
 target_link_libraries(${PROJECT_NAME} PUBLIC

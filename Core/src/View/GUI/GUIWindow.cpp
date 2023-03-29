@@ -66,7 +66,7 @@ namespace Vakol::View
 
                 break;
             default:
-                std::cout << "ERROR: Outside of the bounds of a Vector 2, 3 or 4. Please enter a correct array!" << std::endl;
+                VK_CRITICAL("Outside of the bounds of a Vector 2, 3 or 4. Please enter a correct array!");
 
                 break;
         }
@@ -91,7 +91,7 @@ namespace Vakol::View
 
                 break;
             default:
-                std::cout << "ERROR: Outside of the bounds of a Vector 2, 3 or 4. Please enter a correct array!" << std::endl;
+                VK_CRITICAL("Outside of the bounds of a Vector 2, 3 or 4. Please enter a correct array!");
 
                 break;
         }
