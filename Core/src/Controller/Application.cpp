@@ -116,10 +116,12 @@ namespace Vakol::Controller {
 
             // m_gui.OnUpdate();
 
+            m_gui.CreateNewFrame();
+
             m_gui.StartWindowCreation(std::string("A Very New Window"), 640, 480, 0, 0);
             m_gui.AddButton(std::string("Cool Button"), 100, 20, PrintStuff);
             m_gui.AddCheckbox(std::string("Cool Checkbox"), testBoolean);
-            m_gui.AddIntSlider(std::string("Cool Slider Int"), std::make_unique<int>(testInteger), -10, 10);
+            m_gui.AddIntSlider(std::string("Cool Slider Int"), testInteger, -10, 10);
             m_gui.AddVecIntSlider(std::string("Cool Slider Vec 2 Int"), testIntegerArray, 2, -2, 5);
             m_gui.AddVecIntSlider(std::string("Cool Slider Vec 3 Int"), testIntegerArrayTwo, 3, -2, 5);
             m_gui.AddVecIntSlider(std::string("Cool Slider Vec 4 Int"), testIntegerArrayThree, 4, -2, 5);

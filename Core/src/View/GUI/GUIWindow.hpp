@@ -72,7 +72,7 @@ namespace Vakol::View
              * @param minValue The minimum value of the slider
              * @param maxValue the maximum value of the slider
              */
-            void AddIntSlider(std::string& sliderName, std::unique_ptr<int> sliderValue, int minValue, int maxValue);
+            void AddIntSlider(std::string& sliderName, int& sliderValue, int minValue, int maxValue);
             /**
              * @brief Adds a Vecotr based Integer Slider to the window
              *
@@ -82,7 +82,7 @@ namespace Vakol::View
              * @param minValue The minimum value of the slider
              * @param maxValue the maximum value of the slider
              */
-            void AddVecIntSlider(std::string& sliderName, int *sliderValue, unsigned arraySize, int minValue, int maxValue);
+            void AddVecIntSlider(std::string& sliderName, int sliderValue[], unsigned arraySize, int minValue, int maxValue);
             /**
              * @brief Adds a Float Slider to the window
              *
@@ -101,7 +101,7 @@ namespace Vakol::View
              * @param minValue The minimum value of the slider
              * @param maxValue the maximum value of the slider
              */
-            void AddVecFloatSlider(std::string& sliderName, float* sliderValue, unsigned arraySize, float minValue, float maxValue);
+            void AddVecFloatSlider(std::string& sliderName, float sliderValue[], unsigned arraySize, float minValue, float maxValue);
             /**
             * @brief Ends the creation of a GUI window
             */

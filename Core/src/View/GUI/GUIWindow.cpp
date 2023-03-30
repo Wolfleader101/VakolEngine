@@ -47,9 +47,9 @@ namespace Vakol::View
 
     void GUIWindow::AddCheckbox(std::string& checkboxName, bool &checkBoxValue) { ImGui::Checkbox(checkboxName.c_str(), &checkBoxValue); };
 
-    void GUIWindow::AddIntSlider(std::string& sliderName, std::unique_ptr<int> sliderValue, int minValue, int maxValue) { ImGui::SliderInt(sliderName.c_str(), sliderValue.get(), minValue, maxValue); };
+    void GUIWindow::AddIntSlider(std::string& sliderName, int& sliderValue, int minValue, int maxValue) { ImGui::SliderInt(sliderName.c_str(), &sliderValue, minValue, maxValue); };
 
-    void GUIWindow::AddVecIntSlider(std::string& sliderName, int *sliderValue, unsigned arraySize, int minValue, int maxValue) 
+    void GUIWindow::AddVecIntSlider(std::string& sliderName, int sliderValue[], unsigned arraySize, int minValue, int maxValue) 
     { 
         switch (arraySize) 
         {
@@ -74,7 +74,7 @@ namespace Vakol::View
 
     void GUIWindow::AddFloatSlider(std::string& sliderName, float &sliderValue, float minValue, float maxValue) { ImGui::SliderFloat(sliderName.c_str(), &sliderValue, minValue, maxValue); };
 
-    void GUIWindow::AddVecFloatSlider(std::string& sliderName, float *sliderValue, unsigned arraySize, float minValue, float maxValue) 
+    void GUIWindow::AddVecFloatSlider(std::string& sliderName, float sliderValue[], unsigned arraySize, float minValue, float maxValue) 
     { 
         switch (arraySize) 
         {
