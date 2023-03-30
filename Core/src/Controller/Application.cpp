@@ -119,6 +119,7 @@ namespace Vakol::Controller {
             m_gui.CreateNewFrame();
 
             m_gui.StartWindowCreation(std::string("A Very New Window"), 640, 480, 0, 0);
+
             m_gui.AddButton(std::string("Cool Button"), 100, 20, PrintStuff);
             m_gui.AddCheckbox(std::string("Cool Checkbox"), testBoolean);
             m_gui.AddIntSlider(std::string("Cool Slider Int"), testInteger, -10, 10);
@@ -129,6 +130,7 @@ namespace Vakol::Controller {
             m_gui.AddVecFloatSlider(std::string("Cool Slider Vec 2 Float"), testFloatArray, 2, -2.0f, 5.0f);
             m_gui.AddVecFloatSlider(std::string("Cool Slider Vec 3 Float"), testFloatArrayTwo, 3, -2.0f, 5.0f);
             m_gui.AddVecFloatSlider(std::string("Cool Slider Vec 4 Float"), testFloatArrayThree, 4, -2.0f, 5.0f);
+
             m_gui.EndWindowCreation();
 
             if (testBoolean || testInteger == 10) {
