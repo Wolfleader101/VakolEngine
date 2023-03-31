@@ -12,16 +12,6 @@
 namespace Vakol::Controller {
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
-    bool testBoolean = false;
-    int testInteger = 2;
-    int testIntegerArray[] = {2, 3};
-    int testIntegerArrayTwo[] = {3, 1, 4};
-    int testIntegerArrayThree[] = {3, 1, 4, 2};
-    float testFloat = 0.0f;
-    float testFloatArray[] = {2.0f, 3.0f};
-    float testFloatArrayTwo[] = {3.0f, 1.0f, 4.0f};
-    float testFloatArrayThree[] = {3.0f, 1.0f, 4.0f, 2.0f};
-
     Application::Application() : m_running(false), m_window(nullptr), m_renderer(nullptr) 
     { 
         Logger::Init(); 
@@ -44,8 +34,6 @@ namespace Vakol::Controller {
         m_renderer = CreateRenderer(config.value().rendererType, m_window);
 
         m_window->SetEventCallback(BIND_EVENT_FN(OnEvent));
-
-        m_gui.Init(m_window);
 
         // Physics::Debug = false;
 
@@ -99,8 +87,6 @@ namespace Vakol::Controller {
         // json::SerializeScene("assets/json/Deserialize.json", m_entityList);
     }
 
-    void PrintStuff() { std::cout << "This is a test!" << std::endl; }
-
     void Application::Run() {
         while (m_running) {
             m_time.Update();
@@ -113,29 +99,6 @@ namespace Vakol::Controller {
             }
 
             m_renderer->Update(m_time);
-
-            // m_gui.OnUpdate();
-
-            m_gui.CreateNewFrame();
-
-            m_gui.StartWindowCreation(std::string("A Very New Window"), 640, 480, 0, 0);
-
-            m_gui.AddButton(std::string("Cool Button"), 100, 20, PrintStuff);
-            m_gui.AddCheckbox(std::string("Cool Checkbox"), testBoolean);
-            m_gui.AddIntSlider(std::string("Cool Slider Int"), testInteger, -10, 10);
-            m_gui.AddVecIntSlider(std::string("Cool Slider Vec 2 Int"), testIntegerArray, 2, -2, 5);
-            m_gui.AddVecIntSlider(std::string("Cool Slider Vec 3 Int"), testIntegerArrayTwo, 3, -2, 5);
-            m_gui.AddVecIntSlider(std::string("Cool Slider Vec 4 Int"), testIntegerArrayThree, 4, -2, 5);
-            m_gui.AddFloatSlider(std::string("Cool Slider Float"), testFloat, -10.0, 10.0);
-            m_gui.AddVecFloatSlider(std::string("Cool Slider Vec 2 Float"), testFloatArray, 2, -2.0f, 5.0f);
-            m_gui.AddVecFloatSlider(std::string("Cool Slider Vec 3 Float"), testFloatArrayTwo, 3, -2.0f, 5.0f);
-            m_gui.AddVecFloatSlider(std::string("Cool Slider Vec 4 Float"), testFloatArrayThree, 4, -2.0f, 5.0f);
-
-            m_gui.EndWindowCreation();
-
-            if (testBoolean || testInteger == 10) {
-                PrintStuff();
-            }
 
             m_window->OnUpdate();
         }
