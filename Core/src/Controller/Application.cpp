@@ -15,10 +15,6 @@ namespace Vakol::Controller {
     Application::Application() : m_running(false), m_window(nullptr), m_renderer(nullptr) 
     { 
         Logger::Init(); 
-        
-        
-
-        
     };
 
     void Application::Init() {
@@ -38,8 +34,6 @@ namespace Vakol::Controller {
         m_renderer = CreateRenderer(config.value().rendererType, m_window);
 
         m_window->SetEventCallback(BIND_EVENT_FN(OnEvent));
-
-        // m_gui.Init(m_window.GetWindow());
 
         // Physics::Debug = false;
 
@@ -105,8 +99,6 @@ namespace Vakol::Controller {
             }
 
             m_renderer->Update(m_time);
-
-            // m_gui.OnUpdate();
 
             m_window->OnUpdate();
         }
