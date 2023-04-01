@@ -37,7 +37,7 @@ namespace Vakol::Controller
 
     void System::Physics_UpdateTransforms(float factor) 
     { 
-        registry->view<Transform, PhysicsObject>().each(
+        registry->view<Transform, Components::PhysicsObject>().each(
         [&](auto& trans, auto& PhyObj) {
 
 
