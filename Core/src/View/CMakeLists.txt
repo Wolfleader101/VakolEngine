@@ -1,4 +1,6 @@
 SET(VIEW
+src/View/GUI/GUIWindow.hpp
+src/View/GUI/GUIWindow.cpp
 src/View/Window/Window.hpp
 src/View/Window/Window.cpp
 

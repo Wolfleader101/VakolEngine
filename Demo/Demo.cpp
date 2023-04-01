@@ -7,5 +7,6 @@
 
 int main() {
     Vakol::Run();
+
     return 0;
 }

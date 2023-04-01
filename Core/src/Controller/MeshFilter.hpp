@@ -5,16 +5,17 @@
 
 using Vakol::Model::GLMesh;
 
-namespace Vakol::Controller {
-
-    class MeshFilter {
-       public:
+namespace Vakol::Controller
+{
+    class MeshFilter
+    {
+    public:
         MeshFilter() = default;
-        ~MeshFilter(){};
+        ~MeshFilter() {};
 
         static void LoadMesh(const std::string& path);
         static void Draw(const unsigned int mode);
 
         static std::vector<GLMesh> meshes;
     };
-}  // namespace Vakol::Controller
+}

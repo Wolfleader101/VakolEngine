@@ -37,8 +37,6 @@ namespace Vakol::Controller {
 
         m_window->SetEventCallback(BIND_EVENT_FN(OnEvent));
 
-        // m_gui.Init(m_window.GetWindow());
-
         // Physics::Debug = false;
 
         // Physics::Init();
@@ -106,8 +104,6 @@ namespace Vakol::Controller {
             // run ai agents on seperate thread
 
             m_renderer->Update(m_time);
-
-            // m_gui.OnUpdate();
 
             m_window->OnUpdate();
         }
