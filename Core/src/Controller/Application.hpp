@@ -1,7 +1,6 @@
 #pragma once
 
 #include <View/GUI/GUIWindow.hpp>
-
 #include <View/Renderer/Renderer.hpp>
 #include <View/Window/Window.hpp>
 #include <memory>
@@ -71,7 +70,7 @@ namespace Vakol::Controller {
          */
         const int GetHeight() const { return m_window->GetHeight(); }
 
-        void AddScene(std::string scriptName, std::string scene_name = "", bool setActive = false);
+        void AddScene(std::string scriptName, std::string scene_name = "");
         // void SetActiveScene(std::string scene_name);
         // void DisableAllScenes()
        private:

@@ -13,10 +13,7 @@
 namespace Vakol::Controller {
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
-    Application::Application() : m_running(false), m_window(nullptr), m_renderer(nullptr) 
-    { 
-        Logger::Init(); 
-    };
+    Application::Application() : m_running(false), m_window(nullptr), m_renderer(nullptr) { Logger::Init(); };
 
     void Application::Init() {
         Controller::RegisterLogger(lua.GetState());
@@ -110,9 +107,9 @@ namespace Vakol::Controller {
         // ImGui::DestroyContext();
     }
 
-    void Application::AddScene(std::string scriptName, std::string scene_name, bool setActive) {
+    void Application::AddScene(std::string scriptName, std::string scene_name) {
         std::string sceneName = scene_name.length() == 0 ? "Scene" + std::to_string(scenes.size()) : scene_name;
-        scenes.push_back(Scene(sceneName, scriptName, lua));
+        scenes.push_back(Scene(sceneName, scriptName, lua, true));
     }
 
     void Application::OnEvent(Event& ev) {
