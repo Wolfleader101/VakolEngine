@@ -13,10 +13,9 @@
 namespace Vakol::Controller {
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
-    Application::Application() : m_running(false), m_window(nullptr), m_renderer(nullptr) {
-        Logger::Init();
-
-        auto x = Vakol::Controller::Physics::PhysicsPool::CreatePhysicsWorld();
+    Application::Application() : m_running(false), m_window(nullptr), m_renderer(nullptr) 
+    { 
+        Logger::Init(); 
     };
 
     void Application::Init() {
@@ -102,8 +101,6 @@ namespace Vakol::Controller {
             }
 
             // run ai agents on seperate thread
-
-            m_renderer->Update(m_time);
 
             m_window->OnUpdate();
         }
