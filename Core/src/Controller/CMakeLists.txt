@@ -18,15 +18,6 @@ src/Controller/Camera.cpp
 src/Controller/EntityList.hpp
 src/Controller/EntityList.cpp
 
-src/Controller/MeshFilter.hpp
-src/Controller/MeshFilter.cpp
-
-src/Controller/MeshRenderer.hpp
-src/Controller/MeshRenderer.cpp
-
-src/Controller/ModelLoader.hpp
-src/Controller/ModelLoader.cpp
-
 src/Controller/System.hpp
 src/Controller/System.cpp
 
@@ -39,5 +30,6 @@ src/Controller/Scene.cpp
 
 ${SERIALIZABLE}
 ${EVENTS}
+${ASSETLOADER}
 
 PARENT_SCOPE)
