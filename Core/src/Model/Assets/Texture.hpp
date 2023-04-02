@@ -8,6 +8,7 @@ namespace Vakol::Model::Assets
     {
         std::string path;
         std::string type;
+        unsigned int id;
 
        private:
         int width;

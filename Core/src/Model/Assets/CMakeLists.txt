@@ -1,11 +1,14 @@
 SET(ASSETS
 
 	src/Model/Assets/Model.hpp
-	src/Model/Assets/Model.cpp
 
 	src/Model/Assets/Mesh.hpp
-	src/Model/Assets/Mesh.cpp
 
 	src/Model/Assets/Texture.hpp
+
+	src/Model/Assets/Material.hpp
+
+	src/Model/Assets/Shader.hpp
+
 
 PARENT_SCOPE)

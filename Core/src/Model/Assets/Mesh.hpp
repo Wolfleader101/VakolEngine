@@ -2,6 +2,7 @@
 
 #include "Material.hpp"
 
+
 namespace Vakol::Model::Assets
 {
     struct Vertex {

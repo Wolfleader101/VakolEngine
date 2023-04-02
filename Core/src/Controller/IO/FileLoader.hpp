@@ -5,7 +5,7 @@
 namespace Vakol::Controller::IO 
 {
     std::string LoadFile(const std::string& path);
-    std::string LoadImage(const std::string& path, int& width, int& height, int& nrChannels, const bool flip);
+    char * LoadImage(const std::string& path, int& width, int& height, int& nrChannels, const bool flip);
 
     bool FileExists(const std::string& file);
 

@@ -4,7 +4,6 @@
 #include <string>
 
 
-#include "Asset.hpp"
 #include "Mesh.hpp"
 
 namespace Vakol::Model::Assets {

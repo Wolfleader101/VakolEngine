@@ -4,12 +4,11 @@
 
 #include <Model/Assets/Model.hpp>
 
+using Model = Vakol::Model::Assets::Model;
+
 namespace Vakol::Controller
 {
 	
-	struct ModelLoader
-	{
-		using Model = Vakol::Model::Assets::Model;
-		Model LoadModel(const std::string& path);
-	};
+	Model LoadModel(const std::string& path);
+	
 }
