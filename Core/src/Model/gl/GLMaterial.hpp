@@ -2,15 +2,16 @@
 
 #include <vector>
 
-#include "../Material.hpp"
+#include <Model/Assets/Material.hpp>
 
 #include "GLShader.hpp"
 #include "GLTexture.hpp"
 
 namespace Vakol::Model
 {
+	using MaterialInfo = Vakol::Model::Assets::MaterialInfo;
 
-	class GLMaterial : public Material
+	class GLMaterial : public Vakol::Model::Assets::Material
 	{
 	public:
         GLMaterial() = default;
@@ -24,32 +25,25 @@ namespace Vakol::Model
 		const unsigned int GetTextureCount() const;
 
 	public:
-		void SetBool(const std::string& name, const bool value) const override;
-		void SetInt(const std::string& name, const int value) const override;
-		void SetFloat(const std::string& name, const float value) const override;
+		void SetBool(const std::string& name, const bool value) const;
+		void SetInt(const std::string& name, const int value) const;
+		void SetFloat(const std::string& name, const float value) const;
 
-		void SetVec2(const std::string& name, const glm::vec2& value) const override;
-		void SetVec2(const std::string& name, const float x, const float y) const override;
+		void SetVec2(const std::string& name, const glm::vec2& value) const;
+		void SetVec2(const std::string& name, const float x, const float y) const;
 
-		void SetVec3(const std::string& name, const glm::vec3& value) const override;
-		void SetVec3(const std::string& name, const float x, const float y, const float z) const override;
+		void SetVec3(const std::string& name, const glm::vec3& value) const;
+		void SetVec3(const std::string& name, const float x, const float y, const float z) const;
 
-		void SetVec4(const std::string& name, const glm::vec4& value) const override;
+		void SetVec4(const std::string& name, const glm::vec4& value) const;
 
-		void SetMat3(const std::string& name, const glm::mat3& value) const override;
-		void SetMat4(const std::string& name, const glm::mat4& value) const override;
+		void SetMat3(const std::string& name, const glm::mat3& value) const;
+		void SetMat4(const std::string& name, const glm::mat4& value) const;
 
 	private:
 		const std::string GetName(const std::string& str) const;
 	private:
 		GLShader shader;
 	private:
-		glm::vec3 _AMBIENT = glm::vec3(0.0f);
-		glm::vec3 _DIFFUSE = glm::vec3(0.0f);
-		glm::vec3 _SPECULAR = glm::vec3(0.0f);
-		glm::vec3 _EMISSIVE = glm::vec3(0.0f);
-
-		float _SHININESS = 0.5f;
-		std::vector<Texture> textures;
 	};
 }

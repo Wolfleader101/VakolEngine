@@ -12,9 +12,9 @@ namespace Vakol::Controller {
          */
         Scene(const std::string& name, const std::string& scriptName, LuaState& lua);
         /**
-         * @brief the entity list of engine
+         * @brief the entity list of scene
          */
-        EntityList entityList;  // to be moved to game/scene but for now it all works
+        EntityList entityList; 
 
         const std::string& getName() const;
         void setName(const std::string& newName);
