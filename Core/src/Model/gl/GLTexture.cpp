@@ -23,7 +23,7 @@ namespace Vakol::Model
 		
 		for (auto i = 0; i < faces.size(); i++)
 		{
-			unsigned char* data = LoadImage(faces[i], flip, width, height, colorDepth);
+                    unsigned char* data = LoadImage(faces[i], width, height, colorDepth, flip);
 
 			GLenum format = (colorDepth > 3) ? GL_RGBA : GL_RGB;
 
@@ -50,7 +50,7 @@ namespace Vakol::Model
 		glGenTextures(1, &textureID);
 
 		int width, height, colorDepth;
-        unsigned char* data = LoadImage(path, flip, width, height, colorDepth);
+        unsigned char* data = LoadImage(path, width, height, colorDepth, flip);
 
 		GLenum format = (colorDepth == 1) ? GL_RED : (colorDepth > 3) ? GL_RGBA : GL_RGB;
 

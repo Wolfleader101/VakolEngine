@@ -4,9 +4,9 @@
 
 namespace Vakol::Model
 {
-    class GLShader : public Vakol::Model::Assets::Shader {
+    class GLShader : public Assets::Shader {
        public:
-        GLShader(const unsigned int id);
+        GLShader(const std::string& path);
 
         void Bind() const override;
         void Unbind() const override;

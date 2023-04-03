@@ -35,5 +35,6 @@ src/Controller/Scene.cpp
 ${SERIALIZABLE}
 ${EVENTS}
 ${ASSETLOADER}
+${IO}
 
 PARENT_SCOPE)

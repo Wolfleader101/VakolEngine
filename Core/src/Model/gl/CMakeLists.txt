@@ -8,4 +8,9 @@ SET(GL
 
 	src/Model/gl/GLTexture.hpp
 	src/Model/gl/GLTexture.cpp
+
+	src/Model/gl/GLVertexArray.hpp
+	src/Model/gl/GLVertexArray.cpp
+	
+	
 PARENT_SCOPE)

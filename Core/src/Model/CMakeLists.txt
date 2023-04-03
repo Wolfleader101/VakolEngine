@@ -17,6 +17,7 @@ src/Model/Entity.cpp
 
 src/Model/GameConfig.hpp
 
+src/Model/VertexArray.hpp
 
 
 PARENT_SCOPE)

@@ -30,8 +30,9 @@ namespace Vakol::Controller
 
 
             static std::shared_ptr<Texture> GetTexture(const std::string& file);
-            /*static Model GetModel(const std::string& file);
-            static Shader GetShader(const std::string& file);*/
+            static std::shared_ptr<Model> GetModel(const std::string& file);
+
+            static std::shared_ptr<Shader> GetShader(const std::string& file);
 
 
         private:

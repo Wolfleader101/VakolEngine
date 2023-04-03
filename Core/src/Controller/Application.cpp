@@ -20,7 +20,6 @@ namespace Vakol::Controller {
     { 
         Logger::Init();
 
-        auto x = AssetLoader::GetTexture("assets/textures/pisikek");
     };
 
     void Application::Init() {
@@ -52,6 +51,10 @@ namespace Vakol::Controller {
         sol::function luaMain = lua.GetState()["main"];
 
         luaMain();
+
+        auto x = AssetLoader::GetTexture("coreAssets/textures/pisikek.png");
+        auto y = AssetLoader::GetModel("coreAssets/models/cube.obj");
+        auto z = AssetLoader::GetShader("coreAssets/shaders/basic.prog");
 
         m_running = true;
     }

@@ -7,4 +7,6 @@
 namespace Vakol::Controller
 {
     Vakol::Model::Assets::Texture LoadTexture(const std::string& path);
+    
 }
+

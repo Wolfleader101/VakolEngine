@@ -3,12 +3,14 @@
 
 #include <Controller/Logger.hpp>
 
+#include <Controller/AssetLoader/ShaderLoader.hpp>
+
 #include "GLShader.hpp"
 #include <glm/gtc/type_ptr.hpp>
 
 namespace Vakol::Model
 {
-    GLShader::GLShader(const unsigned int id) : Shader(id) { this->id = id; }
+    GLShader::GLShader(const std::string& path) : Shader(id) { this->id = Vakol::Controller::LoadShader(path); }
 
     void GLShader::Bind() const { glUseProgram(this->id); }
 
