@@ -8,11 +8,10 @@
 
 namespace Vakol::Model::Assets {
 
-    struct Model : public Asset {
-       private:
-        Model(const std::string& file);  // this constructor would load the data with assimp
+    struct Model {
+        Model() = default;
+        Model(const std::vector<Mesh>& meshes) : meshes(meshes){};
 
-       public:
         std::vector<Mesh> meshes;
     };
 

@@ -2,7 +2,9 @@
 
 #include <string>
 
-namespace Vakol::Controller::AssetLoader
+#include <Model/Assets/Texture.hpp>
+
+namespace Vakol::Controller
 {
-    const unsigned int LoadTexture(const std::string& path);
+    Vakol::Model::Assets::Texture LoadTexture(const std::string& path);
 }

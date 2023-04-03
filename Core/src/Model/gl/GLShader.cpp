@@ -4,6 +4,7 @@
 #include <Controller/Logger.hpp>
 
 #include "GLShader.hpp"
+#include <glm/gtc/type_ptr.hpp>
 
 namespace Vakol::Model
 {

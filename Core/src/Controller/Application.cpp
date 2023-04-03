@@ -6,6 +6,10 @@
 #include "Logger.hpp"
 
 #include <Model/Components.hpp>
+
+//testing assetLoader
+#include <Controller/AssetLoader/AssetLoader.hpp>
+#include <Model/Assets/Texture.hpp>
 // #include "JSON/Json.hpp"
 // #include "Physics/Physics.hpp"
 
@@ -14,7 +18,9 @@ namespace Vakol::Controller {
 
     Application::Application() : m_running(false), m_window(nullptr), m_renderer(nullptr) 
     { 
-        Logger::Init(); 
+        Logger::Init();
+
+        auto x = AssetLoader::GetTexture("assets/textures/pisikek");
     };
 
     void Application::Init() {

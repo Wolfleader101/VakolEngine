@@ -2,8 +2,8 @@
 
 #include <glad/glad.h>
 
-#include <IO/FileLoader.hpp>
-#include <Logger.hpp>
+#include <Controller/IO/FileLoader.hpp>
+#include <Controller/Logger.hpp>
 
 #include <vector>
 
@@ -14,9 +14,10 @@ const unsigned int CompileGLShader(const std::string&, const std::string&, const
 const void CheckCompileErrors(const unsigned int, const std::string&);
 
 
+using namespace Vakol::Controller::IO;
 
 
-namespace Vakol::Controller::AssetLoader 
+namespace Vakol::Controller
 {
 
     const unsigned int LoadShader(const std::string& path) 

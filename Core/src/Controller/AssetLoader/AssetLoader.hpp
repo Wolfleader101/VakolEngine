@@ -6,6 +6,8 @@
 #include <Model/Assets/Texture.hpp>
 #include <Model/Assets/Shader.hpp>
 
+
+
 #include <memory>
 
 
@@ -21,14 +23,15 @@ namespace Vakol::Controller
 
         public:
 
-            static std::string model_path = "assets/models/";
-            static std::string texture_path = "assets/textures/";
-            static std::string shader_path = "assets/shaders/";
+            //these can be changed with the game config
+            static std::string model_path;
+            static std::string texture_path;
+            static std::string shader_path;
 
 
-            static Texture GetTexture(const std::string& file);
-            static Model GetModel(const std::string& file);
-            static Shader GetShader(const std::string& file);
+            static std::shared_ptr<Texture> GetTexture(const std::string& file);
+            /*static Model GetModel(const std::string& file);
+            static Shader GetShader(const std::string& file);*/
 
 
         private:
@@ -37,8 +40,6 @@ namespace Vakol::Controller
             static std::unordered_map<std::string, std::shared_ptr<Model>> m_ModelMap;
             static std::unordered_map<std::string, std::shared_ptr<Shader>> m_ShaderMap;
 
-
-        
 
     };
 }

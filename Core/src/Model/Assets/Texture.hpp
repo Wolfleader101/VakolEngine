@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace Vakol::Model::Assets 
+namespace Vakol::Model::Assets
 {
     struct Texture 
     {
@@ -10,7 +10,6 @@ namespace Vakol::Model::Assets
         std::string type;
         unsigned int id;
 
-       private:
         int width;
         int height;
         int channels;

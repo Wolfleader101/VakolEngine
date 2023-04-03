@@ -3,25 +3,35 @@
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 
-#include <Logger.hpp>
+#include <Controller/Logger.hpp>
 #include <assimp/Importer.hpp>
 #include <vector>
 
 #include <Model/Assets/Material.hpp>
 #include <Model/Assets/Texture.hpp>
 #include <Model/Assets/Mesh.hpp>
+#include <Model/Assets/Vertex.hpp>
 
     using Texture = Vakol::Model::Assets::Texture;
     using Mesh = Vakol::Model::Assets::Mesh;
     using Material = Vakol::Model::Assets::Material;
 
+    using Model = Vakol::Model::Assets::Model;
+
+    using Vertex = Vakol::Model::Assets::Vertex;
+
     void ProcessNode(aiNode* node, const aiScene* scene);
     Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
     Material ProcessMaterial(aiMaterial* material);
 
+    std::string directory;
+
+    std::vector<Mesh> meshes;
+    std::vector<Texture> textures_loaded;
+
 namespace Vakol::Controller {
 
-        Model LoadModel(const std::string& path) {
+        ::Model LoadModel(const std::string& path) {
             Assimp::Importer importer;
 
             VK_TRACE("Loading Model: {0}", path);
@@ -38,7 +48,7 @@ namespace Vakol::Controller {
 
             ::ProcessNode(scene->mRootNode, scene);
 
-            return Model(meshes);
+            return ::Model(meshes);
         }
 
 }
@@ -50,11 +60,6 @@ namespace Vakol::Controller {
         
 
     std::vector<Texture> LoadMaterialTextures(aiMaterial* mat, aiTextureType type, const std::string& typeName);
-
-    std::string directory;
-
-    std::vector<Mesh> meshes;
-    std::vector<Texture> textures_loaded;
 
        
 
@@ -127,7 +132,7 @@ namespace Vakol::Controller {
         // material
         aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 
-        return Mesh(vertices, indices, ProcessMaterial(material));
+        return Mesh(vertices, indices, Material(ProcessMaterial(material)));
     }
 
     Material ProcessMaterial(aiMaterial* mat) {
@@ -204,5 +209,6 @@ namespace Vakol::Controller {
 
         return textures;
     }
-}
+    
+    
 

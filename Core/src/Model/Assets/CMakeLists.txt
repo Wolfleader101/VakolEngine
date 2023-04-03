@@ -10,5 +10,7 @@ SET(ASSETS
 
 	src/Model/Assets/Shader.hpp
 
+	src/Model/Assets/Vertex.hpp
+
 
 PARENT_SCOPE)

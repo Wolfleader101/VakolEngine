@@ -1,4 +1,4 @@
-SET{ASSETLOADER
+SET(ASSETLOADER
 
 	src/Controller/AssetLoader/AssetLoader.hpp
 	src/Controller/AssetLoader/AssetLoader.cpp
@@ -12,4 +12,4 @@ SET{ASSETLOADER
 	src/Controller/AssetLoader/TextureLoader.hpp
 	src/Controller/AssetLoader/TextureLoader.cpp
 	
-PARENT_SCOPE}
+PARENT_SCOPE)

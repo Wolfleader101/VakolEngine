@@ -11,6 +11,7 @@
 
 namespace Vakol::Controller::IO 
 {
+    void FreeImage(unsigned char* image) { stbi_image_free(image); }
 
     std::string LoadFile(const std::string& path) {
         std::string result;
@@ -34,7 +35,7 @@ namespace Vakol::Controller::IO
         return result;
     }
 
-    char * LoadImage(const std::string& path, int& width, int& height, int& channels, const bool flip = true) {
+    unsigned char* LoadImage(const std::string& path, const bool flip = true, int& width, int& height, int& nrChannels ) {
         // OpenGL be like: Nah we want textures upside down.
         stbi_set_flip_vertically_on_load(flip);
 

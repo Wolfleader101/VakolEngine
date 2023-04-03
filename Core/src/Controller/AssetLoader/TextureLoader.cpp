@@ -1,16 +1,20 @@
 #include "TextureLoader.hpp"
 
-#include <IO/FileLoader.hpp>
+#include <Controller/IO/FileLoader.hpp>
+#include <Model/Assets/Texture.hpp>
 
 #include <glad/glad.h>
 
-const unsigned int LoadGLTexture(const std::string&);
+using namespace Vakol::Controller::IO;
+using Texture = Vakol::Model::Assets::Texture;
 
-namespace Vakol::Controller::AssetLoader {
-    const unsigned int LoadTexture(const std::string& path) { return ::LoadGLTexture(path); }
+Texture LoadGLTexture(const std::string&);
+
+namespace Vakol::Controller {
+    Texture LoadTexture(const std::string& path) { return ::LoadGLTexture(path); }
 }  // namespace Vakol::Controller::AssetLoader
 
-const unsigned int LoadGLTexture(const std::string& path)
+Texture LoadGLTexture(const std::string& path)
 {
     unsigned int id;
 
@@ -18,7 +22,7 @@ const unsigned int LoadGLTexture(const std::string& path)
     glGenTextures(1, &id);
 
     int width, height, channels;
-    const auto data = LoadImage(path, width, height, channels, true);
+    const unsigned char* data = Vakol::Controller::IO::LoadImage(path, true, width, height, channels);
 
     GLenum format = (channels == 1) ? GL_RED : (channels > 3) ? GL_RGBA : GL_RGB;
 
@@ -36,5 +40,5 @@ const unsigned int LoadGLTexture(const std::string& path)
 
     glDisable(GL_TEXTURE_2D);
 
-    return id;
+    return Texture{path, "", id, width, height, channels};
 }

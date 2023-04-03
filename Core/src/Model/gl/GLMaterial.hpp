@@ -11,7 +11,7 @@ namespace Vakol::Model
 {
 	using MaterialInfo = Vakol::Model::Assets::MaterialInfo;
 
-	class GLMaterial : public Vakol::Model::Assets::Material
+	/*class GLMaterial : public Vakol::Model::Assets::Material
 	{
 	public:
         GLMaterial() = default;
@@ -45,5 +45,5 @@ namespace Vakol::Model
 	private:
 		GLShader shader;
 	private:
-	};
+	};*/
 }

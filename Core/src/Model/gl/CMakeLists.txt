@@ -1,11 +1,5 @@
 SET(GL
 
-	src/Model/gl/GLBuffer.hpp
-	src/Model/gl/GLBuffer.cpp
-
-	src/Model/gl/GLMesh.hpp
-	src/Model/gl/GLMesh.cpp
-
 	src/Model/gl/GLShader.hpp
 	src/Model/gl/GLShader.cpp
 

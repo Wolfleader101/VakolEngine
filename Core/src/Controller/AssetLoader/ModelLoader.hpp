@@ -9,6 +9,6 @@ using Model = Vakol::Model::Assets::Model;
 namespace Vakol::Controller
 {
 	
-	Model LoadModel(const std::string& path);
+	::Model LoadModel(const std::string& path);
 	
 }
