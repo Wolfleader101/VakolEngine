@@ -34,6 +34,8 @@ namespace Vakol::Controller
         if (iter == m_TextureMap.end()) 
         {
             ret = std::make_shared<Texture>(LoadTexture(file));
+
+            if (ret->id == 0) return nullptr; //if texture didn't load
             m_TextureMap[file] = ret;
         }
         else
@@ -51,6 +53,9 @@ namespace Vakol::Controller
         if (iter == m_ModelMap.end())
         {
             ret = std::make_shared<Model>(LoadModel(file));
+
+            if (ret->meshes.empty()) return nullptr; //if model didn't load
+
             m_ModelMap[file] = ret;
         }
         else
@@ -68,10 +73,15 @@ namespace Vakol::Controller
 
         if (iter == m_ShaderMap.end()) 
         {
-            ret = std::make_shared<GLShader>(file); 
+            ret = std::make_shared<GLShader>(file);
+
+            if (ret->GetID() == 0) return nullptr; //if shader didn't load
+            
             m_ShaderMap[file] = ret;
+
         } else {
             ret = m_ShaderMap[file];
+            
         }
         return ret; 
     }
