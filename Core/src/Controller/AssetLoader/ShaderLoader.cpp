@@ -24,7 +24,7 @@ namespace Vakol::Controller
     {
         std::string directory, file;
 
-        directory = path.substr(0, path.find_last_of('/'));
+        directory = path.substr(0, path.find_last_of('.'));
 
         std::string extensions[] = {".vert", ".frag", ".geo", ".tc", ".te"};
         std::vector<std::string> shaders;
