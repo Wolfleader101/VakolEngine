@@ -1,13 +1,17 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include <Controller/IO/FileLoader.hpp>
+
 #include "GLTexture.hpp"
 
-using Vakol::Model::GetImage;
-using Vakol::Model::FreeImage;
+
+
 
 namespace Vakol::Model
 {
+	using Vakol::Controller::IO::FreeImage;
+	using Vakol::Controller::IO::LoadImage;
 	unsigned int GetTextureCubemap(const std::vector<std::string>& faces, const bool flip)
 	{
 		unsigned int textureID;
@@ -19,7 +23,7 @@ namespace Vakol::Model
 		
 		for (auto i = 0; i < faces.size(); i++)
 		{
-			unsigned char* data = GetImage(faces[i], flip, width, height, colorDepth);
+                    unsigned char* data = LoadImage(faces[i], width, height, colorDepth, flip);
 
 			GLenum format = (colorDepth > 3) ? GL_RGBA : GL_RGB;
 
@@ -46,7 +50,7 @@ namespace Vakol::Model
 		glGenTextures(1, &textureID);
 
 		int width, height, colorDepth;
-		unsigned char* data = GetImage(path, flip, width, height, colorDepth);
+        unsigned char* data = LoadImage(path, width, height, colorDepth, flip);
 
 		GLenum format = (colorDepth == 1) ? GL_RED : (colorDepth > 3) ? GL_RGBA : GL_RGB;
 

@@ -1,6 +1,8 @@
 add_subdirectory(Serialization)
 add_subdirectory(Events)
 add_subdirectory(Physics)
+add_subdirectory(AssetLoader)
+add_subdirectory(IO)
 
 SET(CONTROLLER
 
@@ -46,5 +48,7 @@ src/Controller/Scene.cpp
 ${SERIALIZABLE}
 ${PHYSICS}
 ${EVENTS}
+${ASSETLOADER}
+${IO}
 
 PARENT_SCOPE)
