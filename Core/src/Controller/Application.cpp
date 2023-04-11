@@ -6,6 +6,10 @@
 #include "Logger.hpp"
 
 #include <Model/Components.hpp>
+
+//testing assetLoader
+#include <Controller/AssetLoader/AssetLoader.hpp>
+#include <Model/Assets/Texture.hpp>
 // #include "JSON/Json.hpp"
 // #include "Physics/Physics.hpp"
 
@@ -14,7 +18,8 @@ namespace Vakol::Controller {
 
     Application::Application() : m_running(false), m_window(nullptr), m_renderer(nullptr) 
     { 
-        Logger::Init(); 
+        Logger::Init();
+
     };
 
     void Application::Init() {
@@ -46,6 +51,10 @@ namespace Vakol::Controller {
         sol::function luaMain = lua.GetState()["main"];
 
         luaMain();
+
+        auto x = AssetLoader::GetTexture("coreAssets/textures/pisikek.png");
+        auto y = AssetLoader::GetModel("coreAssets/models/cube.obj");
+        auto z = AssetLoader::GetShader("coreAssets/shaders/basic.prog");
 
         m_running = true;
     }

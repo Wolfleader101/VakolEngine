@@ -2,11 +2,11 @@
 
 #include <vector>
 
-#include "../Texture.hpp"
+#include <Model/Assets/Texture.hpp>
 
 namespace Vakol::Model
 {
-	struct GLTexture : public Texture
+	struct GLTexture : public Assets::Texture
 	{
 		
 	};

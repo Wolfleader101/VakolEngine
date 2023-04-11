@@ -1,40 +1,69 @@
 #include "ModelLoader.hpp"
 
 #include <assimp/postprocess.h>
+#include <assimp/scene.h>
 
-#include <Model/GL/GLTexture.hpp>
+#include <Controller/Logger.hpp>
 #include <assimp/Importer.hpp>
+#include <vector>
 
-#include "Logger.hpp"
+#include <Model/Assets/Material.hpp>
+#include <Model/Assets/Texture.hpp>
+#include <Model/Assets/Mesh.hpp>
+#include <Model/Assets/Vertex.hpp>
 
-using Vakol::Model::GetTexture;
+    using Texture = Vakol::Model::Assets::Texture;
+    using Mesh = Vakol::Model::Assets::Mesh;
+    using Material = Vakol::Model::Assets::Material;
+
+    using Model = Vakol::Model::Assets::Model;
+
+    using Vertex = Vakol::Model::Assets::Vertex;
+
+    void ProcessNode(aiNode* node, const aiScene* scene);
+    Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
+    Material ProcessMaterial(aiMaterial* material);
+
+    std::string directory;
+
+    std::vector<Mesh> meshes;
+    std::vector<Texture> textures_loaded;
 
 namespace Vakol::Controller {
-    std::vector<Texture> ModelLoader::textures_loaded;
 
-    std::vector<Mesh> ModelLoader::meshes;
+        ::Model LoadModel(const std::string& path) {
+            Assimp::Importer importer;
 
-    std::string ModelLoader::directory;
+            VK_TRACE("Loading Model: {0}", path);
+
+            const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals |
+                                                               aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+
+            if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
+                VK_ERROR("ERROR::ASSIMP:: {0}", importer.GetErrorString());
+                quick_exit(EXIT_FAILURE);
+            }
+
+            directory = path.substr(0, path.find_last_of('/'));
+
+            ::ProcessNode(scene->mRootNode, scene);
+
+            return ::Model(meshes);
+        }
+
+}
+    
+        
 
     glm::vec3 to_glm(const aiColor3D& val) { return glm::vec3(val.r, val.g, val.b); }
 
-    void ModelLoader::LoadModel(const std::string& path) {
-        Assimp::Importer importer;
+        
 
-        const aiScene* scene = importer.ReadFile(
-            path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+    std::vector<Texture> LoadMaterialTextures(aiMaterial* mat, aiTextureType type, const std::string& typeName);
 
-        if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
-            VK_ERROR("ERROR::ASSIMP:: {0}", importer.GetErrorString());
-            return;
-        }
+       
 
-        directory = path.substr(0, path.find_last_of('/'));
-
-        ProcessNode(scene->mRootNode, scene);
-    }
-
-    void ModelLoader::ProcessNode(aiNode* node, const aiScene* scene) {
+    void ProcessNode(aiNode* node, const aiScene* scene) {
         for (unsigned int i = 0; i < node->mNumMeshes; ++i) {
             aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
             meshes.push_back(ProcessMesh(mesh, scene));
@@ -45,10 +74,9 @@ namespace Vakol::Controller {
         }
     }
 
-    Mesh ModelLoader::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
+    Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene) {
         std::vector<Vertex> vertices;
         std::vector<unsigned int> indices;
-        std::vector<Texture> textures;
 
         // vertices
         for (unsigned int i = 0; i < mesh->mNumVertices; ++i) {
@@ -101,59 +129,58 @@ namespace Vakol::Controller {
             for (unsigned int j = 0; j < face.mNumIndices; ++j) indices.push_back(face.mIndices[j]);
         }
 
-        // materials
+        // material
         aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 
-        // Diffuse Maps
-        std::vector<Texture> diffuseMaps = LoadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
-        textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-
-        // Specular Maps
-        std::vector<Texture> specularMaps = LoadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_specular");
-        textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
-
-        // Normal Maps
-        std::vector<Texture> normalMaps = LoadMaterialTextures(material, aiTextureType_NORMALS, "texture_normal");
-        textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
-
-        // Emissive Maps
-        std::vector<Texture> emissiveMaps = LoadMaterialTextures(material, aiTextureType_EMISSIVE, "texture_emissive");
-        textures.insert(textures.end(), emissiveMaps.begin(), emissiveMaps.end());
-
-        return Mesh(vertices, indices, ProcessMaterial(material, textures));
+        return Mesh(vertices, indices, Material(ProcessMaterial(material)));
     }
 
-    MaterialInfo ModelLoader::ProcessMaterial(aiMaterial* mat, const std::vector<Texture>& textures) {
-        MaterialInfo material;
+    Material ProcessMaterial(aiMaterial* mat) {
+        Material material;
 
         aiColor3D ambient, diffuse, specular, emissive;
 
         mat->Get(AI_MATKEY_COLOR_AMBIENT, ambient);
-        material._AMBIENT = to_glm(ambient);
+        material.AMBIENT = to_glm(ambient);
 
         mat->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse);
-        material._DIFFUSE = to_glm(diffuse);
+        material.DIFFUSE = to_glm(diffuse);
 
         mat->Get(AI_MATKEY_COLOR_SPECULAR, specular);
-        material._SPECULAR = to_glm(specular);
+        material.SPECULAR = to_glm(specular);
 
         mat->Get(AI_MATKEY_COLOR_EMISSIVE, emissive);
-        material._EMISSIVE = to_glm(emissive);
+        material.EMISSIVE = to_glm(emissive);
 
-        mat->Get(AI_MATKEY_SHININESS, material._SHININESS);
+        mat->Get(AI_MATKEY_SHININESS, material.SHININESS);
 
-        material.textures = textures;
+        // Diffuse Maps
+        std::vector<Texture> diffuseMaps = LoadMaterialTextures(mat, aiTextureType_DIFFUSE, "texture_diffuse");
+        material.textures.insert(material.textures.end(), diffuseMaps.begin(), diffuseMaps.end());
+
+        // Specular Maps
+        std::vector<Texture> specularMaps = LoadMaterialTextures(mat, aiTextureType_DIFFUSE, "texture_specular");
+        material.textures.insert(material.textures.end(), specularMaps.begin(), specularMaps.end());
+
+        // Normal Maps
+        std::vector<Texture> normalMaps = LoadMaterialTextures(mat, aiTextureType_NORMALS, "texture_normal");
+        material.textures.insert(material.textures.end(), normalMaps.begin(), normalMaps.end());
+
+        // Emissive Maps
+        std::vector<Texture> emissiveMaps = LoadMaterialTextures(mat, aiTextureType_EMISSIVE, "texture_emissive");
+        material.textures.insert(material.textures.end(), emissiveMaps.begin(), emissiveMaps.end());
 
         return material;
     }
 
-    std::vector<Texture> ModelLoader::LoadMaterialTextures(aiMaterial* mat, aiTextureType type,
-                                                           const std::string& typeName) {
+    std::vector<Texture> LoadMaterialTextures(aiMaterial* mat, aiTextureType type, const std::string& typeName) {
         std::vector<Texture> textures;
 
         for (unsigned int i = 0; i < mat->GetTextureCount(type); ++i) {
             aiString str;
+
             mat->GetTexture(type, i, &str);
+
             // prevents already loaded textures from being loaded again
             bool skip = false;
 
@@ -170,8 +197,8 @@ namespace Vakol::Controller {
             if (!skip)  // if texture has not already been loaded
             {
                 Texture texture;
-                texture.id = GetTexture((std::string("coreAssets/textures/") + str.C_Str()).c_str(),
-                                        true);  // this might need to change
+
+                // Don't load ID yet.
                 texture.type = typeName;
                 texture.path = str.C_Str();
 
@@ -182,4 +209,6 @@ namespace Vakol::Controller {
 
         return textures;
     }
-}  // namespace Vakol::Controller
+    
+    
+
