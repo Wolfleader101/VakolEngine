@@ -2,18 +2,25 @@
 
 #include <Model/Components.hpp>
 
-namespace Vakol::Controller::System {
-    void Model_Draw(reg& registry) {
-        // registry.view<Components::Transform, Components::ModelType>().each(
-        //	[&](auto& trans, auto& model) {
-        //		/* draw model */
-        //
-        //	}
-        //);
+using namespace Vakol::Model::Components;
+
+namespace Vakol::Controller {
+
+    entt::registry* System::registry = nullptr;
+
+    void System::SetEntityList(EntityList& EL) { registry = &EL.m_Registry; }
+
+    void System::Drawable_Update() {
+        registry->view<Components::Transform, Components::Drawable>().each(
+            [&](auto& trans, Components::Drawable& drawable) {
+                /* draw model */
+
+                // drawable.model_ptr->.meshes;
+            });
     }
 
-    void ScriptUpdate(reg& registry, LuaState& lua) {
-        registry.view<Model::Components::Script>().each([&](auto& script) {
+    void System::Script_Update(LuaState& lua) {
+        registry->view<Model::Components::Script>().each([&](auto& script) {
             lua.RunFile("scripts/" + script.script_name);
 
             sol::function update = lua.GetState()["update"];
@@ -22,4 +29,4 @@ namespace Vakol::Controller::System {
         });
     }
 
-}  // namespace Vakol::Controller::System
+}  // namespace Vakol::Controller

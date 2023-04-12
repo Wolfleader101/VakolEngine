@@ -2,18 +2,27 @@
 
 #include <entt/entt.hpp>
 
+#include "Controller/EntityList.hpp"
 #include "LuaState.hpp"
 
-namespace Vakol::Controller::System {
+namespace Vakol::Controller {
 
-    using reg = entt::registry;
+    class System {
+       public:
+        System() = delete;
 
-    // -- READ --
-    // if you add a function use the convention Type_Action()
-    // will make it more intuitive to find names of funcs
+        static void SetEntityList(EntityList& EL);
 
-    void Model_Draw(reg& registry);
+        // -- READ --
+        // if you add a function use the convention Type_Action()
+        // will make it more intuitive to find names of funcs
 
-    void ScriptUpdate(reg& registry, LuaState& lua);
+        static void Drawable_Update();
 
-}  // namespace Vakol::Controller::System
+        static void Script_Update(LuaState& lua);
+
+       private:
+        static entt::registry* registry;
+    };
+
+}  // namespace Vakol::Controller

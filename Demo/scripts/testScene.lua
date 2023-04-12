@@ -3,7 +3,6 @@ function init(scene)
     entity = scene:create_entity("player.lua");
     transform = entity:get_transform();
     print_err(transform.pos.y);
-    entity.add_model("cube.obj")
 
 end
 

@@ -1,8 +1,8 @@
 #pragma once
 
-#include <entt/entt.hpp>
 #include <cereal/archives/json.hpp>
 #include <cereal/types/vector.hpp>
+#include <entt/entt.hpp>
 #include <memory>
 #include <vector>
 
@@ -13,6 +13,8 @@ namespace Vakol::Model {
 
 using namespace Vakol::Model;
 namespace Vakol::Controller {
+
+    class System;
 
     /**
      * @class EntityList
@@ -86,7 +88,6 @@ namespace Vakol::Controller {
 
         void Update(double d_t);
 
-
         void Serialize(const std::string& file) const;
         void Deserialize(const std::string& file);
 
@@ -101,15 +102,10 @@ namespace Vakol::Controller {
          */
         std::vector<Entity> ActiveEntityList;
 
-       
-
-        template <typename Archive, typename ...Args>
-        void privateSerialize(const std::string& file) const
-        {
+        template <typename Archive, typename... Args>
+        void privateSerialize(const std::string& file) const {
             std::ofstream out(file);
-            if (out.good()) 
-            {
-
+            if (out.good()) {
                 Archive json(out);
 
                 json(CEREAL_NVP(ActiveEntityList));
@@ -117,37 +113,33 @@ namespace Vakol::Controller {
                 entt::snapshot snapshot(m_Registry);
                 snapshot.entities(json).component<Args...>(json);
 
-                out << "\n}"; //doesn't close off?
+                out << "\n}";  // doesn't close off?
 
                 out.close();
             }
         }
 
         template <typename Archive, typename... Args>
-        void privateDeserialize(const std::string& file)
-        {
+        void privateDeserialize(const std::string& file) {
             std::ifstream inp(file);
 
-            if (inp.good())
-            {
+            if (inp.good()) {
                 m_Registry.clear();
 
                 Archive json(inp);
 
-                json(ActiveEntityList); //fills vector again
-
+                json(ActiveEntityList);  // fills vector again
 
                 entt::snapshot_loader snapLoad(m_Registry);
                 snapLoad.entities(json);
                 snapLoad.component<Args...>(json);
-                
 
                 inp.close();
             }
-                
         }
 
-         friend class Entity;  // friend to allow the api for entities to be clean.
+        friend class Entity;  // friend to allow the api for entities to be clean.
+        friend class System;
     };
 
 }  // namespace Vakol::Controller

@@ -17,6 +17,8 @@ namespace Vakol::Controller {
         sol::function init = lua.GetState()["init"];
 
         init(*this);
+
+        System::SetEntityList(entityList);
     }
 
     const std::string& Scene::getName() const { return name; }
@@ -37,7 +39,9 @@ namespace Vakol::Controller {
 
         update();
 
-        System::ScriptUpdate(entityList.GetRegistry(), lua);
+        System::Script_Update(lua);
+
+        System::Drawable_Update();
     }
 
     namespace fs = std::filesystem;
