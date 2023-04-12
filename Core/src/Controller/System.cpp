@@ -2,8 +2,6 @@
 
 #include <Model/Components.hpp>
 
-#include <Model/Math/Quaternion.hpp>
-#include <Model/Math/Math.hpp>
 
 using namespace Vakol::Model::Components;
 

@@ -8,7 +8,6 @@
 #include <glm/gtx/quaternion.hpp>
 #include <string>
 
-#include "Mesh.hpp"
 namespace Vakol::Model::Components {
     /**
      * @struct Transform

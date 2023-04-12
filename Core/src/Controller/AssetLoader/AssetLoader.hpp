@@ -41,6 +41,5 @@ namespace Vakol::Controller
             static std::unordered_map<std::string, std::shared_ptr<Model>> m_ModelMap;
             static std::unordered_map<std::string, std::shared_ptr<Shader>> m_ShaderMap;
 
-
     };
 }
