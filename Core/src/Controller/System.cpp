@@ -19,13 +19,15 @@ namespace Vakol::Controller {
             });
     }
 
-    void System::Script_Update(LuaState& lua) {
+    void System::Script_Update(LuaState& lua, EntityList& list) {
         registry->view<Components::Script>().each([&](auto& script) {
             lua.RunFile("scripts/" + script.script_name);
 
             sol::function update = lua.GetState()["update"];
 
-            update();
+            auto ent = list.GetEntity(script.entity_id);
+
+            update(ent);
         });
     }
 

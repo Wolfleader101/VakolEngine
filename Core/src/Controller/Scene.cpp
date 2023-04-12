@@ -39,7 +39,7 @@ namespace Vakol::Controller {
 
         update();
 
-        System::Script_Update(lua);
+        System::Script_Update(lua, entityList);
 
         System::Drawable_Update();
     }

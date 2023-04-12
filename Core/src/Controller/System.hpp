@@ -19,7 +19,7 @@ namespace Vakol::Controller {
 
         static void Drawable_Update();
 
-        static void Script_Update(LuaState& lua);
+        static void Script_Update(LuaState& lua, EntityList& list);
 
        private:
         static entt::registry* registry;
