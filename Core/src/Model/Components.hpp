@@ -8,6 +8,8 @@
 #include <glm/gtx/quaternion.hpp>
 #include <string>
 
+#include <Model/Assets/Model.hpp>
+
 namespace Vakol::Model::Components {
     /**
      * @struct Transform
@@ -46,11 +48,9 @@ namespace Vakol::Model::Components {
         void serialize(Archive& ar) {
             ar(cereal::make_nvp("pos.x", pos.x), cereal::make_nvp("pos.y", pos.y), cereal::make_nvp("pos.z", pos.z),
 
-               cereal::make_nvp("rot.w", rot.w), cereal::make_nvp("rot.x", rot.x), cereal::make_nvp("rot.y", rot.y),
-               cereal::make_nvp("rot.z", rot.z),
+               cereal::make_nvp("rot.w", rot.w), cereal::make_nvp("rot.x", rot.x), cereal::make_nvp("rot.y", rot.y), cereal::make_nvp("rot.z", rot.z),
 
-               cereal::make_nvp("scale.x", scale.x), cereal::make_nvp("scale.y", scale.y),
-               cereal::make_nvp("scale.z", scale.z));
+               cereal::make_nvp("scale.x", scale.x), cereal::make_nvp("scale.y", scale.y), cereal::make_nvp("scale.z", scale.z));
         }
     };
 
@@ -127,21 +127,72 @@ namespace Vakol::Model::Components {
     };
 
     struct Drawable {
-        std::vector<std::string> meshes;
+        std::string name; //for serialization
+        std::shared_ptr<Vakol::Model::Assets::Model> ModelPtr;
+
+        template<class Archive>
+        void serialize(Archive& ar)
+        {
+            ar(cereal::make_nvp("Model", name));
+        }
     };
 
     using namespace Vakol::Controller::Physics;
 
     struct PhysicsObject {
+
+        struct RigidData
+        {
+            double mass;			/**< Mass of object*/
+            bool grav;				/**< If gravity is enabled on the object*/
+            double LDamp;			/**< Linear Dampening*/
+            double ADamp;			/**< Angular Dampening*/
+            rp3d::Vector3 AngularLock; /**< Angular lock axis factor */
+            rp3d::Vector3 Orientation; /**< Orientation */
+
+        };
+
+        //rigid body
         ScenePhysics* owningWorld;
         rp3d::RigidBody* RigidBody;
+        rp3d::BodyType Type;
+        RigidData Data;
+
+        //collider
         rp3d::Collider* CollisionBody;
         rp3d::CollisionShape* Shape;
+        rp3d::CollisionShapeName ShapeName;
 
+        rp3d::Vector3 offset = { 0.0f, 0.0f, 0.0f }; /**< Offset given to the collider*/
+        
+
+        
         rp3d::Transform prevTransform;
 
         template <class Archive>
-        void serialize(Archive& ar) {}
+        void serialize(Archive& ar) 
+        {
+            ar(cereal::make_nvp("CollisionShape", ShapeName));
+
+            ar(cereal::make_nvp("Offset X", offset.x));
+            ar(cereal::make_nvp("Offset Y", offset.y));
+            ar(cereal::make_nvp("Offset Z", offset.z));
+
+            ar(cereal::make_nvp("Mass", Data.mass));
+            ar(cereal::make_nvp("Gravity", Data.grav));
+            ar(cereal::make_nvp("Linear Dampening", Data.LDamp));
+            ar(cereal::make_nvp("Angular Dampening", Data.ADamp));
+            ar(cereal::make_nvp("BodyType", Type));
+
+            ar(cereal::make_nvp("Angular Lock X", Data.AngularLock.x));
+            ar(cereal::make_nvp("Angular Lock Y", Data.AngularLock.y));
+            ar(cereal::make_nvp("Angular Lock Z", Data.AngularLock.z));
+
+            ar(cereal::make_nvp("Orientation X", Data.Orientation.x));
+            ar(cereal::make_nvp("Orientation Y", Data.Orientation.y));
+            ar(cereal::make_nvp("Orientation Z", Data.Orientation.z));
+
+        }
     };
 
 }  // namespace Vakol::Model::Components

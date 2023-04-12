@@ -6,8 +6,6 @@
 #include <Model/Assets/Texture.hpp>
 #include <Model/Assets/Shader.hpp>
 
-
-
 #include <memory>
 
 

@@ -1,7 +1,8 @@
 #pragma once
 
 #include <Controller/EntityList.hpp>
-#include <reactphysics3d/reactphysics3d.h>
+#include <Controller/Physics/ScenePhysics.hpp>
+
 
 #include "LuaState.hpp"
 
@@ -13,7 +14,9 @@ namespace Vakol::Controller {
 
         System() = delete;
 
-        static void SetEntityList(EntityList& EL);
+        static void BindEntityList(EntityList& EL);
+        
+
 
         // -- READ --
         // if you add a function use the convention Type_Action()
@@ -21,12 +24,14 @@ namespace Vakol::Controller {
 
         static void Model_Draw();
 
-        static void ScriptUpdate(LuaState& lua);
 
+        static void Script_Update(LuaState& lua);
+
+
+        static void Physics_Init(ScenePhysics& SP);
         static void Physics_UpdateTransforms(float factor);
 
        private:
         static entt::registry* registry; 
-
     }; 
 }  // namespace Vakol::Controller

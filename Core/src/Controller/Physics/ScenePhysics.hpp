@@ -7,7 +7,8 @@
 namespace Vakol::Controller::Physics
 {
     class PhysicsPool;
-    class PhysicsObject;
+	class Vakol::Controller::System;
+
 
 	class ScenePhysics
 	{
@@ -31,5 +32,6 @@ namespace Vakol::Controller::Physics
 
 			float m_accumulator = 0.0f;
 			friend class PhysicsPool;
+			friend class System;
 	};
 }

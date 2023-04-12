@@ -3,6 +3,11 @@
 #include "EntityList.hpp"
 #include "LuaState.hpp"
 #include "Time.hpp"
+
+#include <Controller/Physics/ScenePhysics.hpp>
+
+
+
 namespace Vakol::Controller {
     class Scene {
        public:
@@ -29,6 +34,8 @@ namespace Vakol::Controller {
         bool active = false;
 
        private:
+
+        Physics::ScenePhysics ScenePhysics;
         LuaState& lua;
         std::string scriptName;
         std::string name;

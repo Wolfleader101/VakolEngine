@@ -29,7 +29,7 @@ namespace Vakol::Controller {
     }
 
     void Scene::Update(const Controller::Time& time) {
-        System::SetEntityList(entityList);
+        System::BindEntityList(entityList);
         lua.RunFile("scripts/" + scriptName);
 
         sol::function update = lua.GetState()["update"];
