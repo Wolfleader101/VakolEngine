@@ -7,6 +7,12 @@
 #include <View/Renderer/RendererFactory.hpp>
 
 #include "Logger.hpp"
+
+#include <Model/Components.hpp>
+
+//testing assetLoader
+#include <Controller/AssetLoader/AssetLoader.hpp>
+#include <Model/Assets/Texture.hpp>
 // #include "JSON/Json.hpp"
 // #include "Physics/Physics.hpp"
 
