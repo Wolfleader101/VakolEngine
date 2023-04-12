@@ -92,6 +92,7 @@ namespace Vakol::Controller {
 
         lua["Time"] = &app->GetTime();
     }
+
     void RegisterEntity(sol::state& lua) {
         auto entityType = lua.new_usertype<Entity>("entity");
 

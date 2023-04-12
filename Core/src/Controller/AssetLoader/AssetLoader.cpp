@@ -38,18 +38,17 @@ namespace Vakol::Controller {
     std::shared_ptr<Model> AssetLoader::GetModel(const std::string& file) {
         std::shared_ptr<Model> ret;
 
-        std::string path = model_path + file;
 
-        auto iter = m_ModelMap.find(path);
+        auto iter = m_ModelMap.find(file);
 
         if (iter == m_ModelMap.end()) {
-            ret = std::make_shared<Model>(LoadModel(path));
+            ret = std::make_shared<Model>(LoadModel(file));
 
             if (ret->meshes().empty()) return nullptr;  // if model didn't load
 
-            m_ModelMap[path] = ret;
+            m_ModelMap[file] = ret;
         } else {
-            ret = m_ModelMap[path];
+            ret = m_ModelMap[file];
         }
         return ret;
     }
