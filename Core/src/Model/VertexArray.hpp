@@ -1,11 +1,16 @@
 #pragma once 
+
 #include <vector>
+
+#include <Model/Assets/Vertex.hpp>
 
 namespace Vakol::Model
 {
+    using Assets::Vertex;
+
     class VertexArray {
        public:
-        VertexArray(const std::vector<float>& vertices, const std::vector<unsigned int>& indices)
+        VertexArray(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices)
             : vertices(vertices), indices(indices) {}
         virtual ~VertexArray() = default;
 
@@ -16,8 +21,8 @@ namespace Vakol::Model
         const virtual unsigned int GetVertices() const = 0;
         const virtual unsigned int GetIndices() const = 0;
 
-       protected:
-        std::vector<float> vertices;
+    protected:
+        std::vector<Vertex> vertices;
         std::vector<unsigned int> indices;
     };
 }
