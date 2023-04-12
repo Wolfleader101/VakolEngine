@@ -8,10 +8,7 @@ namespace Vakol::Controller {
 
     entt::registry* System::registry = nullptr;
 
-    void System::SetEntityList(EntityList& EL) {
-        registry = &EL.m_Registry;
-        VK_CRITICAL((int)registry);
-    }
+    void System::SetEntityList(EntityList& EL) { registry = &EL.m_Registry; }
 
     void System::Drawable_Update() {
         registry->view<Components::Transform, Components::Drawable>().each(
