@@ -20,12 +20,12 @@ namespace Vakol::Controller {
     }
 
     void System::Script_Update(LuaState& lua) {
-        registry->view<Model::Components::Script>().each([&](auto& script) {
+        registry->view<Model::Entity, Components::Script>().each([&](auto& ent, auto& script) {
             lua.RunFile("scripts/" + script.script_name);
 
             sol::function update = lua.GetState()["update"];
 
-            update();
+            update(ent);
         });
     }
 
