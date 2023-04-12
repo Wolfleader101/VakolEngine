@@ -4,8 +4,8 @@
 #include <Controller/Singleton.hpp>
 #include <iostream>
 
-namespace Vakol {
-
+namespace Vakol 
+{
     void Run() {
         Controller::Singleton<Controller::Application>::GetInstance().Init();
 

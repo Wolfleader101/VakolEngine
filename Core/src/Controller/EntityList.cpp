@@ -2,10 +2,15 @@
 
 #include <assert.h>
 
+#include <cereal/cereal.hpp>
+
 #include <Controller/Logger.hpp>
 #include <Controller/System.hpp>
 #include <Model/Components.hpp>
 #include <Model/Entity.hpp>
+#include <Model/Components.hpp>
+
+
 
 namespace Vakol::Controller {
 
@@ -73,15 +78,32 @@ namespace Vakol::Controller {
 
     entt::registry& EntityList::GetRegistry() { return m_Registry; }
 
-    void EntityList::Init(entt::registry& toCopy) {
-        // init the list. Once the json is de-serialized, we transfer to an EntityList
-        // Then call any system init funcs.
-    }
 
     void EntityList::Init() {}
 
     void EntityList::Update(double d_t) {
         // use systems functions to update the entt::registry
+        d_t;
+    }
+
+    void EntityList::Serialize(const std::string& file) const 
+    {
+        privateSerialize<cereal::JSONOutputArchive,   
+                            Model::Components::Transform,
+                            Model::Components::Tag,
+                            Model::Components::EntityType,
+                            Model::Components::TagType,
+                            Model::Components::Script>(file);
+    }
+
+    void EntityList::Deserialize(const std::string& file) 
+    {
+        privateDeserialize<cereal::JSONInputArchive, 
+                            Model::Components::Transform, 
+                            Model::Components::Tag,
+                            Model::Components::EntityType, 
+                            Model::Components::TagType, 
+                            Model::Components::Script>(file);
     }
 
 }  // namespace Vakol::Controller

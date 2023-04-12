@@ -40,6 +40,24 @@ namespace Vakol::Model::Components {
         glm::vec3 pos;   /**< XYZ position */
         glm::quat rot;   /**< XYZ rotation */
         glm::vec3 scale; /**< XYZ scale */
+
+        template<class Archive>
+        void serialize(Archive& ar)
+        {
+            ar(cereal::make_nvp("pos.x",pos.x),
+               cereal::make_nvp("pos.y", pos.y),
+               cereal::make_nvp("pos.z", pos.z),
+
+               cereal::make_nvp("rot.w", rot.w), 
+               cereal::make_nvp("rot.x", rot.x), 
+               cereal::make_nvp("rot.y", rot.y),
+               cereal::make_nvp("rot.z", rot.z), 
+
+               cereal::make_nvp("scale.x",scale.x), 
+               cereal::make_nvp("scale.y", scale.y),
+               cereal::make_nvp("scale.z", scale.z)
+               );
+        }
     };
 
     // using ModelType = VakolModel;
@@ -58,7 +76,15 @@ namespace Vakol::Model::Components {
          */
         bool IsEmpty() { return tag.size() == 0; }
 
+        Tag() = default;
+        Tag(const std::string&);
+
         std::string tag; /**< String object containing data*/
+
+        template <class Archive>
+        void serialize(Archive& ar) {
+            ar(cereal::make_nvp("tag",tag));
+        }
     };
 
     /**
@@ -77,6 +103,14 @@ namespace Vakol::Model::Components {
      */
     struct TagType {
         EntityType type; /**< Type of entity */
+
+        TagType() = default;
+        TagType(uint8_t);
+
+        template <class Archive>
+        void serialize(Archive& ar) {
+            ar(cereal::make_nvp("TagType", type));
+        }
     };
 
     /**
@@ -87,7 +121,15 @@ namespace Vakol::Model::Components {
     struct Script {
         std::string script_name;
 
+        Script() = default;
+        Script(const std::string& name);
+
         Script(const std::string& script, Controller::LuaState& lua);
+
+        template <class Archive>
+        void serialize(Archive& ar) {
+            ar(cereal::make_nvp("ScriptName",script_name));
+        }
     };
 
 }  // namespace Vakol::Model::Components

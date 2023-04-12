@@ -3,112 +3,37 @@
 
 #include <Controller/Logger.hpp>
 
+#include <Controller/AssetLoader/ShaderLoader.hpp>
+
 #include "GLShader.hpp"
+#include <glm/gtc/type_ptr.hpp>
 
 namespace Vakol::Model
 {
-	GLShader::GLShader(const std::string& vertexPath, const std::string& fragmentPath)
-	{
-		std::string vsCode = Shader::ReadFile(vertexPath);
-		std::string fsCode = Shader::ReadFile(fragmentPath);
+    GLShader::GLShader(const std::string& path) : Shader(id) { this->id = Vakol::Controller::LoadShader(path); }
 
-		CompileShader(vsCode, fsCode);
-	}
+    void GLShader::Bind() const { glUseProgram(this->id); }
 
-	void GLShader::CompileShader(const std::string& vertex, const std::string& fragment)
-	{
-		GLuint vert, frag;
-
-		const auto v_code = vertex.c_str();
-		const auto f_code = fragment.c_str();
-
-		vert = glCreateShader(GL_VERTEX_SHADER);
-		glShaderSource(vert, 1, &v_code, NULL);
-		glCompileShader(vert);
-
-		CheckCompileErrors(vert, "VERTEX");
-
-		frag = glCreateShader(GL_FRAGMENT_SHADER);
-		glShaderSource(frag, 1, &f_code, NULL);
-		glCompileShader(frag);
-
-		CheckCompileErrors(frag, "FRAGMENT");
-
-		this->id = glCreateProgram();
-		glAttachShader(this->id, vert);
-		glAttachShader(this->id, frag);
-		glLinkProgram(this->id);
-
-		CheckCompileErrors(this->id, "PROGRAM");
-
-		glDeleteShader(vert);
-		glDeleteShader(frag);
-	}
-
-	void GLShader::CheckCompileErrors(const unsigned int shader, const std::string& type)
-	{
-		int success;
-
-		char infoLog[1024];
-
-		if (type != "PROGRAM")
-		{
-			glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-
-			if (!success)
-			{
-				glGetShaderInfoLog(shader, 1024, NULL, infoLog);
-				VK_ERROR("\nERROR::SHADER_COMPILATION_ERROR of type: {0}\n{1}\n", type, infoLog);
-			}
-		}
-		else
-		{
-			glGetProgramiv(shader, GL_LINK_STATUS, &success);
-
-			if (!success)
-			{
-				glGetProgramInfoLog(shader, 1024, NULL, infoLog);
-				VK_ERROR("ERROR::PROGRAM_LINKING_ERROR of type: {0}\n{1}\n ", type, infoLog);
-			}
-		}
-	}
-
-	GLShader::~GLShader()
-	{
-		//glDeleteProgram(this->id);
-	}
-
-	void GLShader::Bind() const
-	{
-        glUseProgram(this->id);
-	}
-
-    void GLShader::Unbind() const
-    {
+    void GLShader::Unbind() const {
         glUseProgram(0);
+        glDeleteShader(this->id);
     }
 
-	const unsigned int GLShader::GetID() const
-	{
-		return this->id;
-	}
+    const unsigned int GLShader::GetID() const { return this->id; }
 
-	/*void ShaderLibrary::AddShader(const std::string& name, const std::shared_ptr<GLShader>& shader)
-	{
-		assert(!Contains(name));
+    void GLShader::SetBool(const std::string& name, const bool value) const {
+        glUniform1i(glGetUniformLocation(this->id, name.c_str()), static_cast<int>(value));
+    }
 
-		shaders[name] = shader;
-	}
+    void GLShader::SetInt(const std::string& name, const int value) const {
+        glUniform1i(glGetUniformLocation(this->id, name.c_str()), value);
+    }
 
-	std::shared_ptr<GLShader> ShaderLibrary::GetShader(const std::string& name)
-	{
-		assert(Contains(name));
+    void GLShader::SetFloat(const std::string& name, const float value) const {
+        glUniform1f(glGetUniformLocation(this->id, name.c_str()), value);
+    }
 
-		return shaders.at(name);
-	}
-
-	bool ShaderLibrary::Contains(const std::string& name)
-	{
-		return shaders.find(name) != shaders.end();
-	}*/
+    void GLShader::SetMat4(const std::string& name, const glm::mat4& value) const {
+        glUniformMatrix4fv(glGetUniformLocation(this->id, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
+    }
 }

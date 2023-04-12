@@ -26,11 +26,11 @@ glad
 glfw
 spdlog
 glm
-nlohmann_json
 reactphysics3d
 assimp
 lua
 sol2
+cereal
 )
 
 
@@ -55,7 +55,3 @@ target_compile_options(${PROJECT_NAME} PRIVATE
 target_link_options(${PROJECT_NAME} PRIVATE
     $<$<AND:$<CONFIG:Debug>,$<CXX_COMPILER_ID:Clang>,$<PLATFORM_ID:${SANITIZER_OS}>>:${SANITIZER_FLAGS}>
 )
-
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-                COMMAND ${CMAKE_COMMAND} -E copy_directory
-                ${CMAKE_SOURCE_DIR}/Core/assets $<TARGET_FILE_DIR:${PROJECT_NAME}>/assets)

@@ -5,5 +5,4 @@ print_warn("warning");
 print_err("error");
 print_crit("crit");
 
-
 add_scene("testScene.lua", "TestScene");

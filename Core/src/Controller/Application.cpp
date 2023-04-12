@@ -5,13 +5,22 @@
 
 #include "Logger.hpp"
 
+#include <Model/Components.hpp>
+
+//testing assetLoader
+#include <Controller/AssetLoader/AssetLoader.hpp>
+#include <Model/Assets/Texture.hpp>
 // #include "JSON/Json.hpp"
 // #include "Physics/Physics.hpp"
 
 namespace Vakol::Controller {
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
-    Application::Application() : m_running(false), m_window(nullptr), m_renderer(nullptr) { Logger::Init(); };
+    Application::Application() : m_running(false), m_window(nullptr), m_renderer(nullptr) 
+    { 
+        Logger::Init();
+
+    };
 
     void Application::Init() {
         Controller::RegisterLogger(lua.GetState());
@@ -31,8 +40,6 @@ namespace Vakol::Controller {
 
         m_window->SetEventCallback(BIND_EVENT_FN(OnEvent));
 
-        // m_gui.Init(m_window.GetWindow());
-
         // Physics::Debug = false;
 
         // Physics::Init();
@@ -44,6 +51,10 @@ namespace Vakol::Controller {
         sol::function luaMain = lua.GetState()["main"];
 
         luaMain();
+
+        auto x = AssetLoader::GetTexture("coreAssets/textures/pisikek.png");
+        auto y = AssetLoader::GetModel("coreAssets/models/cube.obj");
+        auto z = AssetLoader::GetShader("coreAssets/shaders/basic.prog");
 
         m_running = true;
     }
@@ -97,8 +108,6 @@ namespace Vakol::Controller {
             }
 
             m_renderer->Update(m_time);
-
-            // m_gui.OnUpdate();
 
             m_window->OnUpdate();
         }
