@@ -15,7 +15,7 @@ namespace Vakol::Model::Components {
     Script::Script(const std::string& name) : script_name(name) {}
 
     Script::Script(const std::string& scriptName, Controller::LuaState& lua, Model::Entity& entity)
-        : script_name(scriptName) {
+        : script_name(scriptName), entity_id(entity.GetHandle()) {
         lua.RunFile("scripts/" + scriptName);
 
         sol::function init = lua.GetState()["init"];
