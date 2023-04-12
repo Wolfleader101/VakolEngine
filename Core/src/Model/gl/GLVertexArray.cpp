@@ -18,7 +18,6 @@ namespace Vakol::Model
         this->BindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->EBO);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->indices.size() * sizeof(unsigned int), this->indices.data(), GL_STATIC_DRAW);
 
-
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
         glEnableVertexAttribArray(0);
 
@@ -33,6 +32,15 @@ namespace Vakol::Model
         
         glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, bitangent)));
         glEnableVertexAttribArray(4);
+
+        this->Unbind();
+    }
+
+    void GLVertexArray::Draw() const
+    {
+        this->Bind();
+
+        glDrawElements(GL_TRIANGLES, this->GetIndices(), GL_UNSIGNED_INT, 0);
 
         this->Unbind();
     }

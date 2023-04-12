@@ -3,16 +3,20 @@
 #include <vector>
 #include <string>
 
-
 #include "Mesh.hpp"
 
 namespace Vakol::Model::Assets {
 
-    struct Model {
+    class Model 
+    {
+    public:
         Model() = default;
-        Model(const std::vector<Mesh>& meshes) : meshes(meshes){};
+        Model(const std::vector<Mesh>& meshes) : m_meshes(meshes){};
 
-        std::vector<Mesh> meshes;
+        const std::vector<Mesh> meshes() const { return m_meshes; }
+
+    private:
+        std::vector<Mesh> m_meshes;
     };
 
 }  // namespace Vakol::Model::Assets

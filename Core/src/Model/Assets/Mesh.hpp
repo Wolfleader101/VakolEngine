@@ -4,16 +4,24 @@
 
 #include <Model/Assets/Vertex.hpp>
 
+#include <Model/gl/GLVertexArray.hpp>
+
+#include <memory>
+
 
 namespace Vakol::Model::Assets
 {
-
-    struct Mesh {
+    class Mesh 
+    {
+    public:
         Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const Material& material)
-            : vertices(vertices), indices(indices), material(material) {}
+            : m_vertexArray(std::make_shared<GLVertexArray>(vertices, indices)), m_material(material) {}
 
-        std::vector<Vertex> vertices;
-        std::vector<unsigned int> indices;
-        Material material;
+        const Material material() const { return this->m_material; }
+        const std::shared_ptr<VertexArray> vao() const { return this->m_vertexArray; }
+
+    private:
+        std::shared_ptr<VertexArray> m_vertexArray;
+        Material m_material;
     };
 }

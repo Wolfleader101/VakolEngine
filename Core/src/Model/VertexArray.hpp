@@ -17,6 +17,8 @@ namespace Vakol::Model
         virtual void Bind() const = 0;
         virtual void Unbind() const = 0;
 
+        virtual void Draw() const = 0;
+
         const virtual unsigned int GetID() const = 0;
         const virtual unsigned int GetVertices() const = 0;
         const virtual unsigned int GetIndices() const = 0;

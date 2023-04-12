@@ -12,10 +12,13 @@ namespace Vakol::Controller {
 
     void System::Drawable_Update() {
         registry->view<Components::Transform, Components::Drawable>().each(
-            [&](auto& trans, Components::Drawable& drawable) {
+            [&](auto& trans, Components::Drawable& drawable) 
+            {
                 /* draw model */
-
-                // drawable.model_ptr->.meshes;
+                for (const auto& mesh : drawable.model_ptr->meshes())
+                {
+                    mesh.vao()->Draw();
+                }
             });
     }
 
