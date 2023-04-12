@@ -1,6 +1,6 @@
 function init(entity)
     print_err(entity:get_transform().pos.y);
-    transform.pos.y = 0.2;
+    entity:get_transform().pos.y = 0.2;
     entity:add_model("cube.obj")
     print("Hello from player");
 end
