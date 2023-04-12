@@ -13,12 +13,11 @@ namespace Vakol::Controller {
     Scene::Scene(const std::string& name, const std::string& scriptName, LuaState& lua)
         : name(name), scriptName(scriptName), lua(lua), entityList() {
         lua.RunFile("scripts/" + scriptName);
+        System::SetEntityList(entityList);
 
         sol::function init = lua.GetState()["init"];
 
         init(*this);
-
-        System::SetEntityList(entityList);
     }
 
     const std::string& Scene::getName() const { return name; }
@@ -28,11 +27,12 @@ namespace Vakol::Controller {
     Model::Entity Scene::CreateEntity(const std::string scriptName) {
         auto ent = entityList.CreateEntity();
         if (scriptName.length() != 0) ent.AddComponent<Model::Components::Script>(scriptName, lua, ent);
-
         return ent;
     }
 
     void Scene::Update(const Time& time) {
+        System::SetEntityList(entityList);
+
         lua.RunFile("scripts/" + scriptName);
 
         sol::function update = lua.GetState()["update"];
