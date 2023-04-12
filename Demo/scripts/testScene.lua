@@ -6,5 +6,5 @@ end
 
 function update()
     -- print("Hello from TestScene update!!!");
-    print(Time["delta_time"]);
+    -- print(Time["delta_time"]);
 end
