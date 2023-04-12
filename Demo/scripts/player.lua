@@ -1,14 +1,12 @@
-local ent;
 function init(entity)
-    ent = entity;
-    transform = ent:get_transform();
-    print_err(transform.pos.y);
+    print_err(entity:get_transform().pos.y);
     transform.pos.y = 0.2;
-    ent.add_model("cube.obj")
+    entity:add_model("cube.obj")
     print("Hello from player");
 end
 
 
-function update()
+function update(entity)
+    print(entity:get_transform().pos.y);
     -- print("Hello from TestScene update");
 end

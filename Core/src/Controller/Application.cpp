@@ -57,10 +57,6 @@ namespace Vakol::Controller {
 
         luaMain();
 
-        auto x = AssetLoader::GetTexture("coreAssets/textures/pisikek.png");
-        auto y = AssetLoader::GetModel("coreAssets/models/cube.obj");
-        auto z = AssetLoader::GetShader("coreAssets/shaders/basic.prog");
-
         m_running = true;
     }
 
