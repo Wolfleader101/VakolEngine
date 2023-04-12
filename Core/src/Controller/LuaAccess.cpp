@@ -1,13 +1,14 @@
 #include "LuaAccess.hpp"
 
-namespace Vakol::Controller {
-    void RegisterGameConfig(sol::state& lua) {
-        // auto gameConfigType = lua.new_usertype<GameConfig>("game_config");
+#include "AssetLoader/AssetLoader.hpp"
+#include "Model/Components.hpp"
 
-        // gameConfigType["name"] = &GameConfig::name;
-        // gameConfigType["window"]["w"] = &GameConfig::windowWidth;
-        // gameConfigType["window"]["h"] = &GameConfig::windowHeight;
-        // gameConfigType["renderer"] = &GameConfig::rendererType;
+namespace Vakol::Controller {
+    void RegisterMath(sol::state& lua) {
+        auto vec3 = lua.new_usertype<glm::vec3>("vec3");
+        vec3["x"] = &glm::vec3::x;
+        vec3["y"] = &glm::vec3::y;
+        vec3["z"] = &glm::vec3::z;
     }
 
     void RegisterLogger(sol::state& lua) {
@@ -58,6 +59,29 @@ namespace Vakol::Controller {
         });
     }
 
+    void RegisterAssetLoader(sol::state& lua) {
+        lua.set_function("load_texture", [](std::string path) {
+            auto tex = AssetLoader::GetTexture(path);
+            if (tex == nullptr) return false;
+
+            return true;
+        });
+
+        lua.set_function("load_model", [](std::string path) {
+            auto model = AssetLoader::GetModel(path);
+            if (model == nullptr) return false;
+
+            return true;
+        });
+
+        lua.set_function("load_shader", [](std::string path) {
+            auto shader = AssetLoader::GetShader(path);
+            if (shader == nullptr) return false;
+
+            return true;
+        });
+    }
+
     void RegisterApplication(sol::state& lua, Application* app) {
         lua.set_function("add_scene", &Application::AddScene, app);
 
@@ -68,14 +92,38 @@ namespace Vakol::Controller {
 
         lua["Time"] = &app->GetTime();
     }
-    void RegisterECS(sol::state& lua) {}
-    void RegisterWindow(sol::state& lua) {}
-    void RegisterRenderer(sol::state& lua) {}
-    void RegisterPhysics(sol::state& lua) {}
+    void RegisterEntity(sol::state& lua) {
+        auto entityType = lua.new_usertype<Entity>("entity");
+
+        entityType.set_function("get_transform", &Entity::GetComponent<Model::Components::Transform>);
+        entityType.set_function("add_model", [](Entity* ent, std::string path) {
+            if (ent->HasComponent<Model::Components::Drawable>() == false) {
+                ent->AddComponent<Model::Components::Drawable>();
+            }
+            auto model = AssetLoader::GetModel(path);
+            if (model == nullptr) return false;
+
+            ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
+
+            return true;
+        });
+    }
+
+    void RegisterECS(sol::state& lua) {
+        auto TransformType = lua.new_usertype<Model::Components::Transform>("transform");
+
+        TransformType["pos"] = &Model::Components::Transform::pos;
+        TransformType["rot"] = &Model::Components::Transform::rot;
+        TransformType["scale"] = &Model::Components::Transform::scale;
+    }
 
     void RegisterScene(sol::state& lua) {
         auto sceneType = lua.new_usertype<Scene>("scene");
 
         sceneType.set_function("create_entity", &Scene::CreateEntity);
     }
+
+    void RegisterWindow(sol::state& lua) {}
+    void RegisterRenderer(sol::state& lua) {}
+    void RegisterPhysics(sol::state& lua) {}
 }  // namespace Vakol::Controller

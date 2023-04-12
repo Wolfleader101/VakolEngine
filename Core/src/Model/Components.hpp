@@ -2,10 +2,14 @@
 
 #include <reactphysics3d/reactphysics3d.h>
 
-#include <Controller/LuaState.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>
+#include <memory>
 #include <string>
+
+#include "Controller/LuaState.hpp"
+#include "Entity.hpp"
+#include "Model/Assets/Model.hpp"
 
 namespace Vakol::Model::Components {
     /**
@@ -41,22 +45,15 @@ namespace Vakol::Model::Components {
         glm::quat rot;   /**< XYZ rotation */
         glm::vec3 scale; /**< XYZ scale */
 
-        template<class Archive>
-        void serialize(Archive& ar)
-        {
-            ar(cereal::make_nvp("pos.x",pos.x),
-               cereal::make_nvp("pos.y", pos.y),
-               cereal::make_nvp("pos.z", pos.z),
+        template <class Archive>
+        void serialize(Archive& ar) {
+            ar(cereal::make_nvp("pos.x", pos.x), cereal::make_nvp("pos.y", pos.y), cereal::make_nvp("pos.z", pos.z),
 
-               cereal::make_nvp("rot.w", rot.w), 
-               cereal::make_nvp("rot.x", rot.x), 
-               cereal::make_nvp("rot.y", rot.y),
-               cereal::make_nvp("rot.z", rot.z), 
+               cereal::make_nvp("rot.w", rot.w), cereal::make_nvp("rot.x", rot.x), cereal::make_nvp("rot.y", rot.y),
+               cereal::make_nvp("rot.z", rot.z),
 
-               cereal::make_nvp("scale.x",scale.x), 
-               cereal::make_nvp("scale.y", scale.y),
-               cereal::make_nvp("scale.z", scale.z)
-               );
+               cereal::make_nvp("scale.x", scale.x), cereal::make_nvp("scale.y", scale.y),
+               cereal::make_nvp("scale.z", scale.z));
         }
     };
 
@@ -83,7 +80,7 @@ namespace Vakol::Model::Components {
 
         template <class Archive>
         void serialize(Archive& ar) {
-            ar(cereal::make_nvp("tag",tag));
+            ar(cereal::make_nvp("tag", tag));
         }
     };
 
@@ -124,12 +121,16 @@ namespace Vakol::Model::Components {
         Script() = default;
         Script(const std::string& name);
 
-        Script(const std::string& script, Controller::LuaState& lua);
+        Script(const std::string& script, Controller::LuaState& lua, Model::Entity& entity);
 
         template <class Archive>
         void serialize(Archive& ar) {
-            ar(cereal::make_nvp("ScriptName",script_name));
+            ar(cereal::make_nvp("ScriptName", script_name));
         }
+    };
+
+    struct Drawable {
+        std::shared_ptr<Vakol::Model::Assets::Model> model_ptr;
     };
 
 }  // namespace Vakol::Model::Components

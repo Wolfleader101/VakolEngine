@@ -1,5 +1,4 @@
 print("this is a trace");
-print(1)
 print_info("hello from main");
 print_warn("warning");
 print_err("error");
