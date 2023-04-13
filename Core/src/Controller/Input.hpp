@@ -55,6 +55,7 @@ namespace Vakol::Controller {
             KEY_X = 88,
             KEY_Y = 89,
             KEY_Z = 90,
+            KEY_LEFT_SHIFT = 340,
         };
 
         enum class KeyState { KEY_IDLE, KEY_PRESSED, KEY_HELD, KEY_RELEASED };

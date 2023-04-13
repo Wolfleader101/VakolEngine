@@ -37,9 +37,6 @@ namespace Vakol::Controller {
     void Camera::Update(float deltaTime) {
         float velocity = static_cast<float>((isSprinting ? 50.0f : 30.0f) * deltaTime);
 
-        position += forward * forwardDir * velocity;
-        position += right * rightDir * velocity;
-
         glm::vec3 front;
 
         front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));

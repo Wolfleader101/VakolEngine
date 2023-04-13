@@ -119,7 +119,7 @@ namespace Vakol::Controller {
             Input::KEY::KEY_O, "KEY_P", Input::KEY::KEY_P, "KEY_Q", Input::KEY::KEY_Q, "KEY_R", Input::KEY::KEY_R,
             "KEY_S", Input::KEY::KEY_S, "KEY_T", Input::KEY::KEY_T, "KEY_U", Input::KEY::KEY_U, "KEY_V",
             Input::KEY::KEY_V, "KEY_W", Input::KEY::KEY_W, "KEY_X", Input::KEY::KEY_X, "KEY_Y", Input::KEY::KEY_Y,
-            "KEY_Z", Input::KEY::KEY_Z);
+            "KEY_Z", Input::KEY::KEY_Z, "KEY_LEFT_SHIFT", Input::KEY::KEY_LEFT_SHIFT);
     }
 
     void RegisterEntity(sol::state& lua) {
@@ -156,6 +156,8 @@ namespace Vakol::Controller {
 
         cameraType.set_function("get_pos", &Camera::GetPos);
         cameraType.set_function("set_pos", &Camera::SetPos);
+        cameraType.set_function("get_forward", &Camera::GetForward);
+        cameraType.set_function("get_right", &Camera::GetRight);
     }
 
     void RegisterWindow(sol::state& lua) {}

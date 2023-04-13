@@ -39,7 +39,11 @@ namespace Vakol::Controller {
 
         const glm::vec3& GetPos() const { return position; }
 
-        void SetPos(const glm::vec3& pos) { position = pos; }
+        // void SetPos(const glm::vec3& pos) { position = pos; }
+        void SetPos(const float x, const float y, const float z) { position = glm::vec3(x, y, z); }
+
+        const glm::vec3 GetForward() const { return forward; }
+        const glm::vec3 GetRight() const { return right; }
 
        private:
         void UpdateMatrices();

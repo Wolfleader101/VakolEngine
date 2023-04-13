@@ -9,12 +9,6 @@ end
 
 
 function update(scene)
-    w = Input:get_key(KEYS["KEY_W"])
-    if(w)
-    then
-        print("w is down")
-        print(Input:get_mouse_pos().x)
-    end
     -- print("Hello from TestScene update!!!");
     -- print(Time["delta_time"]);
 end
