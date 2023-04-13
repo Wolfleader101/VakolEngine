@@ -15,9 +15,8 @@ namespace Vakol::View {
         glEnable(GL_TEXTURE_2D);
     };
 
-    void Draw(const Controller::Time& time, const std::shared_ptr<Model::Components::Drawable> drawable) {}
-
-    void GLRenderer::Update(const Controller::Time& time) {
+    void GLRenderer::Draw(const Controller::Time& time, const Model::Components::Drawable& drawable) const
+    {
         glClearColor(0.52941f, 0.80784f, 0.92157f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -36,5 +35,5 @@ namespace Vakol::View {
         mdl_mat = glm::rotate(mdl_mat, 0.0f, glm::vec3(1.0f, 0.0f, 0.0f));
         mdl_mat = glm::rotate(mdl_mat, 0.0f, glm::vec3(0.0f, 1.0f, 0.0f));
         mdl_mat = glm::rotate(mdl_mat, 0.0f, glm::vec3(0.0f, 0.0f, 1.0f));
-    };
+    }
 }  // namespace Vakol::View

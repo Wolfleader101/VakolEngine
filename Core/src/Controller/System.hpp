@@ -5,7 +5,11 @@
 #include "Controller/EntityList.hpp"
 #include "LuaState.hpp"
 
+#include "View/Renderer/Renderer.hpp"
+
 namespace Vakol::Controller {
+
+    using Vakol::View::Renderer;
 
     class System {
        public:
@@ -17,7 +21,7 @@ namespace Vakol::Controller {
         // if you add a function use the convention Type_Action()
         // will make it more intuitive to find names of funcs
 
-        static void Drawable_Update();
+        static void Drawable_Update(const Time& time, const std::shared_ptr<Renderer> renderer);
 
         static void Script_Update(LuaState& lua, EntityList& list);
 

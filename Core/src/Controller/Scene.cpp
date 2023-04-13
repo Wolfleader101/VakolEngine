@@ -24,13 +24,15 @@ namespace Vakol::Controller {
 
     void Scene::setName(const std::string& newName) { name = newName; }
 
-    Model::Entity Scene::CreateEntity(const std::string scriptName) {
+    Model::Entity Scene::CreateEntity(const std::string scriptName) 
+    {
         auto ent = entityList.CreateEntity();
         if (scriptName.length() != 0) ent.AddComponent<Model::Components::Script>(scriptName, lua, ent);
         return ent;
     }
 
-    void Scene::Update(const Time& time) {
+    void Scene::Update(const Time& time, const std::shared_ptr<Renderer> renderer) 
+    {
         System::SetEntityList(entityList);
 
         lua.RunFile("scripts/" + scriptName);
@@ -41,7 +43,7 @@ namespace Vakol::Controller {
 
         System::Script_Update(lua, entityList);
 
-        System::Drawable_Update();
+        System::Drawable_Update(time, renderer);
     }
 
     namespace fs = std::filesystem;

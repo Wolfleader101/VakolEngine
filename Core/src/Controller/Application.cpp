@@ -87,6 +87,7 @@ namespace Vakol::Controller {
             VK_ERROR("CONFIG ERROR: Renderer Not Set");
             return std::nullopt;
         }
+        
         sol::optional<std::string> modelDir = config["model_dir"];
         if (!modelDir) {
             VK_WARN("CONFIG WARNING: No Model Directory Set, Using Default {0}", AssetLoader::model_path);
@@ -94,19 +95,19 @@ namespace Vakol::Controller {
             AssetLoader::model_path = modelDir.value();
         }
 
-        sol::optional<std::string> textureDir = config["texture_dir"];
-        if (!textureDir) {
-            VK_WARN("CONFIG WARNING: No Texture Directory Set, Using Default {0}", AssetLoader::texture_path);
-        } else {
-            AssetLoader::texture_path = textureDir.value();
-        }
+        // sol::optional<std::string> textureDir = config["texture_dir"];
+        // if (!textureDir) {
+        //     VK_WARN("CONFIG WARNING: No Texture Directory Set, Using Default {0}", AssetLoader::texture_path);
+        // } else {
+        //     AssetLoader::texture_path = textureDir.value();
+        // }
 
-        sol::optional<std::string> shaderDir = config["shader_dir"];
-        if (!shaderDir) {
-            VK_WARN("CONFIG WARNING: No Shader Directory Set, Using Default {0}", AssetLoader::shader_path);
-        } else {
-            AssetLoader::shader_path = shaderDir.value();
-        }
+        // sol::optional<std::string> shaderDir = config["shader_dir"];
+        // if (!shaderDir) {
+        //     VK_WARN("CONFIG WARNING: No Shader Directory Set, Using Default {0}", AssetLoader::shader_path);
+        // } else {
+        //     AssetLoader::shader_path = shaderDir.value();
+        // }
 
         Model::GameConfig cfg = {name.value(), windowWidth.value(), windowHeight.value(), rendererType.value()};
 
@@ -125,10 +126,8 @@ namespace Vakol::Controller {
 
             //! update scenes lua
             for (auto& scene : scenes) {
-                scene.Update(m_time);
+                scene.Update(m_time, m_renderer);
             }
-
-            m_renderer->Update(m_time);
 
             m_window->OnUpdate();
         }

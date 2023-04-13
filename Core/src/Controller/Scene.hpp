@@ -3,7 +3,12 @@
 #include "EntityList.hpp"
 #include "LuaState.hpp"
 #include "Time.hpp"
-namespace Vakol::Controller {
+#include "View/Renderer/Renderer.hpp"
+
+namespace Vakol::Controller 
+{
+    using Vakol::View::Renderer;
+
     class Scene {
        public:
         /**
@@ -19,7 +24,7 @@ namespace Vakol::Controller {
         const std::string& getName() const;
         void setName(const std::string& newName);
 
-        void Update(const Time& time);
+        void Update(const Time& time, const std::shared_ptr<Renderer> renderer);
 
         Model::Entity CreateEntity(const std::string scriptName = "");
 

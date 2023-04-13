@@ -61,10 +61,10 @@ namespace Vakol::Controller {
 
     void RegisterAssetLoader(sol::state& lua) {
         lua.set_function("load_texture", [](std::string path) {
-            auto tex = AssetLoader::GetTexture(path);
-            if (tex == nullptr) return false;
+            // auto tex = AssetLoader::GetTexture(path);
+            // if (tex == nullptr) return false;
 
-            return true;
+            // return true;
         });
 
         lua.set_function("load_model", [](std::string path) {
@@ -75,10 +75,10 @@ namespace Vakol::Controller {
         });
 
         lua.set_function("load_shader", [](std::string path) {
-            auto shader = AssetLoader::GetShader(path);
-            if (shader == nullptr) return false;
+            // //auto shader = AssetLoader::GetShader(path);
+            // if (shader == nullptr) return false;
 
-            return true;
+            // return true;
         });
     }
 
@@ -101,6 +101,7 @@ namespace Vakol::Controller {
             if (ent->HasComponent<Model::Components::Drawable>() == false) {
                 ent->AddComponent<Model::Components::Drawable>();
             }
+            
             auto model = AssetLoader::GetModel(path);
             if (model == nullptr) return false;
 

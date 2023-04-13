@@ -12,8 +12,10 @@ uniform bool enableTexture;
 
 void main()
 {
-    if (enableTexture)
-        FragColor = texture(inputTexture0, uv * uvScale0) * rgba;
-    else
-        FragColor = rgba;
+    // if (enableTexture)
+    //     FragColor = texture(inputTexture0, uv * uvScale0) * rgba;
+    // else
+    //     FragColor = rgba;
+
+    FragColor = vec4(1.0);
 }

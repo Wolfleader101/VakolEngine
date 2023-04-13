@@ -12,11 +12,9 @@ namespace Vakol::View {
         Renderer(const std::shared_ptr<Window> window) : m_window(window){};
         virtual ~Renderer() {}
 
-        virtual void Draw(const Controller::Time& time,
-                          const std::shared_ptr<Model::Components::Drawable> drawable) = 0;
-        virtual void Update(const Controller::Time& time) = 0;
+        virtual void Draw(const Controller::Time& time, const Model::Components::Drawable& drawable) const = 0;
 
-       protected:
+    protected:
         std::shared_ptr<Window> m_window;
     };
 }  // namespace Vakol::View

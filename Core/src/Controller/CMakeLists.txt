@@ -1,5 +1,4 @@
 add_subdirectory(AssetLoader)
-add_subdirectory(IO)
 add_subdirectory(Serialization)
 
 SET(CONTROLLER
@@ -35,6 +34,5 @@ src/Controller/Scene.cpp
 ${SERIALIZABLE}
 ${EVENTS}
 ${ASSETLOADER}
-${IO}
 
 PARENT_SCOPE)
