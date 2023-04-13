@@ -9,6 +9,7 @@
 #include <glm/gtc/quaternion.hpp>
 #include <vector>
 
+#include "Model/Components.hpp"
 #include "Model/gl/GLShader.hpp"
 
 namespace Vakol::View {
@@ -17,13 +18,12 @@ namespace Vakol::View {
         glEnable(GL_TEXTURE_2D);
     };
 
-    void GLRenderer::Draw(const Controller::Time& time, const Controller::Camera& camera, const Model::Components::Drawable& drawable) const
-    {
+    void GLRenderer::Draw(const Controller::Time& time, const Controller::Camera& camera,
+                          const Model::Components::Drawable& drawable) const {
         glClearColor(0.52941f, 0.80784f, 0.92157f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        for (const auto& mesh : drawable.model_ptr->meshes())
-        {
+        for (auto mesh : drawable.model_ptr->meshes()) {
             mesh.material()->Bind();
             mesh.material()->SetMat4("_PV", camera.GetMatrix(_PV_MATRIX));
 

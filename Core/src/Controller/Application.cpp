@@ -87,7 +87,7 @@ namespace Vakol::Controller {
             VK_ERROR("CONFIG ERROR: Renderer Not Set");
             return std::nullopt;
         }
-        
+
         sol::optional<std::string> modelDir = config["model_dir"];
         if (!modelDir) {
             VK_WARN("CONFIG WARNING: No Model Directory Set, Using Default {0}", AssetLoader::model_path);
@@ -129,7 +129,7 @@ namespace Vakol::Controller {
                 scene.Update(m_time, m_renderer);
             }
 
-            //m_renderer->Update(scenes[0].GetCamera());
+            // m_renderer->Update(scenes[0].GetCamera());
 
             m_window->OnUpdate();
 

@@ -10,13 +10,10 @@ namespace Vakol::Controller {
 
     void System::SetEntityList(EntityList& EL) { registry = &EL.m_Registry; }
 
-    void System::Drawable_Update(const Time& time, const std::shared_ptr<Renderer> renderer) 
-    {
+    void System::Drawable_Update(const Time& time, const Controller::Camera& camera,
+                                 const std::shared_ptr<View::Renderer> renderer) {
         registry->view<Components::Transform, Components::Drawable>().each(
-            [&](auto& trans, Components::Drawable& drawable) 
-            {
-                renderer->Draw(time, drawable);
-            });
+            [&](auto& trans, Components::Drawable& drawable) { renderer->Draw(time, camera, drawable); });
     }
 
     void System::Script_Update(LuaState& lua, EntityList& list, Scene* scene) {

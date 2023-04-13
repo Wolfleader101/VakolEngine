@@ -18,28 +18,10 @@ namespace Vakol::Controller {
 
         void SetAspect(const float _aspect);
 
-        /**
-         * @brief process keyboard input
-         *
-         * @param deltaTime
-         */
-        void OnKeyPressed(const int keyPress);
-
-        /**
-         * @brief Process mouse movement
-         *
-         * @param xoffset
-         * @param yoffset
-         */
-        void OnMouseMove(float xoffset, float yoffset);
-
-        void Camera::OnKeyRelease(const int direction);
-
         void Update(float deltaTime);
 
         const glm::vec3& GetPos() const { return position; }
 
-        // void SetPos(const glm::vec3& pos) { position = pos; }
         void SetPos(const float x, const float y, const float z) { position = glm::vec3(x, y, z); }
 
         const glm::vec3 GetForward() const { return forward; }
