@@ -118,7 +118,6 @@ namespace Vakol::Model::Components {
      */
     struct Script {
         std::string script_name;
-        unsigned int entity_id;
 
         Script() = default;
         Script(const std::string& name);
