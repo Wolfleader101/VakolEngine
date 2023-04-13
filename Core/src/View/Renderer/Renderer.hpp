@@ -4,6 +4,7 @@
 #include <View/Window/Window.hpp>
 #include <memory>
 
+#include "Controller/Camera.hpp"
 #include "Model/Components.hpp"
 
 namespace Vakol::View {
@@ -14,7 +15,7 @@ namespace Vakol::View {
 
         // virtual void Draw(const Controller::Time& time,
         //                   const std::shared_ptr<Model::Components::Drawable> drawable) = 0;
-        virtual void Update() = 0;
+        virtual void Update(Controller::Camera& cam) = 0;
 
        protected:
         std::shared_ptr<Window> m_window;

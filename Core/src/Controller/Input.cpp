@@ -30,16 +30,10 @@ namespace Vakol::Controller {
     }
 
     bool Input::OnMouseMoved(MouseMovedEvent& ev) {
-        float xpos = static_cast<float>(ev.GetX());
-        float ypos = static_cast<float>(ev.GetY());
+        m_mousePos = glm::vec2(ev.GetX(), ev.GetY());
 
-        m_mousePos = glm::vec2(xpos, ypos);
-        glm::vec2 m_deltaMousePos;
-
-        m_deltaMousePos = m_mousePos - m_prevMousePos;
-
-        // float xoffset = xpos - lastX; // delta x
-        // float yoffset = lastY - ypos; // delta y
+        m_deltaMousePos.x = m_mousePos.x - m_prevMousePos.x;
+        m_deltaMousePos.y = m_prevMousePos.y - m_mousePos.y;
 
         m_prevMousePos = m_mousePos;
 

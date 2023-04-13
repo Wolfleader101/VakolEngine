@@ -40,11 +40,12 @@ function update(scene, entity)
         y = old_pos.y + (forward.y * dir.z + right.y * dir.x) * velocity,
         z = old_pos.z + (forward.z * dir.z + right.z * dir.x) * velocity}
     camera:set_pos(new_pos.x, new_pos.y, new_pos.z);
-    print(camera:get_pos().z);
 
 
     delta_mouse_pos = Input:get_delta_mouse_pos();
+    print(delta_mouse_pos.x)
     camera:set_yaw(camera:get_yaw() + delta_mouse_pos.x * 0.05);
+
 
     pitch = camera:get_pitch() + delta_mouse_pos.y * 0.05;
     if (pitch > 89.0)

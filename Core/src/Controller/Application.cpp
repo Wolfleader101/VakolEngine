@@ -128,7 +128,7 @@ namespace Vakol::Controller {
                 scene.Update(m_time);
             }
 
-            m_renderer->Update();
+            m_renderer->Update(scenes[0].GetCamera());
 
             m_window->OnUpdate();
 
