@@ -19,7 +19,7 @@ namespace Vakol::Controller {
             });
     }
 
-    void System::Script_Update(LuaState& lua, EntityList& list) {
+    void System::Script_Update(LuaState& lua, EntityList& list, Scene* scene) {
         registry->view<Components::Script>().each([&](auto& script) {
             lua.RunFile("scripts/" + script.script_name);
 
@@ -27,7 +27,7 @@ namespace Vakol::Controller {
 
             auto ent = list.GetEntity(script.entity_id);
 
-            update(ent);
+            update(*scene, ent);
         });
     }
 

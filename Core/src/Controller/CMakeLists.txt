@@ -30,7 +30,8 @@ src/Controller/LuaAccess.cpp
 src/Controller/Scene.hpp
 src/Controller/Scene.cpp
 
-
+src/Controller/Input.hpp
+src/Controller/Input.cpp
 ${SERIALIZABLE}
 ${EVENTS}
 ${ASSETLOADER}
