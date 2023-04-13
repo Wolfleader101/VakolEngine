@@ -20,10 +20,10 @@ namespace Vakol::Model::Assets
 		virtual void Bind() const = 0;
 		virtual void Unbind() const = 0;
 	
-		// virtual const unsigned int GetID() const = 0;
-		// virtual const unsigned int GetTextureCount() const = 0;
+		virtual const unsigned int GetID() const = 0;
+		virtual const unsigned int GetTextureCount() const = 0;
 
-        // virtual std::vector<Texture> textures() = 0;
+        virtual std::vector<Texture> textures() = 0;
 
 	public:
 		virtual void SetBool(const std::string& name, const bool value) const = 0;
@@ -43,7 +43,6 @@ namespace Vakol::Model::Assets
 
     protected:
         std::shared_ptr<Shader> m_shader;
-
-		//std::vector<Texture> m_textures;
+		std::vector<Texture> m_textures;
 	};
 }

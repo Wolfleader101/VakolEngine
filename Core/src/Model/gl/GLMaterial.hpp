@@ -14,16 +14,15 @@ namespace Vakol::Model
 	class GLMaterial : public Vakol::Model::Assets::Material
 	{
 	public:
-
 		GLMaterial(const std::string& path) : Material(path) {};
 
 		void Bind() const override;
 		void Unbind() const override;
 
-		// const unsigned int GetID() const override { return this->m_shader->GetID(); };
-		// const unsigned int GetTextureCount() const override { return static_cast<unsigned int>(this->m_textures.size()); }
+		const unsigned int GetID() const override { return this->m_shader->GetID(); };
+		const unsigned int GetTextureCount() const override { return static_cast<unsigned int>(this->m_textures.size()); }
 
-        // std::vector<Texture> textures() override { return this->m_textures; }
+        std::vector<Texture> textures() override { return this->m_textures; }
 
 	public:
 		void SetBool(const std::string& name, const bool value) const override;
