@@ -15,7 +15,7 @@ namespace Vakol::Controller {
          * @brief Construct a new Scene object
          *
          */
-        Scene(const std::string& name, const std::string& scriptName, LuaState& lua, bool active = false);
+        Scene(const std::string& name, const std::string& scriptName, LuaState& lua, Physics::ScenePhysics& SP, bool active = false);
         /**
          * @brief the entity list of scene
          */

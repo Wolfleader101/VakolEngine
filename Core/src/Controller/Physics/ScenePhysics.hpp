@@ -4,10 +4,13 @@
 
 #include <Controller/Time.hpp>
 
+class System;
+
+
 namespace Vakol::Controller::Physics
 {
     class PhysicsPool;
-	class Vakol::Controller::System;
+	
 
 
 	class ScenePhysics
@@ -19,6 +22,8 @@ namespace Vakol::Controller::Physics
 			void Init();
 
 			void Update(const Vakol::Controller::Time& time);
+
+			/*PhysicsObject& AddPhysicsObject(PhysicsObject& PhyObj);*/
 		
 		private:
 

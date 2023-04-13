@@ -10,8 +10,8 @@
 #include "System.hpp"
 
 namespace Vakol::Controller {
-    Scene::Scene(const std::string& name, const std::string& scriptName, LuaState& lua, bool active)
-        : name(name), scriptName(scriptName), lua(lua), entityList(), active(active) {
+    Scene::Scene(const std::string& name, const std::string& scriptName, LuaState& lua, Physics::ScenePhysics& SP, bool active)
+        : name(name), scriptName(scriptName), lua(lua), entityList(), ScenePhysics(SP), active(active)  {
         lua.RunFile("scripts/" + scriptName);
 
         sol::function init = lua.GetState()["init"];
@@ -36,7 +36,7 @@ namespace Vakol::Controller {
 
         update();
 
-        System::ScriptUpdate(lua);
+        System::Script_Update(lua);
     }
 
     namespace fs = std::filesystem;

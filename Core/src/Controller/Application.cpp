@@ -123,7 +123,7 @@ namespace Vakol::Controller {
 
     void Application::AddScene(std::string scriptName, std::string scene_name) {
         std::string sceneName = scene_name.length() == 0 ? "Scene" + std::to_string(scenes.size()) : scene_name;
-        scenes.push_back(Scene(sceneName, scriptName, lua, true));
+        scenes.push_back(Scene(sceneName, scriptName, lua,Physics::PhysicsPool::CreatePhysicsWorld(), true));
     }
 
     void Application::OnEvent(Event& ev) {

@@ -2,12 +2,16 @@
 
 #include <Controller/EntityList.hpp>
 #include <Controller/Physics/ScenePhysics.hpp>
+#include <Model/Components.hpp>
 
 
 #include "LuaState.hpp"
 
 namespace Vakol::Controller {
     
+    using namespace Vakol::Controller::Physics;
+    using namespace Vakol::Model::Components;
+
     class System {
 
        public:
@@ -25,9 +29,12 @@ namespace Vakol::Controller {
         static void Model_Draw();
 
 
+
+
         static void Script_Update(LuaState& lua);
 
 
+        static void Physics_InitObject(ScenePhysics& SP, PhysicsObject& PhyObj, const Drawable& model, Transform trans);
         static void Physics_Init(ScenePhysics& SP);
         static void Physics_UpdateTransforms(float factor);
 

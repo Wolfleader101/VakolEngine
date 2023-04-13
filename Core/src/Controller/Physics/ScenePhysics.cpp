@@ -1,12 +1,17 @@
+#include "ScenePhysics.hpp"
+#include "ScenePhysics.hpp"
 #include <Controller/Physics/ScenePhysics.hpp>
 #include <Controller/Physics/PhysicsPool.hpp>
 
 #include <Controller/System.hpp>
+
+
 namespace Vakol::Controller::Physics 
 {
+
     ScenePhysics::ScenePhysics(rp3d::PhysicsWorld* newWorld) : m_World(newWorld){};
 
-    ScenePhysics::~ScenePhysics() { PhysicsPool::DeletePhysicsWorld(*this); };
+    ScenePhysics::~ScenePhysics() { };
 
     void ScenePhysics::Init(){};
 
@@ -24,7 +29,7 @@ namespace Vakol::Controller::Physics
             // Decrease the accumulated time
             m_accumulator -= m_timestep;
         }
-       
+
 
         // Compute the time interpolation factor
         float factor = m_accumulator / m_timestep;
@@ -33,10 +38,11 @@ namespace Vakol::Controller::Physics
         Vakol::Controller::System::Physics_UpdateTransforms(factor);
     };
 
-    
+    /*PhysicsObject& ScenePhysics::AddPhysicsObject(PhysicsObject& PhyObj)
+    {
+        PhyObj.
 
 
-
-
+    };*/
 
 }
