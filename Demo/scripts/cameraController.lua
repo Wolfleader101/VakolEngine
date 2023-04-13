@@ -1,6 +1,5 @@
 function init(scene, entity)
-    print("Start Camera Controller script");
-    local camera = scene:get_camera();
+
 end
 
 local speed = 50;
@@ -40,10 +39,8 @@ function update(scene, entity)
     }
     camera:set_pos(new_pos.x, new_pos.y, new_pos.z);
 
-
     local delta_mouse_pos = Input:get_delta_mouse_pos();
     camera:set_yaw(camera:get_yaw() + delta_mouse_pos.x * 0.05);
-
 
     local pitch = camera:get_pitch() + delta_mouse_pos.y * 0.05;
     if (pitch > 89.0) then
