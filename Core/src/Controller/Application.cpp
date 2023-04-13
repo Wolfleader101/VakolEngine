@@ -13,8 +13,10 @@
 //testing assetLoader
 #include <Controller/AssetLoader/AssetLoader.hpp>
 #include <Model/Assets/Texture.hpp>
-// #include "JSON/Json.hpp"
-// #include "Physics/Physics.hpp"
+
+#include <Controller/System.hpp>
+
+#include <Controller/Scene.hpp>
 
 namespace Vakol::Controller {
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
@@ -22,7 +24,6 @@ namespace Vakol::Controller {
     Application::Application() : m_running(false), m_window(nullptr), m_renderer(nullptr) 
     { 
         Logger::Init();
-
     };
 
     void Application::Init() {
@@ -58,6 +59,30 @@ namespace Vakol::Controller {
         auto x = AssetLoader::GetTexture("coreAssets/textures/pisikek.png");
         auto y = AssetLoader::GetModel("coreAssets/models/cube.obj");
         auto z = AssetLoader::GetShader("coreAssets/shaders/basic.prog");
+
+        //physics test 
+
+        Scene test("Physics Test Scene", "testScene.lua", lua, std::make_shared<Physics::ScenePhysics>(PhysicsPool::CreatePhysicsWorld()), true);
+
+        for (int i = 0; i < 10; i++)
+        {
+            auto entity = test.entityList.CreateEntity();
+            entity.GetComponent<Components::Tag>().tag = "Entity: " + std::to_string(i);
+            entity.AddComponent<Components::PhysicsObject>(test.ScenePhysics, 2, 3);
+
+            entity.AddComponent<Components::Drawable>();
+            auto& draw = (entity.GetComponent<Components::Drawable>());
+            draw.ModelPtr = y;
+
+
+
+            auto& trans = entity.GetComponent<Components::Transform>();
+
+            auto& PhyObj = entity.GetComponent<Components::PhysicsObject>();
+            System::Physics_InitObject(test.ScenePhysics, PhyObj, draw, trans);
+        }
+
+        test.Serialize("assets/scenes");
 
         m_running = true;
     }
@@ -122,8 +147,14 @@ namespace Vakol::Controller {
     }
 
     void Application::AddScene(std::string scriptName, std::string scene_name) {
+
         std::string sceneName = scene_name.length() == 0 ? "Scene" + std::to_string(scenes.size()) : scene_name;
-        scenes.push_back(Scene(sceneName, scriptName, lua,Physics::PhysicsPool::CreatePhysicsWorld(), true));
+
+        scenes.push_back(Scene(sceneName, scriptName, 
+                                lua,
+                                std::make_shared<Physics::ScenePhysics>(Physics::PhysicsPool::CreatePhysicsWorld()),
+                                true
+                            ));
     }
 
     void Application::OnEvent(Event& ev) {

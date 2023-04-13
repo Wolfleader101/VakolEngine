@@ -42,7 +42,7 @@ namespace Vakol::Model::Components {
 
         glm::vec3 pos;   /**< XYZ position */
         glm::quat rot;   /**< XYZ rotation */
-        glm::vec3 scale; /**< XYZ scale */
+        glm::vec3 scale = { 1,1,1 }; /**< XYZ scale */
 
         template <class Archive>
         void serialize(Archive& ar) {
@@ -141,19 +141,21 @@ namespace Vakol::Model::Components {
 
     struct PhysicsObject {
 
+        PhysicsObject(std::shared_ptr<ScenePhysics> SP, unsigned int BodyType, unsigned int Shape);
+
         struct RigidData
         {
-            double mass;			/**< Mass of object*/
-            bool grav;				/**< If gravity is enabled on the object*/
-            double LDamp;			/**< Linear Dampening*/
-            double ADamp;			/**< Angular Dampening*/
-            rp3d::Vector3 AngularLock; /**< Angular lock axis factor */
-            rp3d::Vector3 Orientation; /**< Orientation */
+            double mass = 3;			/**< Mass of object*/
+            bool grav = true;				/**< If gravity is enabled on the object*/
+            double LDamp = 0;			/**< Linear Dampening*/
+            double ADamp = 2;			/**< Angular Dampening*/
+            rp3d::Vector3 AngularLock = { 0,1,0 }; /**< Angular lock axis factor */
+            rp3d::Vector3 Orientation = { 0,0,0 }; /**< Orientation */
 
         };
 
         //rigid body
-        ScenePhysics* owningWorld;
+        std::shared_ptr<ScenePhysics> owningWorld;
         rp3d::RigidBody* RigidBody;
         rp3d::BodyType Type;
         RigidData Data;

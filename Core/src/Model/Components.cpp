@@ -22,6 +22,15 @@ namespace Vakol::Model::Components {
 
         init();
     };
-    TagType::TagType(uint8_t type) : type(EntityType(type)){}
-    Tag::Tag(const std::string& tag) : tag(tag) {}
+
+    TagType::TagType(uint8_t type) : type(EntityType(type)) {};
+
+    Tag::Tag(const std::string& tag) : tag(tag) {};
+
+    PhysicsObject::PhysicsObject(std::shared_ptr<ScenePhysics> SP, unsigned int BodyType, unsigned int ShapeType)
+    {
+        owningWorld = SP;
+        Type = (rp3d::BodyType) BodyType;
+        ShapeName = (rp3d::CollisionShapeName)ShapeType;
+    }
 }  // namespace Vakol::Model::Components

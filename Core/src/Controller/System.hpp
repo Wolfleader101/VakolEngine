@@ -34,9 +34,10 @@ namespace Vakol::Controller {
         static void Script_Update(LuaState& lua);
 
 
-        static void Physics_InitObject(ScenePhysics& SP, PhysicsObject& PhyObj, const Drawable& model, Transform trans);
-        static void Physics_Init(ScenePhysics& SP);
+        static void Physics_InitObject(std::shared_ptr<ScenePhysics> SP, PhysicsObject& PhyObj, const Drawable& model, Transform trans);
+        static void Physics_Init(std::shared_ptr<ScenePhysics> SP);
         static void Physics_UpdateTransforms(float factor);
+        static void Physics_SerializationPrep();
 
        private:
         static entt::registry* registry; 

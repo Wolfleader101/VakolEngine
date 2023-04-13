@@ -15,7 +15,7 @@ namespace Vakol::Controller {
          * @brief Construct a new Scene object
          *
          */
-        Scene(const std::string& name, const std::string& scriptName, LuaState& lua, Physics::ScenePhysics& SP, bool active = false);
+        Scene(const std::string& name, const std::string& scriptName, LuaState& lua, std::shared_ptr<Physics::ScenePhysics> SP, bool active = false);
         /**
          * @brief the entity list of scene
          */
@@ -33,9 +33,11 @@ namespace Vakol::Controller {
 
         bool active = false;
 
+        std::shared_ptr<Physics::ScenePhysics> ScenePhysics;
+
        private:
 
-        Physics::ScenePhysics ScenePhysics;
+        
         LuaState& lua;
         std::string scriptName;
         std::string name;

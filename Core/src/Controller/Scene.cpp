@@ -10,7 +10,7 @@
 #include "System.hpp"
 
 namespace Vakol::Controller {
-    Scene::Scene(const std::string& name, const std::string& scriptName, LuaState& lua, Physics::ScenePhysics& SP, bool active)
+    Scene::Scene(const std::string& name, const std::string& scriptName, LuaState& lua, std::shared_ptr<Physics::ScenePhysics> SP, bool active)
         : name(name), scriptName(scriptName), lua(lua), entityList(), ScenePhysics(SP), active(active)  {
         lua.RunFile("scripts/" + scriptName);
 
@@ -54,8 +54,8 @@ namespace Vakol::Controller {
             // directory already exists
         }
 
+        System::Physics_SerializationPrep();
         std::string FinalFolder = folder + "/" + name;
-
         entityList.Serialize(FinalFolder + "/EntityList.json");
 
         // json.Serialize camera...
@@ -79,6 +79,8 @@ namespace Vakol::Controller {
             json(name);
             json(scriptName);
         }
+
+
     }
 
 }  // namespace Vakol::Controller

@@ -37,12 +37,4 @@ namespace Vakol::Controller::Physics
         // call update on transforms 
         Vakol::Controller::System::Physics_UpdateTransforms(factor);
     };
-
-    /*PhysicsObject& ScenePhysics::AddPhysicsObject(PhysicsObject& PhyObj)
-    {
-        PhyObj.
-
-
-    };*/
-
 }

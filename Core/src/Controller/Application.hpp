@@ -22,6 +22,7 @@
 #include "Scene.hpp"
 
 namespace Vakol::Controller {
+
     /**
      * @class Application
      * @brief The main application class to launch the game engine, expected use is a singleton

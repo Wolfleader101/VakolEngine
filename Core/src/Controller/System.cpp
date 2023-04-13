@@ -23,7 +23,7 @@ using namespace Vakol::Model::Components;
 
 Bounds getBounds(const Drawable& model);
 
-void InitPhysicsObject(PhysicsObject& PhyObj, const Drawable& model, Transform trans);
+
 
 namespace Vakol::Controller 
 {
@@ -55,14 +55,12 @@ namespace Vakol::Controller
         });
     }
 
-    void System::Physics_Init(ScenePhysics& SP) 
+    void System::Physics_Init(std::shared_ptr<ScenePhysics> SP) 
     { 
         registry->view<Transform, Drawable, PhysicsObject>().each(
             [&](Transform& trans, Drawable& draw, PhysicsObject& PhyObj)
             {
-
-                
- 
+                System::Physics_InitObject(SP, PhyObj, draw, trans);
             }
         );
     }
@@ -90,14 +88,44 @@ namespace Vakol::Controller
         );
     }
 
-    void System::Physics_InitObject(ScenePhysics& SP, PhysicsObject& PhyObj, const Drawable& draw, Transform trans)
+    void System::Physics_SerializationPrep()
+    {
+        auto view = registry->view<PhysicsObject, Transform>();
+        for (auto entity : view)
+        {
+            auto& trans = view.get<Transform>(entity);
+            auto& PhyObj = view.get<PhysicsObject>(entity);
+
+            PhyObj.Data.mass = PhyObj.RigidBody->getMass();
+            PhyObj.Data.grav = PhyObj.RigidBody->isGravityEnabled();
+            PhyObj.Data.ADamp = PhyObj.RigidBody->getAngularDamping();
+            PhyObj.Data.LDamp = PhyObj.RigidBody->getLinearDamping();
+            PhyObj.Data.AngularLock = PhyObj.RigidBody->getAngularLockAxisFactor();
+            PhyObj.Data.Orientation = PhyObj.RigidBody->getTransform().getOrientation().getVectorV();
+
+            PhyObj.Type = PhyObj.RigidBody->getType();
+
+            rp3d::Vector3 pos(trans.pos.x, trans.pos.y, trans.pos.z);
+            rp3d::Quaternion quat = rp3d::Quaternion(trans.rot.x, trans.rot.y, trans.rot.z, trans.rot.w);
+
+            PhyObj.prevTransform = rp3d::Transform(pos, quat);
+        }
+        
+    }
+
+
+    void System::Physics_InitObject(std::shared_ptr<ScenePhysics> SP, PhysicsObject& PhyObj, const Drawable& draw, Transform trans)
     {
         rp3d::Vector3 pos(trans.pos.x, trans.pos.y, trans.pos.z);
         rp3d::Quaternion quat = rp3d::Quaternion(trans.rot.x, trans.rot.y, trans.rot.z, trans.rot.w);
 
-        rp3d::Transform rpTrans = rp3d::Transform(pos, quat);
+        //rp3d::Transform rpTrans = rp3d::Transform(pos, quat);
 
-        PhyObj.RigidBody = SP.m_World->createRigidBody(rpTrans);
+        rp3d::Transform rpTrans = rp3d::Transform::identity();
+
+        PhyObj.owningWorld = SP;
+
+        PhyObj.RigidBody = SP->m_World->createRigidBody(rpTrans);
 
         PhyObj.RigidBody->setMass(PhyObj.Data.mass);
         PhyObj.RigidBody->setType(PhyObj.Type);
