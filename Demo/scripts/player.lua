@@ -7,6 +7,5 @@ end
 
 
 function update(entity)
-    print(entity:get_transform().pos.y);
-    -- print("Hello from TestScene update");
+    -- print(entity:get_transform().pos.y);
 end
