@@ -42,39 +42,20 @@ function update(scene, entity)
     camera:set_pos(new_pos.x, new_pos.y, new_pos.z);
     print(camera:get_pos().z);
 
+
+    delta_mouse_pos = Input:get_delta_mouse_pos();
+    camera:set_yaw(camera:get_yaw() + delta_mouse_pos.x * 0.05);
+
+    pitch = camera:get_pitch() + delta_mouse_pos.y * 0.05;
+    if (pitch > 89.0)
+    then
+        pitch = 89.0;
+    end
+    if (pitch < -89.0)
+    then
+        pitch = -89.0;
+    end
+
+    camera:set_pitch(pitch);
+
 end
-
-        -- float velocity = static_cast<float>((isSprinting ? 50.0f : 30.0f) * deltaTime);
-
-        -- position += forward * forwardDir * velocity;
-        -- position += right * rightDir * velocity;
-
-
-    -- void Camera::OnKeyPressed(const int direction) {
-    --     if (direction == GLFW_KEY_W) forwardDir = 1.0f;
-    --     if (direction == GLFW_KEY_S) forwardDir = -1.0f;
-    --     if (direction == GLFW_KEY_A) rightDir = -1.0f;
-    --     if (direction == GLFW_KEY_D) rightDir = 1.0f;
-
-    --     if (direction == GLFW_KEY_LEFT_SHIFT) isSprinting = true;
-    -- }
-
-    -- void Camera::OnKeyRelease(const int direction) {
-    --     if (direction == GLFW_KEY_W) forwardDir = 0.0f;
-    --     if (direction == GLFW_KEY_S) forwardDir = 0.0f;
-    --     if (direction == GLFW_KEY_A) rightDir = 0.0f;
-    --     if (direction == GLFW_KEY_D) rightDir = 0.0f;
-
-    --     if (direction == GLFW_KEY_LEFT_SHIFT) isSprinting = false;
-    -- }
-
-    -- void Camera::OnMouseMove(float xoffset, float yoffset) {
-    --     xoffset *= 0.05f;  // 0.01f should be replaced with MouseSensitivityX
-    --     yoffset *= 0.05f;  // 0.01f should be replaced with MouseSensitivityY
-
-    --     this->yaw += xoffset;
-    --     this->pitch += yoffset;
-
-    --     if (pitch > 89.0f) pitch = 89.0f;
-    --     if (pitch < -89.0f) pitch = -89.0f;
-    -- }

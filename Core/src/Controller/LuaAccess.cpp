@@ -158,6 +158,12 @@ namespace Vakol::Controller {
         cameraType.set_function("set_pos", &Camera::SetPos);
         cameraType.set_function("get_forward", &Camera::GetForward);
         cameraType.set_function("get_right", &Camera::GetRight);
+
+        cameraType.set_function("get_pitch", &Camera::GetPitch);
+        cameraType.set_function("set_pitch", &Camera::SetPitch);
+
+        cameraType.set_function("get_yaw", &Camera::GetYaw);
+        cameraType.set_function("set_yaw", &Camera::SetYaw);
     }
 
     void RegisterWindow(sol::state& lua) {}

@@ -45,6 +45,12 @@ namespace Vakol::Controller {
         const glm::vec3 GetForward() const { return forward; }
         const glm::vec3 GetRight() const { return right; }
 
+        const float GetPitch() const { return pitch; }
+        const float GetYaw() const { return yaw; }
+
+        void SetPitch(float _pitch) { pitch = _pitch; }
+        void SetYaw(float _yaw) { yaw = _yaw; }
+
        private:
         void UpdateMatrices();
         float pitch = 0.0f;

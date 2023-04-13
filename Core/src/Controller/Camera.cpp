@@ -35,8 +35,6 @@ namespace Vakol::Controller {
     void Camera::SetAspect(const float _aspect) { this->aspect = _aspect; }
 
     void Camera::Update(float deltaTime) {
-        float velocity = static_cast<float>((isSprinting ? 50.0f : 30.0f) * deltaTime);
-
         glm::vec3 front;
 
         front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
@@ -50,34 +48,4 @@ namespace Vakol::Controller {
         this->PROJECTION = glm::perspective(glm::radians(this->fov), this->aspect, this->near, this->far);
         this->VIEW = glm::lookAt(position, position + forward, up);
     }
-
-    void Camera::OnKeyPressed(const int direction) {
-        if (direction == GLFW_KEY_W) forwardDir = 1.0f;
-        if (direction == GLFW_KEY_S) forwardDir = -1.0f;
-        if (direction == GLFW_KEY_A) rightDir = -1.0f;
-        if (direction == GLFW_KEY_D) rightDir = 1.0f;
-
-        if (direction == GLFW_KEY_LEFT_SHIFT) isSprinting = true;
-    }
-
-    void Camera::OnKeyRelease(const int direction) {
-        if (direction == GLFW_KEY_W) forwardDir = 0.0f;
-        if (direction == GLFW_KEY_S) forwardDir = 0.0f;
-        if (direction == GLFW_KEY_A) rightDir = 0.0f;
-        if (direction == GLFW_KEY_D) rightDir = 0.0f;
-
-        if (direction == GLFW_KEY_LEFT_SHIFT) isSprinting = false;
-    }
-
-    void Camera::OnMouseMove(float xoffset, float yoffset) {
-        xoffset *= 0.05f;  // 0.01f should be replaced with MouseSensitivityX
-        yoffset *= 0.05f;  // 0.01f should be replaced with MouseSensitivityY
-
-        this->yaw += xoffset;
-        this->pitch += yoffset;
-
-        if (pitch > 89.0f) pitch = 89.0f;
-        if (pitch < -89.0f) pitch = -89.0f;
-    }
-
 }  // namespace Vakol::Controller
