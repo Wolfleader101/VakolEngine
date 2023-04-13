@@ -1,75 +1,52 @@
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-
-#include <Controller/IO/FileLoader.hpp>
-
 #include "GLTexture.hpp"
 
+#include <glad/glad.h>
 
+#include <Controller/AssetLoader/TextureLoader.hpp>
+
+#include <Controller/Logger.hpp>
 
 
 namespace Vakol::Model
 {
-	using Vakol::Controller::IO::FreeImage;
-	using Vakol::Controller::IO::LoadImage;
-	unsigned int GetTextureCubemap(const std::vector<std::string>& faces, const bool flip)
+	using Controller::LoadRawTexture;
+	using Controller::LoadTexture;
+
+	GLTexture::GLTexture(const int width, const int height, const unsigned int format) : m_width(width), m_height(height), m_format(format)
 	{
-		unsigned int textureID;
+		GLenum internal_format = (format == GL_RED) ? GL_R8 : (format == GL_RGB) ? GL_RGB8 : GL_RGBA8;
 
-		glGenTextures(1, &textureID);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+		glCreateTextures(GL_TEXTURE_2D, 1, &this->m_ID);
+		glTextureStorage2D(this->m_ID, 1, internal_format, this->m_width, this->m_height);
 
-		int width, height, colorDepth;
-		
-		for (auto i = 0; i < faces.size(); i++)
-		{
-                    unsigned char* data = LoadImage(faces[i], width, height, colorDepth, flip);
+		glTextureParameteri(this->m_ID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTextureParameteri(this->m_ID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-			GLenum format = (colorDepth > 3) ? GL_RGBA : GL_RGB;
-
-			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-
-			FreeImage(data);
-		}
-
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_REPEAT);
-
-		return textureID;
+		glTextureParameteri(this->m_ID, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTextureParameteri(this->m_ID, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	}
 
-	unsigned int GetTexture(const std::string& path, const bool flip)
+	GLTexture::GLTexture(const std::string& path, const bool raw)
 	{
-		unsigned int textureID;
+		if (raw)
+			this->m_ID = LoadRawTexture(path);
+		else
+			this->m_ID = LoadTexture(path);
+	}
 
-		glEnable(GL_TEXTURE_2D);
-		glGenTextures(1, &textureID);
+	GLTexture::~GLTexture()
+	{
 
-		int width, height, colorDepth;
-        unsigned char* data = LoadImage(path, width, height, colorDepth, flip);
+		//glDeleteTextures(1, &this->m_ID);
+	}
 
-		GLenum format = (colorDepth == 1) ? GL_RED : (colorDepth > 3) ? GL_RGBA : GL_RGB;
+	void GLTexture::Bind(const unsigned int unit) const
+	{
+		glBindTextureUnit(unit, this->m_ID);
+	}
 
-		glBindTexture(GL_TEXTURE_2D, textureID);
-		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-		FreeImage(data);
-
-		glDisable(GL_TEXTURE_2D);
-
-		return textureID;
+	void GLTexture::SetData(const void* data)
+	{
+		glTextureSubImage2D(this->m_ID, 0, 0, 0, this->m_width, this->m_height, this->m_format, GL_UNSIGNED_BYTE, data);
 	}
 }

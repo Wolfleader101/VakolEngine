@@ -30,7 +30,7 @@ namespace Vakol::Controller {
         return ent;
     }
 
-    void Scene::Update(const Time& time) {
+    void Scene::Update(const Time& time, const std::shared_ptr<View::Renderer> renderer) {
         System::SetEntityList(entityList);
 
         lua.RunFile("scripts/" + scriptName);
@@ -41,7 +41,7 @@ namespace Vakol::Controller {
 
         System::Script_Update(lua, entityList, this);
 
-        System::Drawable_Update();
+        System::Drawable_Update(time, cam, renderer);
 
         cam.Update(time.deltaTime);
     }

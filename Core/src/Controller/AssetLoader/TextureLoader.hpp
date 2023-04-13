@@ -1,12 +1,10 @@
 #pragma once
 
 #include <string>
-
-#include <Model/Assets/Texture.hpp>
+#include <vector>
 
 namespace Vakol::Controller
 {
-    Vakol::Model::Assets::Texture LoadTexture(const std::string& path);
-    
+    const unsigned int LoadTexture(const std::string& path);
+    const unsigned int LoadRawTexture(const std::string& path);
 }
-
