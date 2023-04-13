@@ -29,7 +29,7 @@ namespace Vakol::Controller {
 
             auto ent = list.GetEntity(script.entity_id);
 
-            update(ent, *scene);
+            update(*scene, ent);
         });
     }
 

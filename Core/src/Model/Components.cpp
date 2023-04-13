@@ -14,13 +14,14 @@ namespace Vakol::Model::Components {
 
     Script::Script(const std::string& name) : script_name(name) {}
 
-    Script::Script(const std::string& scriptName, Controller::LuaState& lua, Model::Entity& entity)
+    Script::Script(const std::string& scriptName, Controller::LuaState& lua, Model::Entity& entity,
+                   Controller::Scene& scene)
         : script_name(scriptName), entity_id(entity.GetHandle()) {
         lua.RunFile("scripts/" + scriptName);
 
         sol::function init = lua.GetState()["init"];
 
-        init(entity);
+        init(scene, entity);
     };
     TagType::TagType(uint8_t type) : type(EntityType(type)) {}
     Tag::Tag(const std::string& tag) : tag(tag) {}

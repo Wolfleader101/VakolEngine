@@ -26,7 +26,7 @@ namespace Vakol::Controller {
 
     Model::Entity Scene::CreateEntity(const std::string scriptName) {
         auto ent = entityList.CreateEntity();
-        if (scriptName.length() != 0) ent.AddComponent<Model::Components::Script>(scriptName, lua, ent);
+        if (scriptName.length() != 0) ent.AddComponent<Model::Components::Script>(scriptName, lua, ent, *this);
         return ent;
     }
 

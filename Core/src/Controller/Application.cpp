@@ -131,6 +131,8 @@ namespace Vakol::Controller {
             m_renderer->Update();
 
             m_window->OnUpdate();
+
+            m_input.Update();
         }
     }
 
@@ -143,7 +145,9 @@ namespace Vakol::Controller {
         EventDispatcher dispatcher(ev);
         dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
         dispatcher.Dispatch<KeyPressedEvent>(BIND_EVENT_FN(OnKeyPressed));
+        dispatcher.Dispatch<KeyReleasedEvent>(BIND_EVENT_FN(OnKeyReleased));
         dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT_FN(OnWindowResize));
+        dispatcher.Dispatch<MouseMovedEvent>(BIND_EVENT_FN(OnMouseMoved));
 
         //! lua on event
 
@@ -173,9 +177,20 @@ namespace Vakol::Controller {
     bool Application::OnKeyPressed(KeyPressedEvent& kev) {
         if (kev.GetKeyCode() == GLFW_KEY_ESCAPE) {
             m_running = false;
-            return true;  // wont be hit but compiler sad without
+            return true;
         }
 
+        m_input.OnKeyPressed(kev);
+
+        return true;
+    }
+
+    bool Application::OnKeyReleased(KeyReleasedEvent& kev) {
+        m_input.OnKeyReleased(kev);
+        return true;
+    }
+    bool Application::OnMouseMoved(MouseMovedEvent& ev) {
+        m_input.OnMouseMoved(ev);
         return true;
     }
 

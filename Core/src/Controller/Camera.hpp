@@ -37,9 +37,9 @@ namespace Vakol::Controller {
 
         void Update(float deltaTime);
 
-        const glm::vec3& GetPosition() const { return position; }
+        const glm::vec3& GetPos() const { return position; }
 
-        void SetPosition(const glm::vec3& pos) { position = pos; }
+        void SetPos(const glm::vec3& pos) { position = pos; }
 
        private:
         void UpdateMatrices();

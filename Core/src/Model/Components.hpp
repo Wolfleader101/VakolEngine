@@ -8,6 +8,7 @@
 #include <string>
 
 #include "Controller/LuaState.hpp"
+#include "Controller/Scene.hpp"
 #include "Entity.hpp"
 #include "Model/Assets/Model.hpp"
 
@@ -122,7 +123,7 @@ namespace Vakol::Model::Components {
         Script() = default;
         Script(const std::string& name);
 
-        Script(const std::string& script, Controller::LuaState& lua, Model::Entity& entity);
+        Script(const std::string& script, Controller::LuaState& lua, Model::Entity& entity, Controller::Scene& scene);
 
         template <class Archive>
         void serialize(Archive& ar) {
