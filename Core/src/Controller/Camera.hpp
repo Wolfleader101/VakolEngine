@@ -33,8 +33,7 @@ namespace Vakol::Controller {
         void SetPitch(float _pitch) { pitch = _pitch; }
         void SetYaw(float _yaw) { yaw = _yaw; }
 
-       private:
-        void UpdateMatrices();
+    private:
         float pitch = 0.0f;
         float yaw = -90.0f;
 
@@ -43,10 +42,10 @@ namespace Vakol::Controller {
         float near = 0.01f;
         float far = 1000.0f;
 
-        glm::mat4 PROJECTION = glm::mat4(0.0f);
-        glm::mat4 VIEW = glm::mat4(0.0f);
+        glm::mat4 PROJECTION = glm::mat4(1.0f);
+        glm::mat4 VIEW = glm::mat4(1.0f);
 
-        glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f);
+        glm::vec3 position = glm::vec3(0.0f, 0.0f, 2.0f);
         glm::vec3 forward = glm::vec3(0.0f, 0.0f, -1.0f);
         glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
 

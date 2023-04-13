@@ -3,6 +3,10 @@
 #include "AssetLoader/AssetLoader.hpp"
 #include "Model/Components.hpp"
 
+#include "Model/Assets/Material.hpp"
+
+using Vakol::Model::Assets::Material;
+
 namespace Vakol::Controller {
     void RegisterMath(sol::state& lua) {
         auto vec3 = lua.new_usertype<glm::vec3>("vec3");
@@ -126,14 +130,24 @@ namespace Vakol::Controller {
         auto entityType = lua.new_usertype<Entity>("entity");
 
         entityType.set_function("get_transform", &Entity::GetComponent<Model::Components::Transform>);
-        entityType.set_function("add_model", [](Entity* ent, std::string path) {
-            if (ent->HasComponent<Model::Components::Drawable>() == false) {
+        entityType.set_function("add_model", [](Entity* ent, std::string path) 
+        {
+            if (ent->HasComponent<Model::Components::Drawable>() == false)
                 ent->AddComponent<Model::Components::Drawable>();
-            }
             
             auto model = AssetLoader::GetModel(path);
+            
             if (model == nullptr) return false;
 
+            // force it for now, since I don't understand lua lol
+            model->meshes().begin()->material()->SetShader("coreAssets/shaders/basic.prog");
+
+            for (const auto& texture : model->meshes().begin()->material()->textures())
+            {
+                GLTexture texture("coreAssets/textures/" + texture.path);
+                texture.Bind();
+            }
+           
             ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
 
             return true;

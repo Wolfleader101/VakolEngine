@@ -6,7 +6,6 @@
 #include <Model/gl/GLVertexArray.hpp>
 #include <Model/gl/GLMaterial.hpp>
 
-
 #include <memory>
 
 
@@ -15,8 +14,8 @@ namespace Vakol::Model::Assets
     class Mesh 
     {
     public:
-        Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const std::string& path)
-            : m_vertexArray(std::make_shared<GLVertexArray>(vertices, indices)), m_material(std::make_shared<GLMaterial>(path)) {};
+        Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const MaterialSpec& spec)
+            : m_vertexArray(std::make_shared<GLVertexArray>(vertices, indices)), m_material(std::make_shared<GLMaterial>(spec)) {};
 
         const std::shared_ptr<Material> material() const { return this->m_material; }
         const std::shared_ptr<VertexArray> vao() const { return this->m_vertexArray; }

@@ -8,10 +8,5 @@ namespace Vakol::Model::Assets
     {
         std::string path;
         std::string type;
-        unsigned int id;
-
-        int width;
-        int height;
-        int channels;
     };
-}  // namespace Vakol::Model::Assets
+}

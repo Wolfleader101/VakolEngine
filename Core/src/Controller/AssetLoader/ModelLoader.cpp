@@ -15,7 +15,7 @@ glm::vec3 to_glm(const aiColor3D& val) { return glm::vec3(val.r, val.g, val.b); 
 
 void ProcessNode(aiNode* node, const aiScene* scene);
 Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
-void ProcessMaterial(aiMaterial* material);
+MaterialSpec ProcessMaterial(aiMaterial* material);
 
 std::vector<Texture> LoadMaterialTextures(aiMaterial* mat, aiTextureType type, const std::string& typeName);
 
@@ -123,35 +123,28 @@ Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene)
     // material
     aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 
-    return Mesh(vertices, indices, "coreAssets/shaders/basic.prog");
+    return Mesh(vertices, indices, ProcessMaterial(material));
 }
 
-void ProcessMaterial(aiMaterial* mat) 
+MaterialSpec ProcessMaterial(aiMaterial* mat) 
 {
     std::vector<Texture> textures;
 
-    //aiColor3D ambient, diffuse, specular, emissive;
+    aiColor3D ambient, diffuse, specular, emissive;
+    float shininess;
 
-    //mat->Get(AI_MATKEY_COLOR_AMBIENT, ambient);
-    //material->AMBIENT = to_glm(ambient);
-
-    //mat->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse);
-    //material->DIFFUSE = to_glm(diffuse);
-
-    //mat->Get(AI_MATKEY_COLOR_SPECULAR, specular);
-    //material->SPECULAR = to_glm(specular);
-
-    //mat->Get(AI_MATKEY_COLOR_EMISSIVE, emissive);
-    //material->EMISSIVE = to_glm(emissive);
-
-    //mat->Get(AI_MATKEY_SHININESS, material->SHININESS);
+    mat->Get(AI_MATKEY_COLOR_AMBIENT, ambient);
+    mat->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse);
+    mat->Get(AI_MATKEY_COLOR_SPECULAR, specular);
+    mat->Get(AI_MATKEY_COLOR_EMISSIVE, emissive);
+    mat->Get(AI_MATKEY_SHININESS, shininess);
 
     // Diffuse Maps
     std::vector<Texture> diffuseMaps = LoadMaterialTextures(mat, aiTextureType_DIFFUSE, "texture_diffuse");
     textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
 
     // Specular Maps
-    std::vector<Texture> specularMaps = LoadMaterialTextures(mat, aiTextureType_DIFFUSE, "texture_specular");
+    std::vector<Texture> specularMaps = LoadMaterialTextures(mat, aiTextureType_SPECULAR, "texture_specular");
     textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
 
     // Normal Maps
@@ -162,7 +155,7 @@ void ProcessMaterial(aiMaterial* mat)
     std::vector<Texture> emissiveMaps = LoadMaterialTextures(mat, aiTextureType_EMISSIVE, "texture_emissive");
     textures.insert(textures.end(), emissiveMaps.begin(), emissiveMaps.end());
 
-    //return std::make_shared<Material>("coreAssets/shaders/basic.prog");
+    return { to_glm(ambient), to_glm(diffuse), to_glm(specular), to_glm(emissive), shininess, textures };
 }
 
 std::vector<Texture> LoadMaterialTextures(aiMaterial* mat, aiTextureType type, const std::string& typeName) 

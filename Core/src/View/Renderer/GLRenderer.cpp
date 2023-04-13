@@ -32,7 +32,8 @@ namespace Vakol::View {
 
         for (auto mesh : drawable.model_ptr->meshes()) {
             mesh.material()->Bind();
-            mesh.material()->SetMat4("_PVM", camera.GetMatrix(_PV_MATRIX) * model_matrix);
+            mesh.material()->SetMat4("_PV", camera.GetMatrix(_PV_MATRIX));
+            mesh.material()->SetMat4("MODEL", model_matrix);
 
             mesh.vao()->Draw();
         }

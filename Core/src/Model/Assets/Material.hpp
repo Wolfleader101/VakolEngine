@@ -1,8 +1,8 @@
 #pragma once
 
-#include <glm/common.hpp>
 #include <glm/glm.hpp>
 
+#include <vector>
 #include <memory>
 
 #include "Texture.hpp"
@@ -12,10 +12,25 @@ using Vakol::Model::GLShader;
 
 namespace Vakol::Model::Assets 
 {
+	struct MaterialSpec
+	{
+		MaterialSpec() = default;
+
+		glm::vec3 AMBIENT = glm::vec3(1.0f);
+		glm::vec3 DIFFUSE = glm::vec3(1.0f);
+		glm::vec3 SPECULAR = glm::vec3(0.5f);
+		glm::vec3 EMISSIVE = glm::vec3(0.0f);
+		float SHININESS = 32.0f;
+
+		std::vector<Texture> textures;
+	};
+
 	class Material
 	{
 	public:
-		Material(const std::string& path) : m_shader(std::make_shared<GLShader>(path)) {};
+		Material(const MaterialSpec& spec) : m_spec(spec) {};
+
+		virtual void SetShader(const std::string& path) = 0;
 
 		virtual void Bind() const = 0;
 		virtual void Unbind() const = 0;
@@ -42,7 +57,7 @@ namespace Vakol::Model::Assets
 		virtual void SetMat4(const std::string& name, const glm::mat4& value) const = 0;
 
     protected:
-        std::shared_ptr<Shader> m_shader;
-		std::vector<Texture> m_textures;
+        std::shared_ptr<Shader> m_shader = nullptr;
+		MaterialSpec m_spec;
 	};
 }
