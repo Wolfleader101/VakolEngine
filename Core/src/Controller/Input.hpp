@@ -64,7 +64,11 @@ namespace Vakol::Controller {
         bool OnMouseMoved(MouseMovedEvent& ev);
 
         const glm::vec2& GetMousePos() const { return m_mousePos; }
-        const glm::vec2& GetDeltaMousePos() const { return m_deltaMousePos; }
+        glm::vec2 GetDeltaMousePos() {
+            auto pos = m_deltaMousePos;
+            m_deltaMousePos = glm::vec2(0.0f, 0.0f);
+            return pos;
+        }
 
         bool GetKey(KEY keycode) const;
         bool GetKeyDown(KEY keycode) const;
