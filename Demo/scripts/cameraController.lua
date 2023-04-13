@@ -1,8 +1,6 @@
 function init(scene, entity)
-    print("Hello from cameraController");
+    print("Start Camera Controller script");
     local camera = scene:get_camera();
-    print("Camera Pos")
-    print(camera:get_pos().x)
 end
 
 local speed = 50;

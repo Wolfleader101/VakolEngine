@@ -46,7 +46,7 @@ namespace Vakol::Controller {
         glm::mat4 PROJECTION = glm::mat4(0.0f);
         glm::mat4 VIEW = glm::mat4(0.0f);
 
-        glm::vec3 position = glm::vec3(0.0f);
+        glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f);
         glm::vec3 forward = glm::vec3(0.0f, 0.0f, -1.0f);
         glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
 
