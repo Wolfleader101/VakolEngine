@@ -5,31 +5,29 @@ function init(scene, entity)
     print(camera:get_pos().x)
 end
 
+local speed = 50;
+local sprintSpeed = 100;
+
 function update(scene, entity)
     local dir = { x = 0, y = 0, z = 0 };
     local velocity = 0;
 
-    if (Input:get_key(KEYS["KEY_W"]))
-    then
+    if (Input:get_key(KEYS["KEY_W"])) then
         dir.z = 1;
     end
-    if (Input:get_key(KEYS["KEY_S"]))
-    then
+    if (Input:get_key(KEYS["KEY_S"])) then
         dir.z = -1;
     end
-    if (Input:get_key(KEYS["KEY_A"]))
-    then
+    if (Input:get_key(KEYS["KEY_A"])) then
         dir.x = -1;
     end
-    if (Input:get_key(KEYS["KEY_D"]))
-    then
+    if (Input:get_key(KEYS["KEY_D"])) then
         dir.x = 1;
     end
-    if (Input:get_key(KEYS["KEY_LEFT_SHIFT"]))
-    then
-        velocity = 500 * Time["delta_time"];
+    if (Input:get_key(KEYS["KEY_LEFT_SHIFT"])) then
+        velocity = sprintSpeed * Time["delta_time"];
     else
-        velocity = 250 * Time["delta_time"];
+        velocity = speed * Time["delta_time"];
     end
 
     local camera = scene:get_camera();
@@ -50,12 +48,9 @@ function update(scene, entity)
 
 
     local pitch = camera:get_pitch() + delta_mouse_pos.y * 0.05;
-    if (pitch > 89.0)
-    then
+    if (pitch > 89.0) then
         pitch = 89.0;
-    end
-    if (pitch < -89.0)
-    then
+    elseif (pitch < -89.0) then
         pitch = -89.0;
     end
 
