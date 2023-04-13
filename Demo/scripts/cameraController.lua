@@ -1,6 +1,6 @@
 function init(scene, entity)
     print("Hello from cameraController");
-    camera = scene:get_camera();
+    local camera = scene:get_camera();
     print("Camera Pos")
     print(camera:get_pos().x)
 end
