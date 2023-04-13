@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Camera.hpp"
 #include "EntityList.hpp"
 #include "LuaState.hpp"
 #include "Time.hpp"
@@ -26,9 +27,12 @@ namespace Vakol::Controller {
         void Serialize(const std::string& folder) const;
         void Deserialize(const std::string& folder);
 
+        Camera& GetCamera() { return cam; }
+
        private:
         LuaState& lua;
         std::string scriptName;
         std::string name;
+        Camera cam;
     };
 }  // namespace Vakol::Controller

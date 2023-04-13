@@ -4,6 +4,7 @@
 
 #include "Controller/EntityList.hpp"
 #include "LuaState.hpp"
+#include "Scene.hpp"
 
 namespace Vakol::Controller {
 
@@ -19,7 +20,7 @@ namespace Vakol::Controller {
 
         static void Drawable_Update();
 
-        static void Script_Update(LuaState& lua, EntityList& list);
+        static void Script_Update(LuaState& lua, EntityList& list, Scene* scene);
 
        private:
         static entt::registry* registry;

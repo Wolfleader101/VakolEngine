@@ -6,6 +6,6 @@ function init(entity)
 end
 
 
-function update(entity)
+function update(entity, scene)
     -- print(entity:get_transform().pos.y);
 end

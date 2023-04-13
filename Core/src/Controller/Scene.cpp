@@ -11,7 +11,7 @@
 
 namespace Vakol::Controller {
     Scene::Scene(const std::string& name, const std::string& scriptName, LuaState& lua)
-        : name(name), scriptName(scriptName), lua(lua), entityList() {
+        : name(name), scriptName(scriptName), lua(lua), entityList(), cam(glm::vec3(0.0f, 0.0f, 1.0f)) {
         lua.RunFile("scripts/" + scriptName);
         System::SetEntityList(entityList);
 
@@ -37,11 +37,13 @@ namespace Vakol::Controller {
 
         sol::function update = lua.GetState()["update"];
 
-        update();
+        update(*this);
 
-        System::Script_Update(lua, entityList);
+        System::Script_Update(lua, entityList, this);
 
         System::Drawable_Update();
+
+        cam.Update(time.deltaTime);
     }
 
     namespace fs = std::filesystem;
