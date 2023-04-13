@@ -26,7 +26,7 @@ namespace Vakol::View {
 
         model_matrix = glm::scale(model_matrix, glm::vec3(1.0f));
 
-        model_matrix = glm::rotate(model_matrix, 0.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+        model_matrix = glm::rotate(model_matrix, 45.0f, glm::vec3(1.0f, 0.0f, 0.0f));
         model_matrix = glm::rotate(model_matrix, 0.0f, glm::vec3(0.0f, 1.0f, 0.0f));
         model_matrix = glm::rotate(model_matrix, 0.0f, glm::vec3(0.0f, 0.0f, 1.0f));
 
