@@ -10,5 +10,6 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd diffuse.png
-map_Ks specular.png
+map_Kd TEX_128_ErrorTexture_NoNum.jpg
+map_Ks TEX_128_ErrorTexture_NoNumPattern.jpg
+map_Ke TEX_128_ErrorTexture_NoNumPattern_EMISSION.jpg

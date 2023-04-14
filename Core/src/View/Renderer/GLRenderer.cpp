@@ -33,19 +33,22 @@ namespace Vakol::View {
 
         for (auto mesh : drawable.model_ptr->meshes()) 
         {
-            mesh.material()->Bind();
-
             mesh.material()->SetMat4("PV", camera.GetMatrix(_PV_MATRIX));
             mesh.material()->SetMat4("MODEL", model_matrix);
 
             mesh.material()->SetVec3("viewPos", camera.GetPos());
-            mesh.material()->SetVec3("light.position", glm::vec3(0.0f, 2.0f, 1.0f));
+            mesh.material()->SetVec3("light.position", glm::vec3(0.0f, 2.0f, 1.0f)); // want to modify light pos
+
+            mesh.material()->SetFloat("time", time.curTime);
 
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, 2);
 
             glActiveTexture(GL_TEXTURE0 + 1);
-            glBindTexture(GL_TEXTURE_2D, 4);
+            glBindTexture(GL_TEXTURE_2D, 4); // super hacky way but it'll be changed
+            
+            glActiveTexture(GL_TEXTURE0 + 2);
+            glBindTexture(GL_TEXTURE_2D, 6); // super hacky way but it'll be changed
  
             mesh.vao()->Draw();
         }

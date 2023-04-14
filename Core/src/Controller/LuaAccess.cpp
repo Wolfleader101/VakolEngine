@@ -144,7 +144,8 @@ namespace Vakol::Controller {
             for (const auto& texture : material->textures())
             {
                 VK_TRACE(texture.path);
-                GLTexture tex("coreAssets/textures/" + texture.path);
+                GLTexture tex("coreAssets/textures/Test/" + texture.path);
+                VK_TRACE(tex.id());
             }
 
             // force it for now, since I don't understand lua lol
@@ -153,6 +154,7 @@ namespace Vakol::Controller {
 
             material->SetInt("material.diffuse", 0);
             material->SetInt("material.specular", 1);
+            material->SetInt("material.emissive", 2);
             
             material->SetFloat("material.shininess", 128.0f);
 
