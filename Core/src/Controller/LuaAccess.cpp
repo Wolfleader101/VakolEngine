@@ -7,6 +7,9 @@
 
 using Vakol::Model::Assets::Material;
 
+const int DIRECTIONAL_LIGHT = 0;
+const int POINT_LIGHT = 1;
+
 namespace Vakol::Controller {
     void RegisterMath(sol::state& lua) {
         auto vec3 = lua.new_usertype<glm::vec3>("vec3");
@@ -156,15 +159,17 @@ namespace Vakol::Controller {
             material->SetInt("material.specular", 1);
             material->SetInt("material.emissive", 2);
             
-            material->SetFloat("material.shininess", 128.0f);
-
-            material->SetVec3("light.color", glm::vec3(1.0f, 1.0f, 1.0f));
+            material->SetFloat("material.shininess", 64.0f);
 
             material->SetVec3("light.ambient", glm::vec3(0.2f, 0.2f, 0.2f));
             material->SetVec3("light.diffuse", glm::vec3(0.6f, 0.6f, 0.6f));
             material->SetVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
 
-            material->SetBool("enable_textures", true);
+            material->SetFloat("light.constant", 1.0f);
+            material->SetFloat("light.linear", 0.09f);
+            material->SetFloat("light.quadratic", 0.032f);
+
+            material->SetInt("option", POINT_LIGHT);
            
             ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
 

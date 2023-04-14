@@ -3,6 +3,8 @@ function init(scene, entity)
     entity:get_transform().scale.x = 1.0
     entity:get_transform().scale.y = 1.0
     entity:get_transform().scale.z = 1.0
+
+    entity:get_transform().pos.z = -5.0;
 end
 
 local function lerp(a, b, t)
