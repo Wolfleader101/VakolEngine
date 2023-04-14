@@ -4,7 +4,7 @@
 
 #include <Controller/Logger.hpp>
 
-namespace Vakol::Model::Asset {
+namespace Vakol::Model::Assets {
     using Controller::LoadRawTexture;
     using Controller::LoadTexture;
 
@@ -27,4 +27,4 @@ namespace Vakol::Model::Asset {
     void GLTexture::SetData(const void* data) {
         glTextureSubImage2D(this->m_ID, 0, 0, 0, this->m_width, this->m_height, this->m_format, GL_UNSIGNED_BYTE, data);
     }
-}  // namespace Vakol::Model::Asset
+}  // namespace Vakol::Model::Assets

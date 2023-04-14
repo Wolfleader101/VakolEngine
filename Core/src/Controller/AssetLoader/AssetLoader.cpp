@@ -12,19 +12,19 @@ namespace Vakol::Controller {
     std::string AssetLoader::texture_path = "assets/textures/";
     std::string AssetLoader::shader_path = "assets/shaders/";
 
-    std::unordered_map<std::string, std::shared_ptr<Texture>> AssetLoader::m_TextureMap;
-    std::unordered_map<std::string, std::shared_ptr<Vakol::Model::Assets::Model>> AssetLoader::m_ModelMap;
-    std::unordered_map<std::string, std::shared_ptr<Shader>> AssetLoader::m_ShaderMap;
+    std::unordered_map<std::string, std::shared_ptr<Assets::Texture>> AssetLoader::m_TextureMap;
+    std::unordered_map<std::string, std::shared_ptr<Assets::Model>> AssetLoader::m_ModelMap;
+    std::unordered_map<std::string, std::shared_ptr<Assets::Shader>> AssetLoader::m_ShaderMap;
 
-    std::shared_ptr<Texture> AssetLoader::GetTexture(const std::string& file) {
-        std::shared_ptr<Texture> ret;
+    std::shared_ptr<Assets::Texture> AssetLoader::GetTexture(const std::string& file) {
+        std::shared_ptr<Assets::Texture> ret;
 
         auto iter = m_TextureMap.find(file);
 
         if (iter == m_TextureMap.end()) {
-            ret = std::make_shared<Texture>(LoadTexture(file));
+            ret = std::make_shared<Assets::Texture>(LoadTexture(file));
 
-            if (ret->id == 0) return nullptr;  // if texture didn't load
+            if (ret->id() == 0) return nullptr;  // if texture didn't load
             m_TextureMap[file] = ret;
         } else
             ret = m_TextureMap[file];
@@ -32,13 +32,13 @@ namespace Vakol::Controller {
         return ret;
     }
 
-    std::shared_ptr<Model> AssetLoader::GetModel(const std::string& file) {
-        std::shared_ptr<Model> ret;
+    std::shared_ptr<Assets::Model> AssetLoader::GetModel(const std::string& file) {
+        std::shared_ptr<Assets::Model> ret;
 
         auto iter = m_ModelMap.find(file);
 
         if (iter == m_ModelMap.end()) {
-            ret = std::make_shared<Model>(LoadModel(file));
+            ret = std::make_shared<Assets::Model>(LoadModel(file));
 
             if (ret->meshes().empty()) return nullptr;  // if model didn't load
 
@@ -49,8 +49,8 @@ namespace Vakol::Controller {
         return ret;
     }
 
-    std::shared_ptr<Shader> AssetLoader::GetShader(const std::string& file) {
-        std::shared_ptr<Shader> ret;
+    std::shared_ptr<Assets::Shader> AssetLoader::GetShader(const std::string& file) {
+        std::shared_ptr<Assets::Shader> ret;
 
         auto iter = m_ShaderMap.find(file);
 

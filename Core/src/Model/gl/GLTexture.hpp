@@ -2,7 +2,7 @@
 
 #include <Model/Assets/Texture.hpp>
 
-namespace Vakol::Model::Asset {
+namespace Vakol::Model::Assets {
     class GLTexture : public Texture {
        public:
         GLTexture() = default;
@@ -13,4 +13,4 @@ namespace Vakol::Model::Asset {
 
         void SetData(const void* data);
     };
-}  // namespace Vakol::Model
+}  // namespace Vakol::Model::Asset

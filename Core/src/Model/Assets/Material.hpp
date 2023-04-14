@@ -1,10 +1,10 @@
 #pragma once
 
-#include <Model/gl/GLShader.hpp>
 #include <glm/glm.hpp>
 #include <memory>
 #include <vector>
 
+#include "Shader.hpp"
 #include "Texture.hpp"
 
 namespace Vakol::Model::Assets {

@@ -6,11 +6,10 @@
 #include "GLShader.hpp"
 #include "GLTexture.hpp"
 
+using namespace Vakol::Model::Assets;
 namespace Vakol::Model {
-    using Vakol::Model::Assets::MaterialSpec;
-    using Vakol::Model::Assets::Texture;
 
-    class GLMaterial : public Vakol::Model::Assets::Material {
+    class GLMaterial : public Material {
        public:
         GLMaterial(const MaterialSpec& spec) : Material(spec){};
 
