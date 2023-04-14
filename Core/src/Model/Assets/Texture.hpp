@@ -3,7 +3,7 @@
 #include <Controller/AssetLoader/TextureLoader.hpp>
 #include <string>
 
-namespace Vakol::Model::Asset {
+namespace Vakol::Model::Assets {
     class Texture {
        public:
         Texture() = default;

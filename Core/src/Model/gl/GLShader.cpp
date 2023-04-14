@@ -9,7 +9,7 @@
 
 using Vakol::Controller::LoadShader;
 
-namespace Vakol::Model::Asset {
+namespace Vakol::Model::Assets {
     GLShader::GLShader(const std::string& path) : Shader(LoadShader(path)){};
 
     void GLShader::Bind() const { glUseProgram(this->id); }

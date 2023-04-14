@@ -3,7 +3,7 @@
 #include <glm/mat4x4.hpp>
 #include <string>
 
-namespace Vakol::Model::Asset {
+namespace Vakol::Model::Assets {
     class Shader {
        public:
         Shader(const unsigned int id) : id(id){};

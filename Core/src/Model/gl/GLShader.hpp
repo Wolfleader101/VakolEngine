@@ -2,8 +2,8 @@
 
 #include <Model/Assets/Shader.hpp>
 
-namespace Vakol::Model::Asset {
-    class GLShader : public Asset::Shader {
+namespace Vakol::Model::Assets {
+    class GLShader : public Shader {
        public:
         GLShader(const std::string& path);
 
