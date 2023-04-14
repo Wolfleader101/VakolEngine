@@ -21,7 +21,14 @@ struct Light
     float constant;
     float linear;
     float quadratic;
+
+    float cut_off;
+    float outer_cut_off;
 };
+
+const int DIRECTIONAL_LIGHT = 0;
+const int POINT_LIGHT = 1;
+const int SPOT_LIGHT = 2;
 
 in vec3 FragPos;
 in vec3 Normal;
@@ -39,45 +46,58 @@ uniform int option = 0;
 
 vec3 get_light_dir()
 {
-    if (option == 0)
+    if (option == DIRECTIONAL_LIGHT)
         return normalize(-light.direction);
-    else if (option == 1)
+    else if (option == POINT_LIGHT || option == SPOT_LIGHT)
         return normalize(light.position - FragPos);
 
     return vec3(0.0);
 }
 
-vec3 point_light(in vec3 ambient, in vec3 diffuse, in vec3 specular, vec3 dir)
+void point_light(inout vec3 ambient, inout vec3 diffuse, inout vec3 specular, inout vec3 emission, bool spot)
 {
     float distance = length(light.position - FragPos);
     float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance)); 
 
-    ambient *= attenuation;
+    if (!spot)
+        ambient *= attenuation;
+
     diffuse *= attenuation;
     specular *= attenuation;
-
-    return ambient + diffuse + specular;
+    emission *= attenuation;
 }
 
-void main()
+bool spot_light(inout vec3 ambient, inout vec3 diffuse, inout vec3 specular, inout vec3 emission, vec3 dir)
+{
+    float theta = dot(dir, normalize(-light.direction));
+
+    if (theta > light.cut_off)
+    {
+        point_light(ambient, diffuse, specular, emission, true);
+        return true;
+    }
+
+    return false;
+}
+
+void lighting(inout vec3 ambient, inout vec3 diffuse, inout vec3 specular, inout vec3 emission, out vec3 lightDir)
 {
     /*Ambient */
-    vec3 ambient = light.ambient * texture(material.specular, TexCoords).rgb;   /*use specular texture */
+    ambient = light.ambient * texture(material.specular, TexCoords).rgb;   /*use specular texture */
     
     /*Diffuse */
     vec3 norm = normalize(Normal);
-    vec3 lightDir = get_light_dir();
+    lightDir = get_light_dir();
     float diff = max(dot(norm, lightDir), 0.0);
-    vec3 diffuse = light.diffuse * diff * texture(material.specular, TexCoords).rgb;   /*use specular texture */
+    diffuse = light.diffuse * diff * texture(material.specular, TexCoords).rgb;   /*use specular texture */
     
     /*Specular */
     vec3 viewDir = normalize(viewPos - FragPos);
     vec3 reflectDir = reflect(-lightDir, norm);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
-    vec3 specular = light.specular * spec * texture(material.specular, TexCoords).rgb;    /*use specular texture */
+    specular = light.specular * spec * texture(material.specular, TexCoords).rgb;    /*use specular texture */
     
     /*Emission */
-    vec3 emission = vec3(0.0);
     if (texture(material.specular, TexCoords).r == 0.0)   /*rough check for blackbox inside spec texture */
     {
         /*apply emission texture */
@@ -87,14 +107,34 @@ void main()
         emission = texture(material.emissive, TexCoords + vec2(0.0,time)).rgb;   /*moving */
         emission = emission * (sin(time) * 0.5 + 0.5) * 2.0;                     /*fading */
     }
-    
-    /*output */
+}
+
+void main()
+{    
+    vec3 ambient = vec3(0.0);
+    vec3 diffuse = vec3(0.0);
+    vec3 specular = vec3(0.0);
+    vec3 emission = vec3(0.0);
+    vec3 lightDir = vec3(0.0);
+
+    lighting(ambient, diffuse, specular, emission, lightDir);
+
     vec3 result = vec3(0.0);
 
-    if (option == 0)
+    if (option == DIRECTIONAL_LIGHT)
         result = ambient + diffuse + specular + emission;
-    else if (option == 1)
-        result = point_light(ambient, diffuse, specular, lightDir);
+    else if (option == POINT_LIGHT)
+    {
+        point_light(ambient, diffuse, specular, emission, false);
+        result = ambient + diffuse + specular + emission;
+    }
+    else if (option == SPOT_LIGHT)
+    {
+        if (spot_light(ambient, diffuse, specular, emission, lightDir))
+            result = ambient + diffuse + specular + emission;
+        else
+            result = light.ambient * texture(material.diffuse, TexCoords).rgb;
+    }
 
-    FragColor = vec4(result, 1.0);
+    FragColor = vec4(result, 1.0);    
 }

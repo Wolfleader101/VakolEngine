@@ -9,6 +9,7 @@ using Vakol::Model::Assets::Material;
 
 const int DIRECTIONAL_LIGHT = 0;
 const int POINT_LIGHT = 1;
+const int SPOT_LIGHT = 2;
 
 namespace Vakol::Controller {
     void RegisterMath(sol::state& lua) {
@@ -145,11 +146,7 @@ namespace Vakol::Controller {
             auto material = model->meshes().begin()->material();
 
             for (const auto& texture : material->textures())
-            {
-                VK_TRACE(texture.path);
                 GLTexture tex("coreAssets/textures/Test/" + texture.path);
-                VK_TRACE(tex.id());
-            }
 
             // force it for now, since I don't understand lua lol
             material->SetShader("coreAssets/shaders/custom.prog");
@@ -161,15 +158,16 @@ namespace Vakol::Controller {
             
             material->SetFloat("material.shininess", 64.0f);
 
-            material->SetVec3("light.ambient", glm::vec3(0.2f, 0.2f, 0.2f));
-            material->SetVec3("light.diffuse", glm::vec3(0.6f, 0.6f, 0.6f));
+            material->SetVec3("light.ambient", glm::vec3(0.1f, 0.1f, 0.1f));
+            material->SetVec3("light.diffuse", glm::vec3(0.8f, 0.8f, 0.8f));
             material->SetVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
 
             material->SetFloat("light.constant", 1.0f);
-            material->SetFloat("light.linear", 0.09f);
-            material->SetFloat("light.quadratic", 0.032f);
+            material->SetFloat("light.linear", 0.045f);
+            material->SetFloat("light.quadratic", 0.0075f);
+            material->SetFloat("light.cut_off", glm::cos(glm::radians(12.5f)));
 
-            material->SetInt("option", POINT_LIGHT);
+            material->SetInt("option", DIRECTIONAL_LIGHT);
            
             ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
 

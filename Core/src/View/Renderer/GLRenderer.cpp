@@ -53,8 +53,8 @@ namespace Vakol::View {
             mesh.material()->SetMat4("MODEL", model_matrix);
 
             mesh.material()->SetVec3("viewPos", camera.GetPos());
-            mesh.material()->SetVec3("light.position", glm::vec3(0.0f, 1.0f, 2.0f)); // want to modify light post
-            mesh.material()->SetVec3("light.direction", glm::vec3(-0.2f, -1.0f, -0.3f)); // want to modify light dir
+            mesh.material()->SetVec3("light.position", camera.GetPos()); // want to modify light post
+            mesh.material()->SetVec3("light.direction", camera.GetForward()); // want to modify light dir
 
             mesh.material()->SetFloat("time", time.curTime);
 
