@@ -52,25 +52,26 @@ namespace Vakol::View {
             mesh.material()->SetMat4("PV", camera.GetMatrix(_PV_MATRIX));
             mesh.material()->SetMat4("MODEL", model_matrix);
 
-            mesh.material()->SetVec3("viewPos", camera.GetPos());
-            mesh.material()->SetVec3("light.position", camera.GetPos()); // want to modify light post
-            mesh.material()->SetVec3("light.direction", camera.GetForward()); // want to modify light dir
+            // mesh.material()->SetVec3("viewPos", camera.GetPos());
+            // mesh.material()->SetVec3("light.position", camera.GetPos()); // want to modify light post
+            // mesh.material()->SetVec3("light.direction", camera.GetForward()); // want to modify light dir
 
-            mesh.material()->SetFloat("time", time.curTime);
+            // mesh.material()->SetFloat("time", time.curTime);
 
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, 2);
+            // glActiveTexture(GL_TEXTURE0);
+            // glBindTexture(GL_TEXTURE_2D, 2);
 
-            glActiveTexture(GL_TEXTURE1);
-            glBindTexture(GL_TEXTURE_2D, 4); // super hacky way but it'll be changed
+            // glActiveTexture(GL_TEXTURE1);
+            // glBindTexture(GL_TEXTURE_2D, 4); // super hacky way but it'll be changed
             
-            glActiveTexture(GL_TEXTURE2);
-            glBindTexture(GL_TEXTURE_2D, 6); // super hacky way but it'll be changed
+            // glActiveTexture(GL_TEXTURE2);
+            // glBindTexture(GL_TEXTURE_2D, 6); // super hacky way but it'll be changed
+    
+            mesh.vao()->Bind();
+            glDrawElementsInstanced(GL_TRIANGLES, mesh.vao()->GetIndices(), GL_UNSIGNED_INT, 0, 30000);
+            mesh.vao()->Unbind();
 
-            glActiveTexture(GL_TEXTURE3);
-            glBindTexture(GL_TEXTURE_2D, 8); // super hacky way but it'll be changed
- 
-            mesh.vao()->Draw();
+            //mesh.vao()->Draw();
         }
     }
 }  // namespace Vakol::View
