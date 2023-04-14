@@ -33,7 +33,7 @@ namespace Vakol::Controller {
 
         bool active = false;
 
-        std::shared_ptr<Physics::ScenePhysics> ScenePhysics;
+        std::shared_ptr<Physics::ScenePhysics> scenePhysics;
 
        private:
 

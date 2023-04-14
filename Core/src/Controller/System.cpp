@@ -3,6 +3,8 @@
 #include <reactphysics3d/reactphysics3d.h>
 
 #include <Controller/Physics/PhysicsPool.hpp>
+#include <Controller/AssetLoader/AssetLoader.hpp>
+#include <Controller/Scene.hpp>
 
 #include <Model/Components.hpp>
 
@@ -20,6 +22,7 @@ struct Bounds
 
 
 using namespace Vakol::Model::Components;
+using Scene = Vakol::Controller::Scene;
 
 Bounds getBounds(const Drawable& model);
 
@@ -27,14 +30,26 @@ Bounds getBounds(const Drawable& model);
 
 namespace Vakol::Controller 
 {
-    entt::registry* System::registry = nullptr;
+    entt::registry* System::m_registry = nullptr;
+    std::shared_ptr<ScenePhysics> System::m_SP = nullptr;
 
-    void System::BindEntityList(EntityList& EL) 
+
+    void System::BindScene(Scene& scene)
     { 
-        registry = &EL.m_Registry;
+        m_registry = &scene.entityList.m_Registry;
+        m_SP = scene.scenePhysics;
     }
 
-    
+    void System::Model_Init()
+    {
+        m_registry->view<Drawable>().each(
+            [&](Drawable& model)
+            {
+                model.ModelPtr = AssetLoader::GetModel(model.name);
+            }
+
+        );
+    }
 
     void System::Model_Draw() {
         // registry.view<Components::Transform, Components::ModelType>().each(
@@ -46,7 +61,7 @@ namespace Vakol::Controller
     }
 
     void System::Script_Update(LuaState& lua) {
-        registry->view<Script>().each([&](auto& script) {
+        m_registry->view<Script>().each([&](auto& script) {
             lua.RunFile("scripts/" + script.script_name);
 
             sol::function update = lua.GetState()["update"];
@@ -55,19 +70,19 @@ namespace Vakol::Controller
         });
     }
 
-    void System::Physics_Init(std::shared_ptr<ScenePhysics> SP) 
+    void System::Physics_Init() 
     { 
-        registry->view<Transform, Drawable, PhysicsObject>().each(
+        m_registry->view<Transform, Drawable, PhysicsObject>().each(
             [&](Transform& trans, Drawable& draw, PhysicsObject& PhyObj)
             {
-                System::Physics_InitObject(SP, PhyObj, draw, trans);
+                System::Physics_InitObject(PhyObj, draw, trans);
             }
         );
     }
 
     void System::Physics_UpdateTransforms(float factor) 
     { 
-        registry->view<Transform, Components::PhysicsObject>().each(
+        m_registry->view<Transform, Components::PhysicsObject>().each(
         [&](auto& trans, auto& PhyObj) {
 
 
@@ -90,7 +105,7 @@ namespace Vakol::Controller
 
     void System::Physics_SerializationPrep()
     {
-        auto view = registry->view<PhysicsObject, Transform>();
+        auto view = m_registry->view<PhysicsObject, Transform>();
         for (auto entity : view)
         {
             auto& trans = view.get<Transform>(entity);
@@ -114,7 +129,7 @@ namespace Vakol::Controller
     }
 
 
-    void System::Physics_InitObject(std::shared_ptr<ScenePhysics> SP, PhysicsObject& PhyObj, const Drawable& draw, Transform trans)
+    void System::Physics_InitObject(PhysicsObject& PhyObj, const Drawable& draw, Transform trans)
     {
         rp3d::Vector3 pos(trans.pos.x, trans.pos.y, trans.pos.z);
         rp3d::Quaternion quat = rp3d::Quaternion(trans.rot.x, trans.rot.y, trans.rot.z, trans.rot.w);
@@ -123,9 +138,9 @@ namespace Vakol::Controller
 
         rp3d::Transform rpTrans = rp3d::Transform::identity();
 
-        PhyObj.owningWorld = SP;
+        PhyObj.owningWorld = m_SP;
 
-        PhyObj.RigidBody = SP->m_World->createRigidBody(rpTrans);
+        PhyObj.RigidBody = m_SP->m_World->createRigidBody(rpTrans);
 
         PhyObj.RigidBody->setMass(PhyObj.Data.mass);
         PhyObj.RigidBody->setType(PhyObj.Type);

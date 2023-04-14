@@ -11,6 +11,7 @@
 #include <Model/Components.hpp>
 
 
+using namespace Vakol::Model::Components;
 
 namespace Vakol::Controller {
 
@@ -89,21 +90,25 @@ namespace Vakol::Controller {
     void EntityList::Serialize(const std::string& file) const 
     {
         privateSerialize<cereal::JSONOutputArchive,   
-                            Model::Components::Transform,
-                            Model::Components::Tag,
-                            Model::Components::EntityType,
-                            Model::Components::TagType,
-                            Model::Components::Script>(file);
+                            Transform,
+                            Tag,
+                            EntityType,
+                            TagType,
+                            Script,
+                            PhysicsObject,
+                            Drawable>(file);
     }
 
     void EntityList::Deserialize(const std::string& file) 
     {
-        privateDeserialize<cereal::JSONInputArchive, 
-                            Model::Components::Transform, 
-                            Model::Components::Tag,
-                            Model::Components::EntityType, 
-                            Model::Components::TagType, 
-                            Model::Components::Script>(file);
+        privateDeserialize<cereal::JSONInputArchive,
+                            Transform,
+                            Tag,
+                            EntityType,
+                            TagType,
+                            Script,
+                            PhysicsObject,
+                            Drawable>(file);
     }
 
 }  // namespace Vakol::Controller

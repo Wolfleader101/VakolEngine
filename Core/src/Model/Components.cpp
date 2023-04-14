@@ -2,6 +2,8 @@
 
 #include <glad/glad.h>
 
+#include <Controller/AssetLoader/AssetLoader.hpp>
+
 #include <Controller/Logger.hpp>
 #include <fstream>
 #include <iostream>
@@ -23,6 +25,11 @@ namespace Vakol::Model::Components {
         init();
     };
 
+    Drawable::Drawable(std::string&& file) : name(std::move(file)) //WOW! EFFICIENT!
+    {
+        ModelPtr = Controller::AssetLoader::GetModel(name);
+    }
+
     TagType::TagType(uint8_t type) : type(EntityType(type)) {};
 
     Tag::Tag(const std::string& tag) : tag(tag) {};
@@ -33,4 +40,5 @@ namespace Vakol::Model::Components {
         Type = (rp3d::BodyType) BodyType;
         ShapeName = (rp3d::CollisionShapeName)ShapeType;
     }
+    
 }  // namespace Vakol::Model::Components

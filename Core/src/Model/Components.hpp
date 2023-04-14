@@ -127,8 +127,11 @@ namespace Vakol::Model::Components {
     };
 
     struct Drawable {
+
+        Drawable() = default;
+        Drawable(std::string&& file);
         std::string name; //for serialization
-        std::shared_ptr<Vakol::Model::Assets::Model> ModelPtr;
+        std::shared_ptr<Vakol::Model::Assets::Model> ModelPtr = nullptr;
 
         template<class Archive>
         void serialize(Archive& ar)
@@ -141,6 +144,7 @@ namespace Vakol::Model::Components {
 
     struct PhysicsObject {
 
+        PhysicsObject() = default; //Don't use this. Need it for serialization
         PhysicsObject(std::shared_ptr<ScenePhysics> SP, unsigned int BodyType, unsigned int Shape);
 
         struct RigidData

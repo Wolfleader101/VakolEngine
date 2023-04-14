@@ -12,6 +12,7 @@ namespace Vakol::Model {
 }
 
 using namespace Vakol::Model;
+
 namespace Vakol::Controller {
 
     class System;

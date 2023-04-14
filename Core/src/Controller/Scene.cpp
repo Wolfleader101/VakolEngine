@@ -11,7 +11,7 @@
 
 namespace Vakol::Controller {
     Scene::Scene(const std::string& name, const std::string& scriptName, LuaState& lua, std::shared_ptr<Physics::ScenePhysics> SP, bool active)
-        : name(name), scriptName(scriptName), lua(lua), entityList(), ScenePhysics(SP), active(active)  {
+        : name(name), scriptName(scriptName), lua(lua), entityList(), scenePhysics(SP), active(active)  {
         lua.RunFile("scripts/" + scriptName);
 
         sol::function init = lua.GetState()["init"];
@@ -29,13 +29,13 @@ namespace Vakol::Controller {
     }
 
     void Scene::Update(const Controller::Time& time) {
-        System::BindEntityList(entityList);
         lua.RunFile("scripts/" + scriptName);
 
         sol::function update = lua.GetState()["update"];
 
         update();
 
+        scenePhysics->Update(time);
         System::Script_Update(lua);
     }
 
@@ -54,6 +54,7 @@ namespace Vakol::Controller {
             // directory already exists
         }
 
+        
         System::Physics_SerializationPrep();
         std::string FinalFolder = folder + "/" + name;
         entityList.Serialize(FinalFolder + "/EntityList.json");
@@ -71,7 +72,14 @@ namespace Vakol::Controller {
     }
 
     void Scene::Deserialize(const std::string& folder) {
+
+        
         entityList.Deserialize(folder + "/EntityList.json");
+
+        System::BindScene(*this);
+        System::Model_Init();
+        System::Physics_Init();
+        
 
         std::ifstream input(folder + "/Scene.json");
         if (input.good()) {

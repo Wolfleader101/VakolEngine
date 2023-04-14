@@ -61,16 +61,18 @@ namespace Vakol::Controller {
         auto z = AssetLoader::GetShader("coreAssets/shaders/basic.prog");
 
         //physics test 
-
+        /*
         Scene test("Physics Test Scene", "testScene.lua", lua, std::make_shared<Physics::ScenePhysics>(PhysicsPool::CreatePhysicsWorld()), true);
+        System::BindScene(test);
+        test.Deserialize("assets/scenes/" + test.getName());
 
         for (int i = 0; i < 10; i++)
         {
             auto entity = test.entityList.CreateEntity();
             entity.GetComponent<Components::Tag>().tag = "Entity: " + std::to_string(i);
-            entity.AddComponent<Components::PhysicsObject>(test.ScenePhysics, 2, 3);
+            entity.AddComponent<Components::PhysicsObject>(test.scenePhysics, 2, 3);
 
-            entity.AddComponent<Components::Drawable>();
+            entity.AddComponent<Components::Drawable>("coreAssets/models/cube.obj");
             auto& draw = (entity.GetComponent<Components::Drawable>());
             draw.ModelPtr = y;
 
@@ -79,10 +81,10 @@ namespace Vakol::Controller {
             auto& trans = entity.GetComponent<Components::Transform>();
 
             auto& PhyObj = entity.GetComponent<Components::PhysicsObject>();
-            System::Physics_InitObject(test.ScenePhysics, PhyObj, draw, trans);
+            System::Physics_InitObject( PhyObj, draw, trans);
         }
 
-        test.Serialize("assets/scenes");
+        test.Serialize("assets/scenes");*/
 
         m_running = true;
     }
@@ -128,11 +130,11 @@ namespace Vakol::Controller {
         while (m_running) {
             m_time.Update();
 
-            // Physics::FixedUpdate(m_time, m_entityList.GetEntityList());
-
             //! update scenes lua
             //! only update if the scene is active
-            for (auto& scene : scenes) {
+            for (auto& scene : scenes) 
+            {
+                System::BindScene(scene);
                 if (scene.active) scene.Update(m_time);
             }
 
