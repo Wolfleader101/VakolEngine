@@ -144,8 +144,8 @@ namespace Vakol::Controller {
 
             for (const auto& texture : model->meshes().begin()->material()->textures())
             {
-                GLTexture texture("coreAssets/textures/" + texture.path);
-                texture.Bind();
+                GLTexture tex("coreAssets/textures/" + texture.path);
+                tex.Bind();
             }
            
             ent->GetComponent<Model::Components::Drawable>().model_ptr = model;

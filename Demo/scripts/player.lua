@@ -1,8 +1,8 @@
 function init(scene, entity)
     entity:add_model("coreAssets/models/cube.obj")
-    entity:get_transform().scale.x = 0.01
-    entity:get_transform().scale.y = 0.01
-    entity:get_transform().scale.z = 0.01
+    entity:get_transform().scale.x = 1.0
+    entity:get_transform().scale.y = 1.0
+    entity:get_transform().scale.z = 1.0
 end
 
 local function lerp(a, b, t)
