@@ -139,14 +139,30 @@ namespace Vakol::Controller {
             
             if (model == nullptr) return false;
 
-            // force it for now, since I don't understand lua lol
-            model->meshes().begin()->material()->SetShader("coreAssets/shaders/basic.prog");
+            auto material = model->meshes().begin()->material();
 
-            for (const auto& texture : model->meshes().begin()->material()->textures())
+            for (const auto& texture : material->textures())
             {
+                VK_TRACE(texture.path);
                 GLTexture tex("coreAssets/textures/" + texture.path);
-                tex.Bind();
             }
+
+            // force it for now, since I don't understand lua lol
+            material->SetShader("coreAssets/shaders/custom.prog");
+            material->Bind();
+
+            material->SetInt("material.diffuse", 0);
+            material->SetInt("material.specular", 1);
+            
+            material->SetFloat("material.shininess", 128.0f);
+
+            material->SetVec3("light.color", glm::vec3(1.0f, 1.0f, 1.0f));
+
+            material->SetVec3("light.ambient", glm::vec3(0.2f, 0.2f, 0.2f));
+            material->SetVec3("light.diffuse", glm::vec3(0.6f, 0.6f, 0.6f));
+            material->SetVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
+
+            material->SetBool("enable_textures", true);
            
             ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
 

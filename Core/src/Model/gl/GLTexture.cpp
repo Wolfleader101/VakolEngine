@@ -36,7 +36,6 @@ namespace Vakol::Model
 
 	GLTexture::~GLTexture()
 	{
-
 		//glDeleteTextures(1, &this->m_ID);
 	}
 

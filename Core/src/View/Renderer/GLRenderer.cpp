@@ -17,7 +17,8 @@ namespace Vakol::View {
 
     void GLRenderer::Draw(const Controller::Time& time, const Controller::Camera& camera,
                           const Model::Components::Transform trans, const Model::Components::Drawable& drawable) const {
-        glClearColor(0.52941f, 0.80784f, 0.92157f, 1.0f);
+        //glClearColor(0.52941f, 0.80784f, 0.92157f, 1.0f);
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glm::mat4 model_matrix = glm::mat4(1.0f);
@@ -30,11 +31,22 @@ namespace Vakol::View {
         model_matrix = glm::rotate(model_matrix, trans.rot.y, glm::vec3(0.0f, 1.0f, 0.0f));
         model_matrix = glm::rotate(model_matrix, trans.rot.z, glm::vec3(0.0f, 0.0f, 1.0f));
 
-        for (auto mesh : drawable.model_ptr->meshes()) {
+        for (auto mesh : drawable.model_ptr->meshes()) 
+        {
             mesh.material()->Bind();
-            mesh.material()->SetMat4("_PV", camera.GetMatrix(_PV_MATRIX));
+
+            mesh.material()->SetMat4("PV", camera.GetMatrix(_PV_MATRIX));
             mesh.material()->SetMat4("MODEL", model_matrix);
 
+            mesh.material()->SetVec3("viewPos", camera.GetPos());
+            mesh.material()->SetVec3("light.position", glm::vec3(0.0f, 2.0f, 1.0f));
+
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, 2);
+
+            glActiveTexture(GL_TEXTURE0 + 1);
+            glBindTexture(GL_TEXTURE_2D, 4);
+ 
             mesh.vao()->Draw();
         }
     }
