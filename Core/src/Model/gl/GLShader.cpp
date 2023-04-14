@@ -1,6 +1,5 @@
 #include "GLShader.hpp"
 
-#include <GLFW/glfw3.h>
 #include <glad/glad.h>
 
 #include <Controller/AssetLoader/ShaderLoader.hpp>
