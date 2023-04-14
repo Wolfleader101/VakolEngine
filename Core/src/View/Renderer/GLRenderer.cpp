@@ -61,11 +61,14 @@ namespace Vakol::View {
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, 2);
 
-            glActiveTexture(GL_TEXTURE0 + 1);
+            glActiveTexture(GL_TEXTURE1);
             glBindTexture(GL_TEXTURE_2D, 4); // super hacky way but it'll be changed
             
-            glActiveTexture(GL_TEXTURE0 + 2);
+            glActiveTexture(GL_TEXTURE2);
             glBindTexture(GL_TEXTURE_2D, 6); // super hacky way but it'll be changed
+
+            glActiveTexture(GL_TEXTURE3);
+            glBindTexture(GL_TEXTURE_2D, 8); // super hacky way but it'll be changed
  
             mesh.vao()->Draw();
         }

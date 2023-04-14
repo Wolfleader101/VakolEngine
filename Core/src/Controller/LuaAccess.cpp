@@ -148,13 +148,19 @@ namespace Vakol::Controller {
             for (const auto& texture : material->textures())
                 GLTexture tex("coreAssets/textures/Test/" + texture.path);
 
+            GLTexture light_texture("coreAssets/textures/cookie.png");
+            VK_TRACE(light_texture.id());
+
             // force it for now, since I don't understand lua lol
             material->SetShader("coreAssets/shaders/custom.prog");
             material->Bind();
 
+            material->SetVec2("viewPort", 1280, 720);
+
             material->SetInt("material.diffuse", 0);
             material->SetInt("material.specular", 1);
             material->SetInt("material.emissive", 2);
+            material->SetInt("light.cookie", 3);
             
             material->SetFloat("material.shininess", 64.0f);
 
@@ -166,8 +172,9 @@ namespace Vakol::Controller {
             material->SetFloat("light.linear", 0.045f);
             material->SetFloat("light.quadratic", 0.0075f);
             material->SetFloat("light.cut_off", glm::cos(glm::radians(12.5f)));
+            material->SetFloat("light.outer_cut_off", glm::cos(glm::radians(17.5f)));
 
-            material->SetInt("option", DIRECTIONAL_LIGHT);
+            material->SetInt("option", SPOT_LIGHT);
            
             ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
 

@@ -24,6 +24,8 @@ struct Light
 
     float cut_off;
     float outer_cut_off;
+
+    sampler2D cookie;
 };
 
 const int DIRECTIONAL_LIGHT = 0;
@@ -37,6 +39,7 @@ in vec2 TexCoords;
 out vec4 FragColor;
 
 uniform vec3 viewPos;
+uniform vec2 viewPort;
 
 uniform Material material;
 uniform Light light;
@@ -67,17 +70,19 @@ void point_light(inout vec3 ambient, inout vec3 diffuse, inout vec3 specular, in
     emission *= attenuation;
 }
 
-bool spot_light(inout vec3 ambient, inout vec3 diffuse, inout vec3 specular, inout vec3 emission, vec3 dir)
+void spot_light(inout vec3 ambient, inout vec3 diffuse, inout vec3 specular, inout vec3 emission, vec3 dir, vec2 fragCoord)
 {
     float theta = dot(dir, normalize(-light.direction));
+    float epsilon = light.cut_off - light.outer_cut_off;
+    float intensity = smoothstep(0.0, 1.0, (theta - light.outer_cut_off) / epsilon);
 
-    if (theta > light.cut_off)
-    {
-        point_light(ambient, diffuse, specular, emission, true);
-        return true;
-    }
+    intensity *= length(texture(light.cookie, fragCoord * 0.5).rgb);
 
-    return false;
+    diffuse *= intensity;
+    specular *= intensity;
+    emission *= intensity;
+
+    point_light(ambient, diffuse, specular, emission, true);
 }
 
 void lighting(inout vec3 ambient, inout vec3 diffuse, inout vec3 specular, inout vec3 emission, out vec3 lightDir)
@@ -110,7 +115,9 @@ void lighting(inout vec3 ambient, inout vec3 diffuse, inout vec3 specular, inout
 }
 
 void main()
-{    
+{
+    vec2 fragCoord = gl_FragCoord.xy / viewPort * vec2(1.0, -1.0);
+
     vec3 ambient = vec3(0.0);
     vec3 diffuse = vec3(0.0);
     vec3 specular = vec3(0.0);
@@ -130,10 +137,8 @@ void main()
     }
     else if (option == SPOT_LIGHT)
     {
-        if (spot_light(ambient, diffuse, specular, emission, lightDir))
-            result = ambient + diffuse + specular + emission;
-        else
-            result = light.ambient * texture(material.diffuse, TexCoords).rgb;
+        spot_light(ambient, diffuse, specular, emission, lightDir, fragCoord);
+        result = ambient + diffuse + specular + emission;
     }
 
     FragColor = vec4(result, 1.0);    
