@@ -15,20 +15,20 @@ namespace Vakol::View {
         glEnable(GL_TEXTURE_2D);
     };
 
-    void GLRenderer::Draw(const Controller::Time& time, const Controller::Camera& camera, const Model::Components::Drawable& drawable) const 
-    {
+    void GLRenderer::Draw(const Controller::Time& time, const Controller::Camera& camera,
+                          const Model::Components::Transform trans, const Model::Components::Drawable& drawable) const {
         glClearColor(0.52941f, 0.80784f, 0.92157f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glm::mat4 model_matrix = glm::mat4(1.0f);
 
-        model_matrix = glm::translate(model_matrix, glm::vec3(0.0f));
+        model_matrix = glm::translate(model_matrix, trans.pos);
 
-        model_matrix = glm::scale(model_matrix, glm::vec3(1.0f));
+        model_matrix = glm::scale(model_matrix, trans.scale);
 
-        model_matrix = glm::rotate(model_matrix, 45.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-        model_matrix = glm::rotate(model_matrix, 0.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-        model_matrix = glm::rotate(model_matrix, 0.0f, glm::vec3(0.0f, 0.0f, 1.0f));
+        model_matrix = glm::rotate(model_matrix, trans.rot.x, glm::vec3(1.0f, 0.0f, 0.0f));
+        model_matrix = glm::rotate(model_matrix, trans.rot.y, glm::vec3(0.0f, 1.0f, 0.0f));
+        model_matrix = glm::rotate(model_matrix, trans.rot.z, glm::vec3(0.0f, 0.0f, 1.0f));
 
         for (auto mesh : drawable.model_ptr->meshes()) {
             mesh.material()->Bind();
@@ -38,4 +38,4 @@ namespace Vakol::View {
             mesh.vao()->Draw();
         }
     }
-}
+}  // namespace Vakol::View

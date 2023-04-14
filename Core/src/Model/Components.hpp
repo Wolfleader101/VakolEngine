@@ -40,18 +40,19 @@ namespace Vakol::Model::Components {
          * @param rot rotation
          * @param sca scale
          */
-        Transform(const glm::vec3& pos, const glm::quat& rot, const glm::vec3& scale);
+        Transform(const glm::vec3& pos, const glm::vec3& rot, const glm::vec3& scale);
 
-        glm::vec3 pos;   /**< XYZ position */
-        glm::quat rot;   /**< XYZ rotation */
+        glm::vec3 pos; /**< XYZ position */
+        // glm::quat rot;   /**< XYZW rotation */
+        glm::vec3 rot;   /**< XYZ rotation */
         glm::vec3 scale; /**< XYZ scale */
 
         template <class Archive>
         void serialize(Archive& ar) {
             ar(cereal::make_nvp("pos.x", pos.x), cereal::make_nvp("pos.y", pos.y), cereal::make_nvp("pos.z", pos.z),
 
-               cereal::make_nvp("rot.w", rot.w), cereal::make_nvp("rot.x", rot.x), cereal::make_nvp("rot.y", rot.y),
-               cereal::make_nvp("rot.z", rot.z),
+               //    cereal::make_nvp("rot.w", rot.w),
+               cereal::make_nvp("rot.x", rot.x), cereal::make_nvp("rot.y", rot.y), cereal::make_nvp("rot.z", rot.z),
 
                cereal::make_nvp("scale.x", scale.x), cereal::make_nvp("scale.y", scale.y),
                cereal::make_nvp("scale.z", scale.z));

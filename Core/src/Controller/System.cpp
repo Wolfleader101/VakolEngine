@@ -13,7 +13,7 @@ namespace Vakol::Controller {
     void System::Drawable_Update(const Time& time, const Controller::Camera& camera,
                                  const std::shared_ptr<View::Renderer> renderer) {
         registry->view<Components::Transform, Components::Drawable>().each(
-            [&](auto& trans, Components::Drawable& drawable) { renderer->Draw(time, camera, drawable); });
+            [&](auto& trans, Components::Drawable& drawable) { renderer->Draw(time, camera, trans, drawable); });
     }
 
     void System::Script_Update(LuaState& lua, EntityList& list, Scene* scene) {

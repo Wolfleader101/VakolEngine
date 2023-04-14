@@ -7,7 +7,8 @@
 #include "Controller/Camera.hpp"
 
 namespace Vakol::Model::Components {
-    class Drawable;
+    struct Drawable;
+    struct Transform;
 }  // namespace Vakol::Model::Components
 namespace Vakol::View {
     class Renderer {
@@ -16,7 +17,7 @@ namespace Vakol::View {
         virtual ~Renderer() {}
 
         virtual void Draw(const Controller::Time& time, const Controller::Camera& camera,
-                          const Model::Components::Drawable& drawable) const = 0;
+                          const Model::Components::Transform, const Model::Components::Drawable& drawable) const = 0;
 
        protected:
         std::shared_ptr<Window> m_window;
