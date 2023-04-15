@@ -17,7 +17,11 @@ namespace Vakol::Model
         virtual void Bind() const = 0;
         virtual void Unbind() const = 0;
 
-        virtual void Draw() const = 0;
+        virtual void DrawArrays() const = 0;
+        virtual void DrawElements() const = 0;
+        
+        virtual void DrawArraysInstanced(const int amount) const = 0;
+        virtual void DrawElementsInstanced(const int amount) const = 0;
 
         const virtual unsigned int GetID() const = 0;
         const virtual unsigned int GetVertices() const = 0;

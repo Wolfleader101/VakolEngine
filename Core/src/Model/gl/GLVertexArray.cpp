@@ -42,11 +42,39 @@ namespace Vakol::Model
         this->Unbind();
     }
 
-    void GLVertexArray::Draw() const
+    void GLVertexArray::DrawArrays() const
+    {
+        this->Bind();
+
+        glDrawArrays(GL_TRIANGLES, 0, this->GetVertices());
+
+        this->Unbind();
+    }
+
+    void GLVertexArray::DrawElements() const
     {
         this->Bind();
 
         glDrawElements(GL_TRIANGLES, this->GetIndices(), GL_UNSIGNED_INT, 0);
+
+        this->Unbind();
+    }
+
+
+    void GLVertexArray::DrawArraysInstanced(const int amount) const
+    {
+        this->Bind();
+
+        glDrawArraysInstanced(GL_TRIANGLES, 0, this->GetVertices(), amount);
+
+        this->Unbind();
+    }
+
+    void GLVertexArray::DrawElementsInstanced(const int amount) const
+    {
+        this->Bind();
+
+        glDrawElementsInstanced(GL_TRIANGLES, this->GetIndices(), GL_UNSIGNED_INT, 0, amount);
 
         this->Unbind();
     }

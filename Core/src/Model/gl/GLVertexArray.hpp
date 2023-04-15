@@ -17,7 +17,11 @@ namespace Vakol::Model
         void Bind() const override;
         void Unbind() const override;
 
-        void Draw() const override;
+        void DrawArrays() const override;
+        void DrawElements() const override;
+
+        void DrawArraysInstanced(const int amount) const override;
+        void DrawElementsInstanced(const int amount) const override;
 
         const unsigned int GetID() const override;
         const unsigned int GetVertices() const override;
