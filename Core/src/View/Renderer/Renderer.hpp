@@ -16,6 +16,11 @@ namespace Vakol::View {
         Renderer(const std::shared_ptr<Window> window) : m_window(window){};
         virtual ~Renderer() {}
 
+        virtual void ClearColor(const glm::vec4& color) const = 0;
+        virtual void ClearColor(const float r, const float g, const float b, const float a) const = 0;
+
+        virtual void ClearBuffer(const unsigned int buffer_bit) const = 0;
+
         virtual void Draw(const Controller::Time& time, const Controller::Camera& camera,
                           const Model::Components::Transform, const Model::Components::Drawable& drawable) const = 0;
 

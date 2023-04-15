@@ -25,11 +25,19 @@ Distance	Constant	Linear	Quadratic
 3250	    1.0	        0.0014	0.000007
 */
 
+const glm::vec4 VAKOL_CLASSIC = glm::vec4(0.52941f, 0.80784f, 0.92157f, 1.0f);
+const glm::vec4 VAKOL_DARK = glm::vec4(0.1f, 0.1f, 0.1f, 1.0f);
+
 namespace Vakol::View {
     GLRenderer::GLRenderer(const std::shared_ptr<Window> window) : Renderer(window) {
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_TEXTURE_2D);
     };
+
+    void GLRenderer::ClearColor(const glm::vec4& color) const { glClearColor(color.r, color.g, color.b, color.a); }
+    void GLRenderer::ClearColor(const float r, const float g, const float b, const float a) const { glClearColor(r,g,b,a); }
+
+    void GLRenderer::ClearBuffer(const unsigned int buffer_bit) const { glClear(buffer_bit); }
 
     void GLRenderer::Draw(const Controller::Time& time, const Controller::Camera& camera, const Model::Components::Transform trans, const Model::Components::Drawable& drawable) const 
     {
@@ -43,13 +51,30 @@ namespace Vakol::View {
         model_matrix = glm::rotate(model_matrix, trans.rot.y, glm::vec3(0.0f, 1.0f, 0.0f));
         model_matrix = glm::rotate(model_matrix, trans.rot.z, glm::vec3(0.0f, 0.0f, 1.0f));
 
-        for (auto mesh : drawable.model_ptr->meshes()) {
-            mesh.material()->SetMat4("PV", camera.GetMatrix(_PV_MATRIX));
-            mesh.material()->SetMat4("MODEL", model_matrix);
-    
-            // mesh.vao()->Bind();
-            // glDrawElementsInstanced(GL_TRIANGLES, mesh.vao()->GetIndices(), GL_UNSIGNED_INT, 0, 30000);
-            // mesh.vao()->Unbind();
+        for (auto mesh : drawable.model_ptr->meshes()) 
+        {
+            mesh.material()->SetMat4("PV_MATRIX", camera.GetMatrix(_PV_MATRIX));
+            mesh.material()->SetMat3("NORMAL_MATRIX", glm::transpose(glm::inverse(glm::mat3(model_matrix))));
+            mesh.material()->SetMat4("MODEL_MATRIX", model_matrix);
+
+            mesh.material()->SetVec3("viewPos", camera.GetPos());
+            mesh.material()->SetVec3("lightPos", camera.GetForward());
+
+            // mesh.material()->SetVec3("light.position", camera.GetPos());
+            // mesh.material()->SetVec3("light.direction", camera.GetForward());
+
+            // mesh.material()->SetFloat("time", time.curTime);
+
+            for (int i = 0; i < mesh.material()->GetTextureCount(); ++i)
+            {
+                int j = 2;
+
+                if (i != 0)
+                    j *= i + 1;
+
+                glActiveTexture(GL_TEXTURE0 + i);
+                glBindTexture(GL_TEXTURE_2D, j);
+            }
 
             mesh.vao()->DrawElements();
         }
@@ -57,7 +82,7 @@ namespace Vakol::View {
 
     void GLRenderer::Update() const
     {
-        glClearColor(0.52941f, 0.80784f, 0.92157f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        ClearColor(VAKOL_DARK);
+        ClearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 }  // namespace Vakol::View

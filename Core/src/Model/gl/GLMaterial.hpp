@@ -21,8 +21,8 @@ namespace Vakol::Model {
         void Unbind() const override;
 
         const unsigned int GetID() const override { return this->m_shader->GetID(); };
-        const unsigned int GetTextureCount() const override {
-            return static_cast<unsigned int>(this->m_spec.textures.size());
+        const int GetTextureCount() const override {
+            return static_cast<int>(this->m_spec.textures.size());
         }
 
         std::vector<Texture> textures() override { return this->m_spec.textures; }

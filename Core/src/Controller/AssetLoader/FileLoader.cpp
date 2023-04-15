@@ -79,7 +79,7 @@ unsigned char* LoadImage(const std::string& path, int& width, int& height, int& 
 
     if (!data)
     {
-        VK_ERROR("ERROR::ImageLoader::LoadImage(): {0}", "Failed to load image!");
+        VK_ERROR("ERROR::FileLoader::LoadImage(): Failed to load image at path {0}", path);
         stbi_image_free(data);
     }
 

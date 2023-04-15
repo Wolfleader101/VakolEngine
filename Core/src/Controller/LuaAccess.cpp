@@ -144,21 +144,16 @@ namespace Vakol::Controller {
 
             auto material = model->meshes().begin()->material();
 
-            for (const auto& texture : material->textures())
-            {
-                GLTexture tex("coreAssets/textures/" + texture.path);
-                tex.Bind();
-            }
-
             // force it for now, since I don't understand lua lol
-            material->SetShader("coreAssets/shaders/basic.prog");
+            material->SetShader("coreAssets/shaders/custom_nm.prog");
             material->Bind();
 
-            //material->SetInt("texture_0", 0);
-
-            // material->SetInt("material.diffuse", 0);
-            // material->SetInt("material.specular", 1);
-            // material->SetInt("material.emissive", 2);
+            for (int i = 0; i < material->GetTextureCount(); ++i)
+            {
+                material->SetInt("material." + material->textures().at(i).type, i);
+                GLTexture texture("coreAssets/textures/" + material->textures().at(i).path);
+                VK_TRACE("{0} {1}", "material." + material->textures().at(i).type, i);
+            }
             
             // material->SetFloat("material.shininess", 64.0f);
 
@@ -172,7 +167,7 @@ namespace Vakol::Controller {
             // material->SetFloat("light.cut_off", glm::cos(glm::radians(12.5f)));
             // material->SetFloat("light.outer_cut_off", glm::cos(glm::radians(17.5f)));
 
-            // material->SetInt("option", SPOT_LIGHT);
+            //material->SetInt("option", SPOT_LIGHT);
             ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
 
             return true;

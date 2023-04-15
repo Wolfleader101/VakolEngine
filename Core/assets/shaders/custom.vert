@@ -7,14 +7,15 @@ out vec3 FragPos;
 out vec3 Normal;
 out vec2 TexCoords;
 
-uniform mat4 PV;
-uniform mat4 MODEL;
+uniform mat4 PV_MATRIX;
+uniform mat3 NORMAL_MATRIX;
+uniform mat4 MODEL_MATRIX;
 
 void main()
 {
-    FragPos = vec3(MODEL * vec4(aPos, 1.0));
-    Normal = mat3(transpose(inverse(MODEL))) * aNormal;
+    FragPos = vec3(MODEL_MATRIX * vec4(aPos, 1.0));
+    Normal = NORMAL_MATRIX * aNormal;
     TexCoords = aTexCoords;
 
-    gl_Position = PV * vec4(FragPos, 1.0);
+    gl_Position = PV_MATRIX * vec4(FragPos, 1.0);
 }

@@ -30,7 +30,7 @@ namespace Vakol::Model::Assets {
         virtual void Unbind() const = 0;
 
         virtual const unsigned int GetID() const = 0;
-        virtual const unsigned int GetTextureCount() const = 0;
+        virtual const int GetTextureCount() const = 0;
 
         virtual std::vector<Texture> textures() = 0;
 
