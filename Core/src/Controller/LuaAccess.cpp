@@ -148,8 +148,7 @@ namespace Vakol::Controller {
 
             auto material = model->meshes().begin()->material();
 
-
-            material->SetUniform(2 * sizeof(glm::mat4), 1);
+            material->SetUniform(2 * sizeof(glm::mat4) + sizeof(glm::mat3), 1);
 
             // test uniform
             glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)1280 / (float) 720, 0.1f, 1000.0f);
@@ -165,20 +164,9 @@ namespace Vakol::Controller {
                 GLTexture texture("coreAssets/textures/" + material->textures().at(i).path);
                 //VK_TRACE("{0} {1}", "material." + material->textures().at(i).type, i);
             }
-            
-            // material->SetFloat("material.shininess", 64.0f);
-
-            // material->SetVec3("light.ambient", glm::vec3(0.1f, 0.1f, 0.1f));
-            // material->SetVec3("light.diffuse", glm::vec3(0.8f, 0.8f, 0.8f));
-            // material->SetVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
-
-            // material->SetFloat("light.constant", 1.0f);
-            // material->SetFloat("light.linear", 0.045f);
-            // material->SetFloat("light.quadratic", 0.0075f);
-            // material->SetFloat("light.cut_off", glm::cos(glm::radians(12.5f)));
-            // material->SetFloat("light.outer_cut_off", glm::cos(glm::radians(17.5f)));
 
             //material->SetInt("option", SPOT_LIGHT);
+            material->SetBool("gamma", true);
             ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
 
             return true;

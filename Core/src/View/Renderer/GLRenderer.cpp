@@ -51,7 +51,9 @@ namespace Vakol::View {
     GLRenderer::GLRenderer(const std::shared_ptr<Window> window) : Renderer(window) 
     {
         glEnable(GL_DEPTH_TEST);
-        glEnable(GL_TEXTURE_2D);
+        
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     };
 
     void GLRenderer::ClearColor(const glm::vec4& color) const { glClearColor(color.r, color.g, color.b, color.a); }
@@ -74,6 +76,7 @@ namespace Vakol::View {
         for (auto mesh : drawable.model_ptr->meshes()) 
         {
             mesh.material()->SetUniformData(sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(camera.GetMatrix(VIEW_MATRIX)));
+            mesh.material()->SetUniformData(2 * sizeof(glm::mat4), sizeof(glm::mat3), glm::value_ptr(glm::transpose(glm::inverse(glm::mat3(model_matrix)))));
 
             mesh.material()->SetMat4("MODEL_MATRIX", model_matrix);
 
@@ -102,7 +105,7 @@ namespace Vakol::View {
 
     void GLRenderer::Update() const
     {
-        ClearColor(VAKOL_CLASSIC);
+        ClearColor(VAKOL_DARK);
         ClearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 }  // namespace Vakol::View
