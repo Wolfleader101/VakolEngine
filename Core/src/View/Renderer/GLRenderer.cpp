@@ -31,8 +31,8 @@ namespace Vakol::View {
         glEnable(GL_TEXTURE_2D);
     };
 
-    void GLRenderer::Draw(const Controller::Time& time, const Controller::Camera& camera,
-                          const Model::Components::Transform trans, const Model::Components::Drawable& drawable) const {
+    void GLRenderer::Draw(const Controller::Time& time, const Controller::Camera& camera, const Model::Components::Transform trans, const Model::Components::Drawable& drawable) const 
+    {
         glm::mat4 model_matrix = glm::mat4(1.0f);
 
         model_matrix = glm::translate(model_matrix, trans.pos);
@@ -46,30 +46,17 @@ namespace Vakol::View {
         for (auto mesh : drawable.model_ptr->meshes()) {
             mesh.material()->SetMat4("PV", camera.GetMatrix(_PV_MATRIX));
             mesh.material()->SetMat4("MODEL", model_matrix);
-
-            // mesh.material()->SetVec3("viewPos", camera.GetPos());
-            // mesh.material()->SetVec3("light.position", camera.GetPos()); // want to modify light post
-            // mesh.material()->SetVec3("light.direction", camera.GetForward()); // want to modify light dir
-
-            // mesh.material()->SetFloat("time", time.curTime);
-
-            // glActiveTexture(GL_TEXTURE0);
-            // glBindTexture(GL_TEXTURE_2D, 2);
-
-            // glActiveTexture(GL_TEXTURE1);
-            // glBindTexture(GL_TEXTURE_2D, 4); // super hacky way but it'll be changed
-
-            // glActiveTexture(GL_TEXTURE2);
-            // glBindTexture(GL_TEXTURE_2D, 6); // super hacky way but it'll be changed
-
-            mesh.vao()->Bind();
+    
+            // mesh.vao()->Bind();
             // glDrawElementsInstanced(GL_TRIANGLES, mesh.vao()->GetIndices(), GL_UNSIGNED_INT, 0, 30000);
-            mesh.vao()->Draw();
-            mesh.vao()->Unbind();
+            // mesh.vao()->Unbind();
+
+            mesh.vao()->DrawElements();
         }
     }
 
-    void GLRenderer::Update() const {
+    void GLRenderer::Update() const
+    {
         glClearColor(0.52941f, 0.80784f, 0.92157f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }

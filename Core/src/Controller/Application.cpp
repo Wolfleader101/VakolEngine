@@ -124,13 +124,13 @@ namespace Vakol::Controller {
 
             // Physics::FixedUpdate(m_time, m_entityList.GetEntityList());
 
+            m_renderer->Update();
+
             //! update scenes lua
             for (auto& scene : scenes) {
                 scene.Update(m_time, m_renderer);
             }
-
-            m_renderer->Update();
-
+            
             m_window->OnUpdate();
 
             m_input.Update();

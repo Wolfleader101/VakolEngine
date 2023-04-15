@@ -137,17 +137,42 @@ namespace Vakol::Controller {
         entityType.set_function("add_model", [](Entity* ent, std::string path) {
             if (ent->HasComponent<Model::Components::Drawable>() == false)
                 ent->AddComponent<Model::Components::Drawable>();
-
+            
             auto model = AssetLoader::GetModel(path);
-
+            
             if (model == nullptr) return false;
-            model->meshes().begin()->material()->SetShader("coreAssets/shaders/basic.prog");
 
-            for (const auto& texture : model->meshes().begin()->material()->textures()) {
+            auto material = model->meshes().begin()->material();
+
+            for (const auto& texture : material->textures())
+            {
                 GLTexture tex("coreAssets/textures/" + texture.path);
                 tex.Bind();
             }
 
+            // force it for now, since I don't understand lua lol
+            material->SetShader("coreAssets/shaders/basic.prog");
+            material->Bind();
+
+            //material->SetInt("texture_0", 0);
+
+            // material->SetInt("material.diffuse", 0);
+            // material->SetInt("material.specular", 1);
+            // material->SetInt("material.emissive", 2);
+            
+            // material->SetFloat("material.shininess", 64.0f);
+
+            // material->SetVec3("light.ambient", glm::vec3(0.1f, 0.1f, 0.1f));
+            // material->SetVec3("light.diffuse", glm::vec3(0.8f, 0.8f, 0.8f));
+            // material->SetVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
+
+            // material->SetFloat("light.constant", 1.0f);
+            // material->SetFloat("light.linear", 0.045f);
+            // material->SetFloat("light.quadratic", 0.0075f);
+            // material->SetFloat("light.cut_off", glm::cos(glm::radians(12.5f)));
+            // material->SetFloat("light.outer_cut_off", glm::cos(glm::radians(17.5f)));
+
+            // material->SetInt("option", SPOT_LIGHT);
             ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
 
             return true;
