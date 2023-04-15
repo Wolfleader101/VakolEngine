@@ -77,8 +77,6 @@ namespace Vakol::Controller {
 
     //----------------------- ICT397 additions
 
-    entt::registry& EntityList::GetRegistry() { return m_Registry; }
-
 
     void EntityList::Init() {}
 
@@ -95,7 +93,8 @@ namespace Vakol::Controller {
                             EntityType,
                             TagType,
                             Script,
-                            PhysicsObject,
+                            RigidBody,
+                            Collider,
                             Drawable>(file);
     }
 
@@ -107,7 +106,8 @@ namespace Vakol::Controller {
                             EntityType,
                             TagType,
                             Script,
-                            PhysicsObject,
+                            RigidBody,
+                            Collider,
                             Drawable>(file);
     }
 

@@ -61,12 +61,12 @@ namespace Vakol::Controller {
         auto z = AssetLoader::GetShader("coreAssets/shaders/basic.prog");
 
         //physics test 
-        /*
+        
         Scene test("Physics Test Scene", "testScene.lua", lua, std::make_shared<Physics::ScenePhysics>(PhysicsPool::CreatePhysicsWorld()), true);
         System::BindScene(test);
         test.Deserialize("assets/scenes/" + test.getName());
 
-        for (int i = 0; i < 10; i++)
+        /*for (int i = 0; i < 10; i++)
         {
             auto entity = test.entityList.CreateEntity();
             entity.GetComponent<Components::Tag>().tag = "Entity: " + std::to_string(i);
@@ -82,9 +82,9 @@ namespace Vakol::Controller {
 
             auto& PhyObj = entity.GetComponent<Components::PhysicsObject>();
             System::Physics_InitObject( PhyObj, draw, trans);
-        }
+        }*/
 
-        test.Serialize("assets/scenes");*/
+        test.Serialize("assets/scenes");
 
         m_running = true;
     }

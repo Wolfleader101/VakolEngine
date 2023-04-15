@@ -140,12 +140,11 @@ namespace Vakol::Model::Components {
         }
     };
 
+
     using namespace Vakol::Controller::Physics;
 
-    struct PhysicsObject {
-
-        PhysicsObject() = default; //Don't use this. Need it for serialization
-        PhysicsObject(std::shared_ptr<ScenePhysics> SP, unsigned int BodyType, unsigned int Shape);
+    struct RigidBody
+    {
 
         struct RigidData
         {
@@ -164,26 +163,11 @@ namespace Vakol::Model::Components {
         rp3d::BodyType Type;
         RigidData Data;
 
-        //collider
-        rp3d::Collider* CollisionBody;
-        rp3d::CollisionShape* Shape;
-        rp3d::CollisionShapeName ShapeName;
-
-        rp3d::Vector3 offset = { 0.0f, 0.0f, 0.0f }; /**< Offset given to the collider*/
-        
-
-        
         rp3d::Transform prevTransform;
 
         template <class Archive>
-        void serialize(Archive& ar) 
+        void serialize(Archive& ar)
         {
-            ar(cereal::make_nvp("CollisionShape", ShapeName));
-
-            ar(cereal::make_nvp("Offset X", offset.x));
-            ar(cereal::make_nvp("Offset Y", offset.y));
-            ar(cereal::make_nvp("Offset Z", offset.z));
-
             ar(cereal::make_nvp("Mass", Data.mass));
             ar(cereal::make_nvp("Gravity", Data.grav));
             ar(cereal::make_nvp("Linear Dampening", Data.LDamp));
@@ -197,7 +181,45 @@ namespace Vakol::Model::Components {
             ar(cereal::make_nvp("Orientation X", Data.Orientation.x));
             ar(cereal::make_nvp("Orientation Y", Data.Orientation.y));
             ar(cereal::make_nvp("Orientation Z", Data.Orientation.z));
+        }
+    };
 
+
+    Collider::Bounds getBounds(const Drawable& model);
+
+    struct Collider
+    {
+        Collider() = default;
+        Collider(RigidBody& owner);
+
+        struct Bounds
+        {
+            rp3d::Vector3 min; /**< minimum vertice*/
+            rp3d::Vector3 max; /**< Maximum vertice*/
+            rp3d::Vector3 center; /**< Average of all vertices*/
+            rp3d::Vector3 extents; /**< Extent of vertices*/
+            rp3d::Vector3 size; /**< Size of vertices*/
+
+            float radius; /**< Radius*/
+        };
+
+        RigidBody* OwningBody;
+        rp3d::Collider* ColliderPtr;
+        rp3d::CollisionShape* Shape;
+        rp3d::CollisionShapeName ShapeName;
+
+        Bounds bounds;
+
+        template <class Archive>
+        void serialize(Archive& ar)
+        {
+            ar(cereal::make_nvp("CollisionShape", ShapeName));
+            ar(cereal::make_nvp("BoundsMin", bounds.min));
+            ar(cereal::make_nvp("BoundsMax", bounds.max));
+            ar(cereal::make_nvp("BoundsCenter", bounds.center));
+            ar(cereal::make_nvp("BoundsExtents", bounds.extents));
+            ar(cereal::make_nvp("BoundsSize", bounds.size));
+            ar(cereal::make_nvp("BoundsRadius", bounds.radius));
         }
     };
 

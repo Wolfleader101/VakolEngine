@@ -83,8 +83,6 @@ namespace Vakol::Controller {
 
         //-------------- THESE ARE ADDITIONS IN ICT397 ------------------
 
-        entt::registry& GetRegistry();
-
         void Init();
 
         void Update(double d_t);

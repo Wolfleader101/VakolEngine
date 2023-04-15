@@ -7,14 +7,11 @@
 
 #include "LuaState.hpp"
 
-namespace Vakol::Controller
+
+namespace Vakol::Controller 
 {
-    class Scene;
-};
-
-
-namespace Vakol::Controller {
     
+    class Scene;
     using namespace Vakol::Controller::Physics;
     using namespace Vakol::Model::Components;
 

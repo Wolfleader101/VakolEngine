@@ -8,24 +8,9 @@
 
 #include <Model/Components.hpp>
 
-struct Bounds
-{
-    rp3d::Vector3 min; /**< minimum vertice*/
-    rp3d::Vector3 max; /**< Maximum vertice*/
-    rp3d::Vector3 center; /**< Average of all vertices*/
-    rp3d::Vector3 extents; /**< Extent of vertices*/
-    rp3d::Vector3 size; /**< Size of vertices*/
-
-    float radius; /**< Radius*/
-};
-
-
 
 using namespace Vakol::Model::Components;
 using Scene = Vakol::Controller::Scene;
-
-Bounds getBounds(const Drawable& model);
-
 
 
 namespace Vakol::Controller 
@@ -194,44 +179,4 @@ namespace Vakol::Controller
 }  // namespace Vakol::Controller
 
 
-
-
-Bounds getBounds(const Drawable& model)
-{
-
-    Bounds bounds;
-
-    rp3d::Vector3& centre = bounds.center;
-
-    rp3d::Vector3& max = bounds.max;
-    rp3d::Vector3& min = bounds.min;
-
-    auto& firstVert = model.ModelPtr->meshes.at(0).vertices.at(0);
-
-    max = min = rp3d::Vector3(firstVert.position.x, firstVert.position.y, firstVert.position.z);
-
-    rp3d::Vector3 tempVert;
-    
-    for (auto& msh : model.ModelPtr->meshes)
-    {
-        for (auto& vertice : msh.vertices)
-        {
-            tempVert.x = vertice.position.x;
-            tempVert.y = vertice.position.y;
-            tempVert.z = vertice.position.z;
-
-            max = rp3d::Vector3::max(max, tempVert);
-            min = rp3d::Vector3::min(min, tempVert);
-
-        }
-    }
-
-    bounds.center = (bounds.max + bounds.min) / 2.0f;
-    bounds.extents = (bounds.max - bounds.min) / 2.0f;
-    bounds.size = bounds.extents * 2;
-    bounds.radius = bounds.extents.length();
-
-    return bounds;
-    
-}
 
