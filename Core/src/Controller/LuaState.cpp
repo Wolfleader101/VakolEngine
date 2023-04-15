@@ -1,7 +1,10 @@
 #include "LuaState.hpp"
 
 namespace Vakol::Controller {
-    LuaState::LuaState() { lua.open_libraries(sol::lib::base); }
+    LuaState::LuaState() {
+        lua.open_libraries(sol::lib::base);
+        lua.open_libraries(sol::lib::math);
+    }
 
     const sol::state& LuaState::GetState() const { return lua; }
 

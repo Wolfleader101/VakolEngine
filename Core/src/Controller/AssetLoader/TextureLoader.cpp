@@ -1,47 +1,43 @@
 #include "TextureLoader.hpp"
 
-#include <Controller/IO/FileLoader.hpp>
-#include <Model/Assets/Texture.hpp>
+#include <Controller/AssetLoader/FileLoader.hpp>
 
 #include <glad/glad.h>
 
+const unsigned int LoadGLTexture(const std::string&, const bool);
 
-using Texture = Vakol::Model::Assets::Texture;
-using namespace Vakol::Controller::IO;
+namespace Vakol::Controller
+{
+    const unsigned int LoadTexture(const std::string& path) { return ::LoadGLTexture(path, false); }
 
-Texture LoadGLTexture(const std::string& path);
+    const unsigned int LoadRawTexture(const std::string& path) { return ::LoadGLTexture(path, true); }
+}
 
-namespace Vakol::Controller {
-    Texture LoadTexture(const std::string& path) { return LoadGLTexture(path); }
-}  // namespace Vakol::Controller
+const unsigned int LoadGLTexture(const std::string& path, const bool raw)
+{
+    unsigned int ID = 0;
 
-    Texture LoadGLTexture(const std::string& path) {
-        unsigned int id;
+    glGenTextures(1, &ID);
 
-        glEnable(GL_TEXTURE_2D);
-        glGenTextures(1, &id);
+    int width = 0, height = 0, channels = 1;
+    auto data = (raw) ? LoadImage(path, width, height) : LoadImage(path, width, height, channels, true);
 
-        int width, height, channels;
-        
-        unsigned char* data = Vakol::Controller::IO::LoadImage(path, width, height, channels, true);
+    GLenum internal_format = (channels == 1) ? GL_R8 : (channels > 3) ? GL_RGBA8 : GL_RGB8;
+    GLenum data_format = (channels == 1) ? GL_RED : (channels > 3) ? GL_RGBA : GL_RGB;
 
-        GLenum format = (channels == 1) ? GL_RED : (channels > 3) ? GL_RGBA : GL_RGB;
+    glCreateTextures(GL_TEXTURE_2D, 1, &ID);
+    glTextureStorage2D(ID, 1, internal_format, width, height);
 
-        glBindTexture(GL_TEXTURE_2D, id);
-        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, nullptr);
-        glGenerateMipmap(GL_TEXTURE_2D);
+    glTextureParameteri(ID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTextureParameteri(ID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTextureParameteri(ID, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTextureParameteri(ID, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glTextureSubImage2D(ID, 0, 0, 0, width, height, data_format, GL_UNSIGNED_BYTE, data);
 
-        glDisable(GL_TEXTURE_2D);
+    delete[] data;
+    data = nullptr;
 
-        FreeImage(data);
-
-        return Texture{path, "", id, width, height, channels};
-    }
+    return ID;
+}

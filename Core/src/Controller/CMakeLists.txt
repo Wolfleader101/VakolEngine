@@ -1,5 +1,4 @@
 add_subdirectory(AssetLoader)
-add_subdirectory(IO)
 add_subdirectory(Serialization)
 
 SET(CONTROLLER
@@ -31,10 +30,10 @@ src/Controller/LuaAccess.cpp
 src/Controller/Scene.hpp
 src/Controller/Scene.cpp
 
-
+src/Controller/Input.hpp
+src/Controller/Input.cpp
 ${SERIALIZABLE}
 ${EVENTS}
 ${ASSETLOADER}
-${IO}
 
 PARENT_SCOPE)

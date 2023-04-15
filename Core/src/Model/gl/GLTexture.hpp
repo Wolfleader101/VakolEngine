@@ -1,16 +1,16 @@
 #pragma once
 
-#include <vector>
-
 #include <Model/Assets/Texture.hpp>
 
-namespace Vakol::Model
-{
-	struct GLTexture : public Assets::Texture
-	{
-		
-	};
+namespace Vakol::Model::Assets {
+    class GLTexture : public Texture {
+       public:
+        GLTexture() = default;
+        GLTexture(const std::string& path, const bool raw = false) : Texture(path, raw){};
+        GLTexture(const int width, const int height, const unsigned int format);
 
-	unsigned int GetTextureCubemap(const std::vector<std::string>& faces, const bool flip);
-	unsigned int GetTexture(const std::string& path, const bool flip);
-}
+        void Bind(const unsigned int unit = 0) const;
+
+        void SetData(const void* data);
+    };
+}  // namespace Vakol::Model::Asset

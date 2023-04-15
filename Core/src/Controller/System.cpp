@@ -2,24 +2,30 @@
 
 #include <Model/Components.hpp>
 
-namespace Vakol::Controller::System {
-    void Model_Draw(reg& registry) {
-        // registry.view<Components::Transform, Components::ModelType>().each(
-        //	[&](auto& trans, auto& model) {
-        //		/* draw model */
-        //
-        //	}
-        //);
+using namespace Vakol::Model::Components;
+
+namespace Vakol::Controller {
+
+    entt::registry* System::registry = nullptr;
+
+    void System::SetEntityList(EntityList& EL) { registry = &EL.m_Registry; }
+
+    void System::Drawable_Update(const Time& time, const Controller::Camera& camera,
+                                 const std::shared_ptr<View::Renderer> renderer) {
+        registry->view<Components::Transform, Components::Drawable>().each(
+            [&](auto& trans, Components::Drawable& drawable) { renderer->Draw(time, camera, trans, drawable); });
     }
 
-    void ScriptUpdate(reg& registry, LuaState& lua) {
-        registry.view<Model::Components::Script>().each([&](auto& script) {
+    void System::Script_Update(LuaState& lua, EntityList& list, Scene* scene) {
+        registry->view<Components::Script>().each([&](auto entity_id, auto& script) {
             lua.RunFile("scripts/" + script.script_name);
 
             sol::function update = lua.GetState()["update"];
 
-            update();
+            auto ent = list.GetEntity(static_cast<unsigned int>(entity_id));
+
+            update(*scene, ent);
         });
     }
 
-}  // namespace Vakol::Controller::System
+}  // namespace Vakol::Controller
