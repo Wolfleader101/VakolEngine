@@ -14,9 +14,10 @@ out VS_OUT
     vec3 TangentFragPos;
 } vs_out;
 
-layout (std140, binding = 0) uniform Matrices
+layout (std140, binding = 1) uniform Matrices
 {
-    mat4 PV_MATRIX;
+    mat4 PROJECTION_MATRIX;
+    mat4 VIEW_MATRIX;
     mat3 NORMAL_MATRIX;
 };
 
@@ -41,5 +42,5 @@ void main()
     vs_out.TangentViewPos =  TBN * viewPos;
     vs_out.TangentFragPos =  TBN * vs_out.FragPos;
 
-    gl_Position = PV_MATRIX * MODEL_MATRIX * vec4(aPos, 1.0);
+    gl_Position = PROJECTION_MATRIX * VIEW_MATRIX * MODEL_MATRIX * vec4(aPos, 1.0);
 }

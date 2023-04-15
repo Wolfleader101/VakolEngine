@@ -9,7 +9,7 @@ public:
     virtual void Bind() const = 0;
     virtual void Unbind() const = 0;
 
-    virtual void SetData(const void* data, const int size, const int offset) = 0;
+    virtual void SetData(const int offset, const int size, const void* data) const = 0;
 
 protected:
     int m_size = 0;

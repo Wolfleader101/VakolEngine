@@ -20,11 +20,11 @@ namespace Vakol::Controller {
 
     const glm::mat4 Camera::GetMatrix(const unsigned char type) const {
         switch (type) {
-            case _PROJECTION_MATRIX:
+            case PROJECTION_MATRIX:
                 return this->PROJECTION;
-            case _VIEW_MATRIX:
+            case VIEW_MATRIX:
                 return this->VIEW;
-            case _PV_MATRIX:
+            case PV_MATRIX:
                 return this->PROJECTION * this->VIEW;
             default:
                 VK_WARN("Invalid Matrix Type!");

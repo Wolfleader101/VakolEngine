@@ -13,6 +13,6 @@ namespace Vakol::Model::Assets
         void Bind() const override;
         void Unbind() const override;
 
-        void SetData(const void* data, const int size, const int offset) override;
+        void SetData(const int offset, const int size, const void* data) const override;
     };
 }

@@ -29,7 +29,7 @@ namespace Vakol::Model::Assets {
         virtual void SetShader(const std::string& path) = 0;
 
         virtual void SetUniform(const int size, const int binding) = 0;
-        virtual void SetUniformData(const void* data, const int size, const int offset) const = 0;
+        virtual void SetUniformData(const int offset, const int size, const void* data) const = 0;
 
         virtual void Bind() const = 0;
         virtual void Unbind() const = 0;

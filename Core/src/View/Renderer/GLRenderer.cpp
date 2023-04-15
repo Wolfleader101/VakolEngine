@@ -4,6 +4,7 @@
 
 #include <Controller/Logger.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <vector>
 
 #include "Model/Components.hpp"
@@ -72,8 +73,8 @@ namespace Vakol::View {
 
         for (auto mesh : drawable.model_ptr->meshes()) 
         {
-            mesh.material()->SetMat4("PV_MATRIX", camera.GetMatrix(_PV_MATRIX));
-            mesh.material()->SetMat3("NORMAL_MATRIX", glm::transpose(glm::inverse(glm::mat3(model_matrix))));
+            mesh.material()->SetUniformData(sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(camera.GetMatrix(VIEW_MATRIX)));
+
             mesh.material()->SetMat4("MODEL_MATRIX", model_matrix);
 
             mesh.material()->SetVec3("viewPos", camera.GetPos());
@@ -101,7 +102,7 @@ namespace Vakol::View {
 
     void GLRenderer::Update() const
     {
-        ClearColor(VAKOL_DARK);
+        ClearColor(VAKOL_CLASSIC);
         ClearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 }  // namespace Vakol::View

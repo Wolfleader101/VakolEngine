@@ -5,12 +5,17 @@ layout (location = 2) in vec2 aTexCoords;
 
 out vec2 TexCoords;
 
-uniform mat4 PV_MATRIX;
+layout (std140, binding = 1) uniform Matrices
+{
+    mat4 PROJECTION_MATRIX;
+    mat4 VIEW_MATRIX;
+};
+
 uniform mat4 MODEL_MATRIX;
 
 void main()
 {   
     TexCoords = aTexCoords;
     
-    gl_Position = PV_MATRIX * MODEL_MATRIX * vec4(aPos, 1.0);
+    gl_Position = PROJECTION_MATRIX * VIEW_MATRIX * MODEL_MATRIX * vec4(aPos, 1.0);
 }
