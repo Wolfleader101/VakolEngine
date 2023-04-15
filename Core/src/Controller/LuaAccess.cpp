@@ -1,10 +1,9 @@
 #include "LuaAccess.hpp"
 
 #include "AssetLoader/AssetLoader.hpp"
-#include "Model/Components.hpp"
-
-#include "Model/gl/GLInstance.hpp"
 #include "Model/Assets/Material.hpp"
+#include "Model/Components.hpp"
+#include "Model/gl/GLInstance.hpp"
 
 using Vakol::Model::Assets::Material;
 
@@ -135,8 +134,7 @@ namespace Vakol::Controller {
         auto entityType = lua.new_usertype<Entity>("entity");
 
         entityType.set_function("get_transform", &Entity::GetComponent<Model::Components::Transform>);
-        entityType.set_function("add_model", [](Entity* ent, std::string path) 
-        {
+        entityType.set_function("add_model", [](Entity* ent, std::string path) {
             if (ent->HasComponent<Model::Components::Drawable>() == false)
                 ent->AddComponent<Model::Components::Drawable>();
             
@@ -175,7 +173,6 @@ namespace Vakol::Controller {
             // material->SetFloat("light.outer_cut_off", glm::cos(glm::radians(17.5f)));
 
             // material->SetInt("option", SPOT_LIGHT);
-           
             ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
 
             return true;
