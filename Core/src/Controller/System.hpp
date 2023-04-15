@@ -38,7 +38,11 @@ namespace Vakol::Controller
             static void Script_Update(LuaState& lua);
 
 
-            static void Physics_InitObject(PhysicsObject& PhyObj, const Drawable& model, Transform trans);
+            static void Physics_InitObject(RigidBody& rigid,
+                                            std::optional<std::reference_wrapper<Collider>> collider,
+                                            std::optional<std::reference_wrapper<Drawable>> model, //only used if you want to put triangle mesh
+                                            const Transform& trans);
+
             static void Physics_Init();
             static void Physics_UpdateTransforms(float factor);
             static void Physics_SerializationPrep();

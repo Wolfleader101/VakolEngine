@@ -70,7 +70,8 @@ namespace Vakol::Controller {
         {
             auto entity = test.entityList.CreateEntity();
             entity.GetComponent<Components::Tag>().tag = "Entity: " + std::to_string(i);
-            entity.AddComponent<Components::PhysicsObject>(test.scenePhysics, 2, 3);
+            entity.AddComponent<Components::RigidBody>(test.scenePhysics, std::nullopt);
+            
 
             entity.AddComponent<Components::Drawable>("coreAssets/models/cube.obj");
             auto& draw = (entity.GetComponent<Components::Drawable>());
@@ -80,11 +81,17 @@ namespace Vakol::Controller {
 
             auto& trans = entity.GetComponent<Components::Transform>();
 
-            auto& PhyObj = entity.GetComponent<Components::PhysicsObject>();
-            System::Physics_InitObject( PhyObj, draw, trans);
+            auto& PhyObj = entity.GetComponent<Components::RigidBody>();
+
+            entity.AddComponent<Components::Collider>(PhyObj, std::nullopt);
+
+            auto& collider = entity.GetComponent<Components::Collider>();
+
+
+            System::Physics_InitObject( PhyObj, collider, draw, trans);
         }*/
 
-        test.Serialize("assets/scenes");
+        //test.Serialize("assets/scenes");
 
         m_running = true;
     }
@@ -179,7 +186,7 @@ namespace Vakol::Controller {
         // if its handled then u can break
     }
 
-    bool Application::OnWindowClose(WindowCloseEvent& ev) {
+    bool Application::OnWindowClose([[maybe_unused]] WindowCloseEvent& ev) {
         m_running = false;
         return true;
     }

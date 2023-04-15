@@ -145,7 +145,9 @@ namespace Vakol::Model::Components {
 
     struct RigidBody
     {
+        RigidBody() = default;
 
+        bool initialized = false;
         struct RigidData
         {
             double mass = 3;			/**< Mass of object*/
@@ -157,10 +159,12 @@ namespace Vakol::Model::Components {
 
         };
 
+        RigidBody(std::shared_ptr<ScenePhysics> SP, std::optional<RigidData> DataR);
+
         //rigid body
-        std::shared_ptr<ScenePhysics> owningWorld;
-        rp3d::RigidBody* RigidBody;
-        rp3d::BodyType Type;
+        std::shared_ptr<ScenePhysics> owningWorld = nullptr;
+        rp3d::RigidBody* RigidBodyPtr = nullptr;
+        rp3d::BodyType Type = rp3d::BodyType::DYNAMIC; //default
         RigidData Data;
 
         rp3d::Transform prevTransform;
@@ -185,28 +189,38 @@ namespace Vakol::Model::Components {
     };
 
 
-    Collider::Bounds getBounds(const Drawable& model);
-
     struct Collider
     {
-        Collider() = default;
-        Collider(RigidBody& owner);
-
         struct Bounds
         {
-            rp3d::Vector3 min; /**< minimum vertice*/
-            rp3d::Vector3 max; /**< Maximum vertice*/
-            rp3d::Vector3 center; /**< Average of all vertices*/
-            rp3d::Vector3 extents; /**< Extent of vertices*/
-            rp3d::Vector3 size; /**< Size of vertices*/
+            rp3d::Vector3 min = { 0,0,0 }; /**< minimum vertice*/
+            rp3d::Vector3 max = { 1,1,1 }; /**< Maximum vertice*/
+            rp3d::Vector3 center = { 0.5f, 0.5f, 0.5f }; /**< Average of all vertices*/
+            rp3d::Vector3 extents = { 0.5f, 0.5f, 0.5f }; /**< Extent of vertices*/
+            rp3d::Vector3 size = { 1,1,1 }; /**< Size of vertices*/
 
-            float radius; /**< Radius*/
+            float radius = 0.5f * extents.length(); /**< Radius*/
+
+            template <class Archive>
+            void serialize(Archive& ar)
+            {
+                ar(cereal::make_nvp("min.x", min.x), cereal::make_nvp("min.y", min.y), cereal::make_nvp("min.z", min.z));
+                ar(cereal::make_nvp("max.x", max.x), cereal::make_nvp("max.y", max.y), cereal::make_nvp("max.z", max.z));
+                ar(cereal::make_nvp("centre.x", center.x), cereal::make_nvp("centre.y", center.y), cereal::make_nvp("centre.z", center.z));
+                ar(cereal::make_nvp("extents.x", extents.x), cereal::make_nvp("extents.y", extents.y), cereal::make_nvp("extents.z", extents.z));
+                ar(cereal::make_nvp("size.x", size.x), cereal::make_nvp("size.y", size.y), cereal::make_nvp("size.z", size.z));
+                ar(cereal::make_nvp("radius", radius));
+            }
+
         };
 
-        RigidBody* OwningBody;
-        rp3d::Collider* ColliderPtr;
-        rp3d::CollisionShape* Shape;
-        rp3d::CollisionShapeName ShapeName;
+        Collider() = default;
+        Collider(RigidBody& owner, std::optional<Bounds> Data);
+
+        RigidBody* OwningBody = nullptr;
+        rp3d::Collider* ColliderPtr = nullptr;
+        rp3d::CollisionShape* Shape = nullptr;
+        rp3d::CollisionShapeName ShapeName = (rp3d::CollisionShapeName)3; //box default
 
         Bounds bounds;
 
@@ -214,13 +228,13 @@ namespace Vakol::Model::Components {
         void serialize(Archive& ar)
         {
             ar(cereal::make_nvp("CollisionShape", ShapeName));
-            ar(cereal::make_nvp("BoundsMin", bounds.min));
-            ar(cereal::make_nvp("BoundsMax", bounds.max));
-            ar(cereal::make_nvp("BoundsCenter", bounds.center));
-            ar(cereal::make_nvp("BoundsExtents", bounds.extents));
-            ar(cereal::make_nvp("BoundsSize", bounds.size));
-            ar(cereal::make_nvp("BoundsRadius", bounds.radius));
+
+            ar(cereal::make_nvp("Bounds", bounds));
+
         }
+        
     };
+
+    Collider::Bounds getBounds(const Drawable& model);
 
 }  // namespace Vakol::Model::Components

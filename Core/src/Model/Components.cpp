@@ -36,21 +36,30 @@ namespace Vakol::Model::Components
 
     Tag::Tag(const std::string& tag) : tag(tag) {};
 
-    /*PhysicsObject::PhysicsObject(std::shared_ptr<ScenePhysics>& SP, unsigned int BodyType, unsigned int ShapeType, bool colliderOnly) 
-        : owningWorld(SP), Type((rp3d::BodyType)BodyType), ShapeName((rp3d::CollisionShapeName)ShapeType), ColliderOnly(colliderOnly)
+
+
+    Collider::Collider(RigidBody& owner, std::optional<Bounds> Data)
+    {
+        OwningBody = &owner;
+
+        if (!Data.has_value()) return;
+
+        bounds = Data.value();
+    }
+
+    RigidBody::RigidBody(std::shared_ptr<ScenePhysics> SP, std::optional<RigidData> DataR)
     {
         owningWorld = SP;
-        Type = (rp3d::BodyType)BodyType;
-        ShapeName = (rp3d::CollisionShapeName)ShapeType;
-        ColliderOnly = colliderOnly;
-    }*/
+
+        if (!DataR.has_value()) return;
+
+        Data = DataR.value();
+    }
 
     Collider::Bounds getBounds(const Drawable& model)
     {
 
         Collider::Bounds bounds;
-
-        rp3d::Vector3& centre = bounds.center;
 
         rp3d::Vector3& max = bounds.max;
         rp3d::Vector3& min = bounds.min;
@@ -85,9 +94,6 @@ namespace Vakol::Model::Components
     }
 
     
-    Collider::Collider(RigidBody& owner)
-    {
-        OwningBody = &owner;
-    }
+    
 
 }  // namespace Vakol::Model::Components
