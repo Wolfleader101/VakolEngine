@@ -5,7 +5,7 @@
 namespace Vakol::Model::Assets {
     class Shader {
        public:
-        Shader(const unsigned int id) : id(id){};
+        Shader(const unsigned int id) : id(id) {};
         virtual ~Shader() = default;
 
         virtual void Bind() const = 0;
@@ -13,7 +13,7 @@ namespace Vakol::Model::Assets {
 
         const unsigned int GetID() const { return id; }
 
-       protected:
-        unsigned int id;
+    protected:
+        unsigned int id = 0;
     };
 }  // namespace Vakol::Model

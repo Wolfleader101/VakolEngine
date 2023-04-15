@@ -7,6 +7,8 @@
 #include "Shader.hpp"
 #include "Texture.hpp"
 
+#include <Model/UniformBuffer.hpp>
+
 namespace Vakol::Model::Assets {
     struct MaterialSpec {
         MaterialSpec() = default;
@@ -25,6 +27,9 @@ namespace Vakol::Model::Assets {
         Material(const MaterialSpec& spec) : m_spec(spec){};
 
         virtual void SetShader(const std::string& path) = 0;
+
+        virtual void SetUniform(const int size, const int binding) = 0;
+        virtual void SetUniformData(const void* data, const int size, const int offset) const = 0;
 
         virtual void Bind() const = 0;
         virtual void Unbind() const = 0;
@@ -52,6 +57,7 @@ namespace Vakol::Model::Assets {
 
        protected:
         std::shared_ptr<Shader> m_shader = nullptr;
+        std::shared_ptr<UniformBuffer> m_uniform = nullptr;
         MaterialSpec m_spec;
     };
 }  // namespace Vakol::Model::Assets

@@ -15,6 +15,7 @@ namespace Vakol::Model
 
 	void GLMaterial::Unbind() const
 	{
+		this->m_shader->Unbind();
 	}
 
 	void GLMaterial::SetBool(const std::string& name, const bool value) const

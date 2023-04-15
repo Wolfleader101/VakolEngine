@@ -14,8 +14,12 @@ out VS_OUT
     vec3 TangentFragPos;
 } vs_out;
 
-uniform mat4 PV_MATRIX;
-uniform mat3 NORMAL_MATRIX;
+layout (std140, binding = 0) uniform Matrices
+{
+    mat4 PV_MATRIX;
+    mat3 NORMAL_MATRIX;
+};
+
 uniform mat4 MODEL_MATRIX;
 
 uniform vec3 lightPos;

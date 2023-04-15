@@ -9,7 +9,8 @@
 using namespace Vakol::Model::Assets;
 namespace Vakol::Model {
 
-    class GLMaterial : public Material {
+    class GLMaterial : public Material 
+    {
        public:
         GLMaterial(const MaterialSpec& spec) : Material(spec){};
 
@@ -17,13 +18,21 @@ namespace Vakol::Model {
             if (!this->m_shader) this->m_shader = std::make_shared<GLShader>(path);
         }
 
+        void SetUniform(const int size, const int binding) override 
+        {
+            if (!this->m_uniform) this->m_uniform = std::make_shared<GLUniformBuffer>(size, binding);
+        };
+
+        void SetUniformData(const void* data, const int size, const int offset) const override
+        {
+            if (this->m_uniform) this->m_uniform->SetData(data, size, offset);
+        };
+
         void Bind() const override;
         void Unbind() const override;
 
         const unsigned int GetID() const override { return this->m_shader->GetID(); };
-        const int GetTextureCount() const override {
-            return static_cast<int>(this->m_spec.textures.size());
-        }
+        const int GetTextureCount() const override {return static_cast<int>(this->m_spec.textures.size()); }
 
         std::vector<Texture> textures() override { return this->m_spec.textures; }
 

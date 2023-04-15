@@ -2,6 +2,10 @@
 
 #include <Model/Assets/Shader.hpp>
 
+#include <Model/gl/GLUniformBuffer.hpp>
+
+#include <memory>
+
 namespace Vakol::Model::Assets {
     class GLShader : public Shader {
        public:

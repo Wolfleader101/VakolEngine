@@ -25,11 +25,30 @@ Distance	Constant	Linear	Quadratic
 3250	    1.0	        0.0014	0.000007
 */
 
+// void OpenGLMessageCallback(
+// 		unsigned source,
+// 		unsigned type,
+// 		unsigned id,
+// 		unsigned severity,
+// 		int length,
+// 		const char* message,
+// 		const void* userParam)
+// {
+//     switch (severity)
+//     {
+//         case GL_DEBUG_SEVERITY_HIGH:         VK_CRITICAL(message); return;
+//         case GL_DEBUG_SEVERITY_MEDIUM:       VK_ERROR(message); return;
+//         case GL_DEBUG_SEVERITY_LOW:          VK_WARN(message); return;
+//         case GL_DEBUG_SEVERITY_NOTIFICATION: VK_TRACE(message); return;
+//     }
+// }
+
 const glm::vec4 VAKOL_CLASSIC = glm::vec4(0.52941f, 0.80784f, 0.92157f, 1.0f);
 const glm::vec4 VAKOL_DARK = glm::vec4(0.1f, 0.1f, 0.1f, 1.0f);
 
 namespace Vakol::View {
-    GLRenderer::GLRenderer(const std::shared_ptr<Window> window) : Renderer(window) {
+    GLRenderer::GLRenderer(const std::shared_ptr<Window> window) : Renderer(window) 
+    {
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_TEXTURE_2D);
     };
