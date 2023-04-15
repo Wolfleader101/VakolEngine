@@ -1,10 +1,9 @@
 #include "LuaAccess.hpp"
 
 #include "AssetLoader/AssetLoader.hpp"
-#include "Model/Components.hpp"
-
-#include "Model/gl/GLInstance.hpp"
 #include "Model/Assets/Material.hpp"
+#include "Model/Components.hpp"
+#include "Model/gl/GLInstance.hpp"
 
 using Vakol::Model::Assets::Material;
 
@@ -135,79 +134,20 @@ namespace Vakol::Controller {
         auto entityType = lua.new_usertype<Entity>("entity");
 
         entityType.set_function("get_transform", &Entity::GetComponent<Model::Components::Transform>);
-        entityType.set_function("add_model", [](Entity* ent, std::string path) 
-        {
+        entityType.set_function("add_model", [](Entity* ent, std::string path) {
             if (ent->HasComponent<Model::Components::Drawable>() == false)
                 ent->AddComponent<Model::Components::Drawable>();
-            
+
             auto model = AssetLoader::GetModel(path);
-            
+
             if (model == nullptr) return false;
+            model->meshes().begin()->material()->SetShader("coreAssets/shaders/basic.prog");
 
-            auto material = model->meshes().begin()->material();
-
-            for (const auto& texture : material->textures())
-                GLTexture tex("coreAssets/textures/Test/" + texture.path);
-
-            int amount = 30000;
-            std::vector<glm::mat4> matrices;
-
-            matrices.reserve(amount);
-
-            srand(static_cast<unsigned int>(glfwGetTime()));
-
-            float radius = 150.0f;
-            float offset = 25.0f;
-
-            for (int i = 0; i < amount; ++i)
-            {
-                glm::mat4 model = glm::mat4(1.0f);
-
-                float angle = (float)i / (float) amount * 360.0f;
-                float displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
-
-                float x = sin(angle) * radius + displacement;
-                displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
-                
-                float y = displacement * 0.4f;
-                displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
-
-                float z = cos(angle) * radius + displacement;
-                model = glm::translate(model, glm::vec3(x,y,z));
-
-                float scale = static_cast<float>((rand() % 20) / 100.0f + 0.75f);
-                model = glm::scale(model, glm::vec3(scale));
-
-                float rotAngle = static_cast<float>((rand() % 360));
-                model = glm::rotate(model, rotAngle, glm::vec3(0.4f, 0.6f, 0.8f));
-
-                matrices.push_back(model);
+            for (const auto& texture : model->meshes().begin()->material()->textures()) {
+                GLTexture tex("coreAssets/textures/" + texture.path);
+                tex.Bind();
             }
 
-            CreateInstanced(model->meshes(), matrices);
-
-            // force it for now, since I don't understand lua lol
-            material->SetShader("coreAssets/shaders/instance.prog");
-            material->Bind();
-
-            // material->SetInt("material.diffuse", 0);
-            // material->SetInt("material.specular", 1);
-            // material->SetInt("material.emissive", 2);
-            
-            // material->SetFloat("material.shininess", 64.0f);
-
-            // material->SetVec3("light.ambient", glm::vec3(0.1f, 0.1f, 0.1f));
-            // material->SetVec3("light.diffuse", glm::vec3(0.8f, 0.8f, 0.8f));
-            // material->SetVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
-
-            // material->SetFloat("light.constant", 1.0f);
-            // material->SetFloat("light.linear", 0.045f);
-            // material->SetFloat("light.quadratic", 0.0075f);
-            // material->SetFloat("light.cut_off", glm::cos(glm::radians(12.5f)));
-            // material->SetFloat("light.outer_cut_off", glm::cos(glm::radians(17.5f)));
-
-            // material->SetInt("option", SPOT_LIGHT);
-           
             ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
 
             return true;

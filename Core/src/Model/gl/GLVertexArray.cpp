@@ -1,12 +1,11 @@
-#include <Model/gl/GLVertexArray.hpp>
-
 #include <glad/glad.h>
 
-namespace Vakol::Model 
-{
+#include <Model/gl/GLVertexArray.hpp>
 
-	GLVertexArray::GLVertexArray(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices) : VertexArray(vertices, indices) 
-    {
+namespace Vakol::Model {
+
+    GLVertexArray::GLVertexArray(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices)
+        : VertexArray(vertices, indices) {
         this->GenArray(1, &this->VAO);
         this->Bind();
 
@@ -16,7 +15,8 @@ namespace Vakol::Model
 
         this->GenBuffer(1, &this->EBO);
         this->BindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->EBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->indices.size() * sizeof(unsigned int), this->indices.data(), GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->indices.size() * sizeof(unsigned int), this->indices.data(),
+                     GL_STATIC_DRAW);
 
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
@@ -29,7 +29,7 @@ namespace Vakol::Model
 
         glEnableVertexAttribArray(3);
         glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, tangent));
-        
+
         glEnableVertexAttribArray(4);
         glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, bitangent));
 
@@ -42,8 +42,7 @@ namespace Vakol::Model
         this->Unbind();
     }
 
-    void GLVertexArray::Draw() const
-    {
+    void GLVertexArray::Draw() const {
         this->Bind();
 
         glDrawElements(GL_TRIANGLES, this->GetIndices(), GL_UNSIGNED_INT, 0);
@@ -78,4 +77,4 @@ namespace Vakol::Model
     const unsigned int GLVertexArray::GetVertices() const { return static_cast<unsigned int>(this->vertices.size()); }
 
     const unsigned int GLVertexArray::GetIndices() const { return static_cast<unsigned int>(this->indices.size()); }
-}
+}  // namespace Vakol::Model
