@@ -10,7 +10,11 @@ out VS_OUT {
     vec2 TexCoords;
 } vs_out;
 
-uniform mat4 PV_MATRIX;
+layout (std140, binding = 1) uniform Matrices
+{
+    mat4 PV_MATRIX;
+};
+
 uniform mat3 NORMAL_MATRIX;
 uniform mat4 MODEL_MATRIX;
 

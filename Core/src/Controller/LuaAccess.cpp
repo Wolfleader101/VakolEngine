@@ -147,6 +147,7 @@ namespace Vakol::Controller {
             if (model == nullptr) return false;
 
             auto material = model->meshes().begin()->material();
+            material->AddUniform(sizeof(glm::mat4), 1);
 
             // force it for now, since I don't understand lua lol
             material->SetShader("coreAssets/shaders/custom_nm.prog");
@@ -158,7 +159,7 @@ namespace Vakol::Controller {
                 material->SetFloat("material.shininess", material->shininess());
 
                 if (i == 0)
-                    GLTexture texture("coreAssets/textures/" + material->textures().at(i).path, false, false);
+                    GLTexture texture("coreAssets/textures/" + material->textures().at(i).path, false, true);
                 else
                     GLTexture texture("coreAssets/textures/" + material->textures().at(i).path);
                 //VK_TRACE("{0} {1}", "material." + material->textures().at(i).type, i);

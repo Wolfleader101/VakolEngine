@@ -75,17 +75,13 @@ namespace Vakol::View {
 
         for (auto mesh : drawable.model_ptr->meshes()) 
         {
-            mesh.material()->SetMat4("PV_MATRIX", camera.GetMatrix(PV_MATRIX));
+            mesh.material()->SetUniformData(0, 0, sizeof(glm::mat4), glm::value_ptr(camera.GetMatrix(PV_MATRIX)));
+
             mesh.material()->SetMat3("NORMAL_MATRIX", glm::transpose(glm::inverse(glm::mat3(model_matrix))));
             mesh.material()->SetMat4("MODEL_MATRIX", model_matrix);
 
             mesh.material()->SetVec3("lightPos", glm::vec3(1.5f, 2.0f, 1.2f));
             mesh.material()->SetVec3("viewPos", camera.GetPos());
-
-            // mesh.material()->SetVec3("light.position", camera.GetPos());
-            // mesh.material()->SetVec3("light.direction", camera.GetForward());
-
-            // mesh.material()->SetFloat("time", time.curTime);
 
             for (int i = 0; i < mesh.material()->GetTextureCount(); ++i)
             {

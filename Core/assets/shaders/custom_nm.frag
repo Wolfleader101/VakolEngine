@@ -37,7 +37,7 @@ vec3 BlinnPhong(vec3 normal, vec3 color)
 
     vec3 halfwayDir = normalize(lightDir + viewDir);  
     spec = pow(max(dot(normal, halfwayDir), 0.0), material.shininess);
-    vec3 specular = vec3(0.3) * spec; // assuming bright white light color
+    vec3 specular = vec3(0.6) * spec; // assuming bright white light color
 
     // simple attenuation
     float distance = length(lightPos - fs_in.FragPos);
