@@ -12,7 +12,7 @@ namespace Vakol::Controller {
     void RegisterApplication(sol::state& lua, Application* app);
     void RegisterEntity(sol::state& lua);
     void RegisterECS(sol::state& lua);
-    void RegisterGUIWindow(sol::state& lua);
+    void RegisterGUIWindow(sol::state& lua, View::GUIWindow* guiWindow);
     void RegisterRenderer(sol::state& lua);
     void RegisterPhysics(sol::state& lua);
     void RegisterScene(sol::state& lua);

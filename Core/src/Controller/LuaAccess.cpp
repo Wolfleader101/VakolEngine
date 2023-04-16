@@ -207,9 +207,26 @@ namespace Vakol::Controller {
         cameraType.set_function("set_yaw", &Camera::SetYaw);
     }
 
-    void RegisterGUIWindow(sol::state& lua) {
-        auto guiWindowType = lua.new_usertype<GUIWindow>("gui window");
+    void RegisterGUIWindow(sol::state& lua, View::GUIWindow* guiWindow) {
+        auto guiWindowType = lua.new_usertype<View::GUIWindow>("gui_window"); //Creates a new usertype of the type 'View::GUIWindow'
+
+        //REGISTERS C++ FUNCTIONS TO LUA
+        guiWindowType.set_function("start_window_creation", &View::GUIWindow::StartWindowCreation);
+        guiWindowType.set_function("set_position_inside_window", &View::GUIWindow::SetPositionInsideWIndow);
+
+        guiWindowType.set_function("add_text", &View::GUIWindow::AddText);
+        guiWindowType.set_function("add_button", &View::GUIWindow::AddButton);
+        guiWindowType.set_function("add_checkbox", &View::GUIWindow::AddCheckbox);
+
+        guiWindowType.set_function("add_integer_slider", &View::GUIWindow::AddIntSlider);
+        guiWindowType.set_function("add_float_slider", &View::GUIWindow::AddFloatSlider);
+
+        guiWindowType.set_function("add_vector_integer_slider", &View::GUIWindow::AddVecIntSlider);
+        guiWindowType.set_function("add_vector_float_slider", &View::GUIWindow::AddVecFloatSlider);
+
+        guiWindowType.set_function("end_window_creation", &View::GUIWindow::EndWindowCreation);
     }
+
     void RegisterRenderer(sol::state& lua) {}
     void RegisterPhysics(sol::state& lua) {}
 }  // namespace Vakol::Controller
