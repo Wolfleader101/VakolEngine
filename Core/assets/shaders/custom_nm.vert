@@ -10,8 +10,12 @@ out VS_OUT {
     vec2 TexCoords;
 } vs_out;
 
-uniform mat4 PROJECTION_MATRIX;
-uniform mat4 VIEW_MATRIX;
+layout (std140, binding = 1) uniform Matrices
+{
+    mat4 PROJECTION_MATRIX;
+    mat4 VIEW_MATRIX;
+};
+
 uniform mat4 MODEL_MATRIX;
 
 void main()

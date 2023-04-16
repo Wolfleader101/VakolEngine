@@ -147,6 +147,7 @@ namespace Vakol::Controller {
             if (model == nullptr) return false;
 
             auto material = model->meshes().begin()->material();
+            material->AddUniform(2 * sizeof(glm::mat4), 1);
 
             // force it for now, since I don't understand lua lol
             material->SetShader("coreAssets/shaders/custom_nm.prog");
