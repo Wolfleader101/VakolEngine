@@ -10,14 +10,11 @@
 
 #include <Model/Components.hpp>
 
-
 using namespace Vakol::Model::Components;
-using Scene = Vakol::Controller::Scene;
 
+namespace Vakol::Controller {
 
-namespace Vakol::Controller 
-{
-    entt::registry* System::m_registry = nullptr;
+    entt::registry* System::registry = nullptr;
     std::shared_ptr<ScenePhysics> System::m_SP = nullptr;
 
 
@@ -38,22 +35,21 @@ namespace Vakol::Controller
         );
     }
 
-    void System::Model_Draw() {
-        // registry.view<Components::Transform, Components::ModelType>().each(
-        //	[&](auto& trans, auto& model) {
-        //		/* draw model */
-        //
-        //	}
-        //);
+    void System::Drawable_Update(const Time& time, const Controller::Camera& camera,
+                                 const std::shared_ptr<View::Renderer> renderer) {
+        registry->view<Components::Transform, Components::Drawable>().each(
+            [&](auto& trans, Components::Drawable& drawable) { renderer->Draw(time, camera, trans, drawable); });
     }
 
-    void System::Script_Update(LuaState& lua) {
-        m_registry->view<Script>().each([&](auto& script) {
+    void System::Script_Update(LuaState& lua, EntityList& list, Scene* scene) {
+        registry->view<Components::Script>().each([&](auto entity_id, auto& script) {
             lua.RunFile("scripts/" + script.script_name);
 
             sol::function update = lua.GetState()["update"];
 
-            update();
+            auto ent = list.GetEntity(static_cast<unsigned int>(entity_id));
+
+            update(*scene, ent);
         });
     }
 

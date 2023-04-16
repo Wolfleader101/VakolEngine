@@ -1,9 +1,6 @@
 #pragma once
 
-
-
 #include <View/GUI/GUIWindow.hpp>
-
 #include <View/Renderer/Renderer.hpp>
 #include <View/Window/Window.hpp>
 #include <memory>
@@ -19,6 +16,7 @@
 #include <Model/Entity.hpp>
 #include <Model/GameConfig.hpp>
 
+#include "Input.hpp"
 #include "Scene.hpp"
 
 namespace Vakol::Controller {
@@ -75,8 +73,11 @@ namespace Vakol::Controller {
         const int GetHeight() const { return m_window->GetHeight(); }
 
         void AddScene(std::string scriptName, std::string scene_name = "");
-        // void SetActiveScene(std::string scene_name);
-        // void DisableAllScenes()
+
+        const Time& GetTime() const { return m_time; }
+
+        const Input& GetInput() const { return m_input; }
+
        private:
         /**
          * @brief
@@ -95,6 +96,9 @@ namespace Vakol::Controller {
          * @return true if successful
          */
         bool Application::OnKeyPressed(KeyPressedEvent& kev);
+
+        bool OnKeyReleased(KeyReleasedEvent& kev);
+        bool OnMouseMoved(MouseMovedEvent& ev);
 
         /**
          * @brief load the game config
@@ -131,6 +135,9 @@ namespace Vakol::Controller {
          */
         bool m_running = true;
 
-        Vakol::View::GUIWindow m_gui;
+        View::GUIWindow m_gui;
+
+        Input m_input;
+
     };  // namespace Vakol::Controller
 }  // namespace Vakol::Controller

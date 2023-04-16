@@ -11,8 +11,9 @@
 
 namespace Vakol::Controller {
     Scene::Scene(const std::string& name, const std::string& scriptName, LuaState& lua, std::shared_ptr<Physics::ScenePhysics> SP, bool active)
-        : name(name), scriptName(scriptName), lua(lua), entityList(), scenePhysics(SP), active(active)  {
+        : name(name), scriptName(scriptName), lua(lua), entityList(), scenePhysics(SP), active(active), cam(glm::vec3(0.0f, 0.0f, 1.0f)  {
         lua.RunFile("scripts/" + scriptName);
+        System::SetEntityList(entityList);
 
         sol::function init = lua.GetState()["init"];
 
@@ -23,20 +24,27 @@ namespace Vakol::Controller {
 
     void Scene::setName(const std::string& newName) { name = newName; }
 
-    void Scene::CreateEntity(const std::string scriptName) {
+    Model::Entity Scene::CreateEntity(const std::string scriptName) {
         auto ent = entityList.CreateEntity();
-        if (scriptName.length() != 0) ent.AddComponent<Model::Components::Script>(scriptName, lua);
+        if (scriptName.length() != 0) ent.AddComponent<Model::Components::Script>(scriptName, lua, ent, *this);
+        return ent;
     }
 
-    void Scene::Update(const Controller::Time& time) {
+    void Scene::Update(const Time& time, const std::shared_ptr<View::Renderer> renderer) {
+        System::SetEntityList(entityList);
+
         lua.RunFile("scripts/" + scriptName);
 
         sol::function update = lua.GetState()["update"];
 
-        update();
+        update(*this);
 
         scenePhysics->Update(time);
-        System::Script_Update(lua);
+        System::Script_Update(lua, entityList, this);
+
+        System::Drawable_Update(time, cam, renderer);
+
+        cam.Update(time.deltaTime);
     }
 
     namespace fs = std::filesystem;
@@ -72,8 +80,6 @@ namespace Vakol::Controller {
     }
 
     void Scene::Deserialize(const std::string& folder) {
-
-        
         entityList.Deserialize(folder + "/EntityList.json");
 
         System::BindScene(*this);
@@ -87,8 +93,6 @@ namespace Vakol::Controller {
             json(name);
             json(scriptName);
         }
-
-
     }
 
 }  // namespace Vakol::Controller

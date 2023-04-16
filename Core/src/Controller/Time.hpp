@@ -9,29 +9,28 @@ namespace Vakol {
          * @brief time data used everywhere
          */
         struct Time {
-
-            Time() {};
+            Time(){};
             /**
              * @brief current time
              */
-            double curTime = 0.0f;
+            float curTime = 0.0f;
 
             /**
              * @brief delta time
              */
-            double deltaTime = 0.0f;
+            float deltaTime = 0.0f;
 
             /**
              * @brief the previous frames time
              *
              */
-            double prevTime = 0.0f;
+            float prevTime = 0.0f;
 
             /**
              * @brief used to update the time struct
              */
             void Update() {
-                curTime = glfwGetTime();
+                curTime = static_cast<float>(glfwGetTime());
                 if (prevTime == 0.0f)
                     deltaTime = 0.0f;
                 else
@@ -39,5 +38,5 @@ namespace Vakol {
                 prevTime = curTime;
             }
         };
-    }
-}  // namespace Vakol::Controller
+    }  // namespace Controller
+}  // namespace Vakol

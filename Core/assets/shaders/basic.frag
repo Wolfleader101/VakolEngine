@@ -1,19 +1,11 @@
 #version 460 core
 out vec4 FragColor;
 
-in vec2 uv;
+in vec2 TexCoords;
 
-uniform vec4 rgba;
-
-uniform sampler2D inputTexture0;
-uniform float uvScale0 = 1.0;
-
-uniform bool enableTexture;
+uniform sampler2D texture_0;
 
 void main()
 {
-    if (enableTexture)
-        FragColor = texture(inputTexture0, uv * uvScale0) * rgba;
-    else
-        FragColor = rgba;
+     FragColor = texture(texture_0, TexCoords);
 }

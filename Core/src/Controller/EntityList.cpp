@@ -8,12 +8,10 @@
 #include <Controller/System.hpp>
 #include <Model/Components.hpp>
 #include <Model/Entity.hpp>
-#include <Model/Components.hpp>
 
 
-using namespace Vakol::Model::Components;
-
-namespace Vakol::Controller {
+namespace Vakol::Controller 
+{
 
     Entity& EntityList::CreateEntity() {
         Entity newEntity = Entity(m_Registry.create(), this);
@@ -111,4 +109,4 @@ namespace Vakol::Controller {
                             Drawable>(file);
     }
 
-}  // namespace Vakol::Controller
+}

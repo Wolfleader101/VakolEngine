@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Camera.hpp"
 #include "EntityList.hpp"
 #include "LuaState.hpp"
 #include "Time.hpp"
@@ -7,8 +8,10 @@
 #include <Controller/Physics/ScenePhysics.hpp>
 
 
+#include "View/Renderer/Renderer.hpp"
 
 namespace Vakol::Controller {
+
     class Scene {
        public:
         /**
@@ -19,14 +22,14 @@ namespace Vakol::Controller {
         /**
          * @brief the entity list of scene
          */
-        EntityList entityList; 
+        EntityList entityList;
 
         const std::string& getName() const;
         void setName(const std::string& newName);
 
-        void Update(const Time& time);
+        void Update(const Time& time, const std::shared_ptr<View::Renderer> renderer);
 
-        void CreateEntity(const std::string scriptName = "");
+        Model::Entity CreateEntity(const std::string scriptName = "");
 
         void Serialize(const std::string& folder) const;
         void Deserialize(const std::string& folder);
@@ -34,6 +37,7 @@ namespace Vakol::Controller {
         bool active = false;
 
         std::shared_ptr<Physics::ScenePhysics> scenePhysics;
+        Camera& GetCamera() { return cam; }
 
        private:
 
@@ -41,5 +45,6 @@ namespace Vakol::Controller {
         LuaState& lua;
         std::string scriptName;
         std::string name;
+        Camera cam;
     };
 }  // namespace Vakol::Controller

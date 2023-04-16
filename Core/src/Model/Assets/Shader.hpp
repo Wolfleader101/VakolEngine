@@ -2,10 +2,7 @@
 
 #include <string>
 
-#include <glm/mat4x4.hpp>
-
-namespace Vakol::Model::Assets
-{
+namespace Vakol::Model::Assets {
     class Shader {
        public:
         Shader(const unsigned int id) : id(id){};
@@ -14,14 +11,9 @@ namespace Vakol::Model::Assets
         virtual void Bind() const = 0;
         virtual void Unbind() const = 0;
 
-        virtual void SetBool(const std::string& name, const bool value) const = 0;
-        virtual void SetInt(const std::string& name, const int value) const = 0;
-        virtual void SetFloat(const std::string& name, const float value) const = 0;
-        virtual void SetMat4(const std::string& name, const glm::mat4& value) const = 0;
-
-        const virtual unsigned int GetID() const = 0;
+        const unsigned int GetID() const { return id; }
 
        protected:
         unsigned int id;
     };
-}
+}  // namespace Vakol::Model

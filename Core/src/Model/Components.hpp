@@ -6,9 +6,13 @@
 #include <Controller/Physics/ScenePhysics.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>
+#include <memory>
 #include <string>
 
-#include <Model/Assets/Model.hpp>
+#include "Controller/LuaState.hpp"
+#include "Controller/Scene.hpp"
+#include "Entity.hpp"
+#include "Model/Assets/Model.hpp"
 
 namespace Vakol::Model::Components {
     /**
@@ -38,19 +42,22 @@ namespace Vakol::Model::Components {
          * @param rot rotation
          * @param sca scale
          */
-        Transform(const glm::vec3& pos, const glm::quat& rot, const glm::vec3& scale);
+        Transform(const glm::vec3& pos, const glm::vec3& rot, const glm::vec3& scale);
 
-        glm::vec3 pos;   /**< XYZ position */
-        glm::quat rot;   /**< XYZ rotation */
-        glm::vec3 scale = { 1,1,1 }; /**< XYZ scale */
+        glm::vec3 pos = glm::vec3(0, 0, 0); /**< XYZ position */
+        // glm::quat rot;   /**< XYZW rotation */
+        glm::vec3 rot = glm::vec3(0, 0, 0);   /**< XYZ rotation */
+        glm::vec3 scale = glm::vec3(1, 1, 1); /**< XYZ scale */
 
         template <class Archive>
         void serialize(Archive& ar) {
             ar(cereal::make_nvp("pos.x", pos.x), cereal::make_nvp("pos.y", pos.y), cereal::make_nvp("pos.z", pos.z),
 
-               cereal::make_nvp("rot.w", rot.w), cereal::make_nvp("rot.x", rot.x), cereal::make_nvp("rot.y", rot.y), cereal::make_nvp("rot.z", rot.z),
+               //    cereal::make_nvp("rot.w", rot.w),
+               cereal::make_nvp("rot.x", rot.x), cereal::make_nvp("rot.y", rot.y), cereal::make_nvp("rot.z", rot.z),
 
-               cereal::make_nvp("scale.x", scale.x), cereal::make_nvp("scale.y", scale.y), cereal::make_nvp("scale.z", scale.z));
+               cereal::make_nvp("scale.x", scale.x), cereal::make_nvp("scale.y", scale.y),
+               cereal::make_nvp("scale.z", scale.z));
         }
     };
 
@@ -118,7 +125,7 @@ namespace Vakol::Model::Components {
         Script() = default;
         Script(const std::string& name);
 
-        Script(const std::string& script, Controller::LuaState& lua);
+        Script(const std::string& script, Controller::LuaState& lua, Model::Entity& entity, Controller::Scene& scene);
 
         template <class Archive>
         void serialize(Archive& ar) {
