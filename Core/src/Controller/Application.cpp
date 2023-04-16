@@ -7,6 +7,8 @@
 #include "Logger.hpp"
 
 // testing assetLoader
+
+#include <Controller/Physics/PhysicsPool.hpp>
 #include <Controller/AssetLoader/AssetLoader.hpp>
 #include <Model/Assets/Texture.hpp>
 

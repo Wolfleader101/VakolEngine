@@ -13,7 +13,7 @@ namespace Vakol::Model::Assets {
         Model() = default;
         Model(const std::vector<Mesh>& meshes) : m_meshes(meshes){};
 
-        const std::vector<Mesh> meshes() const { return m_meshes; }
+        const std::vector<Mesh>& meshes() const { return m_meshes; }
 
     private:
         std::vector<Mesh> m_meshes;

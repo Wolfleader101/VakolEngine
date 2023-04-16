@@ -13,7 +13,7 @@
 namespace Vakol::Model::Components 
 {
 
-    Transform::Transform(const glm::vec3& pos, const glm::quat& rot, const glm::vec3& scale)
+    Transform::Transform(const glm::vec3& pos, const glm::vec3& rot, const glm::vec3& scale)
         : pos(pos), rot(rot), scale(scale){};
 
     Script::Script(const std::string& name) : script_name(name) {}
@@ -65,15 +65,15 @@ namespace Vakol::Model::Components
         rp3d::Vector3& max = bounds.max;
         rp3d::Vector3& min = bounds.min;
 
-        auto& firstVert = model.ModelPtr->meshes.at(0).vertices.at(0);
+        auto& firstVert = model.ModelPtr->meshes().at(0).vao()->GetVerticeVec().at(0);
 
         max = min = rp3d::Vector3(firstVert.position.x, firstVert.position.y, firstVert.position.z);
 
         rp3d::Vector3 tempVert;
 
-        for (auto& msh : model.ModelPtr->meshes)
+        for (auto& msh : model.ModelPtr->meshes())
         {
-            for (auto& vertice : msh.vertices)
+            for (auto& vertice : msh.vao()->GetVerticeVec())
             {
                 tempVert.x = vertice.position.x;
                 tempVert.y = vertice.position.y;

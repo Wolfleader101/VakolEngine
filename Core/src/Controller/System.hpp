@@ -31,7 +31,7 @@ namespace Vakol::Controller
             // -- READ --
             // if you add a function use the convention Type_Action()
             // will make it more intuitive to find names of funcs
-            static void Model_Init();
+            static void Drawable_Init();
             
 
             static void Drawable_Update(const Time& time, const Controller::Camera& camera,
@@ -39,8 +39,6 @@ namespace Vakol::Controller
 
             static void Script_Update(LuaState& lua, EntityList& list, Scene* scene);
 
-
-            static void Script_Update(LuaState& lua);
 
 
             static void Physics_InitObject(RigidBody& rigid,

@@ -43,7 +43,7 @@ namespace Vakol::View {
         model_matrix = glm::rotate(model_matrix, trans.rot.y, glm::vec3(0.0f, 1.0f, 0.0f));
         model_matrix = glm::rotate(model_matrix, trans.rot.z, glm::vec3(0.0f, 0.0f, 1.0f));
 
-        for (auto mesh : drawable.model_ptr->meshes()) {
+        for (auto& mesh : drawable.ModelPtr->meshes()) {
             mesh.material()->SetMat4("PV", camera.GetMatrix(_PV_MATRIX));
             mesh.material()->SetMat4("MODEL", model_matrix);
     

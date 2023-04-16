@@ -14,7 +14,7 @@ using namespace Vakol::Model::Components;
 
 namespace Vakol::Controller {
 
-    entt::registry* System::registry = nullptr;
+    entt::registry* System::m_registry = nullptr;
     std::shared_ptr<ScenePhysics> System::m_SP = nullptr;
 
 
@@ -24,7 +24,7 @@ namespace Vakol::Controller {
         m_SP = scene.scenePhysics;
     }
 
-    void System::Model_Init()
+    void System::Drawable_Init()
     {
         m_registry->view<Drawable>().each(
             [&](Drawable& model)
@@ -37,12 +37,12 @@ namespace Vakol::Controller {
 
     void System::Drawable_Update(const Time& time, const Controller::Camera& camera,
                                  const std::shared_ptr<View::Renderer> renderer) {
-        registry->view<Components::Transform, Components::Drawable>().each(
+        m_registry->view<Components::Transform, Components::Drawable>().each(
             [&](auto& trans, Components::Drawable& drawable) { renderer->Draw(time, camera, trans, drawable); });
     }
 
     void System::Script_Update(LuaState& lua, EntityList& list, Scene* scene) {
-        registry->view<Components::Script>().each([&](auto entity_id, auto& script) {
+        m_registry->view<Components::Script>().each([&](auto entity_id, auto& script) {
             lua.RunFile("scripts/" + script.script_name);
 
             sol::function update = lua.GetState()["update"];
@@ -88,8 +88,11 @@ namespace Vakol::Controller {
             auto& interPos = interpolatedTransform.getPosition();
             trans.pos = glm::vec3(interPos.x, interPos.y, interPos.z);
 
-            auto& interOrient = interpolatedTransform.getOrientation();
-            trans.rot = glm::quat(interOrient.w, interOrient.x, interOrient.y, interOrient.z);
+            auto& rp3dQuat = interpolatedTransform.getOrientation();
+
+            glm::quat glmQuat(rp3dQuat.w, rp3dQuat.x, rp3dQuat.y, rp3dQuat.z);
+
+            trans.rot = glm::vec3(glm::eulerAngles(glmQuat));
         }
         );
     }
@@ -112,7 +115,7 @@ namespace Vakol::Controller {
 
 
                     rp3d::Vector3 pos(trans.pos.x, trans.pos.y, trans.pos.z);
-                    rp3d::Quaternion quat = rp3d::Quaternion(trans.rot.x, trans.rot.y, trans.rot.z, trans.rot.w);
+                    rp3d::Quaternion quat = rp3d::Quaternion::fromEulerAngles(trans.rot.x, trans.rot.y, trans.rot.z);
 
                     rigid.prevTransform = rp3d::Transform(pos, quat);
                 }
@@ -173,14 +176,17 @@ namespace Vakol::Controller {
 
                 auto MeshPtr = PhysicsPool::m_Common.createTriangleMesh();
 
-                for (auto mesh : draw.ModelPtr->meshes)
+                for (auto& mesh : draw.ModelPtr->meshes())
                 {
                     rp3d::TriangleVertexArray* triArray = nullptr;
 
                     triArray = new rp3d::TriangleVertexArray(
-
-                        mesh.vertices.size(), mesh.vertices.data(), sizeof(float) * 3,
-                        mesh.indices.size() / 3, mesh.indices.data(), sizeof(unsigned int) * 3,
+                        mesh.vao()->GetVertices(),
+                        mesh.vao()->GetVerticeVec().data(),
+                        sizeof(float) * 3,
+                        mesh.vao()->GetIndices() / 3,
+                        mesh.vao()->GetIndiceVec().data(),
+                        sizeof(unsigned int) * 3,
                         rp3d::TriangleVertexArray::VertexDataType::VERTEX_FLOAT_TYPE,
                         rp3d::TriangleVertexArray::IndexDataType::INDEX_INTEGER_TYPE
                     );
