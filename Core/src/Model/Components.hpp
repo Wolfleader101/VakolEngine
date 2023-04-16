@@ -43,8 +43,9 @@ namespace Vakol::Model::Components {
         Transform(const glm::vec3& pos, const glm::vec3& rot, const glm::vec3& scale);
 
         glm::vec3 pos = glm::vec3(0, 0, 0); /**< XYZ position */
-        // glm::quat rot;   /**< XYZW rotation */
+        
         glm::vec3 rot = glm::vec3(0, 0, 0);   /**< XYZ rotation */
+
         glm::vec3 scale = glm::vec3(1, 1, 1); /**< XYZ scale */
 
         template <class Archive>

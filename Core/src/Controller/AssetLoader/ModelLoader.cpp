@@ -8,6 +8,8 @@
 
 #include <Controller/Logger.hpp>
 
+#include <chrono>
+
 using namespace Vakol::Model::Assets;
 using Vakol::Model::Vertex;
 
@@ -32,6 +34,8 @@ namespace Vakol::Controller
 
         VK_TRACE("Loading Model: {0}", path);
 
+        auto start = std::chrono::steady_clock::now();
+
         const aiScene* scene = importer.ReadFile(
             path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 
@@ -43,6 +47,12 @@ namespace Vakol::Controller
         directory = path.substr(0, path.find_last_of('/'));
 
         ::ProcessNode(scene->mRootNode, scene);
+
+        auto end = std::chrono::steady_clock::now();
+
+        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+
+        VK_TRACE("Finished Loading Model. Elapsed Time: {0} ms", duration.count());
 
         return ::Model(meshes);
     }

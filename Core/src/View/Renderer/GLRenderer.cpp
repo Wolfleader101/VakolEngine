@@ -56,6 +56,17 @@ namespace Vakol::View {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     };
 
+    void GLRenderer::AddUniform(const int size, const int binding) 
+	{
+		this->m_uniforms.push_back(std::make_shared<GLUniformBuffer>(size, binding));
+	}
+
+	void GLRenderer::SetUniformData(const int index, const int offset, const int size, const void* data) const
+	{
+		if (this->m_uniforms[index]) this->m_uniforms[index]->SetData(offset, size, data);
+		else VK_ERROR("Uniform buffer at index {0} does not exist!", index);
+	}
+
     void GLRenderer::ClearColor(const glm::vec4& color) const { glClearColor(color.r, color.g, color.b, color.a); }
     void GLRenderer::ClearColor(const float r, const float g, const float b, const float a) const { glClearColor(r,g,b,a); }
 
@@ -85,14 +96,12 @@ namespace Vakol::View {
                 glActiveTexture(GL_TEXTURE0 + i);
                 glBindTexture(GL_TEXTURE_2D, j);
             }
-
-            mesh.vao()->DrawElements();
         }
     }
 
     void GLRenderer::Update() const
     {
-        ClearColor(VAKOL_DARK);
+        ClearColor(VAKOL_CLASSIC);
         ClearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 }  // namespace Vakol::View

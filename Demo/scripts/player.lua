@@ -1,9 +1,5 @@
 function init(scene, entity)
     entity:add_model("coreAssets/models/cube.obj")
-
-    entity:get_transform().pos.x = 0.0;
-    entity:get_transform().pos.y = 0.0;
-    entity:get_transform().poz.z = 0.0;
 end
 
 local function lerp(a, b, t)

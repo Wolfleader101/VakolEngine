@@ -7,10 +7,10 @@
 #include "Shader.hpp"
 #include "Texture.hpp"
 
-#include <Model/UniformBuffer.hpp>
-
 namespace Vakol::Model::Assets {
-    struct MaterialSpec {
+
+    struct MaterialSpec 
+    {
         MaterialSpec() = default;
 
         glm::vec3 AMBIENT = glm::vec3(1.0f);
@@ -22,14 +22,12 @@ namespace Vakol::Model::Assets {
         std::vector<Texture> textures;
     };
 
-    class Material {
-       public:
+    class Material 
+    {
+    public:
         Material(const MaterialSpec& spec) : m_spec(spec){};
 
         virtual void SetShader(const std::string& path) = 0;
-
-        virtual void AddUniform(const int size, const int binding) = 0;
-        virtual void SetUniformData(const int index, const int offset, const int size, const void* data) const = 0;
 
         virtual void Bind() const = 0;
         virtual void Unbind() const = 0;
@@ -38,8 +36,6 @@ namespace Vakol::Model::Assets {
         virtual const int GetTextureCount() const = 0;
 
         virtual std::vector<Texture> textures() = 0;
-
-        virtual const float shininess() const = 0;
 
        public:
         virtual void SetBool(const std::string& name, const bool value) const = 0;
@@ -59,7 +55,6 @@ namespace Vakol::Model::Assets {
 
     protected:
         std::shared_ptr<Shader> m_shader = nullptr;
-        std::vector<std::shared_ptr<UniformBuffer>> m_uniforms;
         MaterialSpec m_spec;
     };
 }  // namespace Vakol::Model::Assets
