@@ -148,12 +148,6 @@ namespace Vakol::Controller {
 
             auto material = model->meshes().begin()->material();
 
-            material->SetUniform(2 * sizeof(glm::mat4) + sizeof(glm::mat3), 1);
-
-            // test uniform
-            glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)1280 / (float) 720, 0.1f, 1000.0f);
-            material->SetUniformData(0, sizeof(glm::mat4), glm::value_ptr(projection));
-
             // force it for now, since I don't understand lua lol
             material->SetShader("coreAssets/shaders/custom_nm.prog");
             material->Bind();
@@ -161,12 +155,15 @@ namespace Vakol::Controller {
             for (int i = 0; i < material->GetTextureCount(); ++i)
             {
                 material->SetInt("material." + material->textures().at(i).type, i);
-                GLTexture texture("coreAssets/textures/" + material->textures().at(i).path);
+                material->SetFloat("material.shininess", material->shininess());
+
+                if (i == 0)
+                    GLTexture texture("coreAssets/textures/" + material->textures().at(i).path, false, false);
+                else
+                    GLTexture texture("coreAssets/textures/" + material->textures().at(i).path);
                 //VK_TRACE("{0} {1}", "material." + material->textures().at(i).type, i);
             }
-
-            //material->SetInt("option", SPOT_LIGHT);
-            material->SetBool("gamma", true);
+            
             ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
 
             return true;

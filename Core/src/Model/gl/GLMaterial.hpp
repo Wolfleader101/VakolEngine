@@ -15,8 +15,8 @@ namespace Vakol::Model {
         GLMaterial(const MaterialSpec& spec) : Material(spec){};
 
         void SetShader(const std::string& path) override;
-        void SetUniform(const int size, const int binding) override;
-        void SetUniformData(const int offset, const int size, const void* data) const override;
+        void AddUniform(const int size, const int binding) override;
+        void SetUniformData(const int index, const int offset, const int size, const void* data) const override;
 
         void Bind() const override;
         void Unbind() const override;
@@ -25,6 +25,8 @@ namespace Vakol::Model {
         const int GetTextureCount() const override {return static_cast<int>(this->m_spec.textures.size()); }
 
         std::vector<Texture> textures() override { return this->m_spec.textures; }
+
+        const float shininess() const override { return this->m_spec.SHININESS; }
 
     public:
         void SetBool(const std::string& name, const bool value) const override;

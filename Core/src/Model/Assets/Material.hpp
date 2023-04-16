@@ -28,8 +28,8 @@ namespace Vakol::Model::Assets {
 
         virtual void SetShader(const std::string& path) = 0;
 
-        virtual void SetUniform(const int size, const int binding) = 0;
-        virtual void SetUniformData(const int offset, const int size, const void* data) const = 0;
+        virtual void AddUniform(const int size, const int binding) = 0;
+        virtual void SetUniformData(const int index, const int offset, const int size, const void* data) const = 0;
 
         virtual void Bind() const = 0;
         virtual void Unbind() const = 0;
@@ -38,6 +38,8 @@ namespace Vakol::Model::Assets {
         virtual const int GetTextureCount() const = 0;
 
         virtual std::vector<Texture> textures() = 0;
+
+        virtual const float shininess() const = 0;
 
        public:
         virtual void SetBool(const std::string& name, const bool value) const = 0;
@@ -55,9 +57,9 @@ namespace Vakol::Model::Assets {
         virtual void SetMat3(const std::string& name, const glm::mat3& value) const = 0;
         virtual void SetMat4(const std::string& name, const glm::mat4& value) const = 0;
 
-       protected:
+    protected:
         std::shared_ptr<Shader> m_shader = nullptr;
-        std::shared_ptr<UniformBuffer> m_uniform = nullptr;
+        std::vector<std::shared_ptr<UniformBuffer>> m_uniforms;
         MaterialSpec m_spec;
     };
 }  // namespace Vakol::Model::Assets

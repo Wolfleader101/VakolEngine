@@ -75,13 +75,12 @@ namespace Vakol::View {
 
         for (auto mesh : drawable.model_ptr->meshes()) 
         {
-            mesh.material()->SetUniformData(sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(camera.GetMatrix(VIEW_MATRIX)));
-            mesh.material()->SetUniformData(2 * sizeof(glm::mat4), sizeof(glm::mat3), glm::value_ptr(glm::transpose(glm::inverse(glm::mat3(model_matrix)))));
-
+            mesh.material()->SetMat4("PROJECTION_MATRIX", camera.GetMatrix(PROJECTION_MATRIX));
+            mesh.material()->SetMat4("VIEW_MATRIX", camera.GetMatrix(VIEW_MATRIX));
             mesh.material()->SetMat4("MODEL_MATRIX", model_matrix);
 
+            mesh.material()->SetVec3("lightPos", glm::vec3(1.5f, 2.0f, 1.2f));
             mesh.material()->SetVec3("viewPos", camera.GetPos());
-            mesh.material()->SetVec3("lightPos", camera.GetForward());
 
             // mesh.material()->SetVec3("light.position", camera.GetPos());
             // mesh.material()->SetVec3("light.direction", camera.GetForward());

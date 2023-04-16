@@ -1,46 +1,24 @@
 #version 460 core
-layout(location = 0) in vec3 aPos;
-layout(location = 1) in vec3 aNormal;
-layout(location = 2) in vec2 aTexCoords;
-layout(location = 3) in vec3 aTangent;
-layout(location = 4) in vec3 aBitangent;
+layout (location = 0) in vec3 aPos;
+layout (location = 1) in vec3 aNormal;
+layout (location = 2) in vec2 aTexCoords;
 
-out VS_OUT
-{
+// declare an interface block; see 'Advanced GLSL' for what these are.
+out VS_OUT {
     vec3 FragPos;
+    vec3 Normal;
     vec2 TexCoords;
-    vec3 TangentLightPos;
-    vec3 TangentViewPos;
-    vec3 TangentFragPos;
 } vs_out;
 
-layout (std140, binding = 1) uniform Matrices
-{
-    mat4 PROJECTION_MATRIX;
-    mat4 VIEW_MATRIX;
-    mat3 NORMAL_MATRIX;
-};
-
+uniform mat4 PROJECTION_MATRIX;
+uniform mat4 VIEW_MATRIX;
 uniform mat4 MODEL_MATRIX;
-
-uniform vec3 lightPos;
-uniform vec3 viewPos;
 
 void main()
 {
-    vs_out.FragPos = vec3(MODEL_MATRIX * vec4(aPos, 1.0));
+    vs_out.FragPos = aPos;
+    vs_out.Normal = aNormal;
     vs_out.TexCoords = aTexCoords;
-
-    vec3 T = normalize(NORMAL_MATRIX * aTangent); // tangent
-    vec3 N = normalize(NORMAL_MATRIX * aNormal); // normal
-
-    T = normalize(T - dot(T, N) * N); // not sure
-    vec3 B = cross(N, T);
-
-    mat3 TBN = transpose(mat3(T, B, N));
-    vs_out.TangentLightPos = TBN * lightPos;
-    vs_out.TangentViewPos =  TBN * viewPos;
-    vs_out.TangentFragPos =  TBN * vs_out.FragPos;
-
-    gl_Position = PROJECTION_MATRIX * VIEW_MATRIX * MODEL_MATRIX * vec4(aPos, 1.0);
+    
+    gl_Position = PROJECTION_MATRIX * VIEW_MATRIX * vec4(aPos, 1.0);
 }

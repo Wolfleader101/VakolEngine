@@ -11,11 +11,12 @@ namespace Vakol::Model::Assets {
         Texture(const int width, const int height, const unsigned int format)
             : m_width(width), m_height(height), m_format(format) {}
         
-        Texture(const std::string& path, const bool raw = false) {
+        Texture(const std::string& path, const bool raw = false, const bool gamma = false) 
+        {
             if (raw)
                 this->m_ID = Controller::LoadRawTexture(path);
             else
-                this->m_ID = Controller::LoadTexture(path);
+                this->m_ID = Controller::LoadTexture(path, gamma);
         }
 
         const unsigned int id() const { return m_ID; }

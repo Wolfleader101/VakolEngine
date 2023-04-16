@@ -22,16 +22,15 @@ namespace Vakol::Model
 		if (!this->m_shader) this->m_shader = std::make_shared<GLShader>(path);
 	}
 
-	void GLMaterial::SetUniform(const int size, const int binding) 
+	void GLMaterial::AddUniform(const int size, const int binding) 
 	{
-		if (!this->m_uniform) this->m_uniform = std::make_shared<GLUniformBuffer>(size, binding);
-		else VK_TRACE("It appears you've already set a uniform buffer somewhere.");
+		this->m_uniforms.push_back(std::make_shared<GLUniformBuffer>(size, binding));
 	}
 
-	void GLMaterial::SetUniformData(const int offset, const int size, const void* data) const
+	void GLMaterial::SetUniformData(const int index, const int offset, const int size, const void* data) const
 	{
-		if (this->m_uniform) this->m_uniform->SetData(offset, size, data);
-		else VK_WARN("Uniform buffer does not exist!");
+		if (this->m_uniforms[index]) this->m_uniforms[index]->SetData(offset, size, data);
+		else VK_WARN("Uniform buffer at index {0} does not exist!", index);
 	}
 
 	void GLMaterial::SetBool(const std::string& name, const bool value) const

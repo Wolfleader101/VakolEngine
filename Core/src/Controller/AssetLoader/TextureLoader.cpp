@@ -4,16 +4,17 @@
 
 #include <glad/glad.h>
 
-const unsigned int LoadGLTexture(const std::string&, const bool);
+const unsigned int LoadGLTexture(const std::string&, const bool, const bool);
 
 namespace Vakol::Controller
 {
-    const unsigned int LoadTexture(const std::string& path) { return ::LoadGLTexture(path, false); }
+    const unsigned int LoadTexture(const std::string& path, const bool gamma) { return ::LoadGLTexture(path, false, gamma); }
 
-    const unsigned int LoadRawTexture(const std::string& path) { return ::LoadGLTexture(path, true); }
+    // gamma correction only applies for RGB/RGBA channels
+    const unsigned int LoadRawTexture(const std::string& path) { return ::LoadGLTexture(path, true, false); }
 }
 
-const unsigned int LoadGLTexture(const std::string& path, const bool raw)
+const unsigned int LoadGLTexture(const std::string& path, const bool raw, const bool gamma)
 {
     unsigned int ID = 0;
 
@@ -22,7 +23,7 @@ const unsigned int LoadGLTexture(const std::string& path, const bool raw)
     int width = 0, height = 0, channels = 1;
     auto data = (raw) ? LoadImage(path, width, height) : LoadImage(path, width, height, channels, true);
 
-    GLenum internal_format = (channels == 1) ? GL_R8 : (channels > 3) ? GL_RGBA8 : GL_RGB8;
+    GLenum internal_format = (channels == 1) ? GL_R8 : (channels > 3) ? (gamma) ? GL_SRGB8_ALPHA8 : GL_RGBA8 : (gamma) ? GL_SRGB8 : GL_RGB8;
     GLenum data_format = (channels == 1) ? GL_RED : (channels > 3) ? GL_RGBA : GL_RGB;
 
     glCreateTextures(GL_TEXTURE_2D, 1, &ID);

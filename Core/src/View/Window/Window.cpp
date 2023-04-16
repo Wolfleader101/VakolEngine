@@ -84,7 +84,7 @@ namespace Vakol::View {
         {
             glEnable(GL_DEBUG_OUTPUT);
             glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS); // makes sure errors are displayed synchronously
-            glDebugMessageCallback(DebugOutput, nullptr);
+            //glDebugMessageCallback(DebugOutput, nullptr);
             glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
         }
 
