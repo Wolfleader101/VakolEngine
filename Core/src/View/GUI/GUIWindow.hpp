@@ -46,6 +46,12 @@ namespace Vakol::View {
          */
         void SetPositionInsideWIndow(float xPosition, float yPosition);
         /**
+         * @brief Add a text string to the UI Window
+         *
+         * @param inputText The text to be set in the UI
+         */
+        void AddText(std::string& inputText);
+        /**
          * @brief Adds a button to a given window
          *
          * @param buttonName The name of the button

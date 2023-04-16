@@ -35,6 +35,10 @@ namespace Vakol::View {
         ImGui::SetCursorPos({xPosition, yPosition});
     };
 
+    void GUIWindow::AddText(std::string& inputText) {
+        ImGui::Text(inputText.c_str());
+    };
+
     void GUIWindow::AddButton(std::string& buttonName, float width, float height, std::function<void()> inputFunction) {
         if (ImGui::Button(buttonName.c_str(), {width, height})) {
             inputFunction();  // Runs the given input function

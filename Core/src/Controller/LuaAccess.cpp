@@ -4,6 +4,7 @@
 #include "Model/Assets/Material.hpp"
 #include "Model/Components.hpp"
 #include "Model/gl/GLInstance.hpp"
+#include "View/GUI/GUIWindow.hpp"
 
 using Vakol::Model::Assets::Material;
 
@@ -206,7 +207,9 @@ namespace Vakol::Controller {
         cameraType.set_function("set_yaw", &Camera::SetYaw);
     }
 
-    void RegisterWindow(sol::state& lua) {}
+    void RegisterGUIWindow(sol::state& lua) {
+        auto guiWindowType = lua.new_usertype<GUIWindow>("gui window");
+    }
     void RegisterRenderer(sol::state& lua) {}
     void RegisterPhysics(sol::state& lua) {}
 }  // namespace Vakol::Controller
