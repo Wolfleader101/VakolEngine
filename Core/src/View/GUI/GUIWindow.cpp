@@ -14,6 +14,8 @@ namespace Vakol::View {
 
         ImGui_ImplGlfw_InitForOpenGL(m_window->GetWindow(), true);  // Takes in the GLFW Window
         ImGui_ImplOpenGL3_Init("#version 460");                     // Sets the version of GLSL being used
+
+        CreateNewFrame();
     };
 
     void GUIWindow::CreateNewFrame() {
@@ -31,8 +33,8 @@ namespace Vakol::View {
         ImGui::SetWindowSize({width, height}, ImGuiCond_Once);  // Sets the size of the window (Width, Height) in pixels
     };
 
-    void GUIWindow::SetPositionInsideWIndow(float xPosition, float yPosition) {
-        ImGui::SetCursorPos({xPosition, yPosition});
+    float GUIWindow::GetFramesPerSecond() { 
+        return ImGui::GetIO().Framerate;
     };
 
     void GUIWindow::AddText(std::string& inputText) {
@@ -45,12 +47,12 @@ namespace Vakol::View {
         }
     };
 
-    void GUIWindow::AddCheckbox(std::string& checkboxName, bool& checkBoxValue) {
-        ImGui::Checkbox(checkboxName.c_str(), &checkBoxValue);
+    void GUIWindow::AddCheckbox(std::string& checkboxName, bool *checkBoxValue) {
+        ImGui::Checkbox(checkboxName.c_str(), checkBoxValue);
     };
 
-    void GUIWindow::AddIntSlider(std::string& sliderName, int& sliderValue, int minValue, int maxValue) {
-        ImGui::SliderInt(sliderName.c_str(), &sliderValue, minValue, maxValue);
+    void GUIWindow::AddIntSlider(std::string& sliderName, int *sliderValue, int minValue, int maxValue) {
+        ImGui::SliderInt(sliderName.c_str(), sliderValue, minValue, maxValue);
     };
 
     void GUIWindow::AddVecIntSlider(std::string& sliderName, int sliderValue[], unsigned arraySize, int minValue,
@@ -75,8 +77,8 @@ namespace Vakol::View {
         }
     };
 
-    void GUIWindow::AddFloatSlider(std::string& sliderName, float& sliderValue, float minValue, float maxValue) {
-        ImGui::SliderFloat(sliderName.c_str(), &sliderValue, minValue, maxValue);
+    void GUIWindow::AddFloatSlider(std::string& sliderName, float *sliderValue, float minValue, float maxValue) {
+        ImGui::SliderFloat(sliderName.c_str(), sliderValue, minValue, maxValue);
     };
 
     void GUIWindow::AddVecFloatSlider(std::string& sliderName, float sliderValue[], unsigned arraySize, float minValue,

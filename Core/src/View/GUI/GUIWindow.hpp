@@ -39,12 +39,9 @@ namespace Vakol::View {
          */
         void StartWindowCreation(std::string& windowName, float width, float height, float xPosition, float yPosition);
         /**
-         * @brief Allows you to start drawing from a specific position inside the window
-         *
-         * @param xPosition Sets the X-Position of the drawing cursor
-         * @param yPosition Sets the Y-Position of the drawing cursor
+         * @brief Returns the FPS of the current window
          */
-        void SetPositionInsideWIndow(float xPosition, float yPosition);
+        float GetFramesPerSecond();
         /**
          * @brief Add a text string to the UI Window
          *
@@ -66,7 +63,7 @@ namespace Vakol::View {
          * @param checkboxName The name of the checkbox
          * @param checkBoxValue The boolean value of the checkbox
          */
-        void AddCheckbox(std::string& checkboxName, bool& checkBoxValue);
+        void AddCheckbox(std::string& checkboxName, bool *checkBoxValue);
         /**
          * @brief Adds an Integer Slider to the window
          *
@@ -75,7 +72,7 @@ namespace Vakol::View {
          * @param minValue The minimum value of the slider
          * @param maxValue the maximum value of the slider
          */
-        void AddIntSlider(std::string& sliderName, int& sliderValue, int minValue, int maxValue);
+        void AddIntSlider(std::string& sliderName, int *sliderValue, int minValue, int maxValue);
         /**
          * @brief Adds a Vecotr based Integer Slider to the window
          *
@@ -95,7 +92,7 @@ namespace Vakol::View {
          * @param minValue The minimum value of the slider
          * @param maxValue the maximum value of the slider
          */
-        void AddFloatSlider(std::string& sliderName, float& sliderValue, float minValue, float maxValue);
+        void AddFloatSlider(std::string& sliderName, float *sliderValue, float minValue, float maxValue);
         /**
          * @brief Adds a Vecotr based Float Slider to the window
          *

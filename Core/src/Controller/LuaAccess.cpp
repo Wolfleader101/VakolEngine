@@ -212,7 +212,8 @@ namespace Vakol::Controller {
 
         //REGISTERS C++ FUNCTIONS TO LUA
         guiWindowType.set_function("start_window_creation", &View::GUIWindow::StartWindowCreation);
-        guiWindowType.set_function("set_position_inside_window", &View::GUIWindow::SetPositionInsideWIndow);
+
+        guiWindowType.set_function("get_fps", &View::GUIWindow::GetFramesPerSecond);
 
         guiWindowType.set_function("add_text", &View::GUIWindow::AddText);
         guiWindowType.set_function("add_button", &View::GUIWindow::AddButton);
