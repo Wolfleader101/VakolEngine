@@ -49,6 +49,6 @@ namespace Vakol::Controller {
         float m_minHeight = -25.0f;
         float m_maxHeight = 100.0f;
         float m_firFilter = 0.75f;
-        int m_iterations = 500;
+        int m_iterations = 50;
     };
 }  // namespace Vakol::Controller
