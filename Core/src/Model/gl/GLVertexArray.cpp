@@ -42,8 +42,7 @@ namespace Vakol::Model {
         this->Unbind();
     }
 
-    void GLVertexArray::DrawArrays() const
-    {
+    void GLVertexArray::DrawArrays() const {
         this->Bind();
 
         glDrawArrays(GL_TRIANGLES, 0, this->GetVertices());
@@ -51,8 +50,7 @@ namespace Vakol::Model {
         this->Unbind();
     }
 
-    void GLVertexArray::DrawElements() const
-    {
+    void GLVertexArray::DrawElements() const {
         this->Bind();
 
         glDrawElements(GL_TRIANGLES, this->GetIndices(), GL_UNSIGNED_INT, 0);
@@ -60,9 +58,16 @@ namespace Vakol::Model {
         this->Unbind();
     }
 
+    void GLVertexArray::DrawElementsStripped(unsigned int strips) const {
+        this->Bind();
 
-    void GLVertexArray::DrawArraysInstanced(const int amount) const
-    {
+        for (int strip = 0; strip < strips - 1; ++strip)
+            glDrawElements(GL_TRIANGLE_STRIP, strips, GL_UNSIGNED_INT, (void*)(sizeof(unsigned int) * (strips)*strip));
+
+        this->Unbind();
+    }
+
+    void GLVertexArray::DrawArraysInstanced(const int amount) const {
         this->Bind();
 
         glDrawArraysInstanced(GL_TRIANGLES, 0, this->GetVertices(), amount);
@@ -70,8 +75,7 @@ namespace Vakol::Model {
         this->Unbind();
     }
 
-    void GLVertexArray::DrawElementsInstanced(const int amount) const
-    {
+    void GLVertexArray::DrawElementsInstanced(const int amount) const {
         this->Bind();
 
         glDrawElementsInstanced(GL_TRIANGLES, this->GetIndices(), GL_UNSIGNED_INT, 0, amount);

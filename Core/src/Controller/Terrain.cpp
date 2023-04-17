@@ -144,14 +144,18 @@ namespace Vakol::Controller {
         Assets::MaterialSpec mat_spec;
         mat_spec.textures.push_back(m_texture);
         Assets::Mesh mesh(m_vertices, m_indices, mat_spec);
-        mesh.material()->SetShader("coreAsssets/shaders/basic.prog");
+        mesh.material()->SetShader("coreAssets/shaders/basic.prog");
+        mesh.SetIsStripped(true);
+        mesh.strips = m_terrainSize * 2;
+
+        m_texture.Bind();
+        mesh.material()->Bind();
 
         m_entity.AddComponent<Components::Drawable>();
         auto& drawable = m_entity.GetComponent<Components::Drawable>();
 
         std::vector<Assets::Mesh> meshes;
         meshes.push_back(mesh);
-
         drawable.model_ptr = std::make_shared<Model::Assets::Model>(meshes);
     }
 

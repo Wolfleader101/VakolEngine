@@ -18,6 +18,7 @@ namespace Vakol::Model {
 
         void DrawArrays() const override;
         void DrawElements() const override;
+        void DrawElementsStripped(unsigned int strips) const override;
 
         void DrawArraysInstanced(const int amount) const override;
         void DrawElementsInstanced(const int amount) const override;

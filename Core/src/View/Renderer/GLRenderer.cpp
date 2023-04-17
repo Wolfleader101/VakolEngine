@@ -51,7 +51,11 @@ namespace Vakol::View {
             // glDrawElementsInstanced(GL_TRIANGLES, mesh.vao()->GetIndices(), GL_UNSIGNED_INT, 0, 30000);
             // mesh.vao()->Unbind();
 
-            mesh.vao()->DrawElements();
+            if (mesh.IsStripped()) {
+                mesh.vao()->DrawElementsStripped(mesh.strips, mesh.strips);
+            } else {
+                mesh.vao()->DrawElements();
+            }
         }
     }
 
