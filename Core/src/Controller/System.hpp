@@ -4,12 +4,10 @@
 #include <Controller/Physics/ScenePhysics.hpp>
 #include <Model/Components.hpp>
 
-
 #include "Controller/EntityList.hpp"
 #include "LuaState.hpp"
 #include "Scene.hpp"
 #include "View/Renderer/Renderer.hpp"
-
 
 namespace Vakol::Controller 
 {

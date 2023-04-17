@@ -5,9 +5,7 @@
 #include "LuaState.hpp"
 #include "Time.hpp"
 
-#include <Controller/Physics/ScenePhysics.hpp>
-
-
+#include "Controller/Physics/ScenePhysics.hpp"
 #include "View/Renderer/Renderer.hpp"
 
 namespace Vakol::Controller {

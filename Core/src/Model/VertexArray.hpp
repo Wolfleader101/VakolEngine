@@ -29,7 +29,6 @@ namespace Vakol::Model
 
         const std::vector<Vertex>& GetVerticeVec();
         const std::vector<unsigned int> GetIndiceVec();
-
     protected:
         std::vector<Vertex> vertices;
         std::vector<unsigned int> indices;

@@ -134,11 +134,10 @@ namespace Vakol::Model::Components {
     };
 
     struct Drawable {
-
         Drawable() = default;
         Drawable(std::string&& file);
         std::string name; //for serialization
-        std::shared_ptr<Vakol::Model::Assets::Model> ModelPtr = nullptr;
+        std::shared_ptr<Vakol::Model::Assets::Model> model_ptr;
 
         template<class Archive>
         void serialize(Archive& ar)
@@ -243,5 +242,4 @@ namespace Vakol::Model::Components {
     };
 
     Collider::Bounds getBounds(const Drawable& model);
-
 }  // namespace Vakol::Model::Components

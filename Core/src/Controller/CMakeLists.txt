@@ -1,3 +1,4 @@
+add_subdirectory(AssetLoader)
 add_subdirectory(Serialization)
 add_subdirectory(Events)
 add_subdirectory(Physics)

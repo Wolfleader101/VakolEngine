@@ -173,7 +173,7 @@ namespace Vakol::Controller {
             // material->SetFloat("light.outer_cut_off", glm::cos(glm::radians(17.5f)));
 
             // material->SetInt("option", SPOT_LIGHT);
-            ent->GetComponent<Model::Components::Drawable>().ModelPtr = model;
+            ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
 
             return true;
         });

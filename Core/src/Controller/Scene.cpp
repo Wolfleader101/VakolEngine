@@ -14,6 +14,7 @@ namespace Vakol::Controller {
         : name(name), scriptName(scriptName), lua(lua), entityList(), scenePhysics(SP), active(active), cam(glm::vec3(0.0f, 0.0f, 1.0f))
     {
         lua.RunFile("scripts/" + scriptName);
+        System::SetEntityList(entityList);
 
         sol::function init = lua.GetState()["init"];
 
@@ -40,6 +41,7 @@ namespace Vakol::Controller {
         update(*this);
 
         scenePhysics->Update(time);
+
         System::Script_Update(lua, entityList, this);
 
         System::Drawable_Update(time, cam, renderer);
@@ -58,11 +60,9 @@ namespace Vakol::Controller {
         try {
             currentPath += folderPath;
             fs::create_directories(currentPath);  // creates directory for scene if it doesnt exist
-        }
-        catch (std::exception e) {
+        } catch (std::exception e) {
             // directory already exists
         }
-
 
         System::Physics_SerializationPrep();
         std::string FinalFolder = folder + "/" + name;
