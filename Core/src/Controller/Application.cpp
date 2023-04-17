@@ -6,11 +6,13 @@
 
 #include "Logger.hpp"
 
-// testing assetLoader
+#include <Controller/Physics/PhysicsPool.hpp>
 #include <Controller/AssetLoader/AssetLoader.hpp>
 #include <Model/Assets/Texture.hpp>
-// #include "JSON/Json.hpp"
-// #include "Physics/Physics.hpp"
+
+#include <Controller/System.hpp>
+
+#include <Controller/Scene.hpp>
 
 namespace Vakol::Controller {
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
@@ -128,6 +130,7 @@ namespace Vakol::Controller {
 
             //! update scenes lua
             for (auto& scene : scenes) {
+                System::BindScene(scene);
                 scene.Update(m_time, m_renderer);
             }
             
@@ -138,8 +141,14 @@ namespace Vakol::Controller {
     }
 
     void Application::AddScene(std::string scriptName, std::string scene_name) {
+
         std::string sceneName = scene_name.length() == 0 ? "Scene" + std::to_string(scenes.size()) : scene_name;
-        scenes.push_back(Scene(sceneName, scriptName, lua));
+
+        scenes.push_back(Scene(sceneName, scriptName, 
+                                lua,
+                                std::make_shared<Physics::ScenePhysics>(Physics::PhysicsPool::CreatePhysicsWorld()),
+                                true
+                            ));
     }
 
     void Application::OnEvent(Event& ev) {
@@ -164,7 +173,7 @@ namespace Vakol::Controller {
         // if its handled then u can break
     }
 
-    bool Application::OnWindowClose(WindowCloseEvent& ev) {
+    bool Application::OnWindowClose([[maybe_unused]] WindowCloseEvent& ev) {
         m_running = false;
         return true;
     }

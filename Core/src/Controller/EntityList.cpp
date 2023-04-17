@@ -75,8 +75,6 @@ namespace Vakol::Controller
 
     //----------------------- ICT397 additions
 
-    entt::registry& EntityList::GetRegistry() { return m_Registry; }
-
 
     void EntityList::Init() {}
 
@@ -88,21 +86,27 @@ namespace Vakol::Controller
     void EntityList::Serialize(const std::string& file) const 
     {
         privateSerialize<cereal::JSONOutputArchive,   
-                            Model::Components::Transform,
-                            Model::Components::Tag,
-                            Model::Components::EntityType,
-                            Model::Components::TagType,
-                            Model::Components::Script>(file);
+                            Transform,
+                            Tag,
+                            EntityType,
+                            TagType,
+                            Script,
+                            RigidBody,
+                            Collider,
+                            Drawable>(file);
     }
 
     void EntityList::Deserialize(const std::string& file) 
     {
-        privateDeserialize<cereal::JSONInputArchive, 
-                            Model::Components::Transform, 
-                            Model::Components::Tag,
-                            Model::Components::EntityType, 
-                            Model::Components::TagType, 
-                            Model::Components::Script>(file);
+        privateDeserialize<cereal::JSONInputArchive,
+                            Transform,
+                            Tag,
+                            EntityType,
+                            TagType,
+                            Script,
+                            RigidBody,
+                            Collider,
+                            Drawable>(file);
     }
 
 }

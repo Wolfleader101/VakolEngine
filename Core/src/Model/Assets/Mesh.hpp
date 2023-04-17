@@ -17,8 +17,8 @@ namespace Vakol::Model::Assets
         Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const MaterialSpec& spec)
             : m_vertexArray(std::make_shared<GLVertexArray>(vertices, indices)), m_material(std::make_shared<GLMaterial>(spec)) {};
 
-        const std::shared_ptr<Material> material() const { return this->m_material; }
-        const std::shared_ptr<VertexArray> vao() const { return this->m_vertexArray; }
+        const std::shared_ptr<Material>& material() const { return this->m_material; }
+        const std::shared_ptr<VertexArray>& vao() const { return this->m_vertexArray; }
 
     private:
         std::shared_ptr<VertexArray> m_vertexArray;

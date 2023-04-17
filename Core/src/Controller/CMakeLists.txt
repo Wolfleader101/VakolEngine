@@ -1,7 +1,11 @@
 add_subdirectory(AssetLoader)
 add_subdirectory(Serialization)
+add_subdirectory(Events)
+add_subdirectory(Physics)
 
 SET(CONTROLLER
+
+
 src/Controller/Singleton.hpp
 
 src/Controller/Application.hpp
@@ -33,6 +37,7 @@ src/Controller/Scene.cpp
 src/Controller/Input.hpp
 src/Controller/Input.cpp
 ${SERIALIZABLE}
+${PHYSICS}
 ${EVENTS}
 ${ASSETLOADER}
 

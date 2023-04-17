@@ -10,10 +10,17 @@
 #include "System.hpp"
 
 namespace Vakol::Controller {
-    Scene::Scene(const std::string& name, const std::string& scriptName, LuaState& lua)
-        : name(name), scriptName(scriptName), lua(lua), entityList(), cam(glm::vec3(0.0f, 0.0f, 1.0f)) {
+    Scene::Scene(const std::string& name, const std::string& scriptName, LuaState& lua,
+                 std::shared_ptr<Physics::ScenePhysics> SP, bool active)
+        : name(name),
+          scriptName(scriptName),
+          lua(lua),
+          entityList(),
+          scenePhysics(SP),
+          active(active),
+          cam(glm::vec3(0.0f, 0.0f, 1.0f)) {
         lua.RunFile("scripts/" + scriptName);
-        System::SetEntityList(entityList);
+        System::BindScene(*this);
 
         sol::function init = lua.GetState()["init"];
 
@@ -31,13 +38,15 @@ namespace Vakol::Controller {
     }
 
     void Scene::Update(const Time& time, const std::shared_ptr<View::Renderer> renderer) {
-        System::SetEntityList(entityList);
+        System::BindScene(*this);
 
         lua.RunFile("scripts/" + scriptName);
 
         sol::function update = lua.GetState()["update"];
 
         update(*this);
+
+        scenePhysics->Update(time);
 
         System::Script_Update(lua, entityList, this);
 
@@ -61,8 +70,8 @@ namespace Vakol::Controller {
             // directory already exists
         }
 
+        System::Physics_SerializationPrep();
         std::string FinalFolder = folder + "/" + name;
-
         entityList.Serialize(FinalFolder + "/EntityList.json");
 
         // json.Serialize camera...
@@ -80,6 +89,10 @@ namespace Vakol::Controller {
     void Scene::Deserialize(const std::string& folder) {
         entityList.Deserialize(folder + "/EntityList.json");
 
+        System::BindScene(*this);
+        System::Drawable_Init();
+        System::Physics_Init();
+
         std::ifstream input(folder + "/Scene.json");
         if (input.good()) {
             cereal::JSONInputArchive json(input);
@@ -88,4 +101,4 @@ namespace Vakol::Controller {
         }
     }
 
-}  // namespace Vakol::Controller
+};  // namespace Vakol::Controller

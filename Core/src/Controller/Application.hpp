@@ -20,6 +20,7 @@
 #include "Scene.hpp"
 
 namespace Vakol::Controller {
+
     /**
      * @class Application
      * @brief The main application class to launch the game engine, expected use is a singleton
@@ -79,6 +80,8 @@ namespace Vakol::Controller {
 
        private:
         /**
+         * @brief
+         *
          * @brief on window close event
          * @param ev event of windowClose
          * @return true if it was sucessful
