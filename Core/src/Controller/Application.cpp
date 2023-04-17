@@ -40,6 +40,7 @@ namespace Vakol::Controller {
                                                   config.value().windowHeight);
 
         m_renderer = CreateRenderer(config.value().rendererType, m_window);
+        m_renderer->AddUniform(sizeof(glm::mat4), 1);
 
         m_window->SetEventCallback(BIND_EVENT_FN(OnEvent));
 

@@ -37,6 +37,6 @@ namespace Vakol::View
 
     protected:
         std::shared_ptr<Window> m_window = nullptr;
-        std::vector<std::shared_ptr<UniformBuffer>> m_uniforms;
+        std::vector<std::shared_ptr<Model::UniformBuffer>> m_uniforms;
     };
 }

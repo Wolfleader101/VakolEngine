@@ -8,13 +8,6 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
-
-using Vakol::Model::Assets::Material;
-
-const int DIRECTIONAL_LIGHT = 0;
-const int POINT_LIGHT = 1;
-const int SPOT_LIGHT = 2;
-
 namespace Vakol::Controller {
     void RegisterMath(sol::state& lua) {
         auto vec3 = lua.new_usertype<glm::vec3>("vec3");
@@ -75,26 +68,33 @@ namespace Vakol::Controller {
         });
     }
 
-    void RegisterAssetLoader(sol::state& lua) {
-        lua.set_function("load_texture", [](std::string path) {
-            // auto tex = AssetLoader::GetTexture(path);
-            // if (tex == nullptr) return false;
+    void RegisterAssetLoader(sol::state& lua) 
+    {
+        lua.set_function("load_texture", [](std::string path) 
+        {
+            auto tex = AssetLoader::GetTexture(path);
 
-            // return true;
+            if (tex == nullptr) return false;
+
+            return true;
         });
 
-        lua.set_function("load_model", [](std::string path) {
+        lua.set_function("load_model", [](std::string path) 
+        {
             auto model = AssetLoader::GetModel(path);
+
             if (model == nullptr) return false;
 
             return true;
         });
 
-        lua.set_function("load_shader", [](std::string path) {
-            // //auto shader = AssetLoader::GetShader(path);
-            // if (shader == nullptr) return false;
+        lua.set_function("load_shader", [](std::string path) 
+        {
+            auto shader = AssetLoader::GetShader(path);
 
-            // return true;
+            if (shader == nullptr) return false;
+
+            return true;
         });
     }
 
@@ -138,13 +138,42 @@ namespace Vakol::Controller {
         auto entityType = lua.new_usertype<Entity>("entity");
 
         entityType.set_function("get_transform", &Entity::GetComponent<Model::Components::Transform>);
-        entityType.set_function("add_model", [](Entity* ent, std::string path) {
+        
+        entityType.set_function("add_model", [](Entity* ent, std::string path) 
+        {
             if (ent->HasComponent<Model::Components::Drawable>() == false)
                 ent->AddComponent<Model::Components::Drawable>();
             
             auto model = AssetLoader::GetModel(path);
+
+            int amount = 1000;
+
+            std::vector<glm::mat4> matrices;
+
+            matrices.reserve(amount);
+
+            for (int i = 0; i < amount; ++i)
+            {
+                glm::mat4 model_matrix = glm::mat4(1.0f);
+
+                int z = rand() % (10 - 0 + 1) + 0;
+
+                glm::vec3 pos = glm::vec3((float)i, 0.0f, (float)z);
+
+                model_matrix = glm::translate(model_matrix, pos);
+
+                matrices.push_back(model_matrix);
+            }
+
+            CreateInstanced(model->meshes(), matrices);
             
             if (model == nullptr) return false;
+
+            model->SetShader("coreAssets/shaders/instance.prog");
+            model->shader()->Bind();
+
+            GLTexture body("coreAssets/textures/kiki_body.jpg", false, false, false);
+            GLTexture eyes("coreAssets/textures/kiki_eyes.png", false, false, false);
             
             ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
 

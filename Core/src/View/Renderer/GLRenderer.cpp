@@ -2,13 +2,16 @@
 
 #include <glad/glad.h>
 
-#include <Controller/Logger.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 #include <vector>
+#include <memory>
+
+#include <Controller/Logger.hpp>
 
 #include "Model/Components.hpp"
-#include "Model/gl/GLShader.hpp"
+#include "Model/gl/GLUniformBuffer.hpp"
+
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 /*
 Distance	Constant	Linear	Quadratic
@@ -56,7 +59,7 @@ namespace Vakol::View {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     };
 
-    void GLRenderer::AddUniform(const int size, const int binding) 
+    void GLRenderer::AddUniform(const int size, const int binding)
 	{
 		this->m_uniforms.push_back(std::make_shared<GLUniformBuffer>(size, binding));
 	}
@@ -74,6 +77,8 @@ namespace Vakol::View {
 
     void GLRenderer::Draw(const Controller::Time& time, const Controller::Camera& camera, const Model::Components::Transform trans, const Model::Components::Drawable& drawable) const 
     {
+        SetUniformData(0, 0, sizeof(glm::mat4), glm::value_ptr(camera.GetMatrix(PV_MATRIX)));
+
         glm::mat4 model_matrix = glm::mat4(1.0f);
 
         model_matrix = glm::translate(model_matrix, trans.pos);
@@ -84,26 +89,14 @@ namespace Vakol::View {
         model_matrix = glm::rotate(model_matrix, trans.rot.y, glm::vec3(0.0f, 1.0f, 0.0f));
         model_matrix = glm::rotate(model_matrix, trans.rot.z, glm::vec3(0.0f, 0.0f, 1.0f));
 
-        for (auto mesh : drawable.model_ptr->meshes()) 
+        drawable.model_ptr->shader()->SetMat4("MODEL_MATRIX", model_matrix);
+
+        for (int i = 0; i < drawable.model_ptr->mesh_count(); ++i)
         {
-            mesh.material()->SetUniformData(0, 0, sizeof(glm::mat4), glm::value_ptr(camera.GetMatrix(PV_MATRIX)));
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, 2 * (i + 1));
 
-            mesh.material()->SetMat3("NORMAL_MATRIX", glm::transpose(glm::inverse(glm::mat3(model_matrix))));
-            mesh.material()->SetMat4("MODEL_MATRIX", model_matrix);
-
-            mesh.material()->SetVec3("lightPos", glm::vec3(1.5f, 2.0f, 1.2f));
-            mesh.material()->SetVec3("viewPos", camera.GetPos());
-
-            for (int i = 0; i < mesh.material()->GetTextureCount(); ++i)
-            {
-                int j = 2;
-
-                if (i != 0)
-                    j *= i + 1;
-
-                glActiveTexture(GL_TEXTURE0 + i);
-                glBindTexture(GL_TEXTURE_2D, j);
-            }
+            drawable.model_ptr->meshes().at(i).vao()->DrawElementsInstanced(1000);
         }
     }
 
