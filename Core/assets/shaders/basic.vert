@@ -3,7 +3,8 @@ layout (location = 0) in vec3 aPos;
 
 layout (std140, binding = 1) uniform Matrices
 {
-    mat4 PV_MATRIX;
+    mat4 PROJECTION_MATRIX;
+    mat4 VIEW_MATRIX;
 };
 
 uniform mat4 MODEL_MATRIX;

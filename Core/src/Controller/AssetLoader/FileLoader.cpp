@@ -86,11 +86,6 @@ unsigned char* LoadImage(const std::string& path, int& width, int& height, int& 
     return data;
 }
 
-unsigned char* LoadImages(const std::vector<std::string>& paths)
-{
-	return nullptr;
-}
-
 unsigned char* Image::LoadNoiseMap(const int size, float scale, float frequency)
 {
 	auto data = new unsigned char[size * size];
