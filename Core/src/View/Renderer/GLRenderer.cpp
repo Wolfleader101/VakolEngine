@@ -52,7 +52,7 @@ namespace Vakol::View {
             // mesh.vao()->Unbind();
 
             if (mesh.IsStripped()) {
-                mesh.vao()->DrawElementsStripped(mesh.strips, mesh.strips);
+                mesh.vao()->DrawElementsStripped(mesh.strips);
             } else {
                 mesh.vao()->DrawElements();
             }
