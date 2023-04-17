@@ -8,6 +8,9 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
+const int DIRECTIONAL_LIGHT = 0;
+const int POINT_LIGHT = 1;
+
 namespace Vakol::Controller {
     void RegisterMath(sol::state& lua) {
         auto vec3 = lua.new_usertype<glm::vec3>("vec3");
@@ -145,38 +148,18 @@ namespace Vakol::Controller {
                 ent->AddComponent<Model::Components::Drawable>();
             
             auto model = AssetLoader::GetModel(path);
-
-            int amount = 1000;
-
-            std::vector<glm::mat4> matrices;
-
-            matrices.reserve(amount);
-
-            for (int i = 0; i < amount; ++i)
-            {
-                glm::mat4 model_matrix = glm::mat4(1.0f);
-
-                int z = rand() % (10 - 0 + 1) + 0;
-
-                glm::vec3 pos = glm::vec3((float)i, 0.0f, (float)z);
-
-                model_matrix = glm::translate(model_matrix, pos);
-
-                matrices.push_back(model_matrix);
-            }
-
-            CreateInstanced(model->meshes(), matrices);
             
             if (model == nullptr) return false;
 
-            model->SetShader("coreAssets/shaders/custom_nm.prog");
+            model->SetShader("coreAssets/shaders/custom_bp.prog");
             model->shader()->Bind();
-
-            model->shader()->SetVec3("lightPos", glm::vec3(0.0f, 0.5f, 2.0f));
+            
             model->shader()->SetFloat("material.shininess", 32.0f);
 
-            //GLTexture body("coreAssets/textures/kiki_body.jpg", false, false, false);
-            //GLTexture eyes("coreAssets/textures/kiki_eyes.png", false, false, false);
+            model->shader()->SetVec3("light.position", glm::vec3(0.0f, 0.5f, 150.0f));
+            model->shader()->SetVec3("light.direction", glm::vec3(glm::radians(0.0f), glm::radians(-15.0f), glm::radians(-90.0f)));
+
+            model->shader()->SetInt("option", POINT_LIGHT);
             
             ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
 

@@ -50,6 +50,10 @@ Distance	Constant	Linear	Quadratic
 const glm::vec4 VAKOL_CLASSIC = glm::vec4(0.52941f, 0.80784f, 0.92157f, 1.0f);
 const glm::vec4 VAKOL_DARK = glm::vec4(0.1f, 0.1f, 0.1f, 1.0f);
 
+const float light_constant = 1.0f;
+const float light_linear = 0.09f;
+const float light_quadratic = 0.032f;
+
 namespace Vakol::View {
     GLRenderer::GLRenderer(const std::shared_ptr<Window> window) : Renderer(window) 
     {
@@ -57,6 +61,13 @@ namespace Vakol::View {
         
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        AddUniform(sizeof(glm::mat4), 1);
+        AddUniform(3 * sizeof(float), 2);
+
+        SetUniformData(1, 0, sizeof(float), &light_constant);
+        SetUniformData(1, sizeof(float), sizeof(float), &light_linear);
+        SetUniformData(1, 2 * sizeof(float), sizeof(float), &light_quadratic);
     };
 
     void GLRenderer::AddUniform(const int size, const int binding)
@@ -92,7 +103,7 @@ namespace Vakol::View {
         drawable.model_ptr->shader()->SetMat4("MODEL_MATRIX", model_matrix);
         drawable.model_ptr->shader()->SetMat3("NORMAL_MATRIX", glm::transpose(glm::inverse(glm::mat3(model_matrix))));
 
-        drawable.model_ptr->shader()->SetVec3("viewPos", camera.GetPos());
+        drawable.model_ptr->shader()->SetVec3("VIEW_POS", camera.GetPos());
 
         for (int i = 0; i < drawable.model_ptr->mesh_count(); ++i)
         {

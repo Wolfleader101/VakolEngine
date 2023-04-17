@@ -8,17 +8,43 @@ struct Material
     float shininess;
 };
 
+struct Light
+{
+    vec3 position;
+    vec3 direction;
+};
+
+layout (std140, binding = 2) uniform LightInfo
+{
+    float constant;
+    float linear;
+    float quadratic;
+};
+
 in VS_OUT {
     vec3 FragPos;
     vec3 Normal;
     vec2 TexCoords;
 } fs_in;
 
-uniform Material material;
+const int DIRECTIONAL_LIGHT = 0;
+const int POINT_LIGHT = 1;
 
-uniform vec3 lightPos;
-uniform vec3 viewPos;
+uniform Material material;
+uniform Light light;
+
+uniform vec3 VIEW_POS;
 uniform vec3 tint = vec3(0.8);
+
+uniform int option = 0;
+
+vec3 get_light_direction()
+{
+    if (option == DIRECTIONAL_LIGHT)
+        return normalize(-light.direction);
+    else if (option == POINT_LIGHT)
+        return normalize(light.position - fs_in.FragPos);
+}
 
 vec3 BlinnPhong(vec3 normal, vec3 color)
 {
@@ -26,13 +52,13 @@ vec3 BlinnPhong(vec3 normal, vec3 color)
     vec3 ambient = 0.05 * color;
 
     // diffuse
-    vec3 lightDir = normalize(lightPos - fs_in.FragPos);
+    vec3 lightDir = get_light_direction();
 
     float diff = max(dot(lightDir, normal), 0.0);
     vec3 diffuse = diff * color;
 
     // specular
-    vec3 viewDir = normalize(viewPos - fs_in.FragPos);
+    vec3 viewDir = normalize(VIEW_POS - fs_in.FragPos);
     vec3 reflectDir = reflect(-lightDir, normal);
     float spec = 0.0;
 
@@ -41,11 +67,14 @@ vec3 BlinnPhong(vec3 normal, vec3 color)
     vec3 specular = vec3(0.6) * spec; // assuming bright white light color
 
     // simple attenuation
-    float distance = length(lightPos - fs_in.FragPos);
-    float attenuation = 1.0 / (distance * distance);
+    if (option != DIRECTIONAL_LIGHT)
+    {
+        float distance = length(light.position - fs_in.FragPos);
+        float attenuation = 1.0 / (constant + linear * distance + quadratic * (distance * distance));
 
-    diffuse *= attenuation;
-    specular *= attenuation;
+        diffuse *= attenuation;
+        specular *= attenuation;
+    }
 
     return diffuse + specular;
 }
