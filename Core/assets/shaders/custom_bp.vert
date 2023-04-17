@@ -20,9 +20,13 @@ layout (std140, binding = 1) uniform Matrices
 uniform mat3 NORMAL_MATRIX;
 uniform mat4 MODEL_MATRIX;
 
+uniform bool enable_fog = false;
+
 void main()
 {
-    vs_out.FragCoords = VIEW_MATRIX * MODEL_MATRIX * vec4(aPos, 1.0);
+    if (enable_fog)
+        vs_out.FragCoords = VIEW_MATRIX * MODEL_MATRIX * vec4(aPos, 1.0);
+
     vs_out.FragPos = vec3(MODEL_MATRIX * vec4(aPos, 1.0));
     vs_out.Normal = NORMAL_MATRIX * aNormal;
     vs_out.TexCoords = aTexCoords;

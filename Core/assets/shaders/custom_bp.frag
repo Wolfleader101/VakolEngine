@@ -45,6 +45,7 @@ uniform vec4 FOG_COLOR = vec4(1.0, 1.0, 1.0, 0.0);
 
 uniform int OPTION = 0;
 uniform bool enable_textures = false;
+uniform bool enable_fog = false;
 
 vec3 get_light_direction()
 {
@@ -61,7 +62,7 @@ float calculate_fog(float fogCoords)
 
     // result = exp(-density * fogCoords); // Equation 1
 
-    result = exp(-pow(density * fogCoords, 2.0));
+    result = exp(-pow(density * fogCoords, 2.0)); // Equation 2
 
     return 1.0 - clamp(result, 0.0, 1.0);
 }
@@ -126,6 +127,11 @@ void main()
 
     color = pow(color, vec4(1.0 / 2.2));
 
-    float fogCoords = abs(fs_in.FragCoords.z / fs_in.FragCoords.w);
-    FragColor = mix(color, FOG_COLOR, calculate_fog(fogCoords));
+    if (enable_fog)
+    {
+        float fogCoords = abs(fs_in.FragCoords.z / fs_in.FragCoords.w);
+        FragColor = mix(color, FOG_COLOR, calculate_fog(fogCoords));
+    }
+    else
+        FragColor = color;
 }
