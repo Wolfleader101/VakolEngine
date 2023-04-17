@@ -2,8 +2,8 @@ function init(scene, entity)
 
 end
 
-local speed = 50;
-local sprintSpeed = 100;
+local speed = 10;
+local sprintSpeed = 50;
 
 function update(scene, entity)
     local dir = { x = 0, y = 0, z = 0 };

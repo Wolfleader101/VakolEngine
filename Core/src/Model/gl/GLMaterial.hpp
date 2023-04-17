@@ -17,5 +17,9 @@ namespace Vakol::Model {
 
         std::vector<Texture> textures() override { return this->m_spec.textures; }
 
+        const glm::vec3 ambient() const override { return this->m_spec.AMBIENT; }
+        const glm::vec3 diffuse() const override { return this->m_spec.DIFFUSE; }
+        const glm::vec3 specular() const override { return this->m_spec.SPECULAR; }
+        const float shininess() const override { return this->m_spec.SHININESS; }
     };
 }  // namespace Vakol::Model

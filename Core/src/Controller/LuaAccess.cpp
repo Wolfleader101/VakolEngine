@@ -169,11 +169,14 @@ namespace Vakol::Controller {
             
             if (model == nullptr) return false;
 
-            model->SetShader("coreAssets/shaders/instance.prog");
+            model->SetShader("coreAssets/shaders/custom_nm.prog");
             model->shader()->Bind();
 
-            GLTexture body("coreAssets/textures/kiki_body.jpg", false, false, false);
-            GLTexture eyes("coreAssets/textures/kiki_eyes.png", false, false, false);
+            model->shader()->SetVec3("lightPos", glm::vec3(0.0f, 0.5f, 2.0f));
+            model->shader()->SetFloat("material.shininess", 32.0f);
+
+            //GLTexture body("coreAssets/textures/kiki_body.jpg", false, false, false);
+            //GLTexture eyes("coreAssets/textures/kiki_eyes.png", false, false, false);
             
             ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
 

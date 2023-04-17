@@ -18,6 +18,7 @@ uniform Material material;
 
 uniform vec3 lightPos;
 uniform vec3 viewPos;
+uniform vec3 tint = vec3(0.8);
 
 vec3 BlinnPhong(vec3 normal, vec3 color)
 {
@@ -41,7 +42,7 @@ vec3 BlinnPhong(vec3 normal, vec3 color)
 
     // simple attenuation
     float distance = length(lightPos - fs_in.FragPos);
-    float attenuation = 1.0 / distance * distance;
+    float attenuation = 1.0 / (distance * distance);
 
     diffuse *= attenuation;
     specular *= attenuation;
@@ -51,7 +52,7 @@ vec3 BlinnPhong(vec3 normal, vec3 color)
 
 void main()
 {           
-    vec3 color = texture(material.diffuse_map, fs_in.TexCoords).rgb;
+    vec3 color = tint;//texture(material.diffuse_map, fs_in.TexCoords).rgb;
 
     vec3 lighting = vec3(0.0);
 

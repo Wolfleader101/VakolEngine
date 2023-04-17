@@ -30,6 +30,11 @@ namespace Vakol::Model::Assets {
         virtual const int GetTextureCount() const = 0;
         virtual std::vector<Texture> textures() = 0;
 
+        virtual const glm::vec3 ambient() const = 0;
+        virtual const glm::vec3 diffuse() const = 0;
+        virtual const glm::vec3 specular() const = 0;
+        virtual const float shininess() const = 0;
+
     protected:
         MaterialSpec m_spec;
     };

@@ -90,19 +90,27 @@ namespace Vakol::View {
         model_matrix = glm::rotate(model_matrix, trans.rot.z, glm::vec3(0.0f, 0.0f, 1.0f));
 
         drawable.model_ptr->shader()->SetMat4("MODEL_MATRIX", model_matrix);
+        drawable.model_ptr->shader()->SetMat3("NORMAL_MATRIX", glm::transpose(glm::inverse(glm::mat3(model_matrix))));
+
+        drawable.model_ptr->shader()->SetVec3("viewPos", camera.GetPos());
 
         for (int i = 0; i < drawable.model_ptr->mesh_count(); ++i)
         {
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, 2 * (i + 1));
+            auto mesh  = drawable.model_ptr->meshes().at(i);
+            auto material = mesh.material();
 
-            drawable.model_ptr->meshes().at(i).vao()->DrawElementsInstanced(1000);
+            drawable.model_ptr->shader()->SetVec3("tint", material->diffuse());
+            
+            //glActiveTexture(GL_TEXTURE0);
+            //glBindTexture(GL_TEXTURE_2D, 2 * (i + 1));
+
+            mesh.vao()->DrawElements();
         }
     }
 
     void GLRenderer::Update() const
     {
-        ClearColor(VAKOL_CLASSIC);
+        ClearColor(VAKOL_DARK);
         ClearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 }  // namespace Vakol::View
