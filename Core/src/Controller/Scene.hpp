@@ -1,11 +1,13 @@
 #pragma once
 
+#include <memory>
+
 #include "Camera.hpp"
+#include "Controller/Physics/ScenePhysics.hpp"
+#include "Controller/Terrain.hpp"
 #include "EntityList.hpp"
 #include "LuaState.hpp"
 #include "Time.hpp"
-
-#include "Controller/Physics/ScenePhysics.hpp"
 #include "View/Renderer/Renderer.hpp"
 
 namespace Vakol::Controller {
@@ -16,7 +18,8 @@ namespace Vakol::Controller {
          * @brief Construct a new Scene object
          *
          */
-        Scene(const std::string& name, const std::string& scriptName, LuaState& lua, std::shared_ptr<Physics::ScenePhysics> SP, bool active = false);
+        Scene(const std::string& name, const std::string& scriptName, LuaState& lua,
+              std::shared_ptr<Physics::ScenePhysics> SP, bool active = false);
         /**
          * @brief the entity list of scene
          */
@@ -38,11 +41,10 @@ namespace Vakol::Controller {
         Camera& GetCamera() { return cam; }
 
        private:
-
-        
         LuaState& lua;
         std::string scriptName;
         std::string name;
         Camera cam;
+        std::shared_ptr<Terrain> terrain;
     };
 }  // namespace Vakol::Controller

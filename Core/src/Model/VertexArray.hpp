@@ -1,11 +1,9 @@
-#pragma once 
-
-#include <vector>
+#pragma once
 
 #include <Model/Assets/Vertex.hpp>
+#include <vector>
 
-namespace Vakol::Model
-{
+namespace Vakol::Model {
     using Assets::Vertex;
 
     class VertexArray {
@@ -19,7 +17,7 @@ namespace Vakol::Model
 
         virtual void DrawArrays() const = 0;
         virtual void DrawElements() const = 0;
-        
+
         virtual void DrawArraysInstanced(const int amount) const = 0;
         virtual void DrawElementsInstanced(const int amount) const = 0;
 
@@ -29,8 +27,9 @@ namespace Vakol::Model
 
         const std::vector<Vertex>& GetVerticeVec();
         const std::vector<unsigned int> GetIndiceVec();
-    protected:
+
+       protected:
         std::vector<Vertex> vertices;
         std::vector<unsigned int> indices;
     };
-}
+}  // namespace Vakol::Model
