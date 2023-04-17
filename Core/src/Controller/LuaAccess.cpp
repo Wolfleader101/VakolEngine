@@ -156,7 +156,7 @@ namespace Vakol::Controller {
             
             model->shader()->SetFloat("material.shininess", 32.0f);
 
-            model->shader()->SetVec3("light.position", glm::vec3(0.0f, 0.5f, 150.0f));
+            model->shader()->SetVec3("light.position", glm::vec3(0.0f, 0.5f, 7.5f));
             model->shader()->SetVec3("light.direction", glm::vec3(glm::radians(0.0f), glm::radians(-15.0f), glm::radians(-90.0f)));
 
             model->shader()->SetInt("option", POINT_LIGHT);
