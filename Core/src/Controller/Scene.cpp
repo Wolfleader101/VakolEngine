@@ -10,11 +10,17 @@
 #include "System.hpp"
 
 namespace Vakol::Controller {
-    Scene::Scene(const std::string& name, const std::string& scriptName, LuaState& lua, std::shared_ptr<Physics::ScenePhysics> SP, bool active)
-        : name(name), scriptName(scriptName), lua(lua), entityList(), scenePhysics(SP), active(active), cam(glm::vec3(0.0f, 0.0f, 1.0f))
-    {
+    Scene::Scene(const std::string& name, const std::string& scriptName, LuaState& lua,
+                 std::shared_ptr<Physics::ScenePhysics> SP, bool active)
+        : name(name),
+          scriptName(scriptName),
+          lua(lua),
+          entityList(),
+          scenePhysics(SP),
+          active(active),
+          cam(glm::vec3(0.0f, 0.0f, 1.0f)) {
         lua.RunFile("scripts/" + scriptName);
-        System::SetEntityList(entityList);
+        System::BindScene(*this);
 
         sol::function init = lua.GetState()["init"];
 
@@ -86,7 +92,6 @@ namespace Vakol::Controller {
         System::BindScene(*this);
         System::Drawable_Init();
         System::Physics_Init();
-
 
         std::ifstream input(folder + "/Scene.json");
         if (input.good()) {
