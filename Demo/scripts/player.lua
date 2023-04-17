@@ -1,7 +1,7 @@
 function init(scene, entity)
-    entity:add_model("coreAssets/models/cornellBox.obj")
+    entity:add_model("coreAssets/models/kiki_resized.obj")
 
-    entity:get_transform().rot.y = -45.0;
+    entity:get_transform().rot.y = 10.0;
 end
 
 local function lerp(a, b, t)

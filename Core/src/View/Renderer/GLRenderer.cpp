@@ -48,26 +48,35 @@ Distance	Constant	Linear	Quadratic
 // }
 
 const glm::vec4 VAKOL_CLASSIC = glm::vec4(0.52941f, 0.80784f, 0.92157f, 1.0f);
+const glm::vec4 VAKOL_FOGGY = glm::vec4(0.4f, 0.4f, 0.4f, 1.0);
+const glm::vec4 VAKOL_FOGGY_2 = glm::vec4(1.0f, 1.0f, 1.0f, 0.0);
 const glm::vec4 VAKOL_DARK = glm::vec4(0.1f, 0.1f, 0.1f, 1.0f);
 
 const float light_constant = 1.0f;
 const float light_linear = 0.09f;
 const float light_quadratic = 0.032f;
 
+const float light_cut_off = glm::cos(glm::radians(7.5f));
+const float light_outer_cut_off = glm::cos(glm::radians(12.5f));
+
 namespace Vakol::View {
     GLRenderer::GLRenderer(const std::shared_ptr<Window> window) : Renderer(window) 
     {
         glEnable(GL_DEPTH_TEST);
+        glEnable(GL_CULL_FACE);
         
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        AddUniform(sizeof(glm::mat4), 1);
-        AddUniform(3 * sizeof(float), 2);
+        AddUniform(2 * sizeof(glm::mat4), 1);
+        AddUniform(5 * sizeof(float), 2);
 
         SetUniformData(1, 0, sizeof(float), &light_constant);
-        SetUniformData(1, sizeof(float), sizeof(float), &light_linear);
+        SetUniformData(1, 1 * sizeof(float), sizeof(float), &light_linear);
         SetUniformData(1, 2 * sizeof(float), sizeof(float), &light_quadratic);
+
+        SetUniformData(1, 3 * sizeof(float), sizeof(float), &light_cut_off);
+        SetUniformData(1, 4 * sizeof(float), sizeof(float), &light_outer_cut_off);
     };
 
     void GLRenderer::AddUniform(const int size, const int binding)
@@ -89,6 +98,7 @@ namespace Vakol::View {
     void GLRenderer::Draw(const Controller::Time& time, const Controller::Camera& camera, const Model::Components::Transform trans, const Model::Components::Drawable& drawable) const 
     {
         SetUniformData(0, 0, sizeof(glm::mat4), glm::value_ptr(camera.GetMatrix(PV_MATRIX)));
+        SetUniformData(0, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(camera.GetMatrix(VIEW_MATRIX)));
 
         glm::mat4 model_matrix = glm::mat4(1.0f);
 
@@ -105,15 +115,18 @@ namespace Vakol::View {
 
         drawable.model_ptr->shader()->SetVec3("VIEW_POS", camera.GetPos());
 
+        drawable.model_ptr->shader()->SetVec3("light.position", camera.GetPos());
+        drawable.model_ptr->shader()->SetVec3("light.direction", camera.GetForward());
+
         for (int i = 0; i < drawable.model_ptr->mesh_count(); ++i)
         {
             auto mesh  = drawable.model_ptr->meshes().at(i);
             auto material = mesh.material();
 
-            drawable.model_ptr->shader()->SetVec3("tint", material->diffuse());
+            //drawable.model_ptr->shader()->SetVec3("tint", material->diffuse());
             
-            //glActiveTexture(GL_TEXTURE0);
-            //glBindTexture(GL_TEXTURE_2D, 2 * (i + 1));
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, 2 * (i + 1));
 
             mesh.vao()->DrawElements();
         }
@@ -121,7 +134,7 @@ namespace Vakol::View {
 
     void GLRenderer::Update() const
     {
-        ClearColor(VAKOL_DARK);
+        ClearColor(VAKOL_FOGGY_2);
         ClearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 }  // namespace Vakol::View

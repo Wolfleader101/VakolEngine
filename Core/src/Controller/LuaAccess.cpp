@@ -8,8 +8,11 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
-const int DIRECTIONAL_LIGHT = 0;
-const int POINT_LIGHT = 1;
+constexpr int DIRECTIONAL_LIGHT = 0;
+constexpr int POINT_LIGHT = 1;
+constexpr int SPOT_LIGHT = 2;
+
+int OPTION = DIRECTIONAL_LIGHT;
 
 namespace Vakol::Controller {
     void RegisterMath(sol::state& lua) {
@@ -156,10 +159,19 @@ namespace Vakol::Controller {
             
             model->shader()->SetFloat("material.shininess", 32.0f);
 
-            model->shader()->SetVec3("light.position", glm::vec3(0.0f, 0.5f, 7.5f));
-            model->shader()->SetVec3("light.direction", glm::vec3(glm::radians(0.0f), glm::radians(-15.0f), glm::radians(-90.0f)));
+            GLTexture("coreAssets/textures/kiki_body.jpg", false, false, false);
+            GLTexture("coreAssets/textures/kiki_eyes.png", false, false, false);
 
-            model->shader()->SetInt("option", POINT_LIGHT);
+            OPTION = SPOT_LIGHT;
+
+            if (OPTION != SPOT_LIGHT)
+            {
+                model->shader()->SetVec3("light.position", glm::vec3(0.0f, 0.5f, 7.5f));
+                model->shader()->SetVec3("light.direction", glm::vec3(glm::radians(0.0f), glm::radians(-15.0f), glm::radians(-90.0f)));
+            }
+
+            model->shader()->SetInt("option", OPTION);
+            model->shader()->SetBool("enable_textures", true);
             
             ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
 
