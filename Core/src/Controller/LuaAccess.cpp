@@ -138,15 +138,14 @@ namespace Vakol::Controller {
         entityType.set_function("add_model", [](Entity* ent, std::string path) {
             if (ent->HasComponent<Model::Components::Drawable>() == false)
                 ent->AddComponent<Model::Components::Drawable>();
-            
+
             auto model = AssetLoader::GetModel(path);
-            
+
             if (model == nullptr) return false;
 
             auto material = model->meshes().begin()->material();
 
-            for (const auto& texture : material->textures())
-            {
+            for (const auto& texture : material->textures()) {
                 GLTexture tex("coreAssets/textures/" + texture.path);
                 tex.Bind();
             }
@@ -155,12 +154,12 @@ namespace Vakol::Controller {
             material->SetShader("coreAssets/shaders/basic.prog");
             material->Bind();
 
-            //material->SetInt("texture_0", 0);
+            // material->SetInt("texture_0", 0);
 
             // material->SetInt("material.diffuse", 0);
             // material->SetInt("material.specular", 1);
             // material->SetInt("material.emissive", 2);
-            
+
             // material->SetFloat("material.shininess", 64.0f);
 
             // material->SetVec3("light.ambient", glm::vec3(0.1f, 0.1f, 0.1f));
@@ -207,11 +206,14 @@ namespace Vakol::Controller {
         cameraType.set_function("set_yaw", &Camera::SetYaw);
     }
 
-    void RegisterGUIWindow(sol::state& lua, std::shared_ptr<View::Window> applicationWindow) {
-        auto guiWindowType = lua.new_usertype<View::GUIWindow>("gui_window"); //Creates a new usertype of the type 'View::GUIWindow'
+    void RegisterGUIWindow(sol::state& lua, View::GUIWindow* gui) {
+        auto guiWindowType =
+            lua.new_usertype<View::GUIWindow>("GUI");  // Creates a new usertype of the type 'View::GUIWindow'
 
-        //REGISTERS C++ FUNCTIONS TO LUA
-        guiWindowType.set_function("initialize_window", &View::GUIWindow::Init, applicationWindow.get());
+        lua["GUI"] = gui;
+
+        // REGISTERS C++ FUNCTIONS TO LUA
+        guiWindowType.set_function("initialize_window", &View::GUIWindow::Init);
         guiWindowType.set_function("create_window_frame", &View::GUIWindow::CreateNewFrame);
 
         guiWindowType.set_function("start_window_creation", &View::GUIWindow::StartWindowCreation);
