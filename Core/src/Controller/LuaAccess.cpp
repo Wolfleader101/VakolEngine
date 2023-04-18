@@ -142,43 +142,37 @@ namespace Vakol::Controller {
 
     void RegisterEntity(sol::state& lua) {
         auto entityType = lua.new_usertype<Entity>("entity");
+        auto modelType = lua.new_usertype<Assets::Model>("model");
+        auto shaderType = lua.new_usertype<Shader>("shader");
 
         entityType.set_function("get_transform", &Entity::GetComponent<Model::Components::Transform>);
         
         entityType.set_function("add_model", [](Entity* ent, std::string path) 
         {
-            if (ent->HasComponent<Model::Components::Drawable>() == false)
-                ent->AddComponent<Model::Components::Drawable>();
+            if (!ent->HasComponent<Model::Components::Drawable>()) ent->AddComponent<Model::Components::Drawable>();
 
             auto model = AssetLoader::GetModel(path);
-
-            if (model == nullptr) return false;
-
-            model->SetShader("coreAssets/shaders/custom_bp.prog");
-            model->GetShader()->Bind();
             
-            model->GetShader()->SetFloat("material.shininess", 32.0f);
-
-            GLTexture("coreAssets/textures/kiki_body.jpg", false, true, false);
-            GLTexture("coreAssets/textures/kiki_eyes.png", false, false, false);
-
-            OPTION = SPOT_LIGHT;
-
-            if (OPTION != SPOT_LIGHT)
+            if (model)
             {
-                model->GetShader()->SetVec3v("light.position", glm::vec3(0.0f, 0.5f, 7.5f));
-                model->GetShader()->SetVec3v("light.direction", glm::vec3(glm::radians(0.0f), glm::radians(-15.0f), glm::radians(-90.0f)));
+                ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
+                return model;
             }
-
-            model->GetShader()->SetInt("option", OPTION);
-
-            model->GetShader()->SetBool("enable_textures", true);
-            model->GetShader()->SetBool("enable_fog", true);
-            
-            ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
-
-            return true;
         });
+
+        modelType.set_function("mesh_count", &Assets::Model::GetMeshCount);
+
+        modelType.set_function("set_shader", &Assets::Model::SetShader);
+        modelType.set_function("get_shader", &Assets::Model::GetShader);
+
+        shaderType.set_function("get_id", &Assets::Shader::GetID);
+
+        shaderType.set_function("set_int", &Assets::Shader::SetInt);
+        shaderType.set_function("set_bool", &Assets::Shader::SetBool);
+        shaderType.set_function("set_float", &Assets::Shader::SetFloat);
+        shaderType.set_function("set_vec2", &Assets::Shader::SetVec2);
+        shaderType.set_function("set_vec3", &Assets::Shader::SetVec3);
+        shaderType.set_function("set_vec4", &Assets::Shader::SetVec4);
     }
 
     void RegisterECS(sol::state& lua) {

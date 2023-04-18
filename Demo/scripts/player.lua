@@ -1,5 +1,6 @@
 function init(scene, entity)
-    entity:add_model("coreAssets/models/kiki_resized.obj")
+    local model = entity:add_model("coreAssets/models/kiki_resized.obj")
+    model:set_shader("coreAssets/shaders/basic.prog")
 
     entity:get_transform().rot.y = 10.0;
 end

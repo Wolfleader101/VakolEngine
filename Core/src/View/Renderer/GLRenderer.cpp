@@ -111,20 +111,20 @@ namespace Vakol::View {
         model_matrix = glm::rotate(model_matrix, trans.rot.z, glm::vec3(0.0f, 0.0f, 1.0f));
 
         drawable.model_ptr->GetShader()->SetMat4("MODEL_MATRIX", model_matrix);
-        drawable.model_ptr->GetShader()->SetMat3("NORMAL_MATRIX", glm::transpose(glm::inverse(glm::mat3(model_matrix))));
+        // drawable.model_ptr->GetShader()->SetMat3("NORMAL_MATRIX", glm::transpose(glm::inverse(glm::mat3(model_matrix))));
 
-        drawable.model_ptr->GetShader()->SetVec3v("VIEW_POS", camera.GetPos());
+        // drawable.model_ptr->GetShader()->SetVec3v("VIEW_POS", camera.GetPos());
 
-        drawable.model_ptr->GetShader()->SetVec3v("light.position", camera.GetPos());
-        drawable.model_ptr->GetShader()->SetVec3v("light.direction", camera.GetForward());
+        // drawable.model_ptr->GetShader()->SetVec3v("light.position", camera.GetPos());
+        // drawable.model_ptr->GetShader()->SetVec3v("light.direction", camera.GetForward());
 
         for (int i = 0; i < drawable.model_ptr->GetMeshCount(); ++i)
         {   
             auto mesh  = drawable.model_ptr->GetMeshes().at(i);
             //auto material = mesh.material();
             
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, 2 * (i + 1));
+            // glActiveTexture(GL_TEXTURE0);
+            // glBindTexture(GL_TEXTURE_2D, 2 * (i + 1));
 
             mesh.vao()->DrawElements();
         }

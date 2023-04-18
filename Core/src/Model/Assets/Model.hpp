@@ -16,7 +16,12 @@ namespace Vakol::Model::Assets
         Model(const Mesh& mesh) { m_meshes.push_back(mesh); }
         Model(const std::vector<Mesh>& meshes) : m_meshes(meshes) {};
 
-        void SetShader(const std::string& path) { this->m_shader = std::make_shared<GLShader>(path); }
+        void SetShader(const std::string& path) 
+        { 
+            this->m_shader = std::make_shared<GLShader>(path);
+            this->m_shader->Bind(); 
+        }
+        
         std::shared_ptr<Shader> GetShader() { return m_shader; }
 
         const std::vector<Mesh> GetMeshes() const { return m_meshes; }
