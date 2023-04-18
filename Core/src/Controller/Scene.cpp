@@ -33,6 +33,7 @@ namespace Vakol::Controller {
 
         terrain = std::make_shared<Terrain>();
         System::Terrain_Init(entityList, terrain);
+        scenePhysics->AddTerrain(terrain);
         
 
 
@@ -41,7 +42,7 @@ namespace Vakol::Controller {
 
         auto entity = entityList.CreateEntity();
 
-        entity.GetComponent<Components::Transform>().pos = { 10, 50, 10 };
+        entity.GetComponent<Components::Transform>().pos = { 35, 45, 25 };
 
         entity.AddComponent<RigidBody>(scenePhysics, std::nullopt);
         entity.AddComponent<Drawable>("coreAssets/models/cube.obj");
@@ -60,7 +61,7 @@ namespace Vakol::Controller {
 
         System::Physics_InitObject(rigid, collider, std::nullopt, entity.GetComponent<Transform>());
 
-        scenePhysics->AddTerrain(terrain);
+        
 
         int x = 0;
     }
