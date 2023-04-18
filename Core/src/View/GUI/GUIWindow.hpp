@@ -1,6 +1,7 @@
 #pragma once
 
 #include <View/Window/Window.hpp>
+#include "Controller/LuaState.hpp"
 #include <functional>  //Gives acces to std::function
 #include <iostream>
 #include <string>
@@ -42,6 +43,13 @@ namespace Vakol::View {
          * @brief Returns the FPS of the current window
          */
         float GetFramesPerSecond();
+        /**
+         * @brief An update function to call the update script in lua
+         *
+         * @param scriptName The name of the update script to be called
+         * @param lua The current lua state
+         */
+        void Update(std::string scriptName, Controller::LuaState& lua);
         /**
          * @brief Add a text string to the UI Window
          *
@@ -117,5 +125,7 @@ namespace Vakol::View {
         ImGuiWindowFlags windowFlags;
 
         bool is_initialised = false;
+
+        std::string scriptName;
     };
 }  // namespace Vakol::View

@@ -37,6 +37,14 @@ namespace Vakol::View {
         return ImGui::GetIO().Framerate;
     };
 
+    void GUIWindow::Update(std::string scriptName, Controller::LuaState& lua) {
+        lua.RunFile("scripts/" + scriptName);
+
+        sol::function update = lua.GetState()["update"];
+
+        update(*this);
+    }
+
     void GUIWindow::AddText(std::string& inputText) {
         ImGui::Text(inputText.c_str());
     };

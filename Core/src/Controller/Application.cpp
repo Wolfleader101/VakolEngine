@@ -43,6 +43,8 @@ namespace Vakol::Controller {
 
         m_window->SetEventCallback(BIND_EVENT_FN(OnEvent));
 
+        m_gui.Init(m_window.get());
+
         // Physics::Debug = false;
 
         // Physics::Init();
@@ -130,6 +132,8 @@ namespace Vakol::Controller {
             }
 
             m_window->OnUpdate();
+
+            m_gui.Update("fpsGUI.lua", lua);
 
             m_input.Update();
         }
