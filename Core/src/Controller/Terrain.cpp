@@ -12,7 +12,10 @@
 
 namespace Vakol::Controller {
 
-    Terrain::Terrain(){};
+    Terrain::Terrain(Entity& entity) : m_entity(entity) {
+        VK_CRITICAL(m_entity.GetHandle());
+        m_entity.AddComponent<Components::Drawable>();
+    };
 
     void Terrain::LoadFaultFormation(unsigned int terrainSize) {
         m_terrainSize = terrainSize;
@@ -137,6 +140,7 @@ namespace Vakol::Controller {
         return result;
     }
 
+    void Terrain::Generate() { GenerateDrawable(); }
     void Terrain::GenerateDrawable() {
         InitVertices();
         InitIndices();
@@ -151,7 +155,6 @@ namespace Vakol::Controller {
         m_texture.Bind();
         mesh.material()->Bind();
 
-        m_entity.AddComponent<Components::Drawable>();
         auto& drawable = m_entity.GetComponent<Components::Drawable>();
 
         std::vector<Assets::Mesh> meshes;

@@ -39,12 +39,13 @@ namespace Vakol::Controller {
 
         std::shared_ptr<Physics::ScenePhysics> scenePhysics;
         Camera& GetCamera() { return cam; }
+        Terrain& GetTerrain() { return terrain; }
 
        private:
         LuaState& lua;
         std::string scriptName;
         std::string name;
         Camera cam;
-        std::shared_ptr<Terrain> terrain;
+        Terrain terrain;
     };
 }  // namespace Vakol::Controller

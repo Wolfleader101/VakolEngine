@@ -137,15 +137,14 @@ namespace Vakol::Controller {
         entityType.set_function("add_model", [](Entity* ent, std::string path) {
             if (ent->HasComponent<Model::Components::Drawable>() == false)
                 ent->AddComponent<Model::Components::Drawable>();
-            
+
             auto model = AssetLoader::GetModel(path);
-            
+
             if (model == nullptr) return false;
 
             auto material = model->meshes().begin()->material();
 
-            for (const auto& texture : material->textures())
-            {
+            for (const auto& texture : material->textures()) {
                 GLTexture tex("coreAssets/textures/" + texture.path);
                 tex.Bind();
             }
@@ -154,12 +153,12 @@ namespace Vakol::Controller {
             material->SetShader("coreAssets/shaders/basic.prog");
             material->Bind();
 
-            //material->SetInt("texture_0", 0);
+            // material->SetInt("texture_0", 0);
 
             // material->SetInt("material.diffuse", 0);
             // material->SetInt("material.specular", 1);
             // material->SetInt("material.emissive", 2);
-            
+
             // material->SetFloat("material.shininess", 64.0f);
 
             // material->SetVec3("light.ambient", glm::vec3(0.1f, 0.1f, 0.1f));
@@ -190,9 +189,11 @@ namespace Vakol::Controller {
     void RegisterScene(sol::state& lua) {
         auto sceneType = lua.new_usertype<Scene>("scene");
         auto cameraType = lua.new_usertype<Camera>("camera");
+        auto terrainType = lua.new_usertype<Terrain>("terrain");
 
         sceneType.set_function("create_entity", &Scene::CreateEntity);
         sceneType.set_function("get_camera", &Scene::GetCamera);
+        sceneType.set_function("get_terrain", &Scene::GetTerrain);
 
         cameraType.set_function("get_pos", &Camera::GetPos);
         cameraType.set_function("set_pos", &Camera::SetPos);
@@ -204,6 +205,10 @@ namespace Vakol::Controller {
 
         cameraType.set_function("get_yaw", &Camera::GetYaw);
         cameraType.set_function("set_yaw", &Camera::SetYaw);
+
+        terrainType.set_function("load_heightmap", &Terrain::LoadHeightMap);
+        terrainType.set_function("load_texture", &Terrain::LoadTexture);
+        terrainType.set_function("generate", &Terrain::Generate);
     }
 
     void RegisterWindow(sol::state& lua) {}

@@ -14,7 +14,7 @@ namespace Vakol::Controller {
 
     class Terrain {
        public:
-        Terrain();
+        Terrain(Entity& entity);
 
         void LoadHeightMap(const std::string& heightMap);
 
@@ -22,14 +22,14 @@ namespace Vakol::Controller {
 
         void LoadFaultFormation(unsigned int terrainSize);
 
-        void GenerateDrawable();
+        void Generate();
 
         float getHeight(float x, float z);
 
         Entity& GetEntity() { return m_entity; }
-        void SetEntity(Entity& entity) { m_entity = entity; }
 
        private:
+        void GenerateDrawable();
         void InitVertices();
         void InitIndices();
         void InitGL();
@@ -41,7 +41,7 @@ namespace Vakol::Controller {
         std::vector<unsigned int> m_indices;
         Assets::GLTexture m_texture;
 
-        Entity m_entity;
+        Entity& m_entity;
 
         float m_yScale = 0.75f;
         float m_yShift = 8.0f;

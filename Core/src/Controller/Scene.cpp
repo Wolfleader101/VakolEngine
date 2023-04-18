@@ -19,16 +19,13 @@ namespace Vakol::Controller {
           scenePhysics(SP),
           active(active),
           cam(glm::vec3(0.0f, 0.0f, 1.0f)),
-          terrain(nullptr) {
+          terrain(entityList.CreateEntity()) {
         lua.RunFile("scripts/" + scriptName);
         System::BindScene(*this);
 
         sol::function init = lua.GetState()["init"];
 
         init(*this);
-
-        terrain = std::make_shared<Terrain>();
-        System::Terrain_Init(entityList, terrain);
     }
 
     const std::string& Scene::getName() const { return name; }
@@ -42,8 +39,6 @@ namespace Vakol::Controller {
     }
 
     void Scene::Update(const Time& time, const std::shared_ptr<View::Renderer> renderer) {
-        System::BindScene(*this);
-
         lua.RunFile("scripts/" + scriptName);
 
         sol::function update = lua.GetState()["update"];

@@ -41,8 +41,6 @@ namespace Vakol::Controller {
         static void Physics_UpdateTransforms(float factor);
         static void Physics_SerializationPrep();
 
-        static void Terrain_Init(EntityList& list, std::shared_ptr<Terrain> terrain);
-
        private:
         static std::shared_ptr<ScenePhysics> m_SP;
         static entt::registry* m_registry;
