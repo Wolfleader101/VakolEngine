@@ -9,7 +9,8 @@
 #include <istream>
 #include <sstream>
 
-namespace Vakol::Model::Components {
+namespace Vakol::Model::Components 
+{
     Transform::Transform(const glm::vec3& pos, const glm::vec3& rot, const glm::vec3& scale)
         : pos(pos), rot(rot), scale(scale){};
 
@@ -84,4 +85,4 @@ namespace Vakol::Model::Components {
 
         return bounds;
     }
-}  // namespace Vakol::Model::Components
+}

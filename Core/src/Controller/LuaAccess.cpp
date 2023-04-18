@@ -155,9 +155,9 @@ namespace Vakol::Controller {
             if (model == nullptr) return false;
 
             model->SetShader("coreAssets/shaders/custom_bp.prog");
-            model->shader()->Bind();
+            model->GetShader()->Bind();
             
-            model->shader()->SetFloat("material.shininess", 32.0f);
+            model->GetShader()->SetFloat("material.shininess", 32.0f);
 
             GLTexture("coreAssets/textures/kiki_body.jpg", false, true, false);
             GLTexture("coreAssets/textures/kiki_eyes.png", false, false, false);
@@ -166,14 +166,14 @@ namespace Vakol::Controller {
 
             if (OPTION != SPOT_LIGHT)
             {
-                model->shader()->SetVec3("light.position", glm::vec3(0.0f, 0.5f, 7.5f));
-                model->shader()->SetVec3("light.direction", glm::vec3(glm::radians(0.0f), glm::radians(-15.0f), glm::radians(-90.0f)));
+                model->GetShader()->SetVec3v("light.position", glm::vec3(0.0f, 0.5f, 7.5f));
+                model->GetShader()->SetVec3v("light.direction", glm::vec3(glm::radians(0.0f), glm::radians(-15.0f), glm::radians(-90.0f)));
             }
 
-            model->shader()->SetInt("option", OPTION);
+            model->GetShader()->SetInt("option", OPTION);
 
-            model->shader()->SetBool("enable_textures", true);
-            model->shader()->SetBool("enable_fog", true);
+            model->GetShader()->SetBool("enable_textures", true);
+            model->GetShader()->SetBool("enable_fog", true);
             
             ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
 
@@ -196,7 +196,7 @@ namespace Vakol::Controller {
 
         sceneType.set_function("create_entity", &Scene::CreateEntity);
         sceneType.set_function("get_camera", &Scene::GetCamera);
-        sceneType.set_function("get_terrain", &Scene::GetTerrain);
+        //sceneType.set_function("get_terrain", &Scene::GetTerrain);
 
         cameraType.set_function("get_pos", &Camera::GetPos);
         cameraType.set_function("set_pos", &Camera::SetPos);
@@ -210,7 +210,6 @@ namespace Vakol::Controller {
         cameraType.set_function("set_yaw", &Camera::SetYaw);
 
         terrainType.set_function("load_heightmap", &Terrain::LoadHeightMap);
-        terrainType.set_function("load_texture", &Terrain::LoadTexture);
         terrainType.set_function("generate", &Terrain::Generate);
         terrainType.set_function("get_height", &Terrain::GetHeight);
         terrainType.set_function("get_size", &Terrain::GetTerrainSize);
