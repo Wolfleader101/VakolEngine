@@ -42,7 +42,7 @@ namespace Vakol::Controller {
 
         m_window->SetEventCallback(BIND_EVENT_FN(OnEvent));
 
-        Controller::RegisterGUIWindow(lua.GetState(), &*m_window);  // Register GUI Window
+        Controller::RegisterGUIWindow(lua.GetState(), m_window);  // Register GUI Window
 
         // Physics::Debug = false;
 
