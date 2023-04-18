@@ -159,7 +159,7 @@ namespace Vakol::Controller {
             
             model->shader()->SetFloat("material.shininess", 32.0f);
 
-            GLTexture("coreAssets/textures/kiki_body.jpg", false, false, false);
+            GLTexture("coreAssets/textures/kiki_body.jpg", false, true, false);
             GLTexture("coreAssets/textures/kiki_eyes.png", false, false, false);
 
             OPTION = SPOT_LIGHT;
@@ -171,7 +171,9 @@ namespace Vakol::Controller {
             }
 
             model->shader()->SetInt("option", OPTION);
+
             model->shader()->SetBool("enable_textures", true);
+            model->shader()->SetBool("enable_fog", true);
             
             ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
 
