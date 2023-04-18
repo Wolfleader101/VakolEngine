@@ -142,7 +142,8 @@ namespace Vakol::Controller {
 
     void Terrain::Generate() { GenerateDrawable(); }
 
-    void Terrain::GenerateDrawable() {
+    void Terrain::GenerateDrawable() 
+    {
         InitVertices();
         InitIndices();
 

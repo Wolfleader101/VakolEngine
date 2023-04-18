@@ -10,10 +10,12 @@
 
 using namespace Vakol::Model;
 
-namespace Vakol::Controller {
+namespace Vakol::Controller 
+{
 
-    class Terrain {
-       public:
+    class Terrain 
+    {
+    public:
         Terrain(Entity& entity);
 
         void LoadHeightMap(const std::string& heightMap);
@@ -30,11 +32,10 @@ namespace Vakol::Controller {
 
         Entity& GetEntity() { return m_entity; }
 
-       private:
+    private:
         void GenerateDrawable();
         void InitVertices();
         void InitIndices();
-        void InitGL();
         unsigned char* LoadBinaryFile(const std::string& fileName, size_t& fileSize);
 
         int m_terrainSize;
