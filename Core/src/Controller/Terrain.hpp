@@ -26,6 +26,8 @@ namespace Vakol::Controller {
 
         float GetHeight(float x, float z);
 
+        const int GetTerrainSize() const { return m_terrainSize; }
+
         Entity& GetEntity() { return m_entity; }
 
        private:

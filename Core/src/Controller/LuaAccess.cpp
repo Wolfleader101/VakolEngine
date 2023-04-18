@@ -146,7 +146,7 @@ namespace Vakol::Controller {
 
             for (const auto& texture : material->textures()) {
                 GLTexture tex("coreAssets/textures/" + texture.path);
-                tex.Bind();
+                // tex.Bind();
             }
 
             // force it for now, since I don't understand lua lol
@@ -210,6 +210,7 @@ namespace Vakol::Controller {
         terrainType.set_function("load_texture", &Terrain::LoadTexture);
         terrainType.set_function("generate", &Terrain::Generate);
         terrainType.set_function("get_height", &Terrain::GetHeight);
+        terrainType.set_function("get_size", &Terrain::GetTerrainSize);
     }
 
     void RegisterWindow(sol::state& lua) {}

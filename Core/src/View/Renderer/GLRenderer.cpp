@@ -43,19 +43,20 @@ namespace Vakol::View {
         model_matrix = glm::rotate(model_matrix, trans.rot.y, glm::vec3(0.0f, 1.0f, 0.0f));
         model_matrix = glm::rotate(model_matrix, trans.rot.z, glm::vec3(0.0f, 0.0f, 1.0f));
 
+        int i = 0;
         for (auto mesh : drawable.model_ptr->meshes()) {
             mesh.material()->SetMat4("PV", camera.GetMatrix(_PV_MATRIX));
             mesh.material()->SetMat4("MODEL", model_matrix);
 
-            // mesh.vao()->Bind();
-            // glDrawElementsInstanced(GL_TRIANGLES, mesh.vao()->GetIndices(), GL_UNSIGNED_INT, 0, 30000);
-            // mesh.vao()->Unbind();
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, 2 * (i + 1));
 
             if (mesh.IsStripped()) {
                 mesh.vao()->DrawElementsStripped(mesh.strips);
             } else {
                 mesh.vao()->DrawElements();
             }
+            i++;
         }
     }
 
