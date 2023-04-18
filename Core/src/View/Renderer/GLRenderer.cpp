@@ -136,7 +136,7 @@ namespace Vakol::View {
 
     void GLRenderer::Update() const
     {
-        ClearColor(VAKOL_FOGGY_2);
+        ClearColor(VAKOL_CLASSIC);
         ClearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 }

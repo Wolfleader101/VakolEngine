@@ -1,13 +1,16 @@
 function init(scene, entity)
     local camera = scene:get_camera();
 
+    print("For the best-looking results with fog, set clear color to VAKOL_FOGGY_2.");
+    print("If the fog is too thick, lower the FOG_DENSITY in the .lua file");
+
     local model = entity:add_model("coreAssets/models/cornellBox.obj") -- get model and add a drawable component
     model:set_shader("coreAssets/shaders/advanced_lighting.prog") -- set the shader on the model (automatically binds the shader)
 
     local shader = model:get_shader(); -- get the shader from the model
 
     shader:set_float("material.shininess", 32.0);
-    shader:set_float("FOG_DENSITY", 0.2);
+    shader:set_float("FOG_DENSITY", 0.1);
 
     shader:set_vec3("light.position", 0.0, 0.5, 7.5);
     shader:set_vec3("light.direction", math.rad(0.0), math.rad(-15.0), math.rad(-90.0));
