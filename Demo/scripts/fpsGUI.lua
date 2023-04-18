@@ -1,7 +1,7 @@
-function update()
-    start_window_creation("FPS Window", 240.0, 240.0, 10.0, 10.0);
+function update(gui_window)
+    gui_window:start_window_creation("FPS Window", 240.0, 240.0, 10.0, 10.0);
 
-    add_text("Test String");
+    gui_window:add_text("Test String");
 
-    end_window_creation();
+    gui_window:end_window_creation();
 end
