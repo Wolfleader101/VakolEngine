@@ -40,7 +40,9 @@ uniform Light light;
 
 uniform vec3 VIEW_POS;
 
-uniform vec4 tint = vec4(0.8);
+uniform vec3 tint = vec3(0.8);
+
+uniform float FOG_DENSITY = 0.1;
 uniform vec4 FOG_COLOR = vec4(1.0, 1.0, 1.0, 0.0);
 
 uniform int OPTION = 0;
@@ -58,11 +60,10 @@ vec3 get_light_direction()
 float calculate_fog(float fogCoords)
 {
     float result = 0.0;
-    float density = 0.05;
 
     // result = exp(-density * fogCoords); // Equation 1
 
-    result = exp(-pow(density * fogCoords, 2.0)); // Equation 2
+    result = exp(-pow(FOG_DENSITY * fogCoords, 2.0)); // Equation 2
 
     return 1.0 - clamp(result, 0.0, 1.0);
 }
@@ -85,7 +86,7 @@ vec4 BlinnPhong(vec3 normal, vec4 color)
 
     vec3 halfwayDir = normalize(lightDir + viewDir);  
     spec = pow(max(dot(normal, halfwayDir), 0.0), material.shininess);
-    vec4 specular = vec4(0.6) * spec; // assuming bright white light color
+    vec4 specular = vec4(vec3(0.6), 1.0) * spec; // assuming bright white light color
 
     if (OPTION == SPOT_LIGHT)
     {
@@ -113,19 +114,19 @@ vec4 BlinnPhong(vec3 normal, vec4 color)
 
 void main()
 {           
-    vec4 color = vec4(0.0);
+    vec4 color = vec4(vec3(0.0), 1.0);
 
     if (enable_textures)
         color = texture(material.diffuse_map, fs_in.TexCoords);
     else 
-        color = tint;
+        color = vec4(tint, 1.0);
 
-    vec4 lighting = vec4(0.0);
+    vec4 lighting = vec4(vec3(0.0), 1.0);
 
     lighting += BlinnPhong(normalize(fs_in.Normal), color);
     color *= lighting;
 
-    color = pow(color, vec4(1.0 / 2.2));
+    color = pow(color, vec4(vec3(1.0 / 2.2), 1.0));
 
     if (enable_fog)
     {

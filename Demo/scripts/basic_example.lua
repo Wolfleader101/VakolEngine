@@ -1,8 +1,17 @@
 function init(scene, entity)
-    local model = entity:add_model("coreAssets/models/kiki_resized.obj")
-    model:set_shader("coreAssets/shaders/basic.prog")
+    local camera = scene:get_camera();
 
-    entity:get_transform().rot.y = 10.0;
+    print(camera:get_pos().z);
+
+    local model = entity:add_model("coreAssets/models/cube.obj") -- get model and add a drawable component
+    model:set_shader("coreAssets/shaders/basic.prog") -- set the shader on the model (automatically binds it)
+
+    local shader = model:get_shader(); -- get the shader from the model
+    shader:set_vec3("tint", 1.0, 0.0, 0.0); -- in this case, we set a uniform variable "tint" of type vec3 to red
+
+    entity:get_transform().rot.y = 10.0; -- rotate the model on it's y-axis by 10 degrees
+
+    -- if you remove this code, I will (commit war crimes) against you.
 end
 
 local function lerp(a, b, t)

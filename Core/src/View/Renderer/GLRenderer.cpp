@@ -48,8 +48,10 @@ Distance	Constant	Linear	Quadratic
 // }
 
 const glm::vec4 VAKOL_CLASSIC = glm::vec4(0.52941f, 0.80784f, 0.92157f, 1.0f);
+
 const glm::vec4 VAKOL_FOGGY = glm::vec4(0.4f, 0.4f, 0.4f, 1.0);
-const glm::vec4 VAKOL_FOGGY_2 = glm::vec4(1.0f, 1.0f, 1.0f, 0.0);
+const glm::vec4 VAKOL_FOGGY_2 = glm::vec4(0.8f, 0.8f, 0.8f, 0.0);
+
 const glm::vec4 VAKOL_DARK = glm::vec4(0.1f, 0.1f, 0.1f, 1.0f);
 
 const float light_constant = 1.0f;
@@ -111,9 +113,9 @@ namespace Vakol::View {
         model_matrix = glm::rotate(model_matrix, trans.rot.z, glm::vec3(0.0f, 0.0f, 1.0f));
 
         drawable.model_ptr->GetShader()->SetMat4("MODEL_MATRIX", model_matrix);
-        // drawable.model_ptr->GetShader()->SetMat3("NORMAL_MATRIX", glm::transpose(glm::inverse(glm::mat3(model_matrix))));
+        drawable.model_ptr->GetShader()->SetMat3("NORMAL_MATRIX", glm::transpose(glm::inverse(glm::mat3(model_matrix))));
 
-        // drawable.model_ptr->GetShader()->SetVec3v("VIEW_POS", camera.GetPos());
+        drawable.model_ptr->GetShader()->SetVec3v("VIEW_POS", camera.GetPos());
 
         // drawable.model_ptr->GetShader()->SetVec3v("light.position", camera.GetPos());
         // drawable.model_ptr->GetShader()->SetVec3v("light.direction", camera.GetForward());
@@ -121,7 +123,9 @@ namespace Vakol::View {
         for (int i = 0; i < drawable.model_ptr->GetMeshCount(); ++i)
         {   
             auto mesh  = drawable.model_ptr->GetMeshes().at(i);
-            //auto material = mesh.material();
+            auto material = mesh.material();
+
+            drawable.model_ptr->GetShader()->SetVec3v("tint", material->diffuse());
             
             // glActiveTexture(GL_TEXTURE0);
             // glBindTexture(GL_TEXTURE_2D, 2 * (i + 1));
@@ -132,7 +136,7 @@ namespace Vakol::View {
 
     void GLRenderer::Update() const
     {
-        ClearColor(VAKOL_CLASSIC);
+        ClearColor(VAKOL_FOGGY_2);
         ClearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 }

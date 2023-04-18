@@ -1,6 +1,6 @@
 function init(scene)
     scene:create_entity("cameraController.lua");
-    scene:create_entity("player.lua");
+    scene:create_entity("advanced_example.lua");
 
     -- local terrain = scene:get_terrain();
     -- terrain:load_heightmap("coreAssets/textures/Heightmaps/height128.raw")
