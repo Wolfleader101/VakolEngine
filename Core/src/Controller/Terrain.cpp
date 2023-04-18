@@ -1,4 +1,8 @@
 #include "Terrain.hpp"
+#include "Terrain.hpp"
+#include "Terrain.hpp"
+#include "Terrain.hpp"
+#include "Terrain.hpp"
 
 #include <stb_image.h>
 
@@ -196,6 +200,10 @@ namespace Vakol::Controller {
         m_texture = Assets::GLTexture(textureFile);
     }
 
+    
+
+    
+
     void Terrain::InitVertices() {
         m_vertices.resize(m_terrainSize * m_terrainSize);
 
@@ -256,4 +264,15 @@ namespace Vakol::Controller {
 
         return y;
     }
+
+    const std::vector<Vertex>& Terrain::GetVertices()
+    {
+        return m_vertices;
+    }
+
+    const std::vector<unsigned int>& Terrain::GetIndices()
+    {
+        return m_indices;
+    }
+
 }  // namespace Vakol::Controller

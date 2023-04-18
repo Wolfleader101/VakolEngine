@@ -1,19 +1,25 @@
 #include "ScenePhysics.hpp"
-#include "ScenePhysics.hpp"
-#include <Controller/Physics/ScenePhysics.hpp>
+
 #include <Controller/Physics/PhysicsPool.hpp>
+#include <Controller/Logger.hpp>
+
+#include <Controller/Terrain.hpp>
 
 #include <Controller/System.hpp>
 
 
 namespace Vakol::Controller::Physics 
 {
-
+    
+    
     ScenePhysics::ScenePhysics(rp3d::PhysicsWorld* newWorld) : m_World(newWorld){};
 
     ScenePhysics::~ScenePhysics() { };
 
-    void ScenePhysics::Init(){};
+    void ScenePhysics::Init()
+    {
+        System::Physics_Init();
+    };
 
     void ScenePhysics::Update(const Time& time)
     {
@@ -36,5 +42,43 @@ namespace Vakol::Controller::Physics
 
         // call update on transforms 
         Vakol::Controller::System::Physics_UpdateTransforms(factor);
+    }
+
+    void ScenePhysics::AddTerrain(const std::shared_ptr<Vakol::Controller::Terrain>& terr)
+    {
+        auto& vertices = terr->GetVertices();
+        auto& indices = terr->GetIndices();
+
+        if (vertices.empty() || indices.empty())
+        {
+            VK_CRITICAL("Terrain has no vertice or indice data. Can not add to physics");
+            assert(0);
+        }
+
+        rp3d::Transform trans = rp3d::Transform::identity(); //not sure how this is gonna go
+        
+        m_Terrain = m_World->createCollisionBody(trans);
+        auto MeshPtr = PhysicsPool::m_Common.createTriangleMesh();
+
+        rp3d::TriangleVertexArray* triArray = nullptr;
+
+        triArray = new rp3d::TriangleVertexArray(
+            vertices.size(), vertices.data(), sizeof(float) * 3,
+            indices.size() / 3, indices.data(), sizeof(unsigned int) * 3,
+            rp3d::TriangleVertexArray::VertexDataType::VERTEX_FLOAT_TYPE,
+            rp3d::TriangleVertexArray::IndexDataType::INDEX_INTEGER_TYPE
+        );
+
+        MeshPtr->addSubpart(triArray);
+
+        rp3d::ConcaveMeshShape* ConcaveShape = PhysicsPool::m_Common.createConcaveMeshShape(MeshPtr);
+
+        m_Terrain->addCollider(ConcaveShape, trans);
+
+
+
+
+
+
     };
 }

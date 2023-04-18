@@ -29,6 +29,25 @@ namespace Vakol::Controller {
 
         terrain = std::make_shared<Terrain>();
         System::Terrain_Init(entityList, terrain);
+        scenePhysics->AddTerrain(terrain);
+
+        auto entity = entityList.CreateEntity();
+
+        entity.GetComponent<Components::Transform>().pos = { 20, 100, 20 };
+
+        entity.AddComponent<RigidBody>(scenePhysics, std::nullopt);
+        entity.AddComponent<Drawable>("coreAssets/models/cube.obj");
+
+        auto& rigid = entity.GetComponent<RigidBody>();
+
+        entity.AddComponent<Collider>(rigid, std::nullopt);
+
+        auto& collider = entity.GetComponent<Collider>();
+        auto& draw = entity.GetComponent<Drawable>();
+
+        System::Physics_InitObject(rigid, collider, draw, entity.GetComponent<Transform>());
+
+        int x = 0;
     }
 
     const std::string& Scene::getName() const { return name; }

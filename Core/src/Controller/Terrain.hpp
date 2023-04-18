@@ -29,6 +29,10 @@ namespace Vakol::Controller {
         Entity& GetEntity() { return m_entity; }
         void SetEntity(Entity& entity) { m_entity = entity; }
 
+        const std::vector<Vertex>& GetVertices();
+        const std::vector<unsigned int>& GetIndices();
+        
+
        private:
         void InitVertices();
         void InitIndices();

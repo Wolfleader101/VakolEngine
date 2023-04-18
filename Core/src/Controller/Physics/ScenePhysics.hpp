@@ -3,6 +3,7 @@
 #include <reactphysics3d/reactphysics3d.h>
 
 #include <Controller/Time.hpp>
+#include <Controller/Terrain.hpp>
 
 class System;
 
@@ -10,7 +11,8 @@ class System;
 namespace Vakol::Controller::Physics
 {
     class PhysicsPool;
-	
+
+	using Terrain = Vakol::Controller::Terrain;
 
 
 	class ScenePhysics
@@ -23,11 +25,13 @@ namespace Vakol::Controller::Physics
 
 			void Update(const Vakol::Controller::Time& time);
 
-			/*PhysicsObject& AddPhysicsObject(PhysicsObject& PhyObj);*/
+			void AddTerrain(const std::shared_ptr<Terrain>& terrain);
 		
 		private:
 
 			ScenePhysics(rp3d::PhysicsWorld* newWorld);
+
+			rp3d::CollisionBody* m_Terrain;
 
 			
 			rp3d::PhysicsWorld* m_World;
