@@ -209,6 +209,7 @@ namespace Vakol::Controller {
         terrainType.set_function("load_heightmap", &Terrain::LoadHeightMap);
         terrainType.set_function("load_texture", &Terrain::LoadTexture);
         terrainType.set_function("generate", &Terrain::Generate);
+        terrainType.set_function("get_height", &Terrain::GetHeight);
     }
 
     void RegisterWindow(sol::state& lua) {}
