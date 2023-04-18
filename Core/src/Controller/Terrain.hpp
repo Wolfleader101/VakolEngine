@@ -24,7 +24,7 @@ namespace Vakol::Controller {
 
         void Generate();
 
-        float getHeight(float x, float z);
+        float GetHeight(float x, float z);
 
         Entity& GetEntity() { return m_entity; }
 

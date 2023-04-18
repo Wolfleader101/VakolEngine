@@ -141,6 +141,7 @@ namespace Vakol::Controller {
     }
 
     void Terrain::Generate() { GenerateDrawable(); }
+
     void Terrain::GenerateDrawable() {
         InitVertices();
         InitIndices();
@@ -226,7 +227,7 @@ namespace Vakol::Controller {
         }
     }
 
-    float Terrain::getHeight(float x, float z) {
+    float Terrain::GetHeight(float x, float z) {
         // get the height of the terrain at a given x and z coordinate
         // this is done by interpolating the height of the 4 vertices that surround the point
         // the height is then interpolated between the 4 vertices
