@@ -20,8 +20,6 @@ namespace Vakol::Controller
 
         void LoadHeightMap(const std::string& heightMap);
 
-        void LoadTexture(const std::string& textureFile);
-
         void LoadFaultFormation(unsigned int terrainSize);
 
         void Generate();
@@ -34,15 +32,16 @@ namespace Vakol::Controller
 
     private:
         void GenerateDrawable();
+
         void InitVertices();
         void InitIndices();
-        unsigned char* LoadBinaryFile(const std::string& fileName, size_t& fileSize);
 
         int m_terrainSize;
+        
         std::vector<std::vector<float>> m_heightMap;
+
         std::vector<Vertex> m_vertices;
         std::vector<unsigned int> m_indices;
-        Assets::GLTexture m_texture;
 
         Entity& m_entity;
 
@@ -52,6 +51,7 @@ namespace Vakol::Controller
         float m_minHeight = -25.0f;
         float m_maxHeight = 100.0f;
         float m_firFilter = 0.75f;
-        int m_iterations = 50;
+
+        int m_iterations = 128;
     };
-}  // namespace Vakol::Controller
+}

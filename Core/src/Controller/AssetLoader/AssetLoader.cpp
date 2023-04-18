@@ -40,7 +40,7 @@ namespace Vakol::Controller {
         if (iter == m_ModelMap.end()) {
             ret = std::make_shared<Assets::Model>(LoadModel(file));
 
-            if (ret->meshes().empty()) return nullptr;  // if model didn't load
+            if (ret->GetMeshes().empty()) return nullptr;  // if model didn't load
 
             m_ModelMap[file] = ret;
         } else {

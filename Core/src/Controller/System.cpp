@@ -27,10 +27,9 @@ namespace Vakol::Controller {
         );
     }
 
-    void System::Drawable_Update(const Time& time, const Controller::Camera& camera,
-                                 const std::shared_ptr<View::Renderer> renderer) {
-        m_registry->view<Components::Transform, Components::Drawable>().each(
-            [&](auto& trans, Components::Drawable& drawable) { renderer->Draw(time, camera, trans, drawable); });
+    void System::Drawable_Update(const Time& time, const Controller::Camera& camera, const std::shared_ptr<View::Renderer> renderer) 
+    {
+        m_registry->view<Components::Transform, Components::Drawable>().each([&](auto& trans, Components::Drawable& drawable) { renderer->Draw(time, camera, trans, drawable); });
     }
 
     void System::Script_Update(LuaState& lua, EntityList& list, Scene* scene) {
@@ -145,12 +144,12 @@ namespace Vakol::Controller {
 
                 auto MeshPtr = PhysicsPool::m_Common.createTriangleMesh();
 
-                for (auto& mesh : draw.model_ptr->meshes()) {
+                for (auto& mesh : draw.model_ptr->GetMeshes()) {
                     rp3d::TriangleVertexArray* triArray = nullptr;
 
                     triArray = new rp3d::TriangleVertexArray(
-                        mesh.vao()->GetVertices(), mesh.vao()->GetVerticeVec().data(), sizeof(float) * 3,
-                        mesh.vao()->GetIndices() / 3, mesh.vao()->GetIndiceVec().data(), sizeof(unsigned int) * 3,
+                        mesh.vao()->GetVertexCount(), mesh.vao()->GetVertices().data(), sizeof(float) * 3,
+                        mesh.vao()->GetIndexCount() / 3, mesh.vao()->GetIndices().data(), sizeof(unsigned int) * 3,
                         rp3d::TriangleVertexArray::VertexDataType::VERTEX_FLOAT_TYPE,
                         rp3d::TriangleVertexArray::IndexDataType::INDEX_INTEGER_TYPE);
 

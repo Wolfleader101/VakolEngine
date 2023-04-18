@@ -68,15 +68,15 @@ namespace Vakol::View {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        AddUniform(2 * sizeof(glm::mat4), 1);
-        AddUniform(5 * sizeof(float), 2);
+        AddUniform(sizeof(glm::mat4), 1);
+        // AddUniform(5 * sizeof(float), 2);
 
-        SetUniformData(1, 0, sizeof(float), &light_constant);
-        SetUniformData(1, 1 * sizeof(float), sizeof(float), &light_linear);
-        SetUniformData(1, 2 * sizeof(float), sizeof(float), &light_quadratic);
+        // SetUniformData(1, 0, sizeof(float), &light_constant);
+        // SetUniformData(1, 1 * sizeof(float), sizeof(float), &light_linear);
+        // SetUniformData(1, 2 * sizeof(float), sizeof(float), &light_quadratic);
 
-        SetUniformData(1, 3 * sizeof(float), sizeof(float), &light_cut_off);
-        SetUniformData(1, 4 * sizeof(float), sizeof(float), &light_outer_cut_off);
+        // SetUniformData(1, 3 * sizeof(float), sizeof(float), &light_cut_off);
+        // SetUniformData(1, 4 * sizeof(float), sizeof(float), &light_outer_cut_off);
     };
 
     void GLRenderer::AddUniform(const int size, const int binding)
@@ -98,7 +98,7 @@ namespace Vakol::View {
     void GLRenderer::Draw(const Controller::Time& time, const Controller::Camera& camera, const Model::Components::Transform trans, const Model::Components::Drawable& drawable) const 
     {
         SetUniformData(0, 0, sizeof(glm::mat4), glm::value_ptr(camera.GetMatrix(PV_MATRIX)));
-        SetUniformData(0, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(camera.GetMatrix(VIEW_MATRIX)));
+        //SetUniformData(0, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(camera.GetMatrix(VIEW_MATRIX)));
 
         glm::mat4 model_matrix = glm::mat4(1.0f);
 
@@ -110,29 +110,29 @@ namespace Vakol::View {
         model_matrix = glm::rotate(model_matrix, trans.rot.y, glm::vec3(0.0f, 1.0f, 0.0f));
         model_matrix = glm::rotate(model_matrix, trans.rot.z, glm::vec3(0.0f, 0.0f, 1.0f));
 
-        drawable.model_ptr->shader()->SetMat4("MODEL_MATRIX", model_matrix);
-        drawable.model_ptr->shader()->SetMat3("NORMAL_MATRIX", glm::transpose(glm::inverse(glm::mat3(model_matrix))));
+        //drawable.model_ptr->GetShader()->SetMat4("MODEL_MATRIX", model_matrix);
+        // drawable.model_ptr->GetShader()->SetMat3("NORMAL_MATRIX", glm::transpose(glm::inverse(glm::mat3(model_matrix))));
 
-        drawable.model_ptr->shader()->SetVec3("VIEW_POS", camera.GetPos());
+        // drawable.model_ptr->GetShader()->SetVec3v("VIEW_POS", camera.GetPos());
 
-        drawable.model_ptr->shader()->SetVec3("light.position", camera.GetPos());
-        drawable.model_ptr->shader()->SetVec3("light.direction", camera.GetForward());
+        // drawable.model_ptr->GetShader()->SetVec3v("light.position", camera.GetPos());
+        // drawable.model_ptr->GetShader()->SetVec3v("light.direction", camera.GetForward());
 
-        for (int i = 0; i < drawable.model_ptr->mesh_count(); ++i)
-        {
-            auto mesh  = drawable.model_ptr->meshes().at(i);
-            auto material = mesh.material();
-
-            //drawable.model_ptr->shader()->SetVec3("tint", material->diffuse());
+        for (int i = 0; i < drawable.model_ptr->GetMeshCount(); ++i)
+        {   
+            auto mesh  = drawable.model_ptr->GetMeshes().at(i);
+            //auto material = mesh.material();
             
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, 2 * (i + 1));
+            // glActiveTexture(GL_TEXTURE0);
+            // glBindTexture(GL_TEXTURE_2D, 2 * (i + 1));
+
+            mesh.vao()->DrawElements();
         }
     }
 
     void GLRenderer::Update() const
     {
-        ClearColor(VAKOL_FOGGY_2);
+        ClearColor(VAKOL_CLASSIC);
         ClearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 }  // namespace Vakol::View

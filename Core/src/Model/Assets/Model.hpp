@@ -13,13 +13,14 @@ namespace Vakol::Model::Assets
     {
     public:
         Model() = default;
+        Model(const Mesh& mesh) { m_meshes.push_back(mesh); }
         Model(const std::vector<Mesh>& meshes) : m_meshes(meshes) {};
 
         void SetShader(const std::string& path) { this->m_shader = std::make_shared<GLShader>(path); }
-        std::shared_ptr<Shader> shader() { return m_shader; }
+        std::shared_ptr<Shader> GetShader() { return m_shader; }
 
-        const std::vector<Mesh> meshes() const { return m_meshes; }
-        const int mesh_count() const { return static_cast<int>(m_meshes.size()); }
+        const std::vector<Mesh> GetMeshes() const { return m_meshes; }
+        const int GetMeshCount() const { return static_cast<int>(m_meshes.size()); }
 
     private:
         std::vector<Mesh> m_meshes;

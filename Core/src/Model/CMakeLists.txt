@@ -20,7 +20,4 @@ src/Model/GameConfig.hpp
 src/Model/VertexArray.hpp
 src/Model/UniformBuffer.hpp
 
-src/Model/VertexArray.cpp
-
-
 PARENT_SCOPE)
