@@ -9,6 +9,8 @@
 #include "LuaAccess.hpp"
 #include "System.hpp"
 
+#include <Controller/Camera.hpp>
+
 namespace Vakol::Controller {
     Scene::Scene(const std::string& name, const std::string& scriptName, LuaState& lua,
                  std::shared_ptr<Physics::ScenePhysics> SP, bool active)
@@ -27,16 +29,24 @@ namespace Vakol::Controller {
 
         init(*this);
 
+        scenePhysics->Init();
+
         terrain = std::make_shared<Terrain>();
         System::Terrain_Init(entityList, terrain);
-        scenePhysics->AddTerrain(terrain);
+        
+
+
+
+        auto& terPos = terrain->GetEntity().GetComponent<Transform>();
 
         auto entity = entityList.CreateEntity();
 
-        entity.GetComponent<Components::Transform>().pos = { 20, 100, 20 };
+        entity.GetComponent<Components::Transform>().pos = { 10, 50, 10 };
 
         entity.AddComponent<RigidBody>(scenePhysics, std::nullopt);
         entity.AddComponent<Drawable>("coreAssets/models/cube.obj");
+
+        
 
         auto& rigid = entity.GetComponent<RigidBody>();
 
@@ -44,8 +54,13 @@ namespace Vakol::Controller {
 
         auto& collider = entity.GetComponent<Collider>();
         auto& draw = entity.GetComponent<Drawable>();
+        auto bounds = Components::getBounds(draw);
 
-        System::Physics_InitObject(rigid, collider, draw, entity.GetComponent<Transform>());
+        collider.bounds = bounds;
+
+        System::Physics_InitObject(rigid, collider, std::nullopt, entity.GetComponent<Transform>());
+
+        scenePhysics->AddTerrain(terrain);
 
         int x = 0;
     }
@@ -69,13 +84,17 @@ namespace Vakol::Controller {
 
         update(*this);
 
-        scenePhysics->Update(time);
+        //scene physics update here
+
+        scenePhysics->Update(time, cam);
 
         System::Script_Update(lua, entityList, this);
 
         System::Drawable_Update(time, cam, renderer);
 
         cam.Update(time.deltaTime);
+
+    	
     }
 
     namespace fs = std::filesystem;

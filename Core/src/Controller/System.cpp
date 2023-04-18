@@ -122,6 +122,8 @@ namespace Vakol::Controller {
         rigid.RigidBodyPtr->setLinearDamping(rigid.Data.LDamp);
         rigid.RigidBodyPtr->setAngularLockAxisFactor(rigid.Data.AngularLock);
 
+        rigid.prevTransform = rpTrans;
+
         if (collider.has_value()) {
             Collider& col = collider.value();
             col.OwningBody = &rigid;
@@ -178,7 +180,7 @@ namespace Vakol::Controller {
             return;
         }
         terrain->LoadHeightMap("coreAssets/textures/Heightmaps/height128.raw");
-        // terrain->LoadFaultFormation(1000);
+        //terrain->LoadFaultFormation(1000);
         terrain->LoadTexture("coreAssets/textures/Terrain/TEX_128_Grass.jpg");
         terrain->SetEntity(list.CreateEntity());
         terrain->GenerateDrawable();
