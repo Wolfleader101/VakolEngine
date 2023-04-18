@@ -207,10 +207,13 @@ namespace Vakol::Controller {
         cameraType.set_function("set_yaw", &Camera::SetYaw);
     }
 
-    void RegisterGUIWindow(sol::state& lua, View::GUIWindow* guiWindow) {
+    void RegisterGUIWindow(sol::state& lua, View::Window* applicationWindow) {
         auto guiWindowType = lua.new_usertype<View::GUIWindow>("gui_window"); //Creates a new usertype of the type 'View::GUIWindow'
 
         //REGISTERS C++ FUNCTIONS TO LUA
+        guiWindowType.set_function("initialize_window", &View::GUIWindow::Init, applicationWindow);
+        guiWindowType.set_function("create_window_frame", &View::GUIWindow::CreateNewFrame);
+
         guiWindowType.set_function("start_window_creation", &View::GUIWindow::StartWindowCreation);
 
         guiWindowType.set_function("get_fps", &View::GUIWindow::GetFramesPerSecond);

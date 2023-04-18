@@ -7,7 +7,7 @@ namespace Vakol::View {
         windowFlags = 0;
     };
 
-    void GUIWindow::Init(std::shared_ptr<View::Window> m_window) {
+    void GUIWindow::Init(View::Window *m_window) {
         ImGui::CreateContext();
 
         ImGui::StyleColorsDark();  // Chooses the Dark style
