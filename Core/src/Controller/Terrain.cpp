@@ -232,11 +232,21 @@ namespace Vakol::Controller {
         // this is done by interpolating the height of the 4 vertices that surround the point
         // the height is then interpolated between the 4 vertices
 
+        if (x < 0 || x >= m_terrainSize || z < 0 || z >= m_terrainSize) {
+            return 0.0f;
+        }
+
         // get the 4 vertices that surround the point
-        int x0 = static_cast<int>(x);
-        int x1 = x0 + 1;
-        int z0 = static_cast<int>(z);
-        int z1 = z0 + 1;
+        int x0 = static_cast<int>(x) % m_terrainSize;
+        int x1 = (x0 + 1) % m_terrainSize;
+        int z0 = static_cast<int>(z) % m_terrainSize;
+        int z1 = (z0 + 1) % m_terrainSize;
+
+        // Handle negative x and z values by wrapping them around
+        if (x0 < 0) x0 += m_terrainSize;
+        if (x1 < 0) x1 += m_terrainSize;
+        if (z0 < 0) z0 += m_terrainSize;
+        if (z1 < 0) z1 += m_terrainSize;
 
         // get the heights of the 4 vertices
         float y0 = m_vertices[z0 * m_terrainSize + x0].position.y;
