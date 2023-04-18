@@ -12,7 +12,7 @@ constexpr glm::vec3 WORLD_UP = glm::vec3(0.0f, 1.0f, 0.0f);
 
 namespace Vakol::Controller {
 
-    Camera::Camera(const glm::vec3& position = glm::vec3(0.0f)) : forward(WORLD_FORWARD), up(WORLD_UP) {
+    Camera::Camera(const glm::vec3& position = glm::vec3(0.0f, 0.0f, 5.0f)) : forward(WORLD_FORWARD), up(WORLD_UP) {
         this->position = position;
 
         // this->Update();
@@ -20,11 +20,11 @@ namespace Vakol::Controller {
 
     const glm::mat4 Camera::GetMatrix(const unsigned char type) const {
         switch (type) {
-            case _PROJECTION_MATRIX:
+            case PROJECTION_MATRIX:
                 return this->PROJECTION;
-            case _VIEW_MATRIX:
+            case VIEW_MATRIX:
                 return this->VIEW;
-            case _PV_MATRIX:
+            case PV_MATRIX:
                 return this->PROJECTION * this->VIEW;
             default:
                 VK_WARN("Invalid Matrix Type!");

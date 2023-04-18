@@ -3,13 +3,16 @@
 #include "AssetLoader/AssetLoader.hpp"
 #include "Model/Assets/Material.hpp"
 #include "Model/Components.hpp"
+
 #include "Model/gl/GLInstance.hpp"
 
-using Vakol::Model::Assets::Material;
+#include <glm/gtc/type_ptr.hpp>
 
-const int DIRECTIONAL_LIGHT = 0;
-const int POINT_LIGHT = 1;
-const int SPOT_LIGHT = 2;
+constexpr int DIRECTIONAL_LIGHT = 0;
+constexpr int POINT_LIGHT = 1;
+constexpr int SPOT_LIGHT = 2;
+
+int OPTION = DIRECTIONAL_LIGHT;
 
 namespace Vakol::Controller {
     void RegisterMath(sol::state& lua) {
@@ -71,26 +74,33 @@ namespace Vakol::Controller {
         });
     }
 
-    void RegisterAssetLoader(sol::state& lua) {
-        lua.set_function("load_texture", [](std::string path) {
-            // auto tex = AssetLoader::GetTexture(path);
-            // if (tex == nullptr) return false;
+    void RegisterAssetLoader(sol::state& lua) 
+    {
+        lua.set_function("load_texture", [](std::string path) 
+        {
+            auto tex = AssetLoader::GetTexture(path);
 
-            // return true;
+            if (tex == nullptr) return false;
+
+            return true;
         });
 
-        lua.set_function("load_model", [](std::string path) {
+        lua.set_function("load_model", [](std::string path) 
+        {
             auto model = AssetLoader::GetModel(path);
+
             if (model == nullptr) return false;
 
             return true;
         });
 
-        lua.set_function("load_shader", [](std::string path) {
-            // //auto shader = AssetLoader::GetShader(path);
-            // if (shader == nullptr) return false;
+        lua.set_function("load_shader", [](std::string path) 
+        {
+            auto shader = AssetLoader::GetShader(path);
 
-            // return true;
+            if (shader == nullptr) return false;
+
+            return true;
         });
     }
 
@@ -134,7 +144,9 @@ namespace Vakol::Controller {
         auto entityType = lua.new_usertype<Entity>("entity");
 
         entityType.set_function("get_transform", &Entity::GetComponent<Model::Components::Transform>);
-        entityType.set_function("add_model", [](Entity* ent, std::string path) {
+        
+        entityType.set_function("add_model", [](Entity* ent, std::string path) 
+        {
             if (ent->HasComponent<Model::Components::Drawable>() == false)
                 ent->AddComponent<Model::Components::Drawable>();
 
@@ -142,36 +154,27 @@ namespace Vakol::Controller {
 
             if (model == nullptr) return false;
 
-            auto material = model->meshes().begin()->material();
+            model->SetShader("coreAssets/shaders/custom_bp.prog");
+            model->shader()->Bind();
+            
+            model->shader()->SetFloat("material.shininess", 32.0f);
 
-            for (const auto& texture : material->textures()) {
-                GLTexture tex("coreAssets/textures/" + texture.path);
-                // tex.Bind();
+            GLTexture("coreAssets/textures/kiki_body.jpg", false, true, false);
+            GLTexture("coreAssets/textures/kiki_eyes.png", false, false, false);
+
+            OPTION = SPOT_LIGHT;
+
+            if (OPTION != SPOT_LIGHT)
+            {
+                model->shader()->SetVec3("light.position", glm::vec3(0.0f, 0.5f, 7.5f));
+                model->shader()->SetVec3("light.direction", glm::vec3(glm::radians(0.0f), glm::radians(-15.0f), glm::radians(-90.0f)));
             }
 
-            // force it for now, since I don't understand lua lol
-            material->SetShader("coreAssets/shaders/basic.prog");
-            material->Bind();
+            model->shader()->SetInt("option", OPTION);
 
-            // material->SetInt("texture_0", 0);
-
-            // material->SetInt("material.diffuse", 0);
-            // material->SetInt("material.specular", 1);
-            // material->SetInt("material.emissive", 2);
-
-            // material->SetFloat("material.shininess", 64.0f);
-
-            // material->SetVec3("light.ambient", glm::vec3(0.1f, 0.1f, 0.1f));
-            // material->SetVec3("light.diffuse", glm::vec3(0.8f, 0.8f, 0.8f));
-            // material->SetVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
-
-            // material->SetFloat("light.constant", 1.0f);
-            // material->SetFloat("light.linear", 0.045f);
-            // material->SetFloat("light.quadratic", 0.0075f);
-            // material->SetFloat("light.cut_off", glm::cos(glm::radians(12.5f)));
-            // material->SetFloat("light.outer_cut_off", glm::cos(glm::radians(17.5f)));
-
-            // material->SetInt("option", SPOT_LIGHT);
+            model->shader()->SetBool("enable_textures", true);
+            model->shader()->SetBool("enable_fog", true);
+            
             ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
 
             return true;

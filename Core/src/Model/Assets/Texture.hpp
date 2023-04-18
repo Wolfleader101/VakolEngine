@@ -7,13 +7,16 @@ namespace Vakol::Model::Assets {
     class Texture {
        public:
         Texture() = default;
+        
         Texture(const int width, const int height, const unsigned int format)
             : m_width(width), m_height(height), m_format(format) {}
-        Texture(const std::string& path, const bool raw = false) {
+        
+        Texture(const std::string& path, const bool raw = false, const bool gamma = false, const bool flip = true) 
+        {
             if (raw)
                 this->m_ID = Controller::LoadRawTexture(path);
             else
-                this->m_ID = Controller::LoadTexture(path);
+                this->m_ID = Controller::LoadTexture(path, gamma, flip);
         }
 
         const unsigned int id() const { return m_ID; }
@@ -21,7 +24,7 @@ namespace Vakol::Model::Assets {
         std::string type;
         std::string path;
 
-       protected:
+    protected:
         unsigned int m_ID = 0;
         unsigned int m_format = 0;
 

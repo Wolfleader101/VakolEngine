@@ -7,12 +7,7 @@ uniform vec4 rgba;
 
 uniform samplerCube skybox;
 
-uniform bool enableTexture;
-
 void main()
 {
-    if (enableTexture)
-        FragColor = texture(skybox, TexCoords) * rgba;
-    else
-        FragColor = rgba;
+    FragColor = texture(skybox, TexCoords) * rgba;
 }
