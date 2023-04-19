@@ -26,7 +26,7 @@ namespace Vakol::View {
          *
          * @param window The GLFW window the UI will be inside of
          */
-        void Init(View::Window* m_window);
+        void Init(std::shared_ptr<View::Window> window);
         /**
          * @brief Creates a new frame for the window
          */

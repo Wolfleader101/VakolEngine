@@ -43,7 +43,7 @@ namespace Vakol::Controller {
 
         m_window->SetEventCallback(BIND_EVENT_FN(OnEvent));
 
-        m_gui.Init(m_window.get());
+        m_gui.Init(m_window);
 
         // Physics::Debug = false;
 
