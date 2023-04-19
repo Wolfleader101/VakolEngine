@@ -1,12 +1,11 @@
 #include "LuaAccess.hpp"
 
+#include <glm/gtc/type_ptr.hpp>
+
 #include "AssetLoader/AssetLoader.hpp"
 #include "Model/Assets/Material.hpp"
 #include "Model/Components.hpp"
-
 #include "Model/gl/GLInstance.hpp"
-
-#include <glm/gtc/type_ptr.hpp>
 
 constexpr int DIRECTIONAL_LIGHT = 0;
 constexpr int POINT_LIGHT = 1;
@@ -74,10 +73,8 @@ namespace Vakol::Controller {
         });
     }
 
-    void RegisterAssetLoader(sol::state& lua) 
-    {
-        lua.set_function("load_texture", [](std::string path) 
-        {
+    void RegisterAssetLoader(sol::state& lua) {
+        lua.set_function("load_texture", [](std::string path) {
             auto tex = AssetLoader::GetTexture(path);
 
             if (tex == nullptr) return false;
@@ -85,8 +82,7 @@ namespace Vakol::Controller {
             return true;
         });
 
-        lua.set_function("load_model", [](std::string path) 
-        {
+        lua.set_function("load_model", [](std::string path) {
             auto model = AssetLoader::GetModel(path);
 
             if (model == nullptr) return false;
@@ -94,8 +90,7 @@ namespace Vakol::Controller {
             return true;
         });
 
-        lua.set_function("load_shader", [](std::string path) 
-        {
+        lua.set_function("load_shader", [](std::string path) {
             auto shader = AssetLoader::GetShader(path);
 
             if (shader == nullptr) return false;
@@ -146,15 +141,13 @@ namespace Vakol::Controller {
         auto shaderType = lua.new_usertype<Shader>("shader");
 
         entityType.set_function("get_transform", &Entity::GetComponent<Model::Components::Transform>);
-        
-        entityType.set_function("add_model", [](Entity* ent, std::string path) 
-        {
+
+        entityType.set_function("add_model", [](Entity* ent, std::string path) {
             if (!ent->HasComponent<Model::Components::Drawable>()) ent->AddComponent<Model::Components::Drawable>();
 
             auto model = AssetLoader::GetModel(path);
-            
-            if (model)
-            {
+
+            if (model) {
                 ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
                 return model;
             }
@@ -190,7 +183,7 @@ namespace Vakol::Controller {
 
         sceneType.set_function("create_entity", &Scene::CreateEntity);
         sceneType.set_function("get_camera", &Scene::GetCamera);
-        //sceneType.set_function("get_terrain", &Scene::GetTerrain);
+        sceneType.set_function("get_terrain", &Scene::GetTerrain);
 
         cameraType.set_function("get_pos", &Camera::GetPos);
         cameraType.set_function("set_pos", &Camera::SetPos);

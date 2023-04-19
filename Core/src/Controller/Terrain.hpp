@@ -10,13 +10,11 @@
 
 using namespace Vakol::Model;
 
-namespace Vakol::Controller 
-{
+namespace Vakol::Controller {
 
-    class Terrain 
-    {
-    public:
-        Terrain(Entity& entity);
+    class Terrain {
+       public:
+        Terrain(Entity entity);
 
         void LoadHeightMap(const std::string& heightMap);
 
@@ -28,22 +26,22 @@ namespace Vakol::Controller
 
         const int GetTerrainSize() const { return m_terrainSize; }
 
-        Entity& GetEntity() { return m_entity; }
+        Entity GetEntity() { return m_entity; }
 
-    private:
+       private:
         void GenerateDrawable();
 
         void InitVertices();
         void InitIndices();
 
         int m_terrainSize;
-        
+
         std::vector<std::vector<float>> m_heightMap;
 
         std::vector<Vertex> m_vertices;
         std::vector<unsigned int> m_indices;
 
-        Entity& m_entity;
+        Entity m_entity;
 
         float m_yScale = 0.75f;
         float m_yShift = 8.0f;
@@ -54,4 +52,4 @@ namespace Vakol::Controller
 
         int m_iterations = 128;
     };
-}
+}  // namespace Vakol::Controller

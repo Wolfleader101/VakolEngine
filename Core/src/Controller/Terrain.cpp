@@ -1,26 +1,19 @@
 #include "Terrain.hpp"
 
-#include "Logger.hpp"
-
-#include "Model/Components.hpp"
 #include "AssetLoader/FileLoader.hpp"
+#include "Logger.hpp"
+#include "Model/Components.hpp"
 
-namespace Vakol::Controller 
-{
-    Terrain::Terrain(Entity& entity) : m_entity(entity) 
-    {
-        m_entity.AddComponent<Components::Drawable>();
-    };
+namespace Vakol::Controller {
+    Terrain::Terrain(Entity entity) : m_entity(entity){};
 
-    void Terrain::LoadFaultFormation(unsigned int terrainSize) 
-    {
+    void Terrain::LoadFaultFormation(unsigned int terrainSize) {
         m_terrainSize = terrainSize;
         m_heightMap = std::vector<std::vector<float>>(m_terrainSize, std::vector<float>(m_terrainSize));
 
         float deltaHeight = m_maxHeight - m_minHeight;
 
-        for (int i = 0; i < m_iterations; i++) 
-        {
+        for (int i = 0; i < m_iterations; i++) {
             float ratio = static_cast<float>(i) / static_cast<float>(m_iterations);
             float height = m_maxHeight - (ratio * deltaHeight);
 
@@ -34,10 +27,8 @@ namespace Vakol::Controller
             // calculate the direction of the line
             glm::vec3 lineDir = randomP2 - randomP1;
 
-            for (int z = 0; z < m_terrainSize; z++)
-            {
-                for (int x = 0; x < m_terrainSize; x++) 
-                {
+            for (int z = 0; z < m_terrainSize; z++) {
+                for (int x = 0; x < m_terrainSize; x++) {
                     glm::vec3 in(lineDir);
                     in.x = x - randomP1.x;
                     in.z = z - randomP1.z;
@@ -52,12 +43,10 @@ namespace Vakol::Controller
         // apply FIR filters
 
         // left to right
-        for (int z = 0; z < m_terrainSize; z++) 
-        {
+        for (int z = 0; z < m_terrainSize; z++) {
             float prev = m_heightMap[0][z];
 
-            for (int x = 1; x < m_terrainSize; x++) 
-            {
+            for (int x = 1; x < m_terrainSize; x++) {
                 float cur = m_heightMap[x][z];
                 float newVal = m_firFilter * prev + (1.0f - m_firFilter) * cur;
 
@@ -67,11 +56,9 @@ namespace Vakol::Controller
         }
 
         // right to left
-        for (int z = 0; z < m_terrainSize; z++) 
-        {
+        for (int z = 0; z < m_terrainSize; z++) {
             float prev = m_heightMap[m_terrainSize - 1][z];
-            for (int x = m_terrainSize - 2; x >= 0; x--) 
-            {
+            for (int x = m_terrainSize - 2; x >= 0; x--) {
                 float cur = m_heightMap[x][z];
                 float newVal = m_firFilter * prev + (1.0f - m_firFilter) * cur;
 
@@ -81,12 +68,10 @@ namespace Vakol::Controller
         }
 
         // bottom to top
-        for (int x = 0; x < m_terrainSize; x++) 
-        {
+        for (int x = 0; x < m_terrainSize; x++) {
             float prev = m_heightMap[x][0];
 
-            for (int z = 1; z < m_terrainSize; z++) 
-            {
+            for (int z = 1; z < m_terrainSize; z++) {
                 float cur = m_heightMap[x][z];
                 float newVal = m_firFilter * prev + (1.0f - m_firFilter) * cur;
 
@@ -96,11 +81,9 @@ namespace Vakol::Controller
         }
 
         // top to bottom
-        for (int x = 0; x < m_terrainSize; x++) 
-        {
+        for (int x = 0; x < m_terrainSize; x++) {
             float prev = m_heightMap[x][m_terrainSize - 1];
-            for (int z = m_terrainSize - 2; z >= 0; z--) 
-            {
+            for (int z = m_terrainSize - 2; z >= 0; z--) {
                 float cur = m_heightMap[x][z];
                 float newVal = m_firFilter * prev + (1.0f - m_firFilter) * cur;
 
@@ -113,8 +96,7 @@ namespace Vakol::Controller
         float min = m_heightMap[0][0];
         float max = min;
 
-        for (int i = 1; i < m_terrainSize * m_terrainSize; i++) 
-        {
+        for (int i = 1; i < m_terrainSize * m_terrainSize; i++) {
             if (m_heightMap[i / m_terrainSize][i % m_terrainSize] < min)
                 min = m_heightMap[i / m_terrainSize][i % m_terrainSize];
 
@@ -127,33 +109,32 @@ namespace Vakol::Controller
         float delta = max - min;
         float range = m_maxHeight - m_minHeight;
 
-        for (int i = 0; i < m_terrainSize * m_terrainSize; i++) 
-        {
-            m_heightMap[i / m_terrainSize][i % m_terrainSize] = ((m_heightMap[i / m_terrainSize][i % m_terrainSize] - min) / delta) * range + m_minHeight;
+        for (int i = 0; i < m_terrainSize * m_terrainSize; i++) {
+            m_heightMap[i / m_terrainSize][i % m_terrainSize] =
+                ((m_heightMap[i / m_terrainSize][i % m_terrainSize] - min) / delta) * range + m_minHeight;
         }
     }
 
     void Terrain::Generate() { GenerateDrawable(); }
 
-    void Terrain::GenerateDrawable() 
-    {
+    void Terrain::GenerateDrawable() {
         InitVertices();
         InitIndices();
 
         Assets::Mesh mesh(m_vertices, m_indices);
 
+        m_entity.AddComponent<Components::Drawable>();
         auto& drawable = m_entity.GetComponent<Components::Drawable>();
 
         drawable.model_ptr = std::make_shared<Model::Assets::Model>(mesh);
+        drawable.model_ptr->SetShader("coreAssets/shaders/basic.prog");
     }
 
-    void Terrain::LoadHeightMap(const std::string& heightMap) 
-    {
+    void Terrain::LoadHeightMap(const std::string& heightMap) {
         int width = 0, height = 0;
         unsigned char* data = LoadImage(heightMap, width, height);
 
-        if (data) 
-        {
+        if (data) {
             m_terrainSize = width | height;
 
             // initialise a 2d vector
@@ -170,25 +151,23 @@ namespace Vakol::Controller
         }
     }
 
-    void Terrain::InitVertices() 
-    {
+    void Terrain::InitVertices() {
         m_vertices.resize(m_terrainSize * m_terrainSize);
 
         // generate a grid of vertices
-        for (int z = 0; z < m_terrainSize; z++) 
-        {
-            for (int x = 0; x < m_terrainSize; x++) 
-            {
+        for (int z = 0; z < m_terrainSize; z++) {
+            for (int x = 0; x < m_terrainSize; x++) {
                 m_vertices[z * m_terrainSize + x].position = glm::vec3(x, m_heightMap[z][x] * m_yScale - m_yShift, z);
 
-                m_vertices[z * m_terrainSize + x].uv = glm::vec2(x / static_cast<float>(m_terrainSize), z / static_cast<float>(m_terrainSize));
+                m_vertices[z * m_terrainSize + x].uv =
+                    glm::vec2(x / static_cast<float>(m_terrainSize), z / static_cast<float>(m_terrainSize));
             }
         }
     }
 
-    void Terrain::InitIndices() 
-    {
-        m_indices.reserve(m_terrainSize * (m_terrainSize - 1) * 2); // allocate x amount of memory in advance (reduces number of allocations) in push_back
+    void Terrain::InitIndices() {
+        m_indices.reserve(m_terrainSize * (m_terrainSize - 1) *
+                          2);  // allocate x amount of memory in advance (reduces number of allocations) in push_back
 
         for (int i = 0; i < m_terrainSize - 1; i++)  // for each row a.k.a. each strip
         {
@@ -202,8 +181,7 @@ namespace Vakol::Controller
         }
     }
 
-    float Terrain::GetHeight(float x, float z) 
-    {
+    float Terrain::GetHeight(float x, float z) {
         // get the height of the terrain at a given x and z coordinate
         // this is done by interpolating the height of the 4 vertices that surround the point
         // the height is then interpolated between the 4 vertices
@@ -246,4 +224,4 @@ namespace Vakol::Controller
 
         return y;
     }
-}
+}  // namespace Vakol::Controller
