@@ -135,7 +135,8 @@ namespace Vakol::Controller {
             "KEY_Z", Input::KEY::KEY_Z, "KEY_LEFT_SHIFT", Input::KEY::KEY_LEFT_SHIFT);
     }
 
-    void RegisterEntity(sol::state& lua) {
+    void RegisterEntity(sol::state& lua) 
+    {
         auto entityType = lua.new_usertype<Entity>("entity");
         auto modelType = lua.new_usertype<Assets::Model>("model");
         auto meshType = lua.new_usertype<Assets::Mesh>("mesh");
@@ -163,7 +164,6 @@ namespace Vakol::Controller {
             auto model = terrain.get();
             
             const auto size = terrain.get_size();
-            VK_TRACE(size);
 
             if (model)
             {
@@ -211,6 +211,8 @@ namespace Vakol::Controller {
         meshType.set_function("get_material", &Assets::Mesh::GetMaterial);
 
         materialType.set_function("add_texture", &Assets::Material::AddTexture);
+        materialType.set_function("get_texture", &Assets::Material::GetTexture);
+
         materialType.set_function("get_ambient", &Assets::Material::GetAmbientColor);
         materialType.set_function("get_diffuse", &Assets::Material::GetDiffuseColor);
         materialType.set_function("get_specular", &Assets::Material::GetSpecularColor);
@@ -220,6 +222,9 @@ namespace Vakol::Controller {
         materialType.set_function("set_diffuse", &Assets::Material::SetDiffuseColor);
         materialType.set_function("set_specular", &Assets::Material::SetSpecularColor);
         materialType.set_function("set_shininess", &Assets::Material::SetShininess);
+
+        textureType.set_function("bind_texture", &Assets::Texture::Bind);
+        textureType.set_function("unbind_texture", &Assets::Texture::Unbind);
 
         shaderType.set_function("set_int", &Assets::Shader::SetInt);
         shaderType.set_function("set_bool", &Assets::Shader::SetBool);

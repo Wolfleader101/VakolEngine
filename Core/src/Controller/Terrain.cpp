@@ -52,7 +52,7 @@ namespace Vakol::Controller
                     glm::vec3((-size / 2.0f + size * x / static_cast<float>(size)) * 1.0f,
                               (y * 0.1f - 16.0f),
                               (-size / 2.0f + size * z / static_cast<float>(size)) * 1.0f),
-                    glm::vec3(0.0f), // normal
+                    glm::vec3(0.0f, 1.0f, 0.0f), // normal
                     glm::vec2((x / static_cast<float>(size)),
                               (z / static_cast<float>(size))),
                     glm::vec3(0.0f), // tangent
@@ -137,7 +137,7 @@ namespace Vakol::Controller
                     glm::vec3((-size / 2.0f + size * x / static_cast<float>(size)) * 1.0f,
                               (y * 0.25f - 16.0f),
                               (-size / 2.0f + size * z / static_cast<float>(size)) * 1.0f),
-                    glm::vec3(0.0f), // normal
+                    glm::vec3(0.0f, 1.0f, 0.0f), // normal
                     glm::vec2((x / static_cast<float>(size)),
                               (z / static_cast<float>(size))),
                     glm::vec3(0.0f), // tangent

@@ -1,16 +1,22 @@
 function init(scene, entity)
     local camera = scene:get_camera();
 
-    -- local terrain = entity:add_terrain_heightmap("coreAssets/textures/Heightmaps/test_2.raw");
-    local terrain = entity:add_terrain_fault_formation(128, 128, 0.8, true); -- size, iterations, filter, random
+    local terrain = entity:add_terrain_heightmap("coreAssets/textures/Heightmaps/height_map.raw");
+    -- local terrain = entity:add_terrain_fault_formation(128, 128, 0.8, true); -- size, iterations, filter, random
     
     terrain:set_shader("coreAssets/shaders/basic.prog");
     
     local mesh = terrain:get_mesh();
     local material = mesh:get_material();
 
-    local t1 = texture("coreAssets/textures/Terrain/TEX_128_Grass.jpg", false, false);
+    local t1 = texture("coreAssets/textures/grass.png", false, false);
     material:add_texture(t1);
+    t1:bind_texture(0);
+    
+    local shader = terrain:get_shader();
+    shader:set_bool("enable_textures", false);
+
+    -- t1:bind_texture(0);
 
     -- local model = entity:add_model("coreAssets/models/cube.obj") -- get model and add a drawable component
     -- model:set_shader("coreAssets/shaders/basic.prog") -- set the shader on the model (automatically binds it)

@@ -3,6 +3,8 @@
 #include <Model/Assets/Material.hpp>
 #include <vector>
 
+#include <Controller/Logger.hpp>
+
 using namespace Vakol::Model::Assets;
 
 namespace Vakol::Model 
