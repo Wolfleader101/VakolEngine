@@ -88,7 +88,7 @@ namespace Vakol::Controller::Physics
     void ScenePhysics::AddTerrain(const std::shared_ptr<Vakol::Controller::Terrain>& terr)
     {
         auto& vertices = terr->GetVertices();
-        auto& indices = terr->GetIndices();
+        auto& indices = terr->ConvertStripToTriangles();
 
         if (vertices.empty() || indices.empty())
         {

@@ -31,7 +31,8 @@ namespace Vakol::Controller {
 
         const std::vector<Vertex>& GetVertices();
         const std::vector<unsigned int>& GetIndices();
-        
+
+        std::vector<unsigned int> ConvertStripToTriangles();
 
        private:
         void InitVertices();

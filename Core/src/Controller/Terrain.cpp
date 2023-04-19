@@ -275,4 +275,24 @@ namespace Vakol::Controller {
         return m_indices;
     }
 
+    std::vector<unsigned int> Terrain::ConvertStripToTriangles() {
+        std::vector<unsigned int> triangleIndices;
+
+        for (size_t i = 2; i < m_indices.size(); ++i) {
+            // Reverse the winding order for even triangles
+            if (i % 2 == 0) {
+                triangleIndices.push_back(m_indices[i - 2]);
+                triangleIndices.push_back(m_indices[i - 1]);
+                triangleIndices.push_back(m_indices[i]);
+            }
+            else {
+                triangleIndices.push_back(m_indices[i - 1]);
+                triangleIndices.push_back(m_indices[i - 2]);
+                triangleIndices.push_back(m_indices[i]);
+            }
+        }
+
+        return triangleIndices;
+    }
+
 }  // namespace Vakol::Controller

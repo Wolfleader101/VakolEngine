@@ -72,7 +72,6 @@ namespace Vakol::Controller::Physics
 
 
 			float m_timestep = 1.0f / 60.0f; 
-			//not static as we might want to change time steps separately
 
 			float m_accumulator = 0.0f;
 			friend class PhysicsPool;
