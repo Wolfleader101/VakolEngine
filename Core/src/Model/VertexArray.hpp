@@ -21,7 +21,7 @@ namespace Vakol::Model {
         virtual void DrawArraysInstanced(const int amount) const = 0;
         virtual void DrawElementsInstanced(const int amount) const = 0;
 
-        virtual void DrawTriangleStrips(const int strips) const = 0;
+        virtual void DrawTriangleStrips(const int strips, const int tris) const = 0;
 
         const virtual unsigned int GetID() const = 0;
         const virtual int GetVertexCount() const = 0;

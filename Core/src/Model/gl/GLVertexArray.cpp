@@ -33,11 +33,11 @@ namespace Vakol::Model {
         glEnableVertexAttribArray(4);
         glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, bitangent));
 
-        glEnableVertexAttribArray(5);
-        glVertexAttribIPointer(5, 4, GL_INT, sizeof(Vertex), (void*)offsetof(Vertex, m_BoneIDs));
+        //glEnableVertexAttribArray(5);
+        //glVertexAttribIPointer(5, 4, GL_INT, sizeof(Vertex), (void*)offsetof(Vertex, m_BoneIDs));
 
-        glEnableVertexAttribArray(6);
-        glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, m_Weights));
+        //glEnableVertexAttribArray(6);
+        //glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, m_Weights));
 
         this->Unbind();
     }
@@ -51,7 +51,8 @@ namespace Vakol::Model {
         this->Unbind();
     }
 
-    void GLVertexArray::DrawElements() const {
+    void GLVertexArray::DrawElements() const 
+    {
         this->Bind();
 
         glDrawElements(GL_TRIANGLES, this->GetIndexCount(), GL_UNSIGNED_INT, 0);
@@ -59,12 +60,12 @@ namespace Vakol::Model {
         this->Unbind();
     }
 
-    void GLVertexArray::DrawTriangleStrips(const int strips) const 
+    void GLVertexArray::DrawTriangleStrips(const int strips, const int tris) const 
     {
         this->Bind();
 
-        for (int strip = 0; strip < strips - 1; ++strip)
-            glDrawElements(GL_TRIANGLE_STRIP, strips, GL_UNSIGNED_INT, (void*)(sizeof(int) * (strips) * strip));
+        for (int strip = 0; strip < strips; ++strip)
+            glDrawElements(GL_TRIANGLE_STRIP, tris + 2, GL_UNSIGNED_INT, (void*)(sizeof(unsigned int) * (tris + 2) * strip));
 
         this->Unbind();
     }

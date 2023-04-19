@@ -4,7 +4,7 @@
 
 #include "Camera.hpp"
 #include "Controller/Physics/ScenePhysics.hpp"
-#include "Controller/Terrain.hpp"
+#include "Controller/Terrain_2.0.hpp"
 #include "EntityList.hpp"
 #include "LuaState.hpp"
 #include "Time.hpp"
@@ -39,13 +39,11 @@ namespace Vakol::Controller {
 
         std::shared_ptr<Physics::ScenePhysics> scenePhysics;
         Camera& GetCamera() { return cam; }
-        Terrain& GetTerrain() { return terrain; }
 
-       private:
+    private:
         LuaState& lua;
         std::string scriptName;
         std::string name;
         Camera cam;
-        Terrain terrain;
     };
 }  // namespace Vakol::Controller

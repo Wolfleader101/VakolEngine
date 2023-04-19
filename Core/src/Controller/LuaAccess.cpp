@@ -74,7 +74,7 @@ namespace Vakol::Controller {
     }
 
     void RegisterAssetLoader(sol::state& lua) {
-        lua.set_function("load_texture", [](std::string path) {
+        lua.set_function("load_texture", [](const std::string& path) {
             auto tex = AssetLoader::GetTexture(path);
 
             if (tex == nullptr) return false;
@@ -82,7 +82,7 @@ namespace Vakol::Controller {
             return true;
         });
 
-        lua.set_function("load_model", [](std::string path) {
+        lua.set_function("load_model", [](const std::string& path) {
             auto model = AssetLoader::GetModel(path);
 
             if (model == nullptr) return false;
@@ -90,7 +90,7 @@ namespace Vakol::Controller {
             return true;
         });
 
-        lua.set_function("load_shader", [](std::string path) {
+        lua.set_function("load_shader", [](const std::string& path) {
             auto shader = AssetLoader::GetShader(path);
 
             if (shader == nullptr) return false;
@@ -142,7 +142,20 @@ namespace Vakol::Controller {
 
         entityType.set_function("get_transform", &Entity::GetComponent<Model::Components::Transform>);
 
-        entityType.set_function("add_model", [](Entity* ent, std::string path) {
+        entityType.set_function("add_terrain", [](Entity* ent, const std::string& path)
+        {
+            if (!ent->HasComponent<Model::Components::Drawable>()) ent->AddComponent<Model::Components::Drawable>();
+
+            auto terrain = Terrain_2(path).get(); // doesn't that look nice?
+
+            if (terrain)
+            {
+                ent->GetComponent<Model::Components::Drawable>().model_ptr = terrain;
+                return terrain;
+            }
+        });
+
+        entityType.set_function("add_model", [](Entity* ent, const std::string& path) {
             if (!ent->HasComponent<Model::Components::Drawable>()) ent->AddComponent<Model::Components::Drawable>();
 
             auto model = AssetLoader::GetModel(path);
@@ -176,14 +189,13 @@ namespace Vakol::Controller {
         TransformType["scale"] = &Model::Components::Transform::scale;
     }
 
-    void RegisterScene(sol::state& lua) {
+    void RegisterScene(sol::state& lua) 
+    {
         auto sceneType = lua.new_usertype<Scene>("scene");
         auto cameraType = lua.new_usertype<Camera>("camera");
-        auto terrainType = lua.new_usertype<Terrain>("terrain");
 
         sceneType.set_function("create_entity", &Scene::CreateEntity);
         sceneType.set_function("get_camera", &Scene::GetCamera);
-        sceneType.set_function("get_terrain", &Scene::GetTerrain);
 
         cameraType.set_function("get_pos", &Camera::GetPos);
         cameraType.set_function("set_pos", &Camera::SetPos);
@@ -195,11 +207,6 @@ namespace Vakol::Controller {
 
         cameraType.set_function("get_yaw", &Camera::GetYaw);
         cameraType.set_function("set_yaw", &Camera::SetYaw);
-
-        terrainType.set_function("load_heightmap", &Terrain::LoadHeightMap);
-        terrainType.set_function("generate", &Terrain::Generate);
-        terrainType.set_function("get_height", &Terrain::GetHeight);
-        terrainType.set_function("get_size", &Terrain::GetTerrainSize);
     }
 
     void RegisterWindow(sol::state& lua) {}

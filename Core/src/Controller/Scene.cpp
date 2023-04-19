@@ -18,8 +18,7 @@ namespace Vakol::Controller {
           entityList(),
           scenePhysics(SP),
           active(active),
-          cam(glm::vec3(0.0f, 0.0f, 2.0f)),
-          terrain(entityList.CreateEntity()) {
+          cam(glm::vec3(0.0f, 0.0f, 2.0f)) {
         lua.RunFile("scripts/" + scriptName);
         System::BindScene(*this);
 

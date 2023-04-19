@@ -115,7 +115,7 @@ namespace Vakol::View {
         drawable.model_ptr->GetShader()->SetMat4("MODEL_MATRIX", model_matrix);
         drawable.model_ptr->GetShader()->SetMat3("NORMAL_MATRIX", glm::transpose(glm::inverse(glm::mat3(model_matrix))));
 
-        drawable.model_ptr->GetShader()->SetVec3v("VIEW_POS", camera.GetPos());
+        // drawable.model_ptr->GetShader()->SetVec3v("VIEW_POS", camera.GetPos());
 
         // drawable.model_ptr->GetShader()->SetVec3v("light.position", camera.GetPos());
         // drawable.model_ptr->GetShader()->SetVec3v("light.direction", camera.GetForward());
@@ -125,12 +125,12 @@ namespace Vakol::View {
             auto mesh  = drawable.model_ptr->GetMeshes().at(i);
             auto material = mesh.material();
 
-            drawable.model_ptr->GetShader()->SetVec3v("tint", material->diffuse());
+            //drawable.model_ptr->GetShader()->SetVec3v("tint", material->diffuse());
             
-            // glActiveTexture(GL_TEXTURE0);
-            // glBindTexture(GL_TEXTURE_2D, 2 * (i + 1));
+            //glActiveTexture(GL_TEXTURE0);
+            //glBindTexture(GL_TEXTURE_2D, 2 * (i + 1));
 
-            mesh.vao()->DrawElements();
+            mesh.vao()->DrawTriangleStrips((128 - 1) / 1, (128 / 1) * 2 - 2);
         }
     }
 

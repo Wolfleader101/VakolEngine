@@ -1,19 +1,17 @@
 function init(scene, entity)
     local camera = scene:get_camera();
 
-    print_warn("JUST A HEADS UP! IF THE BOX IS SET TO A GREY COLOR. TINT IS BEING OVERRIDDEN IN GLRenderer.");
+    local terrain = entity:add_terrain("coreAssets/textures/Heightmaps/height128.raw");
 
-    print_warn("IT'S NEEDED FOR THE ADVANCED EXAMPLE. YOU CAN COMMENT IT OUT IF USING BASIC EXAMPLE");
+    terrain:set_shader("coreAssets/shaders/basic.prog");
 
-    print_warn("I'M TOO TIRED TO IMPLEMENT MATERIAL SUPPORT RIGHT NOW. IT'S 1:49am AS OF WRITING THIS.")
+    -- local model = entity:add_model("coreAssets/models/cube.obj") -- get model and add a drawable component
+    -- model:set_shader("coreAssets/shaders/basic.prog") -- set the shader on the model (automatically binds it)
 
-    local model = entity:add_model("coreAssets/models/cube.obj") -- get model and add a drawable component
-    model:set_shader("coreAssets/shaders/basic.prog") -- set the shader on the model (automatically binds it)
+    -- local shader = model:get_shader(); -- get the shader from the model
+    -- shader:set_vec3("tint", 1.0, 0.0, 0.0); -- in this case, we set a uniform variable "tint" of type vec3 to red
 
-    local shader = model:get_shader(); -- get the shader from the model
-    shader:set_vec3("tint", 1.0, 0.0, 0.0); -- in this case, we set a uniform variable "tint" of type vec3 to red
-
-    entity:get_transform().rot.y = 10.0; -- rotate the model on it's y-axis by 10 degrees
+    -- entity:get_transform().rot.y = 10.0; -- rotate the model on it's y-axis by 10 degrees
 
     -- if you remove this code, I will (commit war crimes) against you.
 end
