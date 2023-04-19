@@ -28,6 +28,8 @@ namespace Vakol::Model::Assets {
     {
     public:
         Material(const MaterialSpec& spec) : m_spec(spec) {};
+
+        virtual void AddTexture(const Texture& texture) = 0;
         
         virtual const Texture GetTexture(const int index) const = 0;
         virtual const std::vector<Texture> GetTextures() const = 0;

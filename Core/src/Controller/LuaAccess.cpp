@@ -140,7 +140,18 @@ namespace Vakol::Controller {
         auto modelType = lua.new_usertype<Assets::Model>("model");
         auto meshType = lua.new_usertype<Assets::Mesh>("mesh");
         auto materialType = lua.new_usertype<Assets::Material>("material");
+        auto textureType = lua.new_usertype<Assets::Texture>("texture");
         auto shaderType = lua.new_usertype<Shader>("shader");
+
+        lua.set_function("raw_texture", [](const std::string& path, const bool gamma, const bool flip)
+        {
+            return Texture(path);
+        });
+
+        lua.set_function("texture", [](const std::string& path, const bool gamma, const bool flip)
+        {
+            return Texture(path, gamma, flip);
+        });
 
         entityType.set_function("get_transform", &Entity::GetComponent<Model::Components::Transform>);
 
@@ -199,6 +210,7 @@ namespace Vakol::Controller {
 
         meshType.set_function("get_material", &Assets::Mesh::GetMaterial);
 
+        materialType.set_function("add_texture", &Assets::Material::AddTexture);
         materialType.set_function("get_ambient", &Assets::Material::GetAmbientColor);
         materialType.set_function("get_diffuse", &Assets::Material::GetDiffuseColor);
         materialType.set_function("get_specular", &Assets::Material::GetSpecularColor);

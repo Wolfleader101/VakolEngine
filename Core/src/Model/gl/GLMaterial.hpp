@@ -12,7 +12,7 @@ namespace Vakol::Model
     public:
         GLMaterial(const MaterialSpec& spec) : Material(spec) {};
 
-        void AddTexture(const Texture& texture) { this->m_spec.textures.push_back(texture); }
+        void AddTexture(const Texture& texture) override { this->m_spec.textures.push_back(texture); }
 
         const Texture GetTexture(const int index) const override { return this->m_spec.textures.at(index); }
         const std::vector<Texture> GetTextures() const override { return this->m_spec.textures; }
