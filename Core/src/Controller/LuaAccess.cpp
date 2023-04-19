@@ -102,6 +102,7 @@ namespace Vakol::Controller {
         TimeType["delta_time"] = &Time::deltaTime;
         TimeType["curr_time"] = &Time::curTime;
         TimeType["prev_time"] = &Time::prevTime;
+        TimeType["fps"] = &Time::fps;
 
         lua["Time"] = &app->GetTime();
 

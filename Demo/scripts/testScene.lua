@@ -9,7 +9,8 @@ function update(scene)
 
     local fps = GUI:get_fps()
     GUI:add_text("GUI FPS: " .. math.floor(fps));
-    GUI:add_text("GAME FPS: " .. math.floor(1000 / Time.delta_time));
+    GUI:add_text("GAME FPS: " .. Time.fps);
+    GUI:add_text("Delta Time:  " .. string.format("%.4f", Time.delta_time));
 
     GUI:end_window();
 end
