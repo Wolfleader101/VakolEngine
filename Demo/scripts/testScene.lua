@@ -5,11 +5,11 @@ end
 
 
 function update(scene)
-    GUI:start_window_creation("FPS Window", 240.0, 240.0, 10.0, 10.0);
+    GUI:start_window("FPS Window", 240.0, 240.0, 10.0, 10.0);
 
-    GUI:add_text("Test String");
+    local fps = GUI:get_fps()
+    GUI:add_text("GUI FPS: " .. math.floor(fps));
+    GUI:add_text("GAME FPS: " .. math.floor(1000 / Time.delta_time));
 
-    GUI:end_window_creation();
-    -- print("Hello from TestScene update!!!");
-    -- print(Time["delta_time"]);
+    GUI:end_window();
 end

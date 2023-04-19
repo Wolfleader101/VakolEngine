@@ -208,12 +208,12 @@ namespace Vakol::Controller {
 
     void RegisterGUIWindow(sol::state& lua, View::GUIWindow* gui) {
         auto guiWindowType =
-            lua.new_usertype<View::GUIWindow>("gui_window");  // Creates a new usertype of the type 'View::GUIWindow'
+            lua.new_usertype<View::GUIWindow>("gui");  // Creates a new usertype of the type 'View::GUIWindow'
 
         lua["GUI"] = gui;
 
         // REGISTERS C++ FUNCTIONS TO LUA
-        guiWindowType.set_function("start_window_creation", &View::GUIWindow::StartWindowCreation);
+        guiWindowType.set_function("start_window", &View::GUIWindow::StartWindowCreation);
 
         guiWindowType.set_function("get_fps", &View::GUIWindow::GetFramesPerSecond);
 
@@ -227,7 +227,7 @@ namespace Vakol::Controller {
         guiWindowType.set_function("add_vector_integer_slider", &View::GUIWindow::AddVecIntSlider);
         guiWindowType.set_function("add_vector_float_slider", &View::GUIWindow::AddVecFloatSlider);
 
-        guiWindowType.set_function("end_window_creation", &View::GUIWindow::EndWindowCreation);
+        guiWindowType.set_function("end_window", &View::GUIWindow::EndWindowCreation);
     }
 
     void RegisterRenderer(sol::state& lua) {}
