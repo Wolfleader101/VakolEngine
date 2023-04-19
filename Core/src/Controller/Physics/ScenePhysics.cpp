@@ -1,40 +1,29 @@
 #include "ScenePhysics.hpp"
 
-#include <Controller/Physics/PhysicsPool.hpp>
-#include <Controller/Logger.hpp>
-
-#include <Controller/Terrain.hpp>
-
-#include <Controller/AssetLoader/AssetLoader.hpp>
-
-
 #include <glad/glad.h>
 
+#include <Controller/AssetLoader/AssetLoader.hpp>
+#include <Controller/Logger.hpp>
+#include <Controller/Physics/PhysicsPool.hpp>
 #include <Controller/System.hpp>
+#include <Controller/Terrain.hpp>
 
+namespace Vakol::Controller::Physics {
 
-namespace Vakol::Controller::Physics 
-{
-    
-    
     ScenePhysics::ScenePhysics(rp3d::PhysicsWorld* newWorld) : m_World(newWorld), m_Terrain(nullptr){};
 
-    ScenePhysics::~ScenePhysics() { };
+    ScenePhysics::~ScenePhysics(){};
 
-    void ScenePhysics::Init()
-    {
+    void ScenePhysics::Init() {
         System::Physics_Init();
         shader = std::make_shared<Model::Assets::GLShader>("coreAssets/shaders/debug.prog");
         EnableDebug();
 
         glGenVertexArrays(1, &vao);
         glGenBuffers(1, &vbo);
-        
-        
     };
 
-    void ScenePhysics::Update(const Time& time, const Vakol::Controller::Camera& camera)
-    {
+    void ScenePhysics::Update(const Time& time, const Vakol::Controller::Camera& camera) {
         // Add the time difference in the accumulator
         m_accumulator += time.deltaTime;
 
@@ -48,8 +37,7 @@ namespace Vakol::Controller::Physics
             m_accumulator -= m_timestep;
         }
 
-        if(debug)
-        {
+        if (debug) {
             auto debugData = GetDebugTriangles();
             auto lineVerts = GetDebugLines();
 
@@ -62,7 +50,8 @@ namespace Vakol::Controller::Physics
 
             glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-            glBufferData(GL_ARRAY_BUFFER, debugData.size() * sizeof(PhysicsDebugVertex), debugData.data(), GL_STATIC_DRAW);
+            glBufferData(GL_ARRAY_BUFFER, debugData.size() * sizeof(PhysicsDebugVertex), debugData.data(),
+                         GL_STATIC_DRAW);
 
             glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(PhysicsDebugVertex), (void*)0);
             glEnableVertexAttribArray(0);
@@ -74,125 +63,94 @@ namespace Vakol::Controller::Physics
 
             glBindVertexArray(0);
 
-            //shader->Unbind();
-
+            // shader->Unbind();
         }
 
         // Compute the time interpolation factor
         float factor = m_accumulator / m_timestep;
 
-        // call update on transforms 
+        // call update on transforms
         Vakol::Controller::System::Physics_UpdateTransforms(factor);
     }
 
-    void ScenePhysics::AddTerrain(const std::shared_ptr<Vakol::Controller::Terrain>& terr)
-    {
+    void ScenePhysics::AddTerrain(const std::shared_ptr<Vakol::Controller::Terrain>& terr) {
         auto& vertices = terr->GetVertices();
         auto& indices = terr->ConvertStripToTriangles();
 
-        if (vertices.empty() || indices.empty())
-        {
+        if (vertices.empty() || indices.empty()) {
             VK_CRITICAL("Terrain has no vertice or indice data. Can not add to physics");
             assert(0);
         }
 
-        rp3d::Transform trans = rp3d::Transform::identity(); //not sure how this is gonna go
-        
+        rp3d::Transform trans = rp3d::Transform::identity();  // not sure how this is gonna go
+
         m_Terrain = m_World->createRigidBody(trans);
 
         m_Terrain->setType(rp3d::BodyType::STATIC);
 
-        
         auto MeshPtr = PhysicsPool::m_Common.createTriangleMesh();
 
         rp3d::TriangleVertexArray* triArray = nullptr;
 
-        triArray = new rp3d::TriangleVertexArray(
-            vertices.size() , vertices.data(), sizeof(Vertex),
-            indices.size() / 3, indices.data(), sizeof(unsigned int) * 3,
-            rp3d::TriangleVertexArray::VertexDataType::VERTEX_FLOAT_TYPE,
-            rp3d::TriangleVertexArray::IndexDataType::INDEX_INTEGER_TYPE
-        );
+        triArray = new rp3d::TriangleVertexArray(vertices.size(), vertices.data(), sizeof(Vertex), indices.size() / 3,
+                                                 indices.data(), sizeof(unsigned int) * 3,
+                                                 rp3d::TriangleVertexArray::VertexDataType::VERTEX_FLOAT_TYPE,
+                                                 rp3d::TriangleVertexArray::IndexDataType::INDEX_INTEGER_TYPE);
 
         MeshPtr->addSubpart(triArray);
 
-        rp3d::ConcaveMeshShape* ConcaveShape = PhysicsPool::m_Common.createConcaveMeshShape(MeshPtr, {1,1,1});
+        rp3d::ConcaveMeshShape* ConcaveShape = PhysicsPool::m_Common.createConcaveMeshShape(MeshPtr, {1, 1, 1});
 
         m_Terrain->addCollider(ConcaveShape, trans);
 
         int x = 0;
-
-
     };
 
-
-    glm::vec3 ScenePhysics::GetDebugColor(rp3d::uint32 color)
-    {
+    glm::vec3 ScenePhysics::GetDebugColor(rp3d::uint32 color) {
         switch (color) {
-        case static_cast<unsigned>(rp3d::DebugRenderer::DebugColor::RED):
-            return { 1, 0, 0 };
-        case static_cast<unsigned>(rp3d::DebugRenderer::DebugColor::GREEN):
-            return { 0, 1, 0 };
-        case static_cast<unsigned>(rp3d::DebugRenderer::DebugColor::BLUE):
-            return { 0, 0, 1 };
-        case static_cast<unsigned>(rp3d::DebugRenderer::DebugColor::BLACK):
-            return { 0, 0, 0 };
-        case static_cast<unsigned>(rp3d::DebugRenderer::DebugColor::WHITE):
-            return { 1, 1, 1 };
-        case static_cast<unsigned>(rp3d::DebugRenderer::DebugColor::YELLOW):
-            return { 1, 1, 0 };
-        case static_cast<unsigned>(rp3d::DebugRenderer::DebugColor::MAGENTA):
-            return { 1, 0, 1 };
-        case static_cast<unsigned>(rp3d::DebugRenderer::DebugColor::CYAN):
-            return { 0, 1, 1 };
-        default:
-            return { 1, 1, 1 };
+            case static_cast<unsigned>(rp3d::DebugRenderer::DebugColor::RED):
+                return {1, 0, 0};
+            case static_cast<unsigned>(rp3d::DebugRenderer::DebugColor::GREEN):
+                return {0, 1, 0};
+            case static_cast<unsigned>(rp3d::DebugRenderer::DebugColor::BLUE):
+                return {0, 0, 1};
+            case static_cast<unsigned>(rp3d::DebugRenderer::DebugColor::BLACK):
+                return {0, 0, 0};
+            case static_cast<unsigned>(rp3d::DebugRenderer::DebugColor::WHITE):
+                return {1, 1, 1};
+            case static_cast<unsigned>(rp3d::DebugRenderer::DebugColor::YELLOW):
+                return {1, 1, 0};
+            case static_cast<unsigned>(rp3d::DebugRenderer::DebugColor::MAGENTA):
+                return {1, 0, 1};
+            case static_cast<unsigned>(rp3d::DebugRenderer::DebugColor::CYAN):
+                return {0, 1, 1};
+            default:
+                return {1, 1, 1};
         }
     }
 
-
     /**
-         * @brief Get the Debug Triangles
-         *
-         * @return std::vector<PhysicsDebugVertex>
-         */
-    std::vector<ScenePhysics::PhysicsDebugVertex> ScenePhysics::GetDebugTriangles()
-    {
+     * @brief Get the Debug Triangles
+     *
+     * @return std::vector<PhysicsDebugVertex>
+     */
+    std::vector<ScenePhysics::PhysicsDebugVertex> ScenePhysics::GetDebugTriangles() {
         std::vector<PhysicsDebugVertex> debugVec;
-        for (const auto& tri : m_World->getDebugRenderer().getTriangles())
-        {
+        for (const auto& tri : m_World->getDebugRenderer().getTriangles()) {
             glm::vec3 color1 = GetDebugColor(tri.color1);
             glm::vec3 color2 = GetDebugColor(tri.color2);
             glm::vec3 color3 = GetDebugColor(tri.color3);
 
-            PhysicsDebugVertex v1
-            {
-                tri.point1.x,
-                tri.point1.y,
-                tri.point1.z,
-                color1.x,
-                color1.y,
-                color1.z,
+            PhysicsDebugVertex v1{
+                tri.point1.x, tri.point1.y, tri.point1.z, color1.x, color1.y, color1.z,
             };
 
-            PhysicsDebugVertex v2
-            {
-                tri.point2.x,
-                tri.point2.y,
-                tri.point2.z,
-                color2.x,
-                color2.y,
-                color2.z,
+            PhysicsDebugVertex v2{
+                tri.point2.x, tri.point2.y, tri.point2.z, color2.x, color2.y, color2.z,
             };
 
-            PhysicsDebugVertex v3
-            {
-                tri.point3.x,
-                tri.point3.y,
-                tri.point3.z,
-                color3.x,
-                color3.y,
-                color3.z,
+            PhysicsDebugVertex v3{
+                tri.point3.x, tri.point3.y, tri.point3.z, color3.x, color3.y, color3.z,
             };
 
             debugVec.push_back(v1);
@@ -203,35 +161,19 @@ namespace Vakol::Controller::Physics
         return debugVec;
     };
 
-    std::vector<ScenePhysics::PhysicsDebugVertex> ScenePhysics::GetDebugLines()
-    {
+    std::vector<ScenePhysics::PhysicsDebugVertex> ScenePhysics::GetDebugLines() {
         std::vector<PhysicsDebugVertex> debugVec;
-        for (const auto& line : m_World->getDebugRenderer().getLines())
-        {
-
+        for (const auto& line : m_World->getDebugRenderer().getLines()) {
             glm::vec3 color1 = GetDebugColor(line.color1);
             glm::vec3 color2 = GetDebugColor(line.color2);
 
-            PhysicsDebugVertex v1
-            {
-                line.point1.x,
-                line.point1.y,
-                line.point1.z,
-                color1.x,
-                color1.y,
-                color1.z,
+            PhysicsDebugVertex v1{
+                line.point1.x, line.point1.y, line.point1.z, color1.x, color1.y, color1.z,
             };
 
-            PhysicsDebugVertex v2
-            {
-                line.point2.x,
-                line.point2.y,
-                line.point2.z,
-                color2.x,
-                color2.y,
-                color2.z,
+            PhysicsDebugVertex v2{
+                line.point2.x, line.point2.y, line.point2.z, color2.x, color2.y, color2.z,
             };
-
 
             debugVec.push_back(v1);
             debugVec.push_back(v2);
@@ -240,5 +182,4 @@ namespace Vakol::Controller::Physics
         return debugVec;
     }
 
-
-}
+}  // namespace Vakol::Controller::Physics

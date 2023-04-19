@@ -32,7 +32,7 @@ namespace Vakol::Controller {
         const std::vector<Vertex>& GetVertices();
         const std::vector<unsigned int>& GetIndices();
 
-        std::vector<unsigned int> ConvertStripToTriangles();
+        std::vector<unsigned int>& ConvertStripToTriangles();
 
        private:
         void InitVertices();
@@ -44,6 +44,7 @@ namespace Vakol::Controller {
         std::vector<std::vector<float>> m_heightMap;
         std::vector<Vertex> m_vertices;
         std::vector<unsigned int> m_indices;
+        std::vector<unsigned int> m_triangleIndices;
         Assets::GLTexture m_texture;
 
         Entity m_entity;

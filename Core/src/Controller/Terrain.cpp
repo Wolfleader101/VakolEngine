@@ -1,8 +1,4 @@
 #include "Terrain.hpp"
-#include "Terrain.hpp"
-#include "Terrain.hpp"
-#include "Terrain.hpp"
-#include "Terrain.hpp"
 
 #include <stb_image.h>
 
@@ -13,6 +9,7 @@
 #include "Logger.hpp"
 #include "Model/Components.hpp"
 #include "Model/gl/GLMaterial.hpp"
+#include "Terrain.hpp"
 
 namespace Vakol::Controller {
 
@@ -200,10 +197,6 @@ namespace Vakol::Controller {
         m_texture = Assets::GLTexture(textureFile);
     }
 
-    
-
-    
-
     void Terrain::InitVertices() {
         m_vertices.resize(m_terrainSize * m_terrainSize);
 
@@ -265,34 +258,25 @@ namespace Vakol::Controller {
         return y;
     }
 
-    const std::vector<Vertex>& Terrain::GetVertices()
-    {
-        return m_vertices;
-    }
+    const std::vector<Vertex>& Terrain::GetVertices() { return m_vertices; }
 
-    const std::vector<unsigned int>& Terrain::GetIndices()
-    {
-        return m_indices;
-    }
+    const std::vector<unsigned int>& Terrain::GetIndices() { return m_indices; }
 
-    std::vector<unsigned int> Terrain::ConvertStripToTriangles() {
-        std::vector<unsigned int> triangleIndices;
-
+    std::vector<unsigned int>& Terrain::ConvertStripToTriangles() {
         for (size_t i = 2; i < m_indices.size(); ++i) {
             // Reverse the winding order for even triangles
             if (i % 2 == 0) {
-                triangleIndices.push_back(m_indices[i - 2]);
-                triangleIndices.push_back(m_indices[i - 1]);
-                triangleIndices.push_back(m_indices[i]);
-            }
-            else {
-                triangleIndices.push_back(m_indices[i - 1]);
-                triangleIndices.push_back(m_indices[i - 2]);
-                triangleIndices.push_back(m_indices[i]);
+                m_triangleIndices.push_back(m_indices[i - 2]);
+                m_triangleIndices.push_back(m_indices[i - 1]);
+                m_triangleIndices.push_back(m_indices[i]);
+            } else {
+                m_triangleIndices.push_back(m_indices[i - 1]);
+                m_triangleIndices.push_back(m_indices[i - 2]);
+                m_triangleIndices.push_back(m_indices[i]);
             }
         }
 
-        return triangleIndices;
+        return m_triangleIndices;
     }
 
 }  // namespace Vakol::Controller
