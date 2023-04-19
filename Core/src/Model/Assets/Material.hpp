@@ -13,24 +13,24 @@ namespace Vakol::Model::Assets {
     {
         MaterialSpec() = default;
 
-        glm::vec3 AMBIENT = glm::vec3(1.0f);
-        glm::vec3 DIFFUSE = glm::vec3(1.0f);
-        glm::vec3 SPECULAR = glm::vec3(0.5f);
+        glm::vec3 AMBIENT = glm::vec3(0.0f);
+        glm::vec3 DIFFUSE = glm::vec3(0.0f);
+        glm::vec3 SPECULAR = glm::vec3(0.0f);
         glm::vec3 EMISSIVE = glm::vec3(0.0f);
         float SHININESS = 32.0f;
 
         std::vector<Texture> textures;
     };
 
-    const MaterialSpec DEFAULT = {glm::vec3(1.0f), glm::vec3(0.5f), glm::vec3(0.0f), glm::vec3(0.0f), 32.0f};
+    const MaterialSpec DEFAULT = {glm::vec3(1.0f), glm::vec3(0.6f), glm::vec3(0.2f), glm::vec3(0.0f), 32.0f};
 
     class Material 
     {
     public:
-        Material(const MaterialSpec& spec) : m_spec(spec){};
-
-        virtual const int GetTextureCount() const = 0;
-        virtual std::vector<Texture> textures() = 0;
+        Material(const MaterialSpec& spec) : m_spec(spec) {};
+        
+        virtual const Texture GetTexture(const int index) const = 0;
+        virtual const std::vector<Texture> GetTextures() const = 0;
 
         virtual void SetAmbientColor(const float r, const float g, const float b) = 0;
         virtual void SetDiffuseColor(const float r, const float g, const float b) = 0;

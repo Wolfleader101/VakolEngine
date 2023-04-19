@@ -7,10 +7,6 @@ SET(GL
 	src/Model/gl/GLShader.cpp
 
 	src/Model/gl/GLMaterial.hpp
-	src/Model/gl/GLMaterial.cpp
-
-	src/Model/gl/GLTexture.hpp
-	src/Model/gl/GLTexture.cpp
 
 	src/Model/gl/GLUniformBuffer.hpp
 	src/Model/gl/GLUniformBuffer.cpp

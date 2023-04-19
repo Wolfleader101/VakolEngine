@@ -11,15 +11,9 @@ namespace Vakol::Model::Assets
     class Mesh 
     {
     public:
-        Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const MaterialSpec& spec)
-            : m_vertexArray(std::make_shared<GLVertexArray>(vertices, indices)),
-              m_material(std::make_shared<GLMaterial>(spec)) {};
+        Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const MaterialSpec& spec = DEFAULT)
+            : m_vertexArray(std::make_shared<GLVertexArray>(vertices, indices)), m_material(std::make_shared<GLMaterial>(spec)) {};
 
-        Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices)
-            : m_vertexArray(std::make_shared<GLVertexArray>(vertices, indices)),
-              m_material(nullptr) {};
-
-        void SetMaterial() { if (!this->m_material) this->m_material = std::make_shared<GLMaterial>(DEFAULT); }
         void SetMaterial(const MaterialSpec& spec) { if (!this->m_material) this->m_material = std::make_shared<GLMaterial>(spec); }
 
         const std::shared_ptr<Material>& GetMaterial() const { return this->m_material; }

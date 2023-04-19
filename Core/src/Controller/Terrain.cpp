@@ -1,7 +1,7 @@
 #include "Terrain.hpp"
 
-#include <Controller/AssetLoader/FileLoader.hpp>
 #include <Controller/Logger.hpp>
+#include <Controller/AssetLoader/FileLoader.hpp>
 
 #include <cstdlib>
 
@@ -29,14 +29,16 @@ float FIRSinglePass(std::vector<float>& arr, const int index, const float prev, 
 
 namespace Vakol::Controller
 {
-    const Model::Assets::Mesh Terrain::LoadHeightMap(const std::string& path)
+    Terrain::Terrain(const std::string& path)
+    {
+        this->m_terrain = LoadHeightMap(LoadImage(path, this->m_size, this->m_size));
+    }
+
+    const Model::Assets::Mesh Terrain::LoadHeightMap(unsigned char* data)
     {
         std::vector<Vertex> vertices;
 
-        int width = 0, height = 0;
-        auto data = LoadImage(path, width, height);
-
-        const auto size = this->m_size = width | height;
+        const int size = m_size;
         vertices.reserve(size * size); // allocate memory to reduce number of allocation calls in push_back
 
         for (int z = 0; z < size; ++z)

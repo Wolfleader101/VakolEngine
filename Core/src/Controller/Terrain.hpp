@@ -11,7 +11,8 @@ namespace Vakol::Controller
     class Terrain
     {
     public:
-        Terrain(const std::string& path) : m_terrain(LoadHeightMap(path)) {};
+        Terrain(const std::string& path);
+        
         Terrain(const int size, const int iterations, const float filter, const bool random = true) : 
             m_size(size), m_terrain(LoadFaultFormation(size, iterations, filter, random)) {};
 
@@ -22,7 +23,7 @@ namespace Vakol::Controller
         ~Terrain() {};
         
     private:
-        const Model::Assets::Mesh LoadHeightMap(const std::string& path);
+        const Model::Assets::Mesh LoadHeightMap(unsigned char* data);
         const Model::Assets::Mesh LoadFaultFormation(const int size, const int iterations, const float filter, const bool random);
 
         std::vector<float> m_heightMap;

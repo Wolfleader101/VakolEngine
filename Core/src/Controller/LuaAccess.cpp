@@ -148,12 +148,19 @@ namespace Vakol::Controller {
         {
             if (!ent->HasComponent<Model::Components::Drawable>()) ent->AddComponent<Model::Components::Drawable>();
 
-            auto terrain = Terrain(path).get(); // doesn't that look nice?
+            auto terrain = Terrain(path); // doesn't that look nice?
+            auto model = terrain.get();
+            
+            const auto size = terrain.get_size();
+            VK_TRACE(size);
 
-            if (terrain)
+            if (model)
             {
-                ent->GetComponent<Model::Components::Drawable>().model_ptr = terrain;
-                return terrain;
+                model->GetMesh().GetVertexArray()->SetStrips((size - 1) / 1, (size / 1) * 2 - 2);
+
+                ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
+
+                return model;
             }
         });
 
@@ -191,11 +198,6 @@ namespace Vakol::Controller {
         modelType.set_function("get_shader", &Assets::Model::GetShader);
 
         meshType.set_function("get_material", &Assets::Mesh::GetMaterial);
-        
-        meshType.set_function("set_material", [](Assets::Mesh& mesh)
-        {
-            mesh.SetMaterial();
-        });
 
         materialType.set_function("get_ambient", &Assets::Material::GetAmbientColor);
         materialType.set_function("get_diffuse", &Assets::Material::GetDiffuseColor);
@@ -206,8 +208,6 @@ namespace Vakol::Controller {
         materialType.set_function("set_diffuse", &Assets::Material::SetDiffuseColor);
         materialType.set_function("set_specular", &Assets::Material::SetSpecularColor);
         materialType.set_function("set_shininess", &Assets::Material::SetShininess);
-
-        shaderType.set_function("get_id", &Assets::Shader::GetID);
 
         shaderType.set_function("set_int", &Assets::Shader::SetInt);
         shaderType.set_function("set_bool", &Assets::Shader::SetBool);

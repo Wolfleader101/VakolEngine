@@ -5,6 +5,7 @@ SET(ASSETS
 	src/Model/Assets/Mesh.hpp
 
 	src/Model/Assets/Texture.hpp
+	src/Model/Assets/Texture.cpp
 
 	src/Model/Assets/Material.hpp
 
