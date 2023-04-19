@@ -4,6 +4,7 @@
 #include "Model/Assets/Material.hpp"
 #include "Model/Components.hpp"
 #include "Model/gl/GLInstance.hpp"
+#include "View/GUI/GUIWindow.hpp"
 
 using Vakol::Model::Assets::Material;
 
@@ -101,6 +102,7 @@ namespace Vakol::Controller {
         TimeType["delta_time"] = &Time::deltaTime;
         TimeType["curr_time"] = &Time::curTime;
         TimeType["prev_time"] = &Time::prevTime;
+        TimeType["fps"] = &Time::fps;
 
         lua["Time"] = &app->GetTime();
 
@@ -137,15 +139,14 @@ namespace Vakol::Controller {
         entityType.set_function("add_model", [](Entity* ent, std::string path) {
             if (ent->HasComponent<Model::Components::Drawable>() == false)
                 ent->AddComponent<Model::Components::Drawable>();
-            
+
             auto model = AssetLoader::GetModel(path);
-            
+
             if (model == nullptr) return false;
 
             auto material = model->meshes().begin()->material();
 
-            for (const auto& texture : material->textures())
-            {
+            for (const auto& texture : material->textures()) {
                 GLTexture tex("coreAssets/textures/" + texture.path);
                 tex.Bind();
             }
@@ -154,12 +155,12 @@ namespace Vakol::Controller {
             material->SetShader("coreAssets/shaders/basic.prog");
             material->Bind();
 
-            //material->SetInt("texture_0", 0);
+            // material->SetInt("texture_0", 0);
 
             // material->SetInt("material.diffuse", 0);
             // material->SetInt("material.specular", 1);
             // material->SetInt("material.emissive", 2);
-            
+
             // material->SetFloat("material.shininess", 64.0f);
 
             // material->SetVec3("light.ambient", glm::vec3(0.1f, 0.1f, 0.1f));
@@ -206,7 +207,30 @@ namespace Vakol::Controller {
         cameraType.set_function("set_yaw", &Camera::SetYaw);
     }
 
-    void RegisterWindow(sol::state& lua) {}
+    void RegisterGUIWindow(sol::state& lua, View::GUIWindow* gui) {
+        auto guiWindowType =
+            lua.new_usertype<View::GUIWindow>("gui");  // Creates a new usertype of the type 'View::GUIWindow'
+
+        lua["GUI"] = gui;
+
+        // REGISTERS C++ FUNCTIONS TO LUA
+        guiWindowType.set_function("start_window", &View::GUIWindow::StartWindowCreation);
+
+        guiWindowType.set_function("get_fps", &View::GUIWindow::GetFramesPerSecond);
+
+        guiWindowType.set_function("add_text", &View::GUIWindow::AddText);
+        guiWindowType.set_function("add_button", &View::GUIWindow::AddButton);
+        guiWindowType.set_function("add_checkbox", &View::GUIWindow::AddCheckbox);
+
+        guiWindowType.set_function("add_integer_slider", &View::GUIWindow::AddIntSlider);
+        guiWindowType.set_function("add_float_slider", &View::GUIWindow::AddFloatSlider);
+
+        guiWindowType.set_function("add_vector_integer_slider", &View::GUIWindow::AddVecIntSlider);
+        guiWindowType.set_function("add_vector_float_slider", &View::GUIWindow::AddVecFloatSlider);
+
+        guiWindowType.set_function("end_window", &View::GUIWindow::EndWindowCreation);
+    }
+
     void RegisterRenderer(sol::state& lua) {}
     void RegisterPhysics(sol::state& lua) {}
 }  // namespace Vakol::Controller
