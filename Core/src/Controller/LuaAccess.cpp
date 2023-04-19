@@ -207,9 +207,10 @@ namespace Vakol::Controller {
     }
 
     void RegisterGUIWindow(sol::state& lua, View::GUIWindow* gui) {
-        auto guiWindowType = lua.new_usertype<View::GUIWindow>("gui_window");  // Creates a new usertype of the type 'View::GUIWindow'
+        auto guiWindowType =
+            lua.new_usertype<View::GUIWindow>("gui_window");  // Creates a new usertype of the type 'View::GUIWindow'
 
-        lua["gui_window"] = gui;
+        lua["GUI"] = gui;
 
         // REGISTERS C++ FUNCTIONS TO LUA
         guiWindowType.set_function("start_window_creation", &View::GUIWindow::StartWindowCreation);

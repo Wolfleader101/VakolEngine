@@ -1,11 +1,11 @@
 #pragma once
 
 #include <View/Window/Window.hpp>
-#include "Controller/LuaState.hpp"
 #include <functional>  //Gives acces to std::function
 #include <iostream>
 #include <string>
 
+#include "Controller/LuaState.hpp"
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
@@ -44,12 +44,10 @@ namespace Vakol::View {
          */
         float GetFramesPerSecond();
         /**
-         * @brief An update function to call the update script in lua
+         * @brief An update function to call new frame
          *
-         * @param scriptName The name of the update script to be called
-         * @param lua The current lua state
          */
-        void Update(std::string scriptName, Controller::LuaState& lua);
+        void Update();
         /**
          * @brief Add a text string to the UI Window
          *
@@ -71,7 +69,7 @@ namespace Vakol::View {
          * @param checkboxName The name of the checkbox
          * @param checkBoxValue The boolean value of the checkbox
          */
-        void AddCheckbox(std::string& checkboxName, bool *checkBoxValue);
+        void AddCheckbox(std::string& checkboxName, bool* checkBoxValue);
         /**
          * @brief Adds an Integer Slider to the window
          *
@@ -80,7 +78,7 @@ namespace Vakol::View {
          * @param minValue The minimum value of the slider
          * @param maxValue the maximum value of the slider
          */
-        void AddIntSlider(std::string& sliderName, int *sliderValue, int minValue, int maxValue);
+        void AddIntSlider(std::string& sliderName, int* sliderValue, int minValue, int maxValue);
         /**
          * @brief Adds a Vecotr based Integer Slider to the window
          *
@@ -100,7 +98,7 @@ namespace Vakol::View {
          * @param minValue The minimum value of the slider
          * @param maxValue the maximum value of the slider
          */
-        void AddFloatSlider(std::string& sliderName, float *sliderValue, float minValue, float maxValue);
+        void AddFloatSlider(std::string& sliderName, float* sliderValue, float minValue, float maxValue);
         /**
          * @brief Adds a Vecotr based Float Slider to the window
          *

@@ -7,15 +7,13 @@ namespace Vakol::View {
         windowFlags = 0;
     };
 
-    void GUIWindow::Init(View::Window *m_window) {
+    void GUIWindow::Init(View::Window* m_window) {
         ImGui::CreateContext();
 
         ImGui::StyleColorsDark();  // Chooses the Dark style
 
         ImGui_ImplGlfw_InitForOpenGL(m_window->GetWindow(), true);  // Takes in the GLFW Window
         ImGui_ImplOpenGL3_Init("#version 460");                     // Sets the version of GLSL being used
-
-        CreateNewFrame();
     };
 
     void GUIWindow::CreateNewFrame() {
@@ -33,21 +31,15 @@ namespace Vakol::View {
         ImGui::SetWindowSize({width, height}, ImGuiCond_Once);  // Sets the size of the window (Width, Height) in pixels
     };
 
-    float GUIWindow::GetFramesPerSecond() { 
-        return ImGui::GetIO().Framerate;
-    };
+    float GUIWindow::GetFramesPerSecond() { return ImGui::GetIO().Framerate; };
 
-    void GUIWindow::Update(std::string scriptName, Controller::LuaState& lua) {
-        lua.RunFile("scripts/" + scriptName);
+    void GUIWindow::Update() {
+        ImGui::Render();  // Renders the UI
 
-        sol::function update = lua.GetState()["update"];
-
-        update(*this);
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());  // Renders the UI to the screen
     }
 
-    void GUIWindow::AddText(std::string& inputText) {
-        ImGui::Text(inputText.c_str());
-    };
+    void GUIWindow::AddText(std::string& inputText) { ImGui::Text(inputText.c_str()); };
 
     void GUIWindow::AddButton(std::string& buttonName, float width, float height, std::function<void()> inputFunction) {
         if (ImGui::Button(buttonName.c_str(), {width, height})) {
@@ -55,11 +47,11 @@ namespace Vakol::View {
         }
     };
 
-    void GUIWindow::AddCheckbox(std::string& checkboxName, bool *checkBoxValue) {
+    void GUIWindow::AddCheckbox(std::string& checkboxName, bool* checkBoxValue) {
         ImGui::Checkbox(checkboxName.c_str(), checkBoxValue);
     };
 
-    void GUIWindow::AddIntSlider(std::string& sliderName, int *sliderValue, int minValue, int maxValue) {
+    void GUIWindow::AddIntSlider(std::string& sliderName, int* sliderValue, int minValue, int maxValue) {
         ImGui::SliderInt(sliderName.c_str(), sliderValue, minValue, maxValue);
     };
 
@@ -85,7 +77,7 @@ namespace Vakol::View {
         }
     };
 
-    void GUIWindow::AddFloatSlider(std::string& sliderName, float *sliderValue, float minValue, float maxValue) {
+    void GUIWindow::AddFloatSlider(std::string& sliderName, float* sliderValue, float minValue, float maxValue) {
         ImGui::SliderFloat(sliderName.c_str(), sliderValue, minValue, maxValue);
     };
 

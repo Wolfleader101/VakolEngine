@@ -121,6 +121,7 @@ namespace Vakol::Controller {
     void Application::Run() {
         while (m_running) {
             m_time.Update();
+            m_gui.CreateNewFrame();
 
             // Physics::FixedUpdate(m_time, m_entityList.GetEntityList());
 
@@ -132,8 +133,7 @@ namespace Vakol::Controller {
             }
 
             m_window->OnUpdate();
-
-            m_gui.Update("fpsGUI.lua", lua);
+            m_gui.Update();
 
             m_input.Update();
         }
