@@ -7,6 +7,7 @@
 
 namespace Vakol::Model::Assets 
 {
+
     class Mesh 
     {
     public:
@@ -18,10 +19,11 @@ namespace Vakol::Model::Assets
             : m_vertexArray(std::make_shared<GLVertexArray>(vertices, indices)),
               m_material(nullptr) {};
 
+        void SetMaterial() { if (!this->m_material) this->m_material = std::make_shared<GLMaterial>(DEFAULT); }
         void SetMaterial(const MaterialSpec& spec) { if (!this->m_material) this->m_material = std::make_shared<GLMaterial>(spec); }
 
-        const std::shared_ptr<Material>& material() const { return this->m_material; }
-        const std::shared_ptr<VertexArray>& vao() const { return this->m_vertexArray; }
+        const std::shared_ptr<Material>& GetMaterial() const { return this->m_material; }
+        const std::shared_ptr<VertexArray>& GetVertexArray() const { return this->m_vertexArray; }
 
     private:
         std::shared_ptr<VertexArray> m_vertexArray;

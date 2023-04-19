@@ -1,55 +1,37 @@
 #pragma once
-#include <glm/glm.hpp>
-#include <memory>
+
 #include <string>
 #include <vector>
+#include <memory>
 
-#include "Model/Entity.hpp"
-#include "Model/VertexArray.hpp"
-#include "Model/gl/GLTexture.hpp"
+#include <Model/Assets/Model.hpp>
 
-using namespace Vakol::Model;
+namespace Vakol::Controller
+{
+    class Terrain
+    {
+    public:
+        Terrain(const std::string& path) : m_terrain(LoadHeightMap(path)) {};
+        Terrain(const int size, const int iterations, const float filter, const bool random = true) : 
+            m_size(size), m_terrain(LoadFaultFormation(size, iterations, filter, random)) {};
 
-namespace Vakol::Controller {
+        std::shared_ptr<Model::Assets::Model> get() const { return std::make_shared<Model::Assets::Model>(this->m_terrain); }
 
-    class Terrain {
-       public:
-        Terrain(Entity entity);
+        const int get_size() const { return this->m_size; }
 
-        void LoadHeightMap(const std::string& heightMap);
+        ~Terrain() {};
+        
+    private:
+        const Model::Assets::Mesh LoadHeightMap(const std::string& path);
+        const Model::Assets::Mesh LoadFaultFormation(const int size, const int iterations, const float filter, const bool random);
 
-        void LoadFaultFormation(unsigned int terrainSize);
+        std::vector<float> m_heightMap;
 
-        void Generate();
+        Model::Assets::Model m_terrain;
 
-        float GetHeight(float x, float z);
+        int m_size = 0;
 
-        const int GetTerrainSize() const { return m_terrainSize; }
-
-        Entity GetEntity() { return m_entity; }
-
-       private:
-        void GenerateDrawable();
-
-        void InitVertices();
-        void InitIndices();
-
-        int m_terrainSize;
-
-        std::vector<std::vector<float>> m_heightMap;
-
-        std::vector<Vertex> m_vertices;
-        std::vector<unsigned int> m_indices;
-
-        Entity m_entity;
-
-        float m_yScale = 0.75f;
-        float m_yShift = 8.0f;
-
-        float m_minHeight = -25.0f;
-        float m_maxHeight = 100.0f;
-        float m_firFilter = 0.75f;
-
-        int m_iterations = 128;
+        int m_minHeight = 0;
+        int m_maxHeight = 0;
     };
-}  // namespace Vakol::Controller
+}

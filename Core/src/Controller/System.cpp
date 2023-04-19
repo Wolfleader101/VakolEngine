@@ -149,8 +149,8 @@ namespace Vakol::Controller {
                     rp3d::TriangleVertexArray* triArray = nullptr;
 
                     triArray = new rp3d::TriangleVertexArray(
-                        mesh.vao()->GetVertexCount(), mesh.vao()->GetVertices().data(), sizeof(float) * 3,
-                        mesh.vao()->GetIndexCount() / 3, mesh.vao()->GetIndices().data(), sizeof(unsigned int) * 3,
+                        mesh.GetVertexArray()->GetVertexCount(), mesh.GetVertexArray()->GetVertices().data(), sizeof(float) * 3,
+                        mesh.GetVertexArray()->GetIndexCount() / 3, mesh.GetVertexArray()->GetIndices().data(), sizeof(unsigned int) * 3,
                         rp3d::TriangleVertexArray::VertexDataType::VERTEX_FLOAT_TYPE,
                         rp3d::TriangleVertexArray::IndexDataType::INDEX_INTEGER_TYPE);
 

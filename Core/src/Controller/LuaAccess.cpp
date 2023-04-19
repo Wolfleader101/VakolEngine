@@ -138,19 +138,37 @@ namespace Vakol::Controller {
     void RegisterEntity(sol::state& lua) {
         auto entityType = lua.new_usertype<Entity>("entity");
         auto modelType = lua.new_usertype<Assets::Model>("model");
+        auto meshType = lua.new_usertype<Assets::Mesh>("mesh");
+        auto materialType = lua.new_usertype<Assets::Material>("material");
         auto shaderType = lua.new_usertype<Shader>("shader");
 
         entityType.set_function("get_transform", &Entity::GetComponent<Model::Components::Transform>);
 
-        entityType.set_function("add_terrain", [](Entity* ent, const std::string& path)
+        entityType.set_function("add_terrain_heightmap", [](Entity* ent, const std::string& path)
         {
             if (!ent->HasComponent<Model::Components::Drawable>()) ent->AddComponent<Model::Components::Drawable>();
 
-            auto terrain = Terrain_2(path).get(); // doesn't that look nice?
+            auto terrain = Terrain(path).get(); // doesn't that look nice?
 
             if (terrain)
             {
                 ent->GetComponent<Model::Components::Drawable>().model_ptr = terrain;
+                return terrain;
+            }
+        });
+
+        entityType.set_function("add_terrain_fault_formation", [](Entity* ent, const int size, const int iterations, const float filter, const bool random)
+        {
+            if (!ent->HasComponent<Model::Components::Drawable>()) ent->AddComponent<Model::Components::Drawable>();
+
+            auto terrain = Terrain(size, iterations, filter, random).get(); // doesn't that look nice?
+
+            if (terrain)
+            {
+                terrain->GetMesh().GetVertexArray()->SetStrips((size - 1) / 1, (size / 1) * 2 - 2);
+
+                ent->GetComponent<Model::Components::Drawable>().model_ptr = terrain;
+
                 return terrain;
             }
         });
@@ -166,10 +184,28 @@ namespace Vakol::Controller {
             }
         });
 
-        modelType.set_function("mesh_count", &Assets::Model::GetMeshCount);
+        modelType.set_function("get_mesh_count", &Assets::Model::GetMeshCount);
+        modelType.set_function("get_mesh", &Assets::Model::GetMesh);
 
         modelType.set_function("set_shader", &Assets::Model::SetShader);
         modelType.set_function("get_shader", &Assets::Model::GetShader);
+
+        meshType.set_function("get_material", &Assets::Mesh::GetMaterial);
+        
+        meshType.set_function("set_material", [](Assets::Mesh& mesh)
+        {
+            mesh.SetMaterial();
+        });
+
+        materialType.set_function("get_ambient", &Assets::Material::GetAmbientColor);
+        materialType.set_function("get_diffuse", &Assets::Material::GetDiffuseColor);
+        materialType.set_function("get_specular", &Assets::Material::GetSpecularColor);
+        materialType.set_function("get_shininess", &Assets::Material::GetShininess);
+
+        materialType.set_function("set_ambient", &Assets::Material::SetAmbientColor);
+        materialType.set_function("set_diffuse", &Assets::Material::SetDiffuseColor);
+        materialType.set_function("set_specular", &Assets::Material::SetSpecularColor);
+        materialType.set_function("set_shininess", &Assets::Material::SetShininess);
 
         shaderType.set_function("get_id", &Assets::Shader::GetID);
 

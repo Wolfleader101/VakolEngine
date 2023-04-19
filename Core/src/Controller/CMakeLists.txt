@@ -40,9 +40,6 @@ src/Controller/Input.cpp
 src/Controller/Terrain.hpp
 src/Controller/Terrain.cpp
 
-src/Controller/Terrain_2.0.hpp
-src/Controller/Terrain_2.0.cpp
-
 ${SERIALIZABLE}
 ${PHYSICS}
 ${EVENTS}

@@ -4,7 +4,7 @@
 
 #include "Camera.hpp"
 #include "Controller/Physics/ScenePhysics.hpp"
-#include "Controller/Terrain_2.0.hpp"
+#include "Controller/Terrain.hpp"
 #include "EntityList.hpp"
 #include "LuaState.hpp"
 #include "Time.hpp"

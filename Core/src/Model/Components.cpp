@@ -59,7 +59,7 @@ namespace Vakol::Model::Components
         rp3d::Vector3& max = bounds.max;
         rp3d::Vector3& min = bounds.min;
 
-        auto& firstVert = model.model_ptr->GetMeshes().begin()->vao()->GetVertices().begin();
+        auto& firstVert = model.model_ptr->GetMeshes().begin()->GetVertexArray()->GetVertices().begin();
 
         max = min = rp3d::Vector3(firstVert->position.x, firstVert->position.y, firstVert->position.z);
 
@@ -67,7 +67,7 @@ namespace Vakol::Model::Components
 
         for (auto& msh : model.model_ptr->GetMeshes()) 
         {
-            for (auto& vertex : msh.vao()->GetVertices()) 
+            for (auto& vertex : msh.GetVertexArray()->GetVertices()) 
             {
                 tempVert.x = vertex.position.x;
                 tempVert.y = vertex.position.y;

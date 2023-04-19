@@ -1,227 +1,263 @@
 #include "Terrain.hpp"
 
-#include "AssetLoader/FileLoader.hpp"
-#include "Logger.hpp"
-#include "Model/Components.hpp"
+#include <Controller/AssetLoader/FileLoader.hpp>
+#include <Controller/Logger.hpp>
 
-namespace Vakol::Controller {
-    Terrain::Terrain(Entity entity) : m_entity(entity){};
+#include <cstdlib>
 
-    void Terrain::LoadFaultFormation(unsigned int terrainSize) {
-        m_terrainSize = terrainSize;
-        m_heightMap = std::vector<std::vector<float>>(m_terrainSize, std::vector<float>(m_terrainSize));
+struct Point
+{
+    int x = 0;
+    int z = 0;
 
-        float deltaHeight = m_maxHeight - m_minHeight;
-
-        for (int i = 0; i < m_iterations; i++) {
-            float ratio = static_cast<float>(i) / static_cast<float>(m_iterations);
-            float height = m_maxHeight - (ratio * deltaHeight);
-
-            glm::vec3 randomP1 = glm::vec3(rand() % m_terrainSize, 0, rand() % m_terrainSize);
-            glm::vec3 randomP2 = glm::vec3(rand() % m_terrainSize, 0, rand() % m_terrainSize);
-
-            while (randomP1 == randomP2) {
-                randomP2 = glm::vec3(rand() % m_terrainSize, 0, rand() % m_terrainSize);
-            }
-
-            // calculate the direction of the line
-            glm::vec3 lineDir = randomP2 - randomP1;
-
-            for (int z = 0; z < m_terrainSize; z++) {
-                for (int x = 0; x < m_terrainSize; x++) {
-                    glm::vec3 in(lineDir);
-                    in.x = x - randomP1.x;
-                    in.z = z - randomP1.z;
-
-                    float cross = in.x * lineDir.z - in.z * lineDir.x;
-
-                    if (cross > 0) m_heightMap[z][x] += height;
-                }
-            }
-        }
-
-        // apply FIR filters
-
-        // left to right
-        for (int z = 0; z < m_terrainSize; z++) {
-            float prev = m_heightMap[0][z];
-
-            for (int x = 1; x < m_terrainSize; x++) {
-                float cur = m_heightMap[x][z];
-                float newVal = m_firFilter * prev + (1.0f - m_firFilter) * cur;
-
-                m_heightMap[x][z] = newVal;
-                prev = newVal;
-            }
-        }
-
-        // right to left
-        for (int z = 0; z < m_terrainSize; z++) {
-            float prev = m_heightMap[m_terrainSize - 1][z];
-            for (int x = m_terrainSize - 2; x >= 0; x--) {
-                float cur = m_heightMap[x][z];
-                float newVal = m_firFilter * prev + (1.0f - m_firFilter) * cur;
-
-                m_heightMap[x][z] = newVal;
-                prev = newVal;
-            }
-        }
-
-        // bottom to top
-        for (int x = 0; x < m_terrainSize; x++) {
-            float prev = m_heightMap[x][0];
-
-            for (int z = 1; z < m_terrainSize; z++) {
-                float cur = m_heightMap[x][z];
-                float newVal = m_firFilter * prev + (1.0f - m_firFilter) * cur;
-
-                m_heightMap[x][z] = newVal;
-                prev = newVal;
-            }
-        }
-
-        // top to bottom
-        for (int x = 0; x < m_terrainSize; x++) {
-            float prev = m_heightMap[x][m_terrainSize - 1];
-            for (int z = m_terrainSize - 2; z >= 0; z--) {
-                float cur = m_heightMap[x][z];
-                float newVal = m_firFilter * prev + (1.0f - m_firFilter) * cur;
-
-                m_heightMap[x][z] = newVal;
-                prev = newVal;
-            }
-        }
-
-        // normalise the heightmap
-        float min = m_heightMap[0][0];
-        float max = min;
-
-        for (int i = 1; i < m_terrainSize * m_terrainSize; i++) {
-            if (m_heightMap[i / m_terrainSize][i % m_terrainSize] < min)
-                min = m_heightMap[i / m_terrainSize][i % m_terrainSize];
-
-            if (m_heightMap[i / m_terrainSize][i % m_terrainSize] > max)
-                max = m_heightMap[i / m_terrainSize][i % m_terrainSize];
-        }
-
-        if (max <= min) return;
-
-        float delta = max - min;
-        float range = m_maxHeight - m_minHeight;
-
-        for (int i = 0; i < m_terrainSize * m_terrainSize; i++) {
-            m_heightMap[i / m_terrainSize][i % m_terrainSize] =
-                ((m_heightMap[i / m_terrainSize][i % m_terrainSize] - min) / delta) * range + m_minHeight;
-        }
+    const bool operator==(const Point& other) const
+    {
+        return this->x == other.x && this->z == other.z;
     }
 
-    void Terrain::Generate() { GenerateDrawable(); }
-
-    void Terrain::GenerateDrawable() {
-        InitVertices();
-        InitIndices();
-
-        Assets::Mesh mesh(m_vertices, m_indices);
-
-        m_entity.AddComponent<Components::Drawable>();
-        auto& drawable = m_entity.GetComponent<Components::Drawable>();
-
-        drawable.model_ptr = std::make_shared<Model::Assets::Model>(mesh);
-        drawable.model_ptr->SetShader("coreAssets/shaders/basic.prog");
+    const Point operator-(const Point& other) const
+    {
+        return {this->x - other.x, this->z - other.z}; 
     }
+};
 
-    void Terrain::LoadHeightMap(const std::string& heightMap) {
+void GenRandomPoints(Point& p1, Point& p2, const int size);
+void NormalizeValues(std::vector<float>& arr, const int size);
+
+void ApplyFIRFilter(std::vector<float>& arr, const int size, const float filter);
+float FIRSinglePass(std::vector<float>& arr, const int index, const float prev, const float filter);
+
+namespace Vakol::Controller
+{
+    const Model::Assets::Mesh Terrain::LoadHeightMap(const std::string& path)
+    {
+        std::vector<Vertex> vertices;
+
         int width = 0, height = 0;
-        unsigned char* data = LoadImage(heightMap, width, height);
+        auto data = LoadImage(path, width, height);
 
-        if (data) {
-            m_terrainSize = width | height;
+        const auto size = this->m_size = width | height;
+        vertices.reserve(size * size); // allocate memory to reduce number of allocation calls in push_back
 
-            // initialise a 2d vector
-            m_heightMap = std::vector<std::vector<float>>(m_terrainSize, std::vector<float>(m_terrainSize));
-
-            // read the heightmap data into the 2d vector
-            for (int z = 0; z < m_terrainSize; z++) {
-                for (int x = 0; x < m_terrainSize; x++) {
-                    m_heightMap[z][x] = static_cast<float>(data[z * m_terrainSize + x]) * 0.1f;
-                }
-            }
-
-            delete[] data;
-        }
-    }
-
-    void Terrain::InitVertices() {
-        m_vertices.resize(m_terrainSize * m_terrainSize);
-
-        // generate a grid of vertices
-        for (int z = 0; z < m_terrainSize; z++) {
-            for (int x = 0; x < m_terrainSize; x++) {
-                m_vertices[z * m_terrainSize + x].position = glm::vec3(x, m_heightMap[z][x] * m_yScale - m_yShift, z);
-
-                m_vertices[z * m_terrainSize + x].uv =
-                    glm::vec2(x / static_cast<float>(m_terrainSize), z / static_cast<float>(m_terrainSize));
-            }
-        }
-    }
-
-    void Terrain::InitIndices() {
-        m_indices.reserve(m_terrainSize * (m_terrainSize - 1) *
-                          2);  // allocate x amount of memory in advance (reduces number of allocations) in push_back
-
-        for (int i = 0; i < m_terrainSize - 1; i++)  // for each row a.k.a. each strip
+        for (int z = 0; z < size; ++z)
         {
-            for (int j = 0; j < m_terrainSize; j++)  // for each column
+            for (int x = 0; x < size; ++x)
             {
-                for (int k = 0; k < 2; k++)  // for each side of the strip
+                const auto pixel_offset = data + (z * size + x);
+                const auto y = pixel_offset[0];
+
+                vertices.push_back({
+                    glm::vec3((-size / 2.0f + size * x / static_cast<float>(size)) * 1.0f,
+                              (y * 0.1f - 16.0f),
+                              (-size / 2.0f + size * z / static_cast<float>(size)) * 1.0f),
+                    glm::vec3(0.0f), // normal
+                    glm::vec2((x / static_cast<float>(size)),
+                              (z / static_cast<float>(size))),
+                    glm::vec3(0.0f), // tangent
+                    glm::vec3(0.0f)  // bitangent
+                });
+            }
+        }
+        
+        delete [] data;
+        data = nullptr; // don't need the data anymore
+
+        std::vector<unsigned int> indices;
+
+        const int LEVEL_OF_DETAIL = 1;
+
+        indices.reserve((size - 1) * size * 2);
+
+        for (int i = 0; i < size - 1; i += LEVEL_OF_DETAIL)
+        {
+            for (int j = 0; j < size; j += LEVEL_OF_DETAIL)
+            {
+                for (int k = 0; k < 2; ++k)
                 {
-                    m_indices.push_back(j + m_terrainSize * (i + k));
+                    indices.push_back(j + size * (i + k * LEVEL_OF_DETAIL));
                 }
             }
         }
+
+        return Model::Assets::Mesh(vertices, indices);
     }
 
-    float Terrain::GetHeight(float x, float z) {
-        // get the height of the terrain at a given x and z coordinate
-        // this is done by interpolating the height of the 4 vertices that surround the point
-        // the height is then interpolated between the 4 vertices
+    const Model::Assets::Mesh Terrain::LoadFaultFormation(const int size, const int iterations, const float filter, const bool random)
+    {
 
-        if (x < 0 || x >= m_terrainSize || z < 0 || z >= m_terrainSize) {
-            return 0.0f;
+        Point p1, p2;
+
+        int displacement;
+
+        m_heightMap.resize(size * size);
+
+        m_minHeight = -256;
+        m_maxHeight = 256;
+
+        if (random)
+            srand(static_cast<unsigned int>(time(NULL)));
+            
+        for (int itr = 0; itr < iterations; ++itr)
+        {
+            //displacement = this->m_maxHeight - ((this->m_maxHeight - this->m_minHeight) * itr) / iterations;
+            displacement = m_maxHeight - ((m_maxHeight - m_minHeight) * itr) / iterations;
+
+            ::GenRandomPoints(p1, p2, size);
+
+            for (int z = 0; z < size; ++z)
+            {
+                for (int x = 0; x < size; ++x)
+                {
+                    int crossProd = (x - p1.x) * (p2.z - p1.z) - (p2.x - p1.x) * (z - p1.z);
+
+                    if (crossProd > 0)
+                    {
+                        m_heightMap[z * size + x] += static_cast<float>(displacement);
+                    }
+                }
+            }
         }
 
-        // get the 4 vertices that surround the point
-        int x0 = static_cast<int>(x) % m_terrainSize;
-        int x1 = (x0 + 1) % m_terrainSize;
-        int z0 = static_cast<int>(z) % m_terrainSize;
-        int z1 = (z0 + 1) % m_terrainSize;
+        ::ApplyFIRFilter(m_heightMap, size, filter);
+        ::NormalizeValues(m_heightMap, size);
 
-        // Handle negative x and z values by wrapping them around
-        if (x0 < 0) x0 += m_terrainSize;
-        if (x1 < 0) x1 += m_terrainSize;
-        if (z0 < 0) z0 += m_terrainSize;
-        if (z1 < 0) z1 += m_terrainSize;
+        std::vector<Vertex> vertices;
 
-        // get the heights of the 4 vertices
-        float y0 = m_vertices[z0 * m_terrainSize + x0].position.y;
-        float y1 = m_vertices[z0 * m_terrainSize + x1].position.y;
-        float y2 = m_vertices[z1 * m_terrainSize + x0].position.y;
-        float y3 = m_vertices[z1 * m_terrainSize + x1].position.y;
+        vertices.reserve(size * size); // allocate memory to reduce number of allocation calls in push_back
 
-        // get the distance between the point and the 4 vertices
-        float dx1 = x - x0;
-        float dx2 = x1 - x;
-        float dz1 = z - z0;
-        float dz2 = z1 - z;
+        for (int z = 0; z < size; ++z)
+        {
+            for (int x = 0; x < size; ++x)
+            {
+                unsigned char y = static_cast<unsigned char>(m_heightMap.at(z * size + x));
 
-        float w1 = dx2 * dz2;
-        float w2 = dx1 * dz2;
-        float w3 = dx2 * dz1;
-        float w4 = dx1 * dz1;
+                vertices.push_back({
+                    glm::vec3((-size / 2.0f + size * x / static_cast<float>(size)) * 1.0f,
+                              (y * 0.25f - 16.0f),
+                              (-size / 2.0f + size * z / static_cast<float>(size)) * 1.0f),
+                    glm::vec3(0.0f), // normal
+                    glm::vec2((x / static_cast<float>(size)),
+                              (z / static_cast<float>(size))),
+                    glm::vec3(0.0f), // tangent
+                    glm::vec3(0.0f)  // bitangent
+                });
+            }
+        }
 
-        // calculate the interpolated height
-        float y = (y0 * w1 + y1 * w2 + y2 * w3 + y3 * w4) / (w1 + w2 + w3 + w4);
+        std::vector<unsigned int> indices;
 
-        return y;
+        indices.reserve((size - 1) * size * 2);
+
+        const int LEVEL_OF_DETAIL = 1;
+
+        for (int i = 0; i < size - 1; i += LEVEL_OF_DETAIL)
+        {
+            for (int j = 0; j < size; j += LEVEL_OF_DETAIL)
+            {
+                for (int k = 0; k < 2; ++k)
+                {
+                    indices.push_back(j + size * (i + k * LEVEL_OF_DETAIL));
+                }
+            }
+        }
+
+        return Model::Assets::Mesh(vertices, indices);
     }
-}  // namespace Vakol::Controller
+}
+
+void GenRandomPoints(Point& p1, Point& p2, const int size)
+{
+    p1.x = rand() % size;
+    p1.z = rand() % size;
+
+    int index = 0; // index is here to prevent infinite loop (too lazy to implement assert tho)
+
+    do
+    {
+        p2.x = rand() % size;
+        p2.z = rand() % size;
+
+        if (index > 1000)
+        {
+            VK_WARN("Failed to generate two random points.");
+            VK_WARN("Breaking to prevent infinite loop");
+        }
+
+        ++index;
+    } while (p1 == p2);
+}
+
+void ApplyFIRFilter(std::vector<float>& arr, const int size, const float filter)
+{
+    // left to right
+    for (int z = 0; z < size; ++z)
+    {
+        float prev = arr.at(z * size + 0);
+        
+        for (int x = 1; x < size; ++x)
+            prev = FIRSinglePass(arr, z * size + x, prev, filter);
+    }
+
+    // right to left
+    for (int z = 0; z < size; ++z)
+    {
+        float prev = arr.at(z * size + size - 1);
+
+        for (int x = size - 2; x >= 0; --x)
+            prev = FIRSinglePass(arr, z * size + x, prev, filter);
+    }
+
+    // bottom to top
+    for (int x = 0; x < size; ++x)
+    {
+        float prev = arr.at(x * size + 0);
+
+        for (int z = 1; z < size; ++z)
+            prev = FIRSinglePass(arr, x * size + z, prev, filter);
+    }
+
+    // top to bottom
+    for (int x = 0; x < size; ++x)
+    {
+        float prev = arr.at(x * size + (size - 1));
+
+        for (int z = size - 2; z >= 0; --z)
+            prev = FIRSinglePass(arr, x * size + z, prev, filter);
+    }
+}
+
+float FIRSinglePass(std::vector<float>& arr, const int index, const float prev, float filter)
+{
+    auto cur_val = arr.at(index);
+    auto new_val = filter * prev + (1 - filter) * cur_val;
+
+    arr[index] = new_val;
+
+    return new_val;
+}
+
+void NormalizeValues(std::vector<float>& arr, const int size)
+{
+    float min = arr.at(0);
+    float max = arr.at(0);
+
+    float height;
+
+    // find min and max of height values
+    for (int i = 1; i < size * size; ++i)
+    {
+        if (arr.at(i) > max)
+            max = arr[i];
+        else if (arr.at(i) < min)
+            min = arr[i];
+    }
+
+    // find range of the altitude
+    if (max <= min) return;
+
+    height = max - min;
+
+    // scale values between 0-255
+    for (int i = 0; i < size * size; ++i)
+        arr[i] = ((arr.at(i) - min) / height) * 255.0f;
+}

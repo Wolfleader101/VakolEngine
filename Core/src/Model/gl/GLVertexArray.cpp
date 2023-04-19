@@ -1,6 +1,7 @@
 #include <glad/glad.h>
 
 #include <Model/gl/GLVertexArray.hpp>
+#include <Controller/Logger.hpp>
 
 namespace Vakol::Model {
 
@@ -60,12 +61,12 @@ namespace Vakol::Model {
         this->Unbind();
     }
 
-    void GLVertexArray::DrawTriangleStrips(const int strips, const int tris) const 
+    void GLVertexArray::DrawTriangleStrips() const 
     {
         this->Bind();
 
-        for (int strip = 0; strip < strips; ++strip)
-            glDrawElements(GL_TRIANGLE_STRIP, tris + 2, GL_UNSIGNED_INT, (void*)(sizeof(unsigned int) * (tris + 2) * strip));
+        for (int strip = 0; strip < this->NUM_STRIPS; ++strip)
+            glDrawElements(GL_TRIANGLE_STRIP, this->NUM_TRIS_PER_STRIP + 2, GL_UNSIGNED_INT, (void*)(sizeof(unsigned int) * (NUM_TRIS_PER_STRIP + 2) * strip));
 
         this->Unbind();
     }

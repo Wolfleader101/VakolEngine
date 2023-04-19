@@ -21,7 +21,7 @@ namespace Vakol::Model {
         virtual void DrawArraysInstanced(const int amount) const = 0;
         virtual void DrawElementsInstanced(const int amount) const = 0;
 
-        virtual void DrawTriangleStrips(const int strips, const int tris) const = 0;
+        virtual void DrawTriangleStrips() const = 0;
 
         const virtual unsigned int GetID() const = 0;
         const virtual int GetVertexCount() const = 0;
@@ -30,8 +30,13 @@ namespace Vakol::Model {
         virtual const std::vector<Vertex> GetVertices() const = 0;
         virtual const std::vector<unsigned int> GetIndices() const = 0;
 
+        virtual void SetStrips(const int strips, const int tris) = 0;
+
     protected:
         std::vector<Vertex> m_vertices;
         std::vector<unsigned int> m_indices;
+
+        int NUM_STRIPS = 0;
+        int NUM_TRIS_PER_STRIP = 0;
     };
 }

@@ -123,14 +123,14 @@ namespace Vakol::View {
         for (int i = 0; i < drawable.model_ptr->GetMeshCount(); ++i)
         {   
             auto mesh  = drawable.model_ptr->GetMeshes().at(i);
-            auto material = mesh.material();
 
             //drawable.model_ptr->GetShader()->SetVec3v("tint", material->diffuse());
             
             //glActiveTexture(GL_TEXTURE0);
             //glBindTexture(GL_TEXTURE_2D, 2 * (i + 1));
-
-            mesh.vao()->DrawTriangleStrips((128 - 1) / 1, (128 / 1) * 2 - 2);
+            
+            
+            mesh.GetVertexArray()->DrawTriangleStrips();
         }
     }
 

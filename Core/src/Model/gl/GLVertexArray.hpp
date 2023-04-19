@@ -18,7 +18,7 @@ namespace Vakol::Model {
 
         void DrawArrays() const override;
         void DrawElements() const override;
-        void DrawTriangleStrips(const int strips, const int tris) const override;
+        void DrawTriangleStrips() const override;
 
         void DrawArraysInstanced(const int amount) const override;
         void DrawElementsInstanced(const int amount) const override;
@@ -30,6 +30,12 @@ namespace Vakol::Model {
 
         const std::vector<Vertex> GetVertices() const override { return this->m_vertices; }
         const std::vector<unsigned int> GetIndices() const override { return this->m_indices; }
+
+        void SetStrips(const int strips, const int tris) override 
+        { 
+            this->NUM_STRIPS = strips;
+            this->NUM_TRIS_PER_STRIP = tris;
+        }
 
     private:
         unsigned int VAO_ID = 0;
