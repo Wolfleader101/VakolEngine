@@ -5,7 +5,7 @@ function init(scene, entity)
     print("If the fog is too thick, lower the FOG_DENSITY in the .lua file");
 
     local terrain = entity:add_terrain_heightmap("coreAssets/textures/Heightmaps/height_map.raw");
-    -- local terrain = entity:add_terrain_fault_formation(128, 128, 0.8, true); -- size, iterations, filter, random
+    --local terrain = entity:add_terrain_fault_formation(1024, 128, 0.97, true, -10, 10); -- size, iterations, filter, random, minHeight, maxHeight
     
     local mesh = terrain:get_mesh();
     local material = mesh:get_material();
@@ -32,7 +32,7 @@ function init(scene, entity)
     shader:set_int("option", 2);
 
     shader:set_bool("enable_textures", true);
-    shader:set_bool("enable_fog", true);
+    shader:set_bool("enable_fog", false);
 
     -- entity:get_transform().rot.y = 10.0; -- rotate the model on it's y-axis by 10 degrees
 

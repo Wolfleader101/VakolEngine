@@ -84,7 +84,7 @@ namespace Vakol::Controller
         return Model::Assets::Mesh(vertices, indices);
     }
 
-    const Model::Assets::Mesh Terrain::LoadFaultFormation(const int size, const int iterations, const float filter, const bool random)
+    const Model::Assets::Mesh Terrain::LoadFaultFormation(const int size, const int iterations, const float filter, const bool random, const int minHeight, const int maxHeight)
     {
 
         Point p1, p2;
@@ -93,8 +93,8 @@ namespace Vakol::Controller
 
         m_heightMap.resize(size * size);
 
-        m_minHeight = -256;
-        m_maxHeight = 256;
+        m_minHeight = minHeight;
+        m_maxHeight = maxHeight;
 
         if (random)
             srand(static_cast<unsigned int>(time(NULL)));
@@ -135,7 +135,7 @@ namespace Vakol::Controller
 
                 vertices.push_back({
                     glm::vec3((-size / 2.0f + size * x / static_cast<float>(size)) * 1.0f,
-                              (y * 0.25f - 16.0f),
+                              (y * 0.4f - 16.0f),
                               (-size / 2.0f + size * z / static_cast<float>(size)) * 1.0f),
                     glm::vec3(0.0f, 1.0f, 0.0f), // normal
                     glm::vec2((x / static_cast<float>(size)),

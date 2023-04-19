@@ -13,8 +13,8 @@ namespace Vakol::Controller
     public:
         Terrain(const std::string& path);
         
-        Terrain(const int size, const int iterations, const float filter, const bool random = true) : 
-            m_size(size), m_terrain(LoadFaultFormation(size, iterations, filter, random)) {};
+        Terrain(const int size, const int iterations, const float filter, const bool random, const int minHeight, const int maxHeight) :
+            m_size(size), m_terrain(LoadFaultFormation(size, iterations, filter, random, minHeight, maxHeight)) {};
 
         std::shared_ptr<Model::Assets::Model> get() const { return std::make_shared<Model::Assets::Model>(this->m_terrain); }
 
@@ -24,7 +24,7 @@ namespace Vakol::Controller
         
     private:
         const Model::Assets::Mesh LoadHeightMap(unsigned char* data);
-        const Model::Assets::Mesh LoadFaultFormation(const int size, const int iterations, const float filter, const bool random);
+        const Model::Assets::Mesh LoadFaultFormation(const int size, const int iterations, const float filter, const bool random, const int minHeight, const int maxHeight);
 
         std::vector<float> m_heightMap;
 

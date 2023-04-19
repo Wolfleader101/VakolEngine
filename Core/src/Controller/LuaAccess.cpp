@@ -175,11 +175,11 @@ namespace Vakol::Controller {
             }
         });
 
-        entityType.set_function("add_terrain_fault_formation", [](Entity* ent, const int size, const int iterations, const float filter, const bool random)
+        entityType.set_function("add_terrain_fault_formation", [](Entity* ent, const int size, const int iterations, const float filter, const bool random, const int minHeight, const int maxHeight)
         {
             if (!ent->HasComponent<Model::Components::Drawable>()) ent->AddComponent<Model::Components::Drawable>();
 
-            auto terrain = Terrain(size, iterations, filter, random).get(); // doesn't that look nice?
+            auto terrain = Terrain(size, iterations, filter, random, minHeight, maxHeight).get(); // doesn't that look nice?
 
             if (terrain)
             {
