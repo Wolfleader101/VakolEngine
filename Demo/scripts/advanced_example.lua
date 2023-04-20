@@ -16,7 +16,7 @@ function init(scene, entity)
     
     -- local model = entity:add_model("coreAssets/models/cornellBox.obj") -- get model and add a drawable component
     terrain_modal:set_shader("coreAssets/shaders/advanced_lighting.prog") -- set the shader on the model (automatically binds the shader)
-    local shader = terrain_modal:get_shader(); -- get the shader from the model
+    local shader = terrain_modal:get_shader();                            -- get the shader from the model
 
     shader:set_float("material.shininess", 32.0);
     shader:set_float("FOG_DENSITY", 0.03);
