@@ -142,6 +142,8 @@ namespace Vakol::Controller {
         auto materialType = lua.new_usertype<Assets::Material>("material");
         auto textureType = lua.new_usertype<Assets::Texture>("texture");
         auto shaderType = lua.new_usertype<Shader>("shader");
+        auto rigidType = lua.new_usertype<Components::RigidBody>("rigidbody");
+        auto colliderType = lua.new_usertype<Components::Collider>("collider");
 
         lua.set_function("raw_texture", [](const std::string& path) { return Texture(path); });
 
@@ -299,8 +301,7 @@ namespace Vakol::Controller {
 
     void RegisterPhysics(sol::state& lua)
     {
-		auto rigidType = lua.new_usertype<Components::RigidBody>("rigidbody");
-    	auto colliderType = lua.new_usertype<Components::Collider>("collider");
+		
       
 
     }

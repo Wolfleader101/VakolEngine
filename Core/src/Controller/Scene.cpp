@@ -56,8 +56,6 @@ namespace Vakol::Controller {
 
         System::Physics_InitObject(rigid, collider, std::nullopt, entity.GetComponent<Transform>());
 
-        
-
         int x = 0;
     }
 

@@ -3,7 +3,7 @@ function init(scene, entity)
     print("For the best-looking results with fog, set clear color to VAKOL_FOGGY_2.");
     print("If the fog is too thick, lower the FOG_DENSITY in the .lua file");
 
-    -- local terrain = entity:add_terrain_heightmap("coreAssets/textures/Heightmaps/height_map.raw");
+    --local terrain = entity:add_terrain_heightmap("coreAssets/textures/Heightmaps/height_map.raw");
     --local terrain = entity:add_terrain_fault_formation(1024, 128, 0.97, true, -10, 10); -- size, iterations, filter, random, minHeight, maxHeight
     local terrain = entity:add_clod_terrain(128)
     

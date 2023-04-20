@@ -22,6 +22,10 @@ namespace Vakol::Controller {
 
         ~Terrain(){};
 
+        const std::vector<float>& GetHeightMap();
+        const int GetMaxHeight();
+        const int GetMinHeight();
+
        private:
         const Model::Assets::Mesh LoadHeightMap(unsigned char* data);
         const Model::Assets::Mesh LoadFaultFormation(const int size, const int iterations, const float filter, const bool random, const int minHeight, const int maxHeight);
