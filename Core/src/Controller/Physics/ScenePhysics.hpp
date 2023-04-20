@@ -24,14 +24,7 @@ namespace Vakol::Controller::Physics
 	{
 		public:
 
-			struct PhysicsDebugVertex {
-				float x{ 0 }; /**< vertice x*/
-				float y{ 0 }; /**< vertice y*/
-				float z{ 0 }; /**< vertice z*/
-				float r{ 1 }; /**< vertice r*/
-				float g{ 0 }; /**< vertice g*/
-				float b{ 0 }; /**< vertice b*/
-			};
+			
 
 			ScenePhysics() = delete;
             ~ScenePhysics();
@@ -40,13 +33,6 @@ namespace Vakol::Controller::Physics
 			void Update(const Vakol::Controller::Time& time, const Vakol::Controller::Camera& camera);
 
 			void AddTerrain(const std::shared_ptr<Terrain>& terrain);
-
-			glm::vec3 GetDebugColor(rp3d::uint32 color);
-
-			std::vector<PhysicsDebugVertex> GetDebugTriangles();
-			std::vector<PhysicsDebugVertex> GetDebugLines();
-
-			bool debug = false;
 
 			
 			std::shared_ptr<Model::Assets::Shader> shader;
@@ -66,9 +52,6 @@ namespace Vakol::Controller::Physics
 				debugRenderer.setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::COLLISION_SHAPE, true);
 				//debugRenderer.setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::COLLIDER_AABB, true);
 			}
-
-			unsigned vao = 0;
-			unsigned vbo = 0;
 
 
 			float m_timestep = 1.0f / 60.0f; 
