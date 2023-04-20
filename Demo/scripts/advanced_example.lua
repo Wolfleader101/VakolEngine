@@ -1,8 +1,5 @@
 function init(scene, entity)
 
-    print("For the best-looking results with fog, set clear color to VAKOL_FOGGY_2.");
-    print("If the fog is too thick, lower the FOG_DENSITY in the .lua file");
-
     -- local terrain = entity:add_terrain_heightmap("coreAssets/textures/Heightmaps/height_map.raw");
     --local terrain = entity:add_terrain_fault_formation(1024, 128, 0.97, true, -10, 10); -- size, iterations, filter, random, minHeight, maxHeight
     local terrain = entity:add_clod_terrain(128)
@@ -70,27 +67,8 @@ function init(scene, entity)
     shader:set_bool("enable_fog", true);
     shader:set_float("FOG_DENSITY", 0.0);
     shader:set_bool("enable_water", true);
-    local waterEnt = scene:create_entity("");
 
-    local waterPlane = waterEnt:add_model("coreAssets/models/plane.obj");
-
-    local waterMesh = waterPlane:get_mesh();
-    local waterMaterial = waterMesh:get_material();
-
-    waterEnt:get_transform().scale.x = 256;
-    waterEnt:get_transform().scale.z = 256;
-
-    waterEnt:get_transform().pos.y = 60.0;
-
-    waterMaterial:add_texture(water_layer_1);
-    waterMaterial:add_texture(water_layer_2);
-
-    waterPlane:set_shader("coreAssets/shaders/water.prog") -- set the shader on the model (automatically binds the shader)
-    local waterShader = waterPlane:get_shader();
-
-    waterShader:set_int("texture_0", 0);
-    waterShader:set_int("texture_1", 1);
-
+    -- local waterEnt = scene:create_entity("water_example.lua");
 
     -- shader:set_vec3("light.position", 0.0, 0.5, 7.5);
     -- shader:set_vec3("light.direction", math.rad(0.0), math.rad(-15.0), math.rad(-90.0));

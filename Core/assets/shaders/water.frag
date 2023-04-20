@@ -20,7 +20,10 @@ uniform float uv_scale_1 = 1.0;
 uniform float texture_speed_0 = 0.1;
 uniform float texture_speed_1 = 0.08;
 
-uniform float time;
+layout (std140, binding = 3) uniform Time
+{
+    float time;
+};
 
 uniform float wobbleX = 1.4;
 uniform float wobbleY = 1.7;
