@@ -83,10 +83,11 @@ function init(scene, entity)
     local waterMesh = waterPlane:get_mesh();
     local waterMaterial = waterMesh:get_material();
 
-    waterPlane:get_transform().scale.x = terrainSize;
-    waterPlane:get_transform().scale.z = terrainSize;
+    entity:get_transform().scale.x = 256;
+    print_err("ABC")
+    entity:get_transform().scale.z = 256;
 
-    waterPlane:get_transform().pos.y = 60.0;
+    entity:get_transform().pos.y = 60.0;
 
     waterMaterial:add_texture(water_layer_1);
     waterMaterial:add_texture(water_layer_2);
