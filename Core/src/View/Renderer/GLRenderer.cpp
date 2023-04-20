@@ -67,13 +67,14 @@ namespace Vakol::View {
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_CULL_FACE);
 
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         AddUniform(2 * sizeof(glm::mat4), 1);
         // AddUniform(5 * sizeof(float), 2);
+        AddUniform(sizeof(float), 3);
 
         // SetUniformData(1, 0, sizeof(float), &light_constant);
         // SetUniformData(1, 1 * sizeof(float), sizeof(float), &light_linear);
@@ -103,6 +104,8 @@ namespace Vakol::View {
     {
         SetUniformData(0, 0, sizeof(glm::mat4), glm::value_ptr(camera.GetMatrix(PV_MATRIX)));
         SetUniformData(0, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(camera.GetMatrix(VIEW_MATRIX)));
+
+        SetUniformData(1, 0, sizeof(float), &time.curTime);
 
         glm::mat4 model_matrix = glm::mat4(1.0f);
 
