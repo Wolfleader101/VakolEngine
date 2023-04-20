@@ -2,10 +2,15 @@
 
 #include <Model/VertexArray.hpp>
 
-namespace Vakol::Model {
-    class GLVertexArray : public VertexArray {
+namespace Vakol::Model 
+{
+    class GLVertexArray : public VertexArray 
+    {
        public:
         GLVertexArray(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices);
+        GLVertexArray(const std::vector<float>& vertices);
+        GLVertexArray(const std::vector<float>& vertices, const std::vector<unsigned int>& indices);
+        
         ~GLVertexArray();
 
         void GenArray(const unsigned int n, unsigned int* array);
@@ -18,7 +23,9 @@ namespace Vakol::Model {
 
         void DrawArrays() const override;
         void DrawElements() const override;
+
         void DrawTriangleStrips() const override;
+        void DrawQuadPatches() const override;
 
         void DrawArraysInstanced(const int amount) const override;
         void DrawElementsInstanced(const int amount) const override;
@@ -35,6 +42,12 @@ namespace Vakol::Model {
         { 
             this->NUM_STRIPS = strips;
             this->NUM_TRIS_PER_STRIP = tris;
+        }
+
+        void SetPatches(const int num_patches, const int num_verts_per_patch) override
+        {
+            this->NUM_PATCHES = num_patches;
+            this->NUM_VERTS_PER_PATCH = num_verts_per_patch;
         }
 
     private:

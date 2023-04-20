@@ -10,8 +10,9 @@ namespace Vakol::Controller {
        public:
         Terrain(const std::string& path);
 
-        Terrain(const int size, const int iterations, const float filter, const bool random, const int minHeight,
-                const int maxHeight);
+        Terrain(const int size, const int iterations, const float filter, const bool random, const int minHeight, const int maxHeight);
+
+        Terrain(const int size);
 
         std::shared_ptr<Model::Assets::Model> GetModel() const { return this->m_model; }
 
@@ -23,10 +24,12 @@ namespace Vakol::Controller {
 
        private:
         const Model::Assets::Mesh LoadHeightMap(unsigned char* data);
-        const Model::Assets::Mesh LoadFaultFormation(const int size, const int iterations, const float filter,
-                                                     const bool random, const int minHeight, const int maxHeight);
+        const Model::Assets::Mesh LoadFaultFormation(const int size, const int iterations, const float filter, const bool random, const int minHeight, const int maxHeight);
+        const Model::Assets::Mesh LoadCLODTerrain(const int size);
 
-        struct Point {
+
+        struct Point 
+        {
             int x = 0;
             int z = 0;
 

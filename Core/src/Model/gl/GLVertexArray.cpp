@@ -3,10 +3,11 @@
 #include <Model/gl/GLVertexArray.hpp>
 #include <Controller/Logger.hpp>
 
+constexpr int NUM_PATCH_PTS = 4;
+
 namespace Vakol::Model {
 
-    GLVertexArray::GLVertexArray(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices)
-        : VertexArray(vertices, indices) 
+    GLVertexArray::GLVertexArray(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices) : VertexArray(vertices, indices) 
     {
         this->GenArray(1, &this->VAO_ID);
         this->Bind();
@@ -43,6 +44,32 @@ namespace Vakol::Model {
         this->Unbind();
     }
 
+    GLVertexArray::GLVertexArray(const std::vector<float>& vertices, const std::vector<unsigned int>& indices) : VertexArray(vertices, indices)
+    {
+
+    }
+
+    GLVertexArray::GLVertexArray(const std::vector<float>& vertices) : VertexArray(vertices)
+    {
+        this->GenArray(1, &this->VAO_ID);
+        this->Bind();
+
+        this->GenBuffer(1, &this->VBO_ID);
+        this->BindBuffer(GL_ARRAY_BUFFER, this->VBO_ID);
+        glBufferData(GL_ARRAY_BUFFER, this->m_verts.size() * sizeof(float), this->m_verts.data(), GL_STATIC_DRAW);
+
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+
+        glPatchParameteri(GL_PATCH_VERTICES, NUM_PATCH_PTS);
+
+        this->Unbind();
+    }
+
+
     void GLVertexArray::DrawArrays() const 
     {
         this->Bind();
@@ -71,7 +98,17 @@ namespace Vakol::Model {
         this->Unbind();
     }
 
-    void GLVertexArray::DrawArraysInstanced(const int amount) const {
+    void GLVertexArray::DrawQuadPatches() const
+    {
+        this->Bind();
+
+        glDrawArrays(GL_PATCHES, 0, NUM_PATCHES * NUM_VERTS_PER_PATCH);
+
+        this->Unbind();
+    }
+
+    void GLVertexArray::DrawArraysInstanced(const int amount) const 
+    {
         this->Bind();
 
         glDrawArraysInstanced(GL_TRIANGLES, 0, this->GetVertexCount(), amount);
@@ -79,7 +116,8 @@ namespace Vakol::Model {
         this->Unbind();
     }
 
-    void GLVertexArray::DrawElementsInstanced(const int amount) const {
+    void GLVertexArray::DrawElementsInstanced(const int amount) const 
+    {
         this->Bind();
 
         glDrawElementsInstanced(GL_TRIANGLES, this->GetIndexCount(), GL_UNSIGNED_INT, 0, amount);
