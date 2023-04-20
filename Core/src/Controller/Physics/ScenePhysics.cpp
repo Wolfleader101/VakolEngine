@@ -17,7 +17,8 @@ namespace Vakol::Controller::Physics {
     void ScenePhysics::Init() {
         System::Physics_Init();
         shader = std::make_shared<Model::Assets::GLShader>("coreAssets/shaders/debug.prog");
-        EnableDebug();
+
+    	if(debug) EnableDebug();
 
         glGenVertexArrays(1, &vao);
         glGenBuffers(1, &vbo);
@@ -73,38 +74,67 @@ namespace Vakol::Controller::Physics {
         Vakol::Controller::System::Physics_UpdateTransforms(factor);
     }
 
-    void ScenePhysics::AddTerrain(const std::shared_ptr<Vakol::Controller::Terrain>& terr) {
-        auto& vertices = terr->GetVertices();
-        auto& indices = terr->ConvertStripToTriangles();
+    //void ScenePhysics::AddTerrain(const std::shared_ptr<Vakol::Controller::Terrain>& terr) {
+    //    auto& vertices = terr->GetVertices();
+    //    auto& indices = terr->ConvertStripToTriangles();
 
-        if (vertices.empty() || indices.empty()) {
-            VK_CRITICAL("Terrain has no vertice or indice data. Can not add to physics");
-            assert(0);
-        }
+    //    if (vertices.empty() || indices.empty()) {
+    //        VK_CRITICAL("Terrain has no vertice or indice data. Can not add to physics");
+    //        assert(0);
+    //    }
 
-        rp3d::Transform trans = rp3d::Transform::identity();  // not sure how this is gonna go
+    //    rp3d::Transform trans = rp3d::Transform::identity();  // not sure how this is gonna go
 
+    //    m_Terrain = m_World->createRigidBody(trans);
+
+    //    m_Terrain->setType(rp3d::BodyType::STATIC);
+
+    //    auto MeshPtr = PhysicsPool::m_Common.createTriangleMesh();
+
+    //    rp3d::TriangleVertexArray* triArray = nullptr;
+
+    //    triArray = new rp3d::TriangleVertexArray(vertices.size(), vertices.data(), sizeof(Vertex), indices.size() / 3,
+    //                                             indices.data(), sizeof(unsigned int) * 3,
+    //                                             rp3d::TriangleVertexArray::VertexDataType::VERTEX_FLOAT_TYPE,
+    //                                             rp3d::TriangleVertexArray::IndexDataType::INDEX_INTEGER_TYPE);
+
+    //    MeshPtr->addSubpart(triArray);
+
+    //    rp3d::ConcaveMeshShape* ConcaveShape = PhysicsPool::m_Common.createConcaveMeshShape(MeshPtr, {1, 1, 1});
+
+    //    m_Terrain->addCollider(ConcaveShape, trans);
+
+    //    int x = 0;
+    //};
+
+    void ScenePhysics::AddTerrain(const std::shared_ptr<Vakol::Controller::Terrain>& terr)
+    {
+        const auto HeightData = terr->GetHeightMap1D();
+        const unsigned size = terr->GetSize();
+        const float scale = terr->GetScale();
+        const float offset = terr->GetShift();
+
+        const float maxH = terr->GetMaxHeight();
+        const float minH = terr->GetMinHeight();
+
+        rp3d::HeightFieldShape* height = PhysicsPool::m_Common.createHeightFieldShape(
+            size,
+            size,
+            minH,
+            maxH,
+            HeightData.data(),
+            rp3d::HeightFieldShape::HeightDataType::HEIGHT_FLOAT_TYPE,
+            1,
+            1,
+             { size * scale, size * scale, (maxH - minH) }
+        );
+
+        auto trans = rp3d::Transform::identity();
         m_Terrain = m_World->createRigidBody(trans);
 
-        m_Terrain->setType(rp3d::BodyType::STATIC);
-
-        auto MeshPtr = PhysicsPool::m_Common.createTriangleMesh();
-
-        rp3d::TriangleVertexArray* triArray = nullptr;
-
-        triArray = new rp3d::TriangleVertexArray(vertices.size(), vertices.data(), sizeof(Vertex), indices.size() / 3,
-                                                 indices.data(), sizeof(unsigned int) * 3,
-                                                 rp3d::TriangleVertexArray::VertexDataType::VERTEX_FLOAT_TYPE,
-                                                 rp3d::TriangleVertexArray::IndexDataType::INDEX_INTEGER_TYPE);
-
-        MeshPtr->addSubpart(triArray);
-
-        rp3d::ConcaveMeshShape* ConcaveShape = PhysicsPool::m_Common.createConcaveMeshShape(MeshPtr, {1, 1, 1});
-
-        m_Terrain->addCollider(ConcaveShape, trans);
-
-        int x = 0;
-    };
+        m_Terrain->addCollider(height, trans);
+       
+    }
 
     glm::vec3 ScenePhysics::GetDebugColor(rp3d::uint32 color) {
         switch (color) {

@@ -46,7 +46,7 @@ namespace Vakol::Controller::Physics
 			std::vector<PhysicsDebugVertex> GetDebugTriangles();
 			std::vector<PhysicsDebugVertex> GetDebugLines();
 
-			bool debug = true;
+			bool debug = false;
 
 			
 			std::shared_ptr<Model::Assets::Shader> shader;
