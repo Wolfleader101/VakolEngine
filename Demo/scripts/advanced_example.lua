@@ -9,7 +9,7 @@ function init(scene, entity)
     local material = mesh:get_material();
     
     --local height_map = raw_texture("coreAssets/textures/HeightMaps/test_2.raw");
-    local height_map = noise_texture(128, 30.0, 2, 0.5, 2.0);
+    local height_map = noise_texture(128, 30.0, 2, 0.5, 2.0); -- size, scale (smaller = more spikes), octaves (number of loops / detail), persistence (roughness), lacunarity (size of gaps)
 
     local water_layer_1 = texture("coreAssets/textures/Water/water_0.bmp", false, false);
     local water_layer_2 = texture("coreAssets/textures/Water/water_5.bmp", false, false);
