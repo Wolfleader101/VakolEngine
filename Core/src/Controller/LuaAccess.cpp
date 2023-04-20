@@ -143,20 +143,20 @@ namespace Vakol::Controller {
         auto textureType = lua.new_usertype<Assets::Texture>("texture");
         auto shaderType = lua.new_usertype<Shader>("shader");
 
-        lua.set_function("raw_texture",
-                         [](const std::string& path, const bool gamma, const bool flip) { return Texture(path); });
+        lua.set_function("raw_texture", [](const std::string& path) { return Texture(path); });
 
-        lua.set_function("texture", [](const std::string& path, const bool gamma, const bool flip) {
-            return Texture(path, gamma, flip);
-        });
+        lua.set_function("texture", [](const std::string& path, const bool gamma, const bool flip) { return Texture(path, gamma, flip); });
 
         entityType.set_function("get_transform", &Entity::GetComponent<Model::Components::Transform>);
 
-        entityType.set_function("add_terrain_heightmap", [](Entity* ent, const std::string& path) {
+        entityType.set_function("add_heightmap_terrain", [](Entity* ent, const std::string& path) 
+        {
             if (!ent->HasComponent<Model::Components::Drawable>()) ent->AddComponent<Model::Components::Drawable>();
+
             if (ent->HasComponent<Terrain>()) ent->RemoveComponent<Terrain>();
 
             ent->AddComponent<Terrain>(path);
+
             auto terrain = ent->GetComponent<Terrain>();
 
             auto model = terrain.GetModel();  // doesn't that look nice?
@@ -172,25 +172,47 @@ namespace Vakol::Controller {
             return terrain;
         });
 
-        entityType.set_function(
-            "add_terrain_fault_formation", [](Entity* ent, const int size, const int iterations, const float filter,
-                                              const bool random, const int minHeight, const int maxHeight) {
-                if (!ent->HasComponent<Model::Components::Drawable>()) ent->AddComponent<Model::Components::Drawable>();
-                if (ent->HasComponent<Terrain>()) ent->RemoveComponent<Terrain>();
+        entityType.set_function("add_fault_formation_terrain", [](Entity* ent, const int size, const int iterations, const float filter, const bool random, const int minHeight, const int maxHeight) 
+        {
+            if (!ent->HasComponent<Model::Components::Drawable>()) ent->AddComponent<Model::Components::Drawable>();
+            if (ent->HasComponent<Terrain>()) ent->RemoveComponent<Terrain>();
 
-                ent->AddComponent<Terrain>(size, iterations, filter, random, minHeight, maxHeight);
+            ent->AddComponent<Terrain>(size, iterations, filter, random, minHeight, maxHeight);
 
-                auto terrain = ent->GetComponent<Terrain>();
+            auto terrain = ent->GetComponent<Terrain>();
 
-                auto model = terrain.GetModel();  // doesn't that look nice?
+            auto model = terrain.GetModel();  // doesn't that look nice?
 
-                if (model) {
-                    model->GetMesh().GetVertexArray()->SetStrips((size - 1) / 1, (size / 1) * 2 - 2);
+            if (model) 
+            {
+                model->GetMesh().GetVertexArray()->SetStrips((size - 1) / 1, (size / 1) * 2 - 2);
 
-                    ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
-                }
-                return terrain;
-            });
+                ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
+            }
+
+            return terrain;
+        });
+
+        entityType.set_function("add_clod_terrain", [](Entity* ent, const int size)
+        {
+            if (!ent->HasComponent<Model::Components::Drawable>()) ent->AddComponent<Model::Components::Drawable>();
+            if (ent->HasComponent<Terrain>()) ent->RemoveComponent<Terrain>();
+
+            ent->AddComponent<Terrain>(size);
+
+            auto terrain = ent->GetComponent<Terrain>();
+
+            auto model = terrain.GetModel();  // doesn't that look nice?
+
+            if (model) 
+            {
+                model->GetMesh().GetVertexArray()->SetPatches(400, 4);
+
+                ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
+            }
+
+            return terrain;
+        });
 
         entityType.set_function("add_model", [](Entity* ent, const std::string& path) {
             if (!ent->HasComponent<Model::Components::Drawable>()) ent->AddComponent<Model::Components::Drawable>();
@@ -214,15 +236,15 @@ namespace Vakol::Controller {
         materialType.set_function("add_texture", &Assets::Material::AddTexture);
         materialType.set_function("get_texture", &Assets::Material::GetTexture);
 
-        materialType.set_function("get_ambient", &Assets::Material::GetAmbientColor);
-        materialType.set_function("get_diffuse", &Assets::Material::GetDiffuseColor);
-        materialType.set_function("get_specular", &Assets::Material::GetSpecularColor);
-        materialType.set_function("get_shininess", &Assets::Material::GetShininess);
+        // materialType.set_function("get_ambient", &Assets::Material::GetAmbientColor);
+        // materialType.set_function("get_diffuse", &Assets::Material::GetDiffuseColor);
+        // materialType.set_function("get_specular", &Assets::Material::GetSpecularColor);
+        // materialType.set_function("get_shininess", &Assets::Material::GetShininess);
 
-        materialType.set_function("set_ambient", &Assets::Material::SetAmbientColor);
-        materialType.set_function("set_diffuse", &Assets::Material::SetDiffuseColor);
-        materialType.set_function("set_specular", &Assets::Material::SetSpecularColor);
-        materialType.set_function("set_shininess", &Assets::Material::SetShininess);
+        // materialType.set_function("set_ambient", &Assets::Material::SetAmbientColor);
+        // materialType.set_function("set_diffuse", &Assets::Material::SetDiffuseColor);
+        // materialType.set_function("set_specular", &Assets::Material::SetSpecularColor);
+        // materialType.set_function("set_shininess", &Assets::Material::SetShininess);
 
         textureType.set_function("bind_texture", &Assets::Texture::Bind);
         textureType.set_function("unbind_texture", &Assets::Texture::Unbind);

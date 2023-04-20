@@ -29,11 +29,13 @@ const unsigned int LoadGLTexture(const std::string& path, const bool raw, const 
     glCreateTextures(GL_TEXTURE_2D, 1, &ID);
     glTextureStorage2D(ID, 1, internal_format, width, height);
 
-    glTextureParameteri(ID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTextureParameteri(ID, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTextureParameteri(ID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     glTextureParameteri(ID, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTextureParameteri(ID, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+    glGenerateMipmap(ID);
 
     glTextureSubImage2D(ID, 0, 0, 0, width, height, data_format, GL_UNSIGNED_BYTE, data);
 

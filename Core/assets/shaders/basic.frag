@@ -14,8 +14,7 @@ void main()
           FragColor = texture(texture_0, TexCoords);
      else
      {
-          //float h = (height + 16.0) / 32.0;
-          //FragColor = vec4(h, h, h, 1.0);
-          FragColor = vec4(1.0);
+          float h = (height + 16.0) / 32.0;
+          FragColor = vec4(h, h, h, 1.0);
      }
 }
