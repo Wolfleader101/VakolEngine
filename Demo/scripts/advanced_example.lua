@@ -77,17 +77,17 @@ function init(scene, entity)
     --------------------------------------------------------------------------------------------------------------------------------
 
     shader:set_bool("enable_water", true);
+    local waterEnt = scene:create_entity("");
 
-    local waterPlane = entity:add_model("coreAssets/models/plane.obj");
+    local waterPlane = waterEnt:add_model("coreAssets/models/plane.obj");
 
     local waterMesh = waterPlane:get_mesh();
     local waterMaterial = waterMesh:get_material();
 
-    entity:get_transform().scale.x = 256;
-    print_err("ABC")
-    entity:get_transform().scale.z = 256;
+    waterEnt:get_transform().scale.x = 256;
+    waterEnt:get_transform().scale.z = 256;
 
-    entity:get_transform().pos.y = 60.0;
+    waterEnt:get_transform().pos.y = 60.0;
 
     waterMaterial:add_texture(water_layer_1);
     waterMaterial:add_texture(water_layer_2);
