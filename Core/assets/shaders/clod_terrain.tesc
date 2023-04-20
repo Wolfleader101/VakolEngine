@@ -16,9 +16,9 @@ out vec2 TextureCoord[];
 // Step 1: define constants to control tessellation parameters
     // set these as desired for your world scale
 const int MIN_TESS_LEVEL = 4;
-const int MAX_TESS_LEVEL = 24;
+const int MAX_TESS_LEVEL = 32;
 const float MIN_DISTANCE = 5;
-const float MAX_DISTANCE = 2000;
+const float MAX_DISTANCE = 100;
 
 void main()
 {

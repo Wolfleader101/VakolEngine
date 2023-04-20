@@ -11,7 +11,7 @@ function init(scene, entity)
     local mesh = model:get_mesh();
     local material = mesh:get_material();
     
-    local t1 = raw_texture("coreAssets/textures/HeightMaps/height128.raw");
+    local t1 = raw_texture("coreAssets/textures/HeightMaps/test_2.raw");
     material:add_texture(t1);
     t1:bind_texture(0);
     
