@@ -135,8 +135,7 @@ namespace Vakol::Controller {
             "KEY_Z", Input::KEY::KEY_Z, "KEY_LEFT_SHIFT", Input::KEY::KEY_LEFT_SHIFT);
     }
 
-    void RegisterEntity(sol::state& lua) 
-    {
+    void RegisterEntity(sol::state& lua) {
         auto entityType = lua.new_usertype<Entity>("entity");
         auto modelType = lua.new_usertype<Assets::Model>("model");
         auto meshType = lua.new_usertype<Assets::Mesh>("mesh");
@@ -144,29 +143,24 @@ namespace Vakol::Controller {
         auto textureType = lua.new_usertype<Assets::Texture>("texture");
         auto shaderType = lua.new_usertype<Shader>("shader");
 
-        lua.set_function("raw_texture", [](const std::string& path, const bool gamma, const bool flip)
-        {
-            return Texture(path);
-        });
+        lua.set_function("raw_texture",
+                         [](const std::string& path, const bool gamma, const bool flip) { return Texture(path); });
 
-        lua.set_function("texture", [](const std::string& path, const bool gamma, const bool flip)
-        {
+        lua.set_function("texture", [](const std::string& path, const bool gamma, const bool flip) {
             return Texture(path, gamma, flip);
         });
 
         entityType.set_function("get_transform", &Entity::GetComponent<Model::Components::Transform>);
 
-        entityType.set_function("add_terrain_heightmap", [](Entity* ent, const std::string& path)
-        {
+        entityType.set_function("add_terrain_heightmap", [](Entity* ent, const std::string& path) {
             if (!ent->HasComponent<Model::Components::Drawable>()) ent->AddComponent<Model::Components::Drawable>();
 
-            auto terrain = Terrain(path); // doesn't that look nice?
-            auto model = terrain.get();
-            
-            const auto size = terrain.get_size();
+            auto terrain = Terrain(path);  // doesn't that look nice?
+            auto model = terrain.GetModel();
 
-            if (model)
-            {
+            const auto size = terrain.GetSize();
+
+            if (model) {
                 model->GetMesh().GetVertexArray()->SetStrips((size - 1) / 1, (size / 1) * 2 - 2);
 
                 ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
@@ -175,14 +169,15 @@ namespace Vakol::Controller {
             }
         });
 
-        entityType.set_function("add_terrain_fault_formation", [](Entity* ent, const int size, const int iterations, const float filter, const bool random, const int minHeight, const int maxHeight)
-        {
+        entityType.set_function("add_terrain_fault_formation", [](Entity* ent, const int size, const int iterations,
+                                                                  const float filter, const bool random,
+                                                                  const int minHeight, const int maxHeight) {
             if (!ent->HasComponent<Model::Components::Drawable>()) ent->AddComponent<Model::Components::Drawable>();
 
-            auto terrain = Terrain(size, iterations, filter, random, minHeight, maxHeight).get(); // doesn't that look nice?
+            auto terrain =
+                Terrain(size, iterations, filter, random, minHeight, maxHeight).GetModel();  // doesn't that look nice?
 
-            if (terrain)
-            {
+            if (terrain) {
                 terrain->GetMesh().GetVertexArray()->SetStrips((size - 1) / 1, (size / 1) * 2 - 2);
 
                 ent->GetComponent<Model::Components::Drawable>().model_ptr = terrain;
@@ -242,8 +237,7 @@ namespace Vakol::Controller {
         TransformType["scale"] = &Model::Components::Transform::scale;
     }
 
-    void RegisterScene(sol::state& lua) 
-    {
+    void RegisterScene(sol::state& lua) {
         auto sceneType = lua.new_usertype<Scene>("scene");
         auto cameraType = lua.new_usertype<Camera>("camera");
 
