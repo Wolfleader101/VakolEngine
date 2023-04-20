@@ -174,15 +174,4 @@ namespace Vakol::Controller {
         rigid.initialized = true;
     };
 
-    void System::Terrain_Init(EntityList& list, std::shared_ptr<Terrain> terrain) {
-        if (terrain == nullptr) {
-            VK_CRITICAL("Terrain is null");
-            return;
-        }
-        terrain->LoadHeightMap("coreAssets/textures/Heightmaps/height128.raw");
-        //terrain->LoadFaultFormation(1000);
-        terrain->LoadTexture("coreAssets/textures/Terrain/TEX_128_Grass.jpg");
-        terrain->SetEntity(list.CreateEntity());
-        terrain->GenerateDrawable();
-    }
 }  // namespace Vakol::Controller
