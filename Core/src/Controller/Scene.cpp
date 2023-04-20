@@ -32,7 +32,7 @@ namespace Vakol::Controller {
 
         System::Physics_AddTerrain();
 
-        auto entity = entityList.CreateEntity();
+       /* auto entity = entityList.CreateEntity();
 
         entity.GetComponent<Components::Transform>().pos = { 1, 1, 1 };
 
@@ -54,7 +54,7 @@ namespace Vakol::Controller {
 
         collider.bounds = bounds;
 
-        System::Physics_InitObject(rigid, collider, std::nullopt, entity.GetComponent<Transform>());
+        System::Physics_InitObject(rigid, collider, std::nullopt, entity.GetComponent<Transform>());*/
 
         int x = 0;
     }
