@@ -5,7 +5,7 @@ function init(scene, entity)
 
     -- local terrain = entity:add_terrain_heightmap("coreAssets/textures/Heightmaps/height_map.raw");
     --local terrain = entity:add_terrain_fault_formation(1024, 128, 0.97, true, -10, 10); -- size, iterations, filter, random, minHeight, maxHeight
-    local terrain = entity:add_clod_terrain(128)
+    local terrain = entity:add_clod_terrain(256)
     
     local model = terrain:get_model();
     local mesh = model:get_mesh();
@@ -71,7 +71,7 @@ function init(scene, entity)
     layer_6:bind_texture(8);
 
     shader:set_bool("enable_fog", true);
-    shader:set_float("FOG_DENSITY", 0.025);
+    shader:set_float("FOG_DENSITY", 0.0);
 
     -- shader:set_vec3("light.position", 0.0, 0.5, 7.5);
     -- shader:set_vec3("light.direction", math.rad(0.0), math.rad(-15.0), math.rad(-90.0));
