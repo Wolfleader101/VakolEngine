@@ -22,9 +22,6 @@ function init(scene, entity)
     local layer_6 = texture("coreAssets/textures/extras/snow.png", false, false);
 
     material:add_texture(height_map);
-    
-    material:add_texture(water_layer_1);
-    material:add_texture(water_layer_2);
 
     material:add_texture(layer_1);
     material:add_texture(layer_2);

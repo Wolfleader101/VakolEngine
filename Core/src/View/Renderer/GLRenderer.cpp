@@ -129,7 +129,29 @@ namespace Vakol::View {
         {   
             auto mesh  = drawable.model_ptr->GetMeshes().at(i);
             
-            mesh.GetVertexArray()->DrawQuadPatches();
+            switch (mesh.GetVertexArray()->GetDrawMode())
+            {
+                case ARRAYS:
+                    mesh.GetVertexArray()->DrawArrays();
+                    break;
+                case ELEMENTS:
+                    mesh.GetVertexArray()->DrawElements();
+                    break;
+                case ARRAYS_INSTANCED:
+                    mesh.GetVertexArray()->DrawArraysInstanced(1000);
+                    break;
+                case ELEMENTS_INSTANCED:
+                    mesh.GetVertexArray()->DrawElementsInstanced(1000);
+                    break;
+                case TRIANGLE_STRIPS:
+                    mesh.GetVertexArray()->DrawTriangleStrips();
+                    break;
+                case QUAD_PATCHES:
+                    mesh.GetVertexArray()->DrawQuadPatches();
+                    break;
+                default:
+                    break;
+            }
         }
     }
 

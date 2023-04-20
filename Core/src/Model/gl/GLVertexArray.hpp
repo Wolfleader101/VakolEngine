@@ -50,6 +50,12 @@ namespace Vakol::Model
             this->NUM_VERTS_PER_PATCH = num_verts_per_patch;
         }
 
+        void SetDrawMode(const unsigned char mode)
+        {
+            this->DRAW_MODE = mode;
+        }
+
+        const unsigned char GetDrawMode() const { return this->DRAW_MODE; }
     private:
         unsigned int VAO_ID = 0;
         unsigned int VBO_ID = 0;
