@@ -80,8 +80,7 @@ function init(scene, entity)
 
     local waterPlane = entity:add_model("coreAssets/models/plane.obj");
 
-    local waterModel = waterPlane:get_model();
-    local waterMesh = waterModel:get_mesh();
+    local waterMesh = waterPlane:get_mesh();
     local waterMaterial = waterMesh:get_material();
 
     waterPlane:get_transform().scale.x = terrainSize;
@@ -92,11 +91,12 @@ function init(scene, entity)
     waterMaterial:add_texture(water_layer_1);
     waterMaterial:add_texture(water_layer_2);
 
-    waterModel:set_shader("coreAssets/shaders/water.prog") -- set the shader on the model (automatically binds the shader)
-    local waterShader = waterModel:get_shader();
+    waterPlane:set_shader("coreAssets/shaders/water.prog") -- set the shader on the model (automatically binds the shader)
+    local waterShader = waterPlane:get_shader();
 
-    shader:set_int("texture_0", 0);
-    shader:set_int("texture_1", 1);
+    waterShader:set_int("texture_0", 0);
+    waterShader:set_int("texture_1", 1);
+
 
     -- shader:set_vec3("light.position", 0.0, 0.5, 7.5);
     -- shader:set_vec3("light.direction", math.rad(0.0), math.rad(-15.0), math.rad(-90.0));
