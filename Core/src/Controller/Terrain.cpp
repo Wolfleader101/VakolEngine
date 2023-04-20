@@ -181,6 +181,15 @@ namespace Vakol::Controller {
             for (int z = 0; z < m_terrainSize; z++) {
                 for (int x = 0; x < m_terrainSize; x++) {
                     m_heightMap[z][x] = static_cast<float>(data[z * m_terrainSize + x]) * 0.1f;
+
+                    if(m_heightMap[z][x] < m_minHeight)
+                    {
+                        m_minHeight = m_heightMap[z][x];
+                    }
+                    else if(m_heightMap[z][x] > m_maxHeight)
+                    {
+                        m_maxHeight = m_heightMap[z][x];
+                    }
                 }
             }
 
@@ -277,6 +286,46 @@ namespace Vakol::Controller {
         }
 
         return m_triangleIndices;
+    }
+
+    std::vector<float> Terrain::GetHeightMap1D() const
+    {
+
+        std::vector<float> ret;
+        for (const auto& vec : m_heightMap)
+        {
+            for (const float& value : vec)
+            {
+                ret.push_back(value);
+            }
+        }
+
+        return ret;
+    }
+
+    int Terrain::GetSize() const
+    {
+        return m_terrainSize;
+    }
+
+    float Terrain::GetScale() const
+    {
+        return m_yScale;
+    }
+
+    float Terrain::GetShift() const
+    {
+        return m_yShift;
+    }
+
+    float Terrain::GetMinHeight() const
+    {
+        return m_minHeight;
+    }
+
+    float Terrain::GetMaxHeight() const
+    {
+        return m_maxHeight;
     }
 
 }  // namespace Vakol::Controller
