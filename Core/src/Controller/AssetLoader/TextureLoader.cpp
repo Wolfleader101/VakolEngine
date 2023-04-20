@@ -5,10 +5,13 @@
 #include <glad/glad.h>
 
 const unsigned int LoadGLTexture(const std::string&, const bool, const bool, const bool);
+const unsigned int LoadGLTexture(const int, float, const int, const float, const float);
 
 namespace Vakol::Controller
 {
     const unsigned int LoadTexture(const std::string& path, const bool gamma, const bool flip) { return ::LoadGLTexture(path, false, gamma, flip); }
+
+    const unsigned int LoadNoiseTexture(const int size, float scale, const int octaves, const float persistence, const float lacunarity) { return ::LoadGLTexture(size, scale, octaves, persistence, lacunarity); }
 
     // gamma correction only applies for RGB/RGBA channels
     const unsigned int LoadRawTexture(const std::string& path) { return ::LoadGLTexture(path, true, false, false); }
@@ -38,6 +41,33 @@ const unsigned int LoadGLTexture(const std::string& path, const bool raw, const 
     glGenerateMipmap(ID);
 
     glTextureSubImage2D(ID, 0, 0, 0, width, height, data_format, GL_UNSIGNED_BYTE, data);
+
+    delete[] data;
+    data = nullptr;
+
+    return ID;
+}
+
+const unsigned int LoadGLTexture(const int size, float scale, const int octaves, const float persistence, const float lacunarity)
+{
+    unsigned int ID = 0;
+
+    glGenTextures(1, &ID);
+    
+    auto data = LoadNoiseImage(size, scale, octaves, persistence, lacunarity);
+
+    glCreateTextures(GL_TEXTURE_2D, 1, &ID);
+    glTextureStorage2D(ID, 1, GL_R8, size, size);
+
+    glTextureParameteri(ID, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTextureParameteri(ID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    glTextureParameteri(ID, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTextureParameteri(ID, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+    glGenerateMipmap(ID);
+
+    glTextureSubImage2D(ID, 0, 0, 0, size, size, GL_RED, GL_UNSIGNED_BYTE, data);
 
     delete[] data;
     data = nullptr;

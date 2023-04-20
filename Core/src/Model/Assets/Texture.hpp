@@ -7,13 +7,19 @@ namespace Vakol::Model::Assets
 {   
     using Controller::LoadTexture;
     using Controller::LoadRawTexture;
+    using Controller::LoadNoiseTexture;
 
     class Texture
     {
     public:
         Texture() = default;
+        
         Texture(const std::string& path) : m_path(path), m_ID(LoadRawTexture(path)) {};
+        
         Texture(const std::string& path, const bool gamma, const bool flip) : m_path(path), m_ID(LoadTexture(path, gamma, flip)) {};
+        
+        Texture(const int size, float scale, const int octaves, const float persistence, const float lacunarity) : 
+            m_ID(LoadNoiseTexture(size, scale, octaves, persistence, lacunarity)) {};
 
         ~Texture() = default;
 

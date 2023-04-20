@@ -12,15 +12,18 @@ namespace Vakol::Controller
         this->m_model = std::make_shared<Model::Assets::Model>(LoadHeightMap(LoadImage(path, this->m_size, this->m_size)));
     }
 
+    Terrain::Terrain(const int size, float scale, const int octaves, const float persistence, const float lacunarity) : m_size(size)
+    {
+        this->m_model = std::make_shared<Model::Assets::Model>(LoadHeightMap(LoadNoiseImage(size, scale, octaves, persistence, lacunarity)));
+    }
+
     Terrain::Terrain(const int size) 
         : m_size(size), m_model(std::make_shared<Model::Assets::Model>(LoadCLODTerrain(size))) {};
 
     Terrain::Terrain(const int size, const int iterations, const float filter, const bool random, const int minHeight, const int maxHeight)
         : m_size(size), m_model(std::make_shared<Model::Assets::Model>(LoadFaultFormation(size, iterations, filter, random, minHeight, maxHeight))) {};
 
-    
-
-    const Model::Assets::Mesh Terrain::LoadHeightMap(unsigned char* data)
+    const Model::Assets::Mesh Terrain::LoadHeightMap(unsigned char* data) 
     {
         std::vector<Vertex> vertices;
 
@@ -303,8 +306,6 @@ namespace Vakol::Controller
 
         return y;
     }
-
-
 
     const std::vector<float>& Terrain::GetHeightMap()
     {
