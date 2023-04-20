@@ -164,6 +164,7 @@ namespace Vakol::Controller {
             const auto size = terrain.GetSize();
 
             if (model) {
+                model->GetMesh().GetVertexArray()->SetDrawMode(TRIANGLE_STRIPS);
                 model->GetMesh().GetVertexArray()->SetStrips((size - 1) / 1, (size / 1) * 2 - 2);
 
                 ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
@@ -185,6 +186,7 @@ namespace Vakol::Controller {
 
             if (model) 
             {
+                model->GetMesh().GetVertexArray()->SetDrawMode(TRIANGLE_STRIPS);
                 model->GetMesh().GetVertexArray()->SetStrips((size - 1) / 1, (size / 1) * 2 - 2);
 
                 ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
@@ -206,6 +208,7 @@ namespace Vakol::Controller {
 
             if (model) 
             {
+                model->GetMesh().GetVertexArray()->SetDrawMode(QUAD_PATCHES);
                 model->GetMesh().GetVertexArray()->SetPatches(400, 4);
 
                 ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
@@ -220,6 +223,7 @@ namespace Vakol::Controller {
             auto model = AssetLoader::GetModel(path);
 
             if (model) {
+                model->GetMesh().GetVertexArray()->SetDrawMode(ELEMENTS);
                 ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
                 return model;
             }

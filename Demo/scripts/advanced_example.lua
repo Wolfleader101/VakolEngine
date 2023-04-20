@@ -1,12 +1,11 @@
 function init(scene, entity)
-    local terrainSize = 256;
 
     print("For the best-looking results with fog, set clear color to VAKOL_FOGGY_2.");
     print("If the fog is too thick, lower the FOG_DENSITY in the .lua file");
 
     -- local terrain = entity:add_terrain_heightmap("coreAssets/textures/Heightmaps/height_map.raw");
     --local terrain = entity:add_terrain_fault_formation(1024, 128, 0.97, true, -10, 10); -- size, iterations, filter, random, minHeight, maxHeight
-    local terrain = entity:add_clod_terrain(terrainSize)
+    local terrain = entity:add_clod_terrain(128)
     
     local model = terrain:get_model();
     local mesh = model:get_mesh();
@@ -25,9 +24,6 @@ function init(scene, entity)
     local layer_6 = texture("coreAssets/textures/extras/snow.png", false, false);
 
     material:add_texture(height_map);
-    
-    material:add_texture(water_layer_1);
-    material:add_texture(water_layer_2);
 
     material:add_texture(layer_1);
     material:add_texture(layer_2);
@@ -73,30 +69,9 @@ function init(scene, entity)
 
     shader:set_bool("enable_fog", true);
     shader:set_float("FOG_DENSITY", 0.0);
-
-    --------------------------------------------------------------------------------------------------------------------------------
-
     shader:set_bool("enable_water", true);
 
-    local waterPlane = entity:add_model("coreAssets/models/plane.obj");
-
-    local waterModel = waterPlane:get_model();
-    local waterMesh = waterModel:get_mesh();
-    local waterMaterial = waterMesh:get_material();
-
-    waterPlane:get_transform().scale.x = terrainSize;
-    waterPlane:get_transform().scale.z = terrainSize;
-
-    waterPlane:get_transform().pos.y = 60.0;
-
-    waterMaterial:add_texture(water_layer_1);
-    waterMaterial:add_texture(water_layer_2);
-
-    waterModel:set_shader("coreAssets/shaders/water.prog") -- set the shader on the model (automatically binds the shader)
-    local waterShader = waterModel:get_shader();
-
-    shader:set_int("texture_0", 0);
-    shader:set_int("texture_1", 1);
+    --------------------------------------------------------------------------------------------------------------------------------
 
     -- shader:set_vec3("light.position", 0.0, 0.5, 7.5);
     -- shader:set_vec3("light.direction", math.rad(0.0), math.rad(-15.0), math.rad(-90.0));
