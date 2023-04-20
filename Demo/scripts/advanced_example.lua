@@ -1,5 +1,4 @@
 function init(scene, entity)
-    local camera = scene:get_camera();
 
     print("For the best-looking results with fog, set clear color to VAKOL_FOGGY_2.");
     print("If the fog is too thick, lower the FOG_DENSITY in the .lua file");
@@ -7,7 +6,8 @@ function init(scene, entity)
     local terrain = entity:add_terrain_heightmap("coreAssets/textures/Heightmaps/height_map.raw");
     --local terrain = entity:add_terrain_fault_formation(1024, 128, 0.97, true, -10, 10); -- size, iterations, filter, random, minHeight, maxHeight
     
-    local mesh = terrain:get_mesh();
+    local terrain_modal = terrain:get_model();
+    local mesh = terrain_modal:get_mesh();
     local material = mesh:get_material();
     
     local t1 = texture("coreAssets/textures/grass.png", false, false);
@@ -15,8 +15,8 @@ function init(scene, entity)
     t1:bind_texture(0);
     
     -- local model = entity:add_model("coreAssets/models/cornellBox.obj") -- get model and add a drawable component
-    terrain:set_shader("coreAssets/shaders/advanced_lighting.prog") -- set the shader on the model (automatically binds the shader)
-    local shader = terrain:get_shader(); -- get the shader from the model
+    terrain_modal:set_shader("coreAssets/shaders/advanced_lighting.prog") -- set the shader on the model (automatically binds the shader)
+    local shader = terrain_modal:get_shader(); -- get the shader from the model
 
     shader:set_float("material.shininess", 32.0);
     shader:set_float("FOG_DENSITY", 0.03);
@@ -36,7 +36,6 @@ function init(scene, entity)
 
     -- entity:get_transform().rot.y = 10.0; -- rotate the model on it's y-axis by 10 degrees
 
-    -- if you remove this code, I will (commit war crimes) against you.
 end
 
 local function lerp(a, b, t)

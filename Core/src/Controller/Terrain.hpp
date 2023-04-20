@@ -14,7 +14,7 @@ namespace Vakol::Controller {
                 const int maxHeight);
 
         std::shared_ptr<Model::Assets::Model> GetModel() const {
-            return std::make_shared<Model::Assets::Model>(this->m_modal);
+            return std::make_shared<Model::Assets::Model>(this->m_model);
         }
 
         const int GetSize() const { return this->m_size; }
@@ -45,7 +45,7 @@ namespace Vakol::Controller {
 
         std::vector<float> m_heightMap;
 
-        Model::Assets::Model m_modal;
+        Model::Assets::Model m_model;
 
         int m_size = 0;
 

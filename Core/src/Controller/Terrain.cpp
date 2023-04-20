@@ -6,12 +6,12 @@
 
 namespace Vakol::Controller {
     Terrain::Terrain(const std::string& path) {
-        this->m_modal = LoadHeightMap(LoadImage(path, this->m_size, this->m_size));
+        this->m_model = LoadHeightMap(LoadImage(path, this->m_size, this->m_size));
     }
 
     Terrain::Terrain(const int size, const int iterations, const float filter, const bool random, const int minHeight,
                      const int maxHeight)
-        : m_size(size), m_modal(LoadFaultFormation(size, iterations, filter, random, minHeight, maxHeight)){};
+        : m_size(size), m_model(LoadFaultFormation(size, iterations, filter, random, minHeight, maxHeight)){};
 
     const Model::Assets::Mesh Terrain::LoadHeightMap(unsigned char* data) {
         std::vector<Vertex> vertices;
@@ -227,7 +227,7 @@ namespace Vakol::Controller {
         if (z1 < 0) z1 += m_size;
 
         // get the heights of the 4 vertices
-        auto vertices = m_modal.GetMesh().GetVertexArray()->GetVertices();
+        auto vertices = m_model.GetMesh().GetVertexArray()->GetVertices();
 
         float y0 = vertices[z0 * m_size + x0].position.y;
         float y1 = vertices[z0 * m_size + x1].position.y;
