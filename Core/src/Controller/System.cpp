@@ -102,6 +102,8 @@ namespace Vakol::Controller {
             });
     }
 
+    
+
     void System::Physics_InitObject(
         RigidBody& rigid, std::optional<std::reference_wrapper<Collider>> collider,
         std::optional<std::reference_wrapper<Drawable>> model,  // only used if you want to put triangle mesh
@@ -173,5 +175,15 @@ namespace Vakol::Controller {
 
         rigid.initialized = true;
     };
+
+    void System::Physics_AddTerrain()
+    {
+        m_registry->view<Terrain>().each(
+            [&](Terrain& ter)
+            {
+                m_SP->AddTerrain(std::make_shared<Terrain>(ter));
+            }
+        );
+    }
 
 }  // namespace Vakol::Controller

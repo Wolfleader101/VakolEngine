@@ -109,10 +109,8 @@ namespace Vakol::Controller::Physics {
 
     void ScenePhysics::AddTerrain(const std::shared_ptr<Vakol::Controller::Terrain>& terr)
     {
-        const auto HeightData = terr->GetHeightMap1D();
+        const auto HeightData = terr->GetHeightMap();
         const unsigned size = terr->GetSize();
-        const float scale = terr->GetScale();
-        const float offset = terr->GetShift();
 
         const float maxH = terr->GetMaxHeight();
         const float minH = terr->GetMinHeight();
@@ -125,11 +123,10 @@ namespace Vakol::Controller::Physics {
             HeightData.data(),
             rp3d::HeightFieldShape::HeightDataType::HEIGHT_FLOAT_TYPE,
             1,
-            1,
-             { size * scale, size * scale, (maxH - minH) }
+            1
         );
 
-        auto trans = rp3d::Transform::identity();
+        const auto trans = rp3d::Transform::identity();
         m_Terrain = m_World->createRigidBody(trans);
 
         m_Terrain->addCollider(height, trans);

@@ -255,6 +255,10 @@ namespace Vakol::Controller {
     }
 
 
+    const std::vector<float>& Terrain::GetHeightMap() const
+    {
+        return m_heightMap;
+    }
 
     float Terrain::GetMinHeight() const
     {

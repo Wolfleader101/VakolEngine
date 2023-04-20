@@ -235,6 +235,7 @@ namespace Vakol::Controller {
         shaderType.set_function("set_vec4", &Assets::Shader::SetVec4);
     }
 
+
     void RegisterECS(sol::state& lua) {
         auto TransformType = lua.new_usertype<Model::Components::Transform>("transform");
         auto terrainType = lua.new_usertype<Terrain>("terrain");
@@ -273,5 +274,11 @@ namespace Vakol::Controller {
 
     void RegisterWindow(sol::state& lua) {}
     void RegisterRenderer(sol::state& lua) {}
-    void RegisterPhysics(sol::state& lua) {}
+
+    void RegisterPhysics(sol::state& lua)
+    {
+        
+      
+
+    }
 }  // namespace Vakol::Controller

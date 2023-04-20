@@ -40,6 +40,7 @@ namespace Vakol::Controller {
         static void Physics_Init();
         static void Physics_UpdateTransforms(float factor);
         static void Physics_SerializationPrep();
+        static void Physics_AddTerrain(); 
 
        private:
         static std::shared_ptr<ScenePhysics> m_SP;

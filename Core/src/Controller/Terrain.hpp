@@ -21,14 +21,7 @@ namespace Vakol::Controller {
 
         ~Terrain(){};
 
-        const std::vector<Vertex>& GetVertices();
-        const std::vector<unsigned int>& GetIndices();
-
-        std::vector<unsigned int>& ConvertStripToTriangles();
-        std::vector<float> GetHeightMap1D() const;
-
-        float GetScale() const;
-        float GetShift() const;
+        const std::vector<float>& GetHeightMap() const;
 
         float GetMinHeight() const;
         float GetMaxHeight() const;

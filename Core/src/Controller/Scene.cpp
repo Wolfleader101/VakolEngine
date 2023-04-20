@@ -30,14 +30,7 @@ namespace Vakol::Controller {
 
         scenePhysics->Init();
 
-        terrain = std::make_shared<Terrain>();
-        System::Terrain_Init(entityList, terrain);
-        scenePhysics->AddTerrain(terrain);
-        
-
-
-
-        auto& terPos = terrain->GetEntity().GetComponent<Transform>();
+        System::Physics_AddTerrain();
 
         auto entity = entityList.CreateEntity();
 
