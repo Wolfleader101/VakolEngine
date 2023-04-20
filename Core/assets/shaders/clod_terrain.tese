@@ -1,5 +1,5 @@
 #version 460 core
-layout(quads) in;
+layout(quads, equal_spacing) in;
 
 uniform sampler2D height_map;
 

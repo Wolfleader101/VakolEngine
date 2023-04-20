@@ -1,17 +1,15 @@
 function init(scene, entity)
-
-    print("For the best-looking results with fog, set clear color to VAKOL_FOGGY_2.");
-    print("If the fog is too thick, lower the FOG_DENSITY in the .lua file");
-
-    -- local terrain = entity:add_terrain_heightmap("coreAssets/textures/Heightmaps/height_map.raw");
-    --local terrain = entity:add_terrain_fault_formation(1024, 128, 0.97, true, -10, 10); -- size, iterations, filter, random, minHeight, maxHeight
-    local terrain = entity:add_clod_terrain(128)
     
+    --local terrain = entity:add_noisemap_terrain(1024, 30, 2, 0.5, 2.0) -- size, scale, octaves, persistence, lacunarity
+    local terrain = entity:add_clod_terrain(128) -- size
+
     local model = terrain:get_model();
     local mesh = model:get_mesh();
+
     local material = mesh:get_material();
     
-    local height_map = raw_texture("coreAssets/textures/HeightMaps/height128.raw");
+    --local height_map = raw_texture("coreAssets/textures/HeightMaps/test_2.raw");
+    local height_map = noise_texture(128, 30.0, 2, 0.5, 2.0);
 
     local water_layer_1 = texture("coreAssets/textures/Water/water_0.bmp", false, false);
     local water_layer_2 = texture("coreAssets/textures/Water/water_5.bmp", false, false);
@@ -37,10 +35,9 @@ function init(scene, entity)
     material:add_texture(layer_5);
     material:add_texture(layer_6);
 
-    
-    -- local model = entity:add_model("coreAssets/models/cornellBox.obj") -- get model and add a drawable component
+    -- model:set_shader("coreAssets/shaders/basic.prog");
     model:set_shader("coreAssets/shaders/clod_terrain.prog") -- set the shader on the model (automatically binds the shader)
-    local shader = model:get_shader();                            -- get the shader from the model
+    local shader = model:get_shader();                       -- get the shader from the model
 
     shader:set_int("height_map", 0);
 
@@ -70,7 +67,7 @@ function init(scene, entity)
     layer_5:bind_texture(7);
     layer_6:bind_texture(8);
 
-    shader:set_bool("enable_fog", true);
+    shader:set_bool("enable_fog", false);
     shader:set_float("FOG_DENSITY", 0.025);
 
     -- shader:set_vec3("light.position", 0.0, 0.5, 7.5);

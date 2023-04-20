@@ -12,6 +12,11 @@ namespace Vakol::Controller
         this->m_model = std::make_shared<Model::Assets::Model>(LoadHeightMap(LoadImage(path, this->m_size, this->m_size)));
     }
 
+    Terrain::Terrain(const int size, float scale, const int octaves, const float persistence, const float lacunarity) : m_size(size)
+    {
+        this->m_model = std::make_shared<Model::Assets::Model>(LoadHeightMap(LoadNoiseImage(size, scale, octaves, persistence, lacunarity)));
+    }
+
     Terrain::Terrain(const int size) 
         : m_size(size), m_model(std::make_shared<Model::Assets::Model>(LoadCLODTerrain(size))) {};
 

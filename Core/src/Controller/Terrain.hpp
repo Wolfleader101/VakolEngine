@@ -10,6 +10,7 @@ namespace Vakol::Controller {
        public:
         Terrain(const std::string& path);
 
+        Terrain(const int size, float scale, const int octaves, const float persistence, const float lacunarity);
         Terrain(const int size, const int iterations, const float filter, const bool random, const int minHeight, const int maxHeight);
 
         Terrain(const int size);
