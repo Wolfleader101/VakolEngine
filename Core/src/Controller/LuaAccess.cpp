@@ -154,9 +154,12 @@ namespace Vakol::Controller {
 
         entityType.set_function("add_terrain_heightmap", [](Entity* ent, const std::string& path) {
             if (!ent->HasComponent<Model::Components::Drawable>()) ent->AddComponent<Model::Components::Drawable>();
+            if (ent->HasComponent<Terrain>()) ent->RemoveComponent<Terrain>();
 
-            auto terrain = Terrain(path);  // doesn't that look nice?
-            auto model = terrain.GetModel();
+            ent->AddComponent<Terrain>(path);
+            auto terrain = ent->GetComponent<Terrain>();
+
+            auto model = terrain.GetModel();  // doesn't that look nice?
 
             const auto size = terrain.GetSize();
 
@@ -164,27 +167,30 @@ namespace Vakol::Controller {
                 model->GetMesh().GetVertexArray()->SetStrips((size - 1) / 1, (size / 1) * 2 - 2);
 
                 ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
-
-                return model;
             }
+
+            return terrain;
         });
 
-        entityType.set_function("add_terrain_fault_formation", [](Entity* ent, const int size, const int iterations,
-                                                                  const float filter, const bool random,
-                                                                  const int minHeight, const int maxHeight) {
-            if (!ent->HasComponent<Model::Components::Drawable>()) ent->AddComponent<Model::Components::Drawable>();
+        entityType.set_function(
+            "add_terrain_fault_formation", [](Entity* ent, const int size, const int iterations, const float filter,
+                                              const bool random, const int minHeight, const int maxHeight) {
+                if (!ent->HasComponent<Model::Components::Drawable>()) ent->AddComponent<Model::Components::Drawable>();
+                if (ent->HasComponent<Terrain>()) ent->RemoveComponent<Terrain>();
 
-            auto terrain =
-                Terrain(size, iterations, filter, random, minHeight, maxHeight).GetModel();  // doesn't that look nice?
+                ent->AddComponent<Terrain>(size, iterations, filter, random, minHeight, maxHeight);
 
-            if (terrain) {
-                terrain->GetMesh().GetVertexArray()->SetStrips((size - 1) / 1, (size / 1) * 2 - 2);
+                auto terrain = ent->GetComponent<Terrain>();
 
-                ent->GetComponent<Model::Components::Drawable>().model_ptr = terrain;
+                auto model = terrain.GetModel();  // doesn't that look nice?
 
+                if (model) {
+                    model->GetMesh().GetVertexArray()->SetStrips((size - 1) / 1, (size / 1) * 2 - 2);
+
+                    ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
+                }
                 return terrain;
-            }
-        });
+            });
 
         entityType.set_function("add_model", [](Entity* ent, const std::string& path) {
             if (!ent->HasComponent<Model::Components::Drawable>()) ent->AddComponent<Model::Components::Drawable>();
@@ -231,10 +237,19 @@ namespace Vakol::Controller {
 
     void RegisterECS(sol::state& lua) {
         auto TransformType = lua.new_usertype<Model::Components::Transform>("transform");
+        auto terrainType = lua.new_usertype<Terrain>("terrain");
 
         TransformType["pos"] = &Model::Components::Transform::pos;
         TransformType["rot"] = &Model::Components::Transform::rot;
         TransformType["scale"] = &Model::Components::Transform::scale;
+
+        // terrainType.set_function("load_heightmap", &Terrain::LoadHeightMap);
+        // terrainType.set_function("load_texture", &Terrain::LoadTexture);
+        // terrainType.set_function("generate", &Terrain::Generate);
+
+        terrainType.set_function("get_height", &Terrain::GetHeight);
+        terrainType.set_function("get_size", &Terrain::GetSize);
+        terrainType.set_function("get_model", &Terrain::GetModel);
     }
 
     void RegisterScene(sol::state& lua) {
