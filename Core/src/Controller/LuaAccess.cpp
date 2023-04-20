@@ -1,15 +1,17 @@
 #include "LuaAccess.hpp"
 
+#include <glm/gtc/type_ptr.hpp>
+
 #include "AssetLoader/AssetLoader.hpp"
 #include "Model/Assets/Material.hpp"
 #include "Model/Components.hpp"
 #include "Model/gl/GLInstance.hpp"
 
-using Vakol::Model::Assets::Material;
+constexpr int DIRECTIONAL_LIGHT = 0;
+constexpr int POINT_LIGHT = 1;
+constexpr int SPOT_LIGHT = 2;
 
-const int DIRECTIONAL_LIGHT = 0;
-const int POINT_LIGHT = 1;
-const int SPOT_LIGHT = 2;
+int OPTION = DIRECTIONAL_LIGHT;
 
 namespace Vakol::Controller {
     void RegisterMath(sol::state& lua) {
@@ -72,25 +74,28 @@ namespace Vakol::Controller {
     }
 
     void RegisterAssetLoader(sol::state& lua) {
-        lua.set_function("load_texture", [](std::string path) {
-            // auto tex = AssetLoader::GetTexture(path);
-            // if (tex == nullptr) return false;
+        lua.set_function("load_texture", [](const std::string& path) {
+            auto tex = AssetLoader::GetTexture(path);
 
-            // return true;
+            if (tex == nullptr) return false;
+
+            return true;
         });
 
-        lua.set_function("load_model", [](std::string path) {
+        lua.set_function("load_model", [](const std::string& path) {
             auto model = AssetLoader::GetModel(path);
+
             if (model == nullptr) return false;
 
             return true;
         });
 
-        lua.set_function("load_shader", [](std::string path) {
-            // //auto shader = AssetLoader::GetShader(path);
-            // if (shader == nullptr) return false;
+        lua.set_function("load_shader", [](const std::string& path) {
+            auto shader = AssetLoader::GetShader(path);
 
-            // return true;
+            if (shader == nullptr) return false;
+
+            return true;
         });
     }
 
@@ -132,59 +137,119 @@ namespace Vakol::Controller {
 
     void RegisterEntity(sol::state& lua) {
         auto entityType = lua.new_usertype<Entity>("entity");
+        auto modelType = lua.new_usertype<Assets::Model>("model");
+        auto meshType = lua.new_usertype<Assets::Mesh>("mesh");
+        auto materialType = lua.new_usertype<Assets::Material>("material");
+        auto textureType = lua.new_usertype<Assets::Texture>("texture");
+        auto shaderType = lua.new_usertype<Shader>("shader");
+
+        lua.set_function("raw_texture",
+                         [](const std::string& path, const bool gamma, const bool flip) { return Texture(path); });
+
+        lua.set_function("texture", [](const std::string& path, const bool gamma, const bool flip) {
+            return Texture(path, gamma, flip);
+        });
 
         entityType.set_function("get_transform", &Entity::GetComponent<Model::Components::Transform>);
-        entityType.set_function("add_model", [](Entity* ent, std::string path) {
-            if (ent->HasComponent<Model::Components::Drawable>() == false)
-                ent->AddComponent<Model::Components::Drawable>();
-            
-            auto model = AssetLoader::GetModel(path);
-            
-            if (model == nullptr) return false;
 
-            auto material = model->meshes().begin()->material();
+        entityType.set_function("add_terrain_heightmap", [](Entity* ent, const std::string& path) {
+            if (!ent->HasComponent<Model::Components::Drawable>()) ent->AddComponent<Model::Components::Drawable>();
+            if (ent->HasComponent<Terrain>()) ent->RemoveComponent<Terrain>();
 
-            for (const auto& texture : material->textures())
-            {
-                GLTexture tex("coreAssets/textures/" + texture.path);
-                tex.Bind();
+            ent->AddComponent<Terrain>(path);
+            auto terrain = ent->GetComponent<Terrain>();
+
+            auto model = terrain.GetModel();  // doesn't that look nice?
+
+            const auto size = terrain.GetSize();
+
+            if (model) {
+                model->GetMesh().GetVertexArray()->SetStrips((size - 1) / 1, (size / 1) * 2 - 2);
+
+                ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
             }
 
-            // force it for now, since I don't understand lua lol
-            material->SetShader("coreAssets/shaders/basic.prog");
-            material->Bind();
-
-            //material->SetInt("texture_0", 0);
-
-            // material->SetInt("material.diffuse", 0);
-            // material->SetInt("material.specular", 1);
-            // material->SetInt("material.emissive", 2);
-            
-            // material->SetFloat("material.shininess", 64.0f);
-
-            // material->SetVec3("light.ambient", glm::vec3(0.1f, 0.1f, 0.1f));
-            // material->SetVec3("light.diffuse", glm::vec3(0.8f, 0.8f, 0.8f));
-            // material->SetVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
-
-            // material->SetFloat("light.constant", 1.0f);
-            // material->SetFloat("light.linear", 0.045f);
-            // material->SetFloat("light.quadratic", 0.0075f);
-            // material->SetFloat("light.cut_off", glm::cos(glm::radians(12.5f)));
-            // material->SetFloat("light.outer_cut_off", glm::cos(glm::radians(17.5f)));
-
-            // material->SetInt("option", SPOT_LIGHT);
-            ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
-
-            return true;
+            return terrain;
         });
+
+        entityType.set_function(
+            "add_terrain_fault_formation", [](Entity* ent, const int size, const int iterations, const float filter,
+                                              const bool random, const int minHeight, const int maxHeight) {
+                if (!ent->HasComponent<Model::Components::Drawable>()) ent->AddComponent<Model::Components::Drawable>();
+                if (ent->HasComponent<Terrain>()) ent->RemoveComponent<Terrain>();
+
+                ent->AddComponent<Terrain>(size, iterations, filter, random, minHeight, maxHeight);
+
+                auto terrain = ent->GetComponent<Terrain>();
+
+                auto model = terrain.GetModel();  // doesn't that look nice?
+
+                if (model) {
+                    model->GetMesh().GetVertexArray()->SetStrips((size - 1) / 1, (size / 1) * 2 - 2);
+
+                    ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
+                }
+                return terrain;
+            });
+
+        entityType.set_function("add_model", [](Entity* ent, const std::string& path) {
+            if (!ent->HasComponent<Model::Components::Drawable>()) ent->AddComponent<Model::Components::Drawable>();
+
+            auto model = AssetLoader::GetModel(path);
+
+            if (model) {
+                ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
+                return model;
+            }
+        });
+
+        modelType.set_function("get_mesh_count", &Assets::Model::GetMeshCount);
+        modelType.set_function("get_mesh", &Assets::Model::GetMesh);
+
+        modelType.set_function("set_shader", &Assets::Model::SetShader);
+        modelType.set_function("get_shader", &Assets::Model::GetShader);
+
+        meshType.set_function("get_material", &Assets::Mesh::GetMaterial);
+
+        materialType.set_function("add_texture", &Assets::Material::AddTexture);
+        materialType.set_function("get_texture", &Assets::Material::GetTexture);
+
+        materialType.set_function("get_ambient", &Assets::Material::GetAmbientColor);
+        materialType.set_function("get_diffuse", &Assets::Material::GetDiffuseColor);
+        materialType.set_function("get_specular", &Assets::Material::GetSpecularColor);
+        materialType.set_function("get_shininess", &Assets::Material::GetShininess);
+
+        materialType.set_function("set_ambient", &Assets::Material::SetAmbientColor);
+        materialType.set_function("set_diffuse", &Assets::Material::SetDiffuseColor);
+        materialType.set_function("set_specular", &Assets::Material::SetSpecularColor);
+        materialType.set_function("set_shininess", &Assets::Material::SetShininess);
+
+        textureType.set_function("bind_texture", &Assets::Texture::Bind);
+        textureType.set_function("unbind_texture", &Assets::Texture::Unbind);
+
+        shaderType.set_function("set_int", &Assets::Shader::SetInt);
+        shaderType.set_function("set_bool", &Assets::Shader::SetBool);
+        shaderType.set_function("set_float", &Assets::Shader::SetFloat);
+        shaderType.set_function("set_vec2", &Assets::Shader::SetVec2);
+        shaderType.set_function("set_vec3", &Assets::Shader::SetVec3);
+        shaderType.set_function("set_vec4", &Assets::Shader::SetVec4);
     }
 
     void RegisterECS(sol::state& lua) {
         auto TransformType = lua.new_usertype<Model::Components::Transform>("transform");
+        auto terrainType = lua.new_usertype<Terrain>("terrain");
 
         TransformType["pos"] = &Model::Components::Transform::pos;
         TransformType["rot"] = &Model::Components::Transform::rot;
         TransformType["scale"] = &Model::Components::Transform::scale;
+
+        // terrainType.set_function("load_heightmap", &Terrain::LoadHeightMap);
+        // terrainType.set_function("load_texture", &Terrain::LoadTexture);
+        // terrainType.set_function("generate", &Terrain::Generate);
+
+        terrainType.set_function("get_height", &Terrain::GetHeight);
+        terrainType.set_function("get_size", &Terrain::GetSize);
+        terrainType.set_function("get_model", &Terrain::GetModel);
     }
 
     void RegisterScene(sol::state& lua) {

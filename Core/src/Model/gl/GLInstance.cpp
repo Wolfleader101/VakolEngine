@@ -11,7 +11,7 @@ void CreateInstanced(const std::vector<Mesh>& meshes, const std::vector<glm::mat
 
     for (int i = 0; i < meshes.size(); ++i)
     {
-        unsigned int vao = meshes.at(i).vao()->GetID();
+        unsigned int vao = meshes.at(i).GetVertexArray()->GetID();
         glBindVertexArray(vao);
 
         // mat4 is a 4x4 matrix (4 * vec4), which in our case, represents the transformation matrix of a model.

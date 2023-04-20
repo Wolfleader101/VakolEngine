@@ -6,6 +6,47 @@
 
 using namespace Vakol::Controller;
 
+void APIENTRY DebugOutput(unsigned int source, unsigned int type, unsigned int id, unsigned int severity, int length, const char* message, const void* userParam)
+{
+    if(id == 131169 || id == 131185 || id == 131218 || id == 131204) return; // ignore these non-significant error codes
+
+    VK_TRACE("---------------");
+    VK_TRACE("Debug message ({0})", message);
+
+    switch (source)
+    {
+        case GL_DEBUG_SOURCE_API:             VK_TRACE("Source: API"); break;
+        case GL_DEBUG_SOURCE_WINDOW_SYSTEM:   VK_TRACE("Source: Window System"); break;
+        case GL_DEBUG_SOURCE_SHADER_COMPILER: VK_TRACE("Source: Shader Compiler"); break;
+        case GL_DEBUG_SOURCE_THIRD_PARTY:     VK_TRACE("Source: Third Party"); break;
+        case GL_DEBUG_SOURCE_APPLICATION:     VK_TRACE("Source: Application"); break;
+        case GL_DEBUG_SOURCE_OTHER:           VK_TRACE("Source: Other"); break;
+    }
+
+    switch (type)
+    {
+        case GL_DEBUG_TYPE_ERROR:               VK_TRACE("Type: Error"); break;
+        case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR: VK_TRACE("Type: Deprecated Behaviour"); break;
+        case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:  VK_TRACE("Type: Undefined Behaviour"); break; 
+        case GL_DEBUG_TYPE_PORTABILITY:         VK_TRACE("Type: Portability"); break;
+        case GL_DEBUG_TYPE_PERFORMANCE:         VK_TRACE( "Type: Performance"); break;
+        case GL_DEBUG_TYPE_MARKER:              VK_TRACE( "Type: Marker"); break;
+        case GL_DEBUG_TYPE_PUSH_GROUP:          VK_TRACE( "Type: Push Group"); break;
+        case GL_DEBUG_TYPE_POP_GROUP:           VK_TRACE( "Type: Pop Group"); break;
+        case GL_DEBUG_TYPE_OTHER:               VK_TRACE( "Type: Other"); break;
+    }
+    
+    switch (severity)
+    {
+        case GL_DEBUG_SEVERITY_HIGH:         VK_CRITICAL("Severity: high"); break;
+        case GL_DEBUG_SEVERITY_MEDIUM:       VK_ERROR("Severity: medium"); break;
+        case GL_DEBUG_SEVERITY_LOW:          VK_WARN("Severity: low"); break;
+        case GL_DEBUG_SEVERITY_NOTIFICATION: VK_TRACE("Severity: notification"); break;
+    }
+
+    std::cout << std::endl;
+}
+
 namespace Vakol::View {
     Window::Window(const std::string& title, int width, int height)
         : m_window(nullptr), m_title(title), m_width(width), m_height(height) {
@@ -15,6 +56,8 @@ namespace Vakol::View {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
+        glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
+        glfwWindowHint(GLFW_SAMPLES, 4);
 
         /* Initialize the library */
         if (!glfwInit()) return;
@@ -34,6 +77,16 @@ namespace Vakol::View {
         if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
             VK_CRITICAL("Failed to initialise GLAD");
             return;
+        }
+
+        // enable OpenGL debug context if context allows for debug context
+        int flags; glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
+        if (flags & GL_CONTEXT_FLAG_DEBUG_BIT)
+        {
+            glEnable(GL_DEBUG_OUTPUT);
+            glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS); // makes sure errors are displayed synchronously
+            //glDebugMessageCallback(DebugOutput, nullptr);
+            glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
         }
 
         glfwSetWindowUserPointer(m_window, this);

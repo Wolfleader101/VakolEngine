@@ -1,33 +1,25 @@
 #pragma once
-#include <glm/glm.hpp>
+
+#include <Model/Assets/Model.hpp>
 #include <memory>
 #include <string>
 #include <vector>
 
-#include "Model/Entity.hpp"
-#include "Model/VertexArray.hpp"
-#include "Model/gl/GLTexture.hpp"
-
-using namespace Vakol::Model;
-
 namespace Vakol::Controller {
-
     class Terrain {
        public:
-        Terrain();
+        Terrain(const std::string& path);
 
-        void LoadHeightMap(const std::string& heightMap);
+        Terrain(const int size, const int iterations, const float filter, const bool random, const int minHeight,
+                const int maxHeight);
 
-        void LoadTexture(const std::string& textureFile);
+        std::shared_ptr<Model::Assets::Model> GetModel() const { return this->m_model; }
 
-        void LoadFaultFormation(unsigned int terrainSize);
+        const int GetSize() const { return this->m_size; }
 
-        void GenerateDrawable();
+        float GetHeight(const float x, const float z) const;
 
-        float getHeight(float x, float z);
-
-        Entity& GetEntity() { return m_entity; }
-        void SetEntity(Entity& entity) { m_entity = entity; }
+        ~Terrain(){};
 
         const std::vector<Vertex>& GetVertices();
         const std::vector<unsigned int>& GetIndices();
@@ -45,26 +37,32 @@ namespace Vakol::Controller {
 
 
        private:
-        void InitVertices();
-        void InitIndices();
-        void InitGL();
-        unsigned char* LoadBinaryFile(const std::string& fileName, size_t& fileSize);
+        const Model::Assets::Mesh LoadHeightMap(unsigned char* data);
+        const Model::Assets::Mesh LoadFaultFormation(const int size, const int iterations, const float filter,
+                                                     const bool random, const int minHeight, const int maxHeight);
 
-        int m_terrainSize;
-        std::vector<std::vector<float>> m_heightMap;
-        std::vector<Vertex> m_vertices;
-        std::vector<unsigned int> m_indices;
-        std::vector<unsigned int> m_triangleIndices;
-        Assets::GLTexture m_texture;
+        struct Point {
+            int x = 0;
+            int z = 0;
 
-        Entity m_entity;
+            const bool operator==(const Point& other) const { return this->x == other.x && this->z == other.z; }
 
-        float m_yScale = 0.75f;
-        float m_yShift = 8.0f;
+            const Point operator-(const Point& other) const { return {this->x - other.x, this->z - other.z}; }
+        };
 
-        float m_minHeight = -25.0f;
-        float m_maxHeight = 100.0f;
-        float m_firFilter = 0.75f;
-        int m_iterations = 50;
+        void GenRandomPoints(Point& p1, Point& p2, const int size);
+        void NormalizeValues(std::vector<float>& arr, const int size);
+
+        void ApplyFIRFilter(std::vector<float>& arr, const int size, const float filter);
+        float FIRSinglePass(std::vector<float>& arr, const int index, const float prev, const float filter);
+
+        std::vector<float> m_heightMap;
+
+        std::shared_ptr<Model::Assets::Model> m_model;
+
+        int m_size = 0;
+
+        int m_minHeight = 0;
+        int m_maxHeight = 0;
     };
 }  // namespace Vakol::Controller

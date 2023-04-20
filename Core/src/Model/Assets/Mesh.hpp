@@ -5,24 +5,22 @@
 #include <Model/gl/GLVertexArray.hpp>
 #include <memory>
 
-namespace Vakol::Model::Assets {
-    class Mesh {
-       public:
-        Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const MaterialSpec& spec)
-            : m_vertexArray(std::make_shared<GLVertexArray>(vertices, indices)),
-              m_material(std::make_shared<GLMaterial>(spec)){};
+namespace Vakol::Model::Assets 
+{
 
-        const std::shared_ptr<Material>& material() const { return this->m_material; }
-        const std::shared_ptr<VertexArray>& vao() const { return this->m_vertexArray; }
+    class Mesh 
+    {
+    public:
+        Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const MaterialSpec& spec = DEFAULT)
+            : m_vertexArray(std::make_shared<GLVertexArray>(vertices, indices)), m_material(std::make_shared<GLMaterial>(spec)) {};
 
-        void SetIsStripped(bool isStripped) { this->isStripped = isStripped; }
-        bool IsStripped() const { return this->isStripped; }
+        void SetMaterial(const MaterialSpec& spec) { if (!this->m_material) this->m_material = std::make_shared<GLMaterial>(spec); }
 
-        unsigned int strips;
+        const std::shared_ptr<Material>& GetMaterial() const { return this->m_material; }
+        const std::shared_ptr<VertexArray>& GetVertexArray() const { return this->m_vertexArray; }
 
-       private:
+    private:
         std::shared_ptr<VertexArray> m_vertexArray;
         std::shared_ptr<Material> m_material;
-        bool isStripped = false;
     };
-}  // namespace Vakol::Model::Assets
+}

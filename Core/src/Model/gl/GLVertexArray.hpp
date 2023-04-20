@@ -18,18 +18,28 @@ namespace Vakol::Model {
 
         void DrawArrays() const override;
         void DrawElements() const override;
-        void DrawElementsStripped(unsigned int strips) const override;
+        void DrawTriangleStrips() const override;
 
         void DrawArraysInstanced(const int amount) const override;
         void DrawElementsInstanced(const int amount) const override;
 
-        const unsigned int GetID() const override;
-        const unsigned int GetVertices() const override;
-        const unsigned int GetIndices() const override;
+        const unsigned int GetID() const override { return this->VAO_ID; }
 
-       private:
-        unsigned int VAO = 0;
-        unsigned int VBO = 0;
-        unsigned int EBO = 0;
+        const int GetVertexCount() const override { return static_cast<int>(this->m_vertices.size()); }
+        const int GetIndexCount() const override { return static_cast<int>(this->m_indices.size()); }
+
+        const std::vector<Vertex> GetVertices() const override { return this->m_vertices; }
+        const std::vector<unsigned int> GetIndices() const override { return this->m_indices; }
+
+        void SetStrips(const int strips, const int tris) override 
+        { 
+            this->NUM_STRIPS = strips;
+            this->NUM_TRIS_PER_STRIP = tris;
+        }
+
+    private:
+        unsigned int VAO_ID = 0;
+        unsigned int VBO_ID = 0;
+        unsigned int EBO_ID = 0;
     };
-}  // namespace Vakol::Model
+}

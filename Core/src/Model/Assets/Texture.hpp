@@ -3,30 +3,36 @@
 #include <Controller/AssetLoader/TextureLoader.hpp>
 #include <string>
 
-namespace Vakol::Model::Assets {
-    class Texture {
-       public:
+namespace Vakol::Model::Assets 
+{   
+    using Controller::LoadTexture;
+    using Controller::LoadRawTexture;
+
+    class Texture
+    {
+    public:
         Texture() = default;
-        Texture(const int width, const int height, const unsigned int format)
-            : m_width(width), m_height(height), m_format(format) {}
-        Texture(const std::string& path, const bool raw = false) {
-            if (raw)
-                this->m_ID = Controller::LoadRawTexture(path);
-            else
-                this->m_ID = Controller::LoadTexture(path);
-        }
+        Texture(const std::string& path) : m_path(path), m_ID(LoadRawTexture(path)) {};
+        Texture(const std::string& path, const bool gamma, const bool flip) : m_path(path), m_ID(LoadTexture(path, gamma, flip)) {};
 
-        const unsigned int id() const { return m_ID; }
+        ~Texture() = default;
 
-        std::string type;
-        std::string path;
+        void Bind(const unsigned int slot) const;
+        void Unbind(const unsigned int slot) const;
 
-       protected:
-        unsigned int m_ID = 0;
-        unsigned int m_format = 0;
+        const unsigned int GetID() const { return this->m_ID; }
 
-        int m_width = 0;
-        int m_height = 0;
+        const std::string GetPath() const { return this->m_path; }
+        const std::string GetType() const { return this->m_type; }
+
+        void SetPath(const std::string& path) { this->m_path = path; }
+        void SetType(const std::string& type) { this->m_type = type; }
+        //virtual void SetData(const int width, const int height, const unsigned int format, const void* data) const = 0;
+
+    private:
+        unsigned int m_ID;
+
+        std::string m_path;
+        std::string m_type;
     };
-
-}  // namespace Vakol::Model
+}

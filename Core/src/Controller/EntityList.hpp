@@ -30,14 +30,14 @@ namespace Vakol::Controller {
          * @brief Construct a new Entity Manager object
          *
          */
-        EntityList() = default;
+        EntityList() : m_Registry(), ActiveEntityList(){};
 
         /**
          * @brief Create an Entity object
          *
          * @return Entity created
          */
-        Entity& CreateEntity();
+        Entity CreateEntity();
 
         /**
          * @brief Create an Entity object

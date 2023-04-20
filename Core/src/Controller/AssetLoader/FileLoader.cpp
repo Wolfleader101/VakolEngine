@@ -79,43 +79,43 @@ unsigned char* LoadImage(const std::string& path, int& width, int& height, int& 
 
     if (!data)
     {
-        VK_ERROR("ERROR::ImageLoader::LoadImage(): {0}", "Failed to load image!");
+        VK_ERROR("ERROR::FileLoader::LoadImage(): Failed to load image at path {0}", path);
         stbi_image_free(data);
     }
 
     return data;
 }
 
-unsigned char* Image::LoadNoiseMap(const int size, float scale, float frequency)
-{
-	auto data = new unsigned char[size * size];
+// unsigned char* Image::LoadNoiseMap(const int size, float scale, float frequency)
+// {
+// 	auto data = new unsigned char[size * size];
 
-	float xFactor = 1.0f / (size - 1);
-	float yFactor = 1.0f / (size - 1);
+// 	float xFactor = 1.0f / (size - 1);
+// 	float yFactor = 1.0f / (size - 1);
 
-	for( int row = 0; row < size; row++ ) 
-	{
-		for( int col = 0 ; col < size; col++ ) 
-		{
-			float x = xFactor * col;
-			float y = yFactor * row;
+// 	for( int row = 0; row < size; row++ ) 
+// 	{
+// 		for( int col = 0 ; col < size; col++ ) 
+// 		{
+// 			float x = xFactor * col;
+// 			float y = yFactor * row;
 
-			float sum = 0.0f;
+// 			float sum = 0.0f;
 
-			glm::vec2 p(x * frequency, y * frequency);
+// 			glm::vec2 p(x * frequency, y * frequency);
 			
-			float val = glm::perlin(p) / scale;
-			sum += val;
+// 			float val = glm::perlin(p) / scale;
+// 			sum += val;
 
-			float result = (sum + 1.0f)/ 2.0f;
+// 			float result = (sum + 1.0f)/ 2.0f;
 
-			// Store in texture buffer
-			data[(row * size + col)] = (unsigned char) ( result * 255.0f );
-		}
-	}
+// 			// Store in texture buffer
+// 			data[(row * size + col)] = (unsigned char) ( result * 255.0f );
+// 		}
+// 	}
 
-	return data;
-}
+// 	return data;
+// }
 
 bool FileExists(const std::string& file)
 {

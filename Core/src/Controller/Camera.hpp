@@ -3,10 +3,10 @@
 #include <glm/mat4x4.hpp>
 #include <glm/vec3.hpp>
 
-const unsigned char _PROJECTION_MATRIX = 0x0;
-const unsigned char _VIEW_MATRIX = 0x1;
+const unsigned char PROJECTION_MATRIX = 0x0;
+const unsigned char VIEW_MATRIX = 0x1;
 
-const unsigned char _PV_MATRIX = 0x2;
+const unsigned char PV_MATRIX = 0x2;
 
 namespace Vakol::Controller {
     class Camera {

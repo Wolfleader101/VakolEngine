@@ -20,8 +20,7 @@ namespace Vakol::Controller {
           entityList(),
           scenePhysics(SP),
           active(active),
-          cam(glm::vec3(0.0f, 0.0f, 1.0f)),
-          terrain(nullptr) {
+          cam(glm::vec3(0.0f, 0.0f, 2.0f)) {
         lua.RunFile("scripts/" + scriptName);
         System::BindScene(*this);
 
@@ -77,8 +76,6 @@ namespace Vakol::Controller {
     }
 
     void Scene::Update(const Time& time, const std::shared_ptr<View::Renderer> renderer) {
-        System::BindScene(*this);
-
         lua.RunFile("scripts/" + scriptName);
 
         sol::function update = lua.GetState()["update"];
