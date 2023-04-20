@@ -34,7 +34,7 @@ namespace Vakol::Controller {
 
         auto entity = entityList.CreateEntity();
 
-        entity.GetComponent<Components::Transform>().pos = { 35, 45, 25 };
+        entity.GetComponent<Components::Transform>().pos = { 1, 1, 1 };
 
         entity.AddComponent<RigidBody>(scenePhysics, std::nullopt);
         entity.AddComponent<Drawable>("coreAssets/models/cube.obj");
@@ -43,10 +43,13 @@ namespace Vakol::Controller {
 
         auto& rigid = entity.GetComponent<RigidBody>();
 
+        rigid.Type = (rp3d::BodyType) 0;
+
         entity.AddComponent<Collider>(rigid, std::nullopt);
 
         auto& collider = entity.GetComponent<Collider>();
         auto& draw = entity.GetComponent<Drawable>();
+        draw.model_ptr->SetShader("coreAssets/shaders/basic.prog");
         auto bounds = Components::getBounds(draw);
 
         collider.bounds = bounds;
@@ -74,8 +77,6 @@ namespace Vakol::Controller {
         sol::function update = lua.GetState()["update"];
 
         update(*this);
-
-        //scene physics update here
 
         scenePhysics->Update(time, cam);
 

@@ -277,7 +277,8 @@ namespace Vakol::Controller {
 
     void RegisterPhysics(sol::state& lua)
     {
-        
+		auto rigidType = lua.new_usertype<Components::RigidBody>("rigidbody");
+    	auto colliderType = lua.new_usertype<Components::Collider>("collider");
       
 
     }
