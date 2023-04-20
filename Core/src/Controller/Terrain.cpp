@@ -254,56 +254,7 @@ namespace Vakol::Controller {
         return y;
     }
 
-    const std::vector<Vertex>& Terrain::GetVertices() { return m_vertices; }
 
-    const std::vector<unsigned int>& Terrain::GetIndices() { return m_indices; }
-
-    std::vector<unsigned int>& Terrain::ConvertStripToTriangles() {
-        for (size_t i = 2; i < m_indices.size(); ++i) {
-            // Reverse the winding order for even triangles
-            if (i % 2 == 0) {
-                m_triangleIndices.push_back(m_indices[i - 2]);
-                m_triangleIndices.push_back(m_indices[i - 1]);
-                m_triangleIndices.push_back(m_indices[i]);
-            } else {
-                m_triangleIndices.push_back(m_indices[i - 1]);
-                m_triangleIndices.push_back(m_indices[i - 2]);
-                m_triangleIndices.push_back(m_indices[i]);
-            }
-        }
-
-        return m_triangleIndices;
-    }
-
-    std::vector<float> Terrain::GetHeightMap1D() const
-    {
-
-        std::vector<float> ret;
-        for (const auto& vec : m_heightMap)
-        {
-            for (const float& value : vec)
-            {
-                ret.push_back(value);
-            }
-        }
-
-        return ret;
-    }
-
-    int Terrain::GetSize() const
-    {
-        return m_terrainSize;
-    }
-
-    float Terrain::GetScale() const
-    {
-        return m_yScale;
-    }
-
-    float Terrain::GetShift() const
-    {
-        return m_yShift;
-    }
 
     float Terrain::GetMinHeight() const
     {

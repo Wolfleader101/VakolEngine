@@ -27,8 +27,6 @@ namespace Vakol::Controller {
         std::vector<unsigned int>& ConvertStripToTriangles();
         std::vector<float> GetHeightMap1D() const;
 
-        int GetSize() const;
-
         float GetScale() const;
         float GetShift() const;
 
