@@ -70,8 +70,27 @@ function init(scene, entity)
     shader:set_bool("enable_fog", true);
     shader:set_float("FOG_DENSITY", 0.0);
     shader:set_bool("enable_water", true);
+    local waterEnt = scene:create_entity("");
 
-    --------------------------------------------------------------------------------------------------------------------------------
+    local waterPlane = waterEnt:add_model("coreAssets/models/plane.obj");
+
+    local waterMesh = waterPlane:get_mesh();
+    local waterMaterial = waterMesh:get_material();
+
+    waterEnt:get_transform().scale.x = 256;
+    waterEnt:get_transform().scale.z = 256;
+
+    waterEnt:get_transform().pos.y = 60.0;
+
+    waterMaterial:add_texture(water_layer_1);
+    waterMaterial:add_texture(water_layer_2);
+
+    waterPlane:set_shader("coreAssets/shaders/water.prog") -- set the shader on the model (automatically binds the shader)
+    local waterShader = waterPlane:get_shader();
+
+    waterShader:set_int("texture_0", 0);
+    waterShader:set_int("texture_1", 1);
+
 
     -- shader:set_vec3("light.position", 0.0, 0.5, 7.5);
     -- shader:set_vec3("light.direction", math.rad(0.0), math.rad(-15.0), math.rad(-90.0));
