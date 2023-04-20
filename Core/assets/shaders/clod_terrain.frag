@@ -37,6 +37,7 @@ uniform float wobbleX = 1.4;
 uniform float wobbleY = 1.7;
 
 uniform bool enable_fog = false;
+uniform bool enable_water = false;
 
 uniform float FOG_DENSITY = 0.025;
 uniform vec4 FOG_COLOR = vec4(1.0, 1.0, 1.0, 0.0);
@@ -79,48 +80,95 @@ void main()
     vec4 color_5 = texture(layer_5, TexCoord);
     vec4 color_6 = texture(layer_6, TexCoord);
 
-    if (h < level_1)
+    if(enable_water)
     {
-        //result = water * vec4(0.5);
-        result = ((water + 0.01) + color_1) * greyscale;
-    }
-    else if (h < level_2)
-    {
-        float delta = level_2 - level_1;
-        float factor = (h - level_1) / delta;
+        if (h < level_1)
+        {
+            //result = water * vec4(0.5);
+            result = ((water + 0.01) + color_1) * greyscale;
+        }
+        else if (h < level_2)
+        {
+            float delta = level_2 - level_1;
+            float factor = (h - level_1) / delta;
 
-        result = mix(color_1, color_2, factor) * greyscale;
-    }
-    else if (h < level_3)
-    {
-        float delta = level_3 - level_2;
-        float factor = (h - level_2) / delta;
+            result = mix(color_1, color_2, factor) * greyscale;
+        }
+        else if (h < level_3)
+        {
+            float delta = level_3 - level_2;
+            float factor = (h - level_2) / delta;
 
-        result = mix(color_2, color_3, factor) * greyscale;
-    }
-    else if (h < level_4)
-    {
-        float delta = level_4 - level_3;
-        float factor = (h - level_3) / delta;
+            result = mix(color_2, color_3, factor) * greyscale;
+        }
+        else if (h < level_4)
+        {
+            float delta = level_4 - level_3;
+            float factor = (h - level_3) / delta;
 
-        result = mix(color_3, color_4, factor) * greyscale;
-    }
-    else if (h < level_5)
-    {
-        float delta = level_5 - level_4;
-        float factor = (h - level_4) / delta;
+            result = mix(color_3, color_4, factor) * greyscale;
+        }
+        else if (h < level_5)
+        {
+            float delta = level_5 - level_4;
+            float factor = (h - level_4) / delta;
 
-        result = mix(color_4, color_5, factor) * greyscale;
-    }
-    else if (h < level_6)
-    {
-        float delta = level_6 - level_5;
-        float factor = (h - level_5) / delta;
+            result = mix(color_4, color_5, factor) * greyscale;
+        }
+        else if (h < level_6)
+        {
+            float delta = level_6 - level_5;
+            float factor = (h - level_5) / delta;
 
-        result = mix(color_5, color_6, factor) * greyscale;
+            result = mix(color_5, color_6, factor) * greyscale;
+        }
+        else
+            result = color_6 * greyscale;
     }
     else
-        result = color_6 * greyscale;
+    {
+        if (h < level_1)
+        {
+            result = color_1 * greyscale;
+        }
+        else if (h < level_2)
+        {
+            float delta = level_2 - level_1;
+            float factor = (h - level_1) / delta;
+
+            result = mix(color_1, color_2, factor) * greyscale;
+        }
+        else if (h < level_3)
+        {
+            float delta = level_3 - level_2;
+            float factor = (h - level_2) / delta;
+
+            result = mix(color_2, color_3, factor) * greyscale;
+        }
+        else if (h < level_4)
+        {
+            float delta = level_4 - level_3;
+            float factor = (h - level_3) / delta;
+
+            result = mix(color_3, color_4, factor) * greyscale;
+        }
+        else if (h < level_5)
+        {
+            float delta = level_5 - level_4;
+            float factor = (h - level_4) / delta;
+
+            result = mix(color_4, color_5, factor) * greyscale;
+        }
+        else if (h < level_6)
+        {
+            float delta = level_6 - level_5;
+            float factor = (h - level_5) / delta;
+
+            result = mix(color_5, color_6, factor) * greyscale;
+        }
+        else
+            result = color_6 * greyscale;
+    }
 
     if (enable_fog)
     {

@@ -12,6 +12,7 @@ layout (std140, binding = 1) uniform Matrices
 uniform mat4 MODEL_MATRIX;
 
 uniform bool enable_fog = false;
+uniform bool enable_water = false;
 
 in vec2 TextureCoord[];
 
