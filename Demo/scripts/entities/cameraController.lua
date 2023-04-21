@@ -1,6 +1,5 @@
 function init(scene, entity)
     print("Initialising Camera");
-     scene:get_entity("terrain"):get_terrain():get_height(0, 0)
 
 end
 
