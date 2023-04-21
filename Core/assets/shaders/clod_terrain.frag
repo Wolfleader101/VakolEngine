@@ -80,7 +80,10 @@ void main()
     vec4 color_6 = texture(layer_6, TexCoord);
 
     if (h < level_1)
-        result = water * vec4(0.5);
+    {
+        //result = water * vec4(0.5);
+        result = ((water + 0.01) + color_1) * greyscale;
+    }
     else if (h < level_2)
     {
         float delta = level_2 - level_1;
