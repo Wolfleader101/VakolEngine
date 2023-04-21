@@ -4,6 +4,7 @@ namespace Vakol::Controller {
     LuaState::LuaState() {
         lua.open_libraries(sol::lib::base);
         lua.open_libraries(sol::lib::math);
+        lua.open_libraries(sol::lib::string);
     }
 
     const sol::state& LuaState::GetState() const { return lua; }

@@ -27,8 +27,8 @@ namespace Vakol::Controller {
         Controller::RegisterAssetLoader(lua.GetState());
         Controller::RegisterApplication(lua.GetState(), this);
         Controller::RegisterScene(lua.GetState());
+        Controller::RegisterGUIWindow(lua.GetState(), &m_gui);  // Register GUI Window
 
-        // void RegisterWindow(sol::state& lua);
         // void RegisterRenderer(sol::state& lua);
         // void RegisterPhysics(sol::state& lua);
 
@@ -123,6 +123,7 @@ namespace Vakol::Controller {
     void Application::Run() {
         while (m_running) {
             m_time.Update();
+            m_gui.CreateNewFrame();
 
             // Physics::FixedUpdate(m_time, m_entityList.GetEntityList());
 
@@ -133,8 +134,9 @@ namespace Vakol::Controller {
                 System::BindScene(scene);
                 scene.Update(m_time, m_renderer);
             }
-            
+
             m_window->OnUpdate();
+            m_gui.Update();
 
             m_input.Update();
         }
