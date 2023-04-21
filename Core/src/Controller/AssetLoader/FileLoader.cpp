@@ -11,6 +11,8 @@
 
 #include <glm/gtc/noise.hpp>
 
+float inverse_lerp(const float a, const float b, const float t);
+
 std::string LoadFile(const std::string& path)
 {
 	std::string result;
@@ -79,42 +81,75 @@ unsigned char* LoadImage(const std::string& path, int& width, int& height, int& 
 
     if (!data)
     {
-        VK_ERROR("ERROR::ImageLoader::LoadImage(): {0}", "Failed to load image!");
+        VK_ERROR("ERROR::FileLoader::LoadImage(): Failed to load image at path {0}", path);
         stbi_image_free(data);
     }
 
     return data;
 }
 
-unsigned char* Image::LoadNoiseMap(const int size, float scale, float frequency)
+unsigned char* LoadNoiseImage(const int size, float scale, const int octaves, const float persistence, const float lacunarity)
 {
 	auto data = new unsigned char[size * size];
 
-	float xFactor = 1.0f / (size - 1);
-	float yFactor = 1.0f / (size - 1);
+	srand(static_cast<unsigned int>(time(NULL)));
 
-	for( int row = 0; row < size; row++ ) 
+	std::vector<glm::vec2> offsets;
+	glm::vec2 offset = glm::vec2(0.0f);
+
+	offsets.reserve(octaves);
+
+	for (int i = 0; i < octaves; ++i)
 	{
-		for( int col = 0 ; col < size; col++ ) 
+		float off_x = rand() + offset.x;
+		float off_y = rand() + offset.y;
+
+		offsets.push_back(glm::vec2(off_x, off_y));
+	}
+
+	if (scale <= 0.0f)
+		scale = 1e-5f;
+
+	float max_noise_height = FLT_MIN;
+	float min_noise_height = FLT_MAX;
+
+	float half_size = (float) size / 2.0f;
+
+	for (int y = 0; y < size; ++y)
+	{
+		for (int x = 0; x < size; ++x)
 		{
-			float x = xFactor * col;
-			float y = yFactor * row;
+			float amplitude = 1.0f;
+			float frequency = 1.0f;
+			float height = 0.0f;
 
-			float sum = 0.0f;
+			for (int i = 0; i < octaves; ++i)
+			{
+				float sample_x = (x - half_size) / scale * frequency + offsets.at(i).x;
+				float sample_y = (y - half_size) / scale * frequency + offsets.at(i).y;
 
-			glm::vec2 p(x * frequency, y * frequency);
-			
-			float val = glm::perlin(p) / scale;
-			sum += val;
+				float perlin = glm::perlin(glm::vec2(sample_x, sample_y)) * 2 - 1;
+				height += perlin * amplitude;
 
-			float result = (sum + 1.0f)/ 2.0f;
+				amplitude *= persistence;
+				frequency *= lacunarity;
+			}
 
-			// Store in texture buffer
-			data[(row * size + col)] = (unsigned char) ( result * 255.0f );
+			if (height > max_noise_height)
+				max_noise_height = height;
+			else if (height < min_noise_height)
+				min_noise_height = height;
+
+			data[y * size + x] = static_cast<unsigned char>(inverse_lerp(min_noise_height, max_noise_height, height) * 255.0f);
 		}
 	}
 
 	return data;
+}
+
+float inverse_lerp(const float a, const float b, const float t)
+{
+	return (t - a) / (b - a);
 }
 
 bool FileExists(const std::string& file)

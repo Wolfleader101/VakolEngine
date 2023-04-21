@@ -1,11 +1,13 @@
 #pragma once
 
+#include <memory>
+
 #include "Camera.hpp"
+#include "Controller/Physics/ScenePhysics.hpp"
+#include "Controller/Terrain.hpp"
 #include "EntityList.hpp"
 #include "LuaState.hpp"
 #include "Time.hpp"
-
-#include "Controller/Physics/ScenePhysics.hpp"
 #include "View/Renderer/Renderer.hpp"
 
 namespace Vakol::Controller {
@@ -16,7 +18,8 @@ namespace Vakol::Controller {
          * @brief Construct a new Scene object
          *
          */
-        Scene(const std::string& name, const std::string& scriptName, LuaState& lua, std::shared_ptr<Physics::ScenePhysics> SP, bool active = false);
+        Scene(const std::string& name, const std::string& scriptName, LuaState& lua,
+              std::shared_ptr<Physics::ScenePhysics> SP, bool active = false);
         /**
          * @brief the entity list of scene
          */
@@ -27,7 +30,7 @@ namespace Vakol::Controller {
 
         void Update(const Time& time, const std::shared_ptr<View::Renderer> renderer);
 
-        Model::Entity CreateEntity(const std::string scriptName = "");
+        Model::Entity CreateEntity(const std::string tag, const std::string scriptName);
 
         void Serialize(const std::string& folder) const;
         void Deserialize(const std::string& folder);
@@ -36,10 +39,9 @@ namespace Vakol::Controller {
 
         std::shared_ptr<Physics::ScenePhysics> scenePhysics;
         Camera& GetCamera() { return cam; }
+        std::shared_ptr<Entity> GetEntity(const std::string& tag);
 
        private:
-
-        
         LuaState& lua;
         std::string scriptName;
         std::string name;

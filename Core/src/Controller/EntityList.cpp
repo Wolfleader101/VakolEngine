@@ -2,18 +2,15 @@
 
 #include <assert.h>
 
-#include <cereal/cereal.hpp>
-
 #include <Controller/Logger.hpp>
 #include <Controller/System.hpp>
 #include <Model/Components.hpp>
 #include <Model/Entity.hpp>
+#include <cereal/cereal.hpp>
 
+namespace Vakol::Controller {
 
-namespace Vakol::Controller 
-{
-
-    Entity& EntityList::CreateEntity() {
+    Entity EntityList::CreateEntity() {
         Entity newEntity = Entity(m_Registry.create(), this);
 
         ActiveEntityList.push_back(newEntity);
@@ -75,7 +72,6 @@ namespace Vakol::Controller
 
     //----------------------- ICT397 additions
 
-
     void EntityList::Init() {}
 
     void EntityList::Update(double d_t) {
@@ -83,30 +79,14 @@ namespace Vakol::Controller
         d_t;
     }
 
-    void EntityList::Serialize(const std::string& file) const 
-    {
-        privateSerialize<cereal::JSONOutputArchive,   
-                            Transform,
-                            Tag,
-                            EntityType,
-                            TagType,
-                            Script,
-                            RigidBody,
-                            Collider,
-                            Drawable>(file);
+    void EntityList::Serialize(const std::string& file) const {
+        privateSerialize<cereal::JSONOutputArchive, Transform, Tag, EntityType, TagType, Script, RigidBody, Collider,
+                         Drawable>(file);
     }
 
-    void EntityList::Deserialize(const std::string& file) 
-    {
-        privateDeserialize<cereal::JSONInputArchive,
-                            Transform,
-                            Tag,
-                            EntityType,
-                            TagType,
-                            Script,
-                            RigidBody,
-                            Collider,
-                            Drawable>(file);
+    void EntityList::Deserialize(const std::string& file) {
+        privateDeserialize<cereal::JSONInputArchive, Transform, Tag, EntityType, TagType, Script, RigidBody, Collider,
+                           Drawable>(file);
     }
 
-}
+}  // namespace Vakol::Controller
