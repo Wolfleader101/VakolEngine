@@ -1,1 +1,1 @@
-add_scene("testScene.lua", "TestScene");
+add_scene("scenes/testScene.lua", "TestScene");

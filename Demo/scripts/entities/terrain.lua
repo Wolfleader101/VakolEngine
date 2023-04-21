@@ -1,10 +1,10 @@
 function init(scene, entity)
-    --local terrain = entity:add_noisemap_terrain(1024, 30, 2, 0.5, 2.0) -- size, scale, octaves, persistence, lacunarity
+    local terrain_size = 128; -- size of the terrain in meters
     local terrain = entity:add_clod_terrain("coreAssets/textures/HeightMaps/height128.raw"); -- size
 
-    entity:get_transform().scale.x = 1;
-    entity:get_transform().scale.y = 1;
-    entity:get_transform().scale.z = 1;
+    entity:get_transform().scale.x = 10;
+    entity:get_transform().scale.y = 10;
+    entity:get_transform().scale.z = 10;
 
     local model = terrain:get_model();
     local mesh = model:get_mesh();
@@ -12,7 +12,6 @@ function init(scene, entity)
     local material = mesh:get_material();
     
     local height_map = raw_texture("coreAssets/textures/HeightMaps/height128.raw");
-    --local height_map = noise_texture(terrain_size, 100, 2, 0.5, 2.0); -- size, scale (smaller = more spikes), octaves (number of loops / detail), persistence (roughness), lacunarity (size of gaps)
 
     local water_layer_1 = texture("coreAssets/textures/Water/water_0.bmp", false, false);
     local water_layer_2 = texture("coreAssets/textures/Water/water_5.bmp", false, false);
@@ -35,7 +34,6 @@ function init(scene, entity)
     material:add_texture(layer_5);
     material:add_texture(layer_6);
 
-    -- model:set_shader("coreAssets/shaders/basic.prog");
     model:set_shader("coreAssets/shaders/clod_terrain.prog") -- set the shader on the model (automatically binds the shader)
     local shader = model:get_shader();                       -- get the shader from the model
 
@@ -93,27 +91,8 @@ function init(scene, entity)
     -- waterShader:set_int("texture_1", 1);
     -- shader:set_vec3("light.position", 0.0, 0.5, 7.5);
     -- shader:set_vec3("light.direction", math.rad(0.0), math.rad(-15.0), math.rad(-90.0));
-
-    -- option choices
-    -- 0 = directional lighting (sunlight)
-    -- 1 = point light (room light)
-    -- 2 = spot light (flashlight)
-end
-
-local function lerp(a, b, t)
-    return a + (b - a) * t
 end
 
 function update(scene, entity)
-    -- local amplitude = 2.0
-    -- local frequency = 1.0
-    -- local theta = Time.curr_time * frequency
-    -- local dist = amplitude * math.sin(theta)
-    -- local hover = lerp(0, 1, dist)
-    -- entity:get_transform().pos.y = hover
-
-    -- entity:get_transform().rot.x = entity:get_transform().rot.x + (Time.delta_time * 1.25)
-    -- entity:get_transform().rot.y = entity:get_transform().rot.y + (Time.delta_time * 1.25)
-    -- entity:get_transform().rot.z = entity:get_transform().rot.z + (Time.delta_time * 1.25)
 
 end
