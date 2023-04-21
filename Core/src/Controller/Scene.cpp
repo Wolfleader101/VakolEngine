@@ -31,8 +31,9 @@ namespace Vakol::Controller {
 
     void Scene::setName(const std::string& newName) { name = newName; }
 
-    Model::Entity Scene::CreateEntity(const std::string scriptName) {
+    Model::Entity Scene::CreateEntity(const std::string tag, const std::string scriptName) {
         auto ent = entityList.CreateEntity();
+        ent.GetComponent<Model::Components::Tag>().tag = tag;
         if (scriptName.length() != 0) ent.AddComponent<Model::Components::Script>(scriptName, lua, ent, *this);
         return ent;
     }
@@ -51,6 +52,17 @@ namespace Vakol::Controller {
         System::Drawable_Update(time, cam, renderer);
 
         cam.Update(time.deltaTime);
+    }
+
+    std::shared_ptr<Entity> Scene::GetEntity(const std::string& tag) {
+        Entity ent;
+        entityList.m_Registry.view<Model::Components::Tag>().each([&](auto entity, auto& tagComponent) {
+            if (tagComponent.tag == tag) {
+                ent = entityList.GetEntity(static_cast<unsigned int>(entity));
+            }
+        });
+
+        return std::make_shared<Entity>(ent);
     }
 
     namespace fs = std::filesystem;

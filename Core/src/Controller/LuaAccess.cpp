@@ -147,10 +147,13 @@ namespace Vakol::Controller {
 
         lua.set_function("raw_texture", [](const std::string& path) { return Texture(path); });
 
-        lua.set_function("noise_texture", [](const int size, float scale, const int octaves, const float persistence, const float lacunarity) 
-            { return Texture(size, scale, octaves, persistence, lacunarity); });
+        lua.set_function("noise_texture",
+                         [](const int size, float scale, const int octaves, const float persistence,
+                            const float lacunarity) { return Texture(size, scale, octaves, persistence, lacunarity); });
 
-        lua.set_function("texture", [](const std::string& path, const bool gamma, const bool flip) { return Texture(path, gamma, flip); });
+        lua.set_function("texture", [](const std::string& path, const bool gamma, const bool flip) {
+            return Texture(path, gamma, flip);
+        });
 
         entityType.set_function("get_transform", &Entity::GetComponent<Model::Components::Transform>);
 
@@ -167,8 +170,7 @@ namespace Vakol::Controller {
 
             const auto size = terrain.GetSize();
 
-            if (model) 
-            {
+            if (model) {
                 model->GetMesh().GetVertexArray()->SetDrawMode(TRIANGLE_STRIPS);
                 model->GetMesh().GetVertexArray()->SetStrips((size - 1) / 1, (size / 1) * 2 - 2);
 
@@ -178,9 +180,8 @@ namespace Vakol::Controller {
             return terrain;
         });
 
-
-        entityType.set_function("add_noisemap_terrain", [](Entity* ent, const int size, float scale, const int octaves, const float persistence, const float lacunarity)
-        {
+        entityType.set_function("add_noisemap_terrain", [](Entity* ent, const int size, float scale, const int octaves,
+                                                           const float persistence, const float lacunarity) {
             if (!ent->HasComponent<Model::Components::Drawable>()) ent->AddComponent<Model::Components::Drawable>();
 
             if (ent->HasComponent<Terrain>()) ent->RemoveComponent<Terrain>();
@@ -191,8 +192,7 @@ namespace Vakol::Controller {
 
             auto model = terrain.GetModel();  // doesn't that look nice?
 
-            if (model) 
-            {
+            if (model) {
                 model->GetMesh().GetVertexArray()->SetDrawMode(TRIANGLE_STRIPS);
                 model->GetMesh().GetVertexArray()->SetStrips((size - 1) / 1, (size / 1) * 2 - 2);
 
@@ -214,10 +214,9 @@ namespace Vakol::Controller {
 
                 auto model = terrain.GetModel();  // doesn't that look nice?
 
-            if (model) 
-            {
-                model->GetMesh().GetVertexArray()->SetDrawMode(TRIANGLE_STRIPS);
-                model->GetMesh().GetVertexArray()->SetStrips((size - 1) / 1, (size / 1) * 2 - 2);
+                if (model) {
+                    model->GetMesh().GetVertexArray()->SetDrawMode(TRIANGLE_STRIPS);
+                    model->GetMesh().GetVertexArray()->SetStrips((size - 1) / 1, (size / 1) * 2 - 2);
 
                     ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
                 }
@@ -235,8 +234,7 @@ namespace Vakol::Controller {
 
             auto model = terrain.GetModel();  // doesn't that look nice?
 
-            if (model) 
-            {
+            if (model) {
                 model->GetMesh().GetVertexArray()->SetDrawMode(QUAD_PATCHES);
                 model->GetMesh().GetVertexArray()->SetPatches(400, 4);
 
@@ -244,6 +242,12 @@ namespace Vakol::Controller {
             }
 
             return terrain;
+        });
+
+        entityType.set_function("get_terrain", [](Entity* ent) {
+            if (ent->HasComponent<Terrain>()) {
+                return ent->GetComponent<Terrain>();
+            }
         });
 
         entityType.set_function("add_model", [](Entity* ent, const std::string& path) {
@@ -319,6 +323,7 @@ namespace Vakol::Controller {
 
         sceneType.set_function("create_entity", &Scene::CreateEntity);
         sceneType.set_function("get_camera", &Scene::GetCamera);
+        sceneType.set_function("get_entity", &Scene::GetEntity);
 
         cameraType.set_function("get_pos", &Camera::GetPos);
         cameraType.set_function("set_pos", &Camera::SetPos);
