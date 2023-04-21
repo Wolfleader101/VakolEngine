@@ -102,8 +102,6 @@ namespace Vakol::Controller {
             });
     }
 
-    
-
     void System::Physics_InitObject(
         RigidBody& rigid, std::optional<std::reference_wrapper<Collider>> collider,
         std::optional<std::reference_wrapper<Drawable>> model,  // only used if you want to put triangle mesh
@@ -113,11 +111,9 @@ namespace Vakol::Controller {
         rp3d::Transform rpTrans =
             rp3d::Transform(pos, rp3d::Quaternion::fromEulerAngles({trans.rot.x, trans.rot.y, trans.rot.z}));
 
-        
         rigid.owningWorld = m_SP;
 
-        if (rigid.RigidBodyPtr)
-        {
+        if (rigid.RigidBodyPtr) {
             m_SP->m_World->destroyCollisionBody(rigid.RigidBodyPtr);
         }
 
@@ -159,8 +155,9 @@ namespace Vakol::Controller {
                     rp3d::TriangleVertexArray* triArray = nullptr;
 
                     triArray = new rp3d::TriangleVertexArray(
-                        mesh.GetVertexArray()->GetVertexCount(), mesh.GetVertexArray()->GetVertices().data(), sizeof(float) * 3,
-                        mesh.GetVertexArray()->GetIndexCount() / 3, mesh.GetVertexArray()->GetIndices().data(), sizeof(unsigned int) * 3,
+                        mesh.GetVertexArray()->GetVertexCount(), mesh.GetVertexArray()->GetVertices().data(),
+                        sizeof(float) * 3, mesh.GetVertexArray()->GetIndexCount() / 3,
+                        mesh.GetVertexArray()->GetIndices().data(), sizeof(unsigned int) * 3,
                         rp3d::TriangleVertexArray::VertexDataType::VERTEX_FLOAT_TYPE,
                         rp3d::TriangleVertexArray::IndexDataType::INDEX_INTEGER_TYPE);
 
@@ -182,11 +179,6 @@ namespace Vakol::Controller {
         rigid.initialized = true;
     };
 
-    void System::Physics_AddTerrain(Terrain& ter)
-    {
-        
-        m_SP->AddTerrain(std::make_shared<Terrain>(ter));
-         
-    }
+    void System::Physics_AddTerrain(Terrain& ter) { m_SP->AddTerrain(ter); }
 
 }  // namespace Vakol::Controller

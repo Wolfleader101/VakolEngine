@@ -51,6 +51,8 @@ function update(scene, entity)
         pitch = -89.0;
     end
 
+    print(camera:get_pos().y)
+
     camera:set_pitch(pitch);
 
 end

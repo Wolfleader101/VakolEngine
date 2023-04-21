@@ -14,10 +14,7 @@ namespace Vakol::Controller::Physics {
 
     ScenePhysics::~ScenePhysics(){};
 
-    void ScenePhysics::Init() {
-        System::Physics_Init();
-
-    };
+    void ScenePhysics::Init() { System::Physics_Init(); };
 
     void ScenePhysics::Update(const Time& time, const Vakol::Controller::Camera& camera) {
         // Add the time difference in the accumulator
@@ -40,31 +37,21 @@ namespace Vakol::Controller::Physics {
         Vakol::Controller::System::Physics_UpdateTransforms(factor);
     }
 
-    void ScenePhysics::AddTerrain(const std::shared_ptr<Vakol::Controller::Terrain>& terr)
-    {
-        const auto HeightData = terr->GetHeightMap();
-        const unsigned size = terr->GetSize();
+    void ScenePhysics::AddTerrain(Terrain& terr) {
+        auto& HeightData = terr.GetHeightMap();
+        const unsigned size = terr.GetSize();
 
-        const float maxH = terr->GetMaxHeight();
-        const float minH = terr->GetMinHeight();
+        const float maxH = 256;
+        const float minH = -10;
 
         rp3d::HeightFieldShape* height = PhysicsPool::m_Common.createHeightFieldShape(
-            size,
-            size,
-            minH,
-            maxH,
-            HeightData.data(),
-            rp3d::HeightFieldShape::HeightDataType::HEIGHT_FLOAT_TYPE,
-            1,
-            1
-        );
+            size, size, minH, maxH, HeightData.data(), rp3d::HeightFieldShape::HeightDataType::HEIGHT_FLOAT_TYPE, 1, 1);
 
         const auto trans = rp3d::Transform::identity();
         m_Terrain = m_World->createRigidBody(trans);
         m_Terrain->setType(rp3d::BodyType::STATIC);
 
         m_Terrain->addCollider(height, trans);
-       
     }
 
 }  // namespace Vakol::Controller::Physics

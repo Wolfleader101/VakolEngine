@@ -11,7 +11,8 @@ namespace Vakol::Controller {
         Terrain(const std::string& path);
 
         Terrain(const int size, float scale, const int octaves, const float persistence, const float lacunarity);
-        Terrain(const int size, const int iterations, const float filter, const bool random, const int minHeight, const int maxHeight);
+        Terrain(const int size, const int iterations, const float filter, const bool random, const int minHeight,
+                const int maxHeight);
 
         Terrain(const int size);
 
@@ -29,12 +30,11 @@ namespace Vakol::Controller {
 
        private:
         const Model::Assets::Mesh LoadHeightMap(unsigned char* data);
-        const Model::Assets::Mesh LoadFaultFormation(const int size, const int iterations, const float filter, const bool random, const int minHeight, const int maxHeight);
+        const Model::Assets::Mesh LoadFaultFormation(const int size, const int iterations, const float filter,
+                                                     const bool random, const int minHeight, const int maxHeight);
         const Model::Assets::Mesh LoadCLODTerrain(const int size);
 
-
-        struct Point 
-        {
+        struct Point {
             int x = 0;
             int z = 0;
 
@@ -53,9 +53,9 @@ namespace Vakol::Controller {
 
         std::shared_ptr<Model::Assets::Model> m_model;
 
-        int m_size = 0;
+        int m_size;
 
-        int m_minHeight = 0;
-        int m_maxHeight = 0;
+        int m_minHeight;
+        int m_maxHeight;
     };
 }  // namespace Vakol::Controller
