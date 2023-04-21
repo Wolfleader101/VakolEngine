@@ -3,8 +3,11 @@ function init(scene)
     scene:create_entity("terrain", "entities/terrain.lua"); -- switch between basic or advanced_example
     scene:create_entity("Camera Controller", "entities/cameraController.lua");
 
-    for i=1,15 do
+    for i=1,100 do
         local cube = scene:create_entity("spinning Cube " .. i, "");
+        cube:get_transform().scale.x = 5;
+        cube:get_transform().scale.y = 5;
+        cube:get_transform().scale.z = 5;
         local terr_ent = scene:get_entity("terrain");
         local terrain = terr_ent:get_terrain();
         local terr_scale = terr_ent:get_transform().scale;
@@ -30,6 +33,7 @@ function init(scene)
 end
 
 
+
 function update(scene)
     GUI:start_window("FPS Window", 240.0, 240.0, 10.0, 10.0);
 
@@ -37,6 +41,21 @@ function update(scene)
     GUI:add_text("GUI FPS: " .. math.floor(fps));
     GUI:add_text("GAME FPS: " .. Time.fps);
     GUI:add_text("Delta Time:  " .. string.format("%.4f", Time.delta_time));
+
+    GUI:add_text(" ");
+
+    GUI:add_text("CONTROLS:");
+
+    GUI:add_text("W - Move left");
+    GUI:add_text("A - Move forward");
+    GUI:add_text("S - Move left");
+    GUI:add_text("D - Move right");
+
+    GUI:add_text("MOUSE - Move camera");
+
+
+    GUI:add_text("K - Toggle wireframe");
+    GUI:add_text("ESC - Exit");
 
     GUI:end_window();
 end
