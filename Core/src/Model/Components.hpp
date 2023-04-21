@@ -113,6 +113,7 @@ namespace Vakol::Model::Components {
         void serialize(Archive& ar) {
             ar(cereal::make_nvp("TagType", type));
         }
+
     };
 
     /**

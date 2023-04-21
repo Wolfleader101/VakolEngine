@@ -2,16 +2,20 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
+#include "System.hpp"
 #include "AssetLoader/AssetLoader.hpp"
 #include "Model/Assets/Material.hpp"
 #include "Model/Components.hpp"
 #include "Model/gl/GLInstance.hpp"
+#include "Controller/Physics/ScenePhysics.hpp"
 
 constexpr int DIRECTIONAL_LIGHT = 0;
 constexpr int POINT_LIGHT = 1;
 constexpr int SPOT_LIGHT = 2;
 
 int OPTION = DIRECTIONAL_LIGHT;
+
+using namespace Vakol::Controller::Physics;
 
 namespace Vakol::Controller {
     void RegisterMath(sol::state& lua) {
@@ -286,6 +290,27 @@ namespace Vakol::Controller {
         shaderType.set_function("set_vec2", &Assets::Shader::SetVec2);
         shaderType.set_function("set_vec3", &Assets::Shader::SetVec3);
         shaderType.set_function("set_vec4", &Assets::Shader::SetVec4);
+
+        //physics components
+
+        entityType.set_function("add_rigid", [](Entity* ent, ScenePhysics& SP)
+        {
+                if (ent->HasComponent<Components::RigidBody>()) return;
+
+                ent->AddComponent<Components::RigidBody>(std::make_shared<ScenePhysics>(SP), std::nullopt);
+				
+        });
+
+        entityType.set_function("add_collider", [](Entity* ent, Components::RigidBody& owner)
+        {
+                if (ent->HasComponent<Components::Collider>()) return;
+
+                ent->AddComponent<Components::Collider>(owner, std::nullopt);
+
+				
+        });
+
+        
     }
 
 
@@ -330,7 +355,14 @@ namespace Vakol::Controller {
 
     void RegisterPhysics(sol::state& lua)
     {
-		
+        auto scenePhysics = lua.new_usertype<ScenePhysics>("scenePhysics");
+
+        scenePhysics.set_function("init_object", [](Components::RigidBody& rigid, 
+														Components::Transform& trans,
+														Components::Drawable& model)
+        {
+                System::Physics_InitObject(rigid, std::nullopt, model, trans);
+        });
       
 
     }

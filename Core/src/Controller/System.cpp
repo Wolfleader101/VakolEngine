@@ -113,7 +113,13 @@ namespace Vakol::Controller {
         rp3d::Transform rpTrans =
             rp3d::Transform(pos, rp3d::Quaternion::fromEulerAngles({trans.rot.x, trans.rot.y, trans.rot.z}));
 
+        
         rigid.owningWorld = m_SP;
+
+        if (rigid.RigidBodyPtr)
+        {
+            m_SP->m_World->destroyCollisionBody(rigid.RigidBodyPtr);
+        }
 
         rigid.RigidBodyPtr = m_SP->m_World->createRigidBody(rpTrans);
 

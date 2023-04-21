@@ -30,7 +30,7 @@ namespace Vakol::Controller {
 
         scenePhysics->Init();
 
-        System::Physics_AddTerrain();
+        /*System::Physics_AddTerrain();*/
 
         auto entity = entityList.CreateEntity();
 
@@ -41,7 +41,7 @@ namespace Vakol::Controller {
 
         
 
-        auto& rigid = entity.GetComponent<RigidBody>();
+        /*auto& rigid = entity.GetComponent<RigidBody>();
 
         rigid.Type = (rp3d::BodyType) 2;
 
@@ -54,7 +54,7 @@ namespace Vakol::Controller {
 
         collider.bounds = bounds;
 
-        System::Physics_InitObject(rigid, collider, std::nullopt, entity.GetComponent<Transform>());
+        System::Physics_InitObject(rigid, collider, std::nullopt, entity.GetComponent<Transform>());*/
 
         int x = 0;
     }
@@ -89,7 +89,9 @@ namespace Vakol::Controller {
 
     namespace fs = std::filesystem;
 
-    void Scene::Serialize(const std::string& folder) const {
+    void Scene::Serialize(const std::string& folder) const
+	{
+
         std::string temp = folder;
         std::replace(temp.begin(), temp.end(), '/', '\\');  // replace / with \\ for filesystem
 
