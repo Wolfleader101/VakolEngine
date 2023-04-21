@@ -23,8 +23,12 @@ function init(scene)
         local model = cube:add_model("coreAssets/models/cube.obj") -- get model and add a drawable component
         model:set_shader("coreAssets/shaders/basic.prog") -- set the shader on the model (automatically binds it)
 
+        local diffuse_map = texture("coreAssets/textures/pisikek.png");
+
         local shader = model:get_shader(); -- get the shader from the model
-        shader:set_vec3("tint", 1.0, 0.0, 0.0);                    -- in this case, we set a uniform variable "tint" of type vec3 to red
+        shader:set_int("texture_diffuse", 0);                   -- in this case, we set a uniform variable "tint" of type vec3 to red
+
+        diffuse_map:bind_texture(0);
     end
 end
 
