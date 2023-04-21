@@ -3,13 +3,16 @@ function init(scene)
     scene:create_entity("terrain", "entities/terrain.lua"); -- switch between basic or advanced_example
     scene:create_entity("Camera Controller", "entities/cameraController.lua");
 
-    for i=1,15 do
+    for i=1,100 do
         local cube = scene:create_entity("spinning Cube " .. i, "");
+        cube:get_transform().scale.x = 5;
+        cube:get_transform().scale.y = 5;
+        cube:get_transform().scale.z = 5;
         local terr_ent = scene:get_entity("terrain");
         local terrain = terr_ent:get_terrain();
         local terr_scale = terr_ent:get_transform().scale;
-        local x = math.random(0, terrain:get_size());
-        local z = math.random(0, terrain:get_size());
+        local x = math.random(0, terrain:get_size() * terr_scale.x);
+        local z = math.random(0, terrain:get_size() * terr_scale.z);
 
         local y = (terrain:get_height(x / terr_scale.x, z / terr_scale.z) * terr_scale.y) + 5;
 
