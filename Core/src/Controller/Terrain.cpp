@@ -2,29 +2,33 @@
 
 #include <Controller/AssetLoader/FileLoader.hpp>
 #include <Controller/Logger.hpp>
-
+#include <algorithm>
 #include <cstdlib>
 
-namespace Vakol::Controller 
-{
-    Terrain::Terrain(const std::string& path) 
-    {
-        this->m_model = std::make_shared<Model::Assets::Model>(LoadHeightMap(LoadImage(path, this->m_size, this->m_size)));
+namespace Vakol::Controller {
+    // Terrain::Terrain(const std::string& path) {
+    //     this->m_model =
+    //         std::make_shared<Model::Assets::Model>(LoadHeightMap(LoadImage(path, this->m_size, this->m_size)));
+    // }
+
+    Terrain::Terrain(const int size, float scale, const int octaves, const float persistence, const float lacunarity)
+        : m_size(size) {
+        this->m_model = std::make_shared<Model::Assets::Model>(
+            LoadHeightMap(LoadNoiseImage(size, scale, octaves, persistence, lacunarity)));
     }
 
-    Terrain::Terrain(const int size, float scale, const int octaves, const float persistence, const float lacunarity) : m_size(size)
-    {
-        this->m_model = std::make_shared<Model::Assets::Model>(LoadHeightMap(LoadNoiseImage(size, scale, octaves, persistence, lacunarity)));
-    }
+    Terrain::Terrain(const std::string& path)
+        : m_heightMap(ConvertValues(LoadImage(path, this->m_size, this->m_size))), m_model(nullptr) {
+        m_model = std::make_shared<Model::Assets::Model>(LoadCLODTerrain(this->m_size));
+    };
 
-    Terrain::Terrain(const int size) 
-        : m_size(size), m_model(std::make_shared<Model::Assets::Model>(LoadCLODTerrain(size))) {};
+    Terrain::Terrain(const int size, const int iterations, const float filter, const bool random, const int minHeight,
+                     const int maxHeight)
+        : m_size(size),
+          m_model(std::make_shared<Model::Assets::Model>(
+              LoadFaultFormation(size, iterations, filter, random, minHeight, maxHeight))){};
 
-    Terrain::Terrain(const int size, const int iterations, const float filter, const bool random, const int minHeight, const int maxHeight)
-        : m_size(size), m_model(std::make_shared<Model::Assets::Model>(LoadFaultFormation(size, iterations, filter, random, minHeight, maxHeight))) {};
-
-    const Model::Assets::Mesh Terrain::LoadHeightMap(unsigned char* data) 
-    {
+    const Model::Assets::Mesh Terrain::LoadHeightMap(unsigned char* data) {
         std::vector<Vertex> vertices;
 
         
@@ -70,8 +74,8 @@ namespace Vakol::Controller
         return Model::Assets::Mesh(vertices, indices);
     }
 
-    const Model::Assets::Mesh Terrain::LoadFaultFormation(const int size, const int iterations, const float filter, const bool random, const int minHeight, const int maxHeight) 
-    {
+    const Model::Assets::Mesh Terrain::LoadFaultFormation(const int size, const int iterations, const float filter,
+                                                          const bool random, const int minHeight, const int maxHeight) {
         Point p1, p2;
 
         int displacement;
@@ -197,8 +201,20 @@ namespace Vakol::Controller
         return new_val;
     }
 
-    void Terrain::NormalizeValues(std::vector<float>& arr, const int size) 
-    {
+    std::vector<float> Terrain::ConvertValues(unsigned char* data) {
+        std::vector<float> values;
+        values.reserve(m_size * m_size);
+
+        for (int z = 0; z < m_size; ++z) {
+            for (int x = 0; x < m_size; ++x) {  // * scale - shift
+                values.push_back((static_cast<float>(data[z * m_size + x] / 255.0f) * 64.0f - 16.0f));
+            }
+        }
+
+        return values;
+    }
+
+    void Terrain::NormalizeValues(std::vector<float>& arr, const int size) {
         float min = arr.at(0);
         float max = arr.at(0);
 
@@ -221,94 +237,65 @@ namespace Vakol::Controller
         for (int i = 0; i < size * size; ++i) arr[i] = ((arr.at(i) - min) / height) * 255.0f;
     }
 
-    const Model::Assets::Mesh Terrain::LoadCLODTerrain(const int size)
-    {
+    const Model::Assets::Mesh Terrain::LoadCLODTerrain(const int size) {
         std::vector<float> vertices;
 
-        unsigned int patch_size = (3 * sizeof(float) + 2 * sizeof(float)); // position (3 floats) + uv (2 floats) = 20 bytes
+        unsigned int patch_size =
+            (3 * sizeof(float) + 2 * sizeof(float));  // position (3 floats) + uv (2 floats) = 20 bytes
 
         vertices.reserve(patch_size * patch_size * patch_size);
 
-        for(unsigned int i = 0; i <= patch_size - 1; i++)
-        {
-            for(unsigned int j = 0; j <= patch_size - 1; j++)
-            {
-                vertices.push_back(-size / 2.0f + size * j / (float)patch_size); // v.z
-                vertices.push_back(0.0f); // v.y
-                vertices.push_back(-size / 2.0f + size * i / (float)patch_size); // v.x
-                vertices.push_back(i / (float)patch_size); // u
-                vertices.push_back(j / (float)patch_size); // v
+        for (unsigned int i = 0; i <= patch_size - 1; i++) {
+            for (unsigned int j = 0; j <= patch_size - 1; j++) {
+                vertices.push_back(-size / 2.0f + size * j / (float)patch_size);  // v.z
+                vertices.push_back(0.0f);                                         // v.y
+                vertices.push_back(-size / 2.0f + size * i / (float)patch_size);  // v.x
+                vertices.push_back(i / (float)patch_size);                        // u
+                vertices.push_back(j / (float)patch_size);                        // v
 
-                vertices.push_back(-size / 2.0f + size * j / (float)patch_size); // v.z
-                vertices.push_back(0.0f); // v.y
-                vertices.push_back(-size / 2.0f + size * (i + 1) / (float)patch_size); // v.x
-                vertices.push_back((i + 1) / (float)patch_size); // u
-                vertices.push_back(j / (float)patch_size); // v
+                vertices.push_back(-size / 2.0f + size * j / (float)patch_size);        // v.z
+                vertices.push_back(0.0f);                                               // v.y
+                vertices.push_back(-size / 2.0f + size * (i + 1) / (float)patch_size);  // v.x
+                vertices.push_back((i + 1) / (float)patch_size);                        // u
+                vertices.push_back(j / (float)patch_size);                              // v
 
-                vertices.push_back(-size / 2.0f + size * (j + 1) / (float)patch_size); // v.z
-                vertices.push_back(0.0f); // v.y
-                vertices.push_back(-size / 2.0f + size * i / (float)patch_size); // v.x
-                vertices.push_back(i / (float)patch_size); // u
-                vertices.push_back((j + 1) / (float)patch_size); // v
+                vertices.push_back(-size / 2.0f + size * (j + 1) / (float)patch_size);  // v.z
+                vertices.push_back(0.0f);                                               // v.y
+                vertices.push_back(-size / 2.0f + size * i / (float)patch_size);        // v.x
+                vertices.push_back(i / (float)patch_size);                              // u
+                vertices.push_back((j + 1) / (float)patch_size);                        // v
 
-                vertices.push_back(-size / 2.0f + size * (j + 1) / (float)patch_size); // v.z
-                vertices.push_back(0.0f); // v.y
-                vertices.push_back(-size / 2.0f + size * (i + 1) / (float)patch_size); // v.x
-                vertices.push_back((i + 1) / (float)patch_size); // u
-                vertices.push_back((j + 1) / (float)patch_size); // v
+                vertices.push_back(-size / 2.0f + size * (j + 1) / (float)patch_size);  // v.z
+                vertices.push_back(0.0f);                                               // v.y
+                vertices.push_back(-size / 2.0f + size * (i + 1) / (float)patch_size);  // v.x
+                vertices.push_back((i + 1) / (float)patch_size);                        // u
+                vertices.push_back((j + 1) / (float)patch_size);                        // v
             }
         }
 
         VK_TRACE("Loaded {0} patches of 4 control points each", patch_size * patch_size);
         VK_TRACE("Processing {0} vertices in vertex shader", patch_size * patch_size * patch_size);
+        // GenerateStaticVertices(size);
 
         return {vertices};
     }
+    const float Terrain::GetHeight(float x, float z) const {
+        // Clamp x and z to the terrain's dimensions
+        x = std::clamp(x, -m_size / 2.0f, m_size / 2.0f - m_size / (m_size - 1));
+        z = std::clamp(z, -m_size / 2.0f, m_size / 2.0f - m_size / (m_size - 1));
 
-    float Terrain::GetHeight(float x, float z) const 
-    {
-        // get the height of the terrain at a given x and z coordinate
-        // this is done by interpolating the height of the 4 vertices that surround the point
-        // the height is then interpolated between the 4 vertices
+        // Normalize x and z to the range [0, 1]
+        float normX = (x + m_size / 2.0f) / m_size;
+        float normZ = (z + m_size / 2.0f) / m_size;
 
-        if (x < 0 || x >= m_size || z < 0 || z >= m_size) 
-            return 0.0f;
+        // Calculate the height map indices using the normalized coordinates
+        unsigned int i = static_cast<unsigned int>(normX * (m_size - 1));
+        unsigned int j = static_cast<unsigned int>(normZ * (m_size - 1));
 
-        // get the 4 vertices that surround the point
-        int x0 = static_cast<int>(x) % m_size;
-        int x1 = (x0 + 1) % m_size;
-        int z0 = static_cast<int>(z) % m_size;
-        int z1 = (z0 + 1) % m_size;
+        // Get the height at the corresponding height map index
+        float height = m_heightMap[std::min((int)i, m_size - 1) * m_size + std::min((int)j, m_size - 1)];
 
-        // Handle negative x and z values by wrapping them around
-        if (x0 < 0) x0 += m_size;
-        if (x1 < 0) x1 += m_size;
-        if (z0 < 0) z0 += m_size;
-        if (z1 < 0) z1 += m_size;
-
-        // get the heights of the 4 vertices
-        auto vertices = m_model->GetMesh().GetVertexArray()->GetVertices();
-
-        float y0 = vertices[z0 * m_size + x0].position.y;
-        float y1 = vertices[z0 * m_size + x1].position.y;
-        float y2 = vertices[z1 * m_size + x0].position.y;
-        float y3 = vertices[z1 * m_size + x1].position.y;
-
-        // get the distance between the point and the 4 vertices
-        float dx1 = x - x0;
-        float dx2 = x1 - x;
-        float dz1 = z - z0;
-        float dz2 = z1 - z;
-
-        float w1 = dx2 * dz2;
-        float w2 = dx1 * dz2;
-        float w3 = dx2 * dz1;
-        float w4 = dx1 * dz1;
-
-        // calculate the interpolated height
-        float y = (y0 * w1 + y1 * w2 + y2 * w3 + y3 * w4) / (w1 + w2 + w3 + w4);
-
-        return y;
+        return height;
     }
 
     const std::vector<float>& Terrain::GetHeightMap()

@@ -1,18 +1,15 @@
 #include "Application.hpp"
 
+#include <Controller/AssetLoader/AssetLoader.hpp>
 #include <Controller/LuaAccess.hpp>
+#include <Controller/Physics/PhysicsPool.hpp>
+#include <Controller/Scene.hpp>
+#include <Controller/System.hpp>
+#include <Model/Assets/Texture.hpp>
 #include <Model/Components.hpp>
 #include <View/Renderer/RendererFactory.hpp>
 
 #include "Logger.hpp"
-
-#include <Controller/Physics/PhysicsPool.hpp>
-#include <Controller/AssetLoader/AssetLoader.hpp>
-#include <Model/Assets/Texture.hpp>
-
-#include <Controller/System.hpp>
-
-#include <Controller/Scene.hpp>
 
 namespace Vakol::Controller {
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
@@ -27,8 +24,8 @@ namespace Vakol::Controller {
         Controller::RegisterAssetLoader(lua.GetState());
         Controller::RegisterApplication(lua.GetState(), this);
         Controller::RegisterScene(lua.GetState());
+        Controller::RegisterGUIWindow(lua.GetState(), &m_gui);  // Register GUI Window
 
-        // void RegisterWindow(sol::state& lua);
         // void RegisterRenderer(sol::state& lua);
         // void RegisterPhysics(sol::state& lua);
 
@@ -123,6 +120,8 @@ namespace Vakol::Controller {
     void Application::Run() {
         while (m_running) {
             m_time.Update();
+            m_input.Update();
+            m_gui.CreateNewFrame();
 
             m_renderer->Update();
 
@@ -131,22 +130,19 @@ namespace Vakol::Controller {
                 System::BindScene(scene);
                 scene.Update(m_time, m_renderer);
             }
-            
-            m_window->OnUpdate();
 
-            m_input.Update();
+            m_gui.Update();
+
+            m_window->OnUpdate();
         }
     }
 
     void Application::AddScene(std::string scriptName, std::string scene_name) {
-
         std::string sceneName = scene_name.length() == 0 ? "Scene" + std::to_string(scenes.size()) : scene_name;
 
-        scenes.push_back(Scene(sceneName, scriptName, 
-                                lua,
-                                std::make_shared<Physics::ScenePhysics>(Physics::PhysicsPool::CreatePhysicsWorld()),
-                                true
-                            ));
+        scenes.push_back(Scene(sceneName, scriptName, lua,
+                               std::make_shared<Physics::ScenePhysics>(Physics::PhysicsPool::CreatePhysicsWorld()),
+                               true));
     }
 
     void Application::OnEvent(Event& ev) {
@@ -183,9 +179,13 @@ namespace Vakol::Controller {
     }
 
     bool Application::OnKeyPressed(KeyPressedEvent& kev) {
-        if (kev.GetKeyCode() == GLFW_KEY_ESCAPE) {
+        if (kev.GetKeyCode() == GLFW_KEY_ESCAPE || kev.GetKeyCode() == GLFW_KEY_X) {
             m_running = false;
             return true;
+        }
+
+        if (kev.GetKeyCode() == GLFW_KEY_K) {
+            m_renderer->ToggleWireframe();
         }
 
         m_input.OnKeyPressed(kev);

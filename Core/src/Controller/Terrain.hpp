@@ -8,19 +8,21 @@
 namespace Vakol::Controller {
     class Terrain {
        public:
-        Terrain(const std::string& path);
+        // Terrain(const std::string& path);
 
         Terrain(const int size, float scale, const int octaves, const float persistence, const float lacunarity);
         Terrain(const int size, const int iterations, const float filter, const bool random, const int minHeight,
                 const int maxHeight);
 
-        Terrain(const int size);
+        Terrain(const std::string& path);
 
         std::shared_ptr<Model::Assets::Model> GetModel() const { return this->m_model; }
 
         const int GetSize() const { return this->m_size; }
 
-        float GetHeight(const float x, const float z) const;
+        const float GetHeight(const float x, const float z) const;
+
+        void SetHeightMap(std::vector<float>& heightMap) { m_heightMap = std::move(heightMap); }
 
         ~Terrain(){};
 
@@ -29,6 +31,7 @@ namespace Vakol::Controller {
         const int GetMinHeight();
 
        private:
+        void GenerateStaticVertices(const int size);
         const Model::Assets::Mesh LoadHeightMap(unsigned char* data);
         const Model::Assets::Mesh LoadFaultFormation(const int size, const int iterations, const float filter,
                                                      const bool random, const int minHeight, const int maxHeight);
@@ -42,6 +45,8 @@ namespace Vakol::Controller {
 
             const Point operator-(const Point& other) const { return {this->x - other.x, this->z - other.z}; }
         };
+
+        std::vector<float> ConvertValues(unsigned char* data);
 
         void GenRandomPoints(Point& p1, Point& p2, const int size);
         void NormalizeValues(std::vector<float>& arr, const int size);

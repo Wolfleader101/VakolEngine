@@ -1,19 +1,18 @@
 function init(scene, entity)
-    
     --local terrain = entity:add_noisemap_terrain(1024, 30, 2, 0.5, 2.0) -- size, scale, octaves, persistence, lacunarity
-    --local terrain = entity:add_clod_terrain(128) -- size
+    local terrain = entity:add_clod_terrain("coreAssets/textures/HeightMaps/height128.raw"); -- size
 
-    local terrain = entity:add_heightmap_terrain("coreAssets/textures/HeightMaps/test_2.raw");
+    entity:get_transform().scale.x = 1;
+    entity:get_transform().scale.y = 1;
+    entity:get_transform().scale.z = 1;
 
     local model = terrain:get_model();
     local mesh = model:get_mesh();
 
     local material = mesh:get_material();
     
-    local height_map = raw_texture("coreAssets/textures/HeightMaps/test_2.raw");
-
-    scene:add_terrain_physics(entity);
-    --local height_map = noise_texture(128, 30.0, 2, 0.5, 2.0); -- size, scale (smaller = more spikes), octaves (number of loops / detail), persistence (roughness), lacunarity (size of gaps)
+    local height_map = raw_texture("coreAssets/textures/HeightMaps/height128.raw");
+    --local height_map = noise_texture(terrain_size, 100, 2, 0.5, 2.0); -- size, scale (smaller = more spikes), octaves (number of loops / detail), persistence (roughness), lacunarity (size of gaps)
 
     local water_layer_1 = texture("coreAssets/textures/Water/water_0.bmp", false, false);
     local water_layer_2 = texture("coreAssets/textures/Water/water_5.bmp", false, false);
@@ -71,13 +70,12 @@ function init(scene, entity)
     shader:set_bool("enable_fog", false);
     shader:set_float("FOG_DENSITY", 0.025);
 
-    
 
-    -- local waterEnt = scene:create_entity("");
+    -- local waterEnt = scene:create_entity("water", "");
 
-    -- waterEnt:get_transform().scale.x = 256;
-    -- waterEnt:get_transform().scale.z = 256;
-    -- waterEnt:get_transform().pos.y = -1;
+    -- waterEnt:get_transform().scale.x = terrain_size * 10;
+    -- waterEnt:get_transform().scale.z = terrain_size * 10;
+    -- waterEnt:get_transform().pos.y = -10;
 
     -- local waterPlane = waterEnt:add_model("coreAssets/models/plane.obj");
 

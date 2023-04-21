@@ -12,16 +12,16 @@ const unsigned char ELEMENTS_INSTANCED = 0x3;
 const unsigned char TRIANGLE_STRIPS = 0x4;
 const unsigned char QUAD_PATCHES = 0x5;
 
-
 namespace Vakol::Model {
     using Assets::Vertex;
 
-    class VertexArray 
-    {
-    public:
-        VertexArray(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices) : m_vertices(vertices), m_indices(indices) {}
-        VertexArray(const std::vector<float>& vertices, const std::vector<unsigned int>& indices) : m_verts(vertices), m_indices(indices) {};
-        VertexArray(const std::vector<float>& vertices) : m_verts(vertices) {};
+    class VertexArray {
+       public:
+        VertexArray(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices)
+            : m_vertices(vertices), m_indices(indices) {}
+        VertexArray(const std::vector<float>& vertices, const std::vector<unsigned int>& indices)
+            : m_verts(vertices), m_indices(indices){};
+        VertexArray(const std::vector<float>& vertices) : m_verts(vertices){};
 
         virtual ~VertexArray() = default;
 
@@ -39,9 +39,10 @@ namespace Vakol::Model {
 
         const virtual unsigned int GetID() const = 0;
         const virtual int GetVertexCount() const = 0;
-        const virtual int GetIndexCount()  const = 0;
+        const virtual int GetIndexCount() const = 0;
 
         virtual const std::vector<Vertex> GetVertices() const = 0;
+        virtual const std::vector<float> GetFloatVertices() const = 0;
         virtual const std::vector<unsigned int> GetIndices() const = 0;
 
         virtual void SetStrips(const int strips, const int tris) = 0;
@@ -50,7 +51,7 @@ namespace Vakol::Model {
         virtual void SetDrawMode(const unsigned char mode) = 0;
         virtual const unsigned char GetDrawMode() const = 0;
 
-    protected:
+       protected:
         std::vector<Vertex> m_vertices;
         std::vector<float> m_verts;
 
@@ -64,4 +65,4 @@ namespace Vakol::Model {
         int NUM_PATCHES = 0;
         int NUM_VERTS_PER_PATCH = 0;
     };
-}
+}  // namespace Vakol::Model

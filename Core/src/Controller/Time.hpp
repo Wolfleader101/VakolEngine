@@ -27,16 +27,36 @@ namespace Vakol {
             float prevTime = 0.0f;
 
             /**
+             * @brief  the number of frames per second
+             *
+             */
+            int fps = 0;
+
+            /**
              * @brief used to update the time struct
              */
             void Update() {
                 curTime = static_cast<float>(glfwGetTime());
-                if (prevTime == 0.0f)
-                    deltaTime = 0.0f;
-                else
-                    deltaTime = curTime - prevTime;
+                frameCount++;
+
+                if (curTime - prevFPSTime >= 1.0f) {
+                    fps = frameCount;
+                    frameCount = 0;
+                    prevFPSTime = curTime;
+                }
+
+                deltaTime = curTime - prevTime;
+
                 prevTime = curTime;
             }
+
+           private:
+            /**
+             * @brief internal frame count
+             *
+             */
+            int frameCount = 0;
+            float prevFPSTime = 0.0f;
         };
     }  // namespace Controller
 }  // namespace Vakol

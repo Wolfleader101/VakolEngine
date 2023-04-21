@@ -5,6 +5,7 @@
 #include <iostream>
 #include <string>
 
+#include "Controller/LuaState.hpp"
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
@@ -25,7 +26,7 @@ namespace Vakol::View {
          *
          * @param window The GLFW window the UI will be inside of
          */
-        void Init(std::shared_ptr<View::Window> m_window);
+        void Init(std::shared_ptr<View::Window> window);
         /**
          * @brief Creates a new frame for the window
          */
@@ -39,12 +40,20 @@ namespace Vakol::View {
          */
         void StartWindowCreation(std::string& windowName, float width, float height, float xPosition, float yPosition);
         /**
-         * @brief Allows you to start drawing from a specific position inside the window
-         *
-         * @param xPosition Sets the X-Position of the drawing cursor
-         * @param yPosition Sets the Y-Position of the drawing cursor
+         * @brief Returns the FPS of the current window
          */
-        void SetPositionInsideWIndow(float xPosition, float yPosition);
+        float GetFramesPerSecond();
+        /**
+         * @brief An update function to call new frame
+         *
+         */
+        void Update();
+        /**
+         * @brief Add a text string to the UI Window
+         *
+         * @param inputText The text to be set in the UI
+         */
+        void AddText(std::string& inputText);
         /**
          * @brief Adds a button to a given window
          *
@@ -60,7 +69,7 @@ namespace Vakol::View {
          * @param checkboxName The name of the checkbox
          * @param checkBoxValue The boolean value of the checkbox
          */
-        void AddCheckbox(std::string& checkboxName, bool& checkBoxValue);
+        void AddCheckbox(std::string& checkboxName, bool* checkBoxValue);
         /**
          * @brief Adds an Integer Slider to the window
          *
@@ -69,7 +78,7 @@ namespace Vakol::View {
          * @param minValue The minimum value of the slider
          * @param maxValue the maximum value of the slider
          */
-        void AddIntSlider(std::string& sliderName, int& sliderValue, int minValue, int maxValue);
+        void AddIntSlider(std::string& sliderName, int* sliderValue, int minValue, int maxValue);
         /**
          * @brief Adds a Vecotr based Integer Slider to the window
          *
@@ -89,7 +98,7 @@ namespace Vakol::View {
          * @param minValue The minimum value of the slider
          * @param maxValue the maximum value of the slider
          */
-        void AddFloatSlider(std::string& sliderName, float& sliderValue, float minValue, float maxValue);
+        void AddFloatSlider(std::string& sliderName, float* sliderValue, float minValue, float maxValue);
         /**
          * @brief Adds a Vecotr based Float Slider to the window
          *
@@ -114,5 +123,7 @@ namespace Vakol::View {
         ImGuiWindowFlags windowFlags;
 
         bool is_initialised = false;
+
+        std::string scriptName;
     };
 }  // namespace Vakol::View

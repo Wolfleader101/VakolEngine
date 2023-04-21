@@ -139,6 +139,7 @@ namespace Vakol::Controller {
 
         friend class Entity;  // friend to allow the api for entities to be clean.
         friend class System;
+        friend class Scene;
     };
 
 }  // namespace Vakol::Controller
