@@ -18,10 +18,7 @@ namespace Vakol::Controller {
     }
 
     Terrain::Terrain(const std::string& path)
-        : m_staticVertices(),
-          m_heightMap(ConvertValues(LoadImage(path, this->m_size, this->m_size))),
-          m_model(nullptr) {
-        NormalizeValues(m_heightMap, m_size);
+        : m_heightMap(ConvertValues(LoadImage(path, this->m_size, this->m_size))), m_model(nullptr) {
         m_model = std::make_shared<Model::Assets::Model>(LoadCLODTerrain(this->m_size));
     };
 
@@ -205,8 +202,8 @@ namespace Vakol::Controller {
         values.reserve(m_size * m_size);
 
         for (int z = 0; z < m_size; ++z) {
-            for (int x = 0; x < m_size; ++x) {
-                values.push_back(static_cast<float>(data[z * m_size + x]));
+            for (int x = 0; x < m_size; ++x) {  // * scale - shift
+                values.push_back((static_cast<float>(data[z * m_size + x] / 255.0f) * 64.0f - 16.0f));
             }
         }
 
@@ -278,48 +275,6 @@ namespace Vakol::Controller {
 
         return {vertices};
     }
-
-    void Terrain::GenerateStaticVertices(const int size) {
-        unsigned int patch_size = 3 * sizeof(float);  // position (3 floats) = 12 bytes
-
-        m_staticVertices.reserve(patch_size * patch_size * patch_size);
-
-        auto getHeight = [&](unsigned int i, unsigned int j) -> float {
-            return (m_heightMap[std::min((int)i, m_size - 1) * m_size + std::min((int)j, m_size - 1)] / 255.0f) *
-                       64.0f -
-                   16.0f;
-        };
-        for (unsigned int i = 0; i < patch_size - 1; i++) {
-            for (unsigned int j = 0; j < patch_size - 1; j++) {
-                // Calculate heightmap indices
-                unsigned int heightMap_i1 = i * (m_size - 1) / (patch_size - 1);
-                unsigned int heightMap_j1 = j * (m_size - 1) / (patch_size - 1);
-                unsigned int heightMap_i2 = (i + 1) * (m_size - 1) / (patch_size - 1);
-                unsigned int heightMap_j2 = (j + 1) * (m_size - 1) / (patch_size - 1);
-
-                // First vertex
-                m_staticVertices.push_back(-size / 2.0f + size * j / (float)(patch_size - 1));  // v.z
-                m_staticVertices.push_back(getHeight(heightMap_i1, heightMap_j1));              // v.y
-                m_staticVertices.push_back(-size / 2.0f + size * i / (float)(patch_size - 1));  // v.x
-
-                // Second vertex
-                m_staticVertices.push_back(-size / 2.0f + size * j / (float)(patch_size - 1));        // v.z
-                m_staticVertices.push_back(getHeight(heightMap_i2, heightMap_j1));                    // v.y
-                m_staticVertices.push_back(-size / 2.0f + size * (i + 1) / (float)(patch_size - 1));  // v.x
-
-                // Third vertex
-                m_staticVertices.push_back(-size / 2.0f + size * (j + 1) / (float)(patch_size - 1));  // v.z
-                m_staticVertices.push_back(getHeight(heightMap_i1, heightMap_j2));                    // v.y
-                m_staticVertices.push_back(-size / 2.0f + size * i / (float)(patch_size - 1));        // v.x
-
-                // Fourth vertex
-                m_staticVertices.push_back(-size / 2.0f + size * (j + 1) / (float)(patch_size - 1));  // v.z
-                m_staticVertices.push_back(getHeight(heightMap_i2, heightMap_j2));                    // v.y
-                m_staticVertices.push_back(-size / 2.0f + size * (i + 1) / (float)(patch_size - 1));  // v.x
-            }
-        }
-    }
-
     const float Terrain::GetHeight(float x, float z) const {
         // Clamp x and z to the terrain's dimensions
         x = std::clamp(x, -m_size / 2.0f, m_size / 2.0f - m_size / (m_size - 1));
@@ -334,9 +289,7 @@ namespace Vakol::Controller {
         unsigned int j = static_cast<unsigned int>(normZ * (m_size - 1));
 
         // Get the height at the corresponding height map index
-        float height =
-            (m_heightMap[std::min((int)i, m_size - 1) * m_size + std::min((int)j, m_size - 1)] / 255.0f) * 64.0f -
-            16.0f;
+        float height = m_heightMap[std::min((int)i, m_size - 1) * m_size + std::min((int)j, m_size - 1)];
 
         return height;
     }

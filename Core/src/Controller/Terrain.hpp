@@ -54,7 +54,6 @@ namespace Vakol::Controller {
         std::vector<float> m_heightMap;
 
         std::shared_ptr<Model::Assets::Model> m_model;
-        std::vector<float> m_staticVertices;
 
         int m_size;
 
