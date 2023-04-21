@@ -54,9 +54,9 @@ namespace Vakol::Controller {
 
         std::shared_ptr<Model::Assets::Model> m_model;
 
-        int m_size = 0;
+        int m_size;
 
-        int m_minHeight = 0;
-        int m_maxHeight = 0;
+        int m_minHeight;
+        int m_maxHeight;
     };
 }  // namespace Vakol::Controller
