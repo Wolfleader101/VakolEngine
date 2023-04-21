@@ -49,5 +49,9 @@ function update(scene)
 
     GUI:add_text("MOUSE - Move camera");
 
+
+    GUI:add_text("K - Toggle wireframe");
+    GUI:add_text("ESC - Exit");
+
     GUI:end_window();
 end
