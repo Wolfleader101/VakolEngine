@@ -31,11 +31,11 @@ function init(scene)
         local diffuse_map = texture("coreAssets/textures/pisikek.png", false, false);
 
         material:add_texture(diffuse_map);
-        diffuse_map:bind_texture(0);
+        diffuse_map:bind_texture(99);
 
 
         local shader = model:get_shader(); -- get the shader from the model
-        shader:set_int("texture_diffuse", 0); -- in this case, we set a uniform variable "tint" of type vec3 to red
+        shader:set_int("texture_diffuse", 99); -- in this case, we set a uniform variable "tint" of type vec3 to red
 
     end
 end
