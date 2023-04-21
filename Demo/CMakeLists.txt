@@ -2,6 +2,7 @@
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+SET(CopyResources TRUE)
 
 
 # Add source to this project's executable.
@@ -36,17 +37,9 @@ endif()
 
 if (NOT CopyResources)
     add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E create_symlink
-            ${CMAKE_SOURCE_DIR}/Core/scripts $<TARGET_FILE_DIR:${PROJECT_NAME}>/coreScripts)
-
-    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
                  COMMAND ${CMAKE_COMMAND} -E create_symlink
                  ${CMAKE_SOURCE_DIR}/Core/assets $<TARGET_FILE_DIR:${PROJECT_NAME}>/coreAssets)
 else()
-    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_directory
-            ${CMAKE_SOURCE_DIR}/Core/scripts $<TARGET_FILE_DIR:${PROJECT_NAME}>/coreScripts)
-
     add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
                  COMMAND ${CMAKE_COMMAND} -E copy_directory
                  ${CMAKE_SOURCE_DIR}/Core/assets $<TARGET_FILE_DIR:${PROJECT_NAME}>/coreAssets)

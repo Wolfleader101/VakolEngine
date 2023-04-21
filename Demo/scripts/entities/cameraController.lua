@@ -1,10 +1,10 @@
 function init(scene, entity)
-     scene:get_entity("terrain"):get_terrain():get_height(0, 0)
+    print("Initialising Camera");
 
 end
 
-local speed = 50;
-local sprintSpeed = 250;
+local speed = 100;
+local sprintSpeed = 200;
 
 function update(scene, entity)
     local dir = { x = 0, y = 0, z = 0 };
@@ -35,12 +35,13 @@ function update(scene, entity)
 
     local new_pos = {
         x = old_pos.x + (forward.x * dir.z + right.x * dir.x) * velocity,
-        --y = old_pos.y + (forward.y * dir.z + right.y * dir.x) * velocity,
         y = 0.0,
         z = old_pos.z + (forward.z * dir.z + right.z * dir.x) * velocity,
     }
 
-    new_pos.y = scene:get_entity("terrain"):get_terrain():get_height(new_pos.x , new_pos.z) + 15;
+    local terr_entity = scene:get_entity("terrain");
+    local terr_scale = terr_entity:get_transform().scale;
+    new_pos.y = (terr_entity:get_terrain():get_height(new_pos.x / terr_scale.x, new_pos.z / terr_scale.z) * terr_scale.y) + 7.5;
     camera:set_pos(new_pos.x, new_pos.y, new_pos.z);
 
     local delta_mouse_pos = Input:get_delta_mouse_pos();
