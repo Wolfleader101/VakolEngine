@@ -1,24 +1,20 @@
 #pragma once
 
 #include <Controller/Time.hpp>
-#include <View/Window/Window.hpp>
 #include <Model/UniformBuffer.hpp>
-
+#include <View/Window/Window.hpp>
 #include <memory>
 
 #include "Controller/Camera.hpp"
 
-namespace Vakol::Model::Components 
-{
+namespace Vakol::Model::Components {
     struct Drawable;
     struct Transform;
-}
+}  // namespace Vakol::Model::Components
 
-namespace Vakol::View 
-{
-    class Renderer 
-    {
-    public:
+namespace Vakol::View {
+    class Renderer {
+       public:
         Renderer(const std::shared_ptr<Window> window) : m_window(window){};
         virtual ~Renderer() {}
 
@@ -35,8 +31,11 @@ namespace Vakol::View
 
         virtual void Update() const = 0;
 
-    protected:
+        virtual void ToggleWireframe() = 0;
+
+       protected:
+        bool isWireframe = false;
         std::shared_ptr<Window> m_window = nullptr;
         std::vector<std::shared_ptr<Model::UniformBuffer>> m_uniforms;
     };
-}
+}  // namespace Vakol::View

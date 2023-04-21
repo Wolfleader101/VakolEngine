@@ -3,9 +3,8 @@
 #include "Renderer.hpp"
 
 namespace Vakol::View {
-    class GLRenderer : public Renderer 
-    {
-    public:
+    class GLRenderer : public Renderer {
+       public:
         GLRenderer(const std::shared_ptr<Window> window);
 
         void AddUniform(const int size, const int binding) override;
@@ -20,5 +19,15 @@ namespace Vakol::View {
                   const Model::Components::Drawable& drawable) const override;
 
         void Update() const override;
+
+        void ToggleWireframe() override {
+            isWireframe = !isWireframe;
+
+            if (isWireframe) {
+                glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+            } else {
+                glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+            }
+        }
     };
 }  // namespace Vakol::View
