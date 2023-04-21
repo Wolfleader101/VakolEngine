@@ -8,7 +8,7 @@
 namespace Vakol::Controller {
     class Terrain {
        public:
-        //Terrain(const std::string& path);
+        // Terrain(const std::string& path);
 
         Terrain(const int size, float scale, const int octaves, const float persistence, const float lacunarity);
         Terrain(const int size, const int iterations, const float filter, const bool random, const int minHeight,
@@ -27,6 +27,7 @@ namespace Vakol::Controller {
         ~Terrain(){};
 
        private:
+        void GenerateStaticVertices(const int size);
         const Model::Assets::Mesh LoadHeightMap(unsigned char* data);
         const Model::Assets::Mesh LoadFaultFormation(const int size, const int iterations, const float filter,
                                                      const bool random, const int minHeight, const int maxHeight);
@@ -53,6 +54,7 @@ namespace Vakol::Controller {
         std::vector<float> m_heightMap;
 
         std::shared_ptr<Model::Assets::Model> m_model;
+        std::vector<float> m_staticVertices;
 
         int m_size;
 
