@@ -11,8 +11,8 @@ function init(scene)
         local terr_ent = scene:get_entity("terrain");
         local terrain = terr_ent:get_terrain();
         local terr_scale = terr_ent:get_transform().scale;
-        local x = math.random(0, terrain:get_size() * terr_scale.x);
-        local z = math.random(0, terrain:get_size() * terr_scale.z);
+        local x = math.random(0, terrain:get_size()) * 10;
+        local z = math.random(0, terrain:get_size()) * 10;
 
         local y = (terrain:get_height(x / terr_scale.x, z / terr_scale.z) * terr_scale.y) + 5;
 
