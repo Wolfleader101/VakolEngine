@@ -157,28 +157,28 @@ namespace Vakol::Controller {
 
                 entityType.set_function("get_transform", &Entity::GetComponent<Model::Components::Transform>);
 
-        entityType.set_function("add_heightmap_terrain", [](Entity* ent, const std::string& path) {
-            if (!ent->HasComponent<Model::Components::Drawable>()) ent->AddComponent<Model::Components::Drawable>();
+        // entityType.set_function("add_heightmap_terrain", [](Entity* ent, const std::string& path) {
+        //     if (!ent->HasComponent<Model::Components::Drawable>()) ent->AddComponent<Model::Components::Drawable>();
 
-            if (ent->HasComponent<Terrain>()) ent->RemoveComponent<Terrain>();
+        //     if (ent->HasComponent<Terrain>()) ent->RemoveComponent<Terrain>();
 
-            ent->AddComponent<Terrain>(path);
+        //     ent->AddComponent<Terrain>(path);
 
-            auto terrain = ent->GetComponent<Terrain>();
+        //     auto terrain = ent->GetComponent<Terrain>();
 
-            auto model = terrain.GetModel();  // doesn't that look nice?
+        //     auto model = terrain.GetModel();  // doesn't that look nice?
 
-            const auto size = terrain.GetSize();
+        //     const auto size = terrain.GetSize();
 
-            if (model) {
-                model->GetMesh().GetVertexArray()->SetDrawMode(TRIANGLE_STRIPS);
-                model->GetMesh().GetVertexArray()->SetStrips((size - 1) / 1, (size / 1) * 2 - 2);
+        //     if (model) {
+        //         model->GetMesh().GetVertexArray()->SetDrawMode(TRIANGLE_STRIPS);
+        //         model->GetMesh().GetVertexArray()->SetStrips((size - 1) / 1, (size / 1) * 2 - 2);
 
-                ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
-            }
+        //         ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
+        //     }
 
-            return terrain;
-        });
+        //     return terrain;
+        // });
 
         entityType.set_function("add_noisemap_terrain", [](Entity* ent, const int size, float scale, const int octaves,
                                                            const float persistence, const float lacunarity) {
@@ -224,11 +224,11 @@ namespace Vakol::Controller {
                 return terrain;
             });
 
-        entityType.set_function("add_clod_terrain", [](Entity* ent, const int size) {
+        entityType.set_function("add_clod_terrain", [](Entity* ent, const std::string& path) {
             if (!ent->HasComponent<Model::Components::Drawable>()) ent->AddComponent<Model::Components::Drawable>();
             if (ent->HasComponent<Terrain>()) ent->RemoveComponent<Terrain>();
 
-            ent->AddComponent<Terrain>(size);
+            ent->AddComponent<Terrain>(path);
 
             auto terrain = ent->GetComponent<Terrain>();
 

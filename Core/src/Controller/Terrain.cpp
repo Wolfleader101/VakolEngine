@@ -5,10 +5,10 @@
 #include <cstdlib>
 
 namespace Vakol::Controller {
-    Terrain::Terrain(const std::string& path) {
-        this->m_model =
-            std::make_shared<Model::Assets::Model>(LoadHeightMap(LoadImage(path, this->m_size, this->m_size)));
-    }
+    // Terrain::Terrain(const std::string& path) {
+    //     this->m_model =
+    //         std::make_shared<Model::Assets::Model>(LoadHeightMap(LoadImage(path, this->m_size, this->m_size)));
+    // }
 
     Terrain::Terrain(const int size, float scale, const int octaves, const float persistence, const float lacunarity)
         : m_size(size) {
@@ -16,8 +16,8 @@ namespace Vakol::Controller {
             LoadHeightMap(LoadNoiseImage(size, scale, octaves, persistence, lacunarity)));
     }
 
-    Terrain::Terrain(const int size)
-        : m_size(size), m_model(std::make_shared<Model::Assets::Model>(LoadCLODTerrain(size))){};
+    Terrain::Terrain(const std::string& path)
+        : m_heightMap(ConvertValues(LoadImage(path, this->m_size, this->m_size))), m_model(std::make_shared<Model::Assets::Model>(LoadCLODTerrain(this->m_size))) {};
 
     Terrain::Terrain(const int size, const int iterations, const float filter, const bool random, const int minHeight,
                      const int maxHeight)
@@ -194,6 +194,22 @@ namespace Vakol::Controller {
         return new_val;
     }
 
+    std::vector<float> Terrain::ConvertValues(unsigned char* data)
+    {
+        std::vector<float> values; 
+        values.reserve(m_size * m_size);
+
+        for (int z = 0; z < m_size; ++z)
+        {
+            for (int x = 0; x < m_size; ++x)
+            {
+                values.push_back(static_cast<float>(data[z * m_size + x]));
+            }
+        }
+
+        return values;
+    }
+
     void Terrain::NormalizeValues(std::vector<float>& arr, const int size) {
         float min = arr.at(0);
         float max = arr.at(0);
@@ -217,11 +233,11 @@ namespace Vakol::Controller {
         for (int i = 0; i < size * size; ++i) arr[i] = ((arr.at(i) - min) / height) * 255.0f;
     }
 
-    const Model::Assets::Mesh Terrain::LoadCLODTerrain(const int size) {
+    const Model::Assets::Mesh Terrain::LoadCLODTerrain(const int size) 
+    {
         std::vector<float> vertices;
 
-        unsigned int patch_size =
-            (3 * sizeof(float) + 2 * sizeof(float));  // position (3 floats) + uv (2 floats) = 20 bytes
+        unsigned int patch_size = (3 * sizeof(float) + 2 * sizeof(float));  // position (3 floats) + uv (2 floats) = 20 bytes
 
         vertices.reserve(patch_size * patch_size * patch_size);
 
@@ -259,7 +275,8 @@ namespace Vakol::Controller {
         return {vertices};
     }
 
-    const float Terrain::GetHeight(float x, float z) const {
+    const float Terrain::GetHeight(float x, float z) const 
+    {
         // get the height of the terrain at a given x and z coordinate
         // this is done by interpolating the height of the 4 vertices that surround the point
         // the height is then interpolated between the 4 vertices
@@ -279,12 +296,13 @@ namespace Vakol::Controller {
         if (z1 < 0) z1 += m_size;
 
         // get the heights of the 4 vertices
-        auto vertices = m_model->GetMesh().GetVertexArray()->GetFloatVertices();
 
-        float y0 = vertices[5 * (z0 * m_size + x0) + 1];
-        float y1 = vertices[5 * (z0 * m_size + x1) + 1];
-        float y2 = vertices[5 * (z1 * m_size + x0) + 1];
-        float y3 = vertices[5 * (z1 * m_size + x1) + 1];
+        float y0 = m_heightMap[(z0 * m_size + x0)];
+        float y1 = m_heightMap[(z0 * m_size + x1)];
+        float y2 = m_heightMap[(z1 * m_size + x0)];
+        float y3 = m_heightMap[(z1 * m_size + x1)];
+
+        VK_TRACE(m_heightMap.size());
 
         // get the distance between the point and the 4 vertices
         float dx1 = x - x0;

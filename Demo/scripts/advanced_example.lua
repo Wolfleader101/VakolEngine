@@ -1,19 +1,18 @@
 function init(scene, entity)
-    local terrain_size = 1024;
     --local terrain = entity:add_noisemap_terrain(1024, 30, 2, 0.5, 2.0) -- size, scale, octaves, persistence, lacunarity
-    local terrain = entity:add_clod_terrain(terrain_size) -- size
+    local terrain = entity:add_clod_terrain("coreAssets/textures/HeightMaps/height128.raw"); -- size
 
-    entity:get_transform().scale.x = 10;
-    entity:get_transform().scale.y = 10;
-    entity:get_transform().scale.z = 10;
+    entity:get_transform().scale.x = 100;
+    entity:get_transform().scale.y = 100;
+    entity:get_transform().scale.z = 100;
 
     local model = terrain:get_model();
     local mesh = model:get_mesh();
 
     local material = mesh:get_material();
     
-    --local height_map = raw_texture("coreAssets/textures/HeightMaps/test_2.raw");
-    local height_map = noise_texture(terrain_size, 100, 2, 0.5, 2.0); -- size, scale (smaller = more spikes), octaves (number of loops / detail), persistence (roughness), lacunarity (size of gaps)
+    local height_map = raw_texture("coreAssets/textures/HeightMaps/height128.raw");
+    --local height_map = noise_texture(terrain_size, 100, 2, 0.5, 2.0); -- size, scale (smaller = more spikes), octaves (number of loops / detail), persistence (roughness), lacunarity (size of gaps)
 
     local water_layer_1 = texture("coreAssets/textures/Water/water_0.bmp", false, false);
     local water_layer_2 = texture("coreAssets/textures/Water/water_5.bmp", false, false);
@@ -72,26 +71,26 @@ function init(scene, entity)
     shader:set_float("FOG_DENSITY", 0.025);
 
 
-    local waterEnt = scene:create_entity("water", "");
+    -- local waterEnt = scene:create_entity("water", "");
 
-    waterEnt:get_transform().scale.x = terrain_size * 10;
-    waterEnt:get_transform().scale.z = terrain_size * 10;
-    waterEnt:get_transform().pos.y = -10;
+    -- waterEnt:get_transform().scale.x = terrain_size * 10;
+    -- waterEnt:get_transform().scale.z = terrain_size * 10;
+    -- waterEnt:get_transform().pos.y = -10;
 
-    local waterPlane = waterEnt:add_model("coreAssets/models/plane.obj");
+    -- local waterPlane = waterEnt:add_model("coreAssets/models/plane.obj");
 
-    local waterMesh = waterPlane:get_mesh();
-    local waterMaterial = waterMesh:get_material();
+    -- local waterMesh = waterPlane:get_mesh();
+    -- local waterMaterial = waterMesh:get_material();
 
 
-    waterMaterial:add_texture(water_layer_1);
-    waterMaterial:add_texture(water_layer_2);
+    -- waterMaterial:add_texture(water_layer_1);
+    -- waterMaterial:add_texture(water_layer_2);
 
-    waterPlane:set_shader("coreAssets/shaders/water.prog") -- set the shader on the model (automatically binds the shader)
-    local waterShader = waterPlane:get_shader();
+    -- waterPlane:set_shader("coreAssets/shaders/water.prog") -- set the shader on the model (automatically binds the shader)
+    -- local waterShader = waterPlane:get_shader();
 
-    waterShader:set_int("texture_0", 0);
-    waterShader:set_int("texture_1", 1);
+    -- waterShader:set_int("texture_0", 0);
+    -- waterShader:set_int("texture_1", 1);
     -- shader:set_vec3("light.position", 0.0, 0.5, 7.5);
     -- shader:set_vec3("light.direction", math.rad(0.0), math.rad(-15.0), math.rad(-90.0));
 
