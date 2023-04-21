@@ -181,9 +181,13 @@ namespace Vakol::Controller {
     }
 
     bool Application::OnKeyPressed(KeyPressedEvent& kev) {
-        if (kev.GetKeyCode() == GLFW_KEY_ESCAPE) {
+        if (kev.GetKeyCode() == GLFW_KEY_ESCAPE || kev.GetKeyCode() == GLFW_KEY_X) {
             m_running = false;
             return true;
+        }
+
+        if (kev.GetKeyCode() == GLFW_KEY_K) {
+            m_renderer->ToggleWireframe();
         }
 
         m_input.OnKeyPressed(kev);
