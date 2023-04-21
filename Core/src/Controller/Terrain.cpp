@@ -27,6 +27,8 @@ namespace Vakol::Controller
     {
         std::vector<Vertex> vertices;
 
+        
+
         const int size = m_size;
         vertices.reserve(size * size);  // allocate memory to reduce number of allocation calls in push_back
 
@@ -34,6 +36,8 @@ namespace Vakol::Controller
             for (int x = 0; x < size; ++x) {
                 const auto pixel_offset = data + (z * size + x);
                 const auto y = pixel_offset[0];
+
+                m_heightMap.push_back(y);
 
                 vertices.push_back({
                     glm::vec3((-size / 2.0f + size * x / static_cast<float>(size)) * 1.0f, (y * 0.1f - 16.0f),

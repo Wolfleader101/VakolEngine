@@ -348,6 +348,27 @@ namespace Vakol::Controller {
         sceneType.set_function("create_entity", &Scene::CreateEntity);
         sceneType.set_function("get_camera", &Scene::GetCamera);
 
+        sceneType.set_function("add_terrain_physics", [](Scene* scene, Entity ent)
+        {
+            
+            if(!ent.HasComponent<Terrain>())
+            {
+                VK_WARN("Entity does not have a terrain component. Can't add physics");
+                return;
+            }
+
+            auto& terrain = ent.GetComponent<Terrain>();
+            System::BindScene(*scene);
+
+            System::Physics_AddTerrain(terrain);
+
+        });
+
+        sceneType.set_function("get_physics", [](Scene* scene)
+        {
+            return *scene->scenePhysics;
+        });
+
         cameraType.set_function("get_pos", &Camera::GetPos);
         cameraType.set_function("set_pos", &Camera::SetPos);
         cameraType.set_function("get_forward", &Camera::GetForward);
@@ -367,7 +388,7 @@ namespace Vakol::Controller {
     {
         auto scenePhysics = lua.new_usertype<ScenePhysics>("scenePhysics");
 
-        scenePhysics.set_function("init_object", [](Components::RigidBody& rigid, 
+        scenePhysics.set_function("init_object", [](ScenePhysics* sp, Components::RigidBody& rigid, 
 														Components::Transform& trans,
 														Components::Drawable& model)
         {

@@ -2,10 +2,16 @@ function init(scene, entity)
     local camera = scene:get_camera();
 
     local terrain = entity:add_terrain_heightmap("coreAssets/textures/Heightmaps/height_map.raw");
+
+    
     local terrain_model = terrain:get_model();
+
+    model:set_shader("coreAssets/shaders/clod_terrain.prog") 
+    --scene:add_terrain_physics(entity);
+    --print("sad");
     -- local terrain = entity:add_terrain_fault_formation(128, 128, 0.8, true); -- size, iterations, filter, random
     
-    terrain_model:set_shader("coreAssets/shaders/basic.prog");
+    --terrain_model:set_shader("coreAssets/shaders/basic.prog");
     
     local mesh = terrain_model:get_mesh();
     local material = mesh:get_material();
@@ -14,6 +20,7 @@ function init(scene, entity)
     material:add_texture(t1);
     t1:bind_texture(0);
     
+    print("f");
     local shader = terrain_model:get_shader();
     shader:set_bool("enable_textures", false);
 

@@ -30,18 +30,18 @@ namespace Vakol::Controller {
 
         scenePhysics->Init();
 
-        /*System::Physics_AddTerrain();*/
+        //System::Physics_AddTerrain();
 
         auto entity = entityList.CreateEntity();
 
-        entity.GetComponent<Components::Transform>().pos = { 1, 1, 1 };
+        entity.GetComponent<Components::Transform>().pos = { 1, 10, 1 };
 
         entity.AddComponent<RigidBody>(scenePhysics, std::nullopt);
         entity.AddComponent<Drawable>("coreAssets/models/cube.obj");
 
         
 
-        /*auto& rigid = entity.GetComponent<RigidBody>();
+        auto& rigid = entity.GetComponent<RigidBody>();
 
         rigid.Type = (rp3d::BodyType) 2;
 
@@ -54,7 +54,7 @@ namespace Vakol::Controller {
 
         collider.bounds = bounds;
 
-        System::Physics_InitObject(rigid, collider, std::nullopt, entity.GetComponent<Transform>());*/
+        System::Physics_InitObject(rigid, collider, std::nullopt, entity.GetComponent<Transform>());
 
         int x = 0;
     }

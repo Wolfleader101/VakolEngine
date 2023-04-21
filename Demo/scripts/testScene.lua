@@ -1,7 +1,15 @@
 function init(scene)
     scene:create_entity("cameraController.lua");
-    --scene:create_entity("advanced_example.lua"); -- switch between basic or advanced_example
+
+
+    scene:create_entity("advanced_example.lua"); -- switch between basic or advanced_example
     scene:create_entity("physics_example.lua");
+
+
+
+    --scene:create_entity("basic_example.lua");
+
+     
 end
 
 

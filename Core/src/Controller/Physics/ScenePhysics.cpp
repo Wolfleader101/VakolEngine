@@ -61,6 +61,7 @@ namespace Vakol::Controller::Physics {
 
         const auto trans = rp3d::Transform::identity();
         m_Terrain = m_World->createRigidBody(trans);
+        m_Terrain->setType(rp3d::BodyType::STATIC);
 
         m_Terrain->addCollider(height, trans);
        

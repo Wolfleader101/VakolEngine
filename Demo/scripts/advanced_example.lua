@@ -1,15 +1,19 @@
 function init(scene, entity)
     
     --local terrain = entity:add_noisemap_terrain(1024, 30, 2, 0.5, 2.0) -- size, scale, octaves, persistence, lacunarity
-    local terrain = entity:add_clod_terrain(128) -- size
+    --local terrain = entity:add_clod_terrain(128) -- size
+
+    local terrain = entity:add_heightmap_terrain("coreAssets/textures/HeightMaps/test_2.raw");
 
     local model = terrain:get_model();
     local mesh = model:get_mesh();
 
     local material = mesh:get_material();
     
-    --local height_map = raw_texture("coreAssets/textures/HeightMaps/test_2.raw");
-    local height_map = noise_texture(128, 30.0, 2, 0.5, 2.0); -- size, scale (smaller = more spikes), octaves (number of loops / detail), persistence (roughness), lacunarity (size of gaps)
+    local height_map = raw_texture("coreAssets/textures/HeightMaps/test_2.raw");
+
+    scene:add_terrain_physics(entity);
+    --local height_map = noise_texture(128, 30.0, 2, 0.5, 2.0); -- size, scale (smaller = more spikes), octaves (number of loops / detail), persistence (roughness), lacunarity (size of gaps)
 
     local water_layer_1 = texture("coreAssets/textures/Water/water_0.bmp", false, false);
     local water_layer_2 = texture("coreAssets/textures/Water/water_5.bmp", false, false);

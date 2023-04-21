@@ -182,14 +182,11 @@ namespace Vakol::Controller {
         rigid.initialized = true;
     };
 
-    void System::Physics_AddTerrain()
+    void System::Physics_AddTerrain(Terrain& ter)
     {
-        m_registry->view<Terrain>().each(
-            [&](Terrain& ter)
-            {
-                m_SP->AddTerrain(std::make_shared<Terrain>(ter));
-            }
-        );
+        
+        m_SP->AddTerrain(std::make_shared<Terrain>(ter));
+         
     }
 
 }  // namespace Vakol::Controller
