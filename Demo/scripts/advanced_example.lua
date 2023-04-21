@@ -1,6 +1,7 @@
 function init(scene, entity)
     --local terrain = entity:add_noisemap_terrain(1024, 30, 2, 0.5, 2.0) -- size, scale, octaves, persistence, lacunarity
     local terrain = entity:add_clod_terrain("coreAssets/textures/HeightMaps/height128.raw"); -- size
+    scene:add_terrain_physics(entity);
 
     entity:get_transform().scale.x = 1;
     entity:get_transform().scale.y = 1;
