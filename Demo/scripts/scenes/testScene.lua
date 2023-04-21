@@ -26,6 +26,7 @@ function init(scene)
 end
 
 
+
 function update(scene)
     GUI:start_window("FPS Window", 240.0, 240.0, 10.0, 10.0);
 
@@ -33,6 +34,17 @@ function update(scene)
     GUI:add_text("GUI FPS: " .. math.floor(fps));
     GUI:add_text("GAME FPS: " .. Time.fps);
     GUI:add_text("Delta Time:  " .. string.format("%.4f", Time.delta_time));
+
+    GUI:add_text(" ");
+
+    GUI:add_text("CONTROLS:");
+
+    GUI:add_text("W - Move left");
+    GUI:add_text("A - Move forward");
+    GUI:add_text("S - Move left");
+    GUI:add_text("D - Move right");
+
+    GUI:add_text("MOUSE - Move camera");
 
     GUI:end_window();
 end
