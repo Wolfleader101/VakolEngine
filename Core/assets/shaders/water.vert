@@ -14,9 +14,11 @@ layout (std140, binding = 1) uniform Matrices
     mat4 PV_MATRIX;
 };
 
+uniform mat4 MODEL_MATRIX;
+
 void main()
 {
-    gl_Position = PV_MATRIX * vec4(aPos, 1.0);
+    gl_Position = PV_MATRIX * MODEL_MATRIX * vec4(aPos, 1.0);
 
     vs_out.position = aPos;
     vs_out.uv = aTexCoords;

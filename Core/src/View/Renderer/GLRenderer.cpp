@@ -111,11 +111,11 @@ namespace Vakol::View {
 
         model_matrix = glm::translate(model_matrix, trans.pos);
 
-        model_matrix = glm::scale(model_matrix, trans.scale);
-
         model_matrix = glm::rotate(model_matrix, trans.rot.x, glm::vec3(1.0f, 0.0f, 0.0f));
         model_matrix = glm::rotate(model_matrix, trans.rot.y, glm::vec3(0.0f, 1.0f, 0.0f));
         model_matrix = glm::rotate(model_matrix, trans.rot.z, glm::vec3(0.0f, 0.0f, 1.0f));
+
+        model_matrix = glm::scale(model_matrix, trans.scale);
 
         drawable.model_ptr->GetShader()->SetMat4("MODEL_MATRIX", model_matrix);
         // drawable.model_ptr->GetShader()->SetMat3("NORMAL_MATRIX",

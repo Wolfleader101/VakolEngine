@@ -91,7 +91,7 @@ function init(scene, entity)
 
     waterEnt:get_transform().scale.x = 256;
     waterEnt:get_transform().scale.z = 256;
-    waterEnt:get_transform().pos.y = 256;
+    waterEnt:get_transform().pos.y = -1;
 
     local waterPlane = waterEnt:add_model("coreAssets/models/plane.obj");
 
@@ -107,9 +107,6 @@ function init(scene, entity)
 
     waterShader:set_int("texture_0", 0);
     waterShader:set_int("texture_1", 1);
-    print_err("water created")
-
-
     -- shader:set_vec3("light.position", 0.0, 0.5, 7.5);
     -- shader:set_vec3("light.direction", math.rad(0.0), math.rad(-15.0), math.rad(-90.0));
 
