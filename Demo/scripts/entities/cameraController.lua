@@ -4,8 +4,8 @@ function init(scene, entity)
 
 end
 
-local speed = 50;
-local sprintSpeed = 250;
+local speed = 100;
+local sprintSpeed = 200;
 
 function update(scene, entity)
     local dir = { x = 0, y = 0, z = 0 };
@@ -42,7 +42,7 @@ function update(scene, entity)
 
     local terr_entity = scene:get_entity("terrain");
     local terr_scale = terr_entity:get_transform().scale;
-    new_pos.y = terr_entity:get_terrain():get_height(new_pos.x / terr_scale.x, new_pos.z / terr_scale.z) * terr_scale.y + 15;
+    new_pos.y = (terr_entity:get_terrain():get_height(new_pos.x / terr_scale.x, new_pos.z / terr_scale.z) * terr_scale.y) + 5;
     camera:set_pos(new_pos.x, new_pos.y, new_pos.z);
 
     local delta_mouse_pos = Input:get_delta_mouse_pos();
