@@ -2,8 +2,6 @@
 
 out vec4 FragColor;
 
-uniform sampler2D height_map;
-
 uniform sampler2D water_layer_1;
 uniform sampler2D water_layer_2;
 
@@ -32,6 +30,8 @@ uniform float water_scale_2 = 0.5;
 
 uniform float texture_speed_1 = 0.1;
 uniform float texture_speed_2 = 0.08;
+
+uniform float uv_scale_global = 20.0;
 
 uniform float wobbleX = 1.4;
 uniform float wobbleY = 1.7;
@@ -72,12 +72,12 @@ void main()
     
     vec4 greyscale = vec4(g, g, g, 1.0);
 
-    vec4 color_1 = texture(layer_1, TexCoord);
-    vec4 color_2 = texture(layer_2, TexCoord);
-    vec4 color_3 = texture(layer_3, TexCoord);
-    vec4 color_4 = texture(layer_4, TexCoord);
-    vec4 color_5 = texture(layer_5, TexCoord);
-    vec4 color_6 = texture(layer_6, TexCoord);
+    vec4 color_1 = texture(layer_1, TexCoord * uv_scale_global);
+    vec4 color_2 = texture(layer_2, TexCoord * uv_scale_global);
+    vec4 color_3 = texture(layer_3, TexCoord * uv_scale_global);
+    vec4 color_4 = texture(layer_4, TexCoord * uv_scale_global);
+    vec4 color_5 = texture(layer_5, TexCoord * uv_scale_global);
+    vec4 color_6 = texture(layer_6, TexCoord * uv_scale_global);
 
     if (h < level_1)
     {

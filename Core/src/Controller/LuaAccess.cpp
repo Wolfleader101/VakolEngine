@@ -8,12 +8,6 @@
 #include "Model/gl/GLInstance.hpp"
 #include "View/GUI/GUIWindow.hpp"
 
-constexpr int DIRECTIONAL_LIGHT = 0;
-constexpr int POINT_LIGHT = 1;
-constexpr int SPOT_LIGHT = 2;
-
-int OPTION = DIRECTIONAL_LIGHT;
-
 namespace Vakol::Controller {
     void RegisterMath(sol::state& lua) {
         auto vec3 = lua.new_usertype<glm::vec3>("vec3");

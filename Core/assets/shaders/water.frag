@@ -14,8 +14,8 @@ uniform sampler2D texture_1;
 
 uniform vec4 tint = vec4(0.0, 0.4, 1.0, 0.8);
 
-uniform float uv_scale_0 = 1.0;
-uniform float uv_scale_1 = 1.0;
+uniform float uv_scale_0 = 0.3;
+uniform float uv_scale_1 = 0.3;
 
 uniform float texture_speed_0 = 0.1;
 uniform float texture_speed_1 = 0.08;
@@ -34,5 +34,5 @@ void main()
     vec4 textureDiffuse1 = texture(texture_1, vec2(fs_in.uv.x + (sin(time) * texture_speed_1), fs_in.uv.y + (time * texture_speed_1)) + cos(time * vec2(wobbleX, wobbleY) + fs_in.uv * 10.0) * 0.02 * 1.0);
 
     //1st Layer (Background Colour) - 2nd Layer (Dark Caustics) - 3rd Layer (Light Caustics)
-    FragColor = tint + (textureDiffuse0 * 1.0) + (textureDiffuse1 * 1.0);
+    FragColor = tint + (textureDiffuse0 * uv_scale_0) + (textureDiffuse1 * uv_scale_1);
 }
