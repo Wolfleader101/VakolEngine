@@ -1,7 +1,11 @@
 function init(scene, entity)
-    
+    local terrain_size = 1024;
     --local terrain = entity:add_noisemap_terrain(1024, 30, 2, 0.5, 2.0) -- size, scale, octaves, persistence, lacunarity
-    local terrain = entity:add_clod_terrain(128) -- size
+    local terrain = entity:add_clod_terrain(terrain_size) -- size
+
+    entity:get_transform().scale.x = 10;
+    entity:get_transform().scale.y = 10;
+    entity:get_transform().scale.z = 10;
 
     local model = terrain:get_model();
     local mesh = model:get_mesh();
@@ -9,7 +13,7 @@ function init(scene, entity)
     local material = mesh:get_material();
     
     --local height_map = raw_texture("coreAssets/textures/HeightMaps/test_2.raw");
-    local height_map = noise_texture(128, 30.0, 2, 0.5, 2.0); -- size, scale (smaller = more spikes), octaves (number of loops / detail), persistence (roughness), lacunarity (size of gaps)
+    local height_map = noise_texture(terrain_size, 100, 2, 0.5, 2.0); -- size, scale (smaller = more spikes), octaves (number of loops / detail), persistence (roughness), lacunarity (size of gaps)
 
     local water_layer_1 = texture("coreAssets/textures/Water/water_0.bmp", false, false);
     local water_layer_2 = texture("coreAssets/textures/Water/water_5.bmp", false, false);
@@ -70,9 +74,9 @@ function init(scene, entity)
 
     local waterEnt = scene:create_entity("water", "");
 
-    waterEnt:get_transform().scale.x = 256;
-    waterEnt:get_transform().scale.z = 256;
-    waterEnt:get_transform().pos.y = -1;
+    waterEnt:get_transform().scale.x = terrain_size * 10;
+    waterEnt:get_transform().scale.z = terrain_size * 10;
+    waterEnt:get_transform().pos.y = -10;
 
     local waterPlane = waterEnt:add_model("coreAssets/models/plane.obj");
 

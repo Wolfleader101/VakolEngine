@@ -281,16 +281,10 @@ namespace Vakol::Controller {
         // get the heights of the 4 vertices
         auto vertices = m_model->GetMesh().GetVertexArray()->GetFloatVertices();
 
-        // v.z
-        // v.y
-        // v.x
-        // u
-        // v
-
-        float y0 = vertices[(z0 * m_size + x0) + 1];
-        float y1 = vertices[(z0 * m_size + x1) + 1];
-        float y2 = vertices[(z1 * m_size + x0) + 1];
-        float y3 = vertices[(z1 * m_size + x1) + 1];
+        float y0 = vertices[5 * (z0 * m_size + x0) + 1];
+        float y1 = vertices[5 * (z0 * m_size + x1) + 1];
+        float y2 = vertices[5 * (z1 * m_size + x0) + 1];
+        float y3 = vertices[5 * (z1 * m_size + x1) + 1];
 
         // get the distance between the point and the 4 vertices
         float dx1 = x - x0;

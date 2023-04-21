@@ -155,7 +155,7 @@ namespace Vakol::Controller {
             return Texture(path, gamma, flip);
         });
 
-        entityType.set_function("get_transform", &Entity::GetComponent<Model::Components::Transform>);
+                entityType.set_function("get_transform", &Entity::GetComponent<Model::Components::Transform>);
 
         entityType.set_function("add_heightmap_terrain", [](Entity* ent, const std::string& path) {
             if (!ent->HasComponent<Model::Components::Drawable>()) ent->AddComponent<Model::Components::Drawable>();
@@ -315,6 +315,7 @@ namespace Vakol::Controller {
         terrainType.set_function("get_height", &Terrain::GetHeight);
         terrainType.set_function("get_size", &Terrain::GetSize);
         terrainType.set_function("get_model", &Terrain::GetModel);
+        terrainType.set_function("set_heightmap", &Terrain::SetHeightMap);
     }
 
     void RegisterScene(sol::state& lua) {
