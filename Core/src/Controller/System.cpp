@@ -112,14 +112,14 @@ namespace Vakol::Controller {
             rp3d::Transform(pos, rp3d::Quaternion::fromEulerAngles({trans.rot.x, trans.rot.y, trans.rot.z}));
 
         rigid.owningWorld = m_SP;
-
+        
         rigid.RigidBodyPtr = m_SP->m_World->createRigidBody(rpTrans);
 
-        rigid.RigidBodyPtr->setMass(rigid.Data.mass);
+        rigid.RigidBodyPtr->setMass(static_cast<float>(rigid.Data.mass));
         rigid.RigidBodyPtr->setType(rigid.Type);
         rigid.RigidBodyPtr->enableGravity(rigid.Data.grav);
-        rigid.RigidBodyPtr->setAngularDamping(rigid.Data.ADamp);
-        rigid.RigidBodyPtr->setLinearDamping(rigid.Data.LDamp);
+        rigid.RigidBodyPtr->setAngularDamping(static_cast<float>(rigid.Data.ADamp));
+        rigid.RigidBodyPtr->setLinearDamping(static_cast<float>(rigid.Data.LDamp));
         rigid.RigidBodyPtr->setAngularLockAxisFactor(rigid.Data.AngularLock);
 
         if (collider.has_value()) {

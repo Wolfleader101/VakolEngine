@@ -12,12 +12,12 @@ namespace Vakol::Model {
         this->GenArray(1, &this->VAO_ID);
         this->Bind();
 
-        this->GenBuffer(1, &this->VBO_ID);
-        this->BindBuffer(GL_ARRAY_BUFFER, this->VBO_ID);
+        this->VBO.GenBuffer(1);
+        this->VBO.BindBuffer(GL_ARRAY_BUFFER);
         glBufferData(GL_ARRAY_BUFFER, GetVertexCount() * sizeof(Vertex), this->m_vertices.data(), GL_STATIC_DRAW);
 
-        this->GenBuffer(1, &this->EBO_ID);
-        this->BindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->EBO_ID);
+        this->EBO.GenBuffer(1);
+        this->EBO.BindBuffer(GL_ELEMENT_ARRAY_BUFFER);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, GetIndexCount() * sizeof(unsigned int), this->m_indices.data(), GL_STATIC_DRAW);
 
         glEnableVertexAttribArray(0);
@@ -43,20 +43,15 @@ namespace Vakol::Model {
 
         this->Unbind();
     }
-
-    GLVertexArray::GLVertexArray(const std::vector<float>& vertices, const std::vector<unsigned int>& indices) : VertexArray(vertices, indices)
-    {
-
-    }
-
+    
     GLVertexArray::GLVertexArray(const std::vector<float>& vertices) : VertexArray(vertices)
     {
         this->GenArray(1, &this->VAO_ID);
         this->Bind();
 
-        this->GenBuffer(1, &this->VBO_ID);
-        this->BindBuffer(GL_ARRAY_BUFFER, this->VBO_ID);
-        glBufferData(GL_ARRAY_BUFFER, this->m_verts.size() * sizeof(float), this->m_verts.data(), GL_STATIC_DRAW);
+        this->VBO.GenBuffer(1);
+        this->VBO.BindBuffer(GL_ARRAY_BUFFER);
+        this->VBO.SetData(GL_ARRAY_BUFFER, static_cast<int>(this->m_verts.size()) * sizeof(float), this->m_verts.data(), GL_STATIC_DRAW);
 
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
@@ -125,23 +120,14 @@ namespace Vakol::Model {
         this->Unbind();
     }
 
-    void GLVertexArray::GenArray(const unsigned int n, unsigned int* array) {
+    void GLVertexArray::GenArray(const unsigned int n, unsigned int* array) 
+    {
         glGenVertexArrays(static_cast<GLsizei>(n), static_cast<GLuint*>(array));
-    }
-
-    void GLVertexArray::GenBuffer(const unsigned int n, unsigned int* buffer) {
-        glGenBuffers(static_cast<GLsizei>(n), static_cast<GLuint*>(buffer));
-    }
-
-    void GLVertexArray::BindBuffer(const unsigned int type, const unsigned int buffer) {
-        glBindBuffer(static_cast<GLenum>(type), static_cast<GLenum>(buffer));
     }
 
     GLVertexArray::~GLVertexArray() 
     {
         glDeleteVertexArrays(1, &this->VAO_ID);
-        glDeleteBuffers(1, &this->VBO_ID);
-        glDeleteBuffers(1, &this->EBO_ID);
     }
 
     void GLVertexArray::Bind() const { glBindVertexArray(this->VAO_ID); }

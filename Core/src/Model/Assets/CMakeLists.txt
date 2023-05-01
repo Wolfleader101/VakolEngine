@@ -1,5 +1,8 @@
 SET(ASSETS
 
+	src/Model/Assets/Buffer.hpp
+	src/Model/Assets/Buffer.cpp
+
 	src/Model/Assets/Model.hpp
 
 	src/Model/Assets/Mesh.hpp

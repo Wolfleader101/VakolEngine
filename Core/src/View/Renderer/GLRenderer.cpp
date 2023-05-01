@@ -3,8 +3,11 @@
 #include <glad/glad.h>
 
 #include <Controller/Logger.hpp>
+#pragma warning(push)
+#pragma warning(disable:4201)
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#pragma warning(pop)
 #include <memory>
 #include <vector>
 
@@ -62,14 +65,14 @@ const float light_outer_cut_off = glm::cos(glm::radians(12.5f));
 namespace Vakol::View {
     GLRenderer::GLRenderer(const std::shared_ptr<Window> window) : Renderer(window) {
         glEnable(GL_DEPTH_TEST);
-        glEnable(GL_CULL_FACE);
+        //glEnable(GL_CULL_FACE);
 
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        //glEnable(GL_BLEND);
+        //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        AddUniform(2 * sizeof(glm::mat4), 1);
+        AddUniform(2 * sizeof(glm::mat4), 1); // (projection * view matrix) && view matrix
         // AddUniform(5 * sizeof(float), 2);
-        AddUniform(sizeof(float), 3);
+        AddUniform(sizeof(float), 3); // time
 
         // SetUniformData(1, 0, sizeof(float), &light_constant);
         // SetUniformData(1, 1 * sizeof(float), sizeof(float), &light_linear);
@@ -97,8 +100,7 @@ namespace Vakol::View {
 
     void GLRenderer::ClearBuffer(const unsigned int buffer_bit) const { glClear(buffer_bit); }
 
-    void GLRenderer::Draw(const Controller::Time& time, const Controller::Camera& camera,
-                          const Model::Components::Transform trans, const Model::Components::Drawable& drawable) const {
+    void GLRenderer::Draw(const Controller::Time& time, const Controller::Camera& camera, const Model::Components::Transform trans, const Model::Components::Drawable& drawable) const {
         drawable.model_ptr->GetShader()->Bind();
         SetUniformData(0, 0, sizeof(glm::mat4), glm::value_ptr(camera.GetMatrix(PV_MATRIX)));
         SetUniformData(0, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(camera.GetMatrix(VIEW_MATRIX)));
@@ -124,33 +126,14 @@ namespace Vakol::View {
         // drawable.model_ptr->GetShader()->SetVec3v("light.position", camera.GetPos());
         // drawable.model_ptr->GetShader()->SetVec3v("light.direction", camera.GetForward());
 
-        for (int i = 0; i < drawable.model_ptr->GetMeshCount(); ++i) {
+        for (int i = 0; i < drawable.model_ptr->GetMeshCount(); ++i) 
+        {
             auto mesh = drawable.model_ptr->GetMeshes().at(i);
 
-            switch (mesh.GetVertexArray()->GetDrawMode()) {
-                case ARRAYS:
-                    mesh.GetVertexArray()->DrawArrays();
-                    break;
-                case ELEMENTS:
-                    mesh.GetVertexArray()->DrawElements();
-                    break;
-                case ARRAYS_INSTANCED:
-                    mesh.GetVertexArray()->DrawArraysInstanced(1000);
-                    break;
-                case ELEMENTS_INSTANCED:
-                    mesh.GetVertexArray()->DrawElementsInstanced(1000);
-                    break;
-                case TRIANGLE_STRIPS:
-                    mesh.GetVertexArray()->DrawTriangleStrips();
-                    break;
-                case QUAD_PATCHES:
-                    mesh.GetVertexArray()->DrawQuadPatches();
-                    break;
-                default:
-                    break;
-            }
+            mesh.GetVertexArray()->DrawElements();
         }
-        drawable.model_ptr->GetShader()->Unbind();
+
+        //drawable.model_ptr->GetShader()->Unbind();
     }
 
     void GLRenderer::Update() const {

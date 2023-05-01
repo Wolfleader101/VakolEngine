@@ -1,20 +1,17 @@
 #pragma once
 
 #include <Model/VertexArray.hpp>
+#include <Model/Assets/Buffer.hpp>
 
 namespace Vakol::Model {
     class GLVertexArray : public VertexArray {
        public:
         GLVertexArray(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices);
         GLVertexArray(const std::vector<float>& vertices);
-        GLVertexArray(const std::vector<float>& vertices, const std::vector<unsigned int>& indices);
 
         ~GLVertexArray();
-
+        
         void GenArray(const unsigned int n, unsigned int* array);
-        void GenBuffer(const unsigned int n, unsigned int* buffer);
-
-        void BindBuffer(const unsigned int type, const unsigned int buffer);
 
         void Bind() const override;
         void Unbind() const override;
@@ -51,9 +48,9 @@ namespace Vakol::Model {
 
         const unsigned char GetDrawMode() const { return this->DRAW_MODE; }
 
-       private:
+    private:
         unsigned int VAO_ID = 0;
-        unsigned int VBO_ID = 0;
-        unsigned int EBO_ID = 0;
+        Buffer VBO;
+        Buffer EBO;
     };
 }  // namespace Vakol::Model

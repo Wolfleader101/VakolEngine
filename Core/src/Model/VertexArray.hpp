@@ -12,15 +12,15 @@ const unsigned char ELEMENTS_INSTANCED = 0x3;
 const unsigned char TRIANGLE_STRIPS = 0x4;
 const unsigned char QUAD_PATCHES = 0x5;
 
-namespace Vakol::Model {
+namespace Vakol::Model 
+{
     using Assets::Vertex;
 
-    class VertexArray {
-       public:
+    class VertexArray 
+    {
+    public:
         VertexArray(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices)
             : m_vertices(vertices), m_indices(indices) {}
-        VertexArray(const std::vector<float>& vertices, const std::vector<unsigned int>& indices)
-            : m_verts(vertices), m_indices(indices){};
         VertexArray(const std::vector<float>& vertices) : m_verts(vertices){};
 
         virtual ~VertexArray() = default;
@@ -51,7 +51,7 @@ namespace Vakol::Model {
         virtual void SetDrawMode(const unsigned char mode) = 0;
         virtual const unsigned char GetDrawMode() const = 0;
 
-       protected:
+    protected:
         std::vector<Vertex> m_vertices;
         std::vector<float> m_verts;
 
