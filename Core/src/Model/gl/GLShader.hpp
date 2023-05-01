@@ -10,6 +10,7 @@ namespace Vakol::Model::Assets
     {
     public:
         GLShader(const std::string& path);
+        ~GLShader();
 
         void Bind() const override;
         void Unbind() const override;

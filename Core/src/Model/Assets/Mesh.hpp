@@ -14,7 +14,7 @@ namespace Vakol::Model::Assets
         Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const MaterialSpec& spec = DEFAULT)
             : m_vertexArray(std::make_shared<GLVertexArray>(vertices, indices)), m_material(std::make_shared<GLMaterial>(spec)) {};
 
-        Mesh(const std::vector<float>& vertices, const std::vector<unsigned int>& indices, const MaterialSpec& spec = DEFAULT)
+        Mesh(const std::vector<float>& vertices, [[maybe_unused]] const std::vector<unsigned int>& indices, const MaterialSpec& spec = DEFAULT)
             : m_vertexArray(std::make_shared<GLVertexArray>(vertices)), m_material(std::make_shared<GLMaterial>(spec)) {};
 
         Mesh(const std::vector<float>& vertices, const MaterialSpec& spec = DEFAULT)

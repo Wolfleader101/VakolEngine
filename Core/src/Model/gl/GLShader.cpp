@@ -5,20 +5,21 @@
 #include <Controller/AssetLoader/ShaderLoader.hpp>
 #include <Controller/Logger.hpp>
 
+#pragma warning(push)
+#pragma warning(disable:4201)
 #include <glm/gtc/type_ptr.hpp>
+#pragma warning(pop)
 
 using Vakol::Controller::LoadShader;
 
 namespace Vakol::Model::Assets {
     GLShader::GLShader(const std::string& path) : Shader(LoadShader(path)) {};
+	
+	GLShader::~GLShader() { glDeleteShader(this->m_ID); };
 
     void GLShader::Bind() const { glUseProgram(this->m_ID); }
 
-    void GLShader::Unbind() const 
-    {
-        glUseProgram(0);
-        glDeleteShader(this->m_ID);
-    }
+    void GLShader::Unbind() const { glUseProgram(0); }
 
 	void GLShader::SetBool(const std::string& name, const bool value) const
 	{
