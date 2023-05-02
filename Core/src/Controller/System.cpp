@@ -14,10 +14,12 @@ namespace Vakol::Controller {
 
     entt::registry* System::m_registry = nullptr;
     std::shared_ptr<ScenePhysics> System::m_SP = nullptr;
+    Controller::EntityList* System::Entlist = nullptr;
 
     void System::BindScene(Scene& scene) {
         m_registry = &scene.entityList.m_Registry;
         m_SP = scene.scenePhysics;
+        Entlist = &scene.entityList;
     }
 
     void System::Drawable_Init() {
@@ -47,11 +49,11 @@ namespace Vakol::Controller {
 
     void System::Physics_Init()  
     {
-        m_registry->view<Components::RigidBody>()
-            .each(  // for entities that have a model, use model for bounds
-                [&](auto entity_id) {
-                    System::Physics_InitEntity(list.GetEntity(static_cast<unsigned int>(entity_id)));
-                });
+        auto view = m_registry->view<Components::RigidBody>();
+
+        for (auto entity : view) {
+            Physics_InitEntity(Entlist->GetEntity((uint32_t) entity));
+        }
     }
 
     void System::Physics_UpdateTransforms(float factor) {
@@ -85,8 +87,9 @@ namespace Vakol::Controller {
                     rigid.Data.LDamp = rigid.RigidBodyPtr->getLinearDamping();
                     rigid.Data.AngularLock = rigid.RigidBodyPtr->getAngularLockAxisFactor();
                     rigid.Data.Orientation = rigid.RigidBodyPtr->getTransform().getOrientation().getVectorV();
-
-                    rigid.Type = ((RigidBody::BodyType) rigid.RigidBodyPtr->getType());
+                    
+                    
+                    rigid.Type = (RigidBody::BodyType) rigid.RigidBodyPtr->getType(); //fix 
 
                     rp3d::Vector3 pos(trans.pos.x, trans.pos.y, trans.pos.z);
                     rp3d::Quaternion quat = rp3d::Quaternion::fromEulerAngles(trans.rot.x, trans.rot.y, trans.rot.z);

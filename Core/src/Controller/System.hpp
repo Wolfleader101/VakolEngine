@@ -42,5 +42,6 @@ namespace Vakol::Controller {
        private:
         static std::shared_ptr<ScenePhysics> m_SP;
         static entt::registry* m_registry;
+        static Controller::EntityList* Entlist;
     };
 }  // namespace Vakol::Controller

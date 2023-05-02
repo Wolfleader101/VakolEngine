@@ -30,6 +30,8 @@ namespace Vakol::Controller {
         vec2["y"] = &glm::vec2::y;
     }
 
+    
+
     void RegisterLogger(sol::state& lua) {
         lua.set_function("print", [](sol::variadic_args va) {
             auto arg = va[0];
