@@ -7,12 +7,16 @@ function init(scene, entity)
     
     local r = entity:add_rigid();
 
-    --local r = entity:get_rigid();
-    entity:physics_init(scene); 
+    local collider = entity:add_collider();
 
-    print("bruh");
+    collider.Shape = Shape.Box;
+
+    entity:physics_init(scene); 
+    
+
+    -- print("bruh");
    
-    r:toggle_gravity();
+    --r:toggle_gravity();
 
     local vel = vec3.new();
 
@@ -25,7 +29,7 @@ function init(scene, entity)
 
     r:set_angular_velocity(vel);
     
-
+    
     
     
     --local trans = entity:get_transform();
