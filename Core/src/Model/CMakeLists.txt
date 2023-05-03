@@ -17,7 +17,10 @@ src/Model/Entity.cpp
 
 src/Model/GameConfig.hpp
 
+src/Model/Buffer.hpp
+src/Model/Buffer.cpp
+
 src/Model/VertexArray.hpp
-src/Model/UniformBuffer.hpp
+src/Model/VertexArray.cpp
 
 PARENT_SCOPE)

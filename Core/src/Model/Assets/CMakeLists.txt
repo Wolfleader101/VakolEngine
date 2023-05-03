@@ -1,8 +1,5 @@
 SET(ASSETS
 
-	src/Model/Assets/Buffer.hpp
-	src/Model/Assets/Buffer.cpp
-
 	src/Model/Assets/Model.hpp
 
 	src/Model/Assets/Mesh.hpp
@@ -13,8 +10,6 @@ SET(ASSETS
 	src/Model/Assets/Material.hpp
 
 	src/Model/Assets/Shader.hpp
-
-	src/Model/Assets/Vertex.hpp
-
+	src/Model/Assets/Shader.cpp
 
 PARENT_SCOPE)

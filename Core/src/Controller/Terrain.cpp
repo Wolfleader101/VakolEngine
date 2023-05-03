@@ -28,25 +28,24 @@ namespace Vakol::Controller {
           m_model(std::make_shared<Model::Assets::Model>(
               LoadFaultFormation(size, iterations, filter, random, minHeight, maxHeight))){};
 
-    const Model::Assets::Mesh Terrain::LoadHeightMap(unsigned char* data) {
-        std::vector<Vertex> vertices;
+    const Model::Assets::Mesh Terrain::LoadHeightMap(unsigned char* data) 
+    {
+        std::vector<float> vertices;
 
         const int size = m_size;
         vertices.reserve(size * size);  // allocate memory to reduce number of allocation calls in push_back
 
         for (int z = 0; z < size; ++z) {
-            for (int x = 0; x < size; ++x) {
+            for (int x = 0; x < size; ++x) 
+            {
                 const auto pixel_offset = data + (z * size + x);
                 const auto y = pixel_offset[0];
 
-                vertices.push_back({
-                    glm::vec3((-size / 2.0f + size * x / static_cast<float>(size)) * 1.0f, (y * 0.1f - 16.0f),
-                              (-size / 2.0f + size * z / static_cast<float>(size)) * 1.0f),
-                    glm::vec3(0.0f, 1.0f, 0.0f),  // normal
-                    glm::vec2((x / static_cast<float>(size)), (z / static_cast<float>(size))),
-                    glm::vec3(0.0f),  // tangent
-                    glm::vec3(0.0f)   // bitangent
-                });
+                vertices.push_back((-size / 2.0f + size * x / static_cast<float>(size)) * 1.0f); 
+                vertices.push_back(y * 0.1f - 16.0f);
+                vertices.push_back((-size / 2.0f + size * z / static_cast<float>(size)) * 1.0f);
+                vertices.push_back(x / static_cast<float>(size));
+                vertices.push_back(z / static_cast<float>(size));
             }
         }
 
@@ -67,7 +66,7 @@ namespace Vakol::Controller {
             }
         }
 
-        return Model::Assets::Mesh(vertices, indices);
+        return {vertices, indices, 5 * sizeof(float)};
     }
 
     const Model::Assets::Mesh Terrain::LoadFaultFormation(const int size, const int iterations, const float filter,
@@ -103,22 +102,22 @@ namespace Vakol::Controller {
         ApplyFIRFilter(m_heightMap, size, filter);
         NormalizeValues(m_heightMap, size);
 
-        std::vector<Vertex> vertices;
+        std::vector<float> vertices;
 
         vertices.reserve(size * size);  // allocate memory to reduce number of allocation calls in push_back
 
         for (int z = 0; z < size; ++z) {
-            for (int x = 0; x < size; ++x) {
+            for (int x = 0; x < size; ++x) 
+            {
                 unsigned char y = static_cast<unsigned char>(m_heightMap.at(z * size + x));
 
-                vertices.push_back({
-                    glm::vec3((-size / 2.0f + size * x / static_cast<float>(size)) * 1.0f, (y * 0.4f - 16.0f),
-                              (-size / 2.0f + size * z / static_cast<float>(size)) * 1.0f),
-                    glm::vec3(0.0f, 1.0f, 0.0f),  // normal
-                    glm::vec2((x / static_cast<float>(size)), (z / static_cast<float>(size))),
-                    glm::vec3(0.0f),  // tangent
-                    glm::vec3(0.0f)   // bitangent
-                });
+                vertices.push_back((-size / 2.0f + size * x / static_cast<float>(size)) * 1.0f); 
+                vertices.push_back(y * 0.4f - 16.0f);
+                vertices.push_back((-size / 2.0f + size * z / static_cast<float>(size)) * 1.0f);
+                    
+
+                vertices.push_back(x / static_cast<float>(size));
+                vertices.push_back(z / static_cast<float>(size));
             }
         }
 
@@ -136,7 +135,7 @@ namespace Vakol::Controller {
             }
         }
 
-        return Model::Assets::Mesh(vertices, indices);
+        return {vertices, indices, 5 * sizeof(float)};
     }
 
     void Terrain::GenRandomPoints(Point& p1, Point& p2, const int size) {
@@ -233,11 +232,11 @@ namespace Vakol::Controller {
         for (int i = 0; i < size * size; ++i) arr[i] = ((arr.at(i) - min) / height) * 255.0f;
     }
 
-    const Model::Assets::Mesh Terrain::LoadCLODTerrain(const int size) {
+    const Model::Assets::Mesh Terrain::LoadCLODTerrain(const int size) 
+    {
         std::vector<float> vertices;
 
-        unsigned int patch_size =
-            (3 * sizeof(float) + 2 * sizeof(float));  // position (3 floats) + uv (2 floats) = 20 bytes
+        unsigned int patch_size = (3 * sizeof(float) + 2 * sizeof(float));  // position (3 floats) + uv (2 floats) = 20 bytes
 
         vertices.reserve(patch_size * patch_size * patch_size);
 
@@ -269,13 +268,13 @@ namespace Vakol::Controller {
             }
         }
 
-        VK_TRACE("Loaded {0} patches of 4 control points each", patch_size * patch_size);
-        VK_TRACE("Processing {0} vertices in vertex shader", patch_size * patch_size * patch_size);
-        // GenerateStaticVertices(size);
+        std::vector<unsigned int> indices;
 
-        return {vertices};
+        return {vertices, indices, 5 * sizeof(float)};
     }
-    const float Terrain::GetHeight(float x, float z) const {
+
+    const float Terrain::GetHeight(float x, float z) const 
+    {
         // Clamp x and z to the terrain's dimensions
         x = std::clamp(x, -m_size / 2.0f, m_size / 2.0f - m_size / (m_size - 1));
         z = std::clamp(z, -m_size / 2.0f, m_size / 2.0f - m_size / (m_size - 1));

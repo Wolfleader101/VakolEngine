@@ -141,41 +141,15 @@ namespace Vakol::Controller {
 
         lua.set_function("raw_texture", [](const std::string& path) { return Texture(path); });
 
-        lua.set_function("noise_texture",
-                         [](const int size, float scale, const int octaves, const float persistence,
-                            const float lacunarity) { return Texture(size, scale, octaves, persistence, lacunarity); });
+        lua.set_function("noise_texture", [](const int size, float scale, const int octaves, const float persistence, const float lacunarity) 
+            { return Texture(size, scale, octaves, persistence, lacunarity); });
 
-        lua.set_function("texture", [](const std::string& path, const bool gamma, const bool flip) {
-            return Texture(path, gamma, flip);
-        });
+        lua.set_function("texture", [](const std::string& path, const bool gamma, const bool flip) { return Texture(path, gamma, flip); });
 
-                entityType.set_function("get_transform", &Entity::GetComponent<Model::Components::Transform>);
+        entityType.set_function("get_transform", &Entity::GetComponent<Model::Components::Transform>);
 
-        // entityType.set_function("add_heightmap_terrain", [](Entity* ent, const std::string& path) {
-        //     if (!ent->HasComponent<Model::Components::Drawable>()) ent->AddComponent<Model::Components::Drawable>();
-
-        //     if (ent->HasComponent<Terrain>()) ent->RemoveComponent<Terrain>();
-
-        //     ent->AddComponent<Terrain>(path);
-
-        //     auto terrain = ent->GetComponent<Terrain>();
-
-        //     auto model = terrain.GetModel();  // doesn't that look nice?
-
-        //     const auto size = terrain.GetSize();
-
-        //     if (model) {
-        //         model->GetMesh().GetVertexArray()->SetDrawMode(TRIANGLE_STRIPS);
-        //         model->GetMesh().GetVertexArray()->SetStrips((size - 1) / 1, (size / 1) * 2 - 2);
-
-        //         ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
-        //     }
-
-        //     return terrain;
-        // });
-
-        entityType.set_function("add_noisemap_terrain", [](Entity* ent, const int size, float scale, const int octaves,
-                                                           const float persistence, const float lacunarity) {
+        entityType.set_function("add_noisemap_terrain", [](Entity* ent, const int size, float scale, const int octaves, const float persistence, const float lacunarity) 
+        {
             if (!ent->HasComponent<Model::Components::Drawable>()) ent->AddComponent<Model::Components::Drawable>();
 
             if (ent->HasComponent<Terrain>()) ent->RemoveComponent<Terrain>();
@@ -186,40 +160,37 @@ namespace Vakol::Controller {
 
             auto model = terrain.GetModel();  // doesn't that look nice?
 
-            if (model) {
-                model->GetMesh().GetVertexArray()->SetDrawMode(TRIANGLE_STRIPS);
-                model->GetMesh().GetVertexArray()->SetStrips((size - 1) / 1, (size / 1) * 2 - 2);
-
+            if (model) 
+            {
                 ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
             }
 
             return terrain;
         });
 
-        entityType.set_function(
-            "add_fault_formation_terrain", [](Entity* ent, const int size, const int iterations, const float filter,
-                                              const bool random, const int minHeight, const int maxHeight) {
-                if (!ent->HasComponent<Model::Components::Drawable>()) ent->AddComponent<Model::Components::Drawable>();
-                if (ent->HasComponent<Terrain>()) ent->RemoveComponent<Terrain>();
-
-                ent->AddComponent<Terrain>(size, iterations, filter, random, minHeight, maxHeight);
-
-                auto terrain = ent->GetComponent<Terrain>();
-
-                auto model = terrain.GetModel();  // doesn't that look nice?
-
-                if (model) {
-                    model->GetMesh().GetVertexArray()->SetDrawMode(TRIANGLE_STRIPS);
-                    model->GetMesh().GetVertexArray()->SetStrips((size - 1) / 1, (size / 1) * 2 - 2);
-
-                    ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
-                }
-
-                return terrain;
-            });
-
-        entityType.set_function("add_clod_terrain", [](Entity* ent, const std::string& path) {
+        entityType.set_function("add_fault_formation_terrain", [](Entity* ent, const int size, const int iterations, const float filter, const bool random, const int minHeight, const int maxHeight) 
+        {
             if (!ent->HasComponent<Model::Components::Drawable>()) ent->AddComponent<Model::Components::Drawable>();
+            if (ent->HasComponent<Terrain>()) ent->RemoveComponent<Terrain>();
+
+            ent->AddComponent<Terrain>(size, iterations, filter, random, minHeight, maxHeight);
+
+            auto terrain = ent->GetComponent<Terrain>();
+
+            auto model = terrain.GetModel();  // doesn't that look nice?
+
+            if (model) 
+            {
+                ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
+            }
+
+            return terrain;
+        });
+
+        entityType.set_function("add_clod_terrain", [](Entity* ent, const std::string& path) 
+        {
+            if (!ent->HasComponent<Model::Components::Drawable>()) ent->AddComponent<Model::Components::Drawable>();
+
             if (ent->HasComponent<Terrain>()) ent->RemoveComponent<Terrain>();
 
             ent->AddComponent<Terrain>(path);
@@ -228,38 +199,36 @@ namespace Vakol::Controller {
 
             auto model = terrain.GetModel();  // doesn't that look nice?
 
-            if (model) {
-                model->GetMesh().GetVertexArray()->SetDrawMode(QUAD_PATCHES);
-                model->GetMesh().GetVertexArray()->SetPatches(400, 4);
-
+            if (model) 
+            {
                 ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
             }
 
             return terrain;
         });
 
-        entityType.set_function("get_terrain", [](Entity* ent) {
-            if (ent->HasComponent<Terrain>()) {
-                return ent->GetComponent<Terrain>();
-            }
+        entityType.set_function("get_terrain", [](Entity* ent) 
+        {
+            if (ent->HasComponent<Terrain>()) return ent->GetComponent<Terrain>();
         });
 
-        entityType.set_function("add_model", [](Entity* ent, const std::string& path) {
+        entityType.set_function("add_model", [](Entity* ent, const std::string& path) 
+        {
             if (!ent->HasComponent<Model::Components::Drawable>()) ent->AddComponent<Model::Components::Drawable>();
 
             auto model = AssetLoader::GetModel(path);
 
-            if (model) {
-                model->GetMesh().GetVertexArray()->SetDrawMode(ELEMENTS);
+            if (model) 
+            {
                 ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
-                return model;
             }
+
+            return model;
         });
 
-        entityType.set_function("get_model", [](Entity* ent) {
-            if (ent->HasComponent<Model::Components::Drawable>()) {
-                return ent->GetComponent<Model::Components::Drawable>().model_ptr;
-            }
+        entityType.set_function("get_model", [](Entity* ent) 
+        {
+            if (ent->HasComponent<Model::Components::Drawable>()) return ent->GetComponent<Model::Components::Drawable>().model_ptr;
         });
 
         modelType.set_function("get_mesh_count", &Assets::Model::GetMeshCount);
@@ -273,25 +242,15 @@ namespace Vakol::Controller {
         materialType.set_function("add_texture", &Assets::Material::AddTexture);
         materialType.set_function("get_texture", &Assets::Material::GetTexture);
 
-        // materialType.set_function("get_ambient", &Assets::Material::GetAmbientColor);
-        // materialType.set_function("get_diffuse", &Assets::Material::GetDiffuseColor);
-        // materialType.set_function("get_specular", &Assets::Material::GetSpecularColor);
-        // materialType.set_function("get_shininess", &Assets::Material::GetShininess);
-
-        // materialType.set_function("set_ambient", &Assets::Material::SetAmbientColor);
-        // materialType.set_function("set_diffuse", &Assets::Material::SetDiffuseColor);
-        // materialType.set_function("set_specular", &Assets::Material::SetSpecularColor);
-        // materialType.set_function("set_shininess", &Assets::Material::SetShininess);
-
         textureType.set_function("bind_texture", &Assets::Texture::Bind);
         textureType.set_function("unbind_texture", &Assets::Texture::Unbind);
 
         shaderType.set_function("set_int", &Assets::Shader::SetInt);
         shaderType.set_function("set_bool", &Assets::Shader::SetBool);
         shaderType.set_function("set_float", &Assets::Shader::SetFloat);
-        shaderType.set_function("set_vec2", &Assets::Shader::SetVec2);
-        shaderType.set_function("set_vec3", &Assets::Shader::SetVec3);
-        shaderType.set_function("set_vec4", &Assets::Shader::SetVec4);
+        shaderType.set_function("set_vec2", sol::resolve<void(const char*, const float, const float) const>(&Shader::SetVec2));
+        shaderType.set_function("set_vec3", sol::resolve<void(const char*, const float, const float, const float) const>(&Assets::Shader::SetVec3));
+        shaderType.set_function("set_vec4", sol::resolve<void(const char*, const float, const float, const float, const float) const>(&Assets::Shader::SetVec4));
     }
 
     void RegisterECS(sol::state& lua) {

@@ -5,7 +5,7 @@
 #include <string>
 
 #include "Mesh.hpp"
-#include <Model/gl/GLShader.hpp>
+#include "Shader.hpp"
 
 namespace Vakol::Model::Assets 
 {
@@ -18,7 +18,7 @@ namespace Vakol::Model::Assets
 
         void SetShader(const std::string& path) 
         { 
-            this->m_shader = std::make_shared<GLShader>(path);
+            this->m_shader = std::make_shared<Shader>(path);
             this->m_shader->Bind(); 
         }
         
@@ -34,4 +34,4 @@ namespace Vakol::Model::Assets
         std::shared_ptr<Shader> m_shader = nullptr;
     };
 
-}  // namespace Vakol::Model::Assets
+}

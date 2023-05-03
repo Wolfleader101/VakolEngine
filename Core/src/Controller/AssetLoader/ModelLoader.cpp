@@ -133,7 +133,7 @@ Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene)
     // material
     aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 
-    return Mesh(vertices, indices, ProcessMaterial(material));
+    return Mesh(vertices, indices, sizeof(Vertex), ProcessMaterial(material));
 }
 
 MaterialSpec ProcessMaterial(aiMaterial* mat) 

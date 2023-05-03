@@ -145,17 +145,17 @@ namespace Vakol::Controller {
 
                 auto MeshPtr = PhysicsPool::m_Common.createTriangleMesh();
 
-                for (auto& mesh : draw.model_ptr->GetMeshes()) {
-                    rp3d::TriangleVertexArray* triArray = nullptr;
+                // for (auto& mesh : draw.model_ptr->GetMeshes()) {
+                //     rp3d::TriangleVertexArray* triArray = nullptr;
 
-                    triArray = new rp3d::TriangleVertexArray(
-                        mesh.GetVertexArray()->GetVertexCount(), mesh.GetVertexArray()->GetVertices().data(), sizeof(float) * 3,
-                        mesh.GetVertexArray()->GetIndexCount() / 3, mesh.GetVertexArray()->GetIndices().data(), sizeof(unsigned int) * 3,
-                        rp3d::TriangleVertexArray::VertexDataType::VERTEX_FLOAT_TYPE,
-                        rp3d::TriangleVertexArray::IndexDataType::INDEX_INTEGER_TYPE);
+                //     triArray = new rp3d::TriangleVertexArray(
+                //         mesh.GetVertexArray()->GetVertexCount(), mesh.GetVertexArray()->GetVertices().data(), sizeof(float) * 3,
+                //         mesh.GetVertexArray()->GetIndexCount() / 3, mesh.GetVertexArray()->GetIndices().data(), sizeof(unsigned int) * 3,
+                //         rp3d::TriangleVertexArray::VertexDataType::VERTEX_FLOAT_TYPE,
+                //         rp3d::TriangleVertexArray::IndexDataType::INDEX_INTEGER_TYPE);
 
-                    MeshPtr->addSubpart(triArray);
-                };
+                //     MeshPtr->addSubpart(triArray);
+                // };
 
                 col.Shape = PhysicsPool::m_Common.createConcaveMeshShape(
                     MeshPtr, rp3d::Vector3(trans.scale.x, trans.scale.y, trans.scale.z));
