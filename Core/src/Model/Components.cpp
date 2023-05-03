@@ -65,6 +65,11 @@ namespace Vakol::Model::Components
         RigidBodyPtr->setLinearVelocity(rp3d::Vector3(vel.x, vel.y, vel.z));
     }
 
+    void RigidBody::SetAngularVelocity(const glm::vec3 &vel)
+    {
+        RigidBodyPtr->setAngularVelocity(rp3d::Vector3(vel.x, vel.y, vel.z));
+    }
+
     Collider::Collider(RigidBody& owner, std::optional<Bounds> Data) {
         OwningBody = &owner;
 

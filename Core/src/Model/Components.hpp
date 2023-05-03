@@ -168,7 +168,7 @@ namespace Vakol::Model::Components {
             double mass = 3;			/**< Mass of object*/
             bool grav = true;				/**< If gravity is enabled on the object*/
             double LDamp = 0;			/**< Linear Dampening*/
-            double ADamp = 2;			/**< Angular Dampening*/
+            double ADamp = 1;			/**< Angular Dampening*/
             rp3d::Vector3 AngularLock = { 0,1,0 }; /**< Angular lock axis factor */
             rp3d::Vector3 Orientation = { 0,0,0 }; /**< Orientation */
 
@@ -178,6 +178,7 @@ namespace Vakol::Model::Components {
         void ToggleGravity();
         void SetBodyType(BodyType t);
         void SetVelocity(const glm::vec3& vel);
+        void SetAngularVelocity(const glm::vec3& vel);
 
         //rigid body
         std::shared_ptr<ScenePhysics> owningWorld = nullptr;

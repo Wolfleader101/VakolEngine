@@ -26,8 +26,8 @@ namespace Vakol::Controller {
         Controller::RegisterScene(lua.GetState());
         Controller::RegisterGUIWindow(lua.GetState(), &m_gui);  // Register GUI Window
 
-        // void RegisterRenderer(sol::state& lua);
-        // void RegisterPhysics(sol::state& lua);
+        //void RegisterRenderer(sol::state& lua);
+        Controller::RegisterPhysics(lua.GetState());
 
         auto config = LoadConfig();
         if (!config) {

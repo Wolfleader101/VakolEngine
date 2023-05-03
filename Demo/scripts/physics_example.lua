@@ -7,8 +7,24 @@ function init(scene, entity)
     
     local r = entity:add_rigid();
 
+    --local r = entity:get_rigid();
+    entity:physics_init(scene); 
+
     print("bruh");
+   
     r:toggle_gravity();
+
+    local vel = vec3.new();
+
+    vel.x = 1;
+
+    r:set_velocity(vel);
+
+    vel.x = 60;
+    vel.z = 40;
+
+    r:set_angular_velocity(vel);
+    
 
     
     
@@ -16,7 +32,7 @@ function init(scene, entity)
     --print("sdf");
     
 
-    --entity:physics_init(scene); --don't need this and idk why lmao
+    
     
 
 end

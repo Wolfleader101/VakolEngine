@@ -89,7 +89,7 @@ namespace Vakol::Controller {
                     rigid.Data.Orientation = rigid.RigidBodyPtr->getTransform().getOrientation().getVectorV();
                     
                     
-                    rigid.Type = (RigidBody::BodyType) rigid.RigidBodyPtr->getType(); //fix 
+                    rigid.Type = (RigidBody::BodyType) rigid.RigidBodyPtr->getType(); 
 
                     rp3d::Vector3 pos(trans.pos.x, trans.pos.y, trans.pos.z);
                     rp3d::Quaternion quat = rp3d::Quaternion::fromEulerAngles(trans.rot.x, trans.rot.y, trans.rot.z);
@@ -99,7 +99,7 @@ namespace Vakol::Controller {
             });
     }
 
-    void System::Physics_InitEntity(Entity ent) 
+    void System::Physics_InitEntity(Entity& ent) 
     {
         auto& trans = ent.GetComponent<Transform>();
 

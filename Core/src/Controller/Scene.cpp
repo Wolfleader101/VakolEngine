@@ -28,8 +28,6 @@ namespace Vakol::Controller {
 
         init(*this);
 
-        scenePhysics->Init();
-
     }
 
     const std::string& Scene::getName() const { return name; }

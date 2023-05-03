@@ -321,7 +321,7 @@ namespace Vakol::Controller {
 
         // physics components
 
-        entityType.set_function("add_rigid", [](Entity* ent) 
+        entityType.set_function("add_rigid", [](Entity* ent) -> Components::RigidBody&
         {
             if (ent->HasComponent<Components::RigidBody>()) return ent->GetComponent<Components::RigidBody>();
 
@@ -329,15 +329,7 @@ namespace Vakol::Controller {
             return ent->GetComponent<Components::RigidBody>();
         });
 
-        entityType.set_function("get_rigid", [](Entity* ent) 
-        {
-            if (ent->HasComponent<Components::RigidBody>()) 
-            {
-                return ent->GetComponent<Components::RigidBody>();
-            }
-            VK_CRITICAL("Entity does not have a rigid body component");
-            assert(0);
-        });
+        entityType.set_function("get_rigid", &Entity::GetComponent<Model::Components::RigidBody>);
 
         entityType.set_function("add_collider", [](Entity* ent) 
         {
@@ -476,6 +468,11 @@ namespace Vakol::Controller {
         rigidType.set_function("set_velocity", [](Components::RigidBody* rigid, const glm::vec3& vel) 
         {
             rigid->SetVelocity(vel);
+        });
+
+        rigidType.set_function("set_angular_velocity", [](Components::RigidBody* rigid, const glm::vec3& vel) 
+        {
+            rigid->SetAngularVelocity(vel);
         });
 
         colliderType.set_function("set_bounds", [](Components::Collider* collider, const Components::Collider::Bounds& bounds) 
