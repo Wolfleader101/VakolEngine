@@ -246,8 +246,6 @@ namespace Vakol::Controller {
             if (ent->HasComponent<Terrain>()) {
                 return ent->GetComponent<Terrain>();
             }
-            VK_CRITICAL("Entity does not have a terrain component");
-            assert(0);
         });
 
         entityType.set_function("add_model", [](Entity* ent, const std::string& path) {
@@ -260,21 +258,12 @@ namespace Vakol::Controller {
                 ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
                 return model;
             }
-            VK_CRITICAL("Model could not be loaded");
-            assert(0);
         });
 
         entityType.set_function("get_model", [](Entity* ent) {
             if (ent->HasComponent<Model::Components::Drawable>()) {
                 return ent->GetComponent<Model::Components::Drawable>().model_ptr;
             }
-            VK_CRITICAL("Entity does not have a model component");
-            assert(0);
-        });
-
-        entityType.set_function("physics_init", [](Entity* ent, Scene& scene) {
-            System::BindScene(scene);
-            System::Physics_InitEntity(*ent);
         });
 
         modelType.set_function("get_mesh_count", &Assets::Model::GetMeshCount);
@@ -307,42 +296,42 @@ namespace Vakol::Controller {
         shaderType.set_function("set_vec2", &Assets::Shader::SetVec2);
         shaderType.set_function("set_vec3", &Assets::Shader::SetVec3);
         shaderType.set_function("set_vec4", &Assets::Shader::SetVec4);
-
-        // physics components
-
-        entityType.set_function("add_rigid", [](Entity* ent) -> Components::RigidBody&
+        });
+            assert(0);
+            VK_CRITICAL("Entity does not have a collider component");
+            }
+                return ent->GetComponent<Components::Collider>();
+            {
+            if (ent->HasComponent<Components::Collider>()) 
         {
-            if (ent->HasComponent<Components::RigidBody>()) return ent->GetComponent<Components::RigidBody>();
-
-            ent->AddComponent<Components::RigidBody>();
-            return ent->GetComponent<Components::RigidBody>();
+        entityType.set_function("get_collider", [](Entity* ent) 
         });
 
-        entityType.set_function("get_rigid", &Entity::GetComponent<Model::Components::RigidBody>);
-
-        entityType.set_function("add_collider", [](Entity* ent) 
-        {
-            if(!ent->HasComponent<RigidBody>())
-            {
-                VK_ERROR("Cannot add collider to entity without rigid body component");
-                assert(0);
-            }
-            if (ent->HasComponent<Components::Collider>()) return ent->GetComponent<Components::Collider>();
+            return ent->GetComponent<Components::Collider>();
 
             ent->AddComponent<Components::Collider>();
 
-            return ent->GetComponent<Components::Collider>();
-        });
-
-        entityType.set_function("get_collider", [](Entity* ent) 
-        {
-            if (ent->HasComponent<Components::Collider>()) 
-            {
-                return ent->GetComponent<Components::Collider>();
+                assert(0);
             }
-            VK_CRITICAL("Entity does not have a collider component");
-            assert(0);
+            if (ent->HasComponent<Components::Collider>()) return ent->GetComponent<Components::Collider>();
+                VK_ERROR("Cannot add collider to entity without rigid body component");
+            {
+            if(!ent->HasComponent<RigidBody>())
+        {
+        entityType.set_function("add_collider", [](Entity* ent) 
+        entityType.set_function("get_rigid", &Entity::GetComponent<Model::Components::RigidBody>);
+
+
         });
+            ent->AddComponent<Components::RigidBody>();
+            return ent->GetComponent<Components::RigidBody>();
+
+            if (ent->HasComponent<Components::RigidBody>()) return ent->GetComponent<Components::RigidBody>();
+        {
+        entityType.set_function("add_rigid", [](Entity* ent) -> Components::RigidBody&
+
+        // physics components
+
     }
 
     void RegisterECS(sol::state& lua) {

@@ -70,6 +70,17 @@ namespace Vakol::Controller {
         return std::make_shared<Entity>(ent);
     }
 
+    std::shared_ptr<Entity> Scene::GetEntity(const std::string& tag) {
+        Entity ent;
+        entityList.m_Registry.view<Model::Components::Tag>().each([&](auto entity, auto& tagComponent) {
+            if (tagComponent.tag == tag) {
+                ent = entityList.GetEntity(static_cast<unsigned int>(entity));
+            }
+        });
+
+        return std::make_shared<Entity>(ent);
+    }
+
     namespace fs = std::filesystem;
 
     void Scene::Serialize(const std::string& folder) const
