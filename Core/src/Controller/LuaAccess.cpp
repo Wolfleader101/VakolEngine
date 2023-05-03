@@ -323,9 +323,20 @@ namespace Vakol::Controller {
 
         entityType.set_function("add_rigid", [](Entity* ent) 
         {
-            if (ent->HasComponent<Components::RigidBody>()) return;
+            if (ent->HasComponent<Components::RigidBody>()) return ent->GetComponent<Components::RigidBody>();
 
             ent->AddComponent<Components::RigidBody>();
+            return ent->GetComponent<Components::RigidBody>();
+        });
+
+        entityType.set_function("get_rigid", [](Entity* ent) 
+        {
+            if (ent->HasComponent<Components::RigidBody>()) 
+            {
+                return ent->GetComponent<Components::RigidBody>();
+            }
+            VK_CRITICAL("Entity does not have a rigid body component");
+            assert(0);
         });
 
         entityType.set_function("add_collider", [](Entity* ent) 
@@ -338,6 +349,16 @@ namespace Vakol::Controller {
             if (ent->HasComponent<Components::Collider>()) return;
 
             ent->AddComponent<Components::Collider>( );
+        });
+
+        entityType.set_function("get_collider", [](Entity* ent) 
+        {
+            if (ent->HasComponent<Components::Collider>()) 
+            {
+                return ent->GetComponent<Components::Collider>();
+            }
+            VK_CRITICAL("Entity does not have a collider component");
+            assert(0);
         });
     }
 

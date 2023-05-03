@@ -101,7 +101,7 @@ namespace Vakol::Controller {
 
     void System::Physics_InitEntity(Entity ent) 
     {
-        auto trans = ent.GetComponent<Transform>();
+        auto& trans = ent.GetComponent<Transform>();
 
         if(!ent.HasComponent<RigidBody>())
         {

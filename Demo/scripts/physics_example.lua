@@ -5,14 +5,19 @@ function init(scene, entity)
 
     model:set_shader("coreAssets/shaders/basic.prog");
     
-    local rigid = entity:add_rigid();
+    local r = entity:add_rigid();
+
+    print("bruh");
+    r:toggle_gravity();
+
+    
     
     --local trans = entity:get_transform();
     --print("sdf");
     
 
-    entity:physics_init(scene);
-    print("sdf");
+    --entity:physics_init(scene); --don't need this and idk why lmao
+    
 
 end
 
