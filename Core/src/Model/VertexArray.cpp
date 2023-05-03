@@ -5,7 +5,7 @@
 
 #include <iostream>
 
-#define VERBOSE_DEBUG 0
+#define VERBOSE_DEBUG 1
 
 namespace Vakol::Model
 {
@@ -32,16 +32,31 @@ namespace Vakol::Model
 
         VK_ASSERT(arr_size % elements == 0, "\n\nVector size is not divisible by the number of vertex elements. Double check your size input.");
 
-        output.reserve(arr.size());
+        output.reserve(arr.size() * sizeof(float));
 
         for (int i = 0; i < arr_size; i += elements)
         {
             const auto& position = arr.at(i).position;
             const auto& normal = arr.at(i + 1).normal;
             const auto& uv = arr.at(i + 2).uv;
+
+            output.push_back(position.x);
+            output.push_back(position.y);
+            output.push_back(position.z);
+
+            output.push_back(normal.x);
+            output.push_back(normal.y);
+            output.push_back(normal.z);
+
+            output.push_back(uv.x);
+            output.push_back(uv.y);
+
+            // VK_TRACE("{0} {1} {2}", position.x, position.y, position.z);
+            // VK_TRACE("{0} {1} {2}", normal.x, normal.y, normal.z);
+            // VK_TRACE("{0} {1}", uv.x, uv.y);
         }
 
-        //arr.~vector(); // don't need that no more
+        arr.~vector();
 
         return output;
     }
@@ -52,7 +67,7 @@ namespace Vakol::Model
         auto n_elements = 0; // number of elements used
 
         VK_TRACE("Vertex Size = {0}", size);
-        VK_TRACE("Vertex Elements = {0} (number of floats)", n_elements);
+        VK_TRACE("Vertex Elements = {0} (number of floats)", t_elements);
 
         std::cout << std::endl;
         
@@ -77,10 +92,14 @@ namespace Vakol::Model
             this->EBO.SetData(n_indices * sizeof(unsigned int), this->indices.data(), GL_STATIC_DRAW);
         }
 
-        this->EnableVertexAttribArray(0);
-        this->SetVertexAttribData(0, 3, GL_FLOAT, GL_FALSE, size, (void*)0);
-        t_elements -= 3;
-        n_elements += 3;
+        if (t_elements >= 3)
+        {
+            this->EnableVertexAttribArray(0);
+            this->SetVertexAttribData(0, 3, GL_FLOAT, GL_FALSE, size, (void*)0);
+            t_elements -= 3;
+            n_elements += 3;
+            VK_TRACE("Vertex Positions");
+        }
 
         if (t_elements >= 2)
         {
@@ -102,12 +121,13 @@ namespace Vakol::Model
             }
         }
 
-        if (t_elements >= 3)
+        if (t_elements >= 2)
         {
             this->EnableVertexAttribArray(2);
             this->SetVertexAttribData(2, 2, GL_FLOAT, GL_FALSE, size, (void*)(n_elements * sizeof(float)));
             t_elements -= 2;
             n_elements += 2;
+            VK_TRACE("Vertex UVs");
         }
 
         if (t_elements >= 3)
@@ -116,6 +136,8 @@ namespace Vakol::Model
             this->SetVertexAttribData(3, 3, GL_FLOAT, GL_FALSE, size, (void*)(n_elements * sizeof(float)));
             t_elements -= 3;
             n_elements += 3;
+
+            VK_TRACE("Vertex Tangents");
         }
 
         VK_ASSERT(t_elements == 0, "\n\nLooks like someone forgot to use all of their vertex data!");
@@ -127,6 +149,15 @@ namespace Vakol::Model
     VertexArray::~VertexArray()
     {
         glDeleteVertexArrays(1, &this->ID);
+    }
+
+    void VertexArray::Draw() const
+    {
+        this->Bind();
+
+        glDrawElements(GL_TRIANGLES, this->n_indices, GL_UNSIGNED_INT, 0);
+
+        this->Unbind();
     }
 
     void VertexArray::GenArray(const unsigned int n, unsigned int* array)

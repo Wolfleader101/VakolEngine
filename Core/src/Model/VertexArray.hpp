@@ -23,8 +23,8 @@ namespace Vakol::Model
         glm::vec3 position;
         glm::vec3 normal;
         glm::vec2 uv;
-        glm::vec3 tangent;
-        glm::vec3 bitangent;
+        //glm::vec3 tangent;
+        //glm::vec3 bitangent;
     };
 
     const std::vector<float> Convert(const std::vector<Vertex>& arr, const int size);
@@ -34,6 +34,8 @@ namespace Vakol::Model
     public:
         VertexArray(const std::vector<float>& vertices, const std::vector<unsigned int>& indices, const int size);
         ~VertexArray();
+
+        void Draw() const;
 
         void GenArray(const unsigned int n, unsigned int* array);
         void EnableVertexAttribArray(const unsigned int location);
