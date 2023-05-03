@@ -35,7 +35,7 @@ namespace Vakol::Model {
 
         const std::vector<Vertex> GetVertices() const override { return this->m_vertices; }
         const std::vector<float> GetFloatVertices() const override { return this->m_verts; }
-        const std::vector<unsigned int>& GetIndices() const override { return this->m_indices; }
+        const std::vector<unsigned int> GetIndices() const override { return this->m_indices; }
 
         void SetStrips(const int strips, const int tris) override {
             this->NUM_STRIPS = strips;

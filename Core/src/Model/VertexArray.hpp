@@ -43,7 +43,7 @@ namespace Vakol::Model {
 
         virtual const std::vector<Vertex> GetVertices() const = 0;
         virtual const std::vector<float> GetFloatVertices() const = 0;
-        virtual const std::vector<unsigned int>& GetIndices() const = 0;
+        virtual const std::vector<unsigned int> GetIndices() const = 0;
 
         virtual void SetStrips(const int strips, const int tris) = 0;
         virtual void SetPatches(const int num_patches, const int num_verts_per_patch) = 0;

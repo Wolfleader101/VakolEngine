@@ -26,17 +26,12 @@ namespace Vakol::Controller {
 
         ~Terrain(){};
 
-        const std::vector<float>& GetHeightMap();
-        const int GetMaxHeight();
-        const int GetMinHeight();
-
-        std::vector<float>& GetStaticVertices() { return m_staticVertices; }
-
        private:
         void GenerateStaticVertices(const int size);
         const Model::Assets::Mesh LoadHeightMap(unsigned char* data);
         const Model::Assets::Mesh LoadFaultFormation(const int size, const int iterations, const float filter,
                                                      const bool random, const int minHeight, const int maxHeight);
+
         const Model::Assets::Mesh LoadCLODTerrain(const int size);
 
         struct Point {
@@ -59,7 +54,6 @@ namespace Vakol::Controller {
         std::vector<float> m_heightMap;
 
         std::shared_ptr<Model::Assets::Model> m_model;
-        std::vector<float> m_staticVertices;
 
         int m_size;
 

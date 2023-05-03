@@ -39,8 +39,6 @@ namespace Vakol::Controller {
                 const auto pixel_offset = data + (z * size + x);
                 const auto y = pixel_offset[0];
 
-                m_heightMap.push_back(y);
-
                 vertices.push_back({
                     glm::vec3((-size / 2.0f + size * x / static_cast<float>(size)) * 1.0f, (y * 0.1f - 16.0f),
                               (-size / 2.0f + size * z / static_cast<float>(size)) * 1.0f),
@@ -273,52 +271,10 @@ namespace Vakol::Controller {
 
         VK_TRACE("Loaded {0} patches of 4 control points each", patch_size * patch_size);
         VK_TRACE("Processing {0} vertices in vertex shader", patch_size * patch_size * patch_size);
-        GenerateStaticVertices(size);
+        // GenerateStaticVertices(size);
 
         return {vertices};
     }
-
-    void Terrain::GenerateStaticVertices(const int size) {
-        unsigned int patch_size = 3 * sizeof(float);  // position (3 floats) = 12 bytes
-
-        m_staticVertices.reserve(patch_size * patch_size * patch_size);
-
-        auto getHeight = [&](unsigned int i, unsigned int j) -> float {
-            return (m_heightMap[std::min((int)i, m_size - 1) * m_size + std::min((int)j, m_size - 1)] / 255.0f) *
-                       64.0f -
-                   16.0f;
-        };
-        for (unsigned int i = 0; i < patch_size - 1; i++) {
-            for (unsigned int j = 0; j < patch_size - 1; j++) {
-                // Calculate heightmap indices
-                unsigned int heightMap_i1 = i * (m_size - 1) / (patch_size - 1);
-                unsigned int heightMap_j1 = j * (m_size - 1) / (patch_size - 1);
-                unsigned int heightMap_i2 = (i + 1) * (m_size - 1) / (patch_size - 1);
-                unsigned int heightMap_j2 = (j + 1) * (m_size - 1) / (patch_size - 1);
-
-                // First vertex
-                m_staticVertices.push_back(-size / 2.0f + size * j / (float)(patch_size - 1));  // v.z
-                m_staticVertices.push_back(getHeight(heightMap_i1, heightMap_j1));              // v.y
-                m_staticVertices.push_back(-size / 2.0f + size * i / (float)(patch_size - 1));  // v.x
-
-                // Second vertex
-                m_staticVertices.push_back(-size / 2.0f + size * j / (float)(patch_size - 1));        // v.z
-                m_staticVertices.push_back(getHeight(heightMap_i2, heightMap_j1));                    // v.y
-                m_staticVertices.push_back(-size / 2.0f + size * (i + 1) / (float)(patch_size - 1));  // v.x
-
-                // Third vertex
-                m_staticVertices.push_back(-size / 2.0f + size * (j + 1) / (float)(patch_size - 1));  // v.z
-                m_staticVertices.push_back(getHeight(heightMap_i1, heightMap_j2));                    // v.y
-                m_staticVertices.push_back(-size / 2.0f + size * i / (float)(patch_size - 1));        // v.x
-
-                // Fourth vertex
-                m_staticVertices.push_back(-size / 2.0f + size * (j + 1) / (float)(patch_size - 1));  // v.z
-                m_staticVertices.push_back(getHeight(heightMap_i2, heightMap_j2));                    // v.y
-                m_staticVertices.push_back(-size / 2.0f + size * (i + 1) / (float)(patch_size - 1));  // v.x
-            }
-        }
-    }
-
     const float Terrain::GetHeight(float x, float z) const {
         // Clamp x and z to the terrain's dimensions
         x = std::clamp(x, -m_size / 2.0f, m_size / 2.0f - m_size / (m_size - 1));
@@ -337,11 +293,4 @@ namespace Vakol::Controller {
 
         return height;
     }
-
-    const std::vector<float>& Terrain::GetHeightMap() { return m_heightMap; }
-
-    const int Terrain::GetMaxHeight() { return m_maxHeight; }
-
-    const int Terrain::GetMinHeight() { return m_minHeight; }
-
 }  // namespace Vakol::Controller

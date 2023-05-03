@@ -10,14 +10,6 @@
 #include "System.hpp"
 #include "View/GUI/GUIWindow.hpp"
 
-constexpr int DIRECTIONAL_LIGHT = 0;
-constexpr int POINT_LIGHT = 1;
-constexpr int SPOT_LIGHT = 2;
-
-int OPTION = DIRECTIONAL_LIGHT;
-
-using namespace Vakol::Controller::Physics;
-
 namespace Vakol::Controller {
     void RegisterMath(sol::state& lua) {
         auto vec3 = lua.new_usertype<glm::vec3>("vec3");
@@ -150,9 +142,6 @@ namespace Vakol::Controller {
         auto materialType = lua.new_usertype<Assets::Material>("material");
         auto textureType = lua.new_usertype<Assets::Texture>("texture");
         auto shaderType = lua.new_usertype<Shader>("shader");
-        
-
-        lua.set_function("raw_texture", [](const std::string& path) { return Texture(path); });
 
         lua.set_function("raw_texture", [](const std::string& path) { return Texture(path); });
 
@@ -164,7 +153,7 @@ namespace Vakol::Controller {
             return Texture(path, gamma, flip);
         });
 
-        entityType.set_function("get_transform", &Entity::GetComponent<Model::Components::Transform>);
+                entityType.set_function("get_transform", &Entity::GetComponent<Model::Components::Transform>);
 
         // entityType.set_function("add_heightmap_terrain", [](Entity* ent, const std::string& path) {
         //     if (!ent->HasComponent<Model::Components::Drawable>()) ent->AddComponent<Model::Components::Drawable>();

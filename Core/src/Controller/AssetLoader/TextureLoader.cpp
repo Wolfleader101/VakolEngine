@@ -17,6 +17,7 @@ namespace Vakol::Controller
     const unsigned int LoadRawTexture(const std::string& path) { return ::LoadGLTexture(path, true, false, false); }
 }
 
+
 const unsigned int LoadGLTexture(const std::string& path, const bool raw, const bool gamma, const bool flip)
 {
     unsigned int ID = 0;
