@@ -19,6 +19,7 @@ namespace Vakol::View
         glCreateVertexArrays(1, &m_VAO);
         glCreateBuffers(1, &m_VBO);
         
+        
     }
 
 
@@ -61,9 +62,9 @@ namespace Vakol::View
     {
         uint32_t colorValue = color;
 
-        outColor.r = ((colorValue >> 16) & 0xFF) / 255.0f;
-        outColor.g = ((colorValue >> 8) & 0xFF) / 255.0f;
-        outColor.b = (colorValue & 0xFF) / 255.0f;
+        outColor.x = ((colorValue >> 16) & 0xFF) / 255.0f;
+        outColor.y = ((colorValue >> 8) & 0xFF) / 255.0f;
+        outColor.z = (colorValue & 0xFF) / 255.0f;
     }
 
     void DebugRenderer::GetTriangles()
