@@ -28,7 +28,7 @@ namespace Vakol::Model::Assets
         void SetDrawMode(const DRAW_MODE mode) { this->m_vertexArray->set_mode(mode); }
         void SetDrawModeInfo(const unsigned int info) { this->m_vertexArray->set_mode_data(info); }
 
-        void SetDrawShape(const DRAW_SHAPE shape) { this->m_vertexArray->set_shape(shape); }
+        void SetDrawShape(const unsigned int shape) { this->m_vertexArray->set_shape(shape); }
 
         void SetDrawType(const DRAW_TYPE type) { this->m_vertexArray->set_type(type); }
         void SetDrawTypeInfo(const unsigned int info) { this->m_vertexArray->set_type_data(info); }

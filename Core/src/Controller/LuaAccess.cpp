@@ -201,8 +201,6 @@ namespace Vakol::Controller {
 
             if (model) 
             {   
-                model->
-
                 ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
             }
 
