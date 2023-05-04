@@ -207,10 +207,13 @@ namespace Vakol::Controller {
             return terrain;
         });
 
+#pragma warning(push)
+#pragma warning(disable:4715) // disable that annoying warning for not all code path return a value
         entityType.set_function("get_terrain", [](Entity* ent) 
         {
             if (ent->HasComponent<Terrain>()) return ent->GetComponent<Terrain>();
         });
+#pragma warning(pop)
 
         entityType.set_function("add_model", [](Entity* ent, const std::string& path) 
         {
@@ -226,10 +229,13 @@ namespace Vakol::Controller {
             return model;
         });
 
+#pragma warning(push)
+#pragma warning(disable:4715) // disable that annoying warning for not all code path return a value
         entityType.set_function("get_model", [](Entity* ent) 
         {
             if (ent->HasComponent<Model::Components::Drawable>()) return ent->GetComponent<Model::Components::Drawable>().model_ptr;
         });
+#pragma warning(pop)
 
         modelType.set_function("get_mesh_count", &Assets::Model::GetMeshCount);
         modelType.set_function("get_mesh", &Assets::Model::GetMesh);
