@@ -2,54 +2,56 @@
 
 #include <reactphysics3d/reactphysics3d.h>
 
+#include "Controller/AssetLoader/AssetLoader.hpp"
+
+
+
 namespace Vakol::View
 {
-    DebugRenderer::DebugRenderer(const std::shared_ptr<ScenePhysics>& scenePhysics, const std::shared_ptr<Shader>& shader)
+    DebugRenderer::DebugRenderer(rp3d::PhysicsWorld* WorldPtr)
     {
-        m_scenePhysics = scenePhysics;
-        m_Shader = shader;
-
+        m_World = WorldPtr;
+        m_rp3dRenderer = &m_World->getDebugRenderer();
+        
+        m_Shader = Vakol::Controller::AssetLoader::GetShader("phyDebug.prog");
         EnableWorldDebug();
     }
 
+
+    void DebugRenderer::SetShader(const std::shared_ptr<Shader>& shader)
+    {
+        m_Shader = shader;
+    }
+
+    void DebugRenderer::Enable(bool enable)
+    {
+        enable ? EnableWorldDebug() : DisableWorldDebug();
+    }
+
+    bool DebugRenderer::IsEnabled()
+    {
+        return m_World->getIsDebugRenderingEnabled();
+    }
+    
     void DebugRenderer::EnableWorldDebug()
     {
-        m_scenePhysics->m_World->setIsDebugRenderingEnabled(true);
+        m_World->setIsDebugRenderingEnabled(true);
+
+        m_rp3dRenderer = &m_World->getDebugRenderer();
 
         m_rp3dRenderer->setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::COLLIDER_AABB, true);
 		m_rp3dRenderer->setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::COLLISION_SHAPE, true);
 		m_rp3dRenderer->setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::CONTACT_POINT, true);
         
-        m_rp3dRenderer = &m_scenePhysics->m_World->getDebugRenderer();
+        
     }
 
     void DebugRenderer::DisableWorldDebug()
     {
-        m_scenePhysics->m_World->setIsDebugRenderingEnabled(false);
+        m_World->setIsDebugRenderingEnabled(false);
         m_rp3dRenderer = nullptr;
     }
 
-    void DebugRenderer::SetScenePhysics(const std::shared_ptr<ScenePhysics> scenePhysics)
-    {
-        m_scenePhysics = scenePhysics;
-        EnableWorldDebug();
-
-        glCreateVertexArrays(1, &m_VAO);
-
-        glCreateBuffers(1, &m_VBO);
-
-
-    }
-
-    void DebugRenderer::UnsetScenePhysics()
-    {
-        DisableWorldDebug();
-        m_scenePhysics = nullptr;
-
-        glDeleteVertexArrays(1, &m_VAO);
-        glDeleteBuffers(1, &m_VBO);
-        
-    }
 
     void DebugRenderer::GetDebugColor(const uint32_t& color, glm::vec3& outColor) const
     {
@@ -137,11 +139,6 @@ namespace Vakol::View
 
     void DebugRenderer::Update()
     {
-        if (!m_scenePhysics)
-        {
-            VK_ERROR("No scene physics set for debug renderer. Can't update.");
-            return;
-        }
 
         m_DebugData.clear();
 
@@ -152,11 +149,6 @@ namespace Vakol::View
 
     void DebugRenderer::Draw(const Controller::Camera& camera) const
     {
-        if (!m_scenePhysics)
-        {
-            VK_ERROR("No scene physics set for debug renderer. Can't draw.");
-            return;
-        }
 
         m_Shader->Bind();
         m_Shader->SetMat4("PV", camera.GetMatrix(PV_MATRIX));

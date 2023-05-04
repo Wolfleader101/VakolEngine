@@ -10,7 +10,10 @@
 
 namespace Vakol::Controller::Physics {
 
-    ScenePhysics::ScenePhysics(rp3d::PhysicsWorld* newWorld) : m_World(newWorld), m_Terrain(nullptr){};
+    ScenePhysics::ScenePhysics(rp3d::PhysicsWorld* newWorld) : m_World(newWorld), m_Terrain(nullptr)
+    {
+        m_DebugRenderer = View::DebugRenderer(m_World);
+    };
 
     ScenePhysics::~ScenePhysics(){};
 
@@ -35,6 +38,23 @@ namespace Vakol::Controller::Physics {
 
         // call update on transforms
         Vakol::Controller::System::Physics_UpdateTransforms(factor);
+
+        if(m_DebugRenderer.IsEnabled())
+        {
+            m_DebugRenderer.Update();
+            m_DebugRenderer.Draw(camera);
+        }
+            
+    }
+
+    void ScenePhysics::EnableDebug(bool enable)
+    {
+        m_DebugRenderer.Enable(enable);
+    }
+
+    bool ScenePhysics::IsDebugEnabled()
+    {
+        return m_DebugRenderer.IsEnabled();
     }
 
     void ScenePhysics::AddTerrain(Terrain& terr) {

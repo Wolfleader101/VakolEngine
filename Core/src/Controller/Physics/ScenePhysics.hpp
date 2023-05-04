@@ -5,13 +5,12 @@
 #include <Controller/Camera.hpp>
 #include <Controller/Terrain.hpp>
 #include <Controller/Time.hpp>
-#include <Model/gl/GLShader.hpp>
+#include <View/Renderer/DebugRenderer.hpp>
 
 class System;
 
 namespace Vakol::Controller::Physics {
     class PhysicsPool;
-    class Vakol::View::DebugRenderer;
 
     using Terrain = Vakol::Controller::Terrain;
 
@@ -22,6 +21,9 @@ namespace Vakol::Controller::Physics {
         void Init();
 
         void Update(const Vakol::Controller::Time& time, const Vakol::Controller::Camera& camera);
+
+        void EnableDebug(bool enable);
+        bool IsDebugEnabled();
 
         void AddTerrain(Terrain& terrain);
 
@@ -35,8 +37,10 @@ namespace Vakol::Controller::Physics {
 
         float m_accumulator = 0.0f;
 
+        View::DebugRenderer m_DebugRenderer;
+
         friend class PhysicsPool;
         friend class System;
-        friend class Vakol::View::DebugRenderer;
+        
     };
 }  // namespace Vakol::Controller::Physics

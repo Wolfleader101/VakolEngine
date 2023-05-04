@@ -166,10 +166,10 @@ namespace Vakol::Model::Components {
         bool initialized = false;
         struct RigidData
         {
-            double mass = 3;			/**< Mass of object*/
+            float mass = 3;			/**< Mass of object*/
             bool grav = true;				/**< If gravity is enabled on the object*/
-            double LDamp = 0;			/**< Linear Dampening*/
-            double ADamp = 1;			/**< Angular Dampening*/
+            float LDamp = 0;			/**< Linear Dampening*/
+            float ADamp = 1;			/**< Angular Dampening*/
             rp3d::Vector3 AngularLock = { 0,1,0 }; /**< Angular lock axis factor */
             rp3d::Vector3 Orientation = { 0,0,0 }; /**< Orientation */
 
