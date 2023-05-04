@@ -54,14 +54,14 @@ namespace Vakol::Controller {
 
         std::vector<unsigned int> indices;
 
-        const int LEVEL_OF_DETAIL = 1;
+        constexpr int lod = 1;
 
         indices.reserve((size - 1) * size * 2);
 
-        for (int i = 0; i < size - 1; i += LEVEL_OF_DETAIL) {
-            for (int j = 0; j < size; j += LEVEL_OF_DETAIL) {
+        for (int i = 0; i < size - 1; i += lod) {
+            for (int j = 0; j < size; j += lod) {
                 for (int k = 0; k < 2; ++k) {
-                    indices.push_back(j + size * (i + k * LEVEL_OF_DETAIL));
+                    indices.push_back(j + size * (i + k * lod));
                 }
             }
         }
@@ -125,12 +125,12 @@ namespace Vakol::Controller {
 
         indices.reserve((size - 1) * size * 2);
 
-        const int LEVEL_OF_DETAIL = 1;
+        constexpr int lod = 1;
 
-        for (int i = 0; i < size - 1; i += LEVEL_OF_DETAIL) {
-            for (int j = 0; j < size; j += LEVEL_OF_DETAIL) {
+        for (int i = 0; i < size - 1; i += lod) {
+            for (int j = 0; j < size; j += lod) {
                 for (int k = 0; k < 2; ++k) {
-                    indices.push_back(j + size * (i + k * LEVEL_OF_DETAIL));
+                    indices.push_back(j + size * (i + k * lod));
                 }
             }
         }

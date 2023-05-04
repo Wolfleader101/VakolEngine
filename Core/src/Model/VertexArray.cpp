@@ -9,7 +9,7 @@
 
 namespace Vakol::Model
 {
-    const std::vector<float> Convert(const std::vector<Vertex>& arr, const int size)
+	std::vector<float> Convert(std::vector<Vertex>& arr, const int size)
     {
         std::vector<float> output;
 
@@ -30,14 +30,14 @@ namespace Vakol::Model
         std::cout << std::endl;
     #endif
 
-        VK_ASSERT(arr.size() > 0, "\n\nNo point converting an empty vector");
+        VK_ASSERT(!arr.empty(), "\n\nNo point converting an empty vector");
         VK_ASSERT(elements == 3 || elements == 5 || elements == 8 || elements == 14, "\n\nUnknown Vertex size.");
 
         output.reserve(arr.size() * elements);
 
         for (int i = 0; i < arr_size; i++) // this is really hacky, but it works, aaaaand i'm just lazy
         {
-            auto& vertex = arr.at(i);
+            const auto& vertex = arr.at(i);
             
             if (elements == 3)
             {
@@ -104,9 +104,9 @@ namespace Vakol::Model
         return output;
     }
 
-    VertexArray::VertexArray(const std::vector<float>& vertices, const std::vector<unsigned int>& indices, const int size) : vertices(std::move(vertices)), indices(std::move(indices))
+    VertexArray::VertexArray(std::vector<float>&& vertices, std::vector<unsigned int>&& indices, const int size) : vertices(vertices), indices(indices)
     {
-        int total_elements = size / sizeof(float);
+        int total_elements = static_cast<int>(size / sizeof(float));
         auto used_elements = 0;
 
         this->n_vertices = static_cast<int>(this->vertices.size());
@@ -137,17 +137,17 @@ namespace Vakol::Model
         this->Bind();
 
         glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
-        glBufferData(GL_ARRAY_BUFFER, n_vertices * sizeof(float), this->vertices.data(), GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(n_vertices * sizeof(float)), this->vertices.data(), GL_STATIC_DRAW);
 
         if (n_indices > 0)
         {
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->EBO);
-            glBufferData(GL_ELEMENT_ARRAY_BUFFER, n_indices * sizeof(unsigned int), this->indices.data(), GL_STATIC_DRAW);
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLsizeiptr>(n_indices * sizeof(unsigned int)), this->indices.data(), GL_STATIC_DRAW);
         }
 
         if (total_elements >= 3)
         {
-            this->SetVertexAttribData(0, 3, GL_FLOAT, GL_FALSE, size, (void*)0); // Positions
+            this->SetVertexAttributeData(0, 3, GL_FLOAT, GL_FALSE, size, nullptr); // Positions
             used_elements += 3;
             total_elements -= 3;
         }
@@ -156,13 +156,13 @@ namespace Vakol::Model
         {
             if (total_elements >= 3)
             {
-                this->SetVertexAttribData(1, 3, GL_FLOAT, GL_FALSE, size, (void*)(used_elements * sizeof(float))); // Normals
+                this->SetVertexAttributeData(1, 3, GL_FLOAT, GL_FALSE, size, reinterpret_cast<const void*>(used_elements * sizeof(float))); // Normals
                 total_elements -= 3;
                 used_elements += 3;
             }
             else
             {
-                this->SetVertexAttribData(1, 2, GL_FLOAT, GL_FALSE, size, (void*)(used_elements * sizeof(float))); // UVs
+                this->SetVertexAttributeData(1, 2, GL_FLOAT, GL_FALSE, size, reinterpret_cast<const void*>(used_elements * sizeof(float))); // UVs
                 total_elements -= 2;
                 used_elements += 2;
             }
@@ -170,23 +170,23 @@ namespace Vakol::Model
 
         if (total_elements >= 2)
         {
-            this->SetVertexAttribData(2, 2, GL_FLOAT, GL_FALSE, size, (void*)(used_elements * sizeof(float))); // UVs (with normals)
+            this->SetVertexAttributeData(2, 2, GL_FLOAT, GL_FALSE, size, reinterpret_cast<const void*>(used_elements * sizeof(float))); // UVs (with normals)
             total_elements -= 2;
             used_elements += 2;
         }
 
         if (total_elements >= 3)
         {
-            this->SetVertexAttribData(3, 3, GL_FLOAT, GL_FALSE, size, (void*)(used_elements * sizeof(float))); // Tangents
+            this->SetVertexAttributeData(3, 3, GL_FLOAT, GL_FALSE, size, reinterpret_cast<const void*>(used_elements * sizeof(float))); // Tangents
             total_elements -= 3;
             used_elements += 3;
         }
 
         if (total_elements >= 3)
         {
-            this->SetVertexAttribData(4, 3, GL_FLOAT, GL_FALSE, size, (void*)(used_elements * sizeof(float)));
+            this->SetVertexAttributeData(4, 3, GL_FLOAT, GL_FALSE, size, reinterpret_cast<const void*>(used_elements * sizeof(float)));
             total_elements -= 3;
-            used_elements += 3;
+        	// used_elements += 3;
         }
 
         VK_ASSERT(total_elements == 0, "\n\nReserved Vertex data was not fully allocated.");
@@ -208,7 +208,7 @@ namespace Vakol::Model
             if (this->info.draw_type == DRAW_TYPE::ARRAYS)
                 glDrawArrays(GL_TRIANGLES, 0, this->n_vertices);
             else
-                glDrawElements(GL_TRIANGLES, this->n_indices, GL_UNSIGNED_INT, 0);
+                glDrawElements(GL_TRIANGLES, this->n_indices, GL_UNSIGNED_INT, nullptr);
         }
 
         if (this->info.draw_mode == DRAW_MODE::INSTANCED)
@@ -216,7 +216,7 @@ namespace Vakol::Model
             if (this->info.draw_type == DRAW_TYPE::ARRAYS)
                 glDrawArraysInstanced(GL_TRIANGLES, 0, this->n_vertices, this->info.INSTANCE_AMOUNT);
             else
-                glDrawElementsInstanced(GL_TRIANGLES, this->n_indices, GL_UNSIGNED_INT, 0, this->info.INSTANCE_AMOUNT);
+                glDrawElementsInstanced(GL_TRIANGLES, this->n_indices, GL_UNSIGNED_INT, nullptr, this->info.INSTANCE_AMOUNT);
         }
 
         if (this->info.draw_mode == DRAW_MODE::STRIPS)
@@ -227,8 +227,8 @@ namespace Vakol::Model
             }
             else
             {
-                for (unsigned int strip = 0; strip < this->info.NUM_STRIPS; ++strip)
-                    glDrawElements(GL_TRIANGLE_STRIP, this->info.NUM_TRIS_PER_STRIP + 2, GL_UNSIGNED_INT, (void*)(sizeof(unsigned int) * (this->info.NUM_TRIS_PER_STRIP + 2) * strip));
+                for (int strip = 0; strip < this->info.NUM_STRIPS; ++strip)
+                    glDrawElements(GL_TRIANGLE_STRIP, this->info.NUM_TRIS_PER_STRIP + 2, GL_UNSIGNED_INT, reinterpret_cast<const void*>(sizeof(unsigned int) * (this->info.NUM_TRIS_PER_STRIP + 2) * strip));
             }
         }
 
@@ -245,9 +245,9 @@ namespace Vakol::Model
         this->Unbind();
     }
 
-    void VertexArray::GenArray(const unsigned int n, unsigned int* array) { glGenVertexArrays(static_cast<GLsizei>(n), static_cast<GLuint*>(array)); }
+    void VertexArray::GenArray(const unsigned int n, unsigned int* array) { glGenVertexArrays(static_cast<GLsizei>(n), array); }
 
-    void VertexArray::SetVertexAttribData(const int index, const int n, const unsigned int type, const bool normalized, const int stride, const void* data)
+    void VertexArray::SetVertexAttributeData(const int index, const int n, const unsigned int type, const bool normalized, const int stride, const void* data)
     {
         glEnableVertexAttribArray(index); // enable the vertex attribute at the specific index/location first
         glVertexAttribPointer(static_cast<GLuint>(index), static_cast<GLint>(n), static_cast<GLenum>(type), normalized, static_cast<GLsizei>(stride), data);

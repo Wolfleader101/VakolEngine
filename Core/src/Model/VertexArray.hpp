@@ -49,25 +49,25 @@ namespace Vakol::Model
         DRAW_TYPE draw_type = DRAW_TYPE::ELEMENTS;
 
     // instancing info
-        unsigned int INSTANCE_AMOUNT = 0;
+    	int INSTANCE_AMOUNT = 0;
 
     // strip info
-        unsigned int NUM_STRIPS = 0;
+    	int NUM_STRIPS = 0;
 
     // triangle strip info
-        unsigned int NUM_TRIS_PER_STRIP = 0;
+    	int NUM_TRIS_PER_STRIP = 0;
 
     // patch info
-        unsigned int NUM_PATCHES = 0;
+    	int NUM_PATCHES = 0;
         const int NUM_VERTS_PER_PATCH = NUM_PATCH_PTS;
     };
 
-    const std::vector<float> Convert(const std::vector<Vertex>& arr, const int size);
+	std::vector<float> Convert(std::vector<Vertex>& arr, const int size);
 
     class VertexArray
     {
     public:
-        VertexArray(const std::vector<float>& vertices, const std::vector<unsigned int>& indices, const int size);
+        VertexArray(std::vector<float>&& vertices, std::vector<unsigned int>&& indices, const int size);
         ~VertexArray();
 
         void Draw() const;
@@ -85,23 +85,23 @@ namespace Vakol::Model
         /// @param stride byte offset between each consecutive vertex *just keep this at the size* (Our data is not tightly packed).
         /// @param data  the byte offset from the starting vertex attribute
         /// Example 1: Position (aPos) = (void*)0 -> *Position does not need any offset since it starts first*
-        /// Example 2: Normal (aNormal) = (void*)offsetof(Vertex, normal) *if using Vertex struct* OR (void*)(3 * sizeof(float))
-        void SetVertexAttribData(const int index, const int n, const unsigned int type, const bool normalized, const int stride, const void* data);
+        /// Example 2: Normal (aNormal) = (void*)offset of(Vertex, normal) *if using Vertex struct* OR (void*)(3 * sizeof(float))
+        void SetVertexAttributeData(const int index, const int n, const unsigned int type, const bool normalized, const int stride, const void* data);
 
         void Bind() const;
         void Unbind() const;
-        
-        inline const unsigned int GetID() const { return this->ID; }
 
-        inline const int GetVertexCount() const { return this->n_vertices; }
-        inline const int GetIndexCount() const { return this->n_indices; }
+    	[[nodiscard]] unsigned int GetId() const { return this->ID; }
 
-        inline const std::vector<float>& GetVertices() const { return this->vertices; }
+    	[[nodiscard]] int GetVertexCount() const { return this->n_vertices; }
+    	[[nodiscard]] int GetIndexCount() const { return this->n_indices; }
 
-        inline void set_mode(const DRAW_MODE mode) { this->info.draw_mode = mode; }
-        inline void set_type(const DRAW_TYPE type) { this->info.draw_type = type; }
+    	[[nodiscard]] const std::vector<float>& GetVertices() const { return this->vertices; }
 
-        inline void set_mode_data(const unsigned int data) 
+    	void set_mode(const DRAW_MODE mode) { this->info.draw_mode = mode; }
+    	void set_type(const DRAW_TYPE type) { this->info.draw_type = type; }
+
+    	void set_mode_data(const int data) 
         {
             if (this->info.draw_mode == DRAW_MODE::INSTANCED)
                 this->info.INSTANCE_AMOUNT = data;
@@ -113,7 +113,7 @@ namespace Vakol::Model
                 this->info.NUM_PATCHES = data;
         }
 
-        inline void set_strip_data(const unsigned int data)
+    	void set_strip_data(const int data)
         {
             if (this->info.draw_mode == DRAW_MODE::STRIPS)
                 this->info.NUM_TRIS_PER_STRIP = data;
@@ -124,12 +124,12 @@ namespace Vakol::Model
 
         unsigned int VBO = 0;
         unsigned int EBO = 0;
-    private:
+
         int n_vertices = 0;
         int n_indices = 0;
 
         DrawInfo info;
-    private:
+
         std::vector<float> vertices;
         std::vector<unsigned int> indices;
     };
