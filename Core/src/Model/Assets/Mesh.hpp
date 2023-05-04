@@ -31,10 +31,6 @@ namespace Vakol::Model::Assets
         void SetDrawModeInfo(const unsigned int info) { this->m_vertexArray->set_mode_data(info); }
 
         /// @brief 
-        /// @param shape the primitive shape to draw: TRIANGLES, QUADS, TRIANGLE_STRIP, QUAD_STRIP, PATCHES
-        void SetDrawShape(const unsigned int shape) { this->m_vertexArray->set_shape(shape); }
-
-        /// @brief 
         /// @param type the type of drawing method: ARRAYS, ELEMENTS
         void SetDrawType(const DRAW_TYPE type) { this->m_vertexArray->set_type(type); }
         

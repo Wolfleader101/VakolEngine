@@ -11,9 +11,6 @@ layout (std140, binding = 1) uniform Matrices
 
 uniform mat4 MODEL_MATRIX;
 
-uniform bool enable_fog = false;
-uniform bool enable_water = false;
-
 in vec2 TextureCoord[];
 
 out vec2 TexCoord;
@@ -48,8 +45,6 @@ void main()
     vec4 p0 = (p01 - p00) * u + p00;
     vec4 p1 = (p11 - p10) * u + p10;
     vec4 p = (p1 - p0) * v + p0 + up * height;
-
-    FragPos = VIEW_MATRIX * MODEL_MATRIX * p;
 
     gl_Position = PV_MATRIX * MODEL_MATRIX * p;
 }

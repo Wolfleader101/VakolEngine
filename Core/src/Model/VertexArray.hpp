@@ -43,16 +43,9 @@ namespace Vakol::Model
         ARRAYS, ELEMENTS
     };
 
-    const unsigned int TRIANGLES = 4;
-    const unsigned int QUADS = 7;
-    const unsigned int TRIANGLE_STRIP = 5;
-    const unsigned int QUAD_STRIP = 8;
-    const unsigned int PATCHES = 15;
-
     struct DrawInfo
     {
         DRAW_MODE draw_mode = DRAW_MODE::DEFAULT;
-        unsigned int draw_shape = TRIANGLES;
         DRAW_TYPE draw_type = DRAW_TYPE::ELEMENTS;
 
     // instancing info
@@ -63,9 +56,6 @@ namespace Vakol::Model
 
     // triangle strip info
         unsigned int NUM_TRIS_PER_STRIP = 0;
-
-    // quad strip info
-        unsigned int NUM_QUADS_PER_STRIP = 0;
 
     // patch info
         unsigned int NUM_PATCHES = 0;
@@ -92,7 +82,7 @@ namespace Vakol::Model
         /// @param type the type of data to be used
         /// Example: GL_FLOAT
         /// @param normalized IF TRUE - have the data be normalized between ([-1, 1] (signed)) and ([0, 1] (unsigned)) 
-        /// @param stride byte offset between each consecutive vertex *just keep this at the size of a Vertex* (Our data is not tightly packed).
+        /// @param stride byte offset between each consecutive vertex *just keep this at the size* (Our data is not tightly packed).
         /// @param data  the byte offset from the starting vertex attribute
         /// Example 1: Position (aPos) = (void*)0 -> *Position does not need any offset since it starts first*
         /// Example 2: Normal (aNormal) = (void*)offsetof(Vertex, normal) *if using Vertex struct* OR (void*)(3 * sizeof(float))
@@ -109,7 +99,6 @@ namespace Vakol::Model
         inline const std::vector<float>& GetVertices() const { return this->vertices; }
 
         inline void set_mode(const DRAW_MODE mode) { this->info.draw_mode = mode; }
-        inline void set_shape(const unsigned int type) { this->info.draw_shape = type; }
         inline void set_type(const DRAW_TYPE type) { this->info.draw_type = type; }
 
         inline void set_mode_data(const unsigned int data) 
@@ -126,11 +115,8 @@ namespace Vakol::Model
 
         inline void set_strip_data(const unsigned int data)
         {
-            if (this->info.draw_mode == DRAW_MODE::STRIPS && this->info.draw_shape == TRIANGLE_STRIP)
+            if (this->info.draw_mode == DRAW_MODE::STRIPS)
                 this->info.NUM_TRIS_PER_STRIP = data;
-
-            if (this->info.draw_mode == DRAW_MODE::STRIPS && this->info.draw_shape == QUAD_STRIP)
-                this->info.NUM_QUADS_PER_STRIP = data;
         }
 
     private:

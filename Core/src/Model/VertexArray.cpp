@@ -132,10 +132,7 @@ namespace Vakol::Model
         glGenBuffers(1, &this->VBO);
         if (n_indices > 0) glGenBuffers(1, &this->EBO); // EBO is optional
 
-        if (n_indices > 0)
-            VK_ASSERT(this->ID != 0 && this->VBO != 0 && this->EBO != 0, "Failed to generate one or more buffers!");
-        else
-            VK_ASSERT(this->ID != 0 && this->VBO != 0, "Failed to generate one or more buffers!");
+        VK_ASSERT(this->VBO != 0 && (n_indices > 0) ? this->EBO != 0 : 1, "Failed to generate one or more buffers!");
 
         this->Bind();
 
@@ -209,17 +206,17 @@ namespace Vakol::Model
         if (this->info.draw_mode == DRAW_MODE::DEFAULT)
         {
             if (this->info.draw_type == DRAW_TYPE::ARRAYS)
-                glDrawArrays(static_cast<GLenum>(this->info.draw_shape), 0, this->n_vertices);
+                glDrawArrays(GL_TRIANGLES, 0, this->n_vertices);
             else
-                glDrawElements(static_cast<GLenum>(this->info.draw_shape), this->n_indices, GL_UNSIGNED_INT, 0);
+                glDrawElements(GL_TRIANGLES, this->n_indices, GL_UNSIGNED_INT, 0);
         }
 
         if (this->info.draw_mode == DRAW_MODE::INSTANCED)
         {
             if (this->info.draw_type == DRAW_TYPE::ARRAYS)
-                glDrawArraysInstanced(static_cast<GLenum>(this->info.draw_shape), 0, this->n_vertices, this->info.INSTANCE_AMOUNT);
+                glDrawArraysInstanced(GL_TRIANGLES, 0, this->n_vertices, this->info.INSTANCE_AMOUNT);
             else
-                glDrawElementsInstanced(static_cast<GLenum>(this->info.draw_shape), this->n_indices, GL_UNSIGNED_INT, 0, this->info.INSTANCE_AMOUNT);
+                glDrawElementsInstanced(GL_TRIANGLES, this->n_indices, GL_UNSIGNED_INT, 0, this->info.INSTANCE_AMOUNT);
         }
 
         if (this->info.draw_mode == DRAW_MODE::STRIPS)
@@ -231,14 +228,14 @@ namespace Vakol::Model
             else
             {
                 for (unsigned int strip = 0; strip < this->info.NUM_STRIPS; ++strip)
-                    glDrawElements(static_cast<GLenum>(this->info.draw_shape), this->info.NUM_TRIS_PER_STRIP + 2, GL_UNSIGNED_INT, (void*)(sizeof(unsigned int) * (this->info.NUM_TRIS_PER_STRIP + 2) * strip));
+                    glDrawElements(GL_TRIANGLE_STRIP, this->info.NUM_TRIS_PER_STRIP + 2, GL_UNSIGNED_INT, (void*)(sizeof(unsigned int) * (this->info.NUM_TRIS_PER_STRIP + 2) * strip));
             }
         }
 
         if (this->info.draw_mode == DRAW_MODE::PATCHES)
         {
             if (this->info.draw_type == DRAW_TYPE::ARRAYS)
-                glDrawArrays(static_cast<GLenum>(this->info.draw_shape), 0, this->info.NUM_PATCHES * this->info.NUM_VERTS_PER_PATCH);
+                glDrawArrays(GL_PATCHES, 0, this->info.NUM_PATCHES * this->info.NUM_VERTS_PER_PATCH);
             else
             {
                 // idk lol
