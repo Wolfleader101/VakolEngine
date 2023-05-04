@@ -89,7 +89,7 @@ namespace Vakol::View
         {
             auto mesh = drawable.model_ptr->GetMeshes().at(i);
 
-            mesh.GetVertexArray()->Draw();
+            mesh.Draw();
         }
 
         //drawable.model_ptr->GetShader()->Unbind();

@@ -19,9 +19,13 @@ namespace Vakol::Model::Assets
 
         void SetMaterial(const MaterialSpec& spec) { if (!this->m_material) this->m_material = std::make_shared<Material>(spec); }
 
-        const std::shared_ptr<Material>& GetMaterial() const { return this->m_material; }
-        const std::shared_ptr<VertexArray>& GetVertexArray() const { return this->m_vertexArray; }
+        const unsigned int GetID() const { return this->m_vertexArray->GetID(); }
 
+        const std::shared_ptr<Material>& GetMaterial() const { return this->m_material; }
+
+        const std::vector<float>& GetVertices() const { return this->m_vertexArray->GetVertices(); }
+        // const std::shared_ptr<VertexArray>& GetVertexArray() const { return this->m_vertexArray; }
+        void Draw() const { this->m_vertexArray->Draw(); }
     private:
         std::shared_ptr<VertexArray> m_vertexArray;
         std::shared_ptr<Material> m_material;

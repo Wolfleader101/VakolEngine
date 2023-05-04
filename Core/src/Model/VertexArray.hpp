@@ -7,16 +7,19 @@
 
 #include "Buffer.hpp"
 
-const unsigned char ARRAYS = 0x0;
-const unsigned char ELEMENTS = 0x1;
-const unsigned char TRIANGLE_STRIP = 0x2;
-const unsigned char QUAD_STRIP = 0x3;
-const unsigned char INSTANCED_ARRAYS = 0x4;
-const unsigned char INSTANCED_ELEMENTS = 0x5;
+#define USE_TRIANGLE_PATCHES 0
+
+class Mesh;
 
 namespace Vakol::Model
 {
     constexpr int MAX_BONE_INFLUENCE = 4;
+
+#if USE_TRIANGLE_PATCHES
+    constexpr int NUM_PATCH_PTS = 3;
+#else
+    constexpr int NUM_PATCH_PTS = 4;
+#endif
 
     struct Vertex 
     {
@@ -25,6 +28,11 @@ namespace Vakol::Model
         glm::vec2 uv;
         glm::vec3 tangent;
         glm::vec3 bitangent;
+    };
+
+    enum class DRAW_TYPE
+    {
+        ARRAYS, ELEMENTS, INSTANCED_ARRAYS, INSTANCED_ELEMENTS, TRIANGLE_STRIPS, QUAD_STRIPS, TRIANGLE_PATCHES, QUAD_PATCHES
     };
 
     const std::vector<float> Convert(const std::vector<Vertex>& arr, const int size);
@@ -59,8 +67,13 @@ namespace Vakol::Model
         
         inline const unsigned int GetID() const { return this->ID; }
 
-        inline const int GetVertexCount() const { return n_vertices; }
-        inline const int GetIndexCount() const { return n_indices; }
+        inline const int GetVertexCount() const { return this->n_vertices; }
+        inline const int GetIndexCount() const { return this->n_indices; }
+
+        inline const std::vector<float>& GetVertices() const { return this->vertices; } 
+
+        inline const DRAW_TYPE GetDrawType() const { return this->draw_type; }
+        inline void SetDrawType(const DRAW_TYPE type) { this->draw_type = type; }
     private:
         unsigned int ID = 0;
 
@@ -71,8 +84,35 @@ namespace Vakol::Model
         int n_vertices = 0;
         int n_indices = 0;
 
+        DRAW_TYPE draw_type = DRAW_TYPE::ELEMENTS; // have elements set to default if none chosen
+
+    // strip info
+        int NUM_STRIPS = 0;
+
+    // instancing info
+        int INSTANCE_AMOUNT = 0;
+
+    // triangle strip info
+        int NUM_TRIS_PER_STRIP = 0;
+
+    // quad strip info
+        int NUM_QUADS_PER_STRIP = 0;
+
+    // patch info
+        int NUM_PATCHES = 0;
+        int NUM_VERTS_PER_PATCH = NUM_PATCH_PTS;
     private:
         std::vector<float> vertices;
         std::vector<unsigned int> indices;
+
+    private:
+        void DrawArrays() const;
+        void DrawElements() const;
+        void DrawInstancedArrays() const;
+        void DrawInstancedElements() const;
+        void DrawTriangleStrips() const;
+        void DrawQuadStrips() const;
+        void DrawTrianglePatches() const;
+        void DrawQuadPatches() const;
     };
 }

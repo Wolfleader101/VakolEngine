@@ -13,7 +13,7 @@ namespace Vakol::Model
 
         for (int i = 0; i < meshes.size(); ++i)
         {
-            unsigned int vao = meshes.at(i).GetVertexArray()->GetID();
+            unsigned int vao = meshes.at(i).GetID();
             glBindVertexArray(vao);
 
             // mat4 is a 4x4 matrix (4 * vec4), which in our case, represents the transformation matrix of a model.

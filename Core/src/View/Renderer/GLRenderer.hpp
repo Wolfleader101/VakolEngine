@@ -6,7 +6,7 @@ namespace Vakol::View
 {
     class GLRenderer : public Renderer 
     {
-       public:
+    public:
         GLRenderer(const std::shared_ptr<Window> window);
 
         void ClearColor(const glm::vec4& color = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)) const;

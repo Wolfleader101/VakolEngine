@@ -180,6 +180,8 @@ namespace Vakol::Model
 
         VK_ASSERT(total_elements == 0, "\n\nReserved Vertex data was not fully allocated.");
 
+        glPatchParameteri(GL_PATCH_VERTICES, NUM_PATCH_PTS);
+
         this->Unbind();
         this->VBO.Unbind(GL_ARRAY_BUFFER); // turns out this is perfectly legal, don't unbind EBO though!
     }
@@ -222,6 +224,82 @@ namespace Vakol::Model
     void VertexArray::Unbind() const
     {
         glBindVertexArray(0);
+    }
+
+    void VertexArray::DrawArrays() const
+    {
+        this->Bind();
+
+        glDrawArrays(GL_TRIANGLES, 0, this->n_vertices);
+
+        this->Unbind();
+    }
+    
+    void VertexArray::DrawElements() const
+    {
+        this->Bind();
+
+        glDrawElements(GL_TRIANGLES, this->n_indices, GL_UNSIGNED_INT, 0);
+
+        this->Unbind();
+    }
+
+    void VertexArray::DrawInstancedArrays() const
+    {
+        this->Bind();
+
+        glDrawArraysInstanced(GL_TRIANGLES, 0, this->n_vertices, INSTANCE_AMOUNT);
+
+        this->Unbind();
+    }
+    
+    void VertexArray::DrawInstancedElements() const
+    {
+        this->Bind();
+
+        glDrawElementsInstanced(GL_TRIANGLES, this->n_indices, GL_UNSIGNED_INT, 0, INSTANCE_AMOUNT);
+
+        this->Unbind();
+    }
+    
+    void VertexArray::DrawTriangleStrips() const
+    {
+        this->Bind();
+
+        for (int strip = 0; strip < this->NUM_STRIPS; ++strip)
+            glDrawElements(GL_TRIANGLE_STRIP, this->NUM_TRIS_PER_STRIP + 2, GL_UNSIGNED_INT, (void*)(sizeof(unsigned int) * (this->NUM_TRIS_PER_STRIP + 2) * strip));
+
+        this->Unbind();
+    }
+    
+    void VertexArray::DrawQuadStrips() const
+    {
+        this->Bind();
+
+        for (int strip = 0; strip < this->NUM_STRIPS; ++strip)
+            glDrawElements(GL_QUAD_STRIP, this->NUM_QUADS_PER_STRIP + 2, GL_UNSIGNED_INT, (void*)(sizeof(unsigned int) * (this->NUM_QUADS_PER_STRIP + 2) * strip));
+
+        this->Unbind();
+    }
+    
+    void VertexArray::DrawTrianglePatches() const
+    {
+        VK_ASSERT(USE_TRIANGLE_PATCHES, "Triangle patches not enabled");
+
+        this->Bind();
+
+        glDrawArrays(GL_PATCHES, 0, NUM_PATCHES * NUM_VERTS_PER_PATCH);
+
+        this->Unbind();
+    }
+    
+    void VertexArray::DrawQuadPatches() const
+    {
+        this->Bind();
+
+        glDrawArrays(GL_PATCHES, 0, NUM_PATCHES * NUM_VERTS_PER_PATCH);
+
+        this->Unbind();
     }
 }
 

@@ -11,19 +11,20 @@
 #include <chrono>
 
 using namespace Vakol::Model::Assets;
+
 using Vakol::Model::Vertex;
 
 glm::vec3 to_glm(const aiColor3D& val) { return glm::vec3(val.r, val.g, val.b); }
 
 void ProcessNode(aiNode* node, const aiScene* scene);
-Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
+Vakol::Model::Assets::Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
 MaterialSpec ProcessMaterial(aiMaterial* material);
 
 std::vector<Texture> LoadMaterialTextures(aiMaterial* mat, aiTextureType type, const std::string& typeName);
 
 std::string directory;
 
-std::vector<Mesh> meshes;
+std::vector<Vakol::Model::Assets::Mesh> meshes;
 std::vector<Texture> textures_loaded;
 
 namespace Vakol::Controller
@@ -72,7 +73,7 @@ void ProcessNode(aiNode* node, const aiScene* scene)
     }
 }
 
-Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene) 
+Vakol::Model::Assets::Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene) 
 {
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
@@ -133,7 +134,7 @@ Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene)
     // material
     aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 
-    return Mesh(vertices, indices, sizeof(Vertex), ProcessMaterial(material));
+    return { vertices, indices, sizeof(Vertex), ProcessMaterial(material) };
 }
 
 MaterialSpec ProcessMaterial(aiMaterial* mat) 
