@@ -24,7 +24,9 @@ namespace Vakol::Model::Assets
         const std::shared_ptr<Material>& GetMaterial() const { return this->m_material; }
 
         const std::vector<float>& GetVertices() const { return this->m_vertexArray->GetVertices(); }
-        // const std::shared_ptr<VertexArray>& GetVertexArray() const { return this->m_vertexArray; }
+        void set(const DRAW_MODE mode, const int input) { this->m_vertexArray->set(mode, input); }
+
+
         void Draw() const { this->m_vertexArray->Draw(); }
     private:
         std::shared_ptr<VertexArray> m_vertexArray;

@@ -31,6 +31,7 @@ namespace Vakol::Model
     #endif
 
         VK_ASSERT(arr.size() > 0, "\n\nNo point converting an empty vector");
+        VK_ASSERT(elements == 3 || elements == 5 || elements == 8 || elements == 14, "\n\nUnknown Vertex size.");
 
         output.reserve(arr.size() * elements);
 
@@ -130,7 +131,6 @@ namespace Vakol::Model
 
         if (total_elements >= 3)
         {
-            this->EnableVertexAttribArray(0);
             this->SetVertexAttribData(0, 3, GL_FLOAT, GL_FALSE, size, (void*)0); // Positions
             used_elements += 3;
             total_elements -= 3;
@@ -138,8 +138,6 @@ namespace Vakol::Model
 
         if (total_elements >= 2)
         {
-            this->EnableVertexAttribArray(1);
-
             if (total_elements >= 3)
             {
                 this->SetVertexAttribData(1, 3, GL_FLOAT, GL_FALSE, size, (void*)(used_elements * sizeof(float))); // Normals
@@ -156,7 +154,6 @@ namespace Vakol::Model
 
         if (total_elements >= 2)
         {
-            this->EnableVertexAttribArray(2);
             this->SetVertexAttribData(2, 2, GL_FLOAT, GL_FALSE, size, (void*)(used_elements * sizeof(float))); // UVs (with normals)
             total_elements -= 2;
             used_elements += 2;
@@ -164,7 +161,6 @@ namespace Vakol::Model
 
         if (total_elements >= 3)
         {
-            this->EnableVertexAttribArray(3);
             this->SetVertexAttribData(3, 3, GL_FLOAT, GL_FALSE, size, (void*)(used_elements * sizeof(float))); // Tangents
             total_elements -= 3;
             used_elements += 3;
@@ -172,7 +168,6 @@ namespace Vakol::Model
 
         if (total_elements >= 3)
         {
-            this->EnableVertexAttribArray(4);
             this->SetVertexAttribData(4, 3, GL_FLOAT, GL_FALSE, size, (void*)(used_elements * sizeof(float)));
             total_elements -= 3;
             used_elements += 3;
@@ -186,29 +181,46 @@ namespace Vakol::Model
         this->VBO.Unbind(GL_ARRAY_BUFFER); // turns out this is perfectly legal, don't unbind EBO though!
     }
 
-    VertexArray::~VertexArray()
-    {
-        glDeleteVertexArrays(1, &this->ID);
-    }
+    VertexArray::~VertexArray() { glDeleteVertexArrays(1, &this->ID); }
 
     void VertexArray::Draw() const
     {
         this->Bind();
-
-        glDrawElements(GL_TRIANGLES, this->n_indices, GL_UNSIGNED_INT, 0);
+        
+        switch (this->draw_type)
+        {
+            case DRAW_TYPE::ARRAYS:
+                this->DrawArrays();
+                break;
+            case DRAW_TYPE::ELEMENTS:
+                this->DrawElements();
+                break;
+            case DRAW_TYPE::INSTANCED_ARRAYS:
+                this->DrawInstancedArrays();
+                break;
+            case DRAW_TYPE::INSTANCED_ELEMENTS:
+                this->DrawInstancedElements();
+                break;
+            case DRAW_TYPE::TRIANGLE_STRIPS:
+                this->DrawTriangleStrips();
+                break;
+            case DRAW_TYPE::QUAD_STRIPS:
+                this->DrawQuadStrips();
+                break;
+            case DRAW_TYPE::TRIANGLE_PATCHES:
+                this->DrawTrianglePatches();
+                break;
+            case DRAW_TYPE::QUAD_PATCHES:
+                this->DrawQuadPatches();
+                break;
+            default:
+                break;
+        }
 
         this->Unbind();
     }
 
-    void VertexArray::GenArray(const unsigned int n, unsigned int* array)
-    {
-        glGenVertexArrays(static_cast<GLsizei>(n), static_cast<GLuint*>(array));
-    }
-
-    void VertexArray::EnableVertexAttribArray(const unsigned int location)
-    {
-        glEnableVertexAttribArray(static_cast<GLuint>(location));
-    }
+    void VertexArray::GenArray(const unsigned int n, unsigned int* array) { glGenVertexArrays(static_cast<GLsizei>(n), static_cast<GLuint*>(array)); }
 
     void VertexArray::SetVertexAttribData(const int index, const int n, const unsigned int type, const bool normalized, const int stride, const void* data)
     {
@@ -216,90 +228,42 @@ namespace Vakol::Model
         glVertexAttribPointer(static_cast<GLuint>(index), static_cast<GLint>(n), static_cast<GLenum>(type), normalized, static_cast<GLsizei>(stride), data);
     }
 
-    void VertexArray::Bind() const
-    {
-        glBindVertexArray(this->ID);
-    }
+    void VertexArray::Bind() const { glBindVertexArray(this->ID); }
 
-    void VertexArray::Unbind() const
-    {
-        glBindVertexArray(0);
-    }
+    void VertexArray::Unbind() const { glBindVertexArray(0); }
 
-    void VertexArray::DrawArrays() const
-    {
-        this->Bind();
-
-        glDrawArrays(GL_TRIANGLES, 0, this->n_vertices);
-
-        this->Unbind();
-    }
+    void VertexArray::DrawArrays() const { glDrawArrays(GL_TRIANGLES, 0, this->n_vertices); }
     
-    void VertexArray::DrawElements() const
-    {
-        this->Bind();
+    void VertexArray::DrawElements() const { glDrawElements(GL_TRIANGLES, this->n_indices, GL_UNSIGNED_INT, 0); }
 
-        glDrawElements(GL_TRIANGLES, this->n_indices, GL_UNSIGNED_INT, 0);
-
-        this->Unbind();
-    }
-
-    void VertexArray::DrawInstancedArrays() const
-    {
-        this->Bind();
-
-        glDrawArraysInstanced(GL_TRIANGLES, 0, this->n_vertices, INSTANCE_AMOUNT);
-
-        this->Unbind();
-    }
+    void VertexArray::DrawInstancedArrays() const { glDrawArraysInstanced(GL_TRIANGLES, 0, this->n_vertices, INSTANCE_AMOUNT); }
     
-    void VertexArray::DrawInstancedElements() const
-    {
-        this->Bind();
-
-        glDrawElementsInstanced(GL_TRIANGLES, this->n_indices, GL_UNSIGNED_INT, 0, INSTANCE_AMOUNT);
-
-        this->Unbind();
-    }
+    void VertexArray::DrawInstancedElements() const { glDrawElementsInstanced(GL_TRIANGLES, this->n_indices, GL_UNSIGNED_INT, 0, INSTANCE_AMOUNT); }
     
     void VertexArray::DrawTriangleStrips() const
     {
-        this->Bind();
-
         for (int strip = 0; strip < this->NUM_STRIPS; ++strip)
             glDrawElements(GL_TRIANGLE_STRIP, this->NUM_TRIS_PER_STRIP + 2, GL_UNSIGNED_INT, (void*)(sizeof(unsigned int) * (this->NUM_TRIS_PER_STRIP + 2) * strip));
-
-        this->Unbind();
     }
     
     void VertexArray::DrawQuadStrips() const
     {
-        this->Bind();
-
         for (int strip = 0; strip < this->NUM_STRIPS; ++strip)
             glDrawElements(GL_QUAD_STRIP, this->NUM_QUADS_PER_STRIP + 2, GL_UNSIGNED_INT, (void*)(sizeof(unsigned int) * (this->NUM_QUADS_PER_STRIP + 2) * strip));
-
-        this->Unbind();
     }
     
     void VertexArray::DrawTrianglePatches() const
     {
         VK_ASSERT(USE_TRIANGLE_PATCHES, "Triangle patches not enabled");
 
-        this->Bind();
-
         glDrawArrays(GL_PATCHES, 0, NUM_PATCHES * NUM_VERTS_PER_PATCH);
-
-        this->Unbind();
     }
     
     void VertexArray::DrawQuadPatches() const
     {
-        this->Bind();
+        VK_ASSERT(!USE_TRIANGLE_PATCHES, "Quad patches not enabled");
 
         glDrawArrays(GL_PATCHES, 0, NUM_PATCHES * NUM_VERTS_PER_PATCH);
-
-        this->Unbind();
     }
 }
 

@@ -30,9 +30,19 @@ namespace Vakol::Model
         glm::vec3 bitangent;
     };
 
+    enum class DRAW_MODE
+    {
+        DEFAULT, INSTANCED, STRIPS, PATCHES
+    };
+
     enum class DRAW_TYPE
     {
-        ARRAYS, ELEMENTS, INSTANCED_ARRAYS, INSTANCED_ELEMENTS, TRIANGLE_STRIPS, QUAD_STRIPS, TRIANGLE_PATCHES, QUAD_PATCHES
+        ARRAYS, ELEMENTS
+    };
+
+    enum class DRAW_SHAPE_TYPE
+    {
+        TRIANGLES, QUADS
     };
 
     const std::vector<float> Convert(const std::vector<Vertex>& arr, const int size);
@@ -46,7 +56,6 @@ namespace Vakol::Model
         void Draw() const;
 
         void GenArray(const unsigned int n, unsigned int* array);
-        void EnableVertexAttribArray(const unsigned int location);
 
         /// @brief Specify the data of a vertex attribute.
         /// @param index The location at which this vertex attribute occurs. 
@@ -70,10 +79,12 @@ namespace Vakol::Model
         inline const int GetVertexCount() const { return this->n_vertices; }
         inline const int GetIndexCount() const { return this->n_indices; }
 
-        inline const std::vector<float>& GetVertices() const { return this->vertices; } 
+        inline const std::vector<float>& GetVertices() const { return this->vertices; }
 
-        inline const DRAW_TYPE GetDrawType() const { return this->draw_type; }
-        inline void SetDrawType(const DRAW_TYPE type) { this->draw_type = type; }
+        inline void set_mode(const DRAW_MODE mode) { this->draw_mode = mode; }
+        inline void set_shape(const DRAW_SHAPE_TYPE type) { this->draw_shape_type = type; }
+        inline void set_type(const DRAW_TYPE type) { this->draw_type = type; }
+
     private:
         unsigned int ID = 0;
 
@@ -84,13 +95,15 @@ namespace Vakol::Model
         int n_vertices = 0;
         int n_indices = 0;
 
+        DRAW_MODE draw_mode = DRAW_MODE::DEFAULT;
+        DRAW_SHAPE_TYPE draw_shape_type = DRAW_SHAPE_TYPE::TRIANGLES;
         DRAW_TYPE draw_type = DRAW_TYPE::ELEMENTS; // have elements set to default if none chosen
-
-    // strip info
-        int NUM_STRIPS = 0;
 
     // instancing info
         int INSTANCE_AMOUNT = 0;
+
+    // strip info
+        int NUM_STRIPS = 0;
 
     // triangle strip info
         int NUM_TRIS_PER_STRIP = 0;

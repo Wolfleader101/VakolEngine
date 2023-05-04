@@ -200,7 +200,9 @@ namespace Vakol::Controller {
             auto model = terrain.GetModel();  // doesn't that look nice?
 
             if (model) 
-            {
+            {   
+                model->
+
                 ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
             }
 
