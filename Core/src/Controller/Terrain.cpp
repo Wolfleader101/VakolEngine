@@ -236,12 +236,14 @@ namespace Vakol::Controller {
     {
         std::vector<float> vertices;
 
-        unsigned int patch_size = (3 * sizeof(float) + 2 * sizeof(float));  // position (3 floats) + uv (2 floats) = 20 bytes
+        const int patch_size = 5 * sizeof(float);  // position (3 floats) + uv (2 floats) = 20 bytes
 
         vertices.reserve(patch_size * patch_size * patch_size);
 
-        for (unsigned int i = 0; i <= patch_size - 1; i++) {
-            for (unsigned int j = 0; j <= patch_size - 1; j++) {
+        for (unsigned int i = 0; i <= patch_size - 1; i++) 
+        {
+            for (unsigned int j = 0; j <= patch_size - 1; j++) 
+            {
                 vertices.push_back(-size / 2.0f + size * j / (float)patch_size);  // v.z
                 vertices.push_back(0.0f);                                         // v.y
                 vertices.push_back(-size / 2.0f + size * i / (float)patch_size);  // v.x
@@ -270,7 +272,7 @@ namespace Vakol::Controller {
 
         std::vector<unsigned int> indices;
 
-        return {vertices, indices, 5 * sizeof(float)};
+        return {vertices, indices, patch_size};
     }
 
     const float Terrain::GetHeight(float x, float z) const 

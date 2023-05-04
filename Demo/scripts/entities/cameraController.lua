@@ -1,6 +1,8 @@
 function init(scene, entity)
     print("Initialising Camera");
 
+    print_warn("CHECK LUA FILES FOR ANY CHANGES I MAY HAVE MADE REGARDING CAMERA MOVEMENT");
+
 end
 
 local speed = 10;
@@ -35,7 +37,7 @@ function update(scene, entity)
 
     local new_pos = {
         x = old_pos.x + (forward.x * dir.z + right.x * dir.x) * velocity,
-        y = 0.0,
+        y = old_pos.y + (forward.y * dir.z + right.y * dir.x) * velocity,
         z = old_pos.z + (forward.z * dir.z + right.z * dir.x) * velocity,
     }
 

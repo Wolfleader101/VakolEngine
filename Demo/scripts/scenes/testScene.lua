@@ -1,6 +1,7 @@
 function init(scene)
     scene:create_entity("Camera Controller", "entities/cameraController.lua");
-    scene:create_entity("spinning Cube", "entities/spinning_cube.lua");
+    --scene:create_entity("spinning Cube", "entities/spinning_cube.lua");
+    scene:create_entity("terrain", "entities/terrain.lua");
 end
 
 function update(scene)

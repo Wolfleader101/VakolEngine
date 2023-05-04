@@ -5,7 +5,7 @@
 
 #include <iostream>
 
-#define VERBOSE_DEBUG 0
+#define VERBOSE_DEBUG 1
 
 namespace Vakol::Model
 {
@@ -114,19 +114,38 @@ namespace Vakol::Model
 
         VK_ASSERT(n_vertices > 0, "\n\nCannot create empty vertex array.");
 
+    #if VERBOSE_DEBUG
+        std::cout << std::endl;
+
+        VK_TRACE("Vector info:");
+
+        std::cout << std::endl;
+
+        VK_TRACE("Vector Size = {0}", n_vertices);
+        VK_TRACE("Vertex Size = {0}", size);
+        VK_TRACE("Vertex Elements = {0} (number of floats)", total_elements);
+
+        std::cout << std::endl;
+    #endif
+
         this->GenArray(1, &this->ID);
-        this->VBO.GenBuffer(1);
-        if (n_indices > 0) this->EBO.GenBuffer(1);
+        glGenBuffers(1, &this->VBO);
+        if (n_indices > 0) glGenBuffers(1, &this->EBO); // EBO is optional
+
+        if (n_indices > 0)
+            VK_ASSERT(this->ID != 0 && this->VBO != 0 && this->EBO != 0, "Failed to generate one or more buffers!");
+        else
+            VK_ASSERT(this->ID != 0 && this->VBO != 0, "Failed to generate one or more buffers!");
 
         this->Bind();
 
-        this->VBO.Bind(GL_ARRAY_BUFFER);
-        this->VBO.SetData(n_vertices * size, this->vertices.data(), GL_STATIC_DRAW);
-        
+        glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
+        glBufferData(GL_ARRAY_BUFFER, n_vertices * sizeof(float), this->vertices.data(), GL_STATIC_DRAW);
+
         if (n_indices > 0)
         {
-            this->EBO.Bind(GL_ELEMENT_ARRAY_BUFFER);
-            this->EBO.SetData(n_indices * sizeof(unsigned int), this->indices.data(), GL_STATIC_DRAW);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->EBO);
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER, n_indices * sizeof(unsigned int), this->indices.data(), GL_STATIC_DRAW);
         }
 
         if (total_elements >= 3)
@@ -178,7 +197,7 @@ namespace Vakol::Model
         glPatchParameteri(GL_PATCH_VERTICES, NUM_PATCH_PTS);
 
         this->Unbind();
-        this->VBO.Unbind(GL_ARRAY_BUFFER); // turns out this is perfectly legal, don't unbind EBO though!
+        glBindBuffer(GL_ARRAY_BUFFER, 0); // turns out this is perfectly legal, don't unbind EBO though!
     }
 
     VertexArray::~VertexArray() { glDeleteVertexArrays(1, &this->ID); }
@@ -211,7 +230,7 @@ namespace Vakol::Model
             }
             else
             {
-                for (int strip = 0; strip < this->info.NUM_STRIPS; ++strip)
+                for (unsigned int strip = 0; strip < this->info.NUM_STRIPS; ++strip)
                     glDrawElements(static_cast<GLenum>(this->info.draw_shape), this->info.NUM_TRIS_PER_STRIP + 2, GL_UNSIGNED_INT, (void*)(sizeof(unsigned int) * (this->info.NUM_TRIS_PER_STRIP + 2) * strip));
             }
         }

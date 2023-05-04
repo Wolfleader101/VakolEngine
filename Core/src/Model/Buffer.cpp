@@ -2,6 +2,8 @@
 
 #include <glad/glad.h>
 
+#include <Controller/Logger.hpp>
+
 namespace Vakol::Model
 {
     Buffer::Buffer(const unsigned int type, const int size, const unsigned int binding, const void* data, const unsigned int usage)

@@ -201,6 +201,10 @@ namespace Vakol::Controller {
 
             if (model) 
             {   
+                model->GetMesh().SetDrawMode(DRAW_MODE::PATCHES);
+                model->GetMesh().SetDrawType(DRAW_TYPE::ARRAYS);
+                model->GetMesh().SetDrawModeInfo(400);
+
                 ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
             }
 

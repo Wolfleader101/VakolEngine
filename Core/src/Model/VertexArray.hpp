@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <optional>
 
 #include <glm/vec3.hpp>
 #include <glm/vec2.hpp>
@@ -30,11 +31,13 @@ namespace Vakol::Model
         glm::vec3 bitangent;
     };
 
+    // the method of drawing
     enum class DRAW_MODE
     {
         DEFAULT, INSTANCED, STRIPS, PATCHES
     };
 
+    // draw with vertices only (arrays), or using indices (elements)
     enum class DRAW_TYPE
     {
         ARRAYS, ELEMENTS
@@ -121,7 +124,7 @@ namespace Vakol::Model
                 this->info.NUM_PATCHES = data;
         }
 
-        inline void set_type_data(const unsigned int data)
+        inline void set_strip_data(const unsigned int data)
         {
             if (this->info.draw_mode == DRAW_MODE::STRIPS && this->info.draw_shape == TRIANGLE_STRIP)
                 this->info.NUM_TRIS_PER_STRIP = data;
@@ -133,9 +136,8 @@ namespace Vakol::Model
     private:
         unsigned int ID = 0;
 
-        Buffer VBO;
-        Buffer EBO;
-
+        unsigned int VBO = 0;
+        unsigned int EBO = 0;
     private:
         int n_vertices = 0;
         int n_indices = 0;

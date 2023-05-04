@@ -24,8 +24,10 @@ namespace Vakol::Model::Assets
         
         std::shared_ptr<Shader> GetShader() { return m_shader; }
         
-        const Mesh GetMesh() const { return m_meshes.at(0); }
-        const std::vector<Mesh> GetMeshes() const { return m_meshes; }
+        Mesh GetMesh(const int index = 0) const { return m_meshes.at(index); }
+
+
+        const std::vector<Mesh>& GetMeshes() const { return m_meshes; }
         
         const int GetMeshCount() const { return static_cast<int>(m_meshes.size()); }
 

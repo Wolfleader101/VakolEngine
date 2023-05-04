@@ -84,7 +84,11 @@ namespace Vakol::View
 
     void GLRenderer::Draw(const Controller::Time& time, const Controller::Camera& camera, const Model::Components::Transform trans, const Model::Components::Drawable& drawable) const 
     {
-        drawable.model_ptr->GetShader()->Bind();
+        const auto& shader = drawable.model_ptr->GetShader();
+
+        VK_ASSERT(shader, "\n\nShader is nullptr");
+
+        shader->Bind();
 
         // at index 0, with an offset of 0 (since PV_MATRIX is the only element in the buffer), with a size of a 4x4 matrix, set PV_MATRIX
         SetBufferSubData(0, 0, sizeof(glm::mat4), glm::value_ptr(camera.GetMatrix(PV_MATRIX)));
@@ -99,7 +103,7 @@ namespace Vakol::View
 
         model_matrix = glm::scale(model_matrix, trans.scale);
 
-        drawable.model_ptr->GetShader()->SetMat4("MODEL_MATRIX", model_matrix);
+        shader->SetMat4("MODEL_MATRIX", model_matrix);
         // drawable.model_ptr->GetShader()->SetMat3("NORMAL_MATRIX",
         // glm::transpose(glm::inverse(glm::mat3(model_matrix))));
 
@@ -115,7 +119,7 @@ namespace Vakol::View
             mesh.Draw();
         }
 
-        drawable.model_ptr->GetShader()->Unbind();
+        shader->Unbind();
     }
 
     void GLRenderer::Update() const 

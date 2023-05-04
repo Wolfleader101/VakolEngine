@@ -25,13 +25,21 @@ namespace Vakol::Model::Assets
 
         const std::vector<float>& GetVertices() const { return this->m_vertexArray->GetVertices(); }
 
+        /// @brief 
+        /// @param mode the mode of drawing: DEFAULT, INSTANCED, STRIPS, PATCHES
         void SetDrawMode(const DRAW_MODE mode) { this->m_vertexArray->set_mode(mode); }
         void SetDrawModeInfo(const unsigned int info) { this->m_vertexArray->set_mode_data(info); }
 
+        /// @brief 
+        /// @param shape the primitive shape to draw: TRIANGLES, QUADS, TRIANGLE_STRIP, QUAD_STRIP, PATCHES
         void SetDrawShape(const unsigned int shape) { this->m_vertexArray->set_shape(shape); }
 
+        /// @brief 
+        /// @param type the type of drawing method: ARRAYS, ELEMENTS
         void SetDrawType(const DRAW_TYPE type) { this->m_vertexArray->set_type(type); }
-        void SetDrawTypeInfo(const unsigned int info) { this->m_vertexArray->set_type_data(info); }
+        
+        // call this if you are drawing with strips
+        void SetStripInfo(const unsigned int info) { this->m_vertexArray->set_strip_data(info); }
 
         void Draw() const { this->m_vertexArray->Draw(); }
     private:

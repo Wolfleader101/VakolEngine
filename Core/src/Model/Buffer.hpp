@@ -22,6 +22,6 @@ namespace Vakol::Model
 
         inline const unsigned int GetID() const { return ID; }
     private:
-        unsigned int ID;
+        unsigned int ID = 0;
     };
 }

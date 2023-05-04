@@ -79,6 +79,8 @@ namespace Vakol::View {
             return;
         }
 
+        VK_INFO("OPENGL IS REAL!");
+
         // enable OpenGL debug context if context allows for debug context
         int flags; glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
         if (flags & GL_CONTEXT_FLAG_DEBUG_BIT)
