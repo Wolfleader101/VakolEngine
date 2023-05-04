@@ -1,6 +1,4 @@
 function init(scene, entity)
-
-    print("bruh");
     
     local model = entity:add_model("coreAssets/models/cube.obj");
 
@@ -25,12 +23,11 @@ function init(scene, entity)
     
     collider.Shape = Shape.Box;
     
-    
 
     entity:physics_init(scene); 
     
     
-    -- 
+    
 end
 
 function update(scene, entity)
