@@ -1,9 +1,12 @@
 function init(scene, entity)
 
-    --local ent = scene:create_entity("basicEntity.lua");
+    print("bruh");
+    
     local model = entity:add_model("coreAssets/models/cube.obj");
 
     local trans = entity:get_transform();
+
+    
     
     trans.pos.y = -5;
     trans.scale.x = 100;
@@ -16,7 +19,7 @@ function init(scene, entity)
 
     r.BodyType = BodyType.Static;
 
-    
+    print("bruh");
 
     local collider = entity:add_collider();
     

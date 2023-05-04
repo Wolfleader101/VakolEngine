@@ -296,41 +296,46 @@ namespace Vakol::Controller {
         shaderType.set_function("set_vec2", &Assets::Shader::SetVec2);
         shaderType.set_function("set_vec3", &Assets::Shader::SetVec3);
         shaderType.set_function("set_vec4", &Assets::Shader::SetVec4);
-        });
-            assert(0);
-            VK_CRITICAL("Entity does not have a collider component");
-            }
-                return ent->GetComponent<Components::Collider>();
-            {
-            if (ent->HasComponent<Components::Collider>()) 
+
+
+        entityType.set_function("physics_init", [](Entity* ent, Scene& scene)
         {
-        entityType.set_function("get_collider", [](Entity* ent) 
+                System::BindScene(scene);
+                System::Physics_InitEntity(*ent);
         });
 
-            return ent->GetComponent<Components::Collider>();
 
-            ent->AddComponent<Components::Collider>();
-
-                assert(0);
-            }
-            if (ent->HasComponent<Components::Collider>()) return ent->GetComponent<Components::Collider>();
-                VK_ERROR("Cannot add collider to entity without rigid body component");
-            {
-            if(!ent->HasComponent<RigidBody>())
+        entityType.set_function("add_rigid", [](Entity* ent)
         {
-        entityType.set_function("add_collider", [](Entity* ent) 
-        entityType.set_function("get_rigid", &Entity::GetComponent<Model::Components::RigidBody>);
 
-
-        });
-            ent->AddComponent<Components::RigidBody>();
+            if (!ent->HasComponent<Components::RigidBody>()) ent->AddComponent<Components::RigidBody>();
             return ent->GetComponent<Components::RigidBody>();
+        });
 
-            if (ent->HasComponent<Components::RigidBody>()) return ent->GetComponent<Components::RigidBody>();
+        entityType.set_function("get_rigid", [](Entity* ent) -> Components::RigidBody&
         {
-        entityType.set_function("add_rigid", [](Entity* ent) -> Components::RigidBody&
+            if (ent->HasComponent<Components::RigidBody>()) return ent->GetComponent<Components::RigidBody>();
+            
+            VK_CRITICAL("No rigid body component found on entity");
+            assert(0);
+        
+        });
 
-        // physics components
+        entityType.set_function("add_collider", [](Entity* ent)
+        {
+            if (!ent->HasComponent<Components::Collider>()) ent->AddComponent<Components::Collider>();
+            return ent->GetComponent<Components::Collider>();
+        });
+
+        entityType.set_function("get_collider", [](Entity* ent) -> Components::Collider&
+        {
+            if (ent->HasComponent<Components::Collider>()) return ent->GetComponent<Components::Collider>();
+            
+            VK_CRITICAL("No collider component found on entity");
+            assert(0);
+        
+        });
+        
 
     }
 

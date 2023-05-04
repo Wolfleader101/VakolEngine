@@ -59,18 +59,8 @@ namespace Vakol::Controller {
     	
     }
 
-    std::shared_ptr<Entity> Scene::GetEntity(const std::string& tag) {
-        Entity ent;
-        entityList.m_Registry.view<Model::Components::Tag>().each([&](auto entity, auto& tagComponent) {
-            if (tagComponent.tag == tag) {
-                ent = entityList.GetEntity(static_cast<unsigned int>(entity));
-            }
-        });
-
-        return std::make_shared<Entity>(ent);
-    }
-
-    std::shared_ptr<Entity> Scene::GetEntity(const std::string& tag) {
+    std::shared_ptr<Entity> Scene::GetEntity(const std::string& tag) 
+    {
         Entity ent;
         entityList.m_Registry.view<Model::Components::Tag>().each([&](auto entity, auto& tagComponent) {
             if (tagComponent.tag == tag) {
@@ -88,6 +78,7 @@ namespace Vakol::Controller {
 
         std::string temp = folder;
         std::replace(temp.begin(), temp.end(), '/', '\\');  // replace / with \\ for filesystem
+
 
         std::string folderPath = "\\" + temp + "\\" + name;
         fs::path currentPath = fs::current_path();
