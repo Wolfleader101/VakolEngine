@@ -97,7 +97,8 @@ Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene)
             vertex.normal = vector;
         }
 
-        if (mesh->mTextureCoords[0]) {
+        if (mesh->mTextureCoords[0]) 
+        {
             glm::vec2 vec;
 
             vec.x = mesh->mTextureCoords[0][i].x;
@@ -105,17 +106,20 @@ Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene)
 
             vertex.uv = vec;
 
-            // vector.x = mesh->mTangents[i].x;
-            // vector.y = mesh->mTangents[i].y;
-            // vector.z = mesh->mTangents[i].z;
+            if (mesh->HasTangentsAndBitangents())
+            {
+                vector.x = mesh->mTangents[i].x;
+                vector.y = mesh->mTangents[i].y;
+                vector.z = mesh->mTangents[i].z;
 
-            // vertex.tangent = vector;
+                vertex.tangent = vector;
 
-            // vector.x = mesh->mBitangents[i].x;
-            // vector.y = mesh->mBitangents[i].y;
-            // vector.z = mesh->mBitangents[i].z;
+                vector.x = mesh->mBitangents[i].x;
+                vector.y = mesh->mBitangents[i].y;
+                vector.z = mesh->mBitangents[i].z;
 
-            // vertex.bitangent = vector;
+                vertex.bitangent = vector;
+            }
         } else
             vertex.uv = glm::vec2(0.0f);
 

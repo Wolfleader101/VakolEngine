@@ -7,8 +7,8 @@
 #include "Shader.hpp"
 #include "Texture.hpp"
 
-namespace Vakol::Model::Assets {
-
+namespace Vakol::Model::Assets 
+{
     struct MaterialSpec 
     {
         MaterialSpec() = default;
@@ -22,29 +22,30 @@ namespace Vakol::Model::Assets {
         std::vector<Texture> textures;
     };
 
-    const MaterialSpec DEFAULT = {glm::vec3(1.0f), glm::vec3(0.6f), glm::vec3(0.2f), glm::vec3(0.0f), 32.0f};
+    const MaterialSpec DEFAULT = {glm::vec3(1.0f), glm::vec3(0.6f), glm::vec3(0.2f), glm::vec3(0.0f), 32.0f };
 
     class Material 
     {
     public:
-        Material(const MaterialSpec& spec) : m_spec(spec) {};
+        Material(const MaterialSpec& spec) : m_spec(std::move(spec)) {};
 
-        virtual void AddTexture(const Texture& texture) = 0;
-        
-        virtual const Texture GetTexture(const int index) const = 0;
-        virtual const std::vector<Texture> GetTextures() const = 0;
+        void AddTexture(const Texture& texture) { this->m_spec.textures.push_back(texture); }
 
-        virtual void SetAmbientColor(const float r, const float g, const float b) = 0;
-        virtual void SetDiffuseColor(const float r, const float g, const float b) = 0;
-        virtual void SetSpecularColor(const float r, const float g, const float b) = 0;
-        virtual void SetShininess(const float shine) = 0;
+        const Texture GetTexture(const int index) const { return this->m_spec.textures.at(index); }
+        const std::vector<Texture> GetTextures() const  { return this->m_spec.textures; }
+        const int GetTextureCount() const { return static_cast<int>(this->m_spec.textures.size()); }
 
-        virtual const glm::vec3 GetAmbientColor() const = 0;
-        virtual const glm::vec3 GetDiffuseColor() const = 0;
-        virtual const glm::vec3 GetSpecularColor() const = 0;
-        virtual const float GetShininess() const = 0;
+        void SetAmbientColor(const float r, const float g, const float b)  { this->m_spec.AMBIENT = glm::vec3(r,g,b); }
+        void SetDiffuseColor(const float r, const float g, const float b)  { this->m_spec.DIFFUSE = glm::vec3(r,g,b); }
+        void SetSpecularColor(const float r, const float g, const float b)  { this->m_spec.SPECULAR = glm::vec3(r,g,b); }
+        void SetShininess(const float shine)  { this->m_spec.SHININESS = shine; }
 
-    protected:
+        const glm::vec3 GetAmbientColor() const  { return this->m_spec.AMBIENT; }
+        const glm::vec3 GetDiffuseColor() const  { return this->m_spec.DIFFUSE; }
+        const glm::vec3 GetSpecularColor() const  { return this->m_spec.SPECULAR; }
+        const float GetShininess() const  { return this->m_spec.SHININESS; }
+
+    private:
         MaterialSpec m_spec;
     };
 }  // namespace Vakol::Model::Assets

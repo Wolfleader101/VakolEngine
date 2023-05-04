@@ -30,30 +30,22 @@ namespace Vakol::Model
         std::cout << std::endl;
     #endif
 
-        VK_ASSERT(arr_size % elements == 0, "\n\nVector size is not divisible by the number of vertex elements. Double check your size input.");
+        output.reserve(arr.size() * elements);
 
-        output.reserve(arr.size() * sizeof(float));
-
-        for (int i = 0; i < arr_size; i += elements)
+        for (int i = 0; i < arr_size; i++)
         {
-            const auto& position = arr.at(i).position;
-            const auto& normal = arr.at(i + 1).normal;
-            const auto& uv = arr.at(i + 2).uv;
+            auto& vertex = arr.at(i);
+            
+            output.push_back(vertex.position.x);
+            output.push_back(vertex.position.y);
+            output.push_back(vertex.position.z);
 
-            output.push_back(position.x);
-            output.push_back(position.y);
-            output.push_back(position.z);
+            output.push_back(vertex.normal.x);
+            output.push_back(vertex.normal.y);
+            output.push_back(vertex.normal.z);
 
-            output.push_back(normal.x);
-            output.push_back(normal.y);
-            output.push_back(normal.z);
-
-            output.push_back(uv.x);
-            output.push_back(uv.y);
-
-            // VK_TRACE("{0} {1} {2}", position.x, position.y, position.z);
-            // VK_TRACE("{0} {1} {2}", normal.x, normal.y, normal.z);
-            // VK_TRACE("{0} {1}", uv.x, uv.y);
+            output.push_back(vertex.uv.x);
+            output.push_back(vertex.uv.y);
         }
 
         arr.~vector();
@@ -62,21 +54,11 @@ namespace Vakol::Model
     }
 
     VertexArray::VertexArray(const std::vector<float>& vertices, const std::vector<unsigned int>& indices, const int size) : vertices(std::move(vertices)), indices(std::move(indices))
-    {
-        auto t_elements = static_cast<int>(size / sizeof(float)); // total elements remaining
-        auto n_elements = 0; // number of elements used
-
-        VK_TRACE("Vertex Size = {0}", size);
-        VK_TRACE("Vertex Elements = {0} (number of floats)", t_elements);
-
-        std::cout << std::endl;
-        
+    {   
         this->n_vertices = static_cast<int>(this->vertices.size());
         this->n_indices = static_cast<int>(this->indices.size());
 
         VK_ASSERT(n_vertices > 0, "\n\nCannot create empty vertex array.");
-        VK_ASSERT(t_elements >= 3, "\n\nYou'll need at least 3 vertex elements (float values) to create a functional vertex array");
-
         this->GenArray(1, &this->ID);
         this->VBO.GenBuffer(1);
         if (n_indices > 0) this->EBO.GenBuffer(1);
@@ -84,7 +66,7 @@ namespace Vakol::Model
         this->Bind();
 
         this->VBO.Bind(GL_ARRAY_BUFFER);
-        this->VBO.SetData(n_vertices * sizeof(float), this->vertices.data(), GL_STATIC_DRAW);
+        this->VBO.SetData(n_vertices * size, this->vertices.data(), GL_STATIC_DRAW);
         
         if (n_indices > 0)
         {
@@ -92,55 +74,14 @@ namespace Vakol::Model
             this->EBO.SetData(n_indices * sizeof(unsigned int), this->indices.data(), GL_STATIC_DRAW);
         }
 
-        if (t_elements >= 3)
-        {
-            this->EnableVertexAttribArray(0);
-            this->SetVertexAttribData(0, 3, GL_FLOAT, GL_FALSE, size, (void*)0);
-            t_elements -= 3;
-            n_elements += 3;
-            VK_TRACE("Vertex Positions");
-        }
+        this->EnableVertexAttribArray(0);
+        this->SetVertexAttribData(0, 3, GL_FLOAT, GL_FALSE, size, (void*)0);
 
-        if (t_elements >= 2)
-        {
-            this->EnableVertexAttribArray(1);
+        this->EnableVertexAttribArray(1);
+        this->SetVertexAttribData(1, 3, GL_FLOAT, GL_FALSE, size, (void*)(3 * sizeof(float)));
 
-            if (t_elements >= 3)
-            {
-                this->SetVertexAttribData(1, 3, GL_FLOAT, GL_FALSE, size, (void*)(n_elements * sizeof(float)));
-                t_elements -= 3;
-                n_elements += 3;
-                VK_TRACE("Vertex Normals");
-            }
-            else
-            {
-                this->SetVertexAttribData(1, 2, GL_FLOAT, GL_FALSE, size, (void*)(n_elements * sizeof(float)));
-                t_elements -= 2;
-                n_elements += 2;
-                VK_TRACE("Vertex UVs");
-            }
-        }
-
-        if (t_elements >= 2)
-        {
-            this->EnableVertexAttribArray(2);
-            this->SetVertexAttribData(2, 2, GL_FLOAT, GL_FALSE, size, (void*)(n_elements * sizeof(float)));
-            t_elements -= 2;
-            n_elements += 2;
-            VK_TRACE("Vertex UVs");
-        }
-
-        if (t_elements >= 3)
-        {
-            this->EnableVertexAttribArray(3);
-            this->SetVertexAttribData(3, 3, GL_FLOAT, GL_FALSE, size, (void*)(n_elements * sizeof(float)));
-            t_elements -= 3;
-            n_elements += 3;
-
-            VK_TRACE("Vertex Tangents");
-        }
-
-        VK_ASSERT(t_elements == 0, "\n\nLooks like someone forgot to use all of their vertex data!");
+        this->EnableVertexAttribArray(2);
+        this->SetVertexAttribData(2, 2, GL_FLOAT, GL_FALSE, size, (void*)(6 * sizeof(float)));
 
         this->Unbind();
         this->VBO.Unbind(GL_ARRAY_BUFFER); // turns out this is perfectly legal, don't unbind EBO though!

@@ -5,7 +5,7 @@
 #include "AssetLoader/AssetLoader.hpp"
 #include "Model/Assets/Material.hpp"
 #include "Model/Components.hpp"
-#include "Model/gl/GLInstance.hpp"
+#include "Model/Instance.hpp"
 #include "View/GUI/GUIWindow.hpp"
 
 namespace Vakol::Controller {
@@ -137,14 +137,14 @@ namespace Vakol::Controller {
         auto meshType = lua.new_usertype<Assets::Mesh>("mesh");
         auto materialType = lua.new_usertype<Assets::Material>("material");
         auto textureType = lua.new_usertype<Assets::Texture>("texture");
-        auto shaderType = lua.new_usertype<Shader>("shader");
+        auto shaderType = lua.new_usertype<Assets::Shader>("shader");
 
-        lua.set_function("raw_texture", [](const std::string& path) { return Texture(path); });
+        lua.set_function("raw_texture", [](const std::string& path) { return Assets::Texture(path); });
 
         lua.set_function("noise_texture", [](const int size, float scale, const int octaves, const float persistence, const float lacunarity) 
-            { return Texture(size, scale, octaves, persistence, lacunarity); });
+            { return Assets::Texture(size, scale, octaves, persistence, lacunarity); });
 
-        lua.set_function("texture", [](const std::string& path, const bool gamma, const bool flip) { return Texture(path, gamma, flip); });
+        lua.set_function("texture", [](const std::string& path, const bool gamma, const bool flip) { return Assets::Texture(path, gamma, flip); });
 
         entityType.set_function("get_transform", &Entity::GetComponent<Model::Components::Transform>);
 
@@ -248,7 +248,7 @@ namespace Vakol::Controller {
         shaderType.set_function("set_int", &Assets::Shader::SetInt);
         shaderType.set_function("set_bool", &Assets::Shader::SetBool);
         shaderType.set_function("set_float", &Assets::Shader::SetFloat);
-        shaderType.set_function("set_vec2", sol::resolve<void(const char*, const float, const float) const>(&Shader::SetVec2));
+        shaderType.set_function("set_vec2", sol::resolve<void(const char*, const float, const float) const>(&Assets::Shader::SetVec2));
         shaderType.set_function("set_vec3", sol::resolve<void(const char*, const float, const float, const float) const>(&Assets::Shader::SetVec3));
         shaderType.set_function("set_vec4", sol::resolve<void(const char*, const float, const float, const float, const float) const>(&Assets::Shader::SetVec4));
     }
