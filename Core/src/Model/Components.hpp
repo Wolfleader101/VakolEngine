@@ -14,6 +14,7 @@
 #include "Entity.hpp"
 #include "Model/Assets/Model.hpp"
 
+
 namespace Vakol::Model::Components {
     /**
      * @struct Transform
@@ -113,6 +114,7 @@ namespace Vakol::Model::Components {
         void serialize(Archive& ar) {
             ar(cereal::make_nvp("TagType", type));
         }
+
     };
 
     /**
@@ -152,6 +154,13 @@ namespace Vakol::Model::Components {
 
     struct RigidBody
     {
+        enum BodyType
+        {
+            STATIC = rp3d::BodyType::STATIC,
+            KINEMATIC = rp3d::BodyType::KINEMATIC,
+            DYNAMIC = rp3d::BodyType::DYNAMIC
+        };
+
         RigidBody() = default;
 
         bool initialized = false;
@@ -160,18 +169,22 @@ namespace Vakol::Model::Components {
             double mass = 3;			/**< Mass of object*/
             bool grav = true;				/**< If gravity is enabled on the object*/
             double LDamp = 0;			/**< Linear Dampening*/
-            double ADamp = 2;			/**< Angular Dampening*/
+            double ADamp = 1;			/**< Angular Dampening*/
             rp3d::Vector3 AngularLock = { 0,1,0 }; /**< Angular lock axis factor */
             rp3d::Vector3 Orientation = { 0,0,0 }; /**< Orientation */
 
         };
 
-        RigidBody(std::shared_ptr<ScenePhysics> SP, std::optional<RigidData> DataR);
+        void SetRigidData(const RigidData& data);
+        void ToggleGravity();
+        void SetBodyType(BodyType t);
+        void SetVelocity(const glm::vec3& vel);
+        void SetAngularVelocity(const glm::vec3& vel);
 
         //rigid body
         std::shared_ptr<ScenePhysics> owningWorld = nullptr;
         rp3d::RigidBody* RigidBodyPtr = nullptr;
-        rp3d::BodyType Type = rp3d::BodyType::DYNAMIC; //default
+        BodyType Type = BodyType::DYNAMIC; //default
         RigidData Data;
 
         rp3d::Transform prevTransform;
@@ -198,6 +211,13 @@ namespace Vakol::Model::Components {
 
     struct Collider
     {
+        enum ShapeName {
+            BOX,
+            SPHERE,
+            CAPSULE,
+            TRIANGLE_MESH
+        };
+        
         struct Bounds
         {
             rp3d::Vector3 min = { 0,0,0 }; /**< minimum vertice*/
@@ -227,9 +247,11 @@ namespace Vakol::Model::Components {
         RigidBody* OwningBody = nullptr;
         rp3d::Collider* ColliderPtr = nullptr;
         rp3d::CollisionShape* Shape = nullptr;
-        rp3d::CollisionShapeName ShapeName = (rp3d::CollisionShapeName)3; //box default
+        ShapeName ShapeName = BOX; 
 
         Bounds bounds;
+
+        void SetBounds(const Bounds& data);
 
         template <class Archive>
         void serialize(Archive& ar)
@@ -239,7 +261,6 @@ namespace Vakol::Model::Components {
             ar(cereal::make_nvp("Bounds", bounds));
 
         }
-        
     };
 
     Collider::Bounds getBounds(const Drawable& model);
