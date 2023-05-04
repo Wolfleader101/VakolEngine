@@ -14,13 +14,13 @@ using namespace Vakol::Model::Assets;
 
 using Vakol::Model::Vertex;
 
-glm::vec3 to_glm(const aiColor3D& val) { return glm::vec3(val.r, val.g, val.b); }
+glm::vec3 to_glm(const aiColor3D& val) { return { val.r, val.g, val.b }; }
 
-void ProcessNode(aiNode* node, const aiScene* scene);
-Vakol::Model::Assets::Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
-MaterialSpec ProcessMaterial(aiMaterial* material);
+void ProcessNode(const aiNode* node, const aiScene* scene);
+Vakol::Model::Assets::Mesh ProcessMesh(const aiMesh* mesh, const aiScene* scene);
+MaterialSpec ProcessMaterial(const aiMaterial* mat);
 
-std::vector<Texture> LoadMaterialTextures(aiMaterial* mat, aiTextureType type, const std::string& typeName);
+std::vector<Texture> LoadMaterialTextures(const aiMaterial* mat, aiTextureType type, const std::string& typeName);
 
 std::string directory;
 
@@ -35,7 +35,7 @@ namespace Vakol::Controller
 
         VK_TRACE("Loading Model: {0}", path);
 
-        auto start = std::chrono::steady_clock::now();
+        const auto start = std::chrono::steady_clock::now();
 
         const aiScene* scene = importer.ReadFile(
             path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
@@ -49,31 +49,29 @@ namespace Vakol::Controller
 
         ::ProcessNode(scene->mRootNode, scene);
 
-        auto end = std::chrono::steady_clock::now();
+        const auto end = std::chrono::steady_clock::now();
 
-        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+        const auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
 
         VK_TRACE("Finished Loading Model. Elapsed Time: {0} ms", duration.count());
 
-        return ::Model(meshes);
+        return { meshes };
     }
 }
 
-void ProcessNode(aiNode* node, const aiScene* scene) 
+void ProcessNode(const aiNode* node, const aiScene* scene) 
 {
     for (unsigned int i = 0; i < node->mNumMeshes; ++i) 
     {
-        aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
+        const auto mesh = scene->mMeshes[node->mMeshes[i]];
         meshes.push_back(ProcessMesh(mesh, scene));
     }
 
-    for (unsigned int i = 0; i < node->mNumChildren; ++i) 
-    {
+    for (unsigned int i = 0; i < node->mNumChildren; ++i)
         ProcessNode(node->mChildren[i], scene);
-    }
 }
 
-Vakol::Model::Assets::Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene) 
+Vakol::Model::Assets::Mesh ProcessMesh(const aiMesh* mesh, const aiScene* scene) 
 {
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
@@ -81,7 +79,7 @@ Vakol::Model::Assets::Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene)
     // vertices
     for (unsigned int i = 0; i < mesh->mNumVertices; ++i) 
     {
-        Vertex vertex;
+        Vertex vertex{};
         glm::vec3 vector;
 
         vector.x = mesh->mVertices[i].x;
@@ -137,7 +135,7 @@ Vakol::Model::Assets::Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene)
     return { vertices, indices, sizeof(Vertex), ProcessMaterial(material) };
 }
 
-MaterialSpec ProcessMaterial(aiMaterial* mat) 
+MaterialSpec ProcessMaterial(const aiMaterial* mat) 
 {
     std::vector<Texture> textures;
 
@@ -151,25 +149,25 @@ MaterialSpec ProcessMaterial(aiMaterial* mat)
     mat->Get(AI_MATKEY_SHININESS, shininess);
 
     // Diffuse Maps
-    std::vector<Texture> diffuseMaps = LoadMaterialTextures(mat, aiTextureType_DIFFUSE, "diffuse_map");
-    textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
+    std::vector<Texture> diffuse_maps = LoadMaterialTextures(mat, aiTextureType_DIFFUSE, "diffuse_map");
+    textures.insert(textures.end(), diffuse_maps.begin(), diffuse_maps.end());
 
     // Specular Maps
-    std::vector<Texture> specularMaps = LoadMaterialTextures(mat, aiTextureType_SPECULAR, "specular_map");
-    textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+    std::vector<Texture> specular_maps = LoadMaterialTextures(mat, aiTextureType_SPECULAR, "specular_map");
+    textures.insert(textures.end(), specular_maps.begin(), specular_maps.end());
 
     // Normal Maps
-    std::vector<Texture> normalMaps = LoadMaterialTextures(mat, aiTextureType_NORMALS, "normal_map");
-    textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
+    std::vector<Texture> normal_maps = LoadMaterialTextures(mat, aiTextureType_NORMALS, "normal_map");
+    textures.insert(textures.end(), normal_maps.begin(), normal_maps.end());
 
     // Emissive Maps
-    std::vector<Texture> emissiveMaps = LoadMaterialTextures(mat, aiTextureType_EMISSIVE, "emissive_map");
-    textures.insert(textures.end(), emissiveMaps.begin(), emissiveMaps.end());
+    std::vector<Texture> emissive_maps = LoadMaterialTextures(mat, aiTextureType_EMISSIVE, "emissive_map");
+    textures.insert(textures.end(), emissive_maps.begin(), emissive_maps.end());
 
     return { to_glm(ambient), to_glm(diffuse), to_glm(specular), to_glm(emissive), shininess, textures };
 }
 
-std::vector<Texture> LoadMaterialTextures(aiMaterial* mat, aiTextureType type, const std::string& typeName) 
+std::vector<Texture> LoadMaterialTextures(const aiMaterial* mat, const aiTextureType type, const std::string& typeName) 
 {
     std::vector<Texture> textures;
 
@@ -182,11 +180,11 @@ std::vector<Texture> LoadMaterialTextures(aiMaterial* mat, aiTextureType type, c
         // prevents already loaded textures from being loaded again
         bool skip = false;
 
-        for (unsigned int j = 0; j < textures_loaded.size(); ++j) 
+        for (const auto& texture : textures_loaded)
         {
-            if (std::strcmp(textures_loaded[j].GetPath().data(), str.C_Str()) == 0) 
+            if (std::strcmp(texture.GetPath().data(), str.C_Str()) == 0) 
             {
-                textures.push_back(textures_loaded[j]);
+                textures.push_back(texture);
 
                 skip = true;
 
