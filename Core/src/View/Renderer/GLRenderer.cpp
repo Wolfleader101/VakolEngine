@@ -58,7 +58,7 @@ namespace Vakol::View
         // this corresponds to the uniform buffer in each shader that has one.
         // layout (std140, binding = 1) uniform <name>
         // std140 - memory layout, binding - index, uniform (typeof buffer)
-        AddBuffer(GL_UNIFORM_BUFFER, sizeof(glm::mat4), 1, GL_STATIC_DRAW); 
+        AddBuffer(GL_UNIFORM_BUFFER, sizeof(glm::mat4), 1, GL_STATIC_DRAW);
         // add a uniform buffer which size is that of a 4x4 matrix with a binding index of 1
     };
 
@@ -84,6 +84,8 @@ namespace Vakol::View
 
     void GLRenderer::Draw(const Controller::Time& time, const Controller::Camera& camera, const Model::Components::Transform trans, const Model::Components::Drawable& drawable) const 
     {
+        drawable.model_ptr->GetShader()->Bind();
+
         // at index 0, with an offset of 0 (since PV_MATRIX is the only element in the buffer), with a size of a 4x4 matrix, set PV_MATRIX
         SetBufferSubData(0, 0, sizeof(glm::mat4), glm::value_ptr(camera.GetMatrix(PV_MATRIX)));
 
@@ -97,7 +99,6 @@ namespace Vakol::View
 
         model_matrix = glm::scale(model_matrix, trans.scale);
 
-        drawable.model_ptr->GetShader()->SetMat4("PV_MATRIX", camera.GetMatrix(PV_MATRIX));
         drawable.model_ptr->GetShader()->SetMat4("MODEL_MATRIX", model_matrix);
         // drawable.model_ptr->GetShader()->SetMat3("NORMAL_MATRIX",
         // glm::transpose(glm::inverse(glm::mat3(model_matrix))));
