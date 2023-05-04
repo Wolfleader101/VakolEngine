@@ -13,7 +13,7 @@
 #include <memory>
 #include <vector>
 
-#include "Model/Components.hpp"
+#include <Model/Components.hpp>
 
 /*
 Distance	Constant	Linear	Quadratic
@@ -54,7 +54,28 @@ namespace Vakol::View
 
         //glEnable(GL_BLEND);
         //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        // this corresponds to the uniform buffer in each shader that has one.
+        // layout (std140, binding = 1) uniform <name>
+        // std140 - memory layout, binding - index, uniform (typeof buffer)
+        AddBuffer(GL_UNIFORM_BUFFER, sizeof(glm::mat4), 1, GL_STATIC_DRAW); 
+        // add a uniform buffer which size is that of a 4x4 matrix with a binding index of 1
     };
+
+    void GLRenderer::AddBuffer(const unsigned int type, const int size, const int binding, const void* data, const unsigned int usage)
+    {
+        buffers.push_back(std::make_shared<Buffer>(type, size, binding, data, usage));
+    }
+
+    void GLRenderer::AddBuffer(const unsigned int type, const int size, const int binding, const unsigned int usage)
+    {
+        buffers.push_back(std::make_shared<Buffer>(type, size, binding, usage));
+    }
+
+    void GLRenderer::SetBufferSubData(const int index, const int offset, const int size, const void* data) const
+    {
+        buffers.at(index)->SetSubData(offset, size, data);
+    }
 
     void GLRenderer::ClearColor(const glm::vec4& color) const { glClearColor(color.r, color.g, color.b, color.a); }
     void GLRenderer::ClearColor(const float r, const float g, const float b, const float a) const { glClearColor(r, g, b, a); }
@@ -63,7 +84,8 @@ namespace Vakol::View
 
     void GLRenderer::Draw(const Controller::Time& time, const Controller::Camera& camera, const Model::Components::Transform trans, const Model::Components::Drawable& drawable) const 
     {
-        drawable.model_ptr->GetShader()->Bind();
+        // at index 0, with an offset of 0 (since PV_MATRIX is the only element in the buffer), with a size of a 4x4 matrix, set PV_MATRIX
+        SetBufferSubData(0, 0, sizeof(glm::mat4), glm::value_ptr(camera.GetMatrix(PV_MATRIX)));
 
         glm::mat4 model_matrix = glm::mat4(1.0f);
 
@@ -92,7 +114,7 @@ namespace Vakol::View
             mesh.Draw();
         }
 
-        //drawable.model_ptr->GetShader()->Unbind();
+        drawable.model_ptr->GetShader()->Unbind();
     }
 
     void GLRenderer::Update() const 

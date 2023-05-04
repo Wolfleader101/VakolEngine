@@ -4,12 +4,10 @@ layout (location = 2) in vec2 aTexCoords;
 
 out vec2 TexCoords;
 
-// layout (std140, binding = 1) uniform Matrices
-// {
-//     mat4 PV_MATRIX;
-// };
-
-uniform mat4 PV_MATRIX;
+layout (std140, binding = 1) uniform Matrices
+{
+    mat4 PV_MATRIX;
+};
 
 uniform mat4 MODEL_MATRIX;
 
