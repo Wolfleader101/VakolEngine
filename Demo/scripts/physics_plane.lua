@@ -17,15 +17,15 @@ function init(scene, entity)
 
     r.BodyType = BodyType.Static;
 
-    print("bruh");
+    
 
     local collider = entity:add_collider();
     
     collider.Shape = Shape.Box;
     
-
-    entity:physics_init(scene); 
     
+    entity:physics_init(scene); 
+    --everything above works
     
     
 end

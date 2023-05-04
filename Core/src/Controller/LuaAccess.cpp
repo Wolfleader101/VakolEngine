@@ -377,7 +377,7 @@ namespace Vakol::Controller {
             System::Physics_AddTerrain(terrain);
         });
 
-        sceneType.set_function("get_physics", [](Scene* scene) { return *scene->scenePhysics; });
+        sceneType.set_function("get_physics", [](Scene* scene) ->ScenePhysics& { return *scene->scenePhysics; });
 
         cameraType.set_function("get_pos", &Camera::GetPos);
         cameraType.set_function("set_pos", &Camera::SetPos);

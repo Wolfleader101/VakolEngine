@@ -13,8 +13,12 @@ namespace Vakol::View
         m_World = WorldPtr;
         m_rp3dRenderer = &m_World->getDebugRenderer();
         
-        m_Shader = Vakol::Controller::AssetLoader::GetShader("phyDebug.prog");
-        EnableWorldDebug();
+        VK_TRACE("Here");
+        m_Shader = Vakol::Controller::AssetLoader::GetShader("coreAssets/shaders/phyDebug.prog");
+
+        glCreateVertexArrays(1, &m_VAO);
+        glCreateBuffers(1, &m_VBO);
+        
     }
 
 
@@ -157,7 +161,7 @@ namespace Vakol::View
         glBindVertexArray(m_VAO);
 
         glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
-        glBufferData(GL_ARRAY_BUFFER, m_DebugData.size() * sizeof(PhysicsDebugVertex), m_DebugData.data(), GL_DYNAMIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, m_DebugData.size() * sizeof(PhysicsDebugVertex), m_DebugData.data(), GL_STATIC_DRAW);
         
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(PhysicsDebugVertex), (void*)0);
         glEnableVertexAttribArray(0);
