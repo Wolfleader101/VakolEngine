@@ -257,4 +257,3 @@ namespace Vakol::Model
 
     void VertexArray::Unbind() const { glBindVertexArray(0); }
 }
-

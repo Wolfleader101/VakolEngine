@@ -18,6 +18,7 @@ namespace Vakol::Controller {
 
     void Application::Init() 
     {
+        RegisterLua();
 
         auto config = LoadConfig();
         if (!config) {
@@ -37,8 +38,6 @@ namespace Vakol::Controller {
         // Physics::Debug = false;
 
         // Physics::Init();
-
-        RegisterLua();
 
         VK_INFO("Calling main.lua...");
 
