@@ -11,6 +11,7 @@ class System;
 
 namespace Vakol::Controller::Physics {
     class PhysicsPool;
+    class Vakol::View::DebugRenderer;
 
     using Terrain = Vakol::Controller::Terrain;
 
@@ -24,25 +25,18 @@ namespace Vakol::Controller::Physics {
 
         void AddTerrain(Terrain& terrain);
 
-        std::shared_ptr<Model::Assets::Shader> shader;
-
        private:
         ScenePhysics(rp3d::PhysicsWorld* newWorld);
 
         rp3d::RigidBody* m_Terrain;
         rp3d::PhysicsWorld* m_World;
 
-        void EnableDebug() {
-            m_World->setIsDebugRenderingEnabled(true);
-            rp3d::DebugRenderer& debugRenderer = m_World->getDebugRenderer();
-            debugRenderer.setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::COLLISION_SHAPE, true);
-            // debugRenderer.setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::COLLIDER_AABB, true);
-        }
-
         float m_timestep = 1.0f / 60.0f;
 
         float m_accumulator = 0.0f;
+
         friend class PhysicsPool;
         friend class System;
+        friend class Vakol::View::DebugRenderer;
     };
 }  // namespace Vakol::Controller::Physics
