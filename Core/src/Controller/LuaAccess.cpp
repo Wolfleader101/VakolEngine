@@ -418,7 +418,7 @@ namespace Vakol::Controller {
     void RegisterRenderer(sol::state& lua) {}
 
     void RegisterPhysics(sol::state& lua) {
-        auto scenePhysics = lua.new_usertype<ScenePhysics>("scenePhysics");
+        auto scenePhysicType = lua.new_usertype<ScenePhysics>("scenePhysics");
 
         auto rp3dVec3 = lua.new_usertype<rp3d::Vector3>("phyVec3"); //need for collider
             rp3dVec3["x"] = &rp3d::Vector3::x;
@@ -502,11 +502,8 @@ namespace Vakol::Controller {
             collider->SetBounds(bounds);
         });
 
-        scenePhysics.set_function("init_object", [](Entity ent, Scene& scene) 
-        {
-            System::BindScene(scene);
-            System::Physics_InitEntity(ent);
-        });
+
+        scenePhysicType.set_function("enable_debug", &ScenePhysics::EnableDebug);
 
     }
 }  // namespace Vakol::Controller
