@@ -186,35 +186,44 @@ namespace Vakol::Model
     void VertexArray::Draw() const
     {
         this->Bind();
-        
-        switch (this->draw_type)
+
+        if (this->info.draw_mode == DRAW_MODE::DEFAULT)
         {
-            case DRAW_TYPE::ARRAYS:
-                this->DrawArrays();
-                break;
-            case DRAW_TYPE::ELEMENTS:
-                this->DrawElements();
-                break;
-            case DRAW_TYPE::INSTANCED_ARRAYS:
-                this->DrawInstancedArrays();
-                break;
-            case DRAW_TYPE::INSTANCED_ELEMENTS:
-                this->DrawInstancedElements();
-                break;
-            case DRAW_TYPE::TRIANGLE_STRIPS:
-                this->DrawTriangleStrips();
-                break;
-            case DRAW_TYPE::QUAD_STRIPS:
-                this->DrawQuadStrips();
-                break;
-            case DRAW_TYPE::TRIANGLE_PATCHES:
-                this->DrawTrianglePatches();
-                break;
-            case DRAW_TYPE::QUAD_PATCHES:
-                this->DrawQuadPatches();
-                break;
-            default:
-                break;
+            if (this->info.draw_type == DRAW_TYPE::ARRAYS)
+                glDrawArrays(static_cast<GLenum>(this->info.draw_shape), 0, this->n_vertices);
+            else
+                glDrawElements(static_cast<GLenum>(this->info.draw_shape), this->n_indices, GL_UNSIGNED_INT, 0);
+        }
+
+        if (this->info.draw_mode == DRAW_MODE::INSTANCED)
+        {
+            if (this->info.draw_type == DRAW_TYPE::ARRAYS)
+                glDrawArraysInstanced(static_cast<GLenum>(this->info.draw_shape), 0, this->n_vertices, this->info.INSTANCE_AMOUNT);
+            else
+                glDrawElementsInstanced(static_cast<GLenum>(this->info.draw_shape), this->n_indices, GL_UNSIGNED_INT, 0, this->info.INSTANCE_AMOUNT);
+        }
+
+        if (this->info.draw_mode == DRAW_MODE::STRIPS)
+        {
+            if (this->info.draw_type == DRAW_TYPE::ARRAYS)
+            {
+                // idk lol
+            }
+            else
+            {
+                for (int strip = 0; strip < this->info.NUM_STRIPS; ++strip)
+                    glDrawElements(static_cast<GLenum>(this->info.draw_shape), this->info.NUM_TRIS_PER_STRIP + 2, GL_UNSIGNED_INT, (void*)(sizeof(unsigned int) * (this->info.NUM_TRIS_PER_STRIP + 2) * strip));
+            }
+        }
+
+        if (this->info.draw_mode == DRAW_MODE::PATCHES)
+        {
+            if (this->info.draw_type == DRAW_TYPE::ARRAYS)
+                glDrawArrays(static_cast<GLenum>(this->info.draw_shape), 0, this->info.NUM_PATCHES * this->info.NUM_VERTS_PER_PATCH);
+            else
+            {
+                // idk lol
+            }
         }
 
         this->Unbind();
@@ -231,39 +240,5 @@ namespace Vakol::Model
     void VertexArray::Bind() const { glBindVertexArray(this->ID); }
 
     void VertexArray::Unbind() const { glBindVertexArray(0); }
-
-    void VertexArray::DrawArrays() const { glDrawArrays(GL_TRIANGLES, 0, this->n_vertices); }
-    
-    void VertexArray::DrawElements() const { glDrawElements(GL_TRIANGLES, this->n_indices, GL_UNSIGNED_INT, 0); }
-
-    void VertexArray::DrawInstancedArrays() const { glDrawArraysInstanced(GL_TRIANGLES, 0, this->n_vertices, INSTANCE_AMOUNT); }
-    
-    void VertexArray::DrawInstancedElements() const { glDrawElementsInstanced(GL_TRIANGLES, this->n_indices, GL_UNSIGNED_INT, 0, INSTANCE_AMOUNT); }
-    
-    void VertexArray::DrawTriangleStrips() const
-    {
-        for (int strip = 0; strip < this->NUM_STRIPS; ++strip)
-            glDrawElements(GL_TRIANGLE_STRIP, this->NUM_TRIS_PER_STRIP + 2, GL_UNSIGNED_INT, (void*)(sizeof(unsigned int) * (this->NUM_TRIS_PER_STRIP + 2) * strip));
-    }
-    
-    void VertexArray::DrawQuadStrips() const
-    {
-        for (int strip = 0; strip < this->NUM_STRIPS; ++strip)
-            glDrawElements(GL_QUAD_STRIP, this->NUM_QUADS_PER_STRIP + 2, GL_UNSIGNED_INT, (void*)(sizeof(unsigned int) * (this->NUM_QUADS_PER_STRIP + 2) * strip));
-    }
-    
-    void VertexArray::DrawTrianglePatches() const
-    {
-        VK_ASSERT(USE_TRIANGLE_PATCHES, "Triangle patches not enabled");
-
-        glDrawArrays(GL_PATCHES, 0, NUM_PATCHES * NUM_VERTS_PER_PATCH);
-    }
-    
-    void VertexArray::DrawQuadPatches() const
-    {
-        VK_ASSERT(!USE_TRIANGLE_PATCHES, "Quad patches not enabled");
-
-        glDrawArrays(GL_PATCHES, 0, NUM_PATCHES * NUM_VERTS_PER_PATCH);
-    }
 }
 

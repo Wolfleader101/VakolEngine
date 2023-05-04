@@ -40,9 +40,33 @@ namespace Vakol::Model
         ARRAYS, ELEMENTS
     };
 
-    enum class DRAW_SHAPE_TYPE
+    enum class DRAW_SHAPE
     {
-        TRIANGLES, QUADS
+        TRIANGLES = GL_TRIANGLES, QUADS = GL_QUADS, TRIANGLE_STRIP = GL_TRIANGLE_STRIP, QUAD_STRIP = GL_QUAD_STRIP,
+        PATCHES = GL_PATCHES
+    };
+
+    struct DrawInfo
+    {
+        DRAW_MODE draw_mode = DRAW_MODE::DEFAULT;
+        DRAW_SHAPE draw_shape = DRAW_SHAPE::TRIANGLES;
+        DRAW_TYPE draw_type = DRAW_TYPE::ELEMENTS;
+
+    // instancing info
+        unsigned int INSTANCE_AMOUNT = 0;
+
+    // strip info
+        unsigned int NUM_STRIPS = 0;
+
+    // triangle strip info
+        unsigned int NUM_TRIS_PER_STRIP = 0;
+
+    // quad strip info
+        unsigned int NUM_QUADS_PER_STRIP = 0;
+
+    // patch info
+        unsigned int NUM_PATCHES = 0;
+        const int NUM_VERTS_PER_PATCH = NUM_PATCH_PTS;
     };
 
     const std::vector<float> Convert(const std::vector<Vertex>& arr, const int size);
@@ -81,9 +105,30 @@ namespace Vakol::Model
 
         inline const std::vector<float>& GetVertices() const { return this->vertices; }
 
-        inline void set_mode(const DRAW_MODE mode) { this->draw_mode = mode; }
-        inline void set_shape(const DRAW_SHAPE_TYPE type) { this->draw_shape_type = type; }
-        inline void set_type(const DRAW_TYPE type) { this->draw_type = type; }
+        inline void set_mode(const DRAW_MODE mode) { this->info.draw_mode = mode; }
+        inline void set_shape(const DRAW_SHAPE type) { this->info.draw_shape = type; }
+        inline void set_type(const DRAW_TYPE type) { this->info.draw_type = type; }
+
+        inline void set_mode_data(const unsigned int data) 
+        {
+            if (this->info.draw_mode == DRAW_MODE::INSTANCED)
+                this->info.INSTANCE_AMOUNT = data;
+
+            if (this->info.draw_mode == DRAW_MODE::STRIPS)
+                this->info.NUM_STRIPS = data;
+
+            if (this->info.draw_mode == DRAW_MODE::PATCHES)
+                this->info.NUM_PATCHES = data;
+        }
+
+        inline void set_type_data(const unsigned int data)
+        {
+            if (this->info.draw_mode == DRAW_MODE::STRIPS && this->info.draw_shape == DRAW_SHAPE::TRIANGLES)
+                this->info.NUM_TRIS_PER_STRIP = data;
+
+            if (this->info.draw_mode == DRAW_MODE::STRIPS && this->info.draw_shape == DRAW_SHAPE::QUADS)
+                this->info.NUM_QUADS_PER_STRIP = data;
+        }
 
     private:
         unsigned int ID = 0;
@@ -95,37 +140,9 @@ namespace Vakol::Model
         int n_vertices = 0;
         int n_indices = 0;
 
-        DRAW_MODE draw_mode = DRAW_MODE::DEFAULT;
-        DRAW_SHAPE_TYPE draw_shape_type = DRAW_SHAPE_TYPE::TRIANGLES;
-        DRAW_TYPE draw_type = DRAW_TYPE::ELEMENTS; // have elements set to default if none chosen
-
-    // instancing info
-        int INSTANCE_AMOUNT = 0;
-
-    // strip info
-        int NUM_STRIPS = 0;
-
-    // triangle strip info
-        int NUM_TRIS_PER_STRIP = 0;
-
-    // quad strip info
-        int NUM_QUADS_PER_STRIP = 0;
-
-    // patch info
-        int NUM_PATCHES = 0;
-        int NUM_VERTS_PER_PATCH = NUM_PATCH_PTS;
+        DrawInfo info;
     private:
         std::vector<float> vertices;
         std::vector<unsigned int> indices;
-
-    private:
-        void DrawArrays() const;
-        void DrawElements() const;
-        void DrawInstancedArrays() const;
-        void DrawInstancedElements() const;
-        void DrawTriangleStrips() const;
-        void DrawQuadStrips() const;
-        void DrawTrianglePatches() const;
-        void DrawQuadPatches() const;
     };
 }
