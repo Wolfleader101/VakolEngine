@@ -44,9 +44,6 @@ namespace Vakol::Controller {
 
         m_gui.Init(m_window);
 
-        // Physics::Debug = false;
-
-        // Physics::Init();
 
         VK_INFO("Calling main.lua...");
 
@@ -114,7 +111,7 @@ namespace Vakol::Controller {
     }
 
     Application::~Application() {
-        // json::SerializeScene("assets/json/Deserialize.json", m_entityList);
+        
     }
 
     void Application::Run() {

@@ -305,7 +305,7 @@ namespace Vakol::Controller {
         });
 
 
-        entityType.set_function("add_rigid", [](Entity* ent)
+        entityType.set_function("add_rigid", [](Entity* ent) -> RigidBody&
         {
 
             if (!ent->HasComponent<Components::RigidBody>()) ent->AddComponent<Components::RigidBody>();

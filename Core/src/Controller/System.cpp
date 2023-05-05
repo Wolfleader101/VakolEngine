@@ -102,6 +102,9 @@ namespace Vakol::Controller {
     void System::Physics_InitEntity(Entity& ent) 
     {
         auto& trans = ent.GetComponent<Transform>();
+        auto& rigid = ent.GetComponent<RigidBody>();
+
+        if (rigid.initialized) return;
 
         if(!ent.HasComponent<RigidBody>())
         {
@@ -110,7 +113,6 @@ namespace Vakol::Controller {
             return;
         }
 
-        auto& rigid = ent.GetComponent<RigidBody>();
         rp3d::Vector3 pos(trans.pos.x, trans.pos.y, trans.pos.z);
 
         rp3d::Transform rpTrans =
@@ -183,7 +185,7 @@ namespace Vakol::Controller {
                     assert(0);
                 }
 
-                col.ColliderPtr = rigid.RigidBodyPtr->addCollider(col.Shape, rpTrans);
+                col.ColliderPtr = rigid.RigidBodyPtr->addCollider(col.Shape, rp3d::Transform::identity());
                 col.OwningBody = &rigid;
             
         }

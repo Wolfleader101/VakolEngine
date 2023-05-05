@@ -6,7 +6,7 @@ function init(scene, entity)
 
     
     
-    trans.pos.y = -5;
+    trans.pos.y = -30;
     trans.scale.x = 100;
     trans.scale.z = 100;
 
@@ -14,6 +14,7 @@ function init(scene, entity)
     model:set_shader("coreAssets/shaders/basic.prog");
     
     local r = entity:add_rigid();
+
 
     r.BodyType = BodyType.Static;
 
@@ -26,6 +27,8 @@ function init(scene, entity)
     
     entity:physics_init(scene); 
     --everything above works
+
+    r:toggle_gravity();
     
     
 end
