@@ -10,7 +10,7 @@ namespace Vakol::View
     class GLRenderer : public Renderer 
     {
     public:
-        GLRenderer(const std::shared_ptr<Window> window);
+        GLRenderer(const std::shared_ptr<Window>& window);
 
         /// @brief 
         /// @param type the type of buffer, GL_UNIFORM_BUFFER and GL_SHADER_STORAGE_BUFFER are the ones you're looking for
@@ -31,10 +31,10 @@ namespace Vakol::View
         /// @param data 
         void SetBufferSubData(const int index, const int offset, const int size, const void* data) const;
 
-        void ClearColor(const glm::vec4& color = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)) const;
-        void ClearColor(const float r, const float g, const float b, const float a = 1.0f) const;
+        static void ClearColor(const glm::vec4& color = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+        static void ClearColor(const float r, const float g, const float b, const float a = 1.0f);
 
-        void ClearBuffer(const unsigned int buffer_bit) const;
+        static void ClearBuffer(const unsigned int buffer_bit);
 
         void Draw([[maybe_unused]] const Controller::Time& time, const Controller::Camera& camera, const Model::Components::Transform, const Model::Components::Drawable& drawable) const override;
 

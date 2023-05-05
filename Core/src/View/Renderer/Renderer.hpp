@@ -17,8 +17,8 @@ namespace Vakol::View
     class Renderer 
     {
        public:
-        Renderer(const std::shared_ptr<Window> window) : m_window(window){};
-        virtual ~Renderer() {};
+	    explicit Renderer(const std::shared_ptr<Window>& window) : m_window(window) {}
+        virtual ~Renderer() {}
 
         virtual void Draw(const Controller::Time& time, const Controller::Camera& camera, const Model::Components::Transform, const Model::Components::Drawable& drawable) const = 0;
 

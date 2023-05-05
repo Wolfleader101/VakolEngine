@@ -109,13 +109,6 @@ namespace Vakol::View
         model_matrix = glm::rotate(model_matrix, trans.rot.z, glm::vec3(0.0f, 0.0f, 1.0f));
 
         SetBufferSubData(0, 2 * sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(model_matrix));
-        // drawable.model_ptr->GetShader()->SetMat3("NORMAL_MATRIX",
-        // glm::transpose(glm::inverse(glm::mat3(model_matrix))));
-
-        // drawable.model_ptr->GetShader()->SetVec3v("VIEW_POS", camera.GetPos());
-
-        // drawable.model_ptr->GetShader()->SetVec3v("light.position", camera.GetPos());
-        // drawable.model_ptr->GetShader()->SetVec3v("light.direction", camera.GetForward());
 
         for (int i = 0; i < drawable.model_ptr->GetMeshCount(); ++i) 
         {

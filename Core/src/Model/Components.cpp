@@ -56,8 +56,8 @@ namespace Vakol::Model::Components
     {
         Collider::Bounds bounds;
 
-        rp3d::Vector3& max = bounds.max;
-        rp3d::Vector3& min = bounds.min;
+        //rp3d::Vector3& max = bounds.max;
+        //rp3d::Vector3& min = bounds.min;
 
         // const auto firstVert = model.model_ptr->GetMeshes().begin()->GetVertexArray()->GetVertices().begin();
 
