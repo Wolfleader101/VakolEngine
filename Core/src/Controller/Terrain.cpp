@@ -293,4 +293,8 @@ namespace Vakol::Controller {
 
         return height;
     }
-}  // namespace Vakol::Controller
+    const std::vector<float>& Terrain::GetHeightMap() const
+    {
+        return m_heightMap;
+    }
+} // namespace Vakol::Controller

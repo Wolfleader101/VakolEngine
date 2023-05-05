@@ -22,6 +22,8 @@ namespace Vakol::Controller {
 
         const float GetHeight(const float x, const float z) const;
 
+        const std::vector<float>& GetHeightMap() const;
+
         void SetHeightMap(std::vector<float>& heightMap) { m_heightMap = std::move(heightMap); }
 
         ~Terrain(){};

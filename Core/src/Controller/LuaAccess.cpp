@@ -162,7 +162,7 @@ namespace Vakol::Controller {
 
         //     ent->AddComponent<Terrain>(path);
 
-        //     auto terrain = ent->GetComponent<Terrain>();
+        //     auto& terrain = ent->GetComponent<Terrain>();
 
         //     auto model = terrain.GetModel();  // doesn't that look nice?
 
@@ -365,7 +365,8 @@ namespace Vakol::Controller {
         sceneType.set_function("get_camera", &Scene::GetCamera);
         sceneType.set_function("get_entity", &Scene::GetEntity);
 
-        sceneType.set_function("add_terrain_physics", [](Scene* scene, Entity ent) {
+        sceneType.set_function("add_terrain_physics", [](Scene* scene, Entity& ent) 
+        {
             if (!ent.HasComponent<Terrain>()) {
                 VK_WARN("Entity does not have a terrain component. Can't add physics");
                 return;

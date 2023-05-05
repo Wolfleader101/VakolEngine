@@ -1,10 +1,11 @@
 function init(scene, entity)
     print("Initialising Terrain");
-    local terrain = entity:add_clod_terrain("coreAssets/textures/HeightMaps/height1024.raw"); -- size
+    local terrain = entity:add_clod_terrain("coreAssets/textures/HeightMaps/height128.raw"); -- size
 
-    entity:get_transform().scale.x = 10;
-    entity:get_transform().scale.y = 10;
-    entity:get_transform().scale.z = 10;
+    entity:get_transform().pos.y = -100;
+    entity:get_transform().scale.x = 1;
+    entity:get_transform().scale.y = 1;
+    entity:get_transform().scale.z = 1;
 
     local model = terrain:get_model();
     local mesh = model:get_mesh();
@@ -75,22 +76,27 @@ function init(scene, entity)
     waterEnt:get_transform().scale.z = 1024 * 10;
     waterEnt:get_transform().pos.y = -10;
 
-    local waterPlane = waterEnt:add_model("coreAssets/models/plane.obj");
+    -- local waterPlane = waterEnt:add_model("coreAssets/models/plane.obj");
 
-    local waterMesh = waterPlane:get_mesh();
-    local waterMaterial = waterMesh:get_material();
+    -- local waterMesh = waterPlane:get_mesh();
+    -- local waterMaterial = waterMesh:get_material();
 
 
-    waterMaterial:add_texture(water_layer_1);
-    waterMaterial:add_texture(water_layer_2);
+    -- waterMaterial:add_texture(water_layer_1);
+    -- waterMaterial:add_texture(water_layer_2);
 
-    waterPlane:set_shader("coreAssets/shaders/water.prog") -- set the shader on the model (automatically binds the shader)
-    local waterShader = waterPlane:get_shader();
+    -- waterPlane:set_shader("coreAssets/shaders/water.prog") -- set the shader on the model (automatically binds the shader)
+    -- local waterShader = waterPlane:get_shader();
 
-    waterShader:set_int("texture_0", 0);
-    waterShader:set_int("texture_1", 1);
+    -- waterShader:set_int("texture_0", 0);
+    -- waterShader:set_int("texture_1", 1);
     shader:set_vec3("light.position", 0.0, 0.5, 7.5);
     shader:set_vec3("light.direction", math.rad(0.0), math.rad(-15.0), math.rad(-90.0));
+
+    print("adding");
+    scene:add_terrain_physics(entity);
+    print("added");
+    
 end
 
 function update(scene, entity)
