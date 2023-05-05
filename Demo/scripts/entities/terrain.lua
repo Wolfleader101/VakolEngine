@@ -12,7 +12,7 @@ function init(scene, entity)
 
     local material = mesh:get_material();
     
-    local height_map = raw_texture("coreAssets/textures/HeightMaps/height1024.raw");
+    local height_map = raw_texture("coreAssets/textures/HeightMaps/height128.raw");
 
     local water_layer_1 = texture("coreAssets/textures/Water/water_0.bmp", false, false);
     local water_layer_2 = texture("coreAssets/textures/Water/water_5.bmp", false, false);
@@ -100,5 +100,6 @@ function init(scene, entity)
 end
 
 function update(scene, entity)
-
+    
+    
 end

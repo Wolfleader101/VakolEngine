@@ -1,0 +1,68 @@
+function init(scene, entity)
+
+    --local ent = scene:create_entity("basicEntity.lua");
+    local model = entity:add_model("coreAssets/models/sphere.obj");
+
+    model:set_shader("coreAssets/shaders/rainbow.prog");
+
+    local trans = entity:get_transform();
+    
+    trans.scale.x = 1;
+    trans.scale.y = 1;
+    trans.scale.z = 1;
+
+    trans.pos.y = 100;
+
+
+    
+    local r = entity:add_rigid();
+
+    local rData = rigidData.new();
+
+    --rData.angular_lock = phyVec3.new(0, 0, 0);
+
+
+    local collider = entity:add_collider();
+
+    collider.Shape = Shape.Sphere;
+    
+
+    entity:physics_init(scene); 
+    
+
+    -- print("bruh");
+   
+    --r:toggle_gravity();
+
+    local vel = vec3.new();
+
+    --vel.x = 1;
+
+    r:set_velocity(vel);
+
+    vel.x = 0.5;
+    vel.y = 0.5;
+    --vel.z = 0.5;
+
+
+
+    r:set_angular_damp(0);
+    print("ree");
+    r:set_angular_velocity(vel);
+    
+    
+    
+    
+    --local trans = entity:get_transform();
+    --print("sdf");
+    
+
+    
+    
+
+end
+
+function update(scene, entity)
+    
+end
+

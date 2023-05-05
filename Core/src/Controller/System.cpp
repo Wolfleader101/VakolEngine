@@ -101,7 +101,7 @@ namespace Vakol::Controller {
             });
     }
 
-    void System::Physics_InitEntity(Entity& ent) 
+    void System::Physics_InitEntity(Entity& ent)
     {
         auto& trans = ent.GetComponent<Transform>();
         auto& rigid = ent.GetComponent<RigidBody>();
@@ -140,7 +140,23 @@ namespace Vakol::Controller {
                 col.OwningBody = &rigid;
 
                 Collider::Bounds& bounds = col.bounds;
+                if (col.DrawableBounds)
+                {
+                    if(ent.HasComponent<Drawable>())
+                    {
+                        auto& draw = ent.GetComponent<Drawable>();
 
+                        bounds = getBounds(draw);
+                    }
+                    else
+                    {
+                        VK_ERROR("getBounds flag set to true without having model. Using standard bounds");
+                    }
+	                
+                }
+
+
+				
                 if (col.ShapeName == Collider::ShapeName::BOX) 
                 {
                     col.Shape = PhysicsPool::m_Common.createBoxShape(

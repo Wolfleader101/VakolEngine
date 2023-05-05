@@ -442,6 +442,8 @@ namespace Vakol::Controller {
             rigidDataType["gravity"] = &Components::RigidBody::RigidData::grav;
             rigidDataType["linear_damp"] = &Components::RigidBody::RigidData::LDamp;
             rigidDataType["angular_damp"] = &Components::RigidBody::RigidData::ADamp;
+            rigidDataType["angular_lock"] = &Components::RigidBody::RigidData::AngularLock;
+        
 
 
 
@@ -457,6 +459,7 @@ namespace Vakol::Controller {
                     );
             
             colliderType["Shape"] = &Components::Collider::ShapeName;
+            colliderType["UseModelBounds"] = &Components::Collider::DrawableBounds;
 
         auto ColliderBoundsType = lua.new_usertype<Components::Collider::Bounds>("colliderBounds");
 

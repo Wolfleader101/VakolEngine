@@ -73,25 +73,12 @@ namespace Vakol::Controller::Physics {
             }
         }
 
+        
         rp3d::HeightFieldShape* height = PhysicsPool::m_Common.createHeightFieldShape(
             size, size, minH, maxH, HeightData.data(), rp3d::HeightFieldShape::HeightDataType::HEIGHT_FLOAT_TYPE, 1,
-            1);
+            1 );
 
         // auto& vertexData = terr.GetStaticVertices();
-        // auto& indexData = terr.GetModel()->GetMesh().GetVertexArray()->GetIndices();
-
-        // auto MeshPtr = PhysicsPool::m_Common.createTriangleMesh();
-
-        // rp3d::TriangleVertexArray* triArray = nullptr;
-
-        // triArray = new rp3d::TriangleVertexArray(vertexData.size(), vertexData.data(), sizeof(float) * 3,
-        //                                          indexData.size() / 3, indexData.data(), sizeof(unsigned int) * 3,
-        //                                          rp3d::TriangleVertexArray::VertexDataType::VERTEX_FLOAT_TYPE,
-        //                                          rp3d::TriangleVertexArray::IndexDataType::INDEX_INTEGER_TYPE);
-
-        // MeshPtr->addSubpart(triArray);
-
-        // auto col = PhysicsPool::m_Common.createConcaveMeshShape(MeshPtr, rp3d::Vector3(1, 1, 1));
 
         const auto trans = rp3d::Transform::identity();
         m_Terrain = m_World->createRigidBody(trans);
