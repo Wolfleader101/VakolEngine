@@ -12,14 +12,14 @@ namespace Vakol::View
     {
         m_World = WorldPtr;
         m_rp3dRenderer = &m_World->getDebugRenderer();
+
         
-        VK_TRACE("Here");
         m_Shader = Vakol::Controller::AssetLoader::GetShader("coreAssets/shaders/phyDebug.prog");
 
         glCreateVertexArrays(1, &m_VAO);
         glCreateBuffers(1, &m_VBO);
         
-        
+        VK_INFO("Debug Renderer Initialized");
     }
 
 

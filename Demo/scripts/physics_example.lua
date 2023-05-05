@@ -7,11 +7,15 @@ function init(scene, entity)
 
     local trans = entity:get_transform();
     
-    trans.scale.x = 20;
-    trans.scale.y = 20;
-    trans.scale.z = 20;
+    trans.scale.x = 5;
+    trans.scale.y = 5;
+    trans.scale.z = 5;
+
+
+
     
     local r = entity:add_rigid();
+
 
     local collider = entity:add_collider();
 
@@ -22,17 +26,22 @@ function init(scene, entity)
 
     -- print("bruh");
    
-    --r:toggle_gravity();
+    r:toggle_gravity();
 
     local vel = vec3.new();
 
-    vel.x = 1;
+    --vel.x = 1;
 
     r:set_velocity(vel);
 
-    vel.x = 60;
-    vel.z = 40;
+    vel.x = 0.5;
+    --vel.y = 0.5;
+    --vel.z = 0.5;
 
+
+
+    r:set_angular_damp(0);
+    print("ree");
     r:set_angular_velocity(vel);
     
     

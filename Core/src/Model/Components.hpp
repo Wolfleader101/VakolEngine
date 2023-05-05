@@ -180,6 +180,8 @@ namespace Vakol::Model::Components {
         void SetBodyType(BodyType t);
         void SetVelocity(const glm::vec3& vel);
         void SetAngularVelocity(const glm::vec3& vel);
+        void SetLinearDamp(float damp);
+        void SetAngularDamp(float damp);
 
         //rigid body
         std::shared_ptr<ScenePhysics> owningWorld = nullptr;

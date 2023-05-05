@@ -496,6 +496,16 @@ namespace Vakol::Controller {
             rigid->SetAngularVelocity(vel);
         });
 
+        rigidType.set_function("set_linear_damp", [](Components::RigidBody* rigid, float damp) 
+        {
+            rigid->SetLinearDamp(damp);
+        });
+
+        rigidType.set_function("set_angular_damp", [](Components::RigidBody* rigid, float damp) 
+        {
+            rigid->SetAngularDamp(damp);
+        });
+
         
         colliderType.set_function("set_bounds", [](Components::Collider* collider, const Components::Collider::Bounds& bounds) 
         {

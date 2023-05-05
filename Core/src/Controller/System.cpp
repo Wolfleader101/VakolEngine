@@ -10,6 +10,8 @@
 
 using namespace Vakol::Model::Components;
 
+const float PI_FLOAT = 3.1415926f;
+
 namespace Vakol::Controller {
 
     entt::registry* System::m_registry = nullptr;
