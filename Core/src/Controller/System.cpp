@@ -75,7 +75,7 @@ namespace Vakol::Controller {
 
             glm::quat glmQuat(rp3dQuat.w, rp3dQuat.x, rp3dQuat.y, rp3dQuat.z);
 
-            trans.rot = glm::vec3(glm::eulerAngles(glmQuat));
+            trans.rot = glm::eulerAngles(glmQuat);
         });
     }
 

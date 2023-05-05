@@ -35,7 +35,7 @@ function init(scene, entity)
     r:set_velocity(vel);
 
     vel.x = 0.5;
-    --vel.y = 0.5;
+    vel.y = 0.5;
     --vel.z = 0.5;
 
 
