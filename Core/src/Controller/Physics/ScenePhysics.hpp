@@ -5,7 +5,7 @@
 #include <Controller/Camera.hpp>
 #include <Controller/Terrain.hpp>
 #include <Controller/Time.hpp>
-#include <Model/gl/GLShader.hpp>
+#include <View/Renderer/DebugRenderer.hpp>
 
 class System;
 
@@ -22,9 +22,10 @@ namespace Vakol::Controller::Physics {
 
         void Update(const Vakol::Controller::Time& time, const Vakol::Controller::Camera& camera);
 
-        void AddTerrain(Terrain& terrain);
+        void EnableDebug(bool enable);
+        bool IsDebugEnabled();
 
-        std::shared_ptr<Model::Assets::Shader> shader;
+        void AddTerrain(Terrain& terrain);
 
        private:
         ScenePhysics(rp3d::PhysicsWorld* newWorld);
@@ -32,17 +33,14 @@ namespace Vakol::Controller::Physics {
         rp3d::RigidBody* m_Terrain;
         rp3d::PhysicsWorld* m_World;
 
-        void EnableDebug() {
-            m_World->setIsDebugRenderingEnabled(true);
-            rp3d::DebugRenderer& debugRenderer = m_World->getDebugRenderer();
-            debugRenderer.setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::COLLISION_SHAPE, true);
-            // debugRenderer.setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::COLLIDER_AABB, true);
-        }
-
         float m_timestep = 1.0f / 60.0f;
 
         float m_accumulator = 0.0f;
+
+        View::DebugRenderer m_DebugRenderer;
+
         friend class PhysicsPool;
         friend class System;
+        
     };
 }  // namespace Vakol::Controller::Physics

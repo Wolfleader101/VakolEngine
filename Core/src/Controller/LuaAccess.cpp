@@ -296,41 +296,46 @@ namespace Vakol::Controller {
         shaderType.set_function("set_vec2", &Assets::Shader::SetVec2);
         shaderType.set_function("set_vec3", &Assets::Shader::SetVec3);
         shaderType.set_function("set_vec4", &Assets::Shader::SetVec4);
-        });
-            assert(0);
-            VK_CRITICAL("Entity does not have a collider component");
-            }
-                return ent->GetComponent<Components::Collider>();
-            {
-            if (ent->HasComponent<Components::Collider>()) 
+
+
+        entityType.set_function("physics_init", [](Entity* ent, Scene& scene)
         {
-        entityType.set_function("get_collider", [](Entity* ent) 
+                System::BindScene(scene);
+                System::Physics_InitEntity(*ent);
         });
 
-            return ent->GetComponent<Components::Collider>();
 
-            ent->AddComponent<Components::Collider>();
-
-                assert(0);
-            }
-            if (ent->HasComponent<Components::Collider>()) return ent->GetComponent<Components::Collider>();
-                VK_ERROR("Cannot add collider to entity without rigid body component");
-            {
-            if(!ent->HasComponent<RigidBody>())
+        entityType.set_function("add_rigid", [](Entity* ent) -> RigidBody&
         {
-        entityType.set_function("add_collider", [](Entity* ent) 
-        entityType.set_function("get_rigid", &Entity::GetComponent<Model::Components::RigidBody>);
 
-
-        });
-            ent->AddComponent<Components::RigidBody>();
+            if (!ent->HasComponent<Components::RigidBody>()) ent->AddComponent<Components::RigidBody>();
             return ent->GetComponent<Components::RigidBody>();
+        });
 
-            if (ent->HasComponent<Components::RigidBody>()) return ent->GetComponent<Components::RigidBody>();
+        entityType.set_function("get_rigid", [](Entity* ent) -> Components::RigidBody&
         {
-        entityType.set_function("add_rigid", [](Entity* ent) -> Components::RigidBody&
+            if (ent->HasComponent<Components::RigidBody>()) return ent->GetComponent<Components::RigidBody>();
+            
+            VK_CRITICAL("No rigid body component found on entity");
+            assert(0);
+        
+        });
 
-        // physics components
+        entityType.set_function("add_collider", [](Entity* ent)
+        {
+            if (!ent->HasComponent<Components::Collider>()) ent->AddComponent<Components::Collider>();
+            return ent->GetComponent<Components::Collider>();
+        });
+
+        entityType.set_function("get_collider", [](Entity* ent) -> Components::Collider&
+        {
+            if (ent->HasComponent<Components::Collider>()) return ent->GetComponent<Components::Collider>();
+            
+            VK_CRITICAL("No collider component found on entity");
+            assert(0);
+        
+        });
+        
 
     }
 
@@ -372,7 +377,7 @@ namespace Vakol::Controller {
             System::Physics_AddTerrain(terrain);
         });
 
-        sceneType.set_function("get_physics", [](Scene* scene) { return *scene->scenePhysics; });
+        sceneType.set_function("get_physics", [](Scene* scene) ->ScenePhysics& { return *scene->scenePhysics; });
 
         cameraType.set_function("get_pos", &Camera::GetPos);
         cameraType.set_function("set_pos", &Camera::SetPos);
@@ -413,7 +418,7 @@ namespace Vakol::Controller {
     void RegisterRenderer(sol::state& lua) {}
 
     void RegisterPhysics(sol::state& lua) {
-        auto scenePhysics = lua.new_usertype<ScenePhysics>("scenePhysics");
+        auto scenePhysicType = lua.new_usertype<ScenePhysics>("scenePhysics");
 
         auto rp3dVec3 = lua.new_usertype<rp3d::Vector3>("phyVec3"); //need for collider
             rp3dVec3["x"] = &rp3d::Vector3::x;
@@ -491,17 +496,24 @@ namespace Vakol::Controller {
             rigid->SetAngularVelocity(vel);
         });
 
+        rigidType.set_function("set_linear_damp", [](Components::RigidBody* rigid, float damp) 
+        {
+            rigid->SetLinearDamp(damp);
+        });
+
+        rigidType.set_function("set_angular_damp", [](Components::RigidBody* rigid, float damp) 
+        {
+            rigid->SetAngularDamp(damp);
+        });
+
         
         colliderType.set_function("set_bounds", [](Components::Collider* collider, const Components::Collider::Bounds& bounds) 
         {
             collider->SetBounds(bounds);
         });
 
-        scenePhysics.set_function("init_object", [](Entity ent, Scene& scene) 
-        {
-            System::BindScene(scene);
-            System::Physics_InitEntity(ent);
-        });
+
+        scenePhysicType.set_function("enable_debug", &ScenePhysics::EnableDebug);
 
     }
 }  // namespace Vakol::Controller

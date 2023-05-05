@@ -1,11 +1,12 @@
 function init(scene, entity)
-
-    --local ent = scene:create_entity("basicEntity.lua");
+    
     local model = entity:add_model("coreAssets/models/cube.obj");
 
     local trans = entity:get_transform();
+
     
-    trans.pos.y = -5;
+    
+    trans.pos.y = -30;
     trans.scale.x = 100;
     trans.scale.z = 100;
 
@@ -13,6 +14,7 @@ function init(scene, entity)
     model:set_shader("coreAssets/shaders/basic.prog");
     
     local r = entity:add_rigid();
+
 
     r.BodyType = BodyType.Static;
 
@@ -23,11 +25,12 @@ function init(scene, entity)
     collider.Shape = Shape.Box;
     
     
-
     entity:physics_init(scene); 
+    --everything above works
+
+    r:toggle_gravity();
     
     
-    -- 
 end
 
 function update(scene, entity)

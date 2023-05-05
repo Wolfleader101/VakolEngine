@@ -10,4 +10,7 @@ src/View/Renderer/GLRenderer.hpp
 src/View/Renderer/GLRenderer.cpp
 src/View/Renderer/RendererFactory.cpp
 src/View/Renderer/RendererFactory.hpp
+
+src/View/Renderer/DebugRenderer.hpp
+src/View/Renderer/DebugRenderer.cpp
 PARENT_SCOPE)

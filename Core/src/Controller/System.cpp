@@ -10,6 +10,8 @@
 
 using namespace Vakol::Model::Components;
 
+const float PI_FLOAT = 3.1415926f;
+
 namespace Vakol::Controller {
 
     entt::registry* System::m_registry = nullptr;
@@ -73,7 +75,7 @@ namespace Vakol::Controller {
 
             glm::quat glmQuat(rp3dQuat.w, rp3dQuat.x, rp3dQuat.y, rp3dQuat.z);
 
-            trans.rot = glm::vec3(glm::eulerAngles(glmQuat));
+            trans.rot = glm::eulerAngles(glmQuat);
         });
     }
 
@@ -102,6 +104,9 @@ namespace Vakol::Controller {
     void System::Physics_InitEntity(Entity& ent) 
     {
         auto& trans = ent.GetComponent<Transform>();
+        auto& rigid = ent.GetComponent<RigidBody>();
+
+        if (rigid.initialized) return;
 
         if(!ent.HasComponent<RigidBody>())
         {
@@ -110,7 +115,6 @@ namespace Vakol::Controller {
             return;
         }
 
-        auto& rigid = ent.GetComponent<RigidBody>();
         rp3d::Vector3 pos(trans.pos.x, trans.pos.y, trans.pos.z);
 
         rp3d::Transform rpTrans =
@@ -183,7 +187,7 @@ namespace Vakol::Controller {
                     assert(0);
                 }
 
-                col.ColliderPtr = rigid.RigidBodyPtr->addCollider(col.Shape, rpTrans);
+                col.ColliderPtr = rigid.RigidBodyPtr->addCollider(col.Shape, rp3d::Transform::identity());
                 col.OwningBody = &rigid;
             
         }

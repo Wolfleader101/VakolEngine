@@ -70,6 +70,16 @@ namespace Vakol::Model::Components
         RigidBodyPtr->setAngularVelocity(rp3d::Vector3(vel.x, vel.y, vel.z));
     }
 
+    void RigidBody::SetAngularDamp(float Damp)
+    {
+        RigidBodyPtr->setAngularDamping(Damp);
+    }
+
+    void RigidBody::SetLinearDamp(float Damp)
+    {
+        RigidBodyPtr->setLinearDamping(Damp);
+    }
+
     Collider::Collider(RigidBody& owner, std::optional<Bounds> Data) {
         OwningBody = &owner;
 
