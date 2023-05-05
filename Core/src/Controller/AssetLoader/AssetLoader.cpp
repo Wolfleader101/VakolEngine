@@ -16,11 +16,11 @@ namespace Vakol::Controller
     std::unordered_map<std::string, std::shared_ptr<Assets::Model>> AssetLoader::m_ModelMap;
     std::unordered_map<std::string, std::shared_ptr<Assets::Shader>> AssetLoader::m_ShaderMap;
 
-    std::shared_ptr<Assets::Texture> AssetLoader::GetTexture(const std::string& file) 
+    std::shared_ptr<Assets::Texture> AssetLoader::GetTexture(std::string& file) 
     {
         std::shared_ptr<Assets::Texture> ret;
 
-        auto iter = m_TextureMap.find(file);
+        const auto iter = m_TextureMap.find(file);
 
         if (iter == m_TextureMap.end()) {
             ret = std::make_shared<Assets::Texture>(file);

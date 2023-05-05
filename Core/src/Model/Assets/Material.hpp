@@ -7,6 +7,8 @@
 #include "Shader.hpp"
 #include "Texture.hpp"
 
+#include <Controller/Logger.hpp>
+
 namespace Vakol::Model::Assets 
 {
     struct MaterialSpec 
@@ -31,7 +33,14 @@ namespace Vakol::Model::Assets
 
         void AddTexture(const Texture& texture) { this->m_spec.textures.push_back(texture); }
 
-        const Texture GetTexture(const int index) const { return this->m_spec.textures.at(index); }
+        const Texture GetTexture(const int index) const 
+        { 
+            VK_ASSERT(GetTextureCount() > index, "\n\nTexture index out of bounds.");
+
+            if (!this->m_spec.textures.empty())
+                return this->m_spec.textures.at(index); 
+        }
+
         const std::vector<Texture> GetTextures() const  { return this->m_spec.textures; }
         const int GetTextureCount() const { return static_cast<int>(this->m_spec.textures.size()); }
 

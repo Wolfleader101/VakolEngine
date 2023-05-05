@@ -27,14 +27,14 @@ namespace Vakol::Model::Assets
         /// @brief .
         /// @param mode the mode of drawing: DEFAULT, INSTANCED, STRIPS, PATCHES
         void SetDrawMode(const DRAW_MODE mode) const { this->m_vertexArray->set_mode(mode); }
-        void SetDrawModeInfo(const unsigned int info) const { this->m_vertexArray->set_mode_data(info); }
+        void SetDrawModeInfo(const int info) const { this->m_vertexArray->set_mode_data(info); }
 
         /// @brief .
         /// @param type the type of drawing method: ARRAYS, ELEMENTS
         void SetDrawType(const DRAW_TYPE type) const { this->m_vertexArray->set_type(type); }
         
-        // call this if you are drawing with strips
-        void SetStripInfo(const unsigned int info) const { this->m_vertexArray->set_strip_data(info); }
+        // (size / 1) * 2 - 2
+        void SetNumTrisPerStrip(const int info) const { this->m_vertexArray->set_num_tris_per_strip(info); }
 
         void Draw() const { this->m_vertexArray->Draw(); }
     private:

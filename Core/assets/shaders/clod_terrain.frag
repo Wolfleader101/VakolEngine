@@ -8,5 +8,7 @@ in vec4 FragPos;
 
 void main()
 {
-    gl_FragColor = vec4(1.0);
+    
+
+    FragColor = vec4(1.0);
 }

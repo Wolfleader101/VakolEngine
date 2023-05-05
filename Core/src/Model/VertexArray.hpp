@@ -113,7 +113,7 @@ namespace Vakol::Model
                 this->info.NUM_PATCHES = data;
         }
 
-    	void set_strip_data(const int data)
+    	void set_num_tris_per_strip(const int data)
         {
             if (this->info.draw_mode == DRAW_MODE::STRIPS)
                 this->info.NUM_TRIS_PER_STRIP = data;

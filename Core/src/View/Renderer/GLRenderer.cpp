@@ -58,7 +58,7 @@ namespace Vakol::View
         // this corresponds to the uniform buffer in each shader that has one.
         // layout (std140, binding = 1) uniform <name>
         // std140 - memory layout, binding - index, uniform (typeof buffer)
-        AddBuffer(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), 1, GL_STATIC_DRAW);
+        AddBuffer(GL_UNIFORM_BUFFER, 3 * sizeof(glm::mat4), 1, GL_STATIC_DRAW);
         // add a uniform buffer which size is that of a 4x4 matrix with a binding index of 1
     };
 
@@ -94,17 +94,17 @@ namespace Vakol::View
         SetBufferSubData(0, 0, sizeof(glm::mat4), glm::value_ptr(camera.GetMatrix(PV_MATRIX)));
         SetBufferSubData(0, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(camera.GetMatrix(VIEW_MATRIX)));
 
-        glm::mat4 model_matrix = glm::mat4(1.0f);
+        glm::mat4 model_matrix = glm::mat4(1.0f); // start off with an identity matrix
 
         model_matrix = glm::translate(model_matrix, trans.pos);
+
+        model_matrix = glm::scale(model_matrix, trans.scale);
 
         model_matrix = glm::rotate(model_matrix, trans.rot.x, glm::vec3(1.0f, 0.0f, 0.0f));
         model_matrix = glm::rotate(model_matrix, trans.rot.y, glm::vec3(0.0f, 1.0f, 0.0f));
         model_matrix = glm::rotate(model_matrix, trans.rot.z, glm::vec3(0.0f, 0.0f, 1.0f));
 
-        model_matrix = glm::scale(model_matrix, trans.scale);
-
-        shader->SetMat4("MODEL_MATRIX", model_matrix);
+        SetBufferSubData(0, 2 * sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(model_matrix));
         // drawable.model_ptr->GetShader()->SetMat3("NORMAL_MATRIX",
         // glm::transpose(glm::inverse(glm::mat3(model_matrix))));
 
@@ -115,7 +115,14 @@ namespace Vakol::View
 
         for (int i = 0; i < drawable.model_ptr->GetMeshCount(); ++i) 
         {
-            auto mesh = drawable.model_ptr->GetMeshes().at(i);
+            const auto& mesh = drawable.model_ptr->GetMeshes().at(i);
+            const auto& material = mesh.GetMaterial();
+
+            for (int j = 0; j < material->GetTextureCount(); ++j)
+            {
+                //glActiveTexture(GL_TEXTURE0 + j);
+                //glBindTexture(GL_TEXTURE_2D, material->GetTexture(0).GetId());
+            }
 
             mesh.Draw();
         }

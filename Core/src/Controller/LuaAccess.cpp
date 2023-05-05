@@ -69,7 +69,8 @@ namespace Vakol::Controller {
     }
 
     void RegisterAssetLoader(sol::state& lua) {
-        lua.set_function("load_texture", [](const std::string& path) {
+        lua.set_function("load_texture", [](std::string& path) 
+        {
             auto tex = AssetLoader::GetTexture(path);
 
             if (tex == nullptr) return false;
@@ -136,76 +137,30 @@ namespace Vakol::Controller {
         auto modelType = lua.new_usertype<Assets::Model>("model");
         auto meshType = lua.new_usertype<Assets::Mesh>("mesh");
         auto materialType = lua.new_usertype<Assets::Material>("material");
-        auto textureType = lua.new_usertype<Assets::Texture>("texture");
         auto shaderType = lua.new_usertype<Assets::Shader>("shader");
 
-        lua.set_function("raw_texture", [](const std::string& path) { return Assets::Texture(path); });
+        entityType.set_function("get_transform", &Entity::GetComponent<Components::Transform>);
 
-        lua.set_function("noise_texture", [](const int size, float scale, const int octaves, const float persistence, const float lacunarity) 
-            { return Assets::Texture(size, scale, octaves, persistence, lacunarity); });
-
-        lua.set_function("texture", [](const std::string& path, const bool gamma, const bool flip) { return Assets::Texture(path, gamma, flip); });
-
-        entityType.set_function("get_transform", &Entity::GetComponent<Model::Components::Transform>);
-
-        entityType.set_function("add_noisemap_terrain", [](Entity* ent, const int size, float scale, const int octaves, const float persistence, const float lacunarity) 
+        entityType.set_function("create_height_map_terrain", [](Entity* ent, std::string&& path)
         {
-            if (!ent->HasComponent<Model::Components::Drawable>()) ent->AddComponent<Model::Components::Drawable>();
+            if (!ent->HasComponent<Components::Drawable>()) ent->AddComponent<Components::Drawable>();
 
             if (ent->HasComponent<Terrain>()) ent->RemoveComponent<Terrain>();
 
-            ent->AddComponent<Terrain>(size, scale, octaves, persistence, lacunarity);
+            ent->AddComponent<Terrain>(LoadHeightMapTerrain(std::move(path)));
 
-            auto terrain = ent->GetComponent<Terrain>();
+            const auto terrain = ent->GetComponent<Terrain>();
 
-            auto model = terrain.GetModel();  // doesn't that look nice?
-
-            if (model) 
+            if (const auto model = terrain.GetModel())
             {
-                ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
-            }
+                model->GetMesh().SetDrawMode(DRAW_MODE::STRIPS);
+                model->GetMesh().SetDrawType(DRAW_TYPE::ELEMENTS);
 
-            return terrain;
-        });
+                model->GetMesh().SetDrawModeInfo((terrain.GetSize() - 1) / 1); // num strips
 
-        entityType.set_function("add_fault_formation_terrain", [](Entity* ent, const int size, const int iterations, const float filter, const bool random, const int minHeight, const int maxHeight) 
-        {
-            if (!ent->HasComponent<Model::Components::Drawable>()) ent->AddComponent<Model::Components::Drawable>();
-            if (ent->HasComponent<Terrain>()) ent->RemoveComponent<Terrain>();
+                model->GetMesh().SetNumTrisPerStrip(terrain.GetSize() / 1 * 2 - 2);
 
-            ent->AddComponent<Terrain>(size, iterations, filter, random, minHeight, maxHeight);
-
-            auto terrain = ent->GetComponent<Terrain>();
-
-            auto model = terrain.GetModel();  // doesn't that look nice?
-
-            if (model) 
-            {
-                ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
-            }
-
-            return terrain;
-        });
-
-        entityType.set_function("add_clod_terrain", [](Entity* ent, const std::string& path) 
-        {
-            if (!ent->HasComponent<Model::Components::Drawable>()) ent->AddComponent<Model::Components::Drawable>();
-
-            if (ent->HasComponent<Terrain>()) ent->RemoveComponent<Terrain>();
-
-            ent->AddComponent<Terrain>(path);
-
-            auto terrain = ent->GetComponent<Terrain>();
-
-            auto model = terrain.GetModel();  // doesn't that look nice?
-
-            if (model) 
-            {   
-                model->GetMesh().SetDrawMode(DRAW_MODE::PATCHES);
-                model->GetMesh().SetDrawType(DRAW_TYPE::ARRAYS);
-                model->GetMesh().SetDrawModeInfo(400);
-
-                ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
+                ent->GetComponent<Components::Drawable>().model_ptr = model;
             }
 
             return terrain;
@@ -213,7 +168,7 @@ namespace Vakol::Controller {
 
 #pragma warning(push)
 #pragma warning(disable:4715) // disable that annoying warning for not all code path return a value
-        entityType.set_function("get_terrain", [](Entity* ent) 
+        entityType.set_function("get_terrain", [](const Entity* ent) 
         {
             if (ent->HasComponent<Terrain>()) return ent->GetComponent<Terrain>();
         });
@@ -221,13 +176,13 @@ namespace Vakol::Controller {
 
         entityType.set_function("add_model", [](Entity* ent, const std::string& path) 
         {
-            if (!ent->HasComponent<Model::Components::Drawable>()) ent->AddComponent<Model::Components::Drawable>();
+            if (!ent->HasComponent<Components::Drawable>()) ent->AddComponent<Components::Drawable>();
 
             auto model = AssetLoader::GetModel(path);
 
             if (model) 
             {
-                ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
+                ent->GetComponent<Components::Drawable>().model_ptr = model;
             }
 
             return model;
@@ -235,9 +190,9 @@ namespace Vakol::Controller {
 
 #pragma warning(push)
 #pragma warning(disable:4715) // disable that annoying warning for not all code path return a value
-        entityType.set_function("get_model", [](Entity* ent) 
+        entityType.set_function("get_model", [](const Entity* ent) 
         {
-            if (ent->HasComponent<Model::Components::Drawable>()) return ent->GetComponent<Model::Components::Drawable>().model_ptr;
+            if (ent->HasComponent<Components::Drawable>()) return ent->GetComponent<Components::Drawable>().model_ptr;
         });
 #pragma warning(pop)
 
@@ -252,9 +207,6 @@ namespace Vakol::Controller {
         materialType.set_function("add_texture", &Assets::Material::AddTexture);
         materialType.set_function("get_texture", &Assets::Material::GetTexture);
 
-        textureType.set_function("bind_texture", &Assets::Texture::Bind);
-        textureType.set_function("unbind_texture", &Assets::Texture::Unbind);
-
         shaderType.set_function("set_int", &Assets::Shader::SetInt);
         shaderType.set_function("set_bool", &Assets::Shader::SetBool);
         shaderType.set_function("set_float", &Assets::Shader::SetFloat);
@@ -264,12 +216,12 @@ namespace Vakol::Controller {
     }
 
     void RegisterECS(sol::state& lua) {
-        auto TransformType = lua.new_usertype<Model::Components::Transform>("transform");
+        auto TransformType = lua.new_usertype<Components::Transform>("transform");
         auto terrainType = lua.new_usertype<Terrain>("terrain");
 
-        TransformType["pos"] = &Model::Components::Transform::pos;
-        TransformType["rot"] = &Model::Components::Transform::rot;
-        TransformType["scale"] = &Model::Components::Transform::scale;
+        TransformType["pos"] = &Components::Transform::pos;
+        TransformType["rot"] = &Components::Transform::rot;
+        TransformType["scale"] = &Components::Transform::scale;
 
         // terrainType.set_function("load_heightmap", &Terrain::LoadHeightMap);
         // terrainType.set_function("load_texture", &Terrain::LoadTexture);
@@ -278,7 +230,6 @@ namespace Vakol::Controller {
         terrainType.set_function("get_height", &Terrain::GetHeight);
         terrainType.set_function("get_size", &Terrain::GetSize);
         terrainType.set_function("get_model", &Terrain::GetModel);
-        terrainType.set_function("set_heightmap", &Terrain::SetHeightMap);
     }
 
     void RegisterScene(sol::state& lua) {

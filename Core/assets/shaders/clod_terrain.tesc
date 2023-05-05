@@ -6,9 +6,8 @@ layout (std140, binding = 1) uniform Matrices
 {
     mat4 PV_MATRIX;
     mat4 VIEW_MATRIX;
+    mat4 MODEL_MATRIX;
 };
-
-uniform mat4 MODEL_MATRIX;
 
 in vec2 TexCoord[];
 

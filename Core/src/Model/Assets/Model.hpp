@@ -13,8 +13,12 @@ namespace Vakol::Model::Assets
     {
     public:
         Model() = default;
-        Model(const Mesh& mesh) { m_meshes.push_back(mesh); }
-        Model(const std::vector<Mesh>& meshes) : m_meshes(meshes) {};
+
+        Model(Mesh& mesh) { m_meshes.push_back(std::move(mesh)); }
+        Model(Mesh&& mesh) { m_meshes.push_back(std::move(mesh)); }
+
+        Model(std::vector<Mesh>&& meshes) : m_meshes(std::move(meshes)) {};
+        Model(std::vector<Mesh>& meshes) : m_meshes(std::move(meshes)) {};
 
         void SetShader(const std::string& path) 
         { 
