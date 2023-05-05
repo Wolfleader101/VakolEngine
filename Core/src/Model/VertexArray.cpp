@@ -9,7 +9,7 @@
 
 namespace Vakol::Model
 {
-	std::vector<float> Convert(std::vector<Vertex>& arr, const int size)
+	std::vector<float> Convert(const std::vector<Vertex>& arr, const int size)
     {
         std::vector<float> output;
 

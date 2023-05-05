@@ -10,8 +10,8 @@ namespace Vakol::Model::Assets
     class Mesh 
     {
     public:
-        Mesh(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, const int size, const MaterialSpec& spec = DEFAULT)
-            : m_vertexArray(std::make_shared<VertexArray>(Convert(std::move(vertices), size), std::move(indices), size)), m_material(std::make_shared<Material>(spec)) {};
+        Mesh(const std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, const int size, const MaterialSpec& spec = DEFAULT)
+            : m_vertexArray(std::make_shared<VertexArray>(Convert(vertices, size), std::move(indices), size)), m_material(std::make_shared<Material>(spec)) {};
 
         Mesh(std::vector<float>& vertices, std::vector<unsigned int>& indices, const int size, const MaterialSpec& spec = DEFAULT)
             : m_vertexArray(std::make_shared<VertexArray>(std::move(vertices), std::move(indices), size)), m_material(std::make_shared<Material>(spec)) {};

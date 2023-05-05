@@ -62,7 +62,7 @@ namespace Vakol::Model
         const int NUM_VERTS_PER_PATCH = NUM_PATCH_PTS;
     };
 
-	std::vector<float> Convert(std::vector<Vertex>& arr, const int size);
+	std::vector<float> Convert(const std::vector<Vertex>& arr, const int size);
 
     class VertexArray
     {
