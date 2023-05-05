@@ -25,7 +25,7 @@ namespace Vakol::Controller
         if (iter == m_TextureMap.end()) {
             ret = std::make_shared<Assets::Texture>(file);
 
-            if (ret->GetID() == 0) return nullptr;  // if texture didn't load
+            if (ret->GetId() == 0) return nullptr;  // if texture didn't load
             m_TextureMap[file] = ret;
         } else
             ret = m_TextureMap[file];

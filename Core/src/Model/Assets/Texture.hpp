@@ -13,23 +13,24 @@ namespace Vakol::Model::Assets
     {
     public:
         Texture() = default;
+
+        explicit Texture(const std::string& path) : m_ID(LoadRawTexture(path)), m_path(path) {}
         
-        Texture(const std::string& path) : m_path(path), m_ID(LoadRawTexture(path)) {};
-        
-        Texture(const std::string& path, const bool gamma, const bool flip) : m_path(path), m_ID(LoadTexture(path, gamma, flip)) {};
+        Texture(const std::string& path, const bool gamma, const bool flip) : m_ID(LoadTexture(path, gamma, flip)),
+                                                                              m_path(path) {}
         
         Texture(const int size, float scale, const int octaves, const float persistence, const float lacunarity) : 
-            m_ID(LoadNoiseTexture(size, scale, octaves, persistence, lacunarity)) {};
+            m_ID(LoadNoiseTexture(size, scale, octaves, persistence, lacunarity)) {}
 
         ~Texture() = default;
 
         void Bind(const unsigned int slot) const;
         void Unbind(const unsigned int slot) const;
 
-        const unsigned int GetID() const { return this->m_ID; }
+        [[nodiscard]] unsigned int GetId() const { return this->m_ID; }
 
-        const std::string GetPath() const { return this->m_path; }
-        const std::string GetType() const { return this->m_type; }
+        [[nodiscard]] const std::string& GetPath() const { return this->m_path; }
+        [[nodiscard]] const std::string& GetType() const { return this->m_type; }
 
         void SetPath(const std::string& path) { this->m_path = path; }
         void SetType(const std::string& type) { this->m_type = type; }

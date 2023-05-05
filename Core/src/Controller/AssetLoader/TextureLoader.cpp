@@ -4,21 +4,21 @@
 
 #include <glad/glad.h>
 
-const unsigned int LoadGLTexture(const std::string&, const bool, const bool, const bool);
-const unsigned int LoadGLTexture(const int, float, const int, const float, const float);
+unsigned int LoadGLTexture(const std::string&, const bool, const bool, const bool);
+unsigned int LoadGLTexture(const int, float, const int, const float, const float);
 
 namespace Vakol::Controller
 {
-    const unsigned int LoadTexture(const std::string& path, const bool gamma, const bool flip) { return ::LoadGLTexture(path, false, gamma, flip); }
+	unsigned int LoadTexture(const std::string& path, const bool gamma, const bool flip) { return ::LoadGLTexture(path, false, gamma, flip); }
 
-    const unsigned int LoadNoiseTexture(const int size, float scale, const int octaves, const float persistence, const float lacunarity) { return ::LoadGLTexture(size, scale, octaves, persistence, lacunarity); }
+	unsigned int LoadNoiseTexture(const int size, float scale, const int octaves, const float persistence, const float lacunarity) { return ::LoadGLTexture(size, scale, octaves, persistence, lacunarity); }
 
     // gamma correction only applies for RGB/RGBA channels
-    const unsigned int LoadRawTexture(const std::string& path) { return ::LoadGLTexture(path, true, false, false); }
+    unsigned int LoadRawTexture(const std::string& path) { return ::LoadGLTexture(path, true, false, false); }
 }
 
 
-const unsigned int LoadGLTexture(const std::string& path, const bool raw, const bool gamma, const bool flip)
+unsigned int LoadGLTexture(const std::string& path, const bool raw, const bool gamma, const bool flip)
 {
     unsigned int ID = 0;
 
@@ -27,8 +27,8 @@ const unsigned int LoadGLTexture(const std::string& path, const bool raw, const 
     int width = 0, height = 0, channels = 1;
     auto data = (raw) ? LoadImage(path, width, height) : LoadImage(path, width, height, channels, flip);
 
-    GLenum internal_format = (channels == 1) ? GL_R8 : (channels > 3) ? (gamma) ? GL_SRGB8_ALPHA8 : GL_RGBA8 : (gamma) ? GL_SRGB8 : GL_RGB8;
-    GLenum data_format = (channels == 1) ? GL_RED : (channels > 3) ? GL_RGBA : GL_RGB;
+    const GLenum internal_format = (channels == 1) ? GL_R8 : (channels > 3) ? (gamma) ? GL_SRGB8_ALPHA8 : GL_RGBA8 : (gamma) ? GL_SRGB8 : GL_RGB8;
+    const GLenum data_format = (channels == 1) ? GL_RED : (channels > 3) ? GL_RGBA : GL_RGB;
 
     glCreateTextures(GL_TEXTURE_2D, 1, &ID);
     glTextureStorage2D(ID, 1, internal_format, width, height);
@@ -49,7 +49,7 @@ const unsigned int LoadGLTexture(const std::string& path, const bool raw, const 
     return ID;
 }
 
-const unsigned int LoadGLTexture(const int size, float scale, const int octaves, const float persistence, const float lacunarity)
+unsigned int LoadGLTexture(const int size, float scale, const int octaves, const float persistence, const float lacunarity)
 {
     unsigned int ID = 0;
 
