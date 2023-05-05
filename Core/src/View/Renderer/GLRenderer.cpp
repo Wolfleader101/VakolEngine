@@ -31,23 +31,23 @@ Distance	Constant	Linear	Quadratic
 3250	    1.0	        0.0014	0.000007
 */
 
-const glm::vec4 VAKOL_CLASSIC = glm::vec4(0.52941f, 0.80784f, 0.92157f, 1.0f);
+constexpr glm::vec4 VAKOL_CLASSIC = glm::vec4(0.52941f, 0.80784f, 0.92157f, 1.0f);
 
-const glm::vec4 VAKOL_FOGGY = glm::vec4(0.4f, 0.4f, 0.4f, 1.0);
-const glm::vec4 VAKOL_FOGGY_2 = glm::vec4(0.8f, 0.8f, 0.8f, 0.0);
+constexpr glm::vec4 VAKOL_FOGGY = glm::vec4(0.4f, 0.4f, 0.4f, 1.0);
+constexpr glm::vec4 VAKOL_FOGGY_2 = glm::vec4(0.8f, 0.8f, 0.8f, 0.0);
 
-const glm::vec4 VAKOL_DARK = glm::vec4(0.1f, 0.1f, 0.1f, 1.0f);
+constexpr glm::vec4 VAKOL_DARK = glm::vec4(0.1f, 0.1f, 0.1f, 1.0f);
 
-const float light_constant = 1.0f;
-const float light_linear = 0.09f;
-const float light_quadratic = 0.032f;
+constexpr float LIGHT_CONSTANT = 1.0f;
+constexpr float LIGHT_LINEAR = 0.09f;
+constexpr float LIGHT_QUADRATIC = 0.032f;
 
-const float light_cut_off = glm::cos(glm::radians(7.5f));
-const float light_outer_cut_off = glm::cos(glm::radians(12.5f));
+const float LIGHT_CUT_OFF = glm::cos(glm::radians(7.5f));
+const float LIGHT_OUTER_CUT_OFF = glm::cos(glm::radians(12.5f));
 
 namespace Vakol::View 
 {
-    GLRenderer::GLRenderer(const std::shared_ptr<Window> window) : Renderer(window) 
+    GLRenderer::GLRenderer(const std::shared_ptr<Window>& window) : Renderer(window) 
     {
         glEnable(GL_DEPTH_TEST);
         //glEnable(GL_CULL_FACE);
@@ -77,10 +77,14 @@ namespace Vakol::View
         buffers.at(index)->SetSubData(offset, size, data);
     }
 
-    void GLRenderer::ClearColor(const glm::vec4& color) const { glClearColor(color.r, color.g, color.b, color.a); }
-    void GLRenderer::ClearColor(const float r, const float g, const float b, const float a) const { glClearColor(r, g, b, a); }
+    void GLRenderer::ClearColor(const glm::vec4& color)
+    { glClearColor(color.r, color.g, color.b, color.a); }
 
-    void GLRenderer::ClearBuffer(const unsigned int buffer_bit) const { glClear(buffer_bit); }
+    void GLRenderer::ClearColor(const float r, const float g, const float b, const float a)
+    { glClearColor(r, g, b, a); }
+
+    void GLRenderer::ClearBuffer(const unsigned int buffer_bit)
+    { glClear(buffer_bit); }
 
     void GLRenderer::Draw(const Controller::Time& time, const Controller::Camera& camera, const Model::Components::Transform trans, const Model::Components::Drawable& drawable) const 
     {
@@ -94,7 +98,7 @@ namespace Vakol::View
         SetBufferSubData(0, 0, sizeof(glm::mat4), glm::value_ptr(camera.GetMatrix(PV_MATRIX)));
         SetBufferSubData(0, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(camera.GetMatrix(VIEW_MATRIX)));
 
-        glm::mat4 model_matrix = glm::mat4(1.0f); // start off with an identity matrix
+        auto model_matrix = glm::mat4(1.0f); // start off with an identity matrix
 
         model_matrix = glm::translate(model_matrix, trans.pos);
 

@@ -14,14 +14,86 @@ namespace Vakol::Controller
 {
     void RegisterMath(sol::state& lua)
 	{
-        auto vec3 = lua.new_usertype<glm::vec3>("vec3");
-        vec3["x"] = &glm::vec3::x;
-        vec3["y"] = &glm::vec3::y;
-        vec3["z"] = &glm::vec3::z;
+        {
+            sol::constructors<glm::vec2(), glm::vec2(float), glm::vec2(float, float)> ctor; // allow for constructors
 
-        auto vec2 = lua.new_usertype<glm::vec2>("vec2");
-        vec2["x"] = &glm::vec2::x;
-        vec2["y"] = &glm::vec2::y;
+            auto div_overload = sol::overload([](const glm::vec2& v, const float k) -> glm::vec2 { return v / k; },
+                [](const float k, const glm::vec2& v) -> glm::vec2 { return k / v; });
+
+            auto mul_overload = sol::overload([](const glm::vec2& u, const glm::vec2& v) -> glm::vec2 { return u * v; },
+                [](const glm::vec2& v, const float k) -> glm::vec2 { return v * k; },
+                [](const float k, const glm::vec2& v) -> glm::vec2 { return k * v; });
+
+            auto add_overload = sol::overload([](const glm::vec2& u, const glm::vec2& v) -> glm::vec2 { return u + v; });
+
+            auto sub_overload = sol::overload([](const glm::vec2& u, const glm::vec2& v) -> glm::vec2 { return u - v; });
+
+            auto vec2 = lua.new_usertype<glm::vec2>("Vector2", ctor,
+                sol::meta_function::multiplication, mul_overload, sol::meta_function::division, div_overload,
+                sol::meta_function::addition, add_overload, sol::meta_function::subtraction, sub_overload);
+
+            vec2["x"] = &glm::vec2::x;
+            vec2["y"] = &glm::vec2::y;
+
+            vec2["r"] = &glm::vec2::r;
+            vec2["g"] = &glm::vec2::g;
+        }
+
+        {
+            sol::constructors<glm::vec3(), glm::vec3(float), glm::vec3(float, float, float)> ctor; // allow for constructors
+
+            auto div_overload = sol::overload([](const glm::vec3& v, const float k) -> glm::vec3 { return v / k; },
+                [](const float k, const glm::vec3& v) -> glm::vec3 { return k / v; });
+
+            auto mul_overload = sol::overload([](const glm::vec3& u, const glm::vec3& v) -> glm::vec3 { return u * v; },
+                [](const glm::vec3& v, const float k) -> glm::vec3 { return v * k; },
+                [](const float k, const glm::vec3& v) -> glm::vec3 { return k * v; });
+
+            auto add_overload = sol::overload([](const glm::vec3& u, const glm::vec3& v) -> glm::vec3 { return u + v; });
+
+            auto sub_overload = sol::overload([](const glm::vec3& u, const glm::vec3& v) -> glm::vec3 { return u - v; });
+
+            auto vec3 = lua.new_usertype<glm::vec3>("Vector3", ctor,
+                sol::meta_function::multiplication, mul_overload, sol::meta_function::division, div_overload,
+                sol::meta_function::addition, add_overload, sol::meta_function::subtraction, sub_overload);
+
+            vec3["x"] = &glm::vec3::x;
+            vec3["y"] = &glm::vec3::y;
+            vec3["z"] = &glm::vec3::z;
+
+            vec3["r"] = &glm::vec3::r;
+            vec3["g"] = &glm::vec3::g;
+            vec3["b"] = &glm::vec3::b;
+        }
+
+        {
+            sol::constructors<glm::vec4(), glm::vec4(float), glm::vec4(float, float, float, float)> ctor; // allow for constructors
+
+            auto div_overload = sol::overload([](const glm::vec4& v, const float k) -> glm::vec4 { return v / k; },
+                [](const float k, const glm::vec4& v) -> glm::vec4 { return k / v; });
+
+            auto mul_overload = sol::overload([](const glm::vec4& u, const glm::vec4& v) -> glm::vec4 { return u * v; },
+                [](const glm::vec4& v, const float k) -> glm::vec4 { return v * k; },
+                [](const float k, const glm::vec4& v) -> glm::vec4 { return k * v; });
+
+            auto add_overload = sol::overload([](const glm::vec4& u, const glm::vec4& v) -> glm::vec4 { return u + v; });
+
+            auto sub_overload = sol::overload([](const glm::vec4& u, const glm::vec4& v) -> glm::vec4 { return u - v; });
+
+            auto vec4 = lua.new_usertype<glm::vec4>("Vector4", ctor,
+                sol::meta_function::multiplication, mul_overload, sol::meta_function::division, div_overload,
+                sol::meta_function::addition, add_overload, sol::meta_function::subtraction, sub_overload);
+
+            vec4["x"] = &glm::vec4::x;
+            vec4["y"] = &glm::vec4::y;
+            vec4["z"] = &glm::vec4::z;
+            vec4["w"] = &glm::vec4::w;
+
+            vec4["r"] = &glm::vec4::r;
+            vec4["g"] = &glm::vec4::g;
+            vec4["b"] = &glm::vec4::b;
+            vec4["a"] = &glm::vec4::a;
+        }
     }
 
     void RegisterLogger(sol::state& lua) {

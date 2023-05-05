@@ -1,10 +1,13 @@
 function init(scene, entity)
+  
     local model = entity:add_model("coreAssets/models/cube.obj") -- get model and add a drawable component
     model:set_shader("coreAssets/shaders/basic.prog") -- set the shader on the model (automatically binds it)
-
     
     local shader = model:get_shader(); -- get the shader from the model
-    shader:set_vec3("tint", 0.5, 0.2, 0.3); -- in this case, we set a uniform variable "tint" of type vec3 to red
+
+    shader:set_int("diffuse_map", 0);
+
+    shader:set_vec3("tint", 1.0, 1.0, 1.0); -- in this case, we set a uniform variable "tint" of type vec3 to velvet red
 end
 
 local function lerp(a, b, t)

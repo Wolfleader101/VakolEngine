@@ -1,13 +1,17 @@
 function init(scene, entity)
+    
+    entity:get_transform().pos = Vector3.new(5, 0, 0);
+    
     local model = entity:add_model("coreAssets/models/kiki_resized.obj") -- get model and add a drawable component
     
     model:set_shader("coreAssets/shaders/kiki.prog") -- set the shader on the model (automatically binds it)
+
 
     local mesh = model:get_mesh(0);
     local material = mesh:get_material();
 
     local shader = model:get_shader();
-    shader:set_int("diffuse_texture", 0);
+    shader:set_int("diffuse_map", 0);
 end
 
 -- local function lerp(a, b, t)
