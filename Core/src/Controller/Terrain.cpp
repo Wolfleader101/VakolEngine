@@ -159,7 +159,7 @@ namespace Vakol::Controller
         return {vertices, indices, 5 * sizeof(float)};
     }
 
-	Model::Assets::Mesh Terrain::load_clod_terrain_mesh()
+	Model::Assets::Mesh Terrain::load_clod_terrain_mesh() const
     {
         std::vector<float> vertices;
 

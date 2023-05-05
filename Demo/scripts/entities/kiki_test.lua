@@ -1,10 +1,13 @@
 function init(scene, entity)
     local model = entity:add_model("coreAssets/models/kiki_resized.obj") -- get model and add a drawable component
+    --local body_texture = create_texture("coreAssets/textures/kiki_body.jpg");
+    
     model:set_shader("coreAssets/shaders/kiki.prog") -- set the shader on the model (automatically binds it)
 
-    print("kikiiiii");
-    -- local shader = model:get_shader(); -- get the shader from the model
-    -- shader:set_vec3("tint", 0.5, 0.2, 0.3); -- in this case, we set a uniform variable "tint" of type vec3 to red
+    local mesh = model:get_mesh(0);
+    local material = mesh:get_material();
+
+    material:add_texture(load_texture("coreAssets/textures/kiki_body.jpg"));
 end
 
 -- local function lerp(a, b, t)

@@ -9,23 +9,15 @@ namespace Vakol::Model::Assets
     public:
         Texture() = default;
 
-        Texture(std::string&& path) : m_path(std::move(path)) {}
-        Texture(std::string& path) : m_path(std::move(path)) {}
+        explicit Texture(std::string&& path) : path(std::move(path)) {}
+        explicit Texture(std::string& path) : path(std::move(path)) {}
 
-        ~Texture() {}
+        void SetID(const unsigned int id) { this->m_ID = id; }
+        [[nodiscard]] unsigned int GetID() const { return this->m_ID; }
 
-        [[nodiscard]] unsigned int GetId() const { return this->m_ID; }
-
-        [[nodiscard]] const std::string& GetPath() const { return this->m_path; }
-        [[nodiscard]] const std::string& GetType() const { return this->m_type; }
-
-        void SetPath(const std::string& path) { this->m_path = path; }
-        void SetType(const std::string& type) { this->m_type = type; }
-
+        std::string path;
+        std::string type;
     private:
         unsigned int m_ID = 0;
-
-        std::string m_path = "";
-        std::string m_type = "";
     };
 }

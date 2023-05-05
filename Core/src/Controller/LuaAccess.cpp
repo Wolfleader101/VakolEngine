@@ -3,13 +3,17 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "AssetLoader/AssetLoader.hpp"
+#include "AssetLoader/TextureLoader.hpp"
+
 #include "Model/Assets/Material.hpp"
 #include "Model/Components.hpp"
 #include "Model/Instance.hpp"
 #include "View/GUI/GUIWindow.hpp"
 
-namespace Vakol::Controller {
-    void RegisterMath(sol::state& lua) {
+namespace Vakol::Controller
+{
+    void RegisterMath(sol::state& lua)
+	{
         auto vec3 = lua.new_usertype<glm::vec3>("vec3");
         vec3["x"] = &glm::vec3::x;
         vec3["y"] = &glm::vec3::y;
@@ -21,65 +25,52 @@ namespace Vakol::Controller {
     }
 
     void RegisterLogger(sol::state& lua) {
-        lua.set_function("print", [](sol::variadic_args va) {
-            auto arg = va[0];
-
-            if (arg.get_type() == sol::type::string) {
+        lua.set_function("print", [](const sol::variadic_args& va)
+        {
+	        if (const auto arg = va[0]; arg.get_type() == sol::type::string) 
                 Logger::ScriptPrintTrace(va[0].get<std::string>());
-            } else if (arg.get_type() == sol::type::number) {
+            else if (arg.get_type() == sol::type::number)
                 Logger::ScriptPrintTrace(std::to_string(va[0].get<float>()));
-            }
         });
-        lua.set_function("print_info", [](sol::variadic_args va) {
-            auto arg = va[0];
-
-            if (arg.get_type() == sol::type::string) {
+        lua.set_function("print_info", [](const sol::variadic_args& va) 
+		{
+	        if (const auto arg = va[0]; arg.get_type() == sol::type::string) 
                 Logger::ScriptPrintInfo(va[0].get<std::string>());
-            } else if (arg.get_type() == sol::type::number) {
+            else if (arg.get_type() == sol::type::number)
                 Logger::ScriptPrintInfo(std::to_string(va[0].get<float>()));
-            }
         });
-        lua.set_function("print_warn", [](sol::variadic_args va) {
-            auto arg = va[0];
-
-            if (arg.get_type() == sol::type::string) {
+        lua.set_function("print_warn", [](const sol::variadic_args& va)
+        {
+	        if (const auto arg = va[0]; arg.get_type() == sol::type::string) 
                 Logger::ScriptPrintWarn(va[0].get<std::string>());
-            } else if (arg.get_type() == sol::type::number) {
+            else if (arg.get_type() == sol::type::number)
                 Logger::ScriptPrintWarn(std::to_string(va[0].get<float>()));
-            }
         });
-        lua.set_function("print_err", [](sol::variadic_args va) {
-            auto arg = va[0];
-
-            if (arg.get_type() == sol::type::string) {
+        lua.set_function("print_err", [](const sol::variadic_args& va) 
+        {
+	        if (const auto arg = va[0]; arg.get_type() == sol::type::string)
                 Logger::ScriptPrintError(va[0].get<std::string>());
-            } else if (arg.get_type() == sol::type::number) {
+            else if (arg.get_type() == sol::type::number)
                 Logger::ScriptPrintError(std::to_string(va[0].get<float>()));
-            }
         });
-        lua.set_function("print_crit", [](sol::variadic_args va) {
-            auto arg = va[0];
-
-            if (arg.get_type() == sol::type::string) {
+        lua.set_function("print_critical", [](const sol::variadic_args& va) 
+        {
+	        if (const auto arg = va[0]; arg.get_type() == sol::type::string)
                 Logger::ScriptPrintCrit(va[0].get<std::string>());
-            } else if (arg.get_type() == sol::type::number) {
+            else if (arg.get_type() == sol::type::number)
                 Logger::ScriptPrintCrit(std::to_string(va[0].get<float>()));
-            }
         });
     }
 
-    void RegisterAssetLoader(sol::state& lua) {
+    void RegisterAssetLoader(sol::state& lua)
+	{
         lua.set_function("load_texture", [](std::string& path) 
         {
-            auto tex = AssetLoader::GetTexture(path);
-
-            if (tex == nullptr) return false;
-
-            return true;
+			return AssetLoader::GetTexture(path); // no checks... just raw doggin it LOL
         });
 
         lua.set_function("load_model", [](const std::string& path) {
-            auto model = AssetLoader::GetModel(path);
+	        const auto model = AssetLoader::GetModel(path);
 
             if (model == nullptr) return false;
 
@@ -87,7 +78,7 @@ namespace Vakol::Controller {
         });
 
         lua.set_function("load_shader", [](const std::string& path) {
-            auto shader = AssetLoader::GetShader(path);
+	        const auto shader = AssetLoader::GetShader(path);
 
             if (shader == nullptr) return false;
 
@@ -98,20 +89,20 @@ namespace Vakol::Controller {
     void RegisterApplication(sol::state& lua, Application* app) {
         lua.set_function("add_scene", &Application::AddScene, app);
 
-        auto TimeType = lua.new_usertype<Time>("Time");
-        TimeType["delta_time"] = &Time::deltaTime;
-        TimeType["curr_time"] = &Time::curTime;
-        TimeType["prev_time"] = &Time::prevTime;
-        TimeType["fps"] = &Time::fps;
+        auto time_type = lua.new_usertype<Time>("Time");
+        time_type["delta_time"] = &Time::deltaTime;
+        time_type["curr_time"] = &Time::curTime;
+        time_type["prev_time"] = &Time::prevTime;
+        time_type["fps"] = &Time::fps;
 
         lua["Time"] = &app->GetTime();
 
-        auto InputType = lua.new_usertype<Input>("Input");
-        InputType.set_function("get_key", &Input::GetKey);
-        InputType.set_function("get_key_down", &Input::GetKeyDown);
-        InputType.set_function("get_key_up", &Input::GetKeyUp);
-        InputType.set_function("get_mouse_pos", &Input::GetMousePos);
-        InputType.set_function("get_delta_mouse_pos", &Input::GetDeltaMousePos);
+        auto input_type = lua.new_usertype<Input>("Input");
+        input_type.set_function("get_key", &Input::GetKey);
+        input_type.set_function("get_key_down", &Input::GetKeyDown);
+        input_type.set_function("get_key_up", &Input::GetKeyUp);
+        input_type.set_function("get_mouse_pos", &Input::GetMousePos);
+        input_type.set_function("get_delta_mouse_pos", &Input::GetDeltaMousePos);
 
         lua["Input"] = &app->GetInput();
 
@@ -132,16 +123,33 @@ namespace Vakol::Controller {
             "KEY_Z", Input::KEY::KEY_Z, "KEY_LEFT_SHIFT", Input::KEY::KEY_LEFT_SHIFT);
     }
 
-    void RegisterEntity(sol::state& lua) {
-        auto entityType = lua.new_usertype<Entity>("entity");
-        auto modelType = lua.new_usertype<Assets::Model>("model");
-        auto meshType = lua.new_usertype<Assets::Mesh>("mesh");
-        auto materialType = lua.new_usertype<Assets::Material>("material");
-        auto shaderType = lua.new_usertype<Assets::Shader>("shader");
+    void RegisterEntity(sol::state& lua)
+	{
+        auto entity_type = lua.new_usertype<Entity>("entity");
+        auto model_type = lua.new_usertype<Assets::Model>("model");
+        auto mesh_type = lua.new_usertype<Assets::Mesh>("mesh");
+        auto material_type = lua.new_usertype<Assets::Material>("material");
+        auto shader_type = lua.new_usertype<Assets::Shader>("shader");
 
-        entityType.set_function("get_transform", &Entity::GetComponent<Components::Transform>);
+        lua.set_function("create_raw_texture", [](std::string& path)
+        {
+        	auto texture = Assets::Texture(path);
+            texture.SetID(LoadRawTexture(texture.path));
 
-        entityType.set_function("create_height_map_terrain", [](Entity* ent, std::string&& path)
+            return texture;
+        });
+
+        lua.set_function("create_texture", [](std::string& path, const bool gamma, const bool flip)
+        {
+            auto texture = Assets::Texture(path);
+            texture.SetID(LoadTexture(texture.path, gamma, flip));
+
+            return texture;
+        });
+
+        entity_type.set_function("get_transform", &Entity::GetComponent<Components::Transform>);
+
+        entity_type.set_function("create_height_map_terrain", [](Entity* ent, std::string&& path)
         {
             if (!ent->HasComponent<Components::Drawable>()) ent->AddComponent<Components::Drawable>();
 
@@ -149,7 +157,7 @@ namespace Vakol::Controller {
 
             ent->AddComponent<Terrain>(LoadHeightMapTerrain(std::move(path)));
 
-            const auto terrain = ent->GetComponent<Terrain>();
+        	auto terrain = ent->GetComponent<Terrain>();
 
             if (const auto model = terrain.GetModel())
             {
@@ -166,15 +174,38 @@ namespace Vakol::Controller {
             return terrain;
         });
 
+        entity_type.set_function("create_clod_terrain", [](Entity* ent, std::string&& path)
+        {
+            if (!ent->HasComponent<Components::Drawable>()) ent->AddComponent<Components::Drawable>();
+
+            if (ent->HasComponent<Terrain>()) ent->RemoveComponent<Terrain>();
+
+            ent->AddComponent<Terrain>(LoadCLODTerrain(std::move(path)));
+
+        	auto terrain = ent->GetComponent<Terrain>();
+
+            if (const auto model = terrain.GetModel())
+            {
+                model->GetMesh().SetDrawMode(DRAW_MODE::PATCHES);
+                model->GetMesh().SetDrawType(DRAW_TYPE::ARRAYS);
+
+                model->GetMesh().SetDrawModeInfo(400); // num patches
+
+                ent->GetComponent<Components::Drawable>().model_ptr = model;
+            }
+
+            return terrain;
+        });
+
 #pragma warning(push)
 #pragma warning(disable:4715) // disable that annoying warning for not all code path return a value
-        entityType.set_function("get_terrain", [](const Entity* ent) 
+        entity_type.set_function("get_terrain", [](const Entity* ent) 
         {
             if (ent->HasComponent<Terrain>()) return ent->GetComponent<Terrain>();
         });
 #pragma warning(pop)
 
-        entityType.set_function("add_model", [](Entity* ent, const std::string& path) 
+        entity_type.set_function("add_model", [](Entity* ent, const std::string& path) 
         {
             if (!ent->HasComponent<Components::Drawable>()) ent->AddComponent<Components::Drawable>();
 
@@ -190,90 +221,92 @@ namespace Vakol::Controller {
 
 #pragma warning(push)
 #pragma warning(disable:4715) // disable that annoying warning for not all code path return a value
-        entityType.set_function("get_model", [](const Entity* ent) 
+        entity_type.set_function("get_model", [](const Entity* ent) 
         {
             if (ent->HasComponent<Components::Drawable>()) return ent->GetComponent<Components::Drawable>().model_ptr;
         });
 #pragma warning(pop)
 
-        modelType.set_function("get_mesh_count", &Assets::Model::GetMeshCount);
-        modelType.set_function("get_mesh", &Assets::Model::GetMesh);
+        model_type.set_function("get_mesh_count", &Assets::Model::GetMeshCount);
+        model_type.set_function("get_mesh", &Assets::Model::GetMesh);
 
-        modelType.set_function("set_shader", &Assets::Model::SetShader);
-        modelType.set_function("get_shader", &Assets::Model::GetShader);
+        model_type.set_function("set_shader", &Assets::Model::SetShader);
+        model_type.set_function("get_shader", &Assets::Model::GetShader);
 
-        meshType.set_function("get_material", &Assets::Mesh::GetMaterial);
+        mesh_type.set_function("get_material", &Assets::Mesh::GetMaterial);
 
-        materialType.set_function("add_texture", &Assets::Material::AddTexture);
-        materialType.set_function("get_texture", &Assets::Material::GetTexture);
+        material_type.set_function("add_texture", &Assets::Material::AddTexture);
+        material_type.set_function("get_texture", &Assets::Material::GetTexture);
 
-        shaderType.set_function("set_int", &Assets::Shader::SetInt);
-        shaderType.set_function("set_bool", &Assets::Shader::SetBool);
-        shaderType.set_function("set_float", &Assets::Shader::SetFloat);
-        shaderType.set_function("set_vec2", sol::resolve<void(const char*, const float, const float) const>(&Assets::Shader::SetVec2));
-        shaderType.set_function("set_vec3", sol::resolve<void(const char*, const float, const float, const float) const>(&Assets::Shader::SetVec3));
-        shaderType.set_function("set_vec4", sol::resolve<void(const char*, const float, const float, const float, const float) const>(&Assets::Shader::SetVec4));
+        shader_type.set_function("set_int", &Assets::Shader::SetInt);
+        shader_type.set_function("set_bool", &Assets::Shader::SetBool);
+        shader_type.set_function("set_float", &Assets::Shader::SetFloat);
+        shader_type.set_function("set_vec2", sol::resolve<void(const char*, const float, const float) const>(&Assets::Shader::SetVec2));
+        shader_type.set_function("set_vec3", sol::resolve<void(const char*, const float, const float, const float) const>(&Assets::Shader::SetVec3));
+        shader_type.set_function("set_vec4", sol::resolve<void(const char*, const float, const float, const float, const float) const>(&Assets::Shader::SetVec4));
     }
 
-    void RegisterECS(sol::state& lua) {
-        auto TransformType = lua.new_usertype<Components::Transform>("transform");
-        auto terrainType = lua.new_usertype<Terrain>("terrain");
+    void RegisterECS(sol::state& lua)
+	{
+        auto transform_type = lua.new_usertype<Components::Transform>("transform");
+        auto terrain_type = lua.new_usertype<Terrain>("terrain");
 
-        TransformType["pos"] = &Components::Transform::pos;
-        TransformType["rot"] = &Components::Transform::rot;
-        TransformType["scale"] = &Components::Transform::scale;
+        transform_type["pos"] = &Components::Transform::pos;
+        transform_type["rot"] = &Components::Transform::rot;
+        transform_type["scale"] = &Components::Transform::scale;
 
         // terrainType.set_function("load_heightmap", &Terrain::LoadHeightMap);
         // terrainType.set_function("load_texture", &Terrain::LoadTexture);
         // terrainType.set_function("generate", &Terrain::Generate);
 
-        terrainType.set_function("get_height", &Terrain::GetHeight);
-        terrainType.set_function("get_size", &Terrain::GetSize);
-        terrainType.set_function("get_model", &Terrain::GetModel);
+        terrain_type.set_function("get_height", &Terrain::GetHeight);
+        terrain_type.set_function("get_size", &Terrain::GetSize);
+        terrain_type.set_function("get_model", &Terrain::GetModel);
     }
 
     void RegisterScene(sol::state& lua) {
-        auto sceneType = lua.new_usertype<Scene>("scene");
-        auto cameraType = lua.new_usertype<Camera>("camera");
+        auto scene_type = lua.new_usertype<Scene>("scene");
+        auto camera_type = lua.new_usertype<Camera>("camera");
 
-        sceneType.set_function("create_entity", &Scene::CreateEntity);
-        sceneType.set_function("get_camera", &Scene::GetCamera);
-        sceneType.set_function("get_entity", &Scene::GetEntity);
+        scene_type.set_function("create_entity", &Scene::CreateEntity);
+        scene_type.set_function("get_camera", &Scene::GetCamera);
+        scene_type.set_function("get_entity", &Scene::GetEntity);
 
-        cameraType.set_function("get_pos", &Camera::GetPos);
-        cameraType.set_function("set_pos", &Camera::SetPos);
-        cameraType.set_function("get_forward", &Camera::GetForward);
-        cameraType.set_function("get_right", &Camera::GetRight);
+        camera_type.set_function("get_pos", &Camera::GetPos);
+        camera_type.set_function("set_pos", &Camera::SetPos);
+        camera_type.set_function("get_forward", &Camera::GetForward);
+        camera_type.set_function("get_right", &Camera::GetRight);
 
-        cameraType.set_function("get_pitch", &Camera::GetPitch);
-        cameraType.set_function("set_pitch", &Camera::SetPitch);
+        camera_type.set_function("get_pitch", &Camera::GetPitch);
+        camera_type.set_function("set_pitch", &Camera::SetPitch);
 
-        cameraType.set_function("get_yaw", &Camera::GetYaw);
-        cameraType.set_function("set_yaw", &Camera::SetYaw);
+        camera_type.set_function("get_yaw", &Camera::GetYaw);
+        camera_type.set_function("set_yaw", &Camera::SetYaw);
     }
 
-    void RegisterGUIWindow(sol::state& lua, View::GUIWindow* gui) {
-        auto guiWindowType =
+    void RegisterGUIWindow(sol::state& lua, View::GUIWindow* gui)
+	{
+        auto gui_window_type =
             lua.new_usertype<View::GUIWindow>("gui");  // Creates a new usertype of the type 'View::GUIWindow'
 
         lua["GUI"] = gui;
 
         // REGISTERS C++ FUNCTIONS TO LUA
-        guiWindowType.set_function("start_window", &View::GUIWindow::StartWindowCreation);
+        gui_window_type.set_function("start_window", &View::GUIWindow::StartWindowCreation);
 
-        guiWindowType.set_function("get_fps", &View::GUIWindow::GetFramesPerSecond);
+        gui_window_type.set_function("get_fps", &View::GUIWindow::GetFramesPerSecond);
 
-        guiWindowType.set_function("add_text", &View::GUIWindow::AddText);
-        guiWindowType.set_function("add_button", &View::GUIWindow::AddButton);
-        guiWindowType.set_function("add_checkbox", &View::GUIWindow::AddCheckbox);
+        gui_window_type.set_function("add_text", &View::GUIWindow::AddText);
+        gui_window_type.set_function("add_button", &View::GUIWindow::AddButton);
+        gui_window_type.set_function("add_checkbox", &View::GUIWindow::AddCheckbox);
 
-        guiWindowType.set_function("add_integer_slider", &View::GUIWindow::AddIntSlider);
-        guiWindowType.set_function("add_float_slider", &View::GUIWindow::AddFloatSlider);
+        gui_window_type.set_function("add_integer_slider", &View::GUIWindow::AddIntSlider);
+        gui_window_type.set_function("add_float_slider", &View::GUIWindow::AddFloatSlider);
 
-        guiWindowType.set_function("add_vector_integer_slider", &View::GUIWindow::AddVecIntSlider);
-        guiWindowType.set_function("add_vector_float_slider", &View::GUIWindow::AddVecFloatSlider);
+        gui_window_type.set_function("add_vector_integer_slider", &View::GUIWindow::AddVecIntSlider);
+        gui_window_type.set_function("add_vector_float_slider", &View::GUIWindow::AddVecFloatSlider);
 
-        guiWindowType.set_function("end_window", &View::GUIWindow::EndWindowCreation);
+        gui_window_type.set_function("end_window", &View::GUIWindow::EndWindowCreation);
     }
 
     void RegisterRenderer(sol::state& lua) {}

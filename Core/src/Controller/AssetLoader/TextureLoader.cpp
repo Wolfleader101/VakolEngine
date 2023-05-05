@@ -5,20 +5,20 @@
 
 #include <glad/glad.h>
 
-unsigned int LoadGLTexture(std::string&&, const bool, const bool, const bool);
+unsigned int LoadGLTexture(std::string&, const bool, const bool, const bool);
 unsigned int LoadGLTexture(const int, float, const int, const float, const float);
 
 namespace Vakol::Controller
 {
-	unsigned int LoadTexture(std::string&& path, const bool gamma, const bool flip) { return ::LoadGLTexture(std::move(path), false, gamma, flip); }
+	unsigned int LoadTexture(std::string& path, const bool gamma, const bool flip) { return ::LoadGLTexture(path, false, gamma, flip); }
 
 	unsigned int LoadNoiseTexture(const int size, float scale, const int octaves, const float persistence, const float lacunarity) { return ::LoadGLTexture(size, scale, octaves, persistence, lacunarity); }
     // gamma correction only applies for RGB/RGBA channels
-    unsigned int LoadRawTexture(std::string&& path) { return ::LoadGLTexture(std::move(path), true, false, false); }
+    unsigned int LoadRawTexture(std::string& path) { return ::LoadGLTexture(path, true, false, false); }
 }
 
 
-unsigned int LoadGLTexture(std::string&& path, const bool raw, const bool gamma, const bool flip)
+unsigned int LoadGLTexture(std::string& path, const bool raw, const bool gamma, const bool flip)
 {
     unsigned int ID = 0;
 
@@ -36,7 +36,7 @@ unsigned int LoadGLTexture(std::string&& path, const bool raw, const bool gamma,
 
     VK_ASSERT(data, "\n\nData was nullptr");
 
-    const GLenum internal_format = (channels == 1) ? GL_R8 : (channels > 3) ? (gamma) ? GL_SRGB8_ALPHA8 : GL_RGBA8 : (gamma) ? GL_SRGB8 : GL_RGB8;
+    const GLint internal_format = (channels == 1) ? GL_R8 : (channels > 3) ? (gamma) ? GL_SRGB8_ALPHA8 : GL_RGBA8 : (gamma) ? GL_SRGB8 : GL_RGB8;
     const GLenum data_format = (channels == 1) ? GL_RED : (channels > 3) ? GL_RGBA : GL_RGB;
 
     glTexImage2D(GL_TEXTURE_2D, 0, internal_format, width, height, 0, data_format, GL_UNSIGNED_BYTE, data);

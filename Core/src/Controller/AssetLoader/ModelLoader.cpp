@@ -182,7 +182,7 @@ std::vector<Texture> LoadMaterialTextures(const aiMaterial* mat, const aiTexture
 
         for (const auto& texture : textures_loaded)
         {
-            if (std::strcmp(texture.GetPath().data(), str.C_Str()) == 0) 
+            if (std::strcmp(texture.path.data(), str.C_Str()) == 0) 
             {
                 textures.push_back(texture);
 
@@ -194,11 +194,11 @@ std::vector<Texture> LoadMaterialTextures(const aiMaterial* mat, const aiTexture
 
         if (!skip)  // if texture has not already been loaded
         {
-            Texture texture;
+            Texture&& texture {};
 
             // Don't load ID yet.
-            texture.SetPath(str.C_Str());
-            texture.SetType(typeName);
+            texture.path = str.C_Str();
+            texture.type = typeName;
 
             textures.push_back(texture);
             textures_loaded.push_back(texture);

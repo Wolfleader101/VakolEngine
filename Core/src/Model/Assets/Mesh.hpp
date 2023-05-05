@@ -4,23 +4,24 @@
 #include <Model/VertexArray.hpp>
 
 #include <memory>
+#include <Controller/Logger.hpp>
 
 namespace Vakol::Model::Assets 
 {
     class Mesh 
     {
     public:
-        Mesh(const std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, const int size, const MaterialSpec& spec = DEFAULT)
-            : m_vertexArray(std::make_shared<VertexArray>(Convert(vertices, size), std::move(indices), size)), m_material(std::make_shared<Material>(spec)) {};
+        Mesh(const std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, const int size, MaterialSpec&& spec = std::move(DEFAULT))
+            : m_vertexArray(std::make_shared<VertexArray>(Convert(vertices, size), std::move(indices), size)), m_material(std::make_shared<Material>(std::move(spec))) {}
 
-        Mesh(std::vector<float>& vertices, std::vector<unsigned int>& indices, const int size, const MaterialSpec& spec = DEFAULT)
-            : m_vertexArray(std::make_shared<VertexArray>(std::move(vertices), std::move(indices), size)), m_material(std::make_shared<Material>(spec)) {};
+        Mesh(std::vector<float>& vertices, std::vector<unsigned int>& indices, const int size, MaterialSpec&& spec = std::move(DEFAULT))
+            : m_vertexArray(std::make_shared<VertexArray>(std::move(vertices), std::move(indices), size)), m_material(std::make_shared<Material>(std::move(spec))) {}
 
-        void SetMaterial(const MaterialSpec& spec) { if (!this->m_material) this->m_material = std::make_shared<Material>(spec); }
+        void SetMaterial(MaterialSpec&& spec) { if (!this->m_material) this->m_material = std::make_shared<Material>(std::move(spec)); }
 
         [[nodiscard]] unsigned int GetId() const { return this->m_vertexArray->GetId(); }
 
-		[[nodiscard]] const std::shared_ptr<Material>& GetMaterial() const { return this->m_material; }
+        [[nodiscard]] const std::shared_ptr<Material>& GetMaterial() const { return this->m_material; }
 
         [[nodiscard]] const std::vector<float>& GetVertices() const { return this->m_vertexArray->GetVertices(); }
 

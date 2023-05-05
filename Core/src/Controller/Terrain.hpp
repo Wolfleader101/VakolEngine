@@ -25,7 +25,7 @@ namespace Vakol::Controller
         [[nodiscard]] float GetHeight(const float x, const float z) const;
         
         [[nodiscard]] Model::Assets::Mesh load_height_map_mesh() const;
-    	Model::Assets::Mesh load_clod_terrain_mesh();
+    	[[nodiscard]] Model::Assets::Mesh load_clod_terrain_mesh() const;
     private:
 
         Model::Assets::Mesh load_fault_formation_mesh(const int size, const int iterations, const float filter, const bool random, const int minHeight, const int maxHeight);
