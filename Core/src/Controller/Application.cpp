@@ -14,7 +14,7 @@
 namespace Vakol::Controller {
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
-    Application::Application() : m_running(false), m_window(nullptr), m_renderer(nullptr) { Logger::Init(); };
+    Application::Application() : m_window(nullptr), m_renderer(nullptr), m_running(false) { Logger::Init(); };
 
     void Application::Init() 
     {
@@ -43,9 +43,9 @@ namespace Vakol::Controller {
 
         lua.RunFile("scripts/main.lua");
 
-        sol::function luaMain = lua.GetState()["main"];
+        const sol::function lua_main = lua.GetState()["main"];
 
-        luaMain();
+        lua_main();
 
         m_running = true;
     }
@@ -77,44 +77,41 @@ namespace Vakol::Controller {
             VK_ERROR("CONFIG ERROR: Game Name Not Set");
             return std::nullopt;
         }
-        sol::optional<int> windowWidth = config["window"]["w"];
-        if (!windowWidth) {
+        sol::optional<int> window_width = config["window"]["w"];
+        if (!window_width) {
             VK_ERROR("CONFIG ERROR: Window Width Not set");
             return std::nullopt;
         }
-        sol::optional<int> windowHeight = config["window"]["h"];
-        if (!windowHeight) {
+        sol::optional<int> window_height = config["window"]["h"];
+        if (!window_height) {
             VK_ERROR("CONFIG ERROR: Window Height Not Set");
             return std::nullopt;
         }
-        sol::optional<std::string> rendererType = config["renderer"];
-        if (!rendererType) {
+        sol::optional<std::string> renderer_type = config["renderer"];
+        if (!renderer_type) {
             VK_ERROR("CONFIG ERROR: Renderer Not Set");
             return std::nullopt;
         }
 
-        sol::optional<std::string> modelDir = config["model_dir"];
-        if (!modelDir) {
+        if (sol::optional<std::string> model_dir = config["model_dir"]; !model_dir) {
             VK_WARN("CONFIG WARNING: No Model Directory Set, Using Default {0}", AssetLoader::model_path);
         } else {
-            AssetLoader::model_path = modelDir.value();
+            AssetLoader::model_path = model_dir.value();
         }
 
-        sol::optional<std::string> textureDir = config["texture_dir"];
-        if (!textureDir) {
+        if (sol::optional<std::string> texture_dir = config["texture_dir"]; !texture_dir) {
             VK_WARN("CONFIG WARNING: No Texture Directory Set, Using Default {0}", AssetLoader::texture_path);
         } else {
-            AssetLoader::texture_path = textureDir.value();
+            AssetLoader::texture_path = texture_dir.value();
         }
 
-        sol::optional<std::string> shaderDir = config["shader_dir"];
-        if (!shaderDir) {
+        if (sol::optional<std::string> shader_dir = config["shader_dir"]; !shader_dir) {
             VK_WARN("CONFIG WARNING: No Shader Directory Set, Using Default {0}", AssetLoader::shader_path);
         } else {
-            AssetLoader::shader_path = shaderDir.value();
+            AssetLoader::shader_path = shader_dir.value();
         }
 
-        Model::GameConfig cfg = {name.value(), windowWidth.value(), windowHeight.value(), rendererType.value()};
+        Model::GameConfig cfg = {name.value(), window_width.value(), window_height.value(), renderer_type.value()};
 
         return cfg;
     }

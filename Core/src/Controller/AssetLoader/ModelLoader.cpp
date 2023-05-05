@@ -7,10 +7,12 @@
 #include <assimp/scene.h>
 
 #include <Controller/Logger.hpp>
+#include <Controller/AssetLoader/TextureLoader.hpp>
 
 #include <chrono>
 
 using namespace Vakol::Model::Assets;
+using Vakol::Controller::LoadTexture;
 
 using Vakol::Model::Vertex;
 
@@ -199,6 +201,10 @@ std::vector<Texture> LoadMaterialTextures(const aiMaterial* mat, const aiTexture
             // Don't load ID yet.
             texture.path = str.C_Str();
             texture.type = typeName;
+
+        	auto final_path = "coreAssets/textures/" + texture.path;
+
+            texture.SetID(LoadTexture(final_path, false, false));
 
             textures.push_back(texture);
             textures_loaded.push_back(texture);

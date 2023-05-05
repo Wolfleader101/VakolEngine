@@ -12,7 +12,7 @@ namespace Vakol::Controller
 {
 	unsigned int LoadTexture(std::string& path, const bool gamma, const bool flip) { return ::LoadGLTexture(path, false, gamma, flip); }
 
-	unsigned int LoadNoiseTexture(const int size, float scale, const int octaves, const float persistence, const float lacunarity) { return ::LoadGLTexture(size, scale, octaves, persistence, lacunarity); }
+	unsigned int LoadNoiseTexture(const int size, const float scale, const int octaves, const float persistence, const float lacunarity) { return ::LoadGLTexture(size, scale, octaves, persistence, lacunarity); }
     // gamma correction only applies for RGB/RGBA channels
     unsigned int LoadRawTexture(std::string& path) { return ::LoadGLTexture(path, true, false, false); }
 }
@@ -34,7 +34,9 @@ unsigned int LoadGLTexture(std::string& path, const bool raw, const bool gamma, 
     int width = 0, height = 0, channels = 1;
     auto data = (raw) ? LoadImage(std::move(path), width, height) : LoadImage(std::move(path), width, height, channels, flip);
 
-    VK_ASSERT(data, "\n\nData was nullptr");
+    if (!data) data = LoadImage("coreAssets/textures/error.png", width, height, channels, flip);
+
+    VK_ASSERT(data, "\n\ndata was nullptr");
 
     const GLint internal_format = (channels == 1) ? GL_R8 : (channels > 3) ? (gamma) ? GL_SRGB8_ALPHA8 : GL_RGBA8 : (gamma) ? GL_SRGB8 : GL_RGB8;
     const GLenum data_format = (channels == 1) ? GL_RED : (channels > 3) ? GL_RGBA : GL_RGB;
@@ -51,7 +53,7 @@ unsigned int LoadGLTexture(std::string& path, const bool raw, const bool gamma, 
     return ID;
 }
 
-unsigned int LoadGLTexture(const int size, float scale, const int octaves, const float persistence, const float lacunarity)
+unsigned int LoadGLTexture(const int size, const float scale, const int octaves, const float persistence, const float lacunarity)
 {
     unsigned int ID = 0;
 

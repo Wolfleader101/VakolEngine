@@ -1,13 +1,13 @@
 function init(scene, entity)
     local model = entity:add_model("coreAssets/models/kiki_resized.obj") -- get model and add a drawable component
-    --local body_texture = create_texture("coreAssets/textures/kiki_body.jpg");
     
     model:set_shader("coreAssets/shaders/kiki.prog") -- set the shader on the model (automatically binds it)
 
     local mesh = model:get_mesh(0);
     local material = mesh:get_material();
 
-    material:add_texture(load_texture("coreAssets/textures/kiki_body.jpg"));
+    local shader = model:get_shader();
+    shader:set_int("diffuse_texture", 0);
 end
 
 -- local function lerp(a, b, t)

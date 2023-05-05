@@ -10,9 +10,12 @@ function init(scene, entity)
     model:set_shader("coreAssets/shaders/clod_terrain.prog");
 
     local mesh = model:get_mesh(0);
+    local shader = model:get_shader();
     local material = mesh:get_material();
 
     material:add_texture(height_map);
+
+    shader:set_int("height_map", 0);
 end
 
 function update(scene, entity)
