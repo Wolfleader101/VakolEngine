@@ -1,9 +1,14 @@
 #include "LuaAccess.hpp"
 
+#pragma warning(push)
+#pragma warning(disable:4201)
 #include <glm/gtc/type_ptr.hpp>
+#pragma warning(pop)
 
 #include "AssetLoader/AssetLoader.hpp"
 #include "AssetLoader/TextureLoader.hpp"
+
+#include "System.hpp"
 
 #include "Model/Assets/Material.hpp"
 #include "Model/Components.hpp"
@@ -319,44 +324,43 @@ namespace Vakol::Controller
         shader_type.set_function("set_vec3", sol::resolve<void(const char*, const float, const float, const float) const>(&Assets::Shader::SetVec3));
         shader_type.set_function("set_vec4", sol::resolve<void(const char*, const float, const float, const float, const float) const>(&Assets::Shader::SetVec4));
 
-        entityType.set_function("physics_init", [](Entity* ent, Scene& scene)
+        entity_type.set_function("physics_init", [](Entity* ent, Scene& scene)
         {
                 System::BindScene(scene);
                 System::Physics_InitEntity(*ent);
         });
 
 
-        entityType.set_function("add_rigid", [](Entity* ent) -> RigidBody&
+        entity_type.set_function("add_rigid", [](Entity* ent) -> RigidBody&
         {
 
-            if (!ent->HasComponent<Components::RigidBody>()) ent->AddComponent<Components::RigidBody>();
-            return ent->GetComponent<Components::RigidBody>();
+            if (!ent->HasComponent<RigidBody>()) ent->AddComponent<RigidBody>();
+            return ent->GetComponent<RigidBody>();
         });
 
-        entityType.set_function("get_rigid", [](Entity* ent) -> Components::RigidBody&
+        entity_type.set_function("get_rigid", [](const Entity* ent) -> RigidBody&
         {
-            if (ent->HasComponent<Components::RigidBody>()) return ent->GetComponent<Components::RigidBody>();
+            if (ent->HasComponent<RigidBody>()) return ent->GetComponent<RigidBody>();
             
             VK_CRITICAL("No rigid body component found on entity");
             assert(0);
         
         });
 
-        entityType.set_function("add_collider", [](Entity* ent)
+        entity_type.set_function("add_collider", [](Entity* ent)
         {
             if (!ent->HasComponent<Components::Collider>()) ent->AddComponent<Components::Collider>();
             return ent->GetComponent<Components::Collider>();
         });
 
-        entityType.set_function("get_collider", [](Entity* ent) -> Components::Collider&
+        entity_type.set_function("get_collider", [](const Entity* ent) -> Collider&
         {
-            if (ent->HasComponent<Components::Collider>()) return ent->GetComponent<Components::Collider>();
+            if (ent->HasComponent<Components::Collider>()) return ent->GetComponent<Collider>();
             
             VK_CRITICAL("No collider component found on entity");
             assert(0);
         
         });
-        
 
     }
 
@@ -391,7 +395,7 @@ namespace Vakol::Controller
         camera_type.set_function("get_forward", &Camera::GetForward);
         camera_type.set_function("get_right", &Camera::GetRight);
         
-        sceneType.set_function("add_terrain_physics", [](Scene* scene, Entity ent) {
+        scene_type.set_function("add_terrain_physics", [](Scene* scene, const Entity ent) {
             if (!ent.HasComponent<Terrain>()) {
                 VK_WARN("Entity does not have a terrain component. Can't add physics");
                 return;
@@ -403,7 +407,7 @@ namespace Vakol::Controller
             System::Physics_AddTerrain(terrain);
         });
 
-        sceneType.set_function("get_physics", [](Scene* scene) ->ScenePhysics& { return *scene->scenePhysics; });
+        scene_type.set_function("get_physics", [](const Scene* scene) ->ScenePhysics& { return *scene->scenePhysics; });
 
         camera_type.set_function("get_pitch", &Camera::GetPitch);
         camera_type.set_function("set_pitch", &Camera::SetPitch);

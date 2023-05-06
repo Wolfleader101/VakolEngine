@@ -97,6 +97,7 @@ namespace Vakol::Model
     	[[nodiscard]] int GetIndexCount() const { return this->n_indices; }
 
     	[[nodiscard]] const std::vector<float>& GetVertices() const { return this->vertices; }
+        [[nodiscard]] const std::vector<unsigned int>& GetIndices() const { return this->indices; }
 
     	void set_mode(const DRAW_MODE mode) { this->info.draw_mode = mode; }
     	void set_type(const DRAW_TYPE type) { this->info.draw_type = type; }
