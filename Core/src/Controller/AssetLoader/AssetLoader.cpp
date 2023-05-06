@@ -1,6 +1,7 @@
 #include "AssetLoader.hpp"
 
 #include <Controller/AssetLoader/ModelLoader.hpp>
+#include <Controller/AssetLoader/AnimModelLoader.hpp>
 #include <Controller/AssetLoader/ShaderLoader.hpp>
 #include <Controller/AssetLoader/TextureLoader.hpp>
 
@@ -33,14 +34,14 @@ namespace Vakol::Controller
         return *ret;
     }
 
-    std::shared_ptr<Assets::Model> AssetLoader::GetModel(const std::string& file) 
+    std::shared_ptr<Assets::Model> AssetLoader::GetModel(std::string& file) 
     {
         std::shared_ptr<Assets::Model> ret;
 
         auto iter = m_ModelMap.find(file);
 
         if (iter == m_ModelMap.end()) {
-            ret = std::make_shared<Assets::Model>(LoadModel(file));
+            ret = std::make_shared<Assets::Model>(LoadAnimatedModel(std::move(file)));
 
             if (ret->meshes().empty()) return nullptr;  // if model didn't load
 

@@ -148,7 +148,7 @@ namespace Vakol::Controller
 			return AssetLoader::GetTexture(path); // no checks... just raw doggin it LOL
         });
 
-        lua.set_function("load_model", [](const std::string& path) {
+        lua.set_function("load_model", [](std::string& path) {
 	        const auto model = AssetLoader::GetModel(path);
 
             if (model == nullptr) return false;
@@ -284,7 +284,7 @@ namespace Vakol::Controller
         });
 #pragma warning(pop)
 
-        entity_type.set_function("add_model", [](Entity* ent, const std::string& path) 
+        entity_type.set_function("add_model", [](Entity* ent, std::string& path) 
         {
             if (!ent->HasComponent<Drawable>()) ent->AddComponent<Components::Drawable>();
 

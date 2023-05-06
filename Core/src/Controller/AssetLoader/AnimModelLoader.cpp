@@ -45,13 +45,14 @@ namespace Vakol::Controller
     auto extract_vertices(const aiMesh& mesh) -> std::vector<Vertex>;
     auto extract_indices(const aiMesh& mesh)-> std::vector<unsigned int>;
     auto extract_bones(const aiMesh& mesh, std::vector<Vertex>& vertices)->std::pair <std::vector<Bone>, std::unordered_map<std::string, int>>;
+    auto extract_textures(const aiMaterial& material)-> std::vector<Texture>;
 		
     auto process_node(const aiScene* scene, const aiNode* node)->void;
     auto process_mesh(const aiScene* scene, const aiMesh* assimp_mesh)->Mesh;
     auto process_material(const aiMaterial* material)->MaterialSpec;
 
 
-    Model LoadModel(std::string&& path)
+    Model LoadAnimatedModel(std::string&& path)
     {
         auto importer = Assimp::Importer{};
 
@@ -70,7 +71,7 @@ namespace Vakol::Controller
 
         model.meshes().reserve(scene->mNumMeshes);
 
-        return {};
+        return { meshes };
     }
 
     // recursively iterate through each node for meshes
@@ -104,7 +105,7 @@ namespace Vakol::Controller
 
     auto process_material(const aiMaterial* material)->MaterialSpec
     {
-
+        auto diffuse_maps = extract_textures(*material);
 
         return {};
     }
@@ -193,5 +194,14 @@ namespace Vakol::Controller
         }
 
         return std::make_pair(bones, bone_map);
+    }
+
+    auto extract_textures(const aiMaterial& material)->std::vector<Texture>
+    {
+        std::vector<Texture> textures;
+
+        //const auto count = material->
+
+        return {};
     }
 }
