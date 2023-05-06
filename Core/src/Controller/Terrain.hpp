@@ -5,59 +5,59 @@
 #include <string>
 #include <vector>
 
-namespace Vakol::Controller {
-    class Terrain {
-       public:
-        // Terrain(const std::string& path);
+namespace Vakol::Controller
+{
+    class Terrain
+	{
+    public:
+        Terrain() = default;
 
-        Terrain(const int size, float scale, const int octaves, const float persistence, const float lacunarity);
-        Terrain(const int size, const int iterations, const float filter, const bool random, const int minHeight,
-                const int maxHeight);
+        void SetModel(Model::Assets::Mesh&& mesh) { this->m_model = std::make_shared<Model::Assets::Model>(mesh); }
+        void SetModel(Model::Assets::Model&& model) { this->m_model = std::make_shared<Model::Assets::Model>(std::move(model)); }
+        [[nodiscard]] std::shared_ptr<Model::Assets::Model> GetModel() const { return this->m_model; }
 
-        Terrain(const std::string& path);
+        void SetData(const unsigned char* data);
 
-        std::shared_ptr<Model::Assets::Model> GetModel() const { return this->m_model; }
+        [[nodiscard]] int GetSize() const { return this->m_size; }
+        
+        void SetSize(const int size) { this->m_size = size; }
 
-        const int GetSize() const { return this->m_size; }
+        [[nodiscard]] float GetHeight(const float x, const float z) const;
+        
+        [[nodiscard]] Model::Assets::Mesh load_height_map_mesh() const;
+    	[[nodiscard]] Model::Assets::Mesh load_clod_terrain_mesh() const;
+    private:
 
-        const float GetHeight(const float x, const float z) const;
+        Model::Assets::Mesh load_fault_formation_mesh(const int size, const int iterations, const float filter, const bool random, const int minHeight, const int maxHeight);
 
-        void SetHeightMap(std::vector<float>& heightMap) { m_heightMap = std::move(heightMap); }
 
-        ~Terrain(){};
-
-       private:
-        void GenerateStaticVertices(const int size);
-        const Model::Assets::Mesh LoadHeightMap(unsigned char* data);
-        const Model::Assets::Mesh LoadFaultFormation(const int size, const int iterations, const float filter,
-                                                     const bool random, const int minHeight, const int maxHeight);
-
-        const Model::Assets::Mesh LoadCLODTerrain(const int size);
-
-        struct Point {
+        struct Point
+    	{
             int x = 0;
             int z = 0;
 
-            const bool operator==(const Point& other) const { return this->x == other.x && this->z == other.z; }
+            bool operator==(const Point& other) const { return this->x == other.x && this->z == other.z; }
 
-            const Point operator-(const Point& other) const { return {this->x - other.x, this->z - other.z}; }
+            Point operator-(const Point& other) const { return {this->x - other.x, this->z - other.z}; }
         };
 
-        std::vector<float> ConvertValues(unsigned char* data);
+        static void GenRandomPoints(Point& p1, Point& p2, const int size);
+        static void NormalizeValues(std::vector<float>& arr, const int size);
 
-        void GenRandomPoints(Point& p1, Point& p2, const int size);
-        void NormalizeValues(std::vector<float>& arr, const int size);
-
-        void ApplyFIRFilter(std::vector<float>& arr, const int size, const float filter);
-        float FIRSinglePass(std::vector<float>& arr, const int index, const float prev, const float filter);
-
-        std::vector<float> m_heightMap;
+        static void ApplyFIRFilter(std::vector<float>& arr, const int size, const float filter);
+        static float FirSinglePass(std::vector<float>& arr, const int index, const float prev, const float filter);
 
         std::shared_ptr<Model::Assets::Model> m_model;
 
-        int m_size;
+        int m_size = 0;
 
-        int m_minHeight;
-        int m_maxHeight;
+        int m_min_height = 0;
+        int m_max_height = 0;
+
+        std::vector<float> m_height_map;
+        std::vector<unsigned char> m_data;
     };
-}  // namespace Vakol::Controller
+
+    Terrain LoadHeightMapTerrain(std::string&& path);
+    Terrain LoadCLODTerrain(std::string&& path);
+}

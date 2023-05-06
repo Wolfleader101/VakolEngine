@@ -1,10 +1,6 @@
 add_subdirectory(Assets)
-add_subdirectory(gl)
 
 SET(MODEL
-
-#OpenGL
-${GL}
 
 ${ASSETS}
 
@@ -17,7 +13,13 @@ src/Model/Entity.cpp
 
 src/Model/GameConfig.hpp
 
+src/Model/Buffer.hpp
+src/Model/Buffer.cpp
+
 src/Model/VertexArray.hpp
-src/Model/UniformBuffer.hpp
+src/Model/VertexArray.cpp
+
+src/Model/Instance.hpp
+src/Model/Instance.cpp
 
 PARENT_SCOPE)

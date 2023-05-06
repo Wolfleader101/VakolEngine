@@ -3,13 +3,17 @@
 #include <glad/glad.h>
 
 #include <Controller/Logger.hpp>
+
+#pragma warning(push)
+#pragma warning(disable:4201)
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#pragma warning(pop)
+
 #include <memory>
 #include <vector>
 
-#include "Model/Components.hpp"
-#include "Model/gl/GLUniformBuffer.hpp"
+#include <Model/Components.hpp>
 
 /*
 Distance	Constant	Linear	Quadratic
@@ -27,134 +31,105 @@ Distance	Constant	Linear	Quadratic
 3250	    1.0	        0.0014	0.000007
 */
 
-// void OpenGLMessageCallback(
-// 		unsigned source,
-// 		unsigned type,
-// 		unsigned id,
-// 		unsigned severity,
-// 		int length,
-// 		const char* message,
-// 		const void* userParam)
-// {
-//     switch (severity)
-//     {
-//         case GL_DEBUG_SEVERITY_HIGH:         VK_CRITICAL(message); return;
-//         case GL_DEBUG_SEVERITY_MEDIUM:       VK_ERROR(message); return;
-//         case GL_DEBUG_SEVERITY_LOW:          VK_WARN(message); return;
-//         case GL_DEBUG_SEVERITY_NOTIFICATION: VK_TRACE(message); return;
-//     }
-// }
+constexpr glm::vec4 VAKOL_CLASSIC = glm::vec4(0.52941f, 0.80784f, 0.92157f, 1.0f);
 
-const glm::vec4 VAKOL_CLASSIC = glm::vec4(0.52941f, 0.80784f, 0.92157f, 1.0f);
+constexpr glm::vec4 VAKOL_FOGGY = glm::vec4(0.4f, 0.4f, 0.4f, 1.0);
+constexpr glm::vec4 VAKOL_FOGGY_2 = glm::vec4(0.8f, 0.8f, 0.8f, 0.0);
 
-const glm::vec4 VAKOL_FOGGY = glm::vec4(0.4f, 0.4f, 0.4f, 1.0);
-const glm::vec4 VAKOL_FOGGY_2 = glm::vec4(0.8f, 0.8f, 0.8f, 0.0);
+constexpr glm::vec4 VAKOL_DARK = glm::vec4(0.1f, 0.1f, 0.1f, 1.0f);
 
-const glm::vec4 VAKOL_DARK = glm::vec4(0.1f, 0.1f, 0.1f, 1.0f);
+constexpr float LIGHT_CONSTANT = 1.0f;
+constexpr float LIGHT_LINEAR = 0.09f;
+constexpr float LIGHT_QUADRATIC = 0.032f;
 
-const float light_constant = 1.0f;
-const float light_linear = 0.09f;
-const float light_quadratic = 0.032f;
+const float LIGHT_CUT_OFF = glm::cos(glm::radians(7.5f));
+const float LIGHT_OUTER_CUT_OFF = glm::cos(glm::radians(12.5f));
 
-const float light_cut_off = glm::cos(glm::radians(7.5f));
-const float light_outer_cut_off = glm::cos(glm::radians(12.5f));
-
-namespace Vakol::View {
-    GLRenderer::GLRenderer(const std::shared_ptr<Window> window) : Renderer(window) {
+namespace Vakol::View 
+{
+    GLRenderer::GLRenderer(const std::shared_ptr<Window>& window) : Renderer(window) 
+    {
         glEnable(GL_DEPTH_TEST);
-        glEnable(GL_CULL_FACE);
+        //glEnable(GL_CULL_FACE);
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        AddUniform(2 * sizeof(glm::mat4), 1);
-        // AddUniform(5 * sizeof(float), 2);
-        AddUniform(sizeof(float), 3);
-
-        // SetUniformData(1, 0, sizeof(float), &light_constant);
-        // SetUniformData(1, 1 * sizeof(float), sizeof(float), &light_linear);
-        // SetUniformData(1, 2 * sizeof(float), sizeof(float), &light_quadratic);
-
-        // SetUniformData(1, 3 * sizeof(float), sizeof(float), &light_cut_off);
-        // SetUniformData(1, 4 * sizeof(float), sizeof(float), &light_outer_cut_off);
+        // this corresponds to the uniform buffer in each shader that has one.
+        // layout (std140, binding = 1) uniform <name>
+        // std140 - memory layout, binding - index, uniform (typeof buffer)
+        AddBuffer(GL_UNIFORM_BUFFER, 3 * sizeof(glm::mat4), 1, GL_STATIC_DRAW);
+        // add a uniform buffer which size is that of a 4x4 matrix with a binding index of 1
     };
 
-    void GLRenderer::AddUniform(const int size, const int binding) {
-        this->m_uniforms.push_back(std::make_shared<GLUniformBuffer>(size, binding));
+    void GLRenderer::AddBuffer(const unsigned int type, const int size, const int binding, const void* data, const unsigned int usage)
+    {
+        buffers.push_back(std::make_shared<Buffer>(type, size, binding, data, usage));
     }
 
-    void GLRenderer::SetUniformData(const int index, const int offset, const int size, const void* data) const {
-        if (this->m_uniforms[index])
-            this->m_uniforms[index]->SetData(offset, size, data);
-        else
-            VK_ERROR("Uniform buffer at index {0} does not exist!", index);
+    void GLRenderer::AddBuffer(const unsigned int type, const int size, const int binding, const unsigned int usage)
+    {
+        buffers.push_back(std::make_shared<Buffer>(type, size, binding, usage));
     }
 
-    void GLRenderer::ClearColor(const glm::vec4& color) const { glClearColor(color.r, color.g, color.b, color.a); }
-    void GLRenderer::ClearColor(const float r, const float g, const float b, const float a) const {
-        glClearColor(r, g, b, a);
+    void GLRenderer::SetBufferSubData(const int index, const int offset, const int size, const void* data) const
+    {
+        buffers.at(index)->SetSubData(offset, size, data);
     }
 
-    void GLRenderer::ClearBuffer(const unsigned int buffer_bit) const { glClear(buffer_bit); }
+    void GLRenderer::ClearColor(const glm::vec4& color)
+    { glClearColor(color.r, color.g, color.b, color.a); }
 
-    void GLRenderer::Draw(const Controller::Time& time, const Controller::Camera& camera,
-                          const Model::Components::Transform trans, const Model::Components::Drawable& drawable) const {
-        drawable.model_ptr->GetShader()->Bind();
-        SetUniformData(0, 0, sizeof(glm::mat4), glm::value_ptr(camera.GetMatrix(PV_MATRIX)));
-        SetUniformData(0, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(camera.GetMatrix(VIEW_MATRIX)));
+    void GLRenderer::ClearColor(const float r, const float g, const float b, const float a)
+    { glClearColor(r, g, b, a); }
 
-        SetUniformData(1, 0, sizeof(float), &time.curTime);
+    void GLRenderer::ClearBuffer(const unsigned int buffer_bit)
+    { glClear(buffer_bit); }
 
-        glm::mat4 model_matrix = glm::mat4(1.0f);
+    void GLRenderer::Draw(const Controller::Time& time, const Controller::Camera& camera, const Model::Components::Transform trans, const Model::Components::Drawable& drawable) const 
+    {
+        const auto& shader = drawable.model_ptr->GetShader();
+
+        VK_ASSERT(shader, "\n\nShader is nullptr");
+
+        shader->Bind();
+
+        // at index 0, with an offset of 0 (since PV_MATRIX is the only element in the buffer), with a size of a 4x4 matrix, set PV_MATRIX
+        SetBufferSubData(0, 0, sizeof(glm::mat4), glm::value_ptr(camera.GetMatrix(PV_MATRIX)));
+        SetBufferSubData(0, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(camera.GetMatrix(VIEW_MATRIX)));
+
+        auto model_matrix = glm::mat4(1.0f); // start off with an identity matrix
 
         model_matrix = glm::translate(model_matrix, trans.pos);
+
+        model_matrix = glm::scale(model_matrix, trans.scale);
 
         model_matrix = glm::rotate(model_matrix, trans.rot.x, glm::vec3(1.0f, 0.0f, 0.0f));
         model_matrix = glm::rotate(model_matrix, trans.rot.y, glm::vec3(0.0f, 1.0f, 0.0f));
         model_matrix = glm::rotate(model_matrix, trans.rot.z, glm::vec3(0.0f, 0.0f, 1.0f));
 
-        model_matrix = glm::scale(model_matrix, trans.scale);
+        SetBufferSubData(0, 2 * sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(model_matrix));
 
-        drawable.model_ptr->GetShader()->SetMat4("MODEL_MATRIX", model_matrix);
-        // drawable.model_ptr->GetShader()->SetMat3("NORMAL_MATRIX",
-        // glm::transpose(glm::inverse(glm::mat3(model_matrix))));
+        for (int i = 0; i < drawable.model_ptr->GetMeshCount(); ++i) 
+        {
+            const auto& mesh = drawable.model_ptr->GetMeshes().at(i);
+            const auto& material = mesh.GetMaterial();
 
-        // drawable.model_ptr->GetShader()->SetVec3v("VIEW_POS", camera.GetPos());
-
-        // drawable.model_ptr->GetShader()->SetVec3v("light.position", camera.GetPos());
-        // drawable.model_ptr->GetShader()->SetVec3v("light.direction", camera.GetForward());
-
-        for (int i = 0; i < drawable.model_ptr->GetMeshCount(); ++i) {
-            auto mesh = drawable.model_ptr->GetMeshes().at(i);
-
-            switch (mesh.GetVertexArray()->GetDrawMode()) {
-                case ARRAYS:
-                    mesh.GetVertexArray()->DrawArrays();
-                    break;
-                case ELEMENTS:
-                    mesh.GetVertexArray()->DrawElements();
-                    break;
-                case ARRAYS_INSTANCED:
-                    mesh.GetVertexArray()->DrawArraysInstanced(1000);
-                    break;
-                case ELEMENTS_INSTANCED:
-                    mesh.GetVertexArray()->DrawElementsInstanced(1000);
-                    break;
-                case TRIANGLE_STRIPS:
-                    mesh.GetVertexArray()->DrawTriangleStrips();
-                    break;
-                case QUAD_PATCHES:
-                    mesh.GetVertexArray()->DrawQuadPatches();
-                    break;
-                default:
-                    break;
+            for (int j = 0; j < material->GetTextureCount(); ++j)
+            {
+                glActiveTexture(GL_TEXTURE0 + j);
+                glBindTexture(GL_TEXTURE_2D, material->GetTexture(j).GetID());
             }
+
+            mesh.Draw();
         }
-        drawable.model_ptr->GetShader()->Unbind();
+
+        shader->Unbind();
     }
 
-    void GLRenderer::Update() const {
+    void GLRenderer::Update() const 
+    {
         ClearColor(VAKOL_CLASSIC);
         ClearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
-}  // namespace Vakol::View
+}

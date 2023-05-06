@@ -3,6 +3,7 @@
 #include <glad/glad.h>
 
 #include <vector>
+#include <iostream>
 
 #include <Controller/Logger.hpp>
 
@@ -172,6 +173,8 @@ const unsigned int CompileGLShader(const std::string& v_code, const std::string&
 
     if (!cs_code.empty())
         glDeleteShader(compShader);
+
+    std::cout << std::endl;
     
     if (success) VK_INFO("Shader compiled with no known issues");
     else VK_WARN("Compile errors were detected, better go and re-check your code.");

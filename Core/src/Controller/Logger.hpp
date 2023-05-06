@@ -46,3 +46,5 @@ namespace Vakol::Controller {
 #define VK_WARN(...) ::Vakol::Controller::Logger::GetLogger()->warn(__VA_ARGS__)
 #define VK_ERROR(...) ::Vakol::Controller::Logger::GetLogger()->error(__VA_ARGS__)
 #define VK_CRITICAL(...) ::Vakol::Controller::Logger::GetLogger()->critical(__VA_ARGS__)
+
+#define VK_ASSERT(condition, message) FMT_ASSERT(condition, message)

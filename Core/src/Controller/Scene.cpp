@@ -34,14 +34,16 @@ namespace Vakol::Controller {
 
     void Scene::setName(const std::string& newName) { name = newName; }
 
-    Model::Entity Scene::CreateEntity(const std::string tag, const std::string scriptName) {
+    Model::Entity Scene::CreateEntity(const std::string tag, const std::string scriptName) 
+    {
         auto ent = entityList.CreateEntity();
         ent.GetComponent<Model::Components::Tag>().tag = tag;
         if (scriptName.length() != 0) ent.AddComponent<Model::Components::Script>(scriptName, lua, ent, *this);
         return ent;
     }
 
-    void Scene::Update(const Time& time, const std::shared_ptr<View::Renderer> renderer) {
+    void Scene::Update(const Time& time, const std::shared_ptr<View::Renderer> renderer) 
+    {
         lua.RunFile("scripts/" + scriptName);
 
         sol::function update = lua.GetState()["update"];

@@ -1,68 +1,137 @@
 #pragma once
 
-#include <Model/Assets/Vertex.hpp>
 #include <vector>
+#include <optional>
 
-const unsigned char ARRAYS = 0x0;
-const unsigned char ELEMENTS = 0x1;
+#include <glm/vec3.hpp>
+#include <glm/vec2.hpp>
 
-const unsigned char ARRAYS_INSTANCED = 0x2;
-const unsigned char ELEMENTS_INSTANCED = 0x3;
+#include "Buffer.hpp"
 
-const unsigned char TRIANGLE_STRIPS = 0x4;
-const unsigned char QUAD_PATCHES = 0x5;
+#define USE_TRIANGLE_PATCHES 0
 
-namespace Vakol::Model {
-    using Assets::Vertex;
+class Mesh;
 
-    class VertexArray {
-       public:
-        VertexArray(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices)
-            : m_vertices(vertices), m_indices(indices) {}
-        VertexArray(const std::vector<float>& vertices, const std::vector<unsigned int>& indices)
-            : m_verts(vertices), m_indices(indices){};
-        VertexArray(const std::vector<float>& vertices) : m_verts(vertices){};
+namespace Vakol::Model
+{
+    constexpr int MAX_BONE_INFLUENCE = 4;
 
-        virtual ~VertexArray() = default;
+#if USE_TRIANGLE_PATCHES
+    constexpr int NUM_PATCH_PTS = 3;
+#else
+    constexpr int NUM_PATCH_PTS = 4;
+#endif
 
-        virtual void Bind() const = 0;
-        virtual void Unbind() const = 0;
-
-        virtual void DrawArrays() const = 0;
-        virtual void DrawElements() const = 0;
-
-        virtual void DrawArraysInstanced(const int amount) const = 0;
-        virtual void DrawElementsInstanced(const int amount) const = 0;
-
-        virtual void DrawTriangleStrips() const = 0;
-        virtual void DrawQuadPatches() const = 0;
-
-        const virtual unsigned int GetID() const = 0;
-        const virtual int GetVertexCount() const = 0;
-        const virtual int GetIndexCount() const = 0;
-
-        virtual const std::vector<Vertex> GetVertices() const = 0;
-        virtual const std::vector<float> GetFloatVertices() const = 0;
-        virtual const std::vector<unsigned int> GetIndices() const = 0;
-
-        virtual void SetStrips(const int strips, const int tris) = 0;
-        virtual void SetPatches(const int num_patches, const int num_verts_per_patch) = 0;
-
-        virtual void SetDrawMode(const unsigned char mode) = 0;
-        virtual const unsigned char GetDrawMode() const = 0;
-
-       protected:
-        std::vector<Vertex> m_vertices;
-        std::vector<float> m_verts;
-
-        std::vector<unsigned int> m_indices;
-
-        unsigned char DRAW_MODE = ELEMENTS;
-
-        int NUM_STRIPS = 0;
-        int NUM_TRIS_PER_STRIP = 0;
-
-        int NUM_PATCHES = 0;
-        int NUM_VERTS_PER_PATCH = 0;
+    struct Vertex 
+    {
+        glm::vec3 position;
+        glm::vec3 normal;
+        glm::vec2 uv;
+        glm::vec3 tangent;
+        glm::vec3 bitangent;
     };
-}  // namespace Vakol::Model
+
+    // the method of drawing
+    enum class DRAW_MODE
+    {
+        DEFAULT, INSTANCED, STRIPS, PATCHES
+    };
+
+    // draw with vertices only (arrays), or using indices (elements)
+    enum class DRAW_TYPE
+    {
+        ARRAYS, ELEMENTS
+    };
+
+    struct DrawInfo
+    {
+        DRAW_MODE draw_mode = DRAW_MODE::DEFAULT;
+        DRAW_TYPE draw_type = DRAW_TYPE::ELEMENTS;
+
+    // instancing info
+    	int INSTANCE_AMOUNT = 0;
+
+    // strip info
+    	int NUM_STRIPS = 0;
+
+    // triangle strip info
+    	int NUM_TRIS_PER_STRIP = 0;
+
+    // patch info
+    	int NUM_PATCHES = 0;
+        const int NUM_VERTS_PER_PATCH = NUM_PATCH_PTS;
+    };
+
+	std::vector<float> Convert(const std::vector<Vertex>& arr, const int size);
+
+    class VertexArray
+    {
+    public:
+        VertexArray(std::vector<float>&& vertices, std::vector<unsigned int>&& indices, const int size);
+        ~VertexArray();
+
+        void Draw() const;
+
+        void GenArray(const unsigned int n, unsigned int* array);
+
+        /// @brief Specify the data of a vertex attribute.
+        /// @param index The location at which this vertex attribute occurs. 
+        /// Example: Position (aPos) = 0, Normal (aNormal) = 1, UV (aTexCoords) = 2
+        /// @param n number of elements for which the attribute contains. 
+        /// Example: float = 1, glm::vec2 = 2 glm::vec3 = 3, glm::vec4 = 4 (MAX SIZE = 4)
+        /// @param type the type of data to be used
+        /// Example: GL_FLOAT
+        /// @param normalized IF TRUE - have the data be normalized between ([-1, 1] (signed)) and ([0, 1] (unsigned)) 
+        /// @param stride byte offset between each consecutive vertex *just keep this at the size* (Our data is not tightly packed).
+        /// @param data  the byte offset from the starting vertex attribute
+        /// Example 1: Position (aPos) = (void*)0 -> *Position does not need any offset since it starts first*
+        /// Example 2: Normal (aNormal) = (void*)offset of(Vertex, normal) *if using Vertex struct* OR (void*)(3 * sizeof(float))
+        void SetVertexAttributeData(const int index, const int n, const unsigned int type, const bool normalized, const int stride, const void* data);
+
+        void Bind() const;
+        void Unbind() const;
+
+    	[[nodiscard]] unsigned int GetId() const { return this->ID; }
+
+    	[[nodiscard]] int GetVertexCount() const { return this->n_vertices; }
+    	[[nodiscard]] int GetIndexCount() const { return this->n_indices; }
+
+    	[[nodiscard]] const std::vector<float>& GetVertices() const { return this->vertices; }
+        [[nodiscard]] const std::vector<unsigned int>& GetIndices() const { return this->indices; }
+
+    	void set_mode(const DRAW_MODE mode) { this->info.draw_mode = mode; }
+    	void set_type(const DRAW_TYPE type) { this->info.draw_type = type; }
+
+    	void set_mode_data(const int data) 
+        {
+            if (this->info.draw_mode == DRAW_MODE::INSTANCED)
+                this->info.INSTANCE_AMOUNT = data;
+
+            if (this->info.draw_mode == DRAW_MODE::STRIPS)
+                this->info.NUM_STRIPS = data;
+
+            if (this->info.draw_mode == DRAW_MODE::PATCHES)
+                this->info.NUM_PATCHES = data;
+        }
+
+    	void set_num_tris_per_strip(const int data)
+        {
+            if (this->info.draw_mode == DRAW_MODE::STRIPS)
+                this->info.NUM_TRIS_PER_STRIP = data;
+        }
+
+    private:
+        unsigned int ID = 0;
+
+        unsigned int VBO = 0;
+        unsigned int EBO = 0;
+
+        int n_vertices = 0;
+        int n_indices = 0;
+
+        DrawInfo info;
+
+        std::vector<float> vertices;
+        std::vector<unsigned int> indices;
+    };
+}
