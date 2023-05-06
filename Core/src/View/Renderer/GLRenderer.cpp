@@ -104,9 +104,9 @@ namespace Vakol::View
 
         model_matrix = glm::scale(model_matrix, trans.scale);
 
-        model_matrix = glm::rotate(model_matrix, trans.rot.x, glm::vec3(1.0f, 0.0f, 0.0f));
-        model_matrix = glm::rotate(model_matrix, trans.rot.y, glm::vec3(0.0f, 1.0f, 0.0f));
-        model_matrix = glm::rotate(model_matrix, trans.rot.z, glm::vec3(0.0f, 0.0f, 1.0f));
+        model_matrix = glm::rotate(model_matrix, glm::radians(trans.rot.x), glm::vec3(1.0f, 0.0f, 0.0f));
+        model_matrix = glm::rotate(model_matrix, glm::radians(trans.rot.y), glm::vec3(0.0f, 1.0f, 0.0f));
+        model_matrix = glm::rotate(model_matrix, glm::radians(trans.rot.z), glm::vec3(0.0f, 0.0f, 1.0f));
 
         SetBufferSubData(0, 2 * sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(model_matrix));
 

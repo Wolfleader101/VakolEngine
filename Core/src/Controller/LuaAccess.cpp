@@ -226,11 +226,11 @@ namespace Vakol::Controller
             return texture;
         });
 
-        entity_type.set_function("get_transform", &Entity::GetComponent<Components::Transform>);
+        entity_type.set_function("get_transform", &Entity::GetComponent<Transform>);
 
         entity_type.set_function("create_height_map_terrain", [](Entity* ent, std::string&& path)
         {
-            if (!ent->HasComponent<Components::Drawable>()) ent->AddComponent<Components::Drawable>();
+            if (!ent->HasComponent<Drawable>()) ent->AddComponent<Drawable>();
 
             if (ent->HasComponent<Terrain>()) ent->RemoveComponent<Terrain>();
 
@@ -247,7 +247,7 @@ namespace Vakol::Controller
 
                 model->GetMesh().SetNumTrisPerStrip(terrain.GetSize() / 1 * 2 - 2);
 
-                ent->GetComponent<Components::Drawable>().model_ptr = model;
+                ent->GetComponent<Drawable>().model_ptr = model;
             }
 
             return terrain;
@@ -255,7 +255,7 @@ namespace Vakol::Controller
 
         entity_type.set_function("create_clod_terrain", [](Entity* ent, std::string&& path)
         {
-            if (!ent->HasComponent<Components::Drawable>()) ent->AddComponent<Components::Drawable>();
+            if (!ent->HasComponent<Drawable>()) ent->AddComponent<Drawable>();
 
             if (ent->HasComponent<Terrain>()) ent->RemoveComponent<Terrain>();
 
@@ -270,7 +270,7 @@ namespace Vakol::Controller
 
                 model->GetMesh().SetDrawModeInfo(400); // num patches
 
-                ent->GetComponent<Components::Drawable>().model_ptr = model;
+                ent->GetComponent<Drawable>().model_ptr = model;
             }
 
             return terrain;
@@ -286,13 +286,13 @@ namespace Vakol::Controller
 
         entity_type.set_function("add_model", [](Entity* ent, const std::string& path) 
         {
-            if (!ent->HasComponent<Components::Drawable>()) ent->AddComponent<Components::Drawable>();
+            if (!ent->HasComponent<Drawable>()) ent->AddComponent<Components::Drawable>();
 
             auto model = AssetLoader::GetModel(path);
 
             if (model) 
             {
-                ent->GetComponent<Components::Drawable>().model_ptr = model;
+                ent->GetComponent<Drawable>().model_ptr = model;
             }
 
             return model;
@@ -302,7 +302,7 @@ namespace Vakol::Controller
 #pragma warning(disable:4715) // disable that annoying warning for not all code path return a value
         entity_type.set_function("get_model", [](const Entity* ent) 
         {
-            if (ent->HasComponent<Components::Drawable>()) return ent->GetComponent<Components::Drawable>().model_ptr;
+            if (ent->HasComponent<Drawable>()) return ent->GetComponent<Drawable>().model_ptr;
         });
 #pragma warning(pop)
 
