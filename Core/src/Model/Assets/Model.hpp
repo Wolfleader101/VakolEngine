@@ -28,12 +28,13 @@ namespace Vakol::Model::Assets
         
         std::shared_ptr<Shader> GetShader() { return m_shader; }
         
-        Mesh GetMesh(const int index = 0) const { return m_meshes.at(index); }
+        [[nodiscard]] Mesh GetMesh(const int index = 0) const { return m_meshes.at(index); }
 
 
-        const std::vector<Mesh>& GetMeshes() const { return m_meshes; }
+        [[nodiscard]] const std::vector<Mesh>& meshes() const { return m_meshes; }
+        [[nodiscard]] std::vector<Mesh>& meshes() { return m_meshes; }
         
-        const int GetMeshCount() const { return static_cast<int>(m_meshes.size()); }
+    	[[nodiscard]] int nMeshes() const { return static_cast<int>(m_meshes.size()); }
 
     private:
         std::vector<Mesh> m_meshes;

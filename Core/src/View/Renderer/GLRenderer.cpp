@@ -110,9 +110,9 @@ namespace Vakol::View
 
         SetBufferSubData(0, 2 * sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(model_matrix));
 
-        for (int i = 0; i < drawable.model_ptr->GetMeshCount(); ++i) 
+        for (int i = 0; i < drawable.model_ptr->nMeshes(); ++i) 
         {
-            const auto& mesh = drawable.model_ptr->GetMeshes().at(i);
+            const auto& mesh = drawable.model_ptr->meshes().at(i);
             const auto& material = mesh.GetMaterial();
 
             for (int j = 0; j < material->GetTextureCount(); ++j)

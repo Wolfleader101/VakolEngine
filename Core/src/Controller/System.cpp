@@ -167,7 +167,7 @@ namespace Vakol::Controller {
 
                     const auto mesh_ptr = PhysicsPool::m_Common.createTriangleMesh();
 
-                    for (auto& mesh : draw.model_ptr->GetMeshes()) 
+                    for (auto& mesh : draw.model_ptr->meshes()) 
                     {
 	                    const auto tri_array = new rp3d::TriangleVertexArray(
 		                    mesh.nVertices(), mesh.vertices().data(),

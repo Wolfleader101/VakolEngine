@@ -9,38 +9,34 @@
 
 #include <Controller/AssetLoader/FileLoader.hpp>
 
-const unsigned int LoadShader(const std::string&, const std::string&, const std::string&, const std::string&, const std::string&, const std::string&);
+unsigned int LoadShader(const std::string&, const std::string&, const std::string&, const std::string&, const std::string&);
 
-const unsigned int CompileGLShader(const std::string&, const std::string&, const std::string&, const std::string&, const std::string&, const std::string&);
-const int CheckCompileErrors(const unsigned int, const std::string&);
+unsigned int CompileGLShader(std::string&&, std::string&&, std::string&&, std::string&&, std::string&&);
+int CheckCompileErrors(const unsigned int, const std::string&);
 
 namespace Vakol::Controller
 {
-    const unsigned int LoadShader(const std::string& path)
+	unsigned int LoadShader(const std::string& path)
     {
-        std::string directory, file;
+	    const std::string directory = path.substr(0, path.find_last_of('.'));
 
-        directory = path.substr(0, path.find_last_of('.'));
-
-        std::string extensions[] = {".vert", ".frag", ".geom", ".tesc", ".tese", ".comp"};
+        const std::string extensions[] = {".vert", ".frag", ".geom", ".tesc", ".tese"};
 
         std::vector<std::string> shaders;
 
-        for (int i = 0; i < 6; ++i)
+        for (const auto& extension : extensions)
         {
-            file = directory + extensions[i];
-
-            if (FileExists(file))
+	        if (std::string file = directory + extension; FileExists(file))
                 shaders.push_back(file);
             else
-                shaders.push_back("null");
+                shaders.emplace_back("null");
         }
 
-        return ::LoadShader(shaders[0], shaders[1], shaders[2], shaders[3], shaders[4], shaders[5]);
+        return ::LoadShader(shaders[0], shaders[1], shaders[2], shaders[3], shaders[4]);
     }
 }
 
-const unsigned int LoadShader(const std::string& vPath, const std::string& fPath, const std::string& gPath, const std::string& tcPath, const std::string& tePath, const std::string& csPath)
+unsigned int LoadShader(const std::string& vPath, const std::string& fPath, const std::string& gPath, const std::string& tcPath, const std::string& tePath)
 {
     // Vertex, Fragment Code
     std::string v_code;
@@ -48,7 +44,6 @@ const unsigned int LoadShader(const std::string& vPath, const std::string& fPath
     std::string g_code;
     std::string tc_code;
     std::string te_code;
-    std::string cmp_code;
 
     if (vPath != "null")
         v_code = LoadFile(vPath);
@@ -66,13 +61,11 @@ const unsigned int LoadShader(const std::string& vPath, const std::string& fPath
         tc_code = LoadFile(std::string(tcPath));
     if (tePath != "null")
         te_code = LoadFile(std::string(tePath));
-    if (csPath != "null")
-        cmp_code = LoadFile(std::string(csPath));
         
-    return CompileGLShader(v_code, f_code, g_code, tc_code, te_code, cmp_code);
+    return CompileGLShader(std::move(v_code), std::move(f_code), std::move(g_code), std::move(tc_code), std::move(te_code));
 }
 
-const unsigned int CompileGLShader(const std::string& v_code, const std::string& f_code, const std::string& g_code, const std::string& tc_code, const std::string& te_code, const std::string& cs_code)
+unsigned int CompileGLShader(std::string&& v_code, std::string&& f_code, std::string&& g_code, std::string&& tc_code, std::string&& te_code)
 {
     // Vertex Shader Code (same thing as v_code)
     const auto vs_code = v_code.c_str();
@@ -81,15 +74,13 @@ const unsigned int CompileGLShader(const std::string& v_code, const std::string&
 
     auto success = 0;
 
-    unsigned int vertex, fragment;
-
-    vertex = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertex, 1, &vs_code, NULL);
+    const unsigned int vertex = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(vertex, 1, &vs_code, nullptr);
 	glCompileShader(vertex);
     success = CheckCompileErrors(vertex, "VERTEX");
 
-	fragment = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragment, 1, &fs_code, NULL);
+    const unsigned int fragment = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fragment, 1, &fs_code, nullptr);
 	glCompileShader(fragment);
     success = CheckCompileErrors(fragment, "FRAGMENT");
 
@@ -100,47 +91,36 @@ const unsigned int CompileGLShader(const std::string& v_code, const std::string&
         const auto gs_code = g_code.c_str();
 
         geometry = glCreateShader(GL_GEOMETRY_SHADER);
-        glShaderSource(geometry, 1, &gs_code, NULL);
+        glShaderSource(geometry, 1, &gs_code, nullptr);
         glCompileShader(geometry);
         success = CheckCompileErrors(geometry, "GEOMETRY");
     }
 
-    unsigned int tessControl = 0;
+    unsigned int tess_control = 0;
 
     if (!tc_code.empty())
     {
         const auto tcs_code = tc_code.c_str();
 
-        tessControl = glCreateShader(GL_TESS_CONTROL_SHADER);
-        glShaderSource(tessControl, 1, &tcs_code, NULL);
-        glCompileShader(tessControl);
-        success = CheckCompileErrors(tessControl, "TESS_CONTROL");
+        tess_control = glCreateShader(GL_TESS_CONTROL_SHADER);
+        glShaderSource(tess_control, 1, &tcs_code, nullptr);
+        glCompileShader(tess_control);
+        success = CheckCompileErrors(tess_control, "TESS_CONTROL");
     }
 
-    unsigned int tessEval = 0;
+    unsigned int tess_eval = 0;
 
     if (!te_code.empty())
     {
         const auto tes_code = te_code.c_str();
 
-        tessEval = glCreateShader(GL_TESS_EVALUATION_SHADER);
-        glShaderSource(tessEval, 1, &tes_code, NULL);
-        glCompileShader(tessEval);
-        success = CheckCompileErrors(tessEval, "TESS_EVALUATION");
+        tess_eval = glCreateShader(GL_TESS_EVALUATION_SHADER);
+        glShaderSource(tess_eval, 1, &tes_code, nullptr);
+        glCompileShader(tess_eval);
+        success = CheckCompileErrors(tess_eval, "TESS_EVALUATION");
     }
 
-    unsigned int compShader = 0;
-
-    if (!cs_code.empty())
-    {
-        const auto comp_code = cs_code.c_str();
-
-        compShader = glCreateShader(GL_COMPUTE_SHADER);
-        glShaderSource(compShader, 1, &comp_code, NULL);
-        success = CheckCompileErrors(compShader, "COMPUTE");
-    }
-
-	auto id = glCreateProgram();
+    const auto id = glCreateProgram();
 	glAttachShader(id, vertex);
 	glAttachShader(id, fragment);
 
@@ -148,13 +128,10 @@ const unsigned int CompileGLShader(const std::string& v_code, const std::string&
         glAttachShader(id, geometry);
 
     if (!tc_code.empty())
-        glAttachShader(id, tessControl);
+        glAttachShader(id, tess_control);
     
     if (!te_code.empty())
-        glAttachShader(id, tessEval);
-
-    if (!cs_code.empty())
-        glAttachShader(id, compShader);
+        glAttachShader(id, tess_eval);
 
 	glLinkProgram(id);
     success = CheckCompileErrors(id, "PROGRAM");
@@ -166,13 +143,10 @@ const unsigned int CompileGLShader(const std::string& v_code, const std::string&
         glDeleteShader(geometry);
     
     if (!tc_code.empty())
-        glDeleteShader(tessControl);
+        glDeleteShader(tess_control);
     
     if (!te_code.empty())
-        glDeleteShader(tessEval);
-
-    if (!cs_code.empty())
-        glDeleteShader(compShader);
+        glDeleteShader(tess_eval);
 
     std::cout << std::endl;
     
@@ -182,10 +156,10 @@ const unsigned int CompileGLShader(const std::string& v_code, const std::string&
     return id;
 }
 
-const int CheckCompileErrors(const unsigned int id, const std::string& type)
+int CheckCompileErrors(const unsigned int id, const std::string& type)
 {
     int success;
-    char infoLog[1024];
+    char info_log[1024];
 
     if (type != "PROGRAM")
     {
@@ -193,8 +167,8 @@ const int CheckCompileErrors(const unsigned int id, const std::string& type)
 
         if (!success)
         {
-            glGetShaderInfoLog(id, 1024, NULL, infoLog);
-            VK_ERROR("ERROR::SHADER_COMPILATION:: TYPE = {0}\n{1}", type, infoLog);
+            glGetShaderInfoLog(id, 1024, nullptr, info_log);
+            VK_ERROR("ERROR::SHADER_COMPILATION:: TYPE = {0}\n{1}", type, info_log);
         }
         
         return success;
@@ -205,8 +179,8 @@ const int CheckCompileErrors(const unsigned int id, const std::string& type)
 
         if (!success)
         {
-            glGetProgramInfoLog(id, 1024, NULL, infoLog);
-            VK_ERROR("ERROR::PROGRAM_LINKING:: TYPE = {0}\n{1}", type, infoLog);
+            glGetProgramInfoLog(id, 1024, nullptr, info_log);
+            VK_ERROR("ERROR::PROGRAM_LINKING:: TYPE = {0}\n{1}", type, info_log);
         }
 
         return success;

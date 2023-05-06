@@ -9,8 +9,6 @@
 #include <Controller/Logger.hpp>
 #include <Controller/AssetLoader/TextureLoader.hpp>
 
-#include <chrono>
-
 using namespace Vakol::Model::Assets;
 using Vakol::Controller::LoadTexture;
 
@@ -28,6 +26,8 @@ std::string directory;
 
 std::vector<Vakol::Model::Assets::Mesh> meshes;
 std::vector<Texture> textures_loaded;
+
+bool IS_MD2 = false;
 
 namespace Vakol::Controller
 {
@@ -109,6 +109,9 @@ Vakol::Model::Assets::Mesh ProcessMesh(const aiMesh* mesh, const aiScene* scene)
             vertex.bitangent = vector;
         } else
             vertex.uv = glm::vec2(0.0f);
+
+        std::fill(std::begin(vertex.bone_ids), std::end(vertex.bone_ids), -1);
+        std::fill(std::begin(vertex.bone_weights), std::end(vertex.bone_weights), 0.0f);
 
         vertices.push_back(vertex);
     }
@@ -192,12 +195,12 @@ std::vector<Texture> LoadMaterialTextures(const aiMaterial* mat, const aiTexture
             texture.path = str.C_Str();
             texture.type = typeName;
 
-        	auto final_path = "coreAssets/textures/" + texture.path;
+        	auto final_path = texture.path;
 
             texture.SetID(LoadTexture(final_path, false, false));
 
             textures.push_back(texture);
-            textures_loaded.push_back(texture);
+            textures_loaded.push_back(std::move(texture));
         }
     }
 

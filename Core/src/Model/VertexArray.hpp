@@ -29,6 +29,9 @@ namespace Vakol::Model
         glm::vec2 uv;
         glm::vec3 tangent;
         glm::vec3 bitangent;
+
+    	int bone_ids[MAX_BONE_INFLUENCE];
+        float bone_weights[MAX_BONE_INFLUENCE];
     };
 
     // the method of drawing

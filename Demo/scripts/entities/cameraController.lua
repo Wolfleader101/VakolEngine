@@ -1,12 +1,15 @@
 function init(scene, entity)
     local camera = scene:get_camera();
 
-    camera:set_yaw(10);
-    camera:set_pos(30, -5.0, -60);
+    print(camera:get_yaw());
+
+    camera:set_yaw(95);
+
+    print(camera:get_yaw());
+
+    camera:set_pos(15, -5.0, -60);
 
     print("Initialising Camera");
-
-    print_warn("CHECK LUA FILES FOR ANY CHANGES I MAY HAVE MADE REGARDING CAMERA MOVEMENT");
 
 end
 

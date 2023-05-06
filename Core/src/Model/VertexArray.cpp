@@ -31,71 +31,103 @@ namespace Vakol::Model
     #endif
 
         VK_ASSERT(!arr.empty(), "\n\nNo point converting an empty vector");
-        VK_ASSERT(elements == 3 || elements == 5 || elements == 8 || elements == 14, "\n\nUnknown Vertex size.");
+        VK_ASSERT(elements == 3 || elements == 5 || elements == 8 || elements == 14 || elements == 22, "\n\nUnknown Vertex size.");
 
         output.reserve(arr.size() * elements);
 
         for (int i = 0; i < arr_size; i++) // this is really hacky, but it works, aaaaand i'm just lazy
         {
-            const auto& vertex = arr.at(i);
+            const auto& [position, normal, uv, tangent, bitangent, bone_ids, bone_weights] = arr.at(i);
             
             if (elements == 3)
             {
-                output.push_back(vertex.position.x); // Position 0
-                output.push_back(vertex.position.y);
-                output.push_back(vertex.position.z);
+                output.push_back(position.x); // Position 0
+                output.push_back(position.y);
+                output.push_back(position.z);
                 VK_TRACE("positions");
             }
 
             if (elements == 5) // why do we check for this twice? Sometimes people only want positions and texture coordinates (i.e. skyboxes) save time and data
             {
-                output.push_back(vertex.position.x); // Position 0
-                output.push_back(vertex.position.y);
-                output.push_back(vertex.position.z);
+                output.push_back(position.x); // Position 0
+                output.push_back(position.y);
+                output.push_back(position.z);
                 VK_TRACE("positions");
 
-                output.push_back(vertex.uv.x); // Position 1
-                output.push_back(vertex.uv.y);
+                output.push_back(uv.x); // Position 1
+                output.push_back(uv.y);
                 VK_TRACE("uvs");
             }
 
             if (elements == 8)
             {
-                output.push_back(vertex.position.x); // Position 0
-                output.push_back(vertex.position.y);
-                output.push_back(vertex.position.z);
+                output.push_back(position.x); // Position 0
+                output.push_back(position.y);
+                output.push_back(position.z);
                 VK_TRACE("positions");
 
-                output.push_back(vertex.normal.x); // Position 1 (if size is large enough)
-                output.push_back(vertex.normal.y);
-                output.push_back(vertex.normal.z);
+                output.push_back(normal.x); // Position 1 (if size is large enough)
+                output.push_back(normal.y);
+                output.push_back(normal.z);
                 VK_TRACE("normals");
 
-                output.push_back(vertex.uv.x); // Position 2 (if size is large enough)
-                output.push_back(vertex.uv.y);
+                output.push_back(uv.x); // Position 2 (if size is large enough)
+                output.push_back(uv.y);
                 VK_TRACE("uvs");
             }
 
             if (elements == 14) // you need uvs and normals in order to get the resultant tangent and bitangent (THEY MUST STICK TOGETHER)
             {
-                output.push_back(vertex.position.x); // Position 0
-                output.push_back(vertex.position.y);
-                output.push_back(vertex.position.z);
+                output.push_back(position.x); // Position 0
+                output.push_back(position.y);
+                output.push_back(position.z);
 
-                output.push_back(vertex.normal.x); // Position 1 (if size is large enough)
-                output.push_back(vertex.normal.y);
-                output.push_back(vertex.normal.z);
+                output.push_back(normal.x); // Position 1
+                output.push_back(normal.y);
+                output.push_back(normal.z);
 
-                output.push_back(vertex.uv.x); // Position 2 (if size is large enough)
-                output.push_back(vertex.uv.y);
+                output.push_back(uv.x); // Position 2
+                output.push_back(uv.y);
 
-                output.push_back(vertex.tangent.x); // Position 3
-                output.push_back(vertex.tangent.y);
-                output.push_back(vertex.tangent.z);
+                output.push_back(tangent.x); // Position 3
+                output.push_back(tangent.y);
+                output.push_back(tangent.z);
             
-                output.push_back(vertex.bitangent.x); // Position 4
-                output.push_back(vertex.bitangent.y);
-                output.push_back(vertex.bitangent.z);
+                output.push_back(bitangent.x); // Position 4
+                output.push_back(bitangent.y);
+                output.push_back(bitangent.z);
+            }
+
+            if (elements == 22)
+            {
+                output.push_back(position.x); // Position 0
+                output.push_back(position.y);
+                output.push_back(position.z);
+
+                output.push_back(normal.x); // Position 1
+                output.push_back(normal.y);
+                output.push_back(normal.z);
+
+                output.push_back(uv.x); // Position 2 
+                output.push_back(uv.y);
+
+                output.push_back(tangent.x); // Position 3
+                output.push_back(tangent.y);
+                output.push_back(tangent.z);
+
+                output.push_back(bitangent.x); // Position 4
+                output.push_back(bitangent.y);
+                output.push_back(bitangent.z);
+
+                output.push_back(bone_ids[0]); // Position 5
+                output.push_back(bone_ids[1]);
+                output.push_back(bone_ids[2]);
+                output.push_back(bone_ids[3]);
+
+                output.push_back(bone_weights[0]); // Position 6
+                output.push_back(bone_weights[1]);
+                output.push_back(bone_weights[2]);
+                output.push_back(bone_weights[3]);
             }
         }
 
@@ -184,12 +216,27 @@ namespace Vakol::Model
 
         if (total_elements >= 3)
         {
-            this->SetVertexAttributeData(4, 3, GL_FLOAT, GL_FALSE, size, reinterpret_cast<const void*>(used_elements * sizeof(float)));
+            this->SetVertexAttributeData(4, 3, GL_FLOAT, GL_FALSE, size, reinterpret_cast<const void*>(used_elements * sizeof(float))); // Bitangents
             total_elements -= 3;
-        	// used_elements += 3;
+        	used_elements += 3;
         }
 
-        VK_ASSERT(total_elements == 0, "\n\nReserved Vertex data was not fully allocated.");
+        if (total_elements >= 4)
+        {
+            glEnableVertexAttribArray(5);
+            glVertexAttribIPointer(5, 4, GL_INT, size, reinterpret_cast<const void*>(used_elements * sizeof(float))); // Bone IDs
+            total_elements -= 4;
+            used_elements += 4;
+        }
+
+        if (total_elements >= 4)
+        {
+            this->SetVertexAttributeData(6, 4, GL_FLOAT, GL_FALSE, size, reinterpret_cast<const void*>(used_elements * sizeof(float))); // Bone Weights
+            total_elements -= 4;
+            used_elements += 4;
+        }
+
+        VK_ASSERT(total_elements == 0 && used_elements == static_cast<int>(size / sizeof(float)), "\n\nReserved Vertex data was not fully allocated.");
 
         glPatchParameteri(GL_PATCH_VERTICES, NUM_PATCH_PTS);
 
