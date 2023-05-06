@@ -34,11 +34,12 @@ namespace Vakol::Controller {
 
     void Scene::setName(const std::string& newName) { name = newName; }
 
-    Model::Entity Scene::CreateEntity(const std::string tag, const std::string scriptName) 
+    Model::Entity Scene::CreateEntity(const std::string tag, const std::string _name) 
     {
         auto ent = entityList.CreateEntity();
         ent.GetComponent<Model::Components::Tag>().tag = tag;
-        if (scriptName.length() != 0) ent.AddComponent<Model::Components::Script>(scriptName, lua, ent, *this);
+        if (_name.length() != 0) ent.AddComponent<Model::Components::Script>(_name, lua, ent, *this);
+
         return ent;
     }
 
@@ -56,7 +57,7 @@ namespace Vakol::Controller {
 
         System::Drawable_Update(time, cam, renderer);
 
-        cam.Update(time.deltaTime);
+        cam.Update();
 
     	
     }

@@ -338,6 +338,8 @@ namespace Vakol::Controller
             return ent->GetComponent<RigidBody>();
         });
 
+#pragma warning(push)
+#pragma warning(disable:4715) // disable that annoying warning for not all code path return a value
         entity_type.set_function("get_rigid", [](const Entity* ent) -> RigidBody&
         {
             if (ent->HasComponent<RigidBody>()) return ent->GetComponent<RigidBody>();
@@ -346,6 +348,7 @@ namespace Vakol::Controller
             assert(0);
         
         });
+#pragma warning(pop)
 
         entity_type.set_function("add_collider", [](Entity* ent)
         {
@@ -353,6 +356,8 @@ namespace Vakol::Controller
             return ent->GetComponent<Components::Collider>();
         });
 
+#pragma warning(push)
+#pragma warning(disable:4715) // disable that annoying warning for not all code path return a value
         entity_type.set_function("get_collider", [](const Entity* ent) -> Collider&
         {
             if (ent->HasComponent<Components::Collider>()) return ent->GetComponent<Collider>();
@@ -361,6 +366,7 @@ namespace Vakol::Controller
             assert(0);
         
         });
+#pragma warning(pop)
 
     }
 
@@ -441,7 +447,7 @@ namespace Vakol::Controller
         gui_window_type.set_function("end_window", &View::GUIWindow::EndWindowCreation);
     }
 
-    void RegisterRenderer(sol::state& lua) {}
+    void RegisterRenderer([[maybe_unused]] sol::state& lua) {}
 
     void RegisterPhysics(sol::state& lua) {
         auto scenePhysicType = lua.new_usertype<ScenePhysics>("scenePhysics");

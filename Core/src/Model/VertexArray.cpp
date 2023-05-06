@@ -9,6 +9,58 @@
 
 namespace Vakol::Model
 {
+    std::vector<Vertex> Convert(std::vector<float>&& arr)
+    {
+        std::vector<Vertex> output;
+
+        const auto arr_size = static_cast<int>(arr.size());
+        constexpr auto elements = static_cast<int>(sizeof(Vertex) / sizeof(float));
+
+#if VERBOSE_DEBUG
+        VK_TRACE("Converting vector of Vertex to vector of floats.");
+
+        std::cout << std::endl;
+
+        VK_TRACE("Vector info:");
+        std::cout << std::endl;
+        VK_TRACE("Vector Size = {0}", arr_size);
+        VK_TRACE("Vertex Size = {0}", size);
+        VK_TRACE("Vertex Elements = {0} (number of floats)", elements);
+
+        std::cout << std::endl;
+#endif
+
+        VK_ASSERT(!arr.empty(), "\n\nNo point converting an empty vector");
+        VK_ASSERT(elements == 3 || elements == 5 || elements == 8 || elements == 14 || elements == 22, "\n\nUnknown Vertex size.");
+
+        for (int i = 0; i < arr_size; i += elements)
+        {
+            Vertex vertex{};
+
+            vertex.position = { arr.at(i), arr.at(i + 1), arr.at(i + 2) };
+            vertex.normal = { arr.at(i + 3), arr.at(i + 4), arr.at(i + 5) };
+            vertex.uv = { arr.at(6), arr.at(7) };
+            vertex.tangent = { arr.at(8), arr.at(9), arr.at(10) };
+            vertex.bitangent = { arr.at(11), arr.at(12), arr.at(13) };
+
+            vertex.bone_ids[0] = static_cast<int>(arr.at(14));
+            vertex.bone_ids[1] = static_cast<int>(arr.at(15));
+            vertex.bone_ids[2] = static_cast<int>(arr.at(16));
+            vertex.bone_ids[3] = static_cast<int>(arr.at(17));
+
+            vertex.bone_weights[0] = arr.at(18);
+            vertex.bone_weights[1] = arr.at(19);
+            vertex.bone_weights[2] = arr.at(20);
+            vertex.bone_weights[3] = arr.at(21);
+
+            output.push_back(vertex);
+        }
+
+        arr.~vector();
+
+        return output;
+    }
+
 	std::vector<float> Convert(std::vector<Vertex>&& arr)
     {
         std::vector<float> output;
@@ -16,7 +68,7 @@ namespace Vakol::Model
         const auto arr_size = static_cast<int>(arr.size());
         constexpr auto elements = static_cast<int>(sizeof(Vertex) / sizeof(float));
 
-    #if VERBOSE_DEBUG
+#if VERBOSE_DEBUG
         VK_TRACE("Converting vector of floats to vector of Vertex.");
 
         std::cout << std::endl;
@@ -28,7 +80,7 @@ namespace Vakol::Model
         VK_TRACE("Vertex Elements = {0} (number of floats)", elements);
 
         std::cout << std::endl;
-    #endif
+#endif
 
         VK_ASSERT(!arr.empty(), "\n\nNo point converting an empty vector");
         VK_ASSERT(elements == 3 || elements == 5 || elements == 8 || elements == 14 || elements == 22, "\n\nUnknown Vertex size.");

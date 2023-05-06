@@ -26,18 +26,28 @@ namespace Vakol::Model::Assets
         Mesh(std::vector<float>& vertices, std::vector<unsigned int>& indices, const int size, MaterialSpec&& spec = std::move(DEFAULT))
             : m_vertex_array(std::make_shared<VertexArray>(std::move(vertices), std::move(indices), size)), m_material(std::make_shared<Material>(std::move(spec))) {}
 
-        void SetMaterial(MaterialSpec&& spec) { if (!this->m_material) this->m_material = std::make_shared<Material>(std::move(spec)); }
-
         [[nodiscard]] unsigned int GetId() const { return this->m_vertex_array->GetId(); }
+
+        void SetMaterial(MaterialSpec& spec) { if (!this->m_material) this->m_material = std::make_shared<Material>(std::move(spec)); }
+        void SetMaterial(MaterialSpec&& spec) { if (!this->m_material) this->m_material = std::make_shared<Material>(std::move(spec)); }
 
         [[nodiscard]] const std::shared_ptr<Material>& GetMaterial() const { return this->m_material; }
 
+        void set(std::vector<Bone>& _bones) { this->bones = std::move(_bones); }
+        void set(std::unordered_map<std::string, int>& map) { this->bone_map = std::move(map); }
+
+        void set(std::vector<float> vertices) const { this->m_vertex_array->set(std::move(vertices)); }
         void set(std::vector<float>& vertices) const { this->m_vertex_array->set(std::move(vertices)); }
+
+        void set(std::vector<Vertex> vertices) const { this->m_vertex_array->set(Convert(std::move(vertices))); }
         void set(std::vector<Vertex>& vertices) const { this->m_vertex_array->set(Convert(std::move(vertices))); }
 
+        void set(std::vector<unsigned int> indices) const { this->m_vertex_array->set(std::move(indices)); }
         void set(std::vector<unsigned int>& indices) const { this->m_vertex_array->set(std::move(indices)); }
 
-        [[nodiscard]] const std::vector<float>& vertices() const { return this->m_vertex_array->GetVertices(); }
+        [[nodiscard]] const std::vector<float>& const_vertices() const { return this->m_vertex_array->GetConstVertices(); }
+        [[nodiscard]] std::vector<float>& vertices() const { return this->m_vertex_array->GetVertices(); }
+
         [[nodiscard]] const std::vector<unsigned int>& indices() const { return this->m_vertex_array->GetIndices(); }
 
         [[nodiscard]] int nVertices() const { return this->m_vertex_array->GetVertexCount(); }
@@ -61,6 +71,7 @@ namespace Vakol::Model::Assets
 
     	std::shared_ptr<Material> m_material;
 
-        std::unordered_map<std::string, int> bone_info;
+        std::vector<Bone> bones;
+        std::unordered_map<std::string, int> bone_map;
     };
 }

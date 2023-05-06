@@ -16,9 +16,7 @@
 
 using Vakol::Model::Vertex;
 
-using Vakol::Model::Assets::Mesh;
-
-using Vakol::Model::Assets::Bone;
+using namespace Vakol::Model::Assets;
 
 using Vakol::Model::MAX_BONE_INFLUENCE;
 
@@ -38,7 +36,7 @@ namespace Vakol::Controller
         return { c1, c2, c3, c4 };
     }
 
-    static glm::quat to_glm(const aiQuaternion& q) { return { q.w, q.x, q.y, q.z }; }
+    // static glm::quat to_glm(const aiQuaternion& q) { return { q.w, q.x, q.y, q.z }; }
 
     static glm::vec3 to_glm(const aiVector3D& v) { return { v.x, v.y, v.z }; }
 
@@ -47,9 +45,10 @@ namespace Vakol::Controller
     auto extract_vertices(const aiMesh& mesh) -> std::vector<Vertex>;
     auto extract_indices(const aiMesh& mesh)-> std::vector<unsigned int>;
     auto extract_bones(const aiMesh& mesh, std::vector<Vertex>& vertices)->std::pair <std::vector<Bone>, std::unordered_map<std::string, int>>;
-
+		
     auto process_node(const aiScene* scene, const aiNode* node)->void;
     auto process_mesh(const aiScene* scene, const aiMesh* assimp_mesh)->Mesh;
+    auto process_material(const aiMaterial* material)->MaterialSpec;
 
 
     Model LoadModel(std::string&& path)
@@ -92,9 +91,22 @@ namespace Vakol::Controller
     {
         Mesh mesh{};
 
-        auto [bones, bone_map] = extract_bones(*assimp_mesh, mesh.vertices());
+        mesh.set(extract_vertices(*assimp_mesh));
+        mesh.set(extract_indices(*assimp_mesh));
+        process_material(scene->mMaterials[assimp_mesh->mMaterialIndex]);
+
+        auto [bones, bone_map] = extract_bones(*assimp_mesh, std::move(Vakol::Model::Convert(std::move(mesh.vertices()))));
+        mesh.set(bones);
+        mesh.set(bone_map);
 
         return mesh;
+    }
+
+    auto process_material(const aiMaterial* material)->MaterialSpec
+    {
+
+
+        return {};
     }
 
     auto extract_vertices(const aiMesh& mesh)-> std::vector<Vertex>

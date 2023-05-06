@@ -62,12 +62,12 @@ namespace Vakol::Model::Components
 
     void RigidBody::SetVelocity(const glm::vec3 &vel)
     {
-        RigidBodyPtr->setLinearVelocity(rp3d::Vector3(vel.x, vel.y, vel.z));
+        RigidBodyPtr->setLinearVelocity(rp3d::Vector3(static_cast<rp3d::decimal>(vel.x), static_cast<rp3d::decimal>(vel.y), static_cast<rp3d::decimal>(vel.z)));
     }
 
     void RigidBody::SetAngularVelocity(const glm::vec3 &vel)
     {
-        RigidBodyPtr->setAngularVelocity(rp3d::Vector3(vel.x, vel.y, vel.z));
+        RigidBodyPtr->setAngularVelocity(rp3d::Vector3(static_cast<rp3d::decimal>(vel.x), static_cast<rp3d::decimal>(vel.y), static_cast<rp3d::decimal>(vel.z)));
     }
 
     void RigidBody::SetAngularDamp(float Damp)

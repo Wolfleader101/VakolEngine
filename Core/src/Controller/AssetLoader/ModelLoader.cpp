@@ -129,7 +129,7 @@ Vakol::Model::Assets::Mesh ProcessMesh(const aiMesh* mesh, const aiScene* scene)
     // material
     aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 
-    return { vertices, indices, sizeof(Vertex), ProcessMaterial(material) };
+    return { vertices, indices, ProcessMaterial(material) };
 }
 
 MaterialSpec ProcessMaterial(const aiMaterial* mat) 

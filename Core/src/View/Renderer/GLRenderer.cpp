@@ -86,7 +86,7 @@ namespace Vakol::View
     void GLRenderer::ClearBuffer(const unsigned int buffer_bit)
     { glClear(buffer_bit); }
 
-    void GLRenderer::Draw(const Controller::Time& time, const Controller::Camera& camera, const Model::Components::Transform trans, const Model::Components::Drawable& drawable) const 
+    void GLRenderer::Draw([[maybe_unused]] const Controller::Time& time, const Controller::Camera& camera, const Model::Components::Transform trans, const Model::Components::Drawable& drawable) const 
     {
         const auto& shader = drawable.model_ptr->GetShader();
 

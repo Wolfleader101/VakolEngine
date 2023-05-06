@@ -57,7 +57,7 @@ namespace Vakol::Controller::Physics {
         return m_DebugRenderer.IsEnabled();
     }
 
-    void ScenePhysics::AddTerrain(Terrain& terr) {
+    void ScenePhysics::AddTerrain([[maybe_unused]] Terrain& terr) {
         // auto& HeightData = terr.GetHeightMap();
         // const unsigned size = terr.GetSize();
 
