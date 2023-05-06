@@ -49,16 +49,16 @@ namespace Vakol::Controller {
 
     void Application::RegisterLua()
     {
-        Controller::RegisterLogger(lua.GetState());
-        Controller::RegisterMath(lua.GetState());
-        Controller::RegisterEntity(lua.GetState());
-        Controller::RegisterECS(lua.GetState());
-        Controller::RegisterAssetLoader(lua.GetState());
-        Controller::RegisterApplication(lua.GetState(), this);
-        Controller::RegisterScene(lua.GetState());
-        Controller::RegisterGUIWindow(lua.GetState(), &m_gui);  // Register GUI Window
-        // void RegisterRenderer(sol::state& lua);
-        // void RegisterPhysics(sol::state& lua);
+	    RegisterLogger(lua.GetState());
+        RegisterMath(lua.GetState());
+        RegisterEntity(lua.GetState());
+        RegisterECS(lua.GetState());
+        RegisterAssetLoader(lua.GetState());
+        RegisterApplication(lua.GetState(), this);
+        RegisterScene(lua.GetState());
+        RegisterGUIWindow(lua.GetState(), &m_gui);  // Register GUI Window
+    	RegisterRenderer(lua.GetState());
+    	RegisterPhysics(lua.GetState());
     }
 
     std::optional<Model::GameConfig> Application::LoadConfig() 
