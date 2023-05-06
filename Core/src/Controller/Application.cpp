@@ -35,9 +35,6 @@ namespace Vakol::Controller {
 
         m_gui.Init(m_window);
 
-        // Physics::Debug = false;
-
-        // Physics::Init();
 
         VK_INFO("Calling main.lua...");
 
@@ -117,7 +114,7 @@ namespace Vakol::Controller {
     }
 
     Application::~Application() {
-        // json::SerializeScene("assets/json/Deserialize.json", m_entityList);
+        
     }
 
     void Application::Run() {
@@ -125,8 +122,6 @@ namespace Vakol::Controller {
             m_time.Update();
             m_input.Update();
             m_gui.CreateNewFrame();
-
-            // Physics::FixedUpdate(m_time, m_entityList.GetEntityList());
 
             m_renderer->Update();
 

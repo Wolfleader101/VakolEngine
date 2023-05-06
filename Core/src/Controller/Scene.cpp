@@ -9,6 +9,8 @@
 #include "LuaAccess.hpp"
 #include "System.hpp"
 
+#include <Controller/Camera.hpp>
+
 namespace Vakol::Controller {
     Scene::Scene(const std::string& name, const std::string& scriptName, LuaState& lua,
                  std::shared_ptr<Physics::ScenePhysics> SP, bool active)
@@ -25,6 +27,7 @@ namespace Vakol::Controller {
         sol::function init = lua.GetState()["init"];
 
         init(*this);
+
     }
 
     const std::string& Scene::getName() const { return name; }
@@ -47,16 +50,19 @@ namespace Vakol::Controller {
 
         update(*this);
 
-        scenePhysics->Update(time);
+        scenePhysics->Update(time, cam);
 
         System::Script_Update(lua, entityList, this);
 
         System::Drawable_Update(time, cam, renderer);
 
         cam.Update(time.deltaTime);
+
+    	
     }
 
-    std::shared_ptr<Entity> Scene::GetEntity(const std::string& tag) {
+    std::shared_ptr<Entity> Scene::GetEntity(const std::string& tag) 
+    {
         Entity ent;
         entityList.m_Registry.view<Model::Components::Tag>().each([&](auto entity, auto& tagComponent) {
             if (tagComponent.tag == tag) {
@@ -69,9 +75,12 @@ namespace Vakol::Controller {
 
     namespace fs = std::filesystem;
 
-    void Scene::Serialize(const std::string& folder) const {
+    void Scene::Serialize(const std::string& folder) const
+	{
+
         std::string temp = folder;
         std::replace(temp.begin(), temp.end(), '/', '\\');  // replace / with \\ for filesystem
+
 
         std::string folderPath = "\\" + temp + "\\" + name;
         fs::path currentPath = fs::current_path();

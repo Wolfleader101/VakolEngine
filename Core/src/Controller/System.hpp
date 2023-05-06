@@ -32,17 +32,16 @@ namespace Vakol::Controller {
 
         static void Script_Update(LuaState& lua, EntityList& list, Scene* scene);
 
-        static void Physics_InitObject(
-            RigidBody& rigid, std::optional<std::reference_wrapper<Collider>> collider,
-            std::optional<std::reference_wrapper<Drawable>> model,  // only used if you want to put triangle mesh
-            const Transform& trans);
+        static void Physics_InitEntity(Entity& ent);
 
         static void Physics_Init();
         static void Physics_UpdateTransforms(float factor);
         static void Physics_SerializationPrep();
+        static void Physics_AddTerrain(Terrain& ter); 
 
        private:
         static std::shared_ptr<ScenePhysics> m_SP;
         static entt::registry* m_registry;
+        static Controller::EntityList* Entlist;
     };
 }  // namespace Vakol::Controller

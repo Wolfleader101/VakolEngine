@@ -36,6 +36,50 @@ namespace Vakol::Model::Components
 
     Tag::Tag(const std::string& tag) : tag(tag){};
 
+    void RigidBody::SetRigidData(const RigidData& data)
+    {
+        Data = data;
+
+        RigidBodyPtr->setMass(Data.mass);
+        RigidBodyPtr->setType((rp3d::BodyType) Type);
+        RigidBodyPtr->enableGravity(Data.grav);
+        RigidBodyPtr->setAngularDamping(Data.ADamp);
+        RigidBodyPtr->setLinearDamping(Data.LDamp);
+        RigidBodyPtr->setAngularLockAxisFactor(Data.AngularLock);
+    }
+
+    void RigidBody::ToggleGravity()
+    {
+        Data.grav = !Data.grav;
+        RigidBodyPtr->enableGravity(Data.grav);
+    }
+
+    void RigidBody::SetBodyType(BodyType t)
+    {
+        Type = t;
+        RigidBodyPtr->setType((rp3d::BodyType) Type);
+    }
+
+    void RigidBody::SetVelocity(const glm::vec3 &vel)
+    {
+        RigidBodyPtr->setLinearVelocity(rp3d::Vector3(vel.x, vel.y, vel.z));
+    }
+
+    void RigidBody::SetAngularVelocity(const glm::vec3 &vel)
+    {
+        RigidBodyPtr->setAngularVelocity(rp3d::Vector3(vel.x, vel.y, vel.z));
+    }
+
+    void RigidBody::SetAngularDamp(float Damp)
+    {
+        RigidBodyPtr->setAngularDamping(Damp);
+    }
+
+    void RigidBody::SetLinearDamp(float Damp)
+    {
+        RigidBodyPtr->setLinearDamping(Damp);
+    }
+
     Collider::Collider(RigidBody& owner, std::optional<Bounds> Data) {
         OwningBody = &owner;
 
@@ -44,12 +88,9 @@ namespace Vakol::Model::Components
         bounds = Data.value();
     }
 
-    RigidBody::RigidBody(std::shared_ptr<ScenePhysics> SP, std::optional<RigidData> DataR) {
-        owningWorld = SP;
-
-        if (!DataR.has_value()) return;
-
-        Data = DataR.value();
+    void Collider::SetBounds(const Bounds &data)
+    {
+        bounds = data;
     }
 
     Collider::Bounds getBounds(const Drawable& model) 
@@ -86,3 +127,6 @@ namespace Vakol::Model::Components
         return bounds;
     }
 }
+
+    
+

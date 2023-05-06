@@ -2,41 +2,45 @@
 
 #include <reactphysics3d/reactphysics3d.h>
 
+#include <Controller/Camera.hpp>
+#include <Controller/Terrain.hpp>
 #include <Controller/Time.hpp>
+#include <View/Renderer/DebugRenderer.hpp>
 
 class System;
 
-
-namespace Vakol::Controller::Physics
-{
+namespace Vakol::Controller::Physics {
     class PhysicsPool;
-	
 
+    using Terrain = Vakol::Controller::Terrain;
 
-	class ScenePhysics
-	{
-		public:
+    class ScenePhysics {
+       public:
+        ScenePhysics() = delete;
+        ~ScenePhysics();
+        void Init();
 
-			ScenePhysics() = delete;
-            ~ScenePhysics();
-			void Init();
+        void Update(const Vakol::Controller::Time& time, const Vakol::Controller::Camera& camera);
 
-			void Update(const Vakol::Controller::Time& time);
+        void EnableDebug(bool enable);
+        bool IsDebugEnabled();
 
-			/*PhysicsObject& AddPhysicsObject(PhysicsObject& PhyObj);*/
-		
-		private:
+        void AddTerrain(Terrain& terrain);
 
-			ScenePhysics(rp3d::PhysicsWorld* newWorld);
+       private:
+        ScenePhysics(rp3d::PhysicsWorld* newWorld);
 
-			
-			rp3d::PhysicsWorld* m_World;
+        rp3d::RigidBody* m_Terrain;
+        rp3d::PhysicsWorld* m_World;
 
-			float m_timestep = 1.0f / 60.0f; 
-			//not static as we might want to change timesteps seperately
+        float m_timestep = 1.0f / 60.0f;
 
-			float m_accumulator = 0.0f;
-			friend class PhysicsPool;
-			friend class System;
-	};
-}
+        float m_accumulator = 0.0f;
+
+        View::DebugRenderer m_DebugRenderer;
+
+        friend class PhysicsPool;
+        friend class System;
+        
+    };
+}  // namespace Vakol::Controller::Physics

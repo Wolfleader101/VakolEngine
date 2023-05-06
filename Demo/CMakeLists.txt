@@ -2,7 +2,7 @@
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-SET(CopyResources 0)
+SET(CopyResources FALSE)
 
 
 # Add source to this project's executable.
