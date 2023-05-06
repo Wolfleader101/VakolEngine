@@ -1,16 +1,11 @@
 #pragma once
 
 #include <vector>
-#include <optional>
 
 #include <glm/vec3.hpp>
 #include <glm/vec2.hpp>
 
-#include "Buffer.hpp"
-
 #define USE_TRIANGLE_PATCHES 0
-
-class Mesh;
 
 namespace Vakol::Model
 {

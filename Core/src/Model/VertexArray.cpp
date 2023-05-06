@@ -5,7 +5,7 @@
 
 #include <iostream>
 
-#define VERBOSE_DEBUG 1
+#define VERBOSE_DEBUG 0
 
 namespace Vakol::Model
 {

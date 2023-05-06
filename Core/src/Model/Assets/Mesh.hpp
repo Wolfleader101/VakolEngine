@@ -8,9 +8,18 @@
 
 namespace Vakol::Model::Assets 
 {
+    struct Bone
+    {
+        std::string name;
+        int index = -1;
+        glm::mat4 offset;
+    };
+
     class Mesh 
     {
     public:
+        Mesh() = default;
+
         Mesh(const std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, const int size, MaterialSpec&& spec = std::move(DEFAULT))
             : m_vertex_array(std::make_shared<VertexArray>(Convert(vertices, size), std::move(indices), size)), m_material(std::make_shared<Material>(std::move(spec))) {}
 
@@ -45,5 +54,7 @@ namespace Vakol::Model::Assets
     private:
         std::shared_ptr<VertexArray> m_vertex_array;
         std::shared_ptr<Material> m_material;
+
+        std::unordered_map<std::string, int> bone_info;
     };
 }

@@ -27,13 +27,15 @@ std::string directory;
 std::vector<Vakol::Model::Assets::Mesh> meshes;
 std::vector<Texture> textures_loaded;
 
-bool IS_MD2 = false;
+bool IS_CORE_ASSET = false;
 
 namespace Vakol::Controller
 {
     ::Model LoadModel(const std::string& path) 
     {
         Assimp::Importer importer;
+
+        IS_CORE_ASSET = path.find("coreAssets/");
 
         const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 
@@ -195,8 +197,7 @@ std::vector<Texture> LoadMaterialTextures(const aiMaterial* mat, const aiTexture
             texture.path = str.C_Str();
             texture.type = typeName;
 
-        	auto final_path = texture.path;
-
+            auto final_path = IS_CORE_ASSET ? "assets/" + texture.path : "coreAssets/textures/" + texture.path;
             texture.SetID(LoadTexture(final_path, false, false));
 
             textures.push_back(texture);
