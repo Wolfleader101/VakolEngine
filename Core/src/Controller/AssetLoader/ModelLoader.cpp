@@ -35,27 +35,17 @@ namespace Vakol::Controller
     {
         Assimp::Importer importer;
 
-        VK_TRACE("Loading Model: {0}", path);
+        const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 
-        const auto start = std::chrono::steady_clock::now();
-
-        const aiScene* scene = importer.ReadFile(
-            path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
-
-        if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
+        if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) 
+        {
             VK_ERROR("ERROR::ASSIMP:: {0}", importer.GetErrorString());
-            quick_exit(EXIT_FAILURE);
+            importer.ReadFile("coreAssets/models/error.obj", aiProcess_Triangulate);
         }
 
         directory = path.substr(0, path.find_last_of('/'));
 
         ::ProcessNode(scene->mRootNode, scene);
-
-        const auto end = std::chrono::steady_clock::now();
-
-        const auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-
-        VK_TRACE("Finished Loading Model. Elapsed Time: {0} ms", duration.count());
 
         return { meshes };
     }
