@@ -9,12 +9,12 @@
 
 namespace Vakol::Model
 {
-	std::vector<float> Convert(const std::vector<Vertex>& arr, const int size)
+	std::vector<float> Convert(std::vector<Vertex>&& arr)
     {
         std::vector<float> output;
 
         const auto arr_size = static_cast<int>(arr.size());
-        const auto elements = static_cast<int>(size / sizeof(float));
+        constexpr auto elements = static_cast<int>(sizeof(Vertex) / sizeof(float));
 
     #if VERBOSE_DEBUG
         VK_TRACE("Converting vector of floats to vector of Vertex.");
@@ -38,97 +38,35 @@ namespace Vakol::Model
         for (int i = 0; i < arr_size; i++) // this is really hacky, but it works, aaaaand i'm just lazy
         {
             const auto& [position, normal, uv, tangent, bitangent, bone_ids, bone_weights] = arr.at(i);
-            
-            if (elements == 3)
-            {
-                output.push_back(position.x); // Position 0
-                output.push_back(position.y);
-                output.push_back(position.z);
-                VK_TRACE("positions");
-            }
 
-            if (elements == 5) // why do we check for this twice? Sometimes people only want positions and texture coordinates (i.e. skyboxes) save time and data
-            {
-                output.push_back(position.x); // Position 0
-                output.push_back(position.y);
-                output.push_back(position.z);
-                VK_TRACE("positions");
+            output.push_back(position.x); // Position 0
+            output.push_back(position.y);
+            output.push_back(position.z);
 
-                output.push_back(uv.x); // Position 1
-                output.push_back(uv.y);
-                VK_TRACE("uvs");
-            }
+            output.push_back(normal.x); // Position 1
+            output.push_back(normal.y);
+            output.push_back(normal.z);
 
-            if (elements == 8)
-            {
-                output.push_back(position.x); // Position 0
-                output.push_back(position.y);
-                output.push_back(position.z);
-                VK_TRACE("positions");
+            output.push_back(uv.x); // Position 2 
+            output.push_back(uv.y);
 
-                output.push_back(normal.x); // Position 1 (if size is large enough)
-                output.push_back(normal.y);
-                output.push_back(normal.z);
-                VK_TRACE("normals");
+            output.push_back(tangent.x); // Position 3
+            output.push_back(tangent.y);
+            output.push_back(tangent.z);
 
-                output.push_back(uv.x); // Position 2 (if size is large enough)
-                output.push_back(uv.y);
-                VK_TRACE("uvs");
-            }
+            output.push_back(bitangent.x); // Position 4
+            output.push_back(bitangent.y);
+            output.push_back(bitangent.z);
 
-            if (elements == 14) // you need uvs and normals in order to get the resultant tangent and bitangent (THEY MUST STICK TOGETHER)
-            {
-                output.push_back(position.x); // Position 0
-                output.push_back(position.y);
-                output.push_back(position.z);
+            output.push_back(bone_ids[0]); // Position 5
+            output.push_back(bone_ids[1]);
+            output.push_back(bone_ids[2]);
+            output.push_back(bone_ids[3]);
 
-                output.push_back(normal.x); // Position 1
-                output.push_back(normal.y);
-                output.push_back(normal.z);
-
-                output.push_back(uv.x); // Position 2
-                output.push_back(uv.y);
-
-                output.push_back(tangent.x); // Position 3
-                output.push_back(tangent.y);
-                output.push_back(tangent.z);
-            
-                output.push_back(bitangent.x); // Position 4
-                output.push_back(bitangent.y);
-                output.push_back(bitangent.z);
-            }
-
-            if (elements == 22)
-            {
-                output.push_back(position.x); // Position 0
-                output.push_back(position.y);
-                output.push_back(position.z);
-
-                output.push_back(normal.x); // Position 1
-                output.push_back(normal.y);
-                output.push_back(normal.z);
-
-                output.push_back(uv.x); // Position 2 
-                output.push_back(uv.y);
-
-                output.push_back(tangent.x); // Position 3
-                output.push_back(tangent.y);
-                output.push_back(tangent.z);
-
-                output.push_back(bitangent.x); // Position 4
-                output.push_back(bitangent.y);
-                output.push_back(bitangent.z);
-
-                output.push_back(bone_ids[0]); // Position 5
-                output.push_back(bone_ids[1]);
-                output.push_back(bone_ids[2]);
-                output.push_back(bone_ids[3]);
-
-                output.push_back(bone_weights[0]); // Position 6
-                output.push_back(bone_weights[1]);
-                output.push_back(bone_weights[2]);
-                output.push_back(bone_weights[3]);
-            }
+            output.push_back(bone_weights[0]); // Position 6
+            output.push_back(bone_weights[1]);
+            output.push_back(bone_weights[2]);
+            output.push_back(bone_weights[3]);
         }
 
         arr.~vector();

@@ -20,8 +20,8 @@ namespace Vakol::Model::Assets
     public:
         Mesh() = default;
 
-        Mesh(const std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, const int size, MaterialSpec&& spec = std::move(DEFAULT))
-            : m_vertex_array(std::make_shared<VertexArray>(Convert(vertices, size), std::move(indices), size)), m_material(std::make_shared<Material>(std::move(spec))) {}
+        Mesh(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, MaterialSpec&& spec = std::move(DEFAULT))
+            : m_vertex_array(std::make_shared<VertexArray>(Convert(std::move(vertices)), std::move(indices), sizeof(Vertex))), m_material(std::make_shared<Material>(std::move(spec))) {}
 
         Mesh(std::vector<float>& vertices, std::vector<unsigned int>& indices, const int size, MaterialSpec&& spec = std::move(DEFAULT))
             : m_vertex_array(std::make_shared<VertexArray>(std::move(vertices), std::move(indices), size)), m_material(std::make_shared<Material>(std::move(spec))) {}
@@ -31,6 +31,11 @@ namespace Vakol::Model::Assets
         [[nodiscard]] unsigned int GetId() const { return this->m_vertex_array->GetId(); }
 
         [[nodiscard]] const std::shared_ptr<Material>& GetMaterial() const { return this->m_material; }
+
+        void set(std::vector<float>& vertices) const { this->m_vertex_array->set(std::move(vertices)); }
+        void set(std::vector<Vertex>& vertices) const { this->m_vertex_array->set(Convert(std::move(vertices))); }
+
+        void set(std::vector<unsigned int>& indices) const { this->m_vertex_array->set(std::move(indices)); }
 
         [[nodiscard]] const std::vector<float>& vertices() const { return this->m_vertex_array->GetVertices(); }
         [[nodiscard]] const std::vector<unsigned int>& indices() const { return this->m_vertex_array->GetIndices(); }
@@ -53,7 +58,8 @@ namespace Vakol::Model::Assets
         void Draw() const { this->m_vertex_array->Draw(); }
     private:
         std::shared_ptr<VertexArray> m_vertex_array;
-        std::shared_ptr<Material> m_material;
+
+    	std::shared_ptr<Material> m_material;
 
         std::unordered_map<std::string, int> bone_info;
     };

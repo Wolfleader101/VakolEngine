@@ -46,7 +46,7 @@ namespace Vakol::Controller
 
     auto extract_vertices(const aiMesh& mesh) -> std::vector<Vertex>;
     auto extract_indices(const aiMesh& mesh)-> std::vector<unsigned int>;
-    auto extract_bones(const aiMesh& mesh)->std::pair <std::vector<Bone>, std::unordered_map<std::string, int>>;
+    auto extract_bones(const aiMesh& mesh, std::vector<Vertex>& vertices)->std::pair <std::vector<Bone>, std::unordered_map<std::string, int>>;
 
     auto process_node(const aiScene* scene, const aiNode* node)->void;
     auto process_mesh(const aiScene* scene, const aiMesh* assimp_mesh)->Mesh;
@@ -90,7 +90,9 @@ namespace Vakol::Controller
 
     auto process_mesh(const aiScene* scene, const aiMesh* assimp_mesh)->Mesh
     {
-        Mesh mesh {};
+        Mesh mesh{};
+
+        auto [bones, bone_map] = extract_bones(*assimp_mesh, mesh.vertices());
 
         return mesh;
     }
