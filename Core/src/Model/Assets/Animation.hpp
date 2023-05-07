@@ -157,9 +157,12 @@ namespace Vakol::Model::Assets
 			return progress / total;
 		}
 
-		[[nodiscard]] glm::mat4 interpolate_position(const float time) const
+		[[nodiscard]] glm::mat4 interpolate_position(const float time)
 		{
 			const int p0 = UpdateFrameIndex(positions, time, prev_position_index, prev_time);
+
+			prev_position_index = p0;
+
 			const auto& [position, timestamp] = positions.at(p0);
 			const auto& next = positions.at(p0 + 1);
 
@@ -169,9 +172,10 @@ namespace Vakol::Model::Assets
 			return translate(glm::mat4(1.0f), target_position);
 		}
 
-		glm::mat4 interpolate_rotation(const float time)
+		[[nodiscard]] glm::mat4 interpolate_rotation(const float time)
 		{
 			const int p0 = UpdateFrameIndex(rotations, time, prev_rotation_index, prev_time);
+
 			prev_rotation_index = p0;
 
 			const auto& [rotation, timestamp] = rotations.at(p0);
@@ -181,19 +185,22 @@ namespace Vakol::Model::Assets
 
 			const auto& target_rotation = glm::normalize(glm::slerp(rotation, next.rotation, scale_factor));
 
-			return mat4_cast(rotation);
+			return mat4_cast(target_rotation);
 		}
 
-		glm::mat4 interpolate_scaling(const float time)
+		[[nodiscard]] glm::mat4 interpolate_scaling(const float time)
 		{
-			const int p0 = UpdateFrameIndex(positions, time, prev_position_index, prev_time);
-			const auto& [position, timestamp] = positions.at(p0);
-			const KeyPosition& next = positions.at(p0 + 1);
+			const int p0 = UpdateFrameIndex(scales, time, prev_scale_index, prev_time);
+
+			prev_scale_index = p0;
+
+			const auto& [scale, timestamp] = scales.at(p0);
+			const auto& next = scales.at(p0 + 1);
 
 			const float scale_factor = GetScaleFactor(timestamp, next.timestamp, time);
-			const auto& final_position = glm::mix(position, next.position, scale_factor);
+			const auto& target_scale = glm::mix(scale, next.scale, scale_factor);
 
-			return translate(glm::mat4(1.0f), final_position);
+			return glm::scale(glm::mat4(1.0f), target_scale);
 		}
 	};
 
@@ -248,7 +255,7 @@ namespace Vakol::Model::Assets
 		std::vector<glm::mat4> transforms;
 		std::vector<AnimNode> nodes;
 
-		unsigned int bone_count = 0;
+		[[maybe_unused]] unsigned int bone_count = 0;
 
 		float current_time = 0.0f;
 		float duration = 0.0f;

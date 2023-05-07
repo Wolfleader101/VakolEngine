@@ -112,6 +112,8 @@ namespace Vakol::View
 
         SetBufferSubData(0, 2 * sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(model_matrix));
 
+        drawable.model_ptr->animation().Update(time.deltaTime * 10.0f);
+
         for (int i = 0; i < drawable.model_ptr->nMeshes(); ++i) 
         {
             const auto& mesh = drawable.model_ptr->meshes().at(i);

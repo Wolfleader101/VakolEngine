@@ -32,7 +32,7 @@ namespace Vakol::Model::Assets
         
         [[nodiscard]] Mesh nMesh(const int index = 0) const { return m_meshes.at(index); }
 
-        [[nodiscard]] const Animation& animation() const { return m_animation;  }
+        [[nodiscard]] Animation& animation() { return m_animation;  }
 
         [[nodiscard]] const std::vector<Mesh>& meshes() const { return m_meshes; }
         [[nodiscard]] std::vector<Mesh>& meshes() { return m_meshes; }

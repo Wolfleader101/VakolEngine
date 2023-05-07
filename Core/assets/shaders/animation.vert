@@ -11,10 +11,6 @@ out VS_OUT
 {
     vec3  normal;
     vec2  uv;
-    vec3  tangent;
-    vec3  bitangent;
-    vec4  bone_ids;
-    vec4  bone_weights;
 } vs_out;
 
 layout (std140, binding = 1) uniform Matrices
@@ -24,14 +20,25 @@ layout (std140, binding = 1) uniform Matrices
     mat4 MODEL_MATRIX;
 };
 
+uniform mat4 BONE_TRANSFORMS[206];
+
 void main()
 {   
+    mat4 S = mat4(1.0);
+
+    for (int i = 0; i < 4; ++i)
+    {
+        int bone_id = int(aBoneIDs[i]);
+
+        if (bone_id >= 0)
+            S += BONE_TRANSFORMS[bone_id] * aBoneWeights[i];
+    }
+
+    if (int(aBoneIDs[0]) < 0)
+        S = mat4(1.0);
+
     vs_out.normal = aNormal;
     vs_out.uv = aTexCoords;
-    vs_out.tangent = aTangent;
-    vs_out.bitangent = aBitangent;
-    vs_out.bone_ids = aBoneIDs;
-    vs_out.bone_weights = aBoneWeights;
 
-    gl_Position = PV_MATRIX * MODEL_MATRIX * vec4(aPos, 1.0);
+    gl_Position = PV_MATRIX * MODEL_MATRIX * S * vec4(aPos, 1.0);
 }
