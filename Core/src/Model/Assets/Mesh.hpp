@@ -13,9 +13,6 @@ namespace Vakol::Model::Assets
     public:
         Mesh() = default;
 
-        //Mesh(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, std::vector<Bone>& bones, std::unordered_map<std::string, int>& bone_map, MaterialSpec& spec = DEFAULT)
-	       // : m_vertex_array(std::make_shared<VertexArray>(Convert(vertices), std::move(indices), static_cast<int>(sizeof(Vertex)))), m_bones(std::move(bones)), m_bone_map(std::move(bone_map)), m_material(std::make_shared<Material>(std::move(spec))) {}
-
         Mesh(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, MaterialSpec& spec = DEFAULT)
             : m_vertex_array(std::make_shared<VertexArray>(Convert(vertices), std::move(indices), static_cast<int>(sizeof(Vertex)))), m_material(std::make_shared<Material>(std::move(spec))) {}
 
