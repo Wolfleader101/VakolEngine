@@ -2,7 +2,6 @@
 
 #include <vector>
 #include <string>
-#include <span>
 
 #include <optional>
 #include <map>
@@ -10,6 +9,8 @@
 #pragma warning(push)
 #pragma warning(disable:4201)
 #include <glm/gtc/quaternion.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #pragma warning(pop)
 
 namespace Vakol::Model::Assets
@@ -79,10 +80,121 @@ namespace Vakol::Model::Assets
 		std::vector<KeyRotation> rotations;
 
 		// remember previous frame's state to find next frame keys quicker
-		float prev_time = -1.0f;
+		float prev_time = -1;
 		int prev_position_index = -1;
 		int prev_scale_index = -1;
 		int prev_rotation_index = -1;
+
+		glm::mat4 interpolate_frames_at(const float time)
+		{
+			const auto translation = interpolate_position(time);
+			const auto rotation =	  interpolate_rotation(time);
+			const auto scale =		   interpolate_scaling(time);
+
+			prev_time = time;
+
+			return translation * rotation * scale;
+		}
+
+	private:
+
+		template <typename Key>
+		struct KeyTimeCompare
+		{
+			bool operator()(const Key& lhs, const Key& rhs) const noexcept { return lhs.timestamp < rhs.timestamp; }
+			bool operator()(const float time, const Key& rhs) const noexcept { return time < rhs.timestamp; }
+			bool operator()(const Key& lhs, const float time) const noexcept { return lhs.timestamp < time; }
+		};
+
+		template <typename Key>
+		static int GetFrameIndex(const std::vector<Key>& frames, float time, unsigned int start_offset, unsigned int end_offset)
+		{
+			VK_ASSERT(frames.size() >= 2, "");
+
+			auto itr = std::lower_bound(frames.cbegin() + start_offset, frames.cbegin() + end_offset, time, KeyTimeCompare<Key>{});
+
+			if (itr == frames.cbegin())
+				itr = frames.cbegin() + 1;
+
+			VK_ASSERT(itr != frames.cend(), "");
+			const auto index = static_cast<int>(std::distance(frames.cbegin(), itr) - 1);
+
+			VK_ASSERT(index >= 0, "");
+			VK_ASSERT(index < static_cast<int>(frames.size()) - 1, "");
+			VK_ASSERT(frames.at(index).timestamp <= time, "");
+			VK_ASSERT(frames.at(index + 1).timestamp >= time, "");
+
+			return index;
+		}
+
+		template <typename Key>
+		static int UpdateFrameIndex(const std::vector<Key>& frames, const float time, const int prev_index, const float prev_time)
+		{
+			VK_ASSERT(prev_index < static_cast<int>(frames.size()), "");
+
+			if (prev_index < 0)
+				return GetFrameIndex(frames, time, 0, static_cast<unsigned int>(frames.size()));
+
+			VK_ASSERT(prev_index >= 0, "");
+			VK_ASSERT(prev_time >= 0, "");
+
+			if (time >= prev_time)
+				return GetFrameIndex(frames, time, prev_index, static_cast<unsigned int>(frames.size()));
+
+			return GetFrameIndex(frames, time, 0, prev_index);
+		}
+
+		static float GetScaleFactor(const float prev_timestamp, const float next_timestamp, const float time)
+		{
+			VK_ASSERT(time >= prev_timestamp, "");
+			VK_ASSERT(next_timestamp > prev_timestamp, "");
+
+			const auto progress = time - prev_timestamp;
+			const auto total = next_timestamp - prev_timestamp;
+
+			VK_ASSERT(progress <= total, "");
+
+			return progress / total;
+		}
+
+		[[nodiscard]] glm::mat4 interpolate_position(const float time) const
+		{
+			const int p0 = UpdateFrameIndex(positions, time, prev_position_index, prev_time);
+			const auto& [position, timestamp] = positions.at(p0);
+			const auto& next = positions.at(p0 + 1);
+
+			const float scale_factor = GetScaleFactor(timestamp, next.timestamp, time);
+			const auto& target_position = mix(position, next.position, scale_factor);
+
+			return translate(glm::mat4(1.0f), target_position);
+		}
+
+		glm::mat4 interpolate_rotation(const float time)
+		{
+			const int p0 = UpdateFrameIndex(rotations, time, prev_rotation_index, prev_time);
+			prev_rotation_index = p0;
+
+			const auto& [rotation, timestamp] = rotations.at(p0);
+			const auto& next = rotations.at(p0 + 1);
+
+			const float scale_factor = GetScaleFactor(timestamp, next.timestamp, time);
+
+			const auto& target_rotation = glm::normalize(glm::slerp(rotation, next.rotation, scale_factor));
+
+			return mat4_cast(rotation);
+		}
+
+		glm::mat4 interpolate_scaling(const float time)
+		{
+			const int p0 = UpdateFrameIndex(positions, time, prev_position_index, prev_time);
+			const auto& [position, timestamp] = positions.at(p0);
+			const KeyPosition& next = positions.at(p0 + 1);
+
+			const float scale_factor = GetScaleFactor(timestamp, next.timestamp, time);
+			const auto& final_position = glm::mix(position, next.position, scale_factor);
+
+			return translate(glm::mat4(1.0f), final_position);
+		}
 	};
 
 	struct AnimNode
@@ -105,6 +217,30 @@ namespace Vakol::Model::Assets
 			: global_inverse(root_inverse), transforms(MAX_BONE_COUNT, glm::mat4(1.0f)), nodes(std::move(nodes)), bone_count(bone_count), duration(duration), ticks_per_second(tps)
 		{
 			VK_ASSERT(bone_count <= MAX_BONE_COUNT, "\n\nTOO MANY BONES!!");
+		}
+
+		void Update(const float delta_time)
+		{
+			current_time += ticks_per_second * delta_time;
+			current_time = fmod(current_time, duration);
+
+			for (int i = 0, count = static_cast<int>(nodes.size()); i < count; ++i)
+			{
+				auto& [bone, bone_transform, parent, node_transform] = nodes[i];
+				VK_ASSERT(i > parent, "");
+
+				const glm::mat4& transform = bone ? bone->interpolate_frames_at(current_time) : node_transform;
+				const glm::mat4& parent_transform = parent >= 0 ? nodes[parent].bone_transform : glm::mat4(1.0f);
+
+				bone_transform = parent_transform * transform;
+
+				if (!bone) continue;
+
+				const size_t bone_index = bone->bone_index;
+				VK_ASSERT(bone_index < transforms.size(), "\n\nTOO MANY BONES!");
+
+				transforms[bone_index] = global_inverse * parent_transform * bone_transform * bone->offset;
+			}
 		}
 
 	private:
