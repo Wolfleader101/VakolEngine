@@ -206,7 +206,7 @@ namespace Vakol::Controller
 	{
         auto entity_type = lua.new_usertype<Entity>("entity");
         auto model_type = lua.new_usertype<Assets::Model>("model");
-        auto mesh_type = lua.new_usertype<Assets::Mesh>("mesh");
+        auto mesh_type = lua.new_usertype<Mesh>("mesh");
         auto material_type = lua.new_usertype<Assets::Material>("material");
         auto shader_type = lua.new_usertype<Assets::Shader>("shader");
 
@@ -286,7 +286,7 @@ namespace Vakol::Controller
 
         entity_type.set_function("add_model", [](Entity* ent, const std::string& path) 
         {
-            if (!ent->HasComponent<Drawable>()) ent->AddComponent<Components::Drawable>();
+            if (!ent->HasComponent<Drawable>()) ent->AddComponent<Drawable>();
 
             auto model = AssetLoader::GetModel(path);
 
@@ -312,7 +312,7 @@ namespace Vakol::Controller
         model_type.set_function("set_shader", &Assets::Model::SetShader);
         model_type.set_function("get_shader", &Assets::Model::GetShader);
 
-        mesh_type.set_function("get_material", &Assets::Mesh::GetMaterial);
+        mesh_type.set_function("get_material", &Mesh::GetMaterial);
 
         material_type.set_function("add_texture", &Assets::Material::AddTexture);
         material_type.set_function("get_texture", &Assets::Material::GetTexture);
@@ -352,15 +352,15 @@ namespace Vakol::Controller
 
         entity_type.set_function("add_collider", [](Entity* ent)
         {
-            if (!ent->HasComponent<Components::Collider>()) ent->AddComponent<Components::Collider>();
-            return ent->GetComponent<Components::Collider>();
+            if (!ent->HasComponent<Collider>()) ent->AddComponent<Collider>();
+            return ent->GetComponent<Collider>();
         });
 
 #pragma warning(push)
 #pragma warning(disable:4715) // disable that annoying warning for not all code path return a value
         entity_type.set_function("get_collider", [](const Entity* ent) -> Collider&
         {
-            if (ent->HasComponent<Components::Collider>()) return ent->GetComponent<Collider>();
+            if (ent->HasComponent<Collider>()) return ent->GetComponent<Collider>();
             
             VK_CRITICAL("No collider component found on entity");
             assert(0);
@@ -372,12 +372,12 @@ namespace Vakol::Controller
 
     void RegisterECS(sol::state& lua)
 	{
-        auto transform_type = lua.new_usertype<Components::Transform>("transform");
+        auto transform_type = lua.new_usertype<Transform>("transform");
         auto terrain_type = lua.new_usertype<Terrain>("terrain");
 
-        transform_type["pos"] = &Components::Transform::pos;
-        transform_type["rot"] = &Components::Transform::rot;
-        transform_type["scale"] = &Components::Transform::scale;
+        transform_type["pos"] = &Transform::pos;
+        transform_type["rot"] = &Transform::rot;
+        transform_type["scale"] = &Transform::scale;
 
         // terrainType.set_function("load_heightmap", &Terrain::LoadHeightMap);
         // terrainType.set_function("load_texture", &Terrain::LoadTexture);
@@ -457,7 +457,7 @@ namespace Vakol::Controller
             rp3dVec3["y"] = &rp3d::Vector3::y;
             rp3dVec3["z"] = &rp3d::Vector3::z;
 
-        auto rigidType = lua.new_usertype<Components::RigidBody>("rigidBody");
+        auto rigidType = lua.new_usertype<RigidBody>("rigidBody");
 
             lua["BodyType"] = lua.create_table_with( 
                     "Static", RigidBody::BODY_TYPE::STATIC, 
@@ -465,20 +465,20 @@ namespace Vakol::Controller
                     "Dynamic", RigidBody::BODY_TYPE::DYNAMIC
                     );
 
-            rigidType["BodyType"] = &Components::RigidBody::Type;
+            rigidType["BodyType"] = &RigidBody::Type;
 
-        auto rigidDataType = lua.new_usertype<Components::RigidBody::RigidData>("rigidData");
+        auto rigidDataType = lua.new_usertype<RigidBody::RigidData>("rigidData");
 
-            rigidDataType["mass"] = &Components::RigidBody::RigidData::mass;
-            rigidDataType["gravity"] = &Components::RigidBody::RigidData::grav;
-            rigidDataType["linear_damp"] = &Components::RigidBody::RigidData::LDamp;
-            rigidDataType["angular_damp"] = &Components::RigidBody::RigidData::ADamp;
+            rigidDataType["mass"] = &RigidBody::RigidData::mass;
+            rigidDataType["gravity"] = &RigidBody::RigidData::grav;
+            rigidDataType["linear_damp"] = &RigidBody::RigidData::LDamp;
+            rigidDataType["angular_damp"] = &RigidBody::RigidData::ADamp;
 
 
 
         
 
-        auto colliderType = lua.new_usertype<Components::Collider>("collider");
+        auto colliderType = lua.new_usertype<Collider>("collider");
 
             lua["Shape"] = lua.create_table_with(
                     "Box", Collider::SHAPE_NAME::BOX,
@@ -487,15 +487,15 @@ namespace Vakol::Controller
                     "TriangleMesh", Collider::SHAPE_NAME::TRIANGLE_MESH
                     );
             
-            colliderType["Shape"] = &Components::Collider::ShapeName;
+            colliderType["Shape"] = &Collider::ShapeName;
 
-        auto ColliderBoundsType = lua.new_usertype<Components::Collider::Bounds>("colliderBounds");
+        auto ColliderBoundsType = lua.new_usertype<Collider::Bounds>("colliderBounds");
 
-            ColliderBoundsType["min"] = &Components::Collider::Bounds::min;
-            ColliderBoundsType["max"] = &Components::Collider::Bounds::max;
-            ColliderBoundsType["center"] = &Components::Collider::Bounds::center;
-            ColliderBoundsType["extents"] = &Components::Collider::Bounds::extents;
-            ColliderBoundsType["radius"] = &Components::Collider::Bounds::radius;
+            ColliderBoundsType["min"] = &Collider::Bounds::min;
+            ColliderBoundsType["max"] = &Collider::Bounds::max;
+            ColliderBoundsType["center"] = &Collider::Bounds::center;
+            ColliderBoundsType["extents"] = &Collider::Bounds::extents;
+            ColliderBoundsType["radius"] = &Collider::Bounds::radius;
 
         
 
@@ -503,43 +503,43 @@ namespace Vakol::Controller
             
 
             
-        rigidType.set_function("set_data", [](Components::RigidBody* rigid, const Components::RigidBody::RigidData& data) 
+        rigidType.set_function("set_data", [](RigidBody* rigid, const RigidBody::RigidData& data) 
         {
             rigid->SetRigidData(data);
         });
 
-        rigidType.set_function("toggle_gravity", [](Components::RigidBody* rigid) 
+        rigidType.set_function("toggle_gravity", [](RigidBody* rigid) 
         {
             rigid->ToggleGravity();
         });
 
-        rigidType.set_function("set_body_type", [](Components::RigidBody* rigid, Components::RigidBody::BODY_TYPE type) 
+        rigidType.set_function("set_body_type", [](RigidBody* rigid, const RigidBody::BODY_TYPE type) 
         {
             rigid->SetBodyType(type);
         });
 
-        rigidType.set_function("set_velocity", [](Components::RigidBody* rigid, const glm::vec3& vel) 
+        rigidType.set_function("set_velocity", [](const RigidBody* rigid, const glm::vec3& vel) 
         {
             rigid->SetVelocity(vel);
         });
 
-        rigidType.set_function("set_angular_velocity", [](Components::RigidBody* rigid, const glm::vec3& vel) 
+        rigidType.set_function("set_angular_velocity", [](const RigidBody* rigid, const glm::vec3& vel) 
         {
             rigid->SetAngularVelocity(vel);
         });
 
-        rigidType.set_function("set_linear_damp", [](Components::RigidBody* rigid, float damp) 
+        rigidType.set_function("set_linear_damp", [](const RigidBody* rigid, const float damp) 
         {
             rigid->SetLinearDamp(damp);
         });
 
-        rigidType.set_function("set_angular_damp", [](Components::RigidBody* rigid, float damp) 
+        rigidType.set_function("set_angular_damp", [](const RigidBody* rigid, const float damp) 
         {
             rigid->SetAngularDamp(damp);
         });
 
         
-        colliderType.set_function("set_bounds", [](Components::Collider* collider, const Components::Collider::Bounds& bounds) 
+        colliderType.set_function("set_bounds", [](Collider* collider, const Collider::Bounds& bounds) 
         {
             collider->SetBounds(bounds);
         });

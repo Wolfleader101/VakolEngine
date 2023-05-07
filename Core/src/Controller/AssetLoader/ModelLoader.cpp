@@ -3,6 +3,8 @@
 #include <Controller/AssetLoader/FileLoader.hpp>
 #include <Controller/AssetLoader/TextureLoader.hpp>
 
+#include <stack>
+
 #include <assimp/postprocess.h>
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -39,21 +41,19 @@ namespace Vakol::Controller
     static glm::vec3 to_glm(aiColor3D& v) { return { v.r, v.g, v.b}; }
     static glm::vec3 to_glm(aiVector3D& v) { return { v.x, v.y, v.z }; }
 
-    std::vector<Mesh> meshes;
-
     auto extract_vertices(const aiMesh* mesh) -> std::vector<Vertex>;
     auto extract_indices(const aiMesh* mesh)-> std::vector<unsigned int>;
     auto extract_bones(const aiMesh* mesh, std::vector<Vertex>& vertices)->std::pair <std::vector<Bone>, std::unordered_map<std::string, int>>;
     auto extract_textures(const aiMaterial* material, const aiTextureType type)-> std::vector<Texture>;
     auto extract_animations(const aiScene* scene)->std::vector<Animation>;
 		
-    auto process_node(const aiScene* scene, const aiNode* node)->void;
+    auto process_meshes(const aiScene* scene)->std::vector<Mesh>;
     auto process_mesh(const aiScene* scene, const aiMesh* assimp_mesh)->Mesh;
     auto process_material(const aiMaterial* material)->MaterialSpec;
 
     bool IS_CORE_ASSET = false;
 
-    Model::Assets::Model LoadAnimatedModel(const std::string& path)
+    ::Model LoadModel(const std::string& path)
     {
         auto importer = Assimp::Importer{};
 
@@ -70,26 +70,39 @@ namespace Vakol::Controller
             importer.ReadFile("coreAssets/models/error.obj", aiProcess_Triangulate);
         }
 
-
-        process_node(scene, scene->mRootNode);
-
+        auto meshes = process_meshes(scene);
         auto animations = extract_animations(scene);
 
         return {meshes, animations};
     }
 
-    // recursively iterate through each node for meshes
-    auto process_node(const aiScene* scene, const aiNode* node)->void
+    // iteratively iterate through each node for meshes
+    auto process_meshes(const aiScene* scene)->std::vector<Mesh>
     {
-        // Fetch meshes in current node
-	    for (unsigned int i = 0; i < node->mNumMeshes; ++i)
-	    {
-            const auto* mesh = scene->mMeshes[node->mMeshes[i]];
-            meshes.push_back(process_mesh(scene, mesh));
-	    }
+        std::vector<Mesh> meshes;
 
-        for (unsigned int i = 0; i < node->mNumChildren; ++i)
-            process_node(scene, node->mChildren[i]);
+        std::stack<const aiNode*> nodes;
+
+        nodes.push(scene->mRootNode);
+
+        while(!nodes.empty())
+        {
+            const aiNode* const node = nodes.top(); // current node
+            nodes.pop();
+
+            // Fetch meshes in current node
+            for (unsigned int i = 0; i < node->mNumMeshes; ++i)
+            {
+                const auto* const mesh = scene->mMeshes[node->mMeshes[i]];
+                
+                meshes.push_back(process_mesh(scene, mesh));
+            }
+
+            for (unsigned int i = 0; i < node->mNumChildren; ++i)
+                nodes.push(node->mChildren[i]);
+        }
+
+        return meshes;
     }
 
     auto process_mesh(const aiScene* scene, const aiMesh* assimp_mesh)->Mesh

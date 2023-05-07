@@ -3,7 +3,7 @@
 #include <Controller/AssetLoader/ModelLoader.hpp>
 #include <Controller/AssetLoader/TextureLoader.hpp>
 
-using namespace Assets;
+using namespace Vakol::Model::Assets;
 
 namespace Vakol::Controller 
 {
@@ -11,17 +11,17 @@ namespace Vakol::Controller
     std::string AssetLoader::texture_path = "assets/textures/";
     std::string AssetLoader::shader_path = "assets/shaders/";
 
-    std::unordered_map<std::string, std::shared_ptr<Assets::Texture>> AssetLoader::m_TextureMap;
-    std::unordered_map<std::string, std::shared_ptr<Assets::Model>> AssetLoader::m_ModelMap;
-    std::unordered_map<std::string, std::shared_ptr<Assets::Shader>> AssetLoader::m_ShaderMap;
+    std::unordered_map<std::string, std::shared_ptr<Texture>> AssetLoader::m_TextureMap;
+    std::unordered_map<std::string, std::shared_ptr<::Model>> AssetLoader::m_ModelMap;
+    std::unordered_map<std::string, std::shared_ptr<Shader>> AssetLoader::m_ShaderMap;
 
-    Assets::Texture& AssetLoader::GetTexture(std::string& file) 
+    Texture& AssetLoader::GetTexture(std::string& file) 
     {
-        std::shared_ptr<Assets::Texture> ret;
+        std::shared_ptr<Texture> ret;
 
         if (const auto itr = m_TextureMap.find(file); itr == m_TextureMap.end()) 
         {
-            ret = std::make_shared<Assets::Texture>(file);
+            ret = std::make_shared<Texture>(file);
 
             ret->SetID(LoadTexture(ret->path, false, false));
 
@@ -32,14 +32,12 @@ namespace Vakol::Controller
         return *ret;
     }
 
-    std::shared_ptr<Assets::Model> AssetLoader::GetModel(const std::string& file) 
+    std::shared_ptr<::Model> AssetLoader::GetModel(const std::string& file) 
     {
-        std::shared_ptr<Assets::Model> ret;
+        std::shared_ptr<::Model> ret;
 
-        const auto itr = m_ModelMap.find(file);
-
-        if (itr == m_ModelMap.end()) {
-            ret = std::make_shared<Assets::Model>(LoadModel(file));
+        if (const auto itr = m_ModelMap.find(file); itr == m_ModelMap.end()) {
+            ret = std::make_shared<::Model>(LoadModel(file));
 
             if (ret->meshes().empty())
             {
@@ -51,6 +49,7 @@ namespace Vakol::Controller
         } else {
             ret = m_ModelMap[file];
         }
+
         return ret;
     }
 
