@@ -12,6 +12,7 @@
 #pragma warning(push)
 #pragma warning(disable:4201)
 #include <glm/gtc/quaternion.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #pragma warning(pop)
 
 #include <Controller/Logger.hpp>
@@ -43,11 +44,11 @@ namespace Vakol::Controller
 
     auto extract_vertices(const aiMesh* mesh) -> std::vector<Vertex>;
     auto extract_indices(const aiMesh* mesh)-> std::vector<unsigned int>;
-    auto extract_bones(const aiMesh* mesh, std::vector<Vertex>& vertices)->std::pair <std::vector<Bone>, std::unordered_map<std::string, int>>;
-    auto extract_textures(const aiMaterial* material, const aiTextureType type)-> std::vector<Texture>;
-    auto extract_animations(const aiScene* scene)->std::vector<Animation>;
+    auto extract_bones(const aiMesh* mesh, std::vector<Vertex>& vertices)->void;
+    auto extract_textures(const aiMaterial* material, aiTextureType type)->std::vector<Texture>;
+    auto extract_animation(const aiScene* scene, int animation_index, BoneInfoRemap& bone_info)->Animation;
 		
-    auto process_meshes(const aiScene* scene)->std::vector<Mesh>;
+    auto process_meshes(const aiScene* scene, BoneInfoRemap& bone_info)->std::vector<Mesh>;
     auto process_mesh(const aiScene* scene, const aiMesh* assimp_mesh)->Mesh;
     auto process_material(const aiMaterial* material)->MaterialSpec;
 
@@ -70,10 +71,12 @@ namespace Vakol::Controller
             importer.ReadFile("coreAssets/models/error.obj", aiProcess_Triangulate);
         }
 
-        auto meshes = process_meshes(scene);
-        auto animations = extract_animations(scene);
+        BoneInfoRemap bone_info;
 
-        return {meshes, animations};
+        auto meshes = process_meshes(scene, bone_info);
+        auto animation = extract_animation(scene, -1, bone_info);
+
+        return {meshes, animation };
     }
 
     // iteratively iterate through each node for meshes
@@ -109,10 +112,11 @@ namespace Vakol::Controller
     {
     	auto vertices = extract_vertices(assimp_mesh);
     	auto indices = extract_indices(assimp_mesh);
-        auto [bones, bone_map] = extract_bones(assimp_mesh, vertices);
+        //auto [bones, bone_map] = extract_bones(assimp_mesh, vertices);
         auto material = process_material(scene->mMaterials[assimp_mesh->mMaterialIndex]);
 
-        return { vertices, indices, bones, bone_map, material };
+        //return { vertices, indices, bones, bone_map, material };
+        return { vertices, indices, material };
     }
 
     auto process_material(const aiMaterial* material)->MaterialSpec
@@ -187,46 +191,30 @@ namespace Vakol::Controller
         return indices;
     }
 
-    auto extract_bones(const aiMesh* mesh, std::vector<Vertex>& vertices) -> std::pair<std::vector<Bone>, std::unordered_map<std::string, int>>
+    auto extract_bones(const aiMesh* mesh, std::vector<Vertex>& vertices)->void
     {
-        std::vector<Bone> bones;
-        std::unordered_map<std::string, int> bone_map;
+        auto add_bone_weights = [](Vertex& vertex, const int bone_index, float bone_weight)
+        {
+            // There should only be up to 4 bone influences supported.
+            const auto itr = std::find_if(std::begin(vertex.bone_ids), std::end(vertex.bone_ids), [&](const int index)
+            {
+	            return index < 0 && index != bone_index; // if index = -1 (initial index) AND ...
+            });
 
-        VK_TRACE("Num Bones: {0}", mesh->mNumBones);
+            VK_ASSERT(itr != std::end(vertex.bone_ids), "\n\nEither more than 4 bones per vertex OR duplicated bone.");
+
+            const size_t i = std::distance(std::begin(vertex.bone_ids), itr); // Number of elements between two iterators
+
+            vertex.bone_ids[i] = bone_index;
+            vertex.bone_weights[i] = bone_weight;
+        };
 
         for (unsigned int i = 0; i < mesh->mNumBones; ++i)
         {
-            const auto& imported_bone = *mesh->mBones[i];
+            const aiString& bone_name = mesh->mBones[i]->mName;
 
-        	auto name = std::string { imported_bone.mName.data };
-
-            if (bone_map.find(name) == bone_map.end())
-            {
-                auto bone = Bone{};
-
-            	bone.name = name;
-                bone.index = static_cast<int>(bone_map.size());
-                bone.offset = to_glm(imported_bone.mOffsetMatrix); // inverse-bind pose matrix
-
-                bone_map[bone.name] = bone.index;
-
-                bones.push_back(std::move(bone));
-            }
-
-            const auto bone_index = bone_map.at(name);
-
-            for (unsigned int j = 0; j < imported_bone.mNumWeights; ++j)
-            {
-                const auto& imported_weight = imported_bone.mWeights[j];
-                const auto index = static_cast<int>(imported_weight.mVertexId);
-                const auto bone_weight = imported_weight.mWeight;
-
-                std::fill(std::begin(vertices[index].bone_ids), std::end(vertices[index].bone_ids), bone_index);
-                std::fill(std::begin(vertices[index].bone_weights), std::end(vertices[index].bone_weights), bone_weight);
-            }
+            const auto bone_index = 
         }
-
-        return std::make_pair(bones, bone_map);
     }
 
     auto extract_textures(const aiMaterial* material, const aiTextureType type)->std::vector<Texture>
@@ -256,48 +244,84 @@ namespace Vakol::Controller
         return textures;
     }
 
-    auto extract_animations(const aiScene* scene)->std::vector<Animation>
+    auto extract_animations(const aiScene* scene, int animation_index, BoneInfoRemap& bone_info)->Animation
     {
-        std::vector<Animation> animations;
-
-        VK_TRACE("Num Animations: {0}", scene->mNumAnimations);
-
-        for (unsigned int i = 0; i < scene->mNumAnimations; ++i)
+        if (scene->mNumAnimations == 0)
         {
-            const auto& imported_animation = *scene->mAnimations[i];
-
-            Animation animation{};
-
-            animation.name = std::string(imported_animation.mName.C_Str());
-            animation.frame_rate = static_cast<float>(imported_animation.mTicksPerSecond);
-            animation.duration = static_cast<float>(imported_animation.mDuration);
-
-            for (unsigned int j = 0; j < imported_animation.mNumChannels; ++j)
-            {
-                const auto& imported_animation_channel = *imported_animation.mChannels[j];
-
-                Animation::Channel channel{};
-                channel.name = std::string(imported_animation_channel.mNodeName.C_Str());
-
-                for (unsigned int k = 0; k < imported_animation_channel.mNumPositionKeys; ++k)
-                {
-                    Transform frame{};
-
-                    frame.position = to_glm(imported_animation_channel.mPositionKeys[k].mValue);
-                    frame.scale = to_glm(imported_animation_channel.mScalingKeys[k].mValue);
-                    frame.rotation = to_glm(imported_animation_channel.mRotationKeys[k].mValue);
-
-                    channel.frames.emplace_back(frame);
-                }
-
-                animation.channels.emplace_back(std::move(channel));
-            }
-
-            VK_TRACE("Loaded Animation: {0} with {1} channels.", animation.name, animation.channels.size());
-
-            animations.emplace_back(std::move(animation));
+            VK_WARN("No Animations Found!");
+            return {};
         }
 
-        return animations;
+        animation_index = std::max(0, animation_index);
+
+        VK_ASSERT(static_cast<unsigned int>(animation_index) < scene->mNumAnimations, "No");
+
+        const aiAnimation* const animation = scene->mAnimations[animation_index];
+
+        const auto duration = static_cast<float>(animation->mDuration);
+        const auto ticks_per_second = static_cast<float>(animation->mTicksPerSecond);
+
+        std::vector<AnimNode> nodes;
+        std::vector<const aiString*> node_names;
+
+        struct Node
+        {
+            const aiNode* src = nullptr;
+            int parent = -1;
+        };
+
+        std::stack<Node> node_search;
+        node_search.push(Node{ scene->mRootNode, -1 }); // -1 represents no associated parent node
+
+        while (!node_search.empty())
+        {
+	        const auto [src, parent] = node_search.top();
+            node_search.pop();
+
+            AnimNode node;
+            node.parent = parent;
+            node.node_transform = to_glm(src->mTransformation);
+
+            VK_ASSERT(node.parent < static_cast<int>(nodes.size()), "doin it wrong");
+
+            nodes.push_back(node);
+            node_names.push_back(&src->mName);
+
+            const auto parent_index = static_cast<int>(nodes.size() - 1);
+
+            for (unsigned int i = 0; i < src->mNumChildren; ++i)
+                node_search.push(Node{ src->mChildren[i], parent_index });
+        }
+
+        for (unsigned int i = 0; i < animation->mNumChannels; ++i)
+        {
+	        const auto channel = animation->mChannels[i];
+
+            const aiString& bone_name = channel->mNodeName;
+
+            auto itr = std::find_if(node_names.cbegin(), node_names.cend(), [&bone_name](const aiString* node_name)
+            {
+                return bone_name == *node_name;
+            });
+
+            VK_ASSERT(itr != node_names.end(), "\n\nNo node matching a bone.");
+
+            const auto index = static_cast<int>(std::distance(node_names.cbegin(), itr));
+
+            const BoneInfo* info = bone_info.get(bone_name.C_Str());
+
+            VK_ASSERT(info, "\n\nNo bone info remap matching a bone");
+
+            AnimNode& node = nodes[index];
+
+            VK_ASSERT(!node.bone.has_value(), "\n\nTwo or more bones matching same node.");
+
+            //node.bone.emplace(extract)
+        }
+
+        const auto& root = to_glm(scene->mRootNode->mTransformation);
+        const auto bone_count = static_cast<unsigned int>(bone_info.name_to_info.size());
+
+        return Animation(glm::inverse(root), std::move(nodes), bone_count, duration, ticks_per_second);
     }
 }

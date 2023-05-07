@@ -215,8 +215,7 @@ namespace Vakol::Model
 
         if (total_elements >= 4)
         {
-            glEnableVertexAttribArray(5);
-            glVertexAttribIPointer(5, 4, GL_INT, size, reinterpret_cast<const void*>(used_elements * sizeof(float))); // Bone IDs
+            this->SetVertexAttributeData(5, 4, GL_FLOAT, GL_FALSE, size, reinterpret_cast<const void*>(used_elements * sizeof(float))); // Bone IDs
             total_elements -= 4;
             used_elements += 4;
         }
