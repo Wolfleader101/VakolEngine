@@ -88,6 +88,8 @@ namespace Vakol::View
 
     void GLRenderer::Draw([[maybe_unused]] const Controller::Time& time, const Controller::Camera& camera, const Model::Components::Transform trans, const Model::Components::Drawable& drawable) const 
     {
+        VK_ASSERT(drawable.model_ptr, "\n\nModel ptr is nullptr");
+
         const auto& shader = drawable.model_ptr->GetShader();
 
         VK_ASSERT(shader, "\n\nShader is nullptr");

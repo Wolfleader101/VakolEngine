@@ -32,7 +32,7 @@ namespace Vakol::Model::Components
         model_ptr = Controller::AssetLoader::GetModel(name);
     }
 
-    TagType::TagType(uint8_t type) : type(EntityType(type)){};
+    TagType::TagType(uint8_t type) : type(ENTITY_TYPE(type)){};
 
     Tag::Tag(const std::string& tag) : tag(tag){};
 
@@ -54,38 +54,39 @@ namespace Vakol::Model::Components
         RigidBodyPtr->enableGravity(Data.grav);
     }
 
-    void RigidBody::SetBodyType(BodyType t)
+    void RigidBody::SetBodyType(const BODY_TYPE t)
     {
         Type = t;
-        RigidBodyPtr->setType((rp3d::BodyType) Type);
+
+        RigidBodyPtr->setType(static_cast<rp3d::BodyType>(Type));
     }
 
-    void RigidBody::SetVelocity(const glm::vec3 &vel)
+    void RigidBody::SetVelocity(const glm::vec3 &vel) const
     {
-        RigidBodyPtr->setLinearVelocity(rp3d::Vector3(static_cast<rp3d::decimal>(vel.x), static_cast<rp3d::decimal>(vel.y), static_cast<rp3d::decimal>(vel.z)));
+        RigidBodyPtr->setLinearVelocity(rp3d::Vector3(vel.x, vel.y, vel.z));
     }
 
-    void RigidBody::SetAngularVelocity(const glm::vec3 &vel)
+    void RigidBody::SetAngularVelocity(const glm::vec3 &vel) const
     {
-        RigidBodyPtr->setAngularVelocity(rp3d::Vector3(static_cast<rp3d::decimal>(vel.x), static_cast<rp3d::decimal>(vel.y), static_cast<rp3d::decimal>(vel.z)));
+        RigidBodyPtr->setAngularVelocity(rp3d::Vector3(vel.x, vel.y, vel.z));
     }
 
-    void RigidBody::SetAngularDamp(float Damp)
+    void RigidBody::SetAngularDamp(const float damp) const
     {
-        RigidBodyPtr->setAngularDamping(Damp);
+        RigidBodyPtr->setAngularDamping(damp);
     }
 
-    void RigidBody::SetLinearDamp(float Damp)
+    void RigidBody::SetLinearDamp(const float damp) const
     {
-        RigidBodyPtr->setLinearDamping(Damp);
+        RigidBodyPtr->setLinearDamping(damp);
     }
 
-    Collider::Collider(RigidBody& owner, std::optional<Bounds> Data) {
+    Collider::Collider(RigidBody& owner, const std::optional<Bounds>& data) {
         OwningBody = &owner;
 
-        if (!Data.has_value()) return;
+        if (!data.has_value()) return;
 
-        bounds = Data.value();
+        bounds = data.value();
     }
 
     void Collider::SetBounds(const Bounds &data)
@@ -93,7 +94,7 @@ namespace Vakol::Model::Components
         bounds = data;
     }
 
-    Collider::Bounds getBounds(const Drawable& model) 
+    Collider::Bounds GetBounds(const Drawable& model) 
     {
         Collider::Bounds bounds;
 

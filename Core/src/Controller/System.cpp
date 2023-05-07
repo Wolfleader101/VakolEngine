@@ -6,14 +6,16 @@
 #include <Controller/Physics/PhysicsPool.hpp>
 #include <Controller/Scene.hpp>
 #include <Model/Components.hpp>
-#include <functional>
 
-using namespace Vakol::Model::Components;
+#pragma warning(push)
+#pragma warning(disable:4201)
+#include <glm/gtc/quaternion.hpp>
+#pragma warning(pop)
 
-const float PI_FLOAT = 3.1415926f;
+using namespace Components;
 
-namespace Vakol::Controller {
-
+namespace Vakol::Controller
+{
     entt::registry* System::m_registry = nullptr;
     std::shared_ptr<ScenePhysics> System::m_SP = nullptr;
     Controller::EntityList* System::Entlist = nullptr;
@@ -60,13 +62,13 @@ namespace Vakol::Controller {
 
     void System::Physics_UpdateTransforms(float factor) {
         m_registry->view<Transform, RigidBody>().each([&](auto& trans, auto& rigid) {
-            rp3d::Transform currTransform = rigid.RigidBodyPtr->getTransform();
+            rp3d::Transform curr_transform = rigid.RigidBodyPtr->getTransform();
 
             // Compute the interpolated transform of the rigid body
-            rp3d::Transform interpolatedTransform =
-                rp3d::Transform::interpolateTransforms(rigid.prevTransform, currTransform, factor);
+            const rp3d::Transform interpolatedTransform =
+                rp3d::Transform::interpolateTransforms(rigid.prevTransform, curr_transform, factor);
 
-            rigid.prevTransform = currTransform;
+            rigid.prevTransform = curr_transform;
 
             auto& interPos = interpolatedTransform.getPosition();
             trans.pos = glm::vec3(interPos.x, interPos.y, interPos.z);
@@ -91,7 +93,7 @@ namespace Vakol::Controller {
                     rigid.Data.Orientation = rigid.RigidBodyPtr->getTransform().getOrientation().getVectorV();
                     
                     
-                    rigid.Type = (RigidBody::BodyType) rigid.RigidBodyPtr->getType(); 
+                    rigid.Type = (RigidBody::BODY_TYPE) rigid.RigidBodyPtr->getType(); 
 
                     rp3d::Vector3 pos(trans.pos.x, trans.pos.y, trans.pos.z);
                     rp3d::Quaternion quat = rp3d::Quaternion::fromEulerAngles(trans.rot.x, trans.rot.y, trans.rot.z);
@@ -141,21 +143,21 @@ namespace Vakol::Controller {
 
             const Collider::Bounds& bounds = col.bounds;
 
-                if (col.ShapeName == Collider::ShapeName::BOX) 
+                if (col.ShapeName == Collider::SHAPE_NAME::BOX) 
                 {
                     col.Shape = PhysicsPool::m_Common.createBoxShape(
                         (bounds.extents) * rp3d::Vector3(trans.scale.x, trans.scale.y, trans.scale.z));
                 }
-                else if (col.ShapeName == Collider::ShapeName::SPHERE) 
+                else if (col.ShapeName == Collider::SHAPE_NAME::SPHERE) 
                 {
                     col.Shape = PhysicsPool::m_Common.createSphereShape(bounds.radius * trans.scale.x);
                 } 
-                else if (col.ShapeName == Collider::ShapeName::CAPSULE) 
+                else if (col.ShapeName == Collider::SHAPE_NAME::CAPSULE) 
                 {
                     col.Shape = PhysicsPool::m_Common.createCapsuleShape(bounds.extents.x * trans.scale.x,
                                                                         bounds.extents.y * trans.scale.y);
                 } 
-                else if (col.ShapeName == Collider::ShapeName::TRIANGLE_MESH) 
+                else if (col.ShapeName == Collider::SHAPE_NAME::TRIANGLE_MESH) 
                 {
 
                     if (!ent.HasComponent<Drawable>()) {

@@ -34,16 +34,20 @@ namespace Vakol::Controller
         return *ret;
     }
 
-    std::shared_ptr<Assets::Model> AssetLoader::GetModel(std::string& file) 
+    std::shared_ptr<Assets::Model> AssetLoader::GetModel(const std::string& file) 
     {
         std::shared_ptr<Assets::Model> ret;
 
         auto iter = m_ModelMap.find(file);
 
         if (iter == m_ModelMap.end()) {
-            ret = std::make_shared<Assets::Model>(LoadAnimatedModel(std::move(file)));
+            ret = std::make_shared<Assets::Model>(LoadAnimatedModel(file));
 
-            if (ret->meshes().empty()) return nullptr;  // if model didn't load
+            if (ret->meshes().empty())
+            {
+                VK_TRACE("no meshes found in model!");
+        		return nullptr;  // if model didn't load
+            }
 
             m_ModelMap[file] = ret;
         } else {

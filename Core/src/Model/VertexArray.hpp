@@ -2,8 +2,11 @@
 
 #include <vector>
 
+#pragma warning(push)
+#pragma warning(disable:4201)
 #include <glm/vec3.hpp>
 #include <glm/vec2.hpp>
+#pragma warning(pop)
 
 #define USE_TRIANGLE_PATCHES 0
 
@@ -60,8 +63,8 @@ namespace Vakol::Model
         const int NUM_VERTS_PER_PATCH = NUM_PATCH_PTS;
     };
 
-    std::vector<Vertex> Convert(std::vector<float>&& arr);
-	std::vector<float> Convert(std::vector<Vertex>&& arr);
+    std::vector<Vertex>& Convert(std::vector<float>& arr);
+	std::vector<float> Convert(std::vector<Vertex>& arr);
 
     class VertexArray
     {
@@ -95,8 +98,8 @@ namespace Vakol::Model
     	[[nodiscard]] int GetVertexCount() const { return this->n_vertices; }
     	[[nodiscard]] int GetIndexCount() const { return this->n_indices; }
 
-        void set(std::vector<float>&& _vertices) { this->vertices = std::move(_vertices); }
-        void set(std::vector<unsigned int>&& _indices) { this->indices = std::move(_indices); }
+        void set(std::vector<float>& in_vertices) { this->vertices = std::move(in_vertices); }
+        void set(std::vector<unsigned int>& in_indices) { this->indices = std::move(in_indices); }
 
     	[[nodiscard]] const std::vector<float>& GetConstVertices() const { return this->vertices; }
         [[nodiscard]] std::vector<float>& GetVertices() { return this->vertices; }

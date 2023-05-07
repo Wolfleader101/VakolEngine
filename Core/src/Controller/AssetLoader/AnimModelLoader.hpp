@@ -8,5 +8,5 @@ namespace Vakol::Controller
 {
 	using Model::Assets::Model;
 
-	Model LoadAnimatedModel(std::string&& path);
+	Model LoadAnimatedModel(const std::string& path);
 }

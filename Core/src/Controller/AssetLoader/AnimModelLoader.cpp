@@ -42,17 +42,17 @@ namespace Vakol::Controller
 
     std::vector<Mesh> meshes;
 
-    auto extract_vertices(const aiMesh& mesh) -> std::vector<Vertex>;
-    auto extract_indices(const aiMesh& mesh)-> std::vector<unsigned int>;
-    auto extract_bones(const aiMesh& mesh, std::vector<Vertex>& vertices)->std::pair <std::vector<Bone>, std::unordered_map<std::string, int>>;
-    auto extract_textures(const aiMaterial& material)-> std::vector<Texture>;
+    auto extract_vertices(const aiMesh* mesh) -> std::vector<Vertex>;
+    auto extract_indices(const aiMesh* mesh)-> std::vector<unsigned int>;
+    auto extract_bones(const aiMesh* mesh, std::vector<Vertex>& vertices)->std::pair <std::vector<Bone>, std::unordered_map<std::string, int>>;
+    auto extract_textures(const aiMaterial* material)-> std::vector<Texture>;
 		
     auto process_node(const aiScene* scene, const aiNode* node)->void;
     auto process_mesh(const aiScene* scene, const aiMesh* assimp_mesh)->Mesh;
     auto process_material(const aiMaterial* material)->MaterialSpec;
 
 
-    Model LoadAnimatedModel(std::string&& path)
+    Model LoadAnimatedModel(const std::string& path)
     {
         auto importer = Assimp::Importer{};
 
@@ -70,6 +70,7 @@ namespace Vakol::Controller
         Model model {};
 
         model.meshes().reserve(scene->mNumMeshes);
+        process_node(scene, scene->mRootNode);
 
         return { meshes };
     }
@@ -90,44 +91,41 @@ namespace Vakol::Controller
 
     auto process_mesh(const aiScene* scene, const aiMesh* assimp_mesh)->Mesh
     {
-        Mesh mesh{};
-
-        mesh.set(extract_vertices(*assimp_mesh));
-        mesh.set(extract_indices(*assimp_mesh));
+        Mesh mesh{extract_vertices(assimp_mesh), extract_indices(assimp_mesh)};
         process_material(scene->mMaterials[assimp_mesh->mMaterialIndex]);
 
-        auto [bones, bone_map] = extract_bones(*assimp_mesh, std::move(Vakol::Model::Convert(std::move(mesh.vertices()))));
-        mesh.set(bones);
-        mesh.set(bone_map);
+        // auto [bones, bone_map] = extract_bones(assimp_mesh, std::move(Vakol::Model::Convert(std::move(mesh.vertices()))));
+        // mesh.set(bones);
+        // mesh.set(bone_map);
 
         return mesh;
     }
 
     auto process_material(const aiMaterial* material)->MaterialSpec
     {
-        auto diffuse_maps = extract_textures(*material);
+        auto diffuse_maps = extract_textures(material);
 
         return {};
     }
 
-    auto extract_vertices(const aiMesh& mesh)-> std::vector<Vertex>
+    auto extract_vertices(const aiMesh* mesh)-> std::vector<Vertex>
     {
         std::vector<Vertex> vertices;
 
-        vertices.reserve(mesh.mNumVertices);
+        vertices.reserve(mesh->mNumVertices);
 
-        for (unsigned int i = 0; i < mesh.mNumVertices; ++i)
+        for (unsigned int i = 0; i < mesh->mNumVertices; ++i)
         {
             Vertex vertex {};
 
-            vertex.position = to_glm(mesh.mVertices[i]);
-            vertex.normal = to_glm(mesh.mNormals[i]);
+            vertex.position = to_glm(mesh->mVertices[i]);
+            vertex.normal = to_glm(mesh->mNormals[i]);
 
-            if (mesh.HasTextureCoords(0))
+            if (mesh->HasTextureCoords(0))
             {
-                vertex.uv = to_glm(mesh.mTextureCoords[0][i]);
-                vertex.tangent = to_glm(mesh.mTangents[i]);
-                vertex.bitangent = to_glm(mesh.mBitangents[i]);
+                vertex.uv = to_glm(mesh->mTextureCoords[0][i]);
+                vertex.tangent = to_glm(mesh->mTangents[i]);
+                vertex.bitangent = to_glm(mesh->mBitangents[i]);
             }
 
             std::fill(std::begin(vertex.bone_ids), std::end(vertex.bone_ids), -1);
@@ -139,15 +137,15 @@ namespace Vakol::Controller
         return vertices;
     }
 
-    auto extract_indices(const aiMesh& mesh) -> std::vector<unsigned int>
+    auto extract_indices(const aiMesh* mesh) -> std::vector<unsigned int>
     {
         std::vector<unsigned int> indices;
 
-        indices.reserve(static_cast<size_t>(mesh.mNumFaces) * 3);
+        indices.reserve(static_cast<size_t>(mesh->mNumFaces) * 3);
 
-        for (unsigned int i = 0; i < mesh.mNumFaces; ++i)
+        for (unsigned int i = 0; i < mesh->mNumFaces; ++i)
         {
-            const auto face = mesh.mFaces[i];
+            const auto face = mesh->mFaces[i];
 
             for (unsigned int j = 0; j < face.mNumIndices; ++j)
                 indices.push_back(face.mIndices[j]);
@@ -156,14 +154,14 @@ namespace Vakol::Controller
         return indices;
     }
 
-    auto extract_bones(const aiMesh& mesh, std::vector<Vertex>& vertices) -> std::pair<std::vector<Bone>, std::unordered_map<std::string, int>>
+    auto extract_bones(const aiMesh* mesh, std::vector<Vertex>& vertices) -> std::pair<std::vector<Bone>, std::unordered_map<std::string, int>>
     {
         std::vector<Bone> bones;
         std::unordered_map<std::string, int> bone_map;
 
-        for (unsigned int i = 0; i < mesh.mNumBones; ++i)
+        for (unsigned int i = 0; i < mesh->mNumBones; ++i)
         {
-            const auto& imported_bone = *mesh.mBones[i];
+            const auto& imported_bone = *mesh->mBones[i];
 
         	auto name = std::string { imported_bone.mName.data };
 
@@ -196,7 +194,7 @@ namespace Vakol::Controller
         return std::make_pair(bones, bone_map);
     }
 
-    auto extract_textures(const aiMaterial& material)->std::vector<Texture>
+    auto extract_textures(const aiMaterial* material)->std::vector<Texture>
     {
         std::vector<Texture> textures;
 

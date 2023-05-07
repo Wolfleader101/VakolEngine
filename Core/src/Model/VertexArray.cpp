@@ -9,12 +9,10 @@
 
 namespace Vakol::Model
 {
-    std::vector<Vertex> Convert(std::vector<float>&& arr)
+    std::vector<Vertex>& Convert(std::vector<float>& arr)
     {
-        std::vector<Vertex> output;
-
-        const auto arr_size = static_cast<int>(arr.size());
-        constexpr auto elements = static_cast<int>(sizeof(Vertex) / sizeof(float));
+        const auto arr_size = arr.size();
+        constexpr auto elements = sizeof(Vertex) / sizeof(float);
 
 #if VERBOSE_DEBUG
         VK_TRACE("Converting vector of Vertex to vector of floats.");
@@ -33,7 +31,11 @@ namespace Vakol::Model
         VK_ASSERT(!arr.empty(), "\n\nNo point converting an empty vector");
         VK_ASSERT(elements == 3 || elements == 5 || elements == 8 || elements == 14 || elements == 22, "\n\nUnknown Vertex size.");
 
-        for (int i = 0; i < arr_size; i += elements)
+    	std::vector<Vertex> output;
+
+        output.reserve(arr_size / elements);
+
+        for (auto i = static_cast<size_t>(0); i < arr_size; i += elements)
         {
             Vertex vertex{};
 
@@ -61,12 +63,12 @@ namespace Vakol::Model
         return output;
     }
 
-	std::vector<float> Convert(std::vector<Vertex>&& arr)
+	std::vector<float> Convert(std::vector<Vertex>& arr)
     {
         std::vector<float> output;
 
-        const auto arr_size = static_cast<int>(arr.size());
-        constexpr auto elements = static_cast<int>(sizeof(Vertex) / sizeof(float));
+        const auto arr_size = arr.size();
+        constexpr auto elements = sizeof(Vertex) / sizeof(float);
 
 #if VERBOSE_DEBUG
         VK_TRACE("Converting vector of floats to vector of Vertex.");
@@ -87,7 +89,7 @@ namespace Vakol::Model
 
         output.reserve(arr.size() * elements);
 
-        for (int i = 0; i < arr_size; i++) // this is really hacky, but it works, aaaaand i'm just lazy
+        for (auto i = static_cast<size_t>(0); i < arr_size; i++) // this is really hacky, but it works, aaaaand i'm just lazy
         {
             const auto& [position, normal, uv, tangent, bitangent, bone_ids, bone_weights] = arr.at(i);
 
@@ -110,10 +112,10 @@ namespace Vakol::Model
             output.push_back(bitangent.y);
             output.push_back(bitangent.z);
 
-            output.push_back(bone_ids[0]); // Position 5
-            output.push_back(bone_ids[1]);
-            output.push_back(bone_ids[2]);
-            output.push_back(bone_ids[3]);
+            output.push_back(static_cast<float>(bone_ids[0])); // Position 5
+            output.push_back(static_cast<float>(bone_ids[1]));
+            output.push_back(static_cast<float>(bone_ids[2]));
+            output.push_back(static_cast<float>(bone_ids[3]));
 
             output.push_back(bone_weights[0]); // Position 6
             output.push_back(bone_weights[1]);

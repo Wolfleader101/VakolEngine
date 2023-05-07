@@ -148,7 +148,7 @@ namespace Vakol::Controller
 			return AssetLoader::GetTexture(path); // no checks... just raw doggin it LOL
         });
 
-        lua.set_function("load_model", [](std::string& path) {
+        lua.set_function("load_model", [](const std::string& path) {
 	        const auto model = AssetLoader::GetModel(path);
 
             if (model == nullptr) return false;
@@ -284,7 +284,7 @@ namespace Vakol::Controller
         });
 #pragma warning(pop)
 
-        entity_type.set_function("add_model", [](Entity* ent, std::string& path) 
+        entity_type.set_function("add_model", [](Entity* ent, const std::string& path) 
         {
             if (!ent->HasComponent<Drawable>()) ent->AddComponent<Components::Drawable>();
 
@@ -460,9 +460,9 @@ namespace Vakol::Controller
         auto rigidType = lua.new_usertype<Components::RigidBody>("rigidBody");
 
             lua["BodyType"] = lua.create_table_with( 
-                    "Static", RigidBody::BodyType::STATIC, 
-                    "Kinematic", RigidBody::BodyType::KINEMATIC, 
-                    "Dynamic", RigidBody::BodyType::DYNAMIC
+                    "Static", RigidBody::BODY_TYPE::STATIC, 
+                    "Kinematic", RigidBody::BODY_TYPE::KINEMATIC, 
+                    "Dynamic", RigidBody::BODY_TYPE::DYNAMIC
                     );
 
             rigidType["BodyType"] = &Components::RigidBody::Type;
@@ -481,10 +481,10 @@ namespace Vakol::Controller
         auto colliderType = lua.new_usertype<Components::Collider>("collider");
 
             lua["Shape"] = lua.create_table_with(
-                    "Box", Collider::ShapeName::BOX,
-                    "Sphere", Collider::ShapeName::SPHERE,
-                    "Capsule", Collider::ShapeName::CAPSULE,
-                    "TriangleMesh", Collider::ShapeName::TRIANGLE_MESH
+                    "Box", Collider::SHAPE_NAME::BOX,
+                    "Sphere", Collider::SHAPE_NAME::SPHERE,
+                    "Capsule", Collider::SHAPE_NAME::CAPSULE,
+                    "TriangleMesh", Collider::SHAPE_NAME::TRIANGLE_MESH
                     );
             
             colliderType["Shape"] = &Components::Collider::ShapeName;
@@ -513,7 +513,7 @@ namespace Vakol::Controller
             rigid->ToggleGravity();
         });
 
-        rigidType.set_function("set_body_type", [](Components::RigidBody* rigid, Components::RigidBody::BodyType type) 
+        rigidType.set_function("set_body_type", [](Components::RigidBody* rigid, Components::RigidBody::BODY_TYPE type) 
         {
             rigid->SetBodyType(type);
         });

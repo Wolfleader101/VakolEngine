@@ -4,12 +4,15 @@
 
 #include <Controller/LuaState.hpp>
 #include <Controller/Physics/ScenePhysics.hpp>
+
+#pragma warning(push)
+#pragma warning(disable:4201)
 #include <glm/glm.hpp>
-#include <glm/gtx/quaternion.hpp>
+#pragma warning(pop)
+
 #include <memory>
 #include <string>
 
-#include "Controller/LuaState.hpp"
 #include "Controller/Scene.hpp"
 #include "Entity.hpp"
 #include "Model/Assets/Model.hpp"
@@ -41,7 +44,7 @@ namespace Vakol::Model::Components {
          *
          * @param pos posiiton
          * @param rot rotation
-         * @param sca scale
+         * @param scale
          */
         Transform(const glm::vec3& pos, const glm::vec3& rot, const glm::vec3& scale);
 
@@ -77,10 +80,10 @@ namespace Vakol::Model::Components {
          * @brief Returns bool indicating if string is empty
          *
          */
-        bool IsEmpty() { return tag.size() == 0; }
+        bool IsEmpty() const { return tag.size() == 0; }
 
         Tag() = default;
-        Tag(const std::string&);
+        explicit Tag(const std::string&);
 
         std::string tag; /**< String object containing data*/
 
@@ -91,11 +94,11 @@ namespace Vakol::Model::Components {
     };
 
     /**
-     * @enum EntityType
+     * @enum ENTITY_TYPE
      *
      * @brief enum value indicating the type of entity it is
      */
-    enum EntityType { UNKNOWN, WORLD, PLAYER, ENEMY, FRIEND, COLLECTABLE, EXIT };
+    enum ENTITY_TYPE { UNKNOWN, WORLD, PLAYER, ENEMY, FRIEND, COLLECTABLE, EXIT };
 
     /**
      *
@@ -105,10 +108,10 @@ namespace Vakol::Model::Components {
      *
      */
     struct TagType {
-        EntityType type; /**< Type of entity */
+        ENTITY_TYPE type; /**< Type of entity */
 
         TagType() = default;
-        TagType(uint8_t);
+        explicit TagType(uint8_t);
 
         template <class Archive>
         void serialize(Archive& ar) {
@@ -126,7 +129,7 @@ namespace Vakol::Model::Components {
         std::string script_name;
 
         Script() = default;
-        Script(const std::string& name);
+        explicit Script(const std::string& name);
 
         Script(const std::string& script, Controller::LuaState& lua, Model::Entity& entity, Controller::Scene& scene);
 
@@ -138,9 +141,9 @@ namespace Vakol::Model::Components {
 
     struct Drawable {
         Drawable() = default;
-        Drawable(std::string&& file);
+        explicit Drawable(std::string&& file);
         std::string name; //for serialization
-        std::shared_ptr<Vakol::Model::Assets::Model> model_ptr;
+        std::shared_ptr<Assets::Model> model_ptr;
 
         template<class Archive>
         void serialize(Archive& ar)
@@ -154,7 +157,7 @@ namespace Vakol::Model::Components {
 
     struct RigidBody
     {
-        enum BodyType
+        enum BODY_TYPE
         {
             STATIC = rp3d::BodyType::STATIC,
             KINEMATIC = rp3d::BodyType::KINEMATIC,
@@ -177,16 +180,16 @@ namespace Vakol::Model::Components {
 
         void SetRigidData(const RigidData& data);
         void ToggleGravity();
-        void SetBodyType(BodyType t);
-        void SetVelocity(const glm::vec3& vel);
-        void SetAngularVelocity(const glm::vec3& vel);
-        void SetLinearDamp(float damp);
-        void SetAngularDamp(float damp);
+        void SetBodyType(BODY_TYPE t);
+        void SetVelocity(const glm::vec3& vel) const;
+        void SetAngularVelocity(const glm::vec3& vel) const;
+        void SetLinearDamp(float damp) const;
+        void SetAngularDamp(float damp) const;
 
         //rigid body
         std::shared_ptr<ScenePhysics> owningWorld = nullptr;
         rp3d::RigidBody* RigidBodyPtr = nullptr;
-        BodyType Type = BodyType::DYNAMIC; //default
+        BODY_TYPE Type = BODY_TYPE::DYNAMIC; //default
         RigidData Data;
 
         rp3d::Transform prevTransform;
@@ -213,7 +216,7 @@ namespace Vakol::Model::Components {
 
     struct Collider
     {
-        enum ShapeName {
+        enum SHAPE_NAME {
             BOX,
             SPHERE,
             CAPSULE,
@@ -244,12 +247,12 @@ namespace Vakol::Model::Components {
         };
 
         Collider() = default;
-        Collider(RigidBody& owner, std::optional<Bounds> Data);
+        Collider(RigidBody& owner, const std::optional<Bounds>& data);
 
         RigidBody* OwningBody = nullptr;
         rp3d::Collider* ColliderPtr = nullptr;
         rp3d::CollisionShape* Shape = nullptr;
-        ShapeName ShapeName = BOX; 
+        SHAPE_NAME ShapeName = BOX; 
 
         Bounds bounds;
 
@@ -265,5 +268,5 @@ namespace Vakol::Model::Components {
         }
     };
 
-    Collider::Bounds getBounds(const Drawable& model);
+    Collider::Bounds GetBounds(const Drawable& model);
 }  // namespace Vakol::Model::Components

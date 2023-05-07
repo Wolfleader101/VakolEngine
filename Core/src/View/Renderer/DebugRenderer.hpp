@@ -1,7 +1,12 @@
 #pragma once
 
 #include <glad/glad.h>
+
+#pragma warning(push)
+#pragma warning(disable:4201)
 #include <glm/vec3.hpp>
+#pragma warning(pop)
+
 #include <reactphysics3d/reactphysics3d.h>
 
 #include <memory>

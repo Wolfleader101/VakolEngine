@@ -5,14 +5,14 @@
 #include <Controller/Camera.hpp>
 #include <Controller/Terrain.hpp>
 #include <Controller/Time.hpp>
+
 #include <View/Renderer/DebugRenderer.hpp>
 
 class System;
 
-namespace Vakol::Controller::Physics {
+namespace Vakol::Controller::Physics
+{
     class PhysicsPool;
-
-    using Terrain = Vakol::Controller::Terrain;
 
     class ScenePhysics {
        public:
