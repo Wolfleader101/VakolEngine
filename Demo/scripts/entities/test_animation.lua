@@ -5,10 +5,14 @@ function init(scene, entity)
     entity:get_transform().rot = Vector3.new(0.0, -90.0, 0.0);
 
     local model = entity:add_model("assets/models/dancing_vampire.dae") -- get model and add a drawable component
-    model:set_shader("coreAssets/shaders/basic.prog") -- set the shader on the model (automatically binds it)
+    model:set_shader("coreAssets/shaders/animation.prog") -- set the shader on the model (automatically binds it)
     
     local shader = model:get_shader(); -- get the shader from the model
+
     shader:set_int("diffuse_map", 0);
+    shader:set_int("specular_map", 1);
+    shader:set_int("normal_map", 2);
+    shader:set_int("emission_map", 3);
 end
 
 function update(scene, entity)

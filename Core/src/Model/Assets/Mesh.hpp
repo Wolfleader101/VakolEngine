@@ -20,7 +20,10 @@ namespace Vakol::Model::Assets
     public:
         Mesh() = default;
 
-        Mesh(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, MaterialSpec&& spec = std::move(DEFAULT))
+        Mesh(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, std::vector<Bone>& bones, std::unordered_map<std::string, int>& bone_map, MaterialSpec& spec = DEFAULT)
+	        : m_vertex_array(std::make_shared<VertexArray>(Convert(vertices), std::move(indices), static_cast<int>(sizeof(Vertex)))), m_bones(std::move(bones)), m_bone_map(std::move(bone_map)), m_material(std::make_shared<Material>(std::move(spec))) {}
+
+        Mesh(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, MaterialSpec& spec = DEFAULT)
             : m_vertex_array(std::make_shared<VertexArray>(Convert(vertices), std::move(indices), static_cast<int>(sizeof(Vertex)))), m_material(std::make_shared<Material>(std::move(spec))) {}
 
         Mesh(std::vector<float>& vertices, std::vector<unsigned int>& indices, const int size, MaterialSpec&& spec = std::move(DEFAULT))
@@ -32,9 +35,6 @@ namespace Vakol::Model::Assets
         void SetMaterial(MaterialSpec&& spec) { if (!this->m_material) this->m_material = std::make_shared<Material>(std::move(spec)); }
 
         [[nodiscard]] const std::shared_ptr<Material>& GetMaterial() const { return this->m_material; }
-
-        void set(std::vector<Bone>& in_bones) { this->bones = std::move(in_bones); }
-        void set(std::unordered_map<std::string, int>& map) { this->bone_map = std::move(map); }
 
         [[nodiscard]] const std::vector<float>& const_vertices() const { return this->m_vertex_array->GetConstVertices(); }
 
@@ -60,9 +60,10 @@ namespace Vakol::Model::Assets
     private:
         std::shared_ptr<VertexArray> m_vertex_array;
 
-    	std::shared_ptr<Material> m_material;
+        std::vector<Bone> m_bones;
 
-        std::vector<Bone> bones;
-        std::unordered_map<std::string, int> bone_map;
+        std::unordered_map<std::string, int> m_bone_map;
+
+    	std::shared_ptr<Material> m_material;
     };
 }

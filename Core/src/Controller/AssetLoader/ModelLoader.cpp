@@ -20,7 +20,7 @@ void ProcessNode(const aiNode* node, const aiScene* scene);
 Vakol::Model::Assets::Mesh ProcessMesh(const aiMesh* mesh, const aiScene* scene);
 MaterialSpec ProcessMaterial(const aiMaterial* mat);
 
-std::vector<Texture> LoadMaterialTextures(const aiMaterial* mat, aiTextureType type, const std::string& typeName);
+std::vector<Texture> LoadMaterialTextures(const aiMaterial* mat, aiTextureType type);
 
 std::string directory;
 
@@ -49,7 +49,7 @@ namespace Vakol::Controller
 
         ::ProcessNode(scene->mRootNode, scene);
 
-        return { meshes };
+        return { std::move(meshes) };
     }
 }
 
@@ -146,25 +146,25 @@ MaterialSpec ProcessMaterial(const aiMaterial* mat)
     mat->Get(AI_MATKEY_SHININESS, shininess);
 
     // Diffuse Maps
-    std::vector<Texture> diffuse_maps = LoadMaterialTextures(mat, aiTextureType_DIFFUSE, "diffuse_map");
+    std::vector<Texture> diffuse_maps = LoadMaterialTextures(mat, aiTextureType_DIFFUSE);
     textures.insert(textures.end(), diffuse_maps.begin(), diffuse_maps.end());
 
     // Specular Maps
-    std::vector<Texture> specular_maps = LoadMaterialTextures(mat, aiTextureType_SPECULAR, "specular_map");
+    std::vector<Texture> specular_maps = LoadMaterialTextures(mat, aiTextureType_SPECULAR);
     textures.insert(textures.end(), specular_maps.begin(), specular_maps.end());
 
     // Normal Maps
-    std::vector<Texture> normal_maps = LoadMaterialTextures(mat, aiTextureType_NORMALS, "normal_map");
+    std::vector<Texture> normal_maps = LoadMaterialTextures(mat, aiTextureType_NORMALS);
     textures.insert(textures.end(), normal_maps.begin(), normal_maps.end());
 
     // Emissive Maps
-    std::vector<Texture> emissive_maps = LoadMaterialTextures(mat, aiTextureType_EMISSIVE, "emissive_map");
+    std::vector<Texture> emissive_maps = LoadMaterialTextures(mat, aiTextureType_EMISSIVE);
     textures.insert(textures.end(), emissive_maps.begin(), emissive_maps.end());
 
     return { to_glm(ambient), to_glm(diffuse), to_glm(specular), to_glm(emissive), shininess, textures };
 }
 
-std::vector<Texture> LoadMaterialTextures(const aiMaterial* mat, const aiTextureType type, const std::string& typeName) 
+std::vector<Texture> LoadMaterialTextures(const aiMaterial* mat, const aiTextureType type) 
 {
     std::vector<Texture> textures;
 
@@ -195,7 +195,6 @@ std::vector<Texture> LoadMaterialTextures(const aiMaterial* mat, const aiTexture
 
             // Don't load ID yet.
             texture.path = str.C_Str();
-            texture.type = typeName;
 
             auto final_path = IS_CORE_ASSET ? "assets/" + texture.path : "coreAssets/textures/" + texture.path;
             texture.SetID(LoadTexture(final_path, false, false));

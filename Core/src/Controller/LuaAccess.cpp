@@ -240,12 +240,12 @@ namespace Vakol::Controller
 
             if (const auto model = terrain.GetModel())
             {
-                model->GetMesh().SetDrawMode(DRAW_MODE::STRIPS);
-                model->GetMesh().SetDrawType(DRAW_TYPE::ELEMENTS);
+                model->nMesh().SetDrawMode(DRAW_MODE::STRIPS);
+                model->nMesh().SetDrawType(DRAW_TYPE::ELEMENTS);
 
-                model->GetMesh().SetDrawModeInfo((terrain.GetSize() - 1) / 1); // num strips
+                model->nMesh().SetDrawModeInfo((terrain.GetSize() - 1) / 1); // num strips
 
-                model->GetMesh().SetNumTrisPerStrip(terrain.GetSize() / 1 * 2 - 2);
+                model->nMesh().SetNumTrisPerStrip(terrain.GetSize() / 1 * 2 - 2);
 
                 ent->GetComponent<Drawable>().model_ptr = model;
             }
@@ -265,10 +265,10 @@ namespace Vakol::Controller
 
             if (const auto model = terrain.GetModel())
             {
-                model->GetMesh().SetDrawMode(DRAW_MODE::PATCHES);
-                model->GetMesh().SetDrawType(DRAW_TYPE::ARRAYS);
+                model->nMesh().SetDrawMode(DRAW_MODE::PATCHES);
+                model->nMesh().SetDrawType(DRAW_TYPE::ARRAYS);
 
-                model->GetMesh().SetDrawModeInfo(400); // num patches
+                model->nMesh().SetDrawModeInfo(400); // num patches
 
                 ent->GetComponent<Drawable>().model_ptr = model;
             }
@@ -307,7 +307,7 @@ namespace Vakol::Controller
 #pragma warning(pop)
 
         model_type.set_function("get_mesh_count", &Assets::Model::nMeshes);
-        model_type.set_function("get_mesh", &Assets::Model::GetMesh);
+        model_type.set_function("get_mesh", &Assets::Model::nMesh);
 
         model_type.set_function("set_shader", &Assets::Model::SetShader);
         model_type.set_function("get_shader", &Assets::Model::GetShader);
