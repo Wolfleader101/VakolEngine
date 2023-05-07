@@ -1,14 +1,12 @@
 #include "AssetLoader.hpp"
 
 #include <Controller/AssetLoader/ModelLoader.hpp>
-#include <Controller/AssetLoader/AnimModelLoader.hpp>
-#include <Controller/AssetLoader/ShaderLoader.hpp>
 #include <Controller/AssetLoader/TextureLoader.hpp>
 
-using namespace Vakol::Model::Assets;
+using namespace Assets;
+
 namespace Vakol::Controller 
 {
-
     std::string AssetLoader::model_path = "assets/models/";
     std::string AssetLoader::texture_path = "assets/textures/";
     std::string AssetLoader::shader_path = "assets/shaders/";
@@ -38,10 +36,10 @@ namespace Vakol::Controller
     {
         std::shared_ptr<Assets::Model> ret;
 
-        auto iter = m_ModelMap.find(file);
+        const auto itr = m_ModelMap.find(file);
 
-        if (iter == m_ModelMap.end()) {
-            ret = std::make_shared<Assets::Model>(LoadAnimatedModel(file));
+        if (itr == m_ModelMap.end()) {
+            ret = std::make_shared<Assets::Model>(LoadModel(file));
 
             if (ret->meshes().empty())
             {
@@ -56,14 +54,14 @@ namespace Vakol::Controller
         return ret;
     }
 
-    std::shared_ptr<Assets::Shader> AssetLoader::GetShader(const std::string& file) 
+    std::shared_ptr<Shader> AssetLoader::GetShader(const std::string& file) 
     {
-        std::shared_ptr<Assets::Shader> ret;
+        std::shared_ptr<Shader> ret;
 
-        auto iter = m_ShaderMap.find(file);
+        const auto itr = m_ShaderMap.find(file);
 
-        if (iter == m_ShaderMap.end()) {
-            ret = std::make_shared<Assets::Shader>(file);
+        if (itr == m_ShaderMap.end()) {
+            ret = std::make_shared<Shader>(file);
 
             if (ret->GetID() == 0) return nullptr;  // if shader didn't load
 

@@ -1,208 +1,290 @@
 #include "ModelLoader.hpp"
 
-#include <vector>
+#include <Controller/AssetLoader/FileLoader.hpp>
+#include <Controller/AssetLoader/TextureLoader.hpp>
 
 #include <assimp/postprocess.h>
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 
-#include <Controller/Logger.hpp>
-#include <Controller/AssetLoader/TextureLoader.hpp>
+#pragma warning(push)
+#pragma warning(disable:4201)
+#include <glm/gtc/quaternion.hpp>
+#pragma warning(pop)
 
-using namespace Vakol::Model::Assets;
-using Vakol::Controller::LoadTexture;
+#include <Controller/Logger.hpp>
 
 using Vakol::Model::Vertex;
 
-glm::vec3 to_glm(const aiColor3D& val) { return { val.r, val.g, val.b }; }
-
-void ProcessNode(const aiNode* node, const aiScene* scene);
-Vakol::Model::Assets::Mesh ProcessMesh(const aiMesh* mesh, const aiScene* scene);
-MaterialSpec ProcessMaterial(const aiMaterial* mat);
-
-std::vector<Texture> LoadMaterialTextures(const aiMaterial* mat, aiTextureType type);
-
-std::string directory;
-
-std::vector<Vakol::Model::Assets::Mesh> meshes;
-std::vector<Texture> textures_loaded;
-
-bool IS_CORE_ASSET = false;
+using namespace Vakol::Model::Assets;
 
 namespace Vakol::Controller
 {
-    ::Model LoadModel(const std::string& path) 
+    constexpr unsigned int ASSIMP_LOADER_OPTIONS =
+        aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs |
+        aiProcess_JoinIdenticalVertices | aiProcess_CalcTangentSpace | aiProcess_LimitBoneWeights | aiProcess_GlobalScale;
+
+    static glm::mat4 to_glm(const aiMatrix4x4& m)
     {
-        Assimp::Importer importer;
+    	glm::vec4 c1{ m.a1, m.b1, m.c1, m.d1 };
+    	glm::vec4 c2{ m.a2, m.b2, m.c2, m.d2 };
+    	glm::vec4 c3{ m.a3, m.b3, m.c3, m.d3 };
+    	glm::vec4 c4{ m.a4, m.b4, m.c4, m.d4 };
+
+        return { c1, c2, c3, c4 };
+    }
+
+    static glm::quat to_glm(aiQuaternion& v) { return { v.w, v.x, v.y, v.z }; }
+
+    static glm::vec3 to_glm(aiColor3D& v) { return { v.r, v.g, v.b}; }
+    static glm::vec3 to_glm(aiVector3D& v) { return { v.x, v.y, v.z }; }
+
+    std::vector<Mesh> meshes;
+
+    auto extract_vertices(const aiMesh* mesh) -> std::vector<Vertex>;
+    auto extract_indices(const aiMesh* mesh)-> std::vector<unsigned int>;
+    auto extract_bones(const aiMesh* mesh, std::vector<Vertex>& vertices)->std::pair <std::vector<Bone>, std::unordered_map<std::string, int>>;
+    auto extract_textures(const aiMaterial* material, const aiTextureType type)-> std::vector<Texture>;
+    auto extract_animations(const aiScene* scene)->std::vector<Animation>;
+		
+    auto process_node(const aiScene* scene, const aiNode* node)->void;
+    auto process_mesh(const aiScene* scene, const aiMesh* assimp_mesh)->Mesh;
+    auto process_material(const aiMaterial* material)->MaterialSpec;
+
+    bool IS_CORE_ASSET = false;
+
+    Model::Assets::Model LoadAnimatedModel(const std::string& path)
+    {
+        auto importer = Assimp::Importer{};
 
         IS_CORE_ASSET = path.find("coreAssets/");
 
-        const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+        static_cast<void>(importer.SetPropertyFloat(AI_CONFIG_GLOBAL_SCALE_FACTOR_KEY, 1.0f));
+        VK_ASSERT(FileExists(path), "File could not be found!");
 
-        if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) 
+        const auto* scene = importer.ReadFile(path.c_str(), ASSIMP_LOADER_OPTIONS);
+
+        if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
         {
             VK_ERROR("ERROR::ASSIMP:: {0}", importer.GetErrorString());
             importer.ReadFile("coreAssets/models/error.obj", aiProcess_Triangulate);
         }
 
-        directory = path.substr(0, path.find_last_of('/'));
 
-        ::ProcessNode(scene->mRootNode, scene);
+        process_node(scene, scene->mRootNode);
 
-        return { std::move(meshes) };
-    }
-}
+        auto animations = extract_animations(scene);
 
-void ProcessNode(const aiNode* node, const aiScene* scene) 
-{
-    for (unsigned int i = 0; i < node->mNumMeshes; ++i) 
-    {
-        const auto mesh = scene->mMeshes[node->mMeshes[i]];
-        meshes.push_back(ProcessMesh(mesh, scene));
+        return {meshes, animations};
     }
 
-    for (unsigned int i = 0; i < node->mNumChildren; ++i)
-        ProcessNode(node->mChildren[i], scene);
-}
-
-Vakol::Model::Assets::Mesh ProcessMesh(const aiMesh* mesh, const aiScene* scene) 
-{
-    std::vector<Vertex> vertices;
-    std::vector<unsigned int> indices;
-
-    // vertices
-    for (unsigned int i = 0; i < mesh->mNumVertices; ++i) 
+    // recursively iterate through each node for meshes
+    auto process_node(const aiScene* scene, const aiNode* node)->void
     {
-        Vertex vertex{};
-        glm::vec3 vector;
+        // Fetch meshes in current node
+	    for (unsigned int i = 0; i < node->mNumMeshes; ++i)
+	    {
+            const auto* mesh = scene->mMeshes[node->mMeshes[i]];
+            meshes.push_back(process_mesh(scene, mesh));
+	    }
 
-        vector.x = mesh->mVertices[i].x;
-        vector.y = mesh->mVertices[i].y;
-        vector.z = mesh->mVertices[i].z;
+        for (unsigned int i = 0; i < node->mNumChildren; ++i)
+            process_node(scene, node->mChildren[i]);
+    }
 
-        vertex.position = vector;
+    auto process_mesh(const aiScene* scene, const aiMesh* assimp_mesh)->Mesh
+    {
+    	auto vertices = extract_vertices(assimp_mesh);
+    	auto indices = extract_indices(assimp_mesh);
+        auto [bones, bone_map] = extract_bones(assimp_mesh, vertices);
+        auto material = process_material(scene->mMaterials[assimp_mesh->mMaterialIndex]);
 
-        if (mesh->HasNormals()) {
-            vector.x = mesh->mNormals[i].x;
-            vector.y = mesh->mNormals[i].y;
-            vector.z = mesh->mNormals[i].z;
+        return { vertices, indices, bones, bone_map, material };
+    }
 
-            vertex.normal = vector;
+    auto process_material(const aiMaterial* material)->MaterialSpec
+    {
+        std::vector<Texture> textures;
+
+        aiColor3D ambient, diffuse, specular, normal, emission;
+        float shininess;
+
+        material->Get(AI_MATKEY_COLOR_AMBIENT, ambient);
+        material->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse);
+        material->Get(AI_MATKEY_COLOR_SPECULAR, specular);
+        material->Get(AI_MATKEY_COLOR_EMISSIVE, emission);
+        material->Get(AI_MATKEY_SHININESS, shininess);
+
+        auto diffuse_maps = extract_textures(material, aiTextureType_DIFFUSE);
+        auto specular_maps = extract_textures(material, aiTextureType_SPECULAR);
+        auto normal_maps = extract_textures(material, aiTextureType_NORMALS);
+        auto emission_maps = extract_textures(material, aiTextureType_EMISSIVE);
+
+        textures.insert(textures.end(), std::make_move_iterator(diffuse_maps.begin()), std::make_move_iterator(diffuse_maps.end()));
+        textures.insert(textures.end(), std::make_move_iterator(specular_maps.begin()), std::make_move_iterator(specular_maps.end()));
+        textures.insert(textures.end(), std::make_move_iterator(normal_maps.begin()), std::make_move_iterator(normal_maps.end()));
+        textures.insert(textures.end(), std::make_move_iterator(emission_maps.begin()), std::make_move_iterator(emission_maps.end()));
+
+        return {to_glm(ambient), to_glm(diffuse), to_glm(specular), to_glm(emission), shininess, std::move(textures) };
+    }
+
+    auto extract_vertices(const aiMesh* mesh)-> std::vector<Vertex>
+    {
+        std::vector<Vertex> vertices;
+
+        vertices.reserve(mesh->mNumVertices);
+
+        for (unsigned int i = 0; i < mesh->mNumVertices; ++i)
+        {
+            Vertex vertex {};
+
+            vertex.position = to_glm(mesh->mVertices[i]);
+            vertex.normal = to_glm(mesh->mNormals[i]);
+
+            if (mesh->HasTextureCoords(0))
+            {
+                vertex.uv = to_glm(mesh->mTextureCoords[0][i]);
+                vertex.tangent = to_glm(mesh->mTangents[i]);
+                vertex.bitangent = to_glm(mesh->mBitangents[i]);
+            }
+
+            std::fill(std::begin(vertex.bone_ids), std::end(vertex.bone_ids), -1);
+            std::fill(std::begin(vertex.bone_weights), std::end(vertex.bone_weights), 0.0f);
+
+            vertices.push_back(vertex);
         }
 
-        if (mesh->mTextureCoords[0]) {
-            glm::vec2 vec;
-
-            vec.x = mesh->mTextureCoords[0][i].x;
-            vec.y = mesh->mTextureCoords[0][i].y;
-
-            vertex.uv = vec;
-
-            vector.x = mesh->mTangents[i].x;
-            vector.y = mesh->mTangents[i].y;
-            vector.z = mesh->mTangents[i].z;
-
-            vertex.tangent = vector;
-
-            vector.x = mesh->mBitangents[i].x;
-            vector.y = mesh->mBitangents[i].y;
-            vector.z = mesh->mBitangents[i].z;
-
-            vertex.bitangent = vector;
-        } else
-            vertex.uv = glm::vec2(0.0f);
-
-        std::fill(std::begin(vertex.bone_ids), std::end(vertex.bone_ids), -1);
-        std::fill(std::begin(vertex.bone_weights), std::end(vertex.bone_weights), 0.0f);
-
-        vertices.push_back(vertex);
+        return vertices;
     }
 
-    // faces
-    for (unsigned int i = 0; i < mesh->mNumFaces; ++i) 
+    auto extract_indices(const aiMesh* mesh) -> std::vector<unsigned int>
     {
-        aiFace face = mesh->mFaces[i];
+        std::vector<unsigned int> indices;
 
-        for (unsigned int j = 0; j < face.mNumIndices; ++j) indices.push_back(face.mIndices[j]);
-    }
+        indices.reserve(static_cast<size_t>(mesh->mNumFaces) * 3);
 
-    // material
-    aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-
-    return { vertices, indices, ProcessMaterial(material) };
-}
-
-MaterialSpec ProcessMaterial(const aiMaterial* mat) 
-{
-    std::vector<Texture> textures;
-
-    aiColor3D ambient, diffuse, specular, emissive;
-    float shininess;
-
-    mat->Get(AI_MATKEY_COLOR_AMBIENT, ambient);
-    mat->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse);
-    mat->Get(AI_MATKEY_COLOR_SPECULAR, specular);
-    mat->Get(AI_MATKEY_COLOR_EMISSIVE, emissive);
-    mat->Get(AI_MATKEY_SHININESS, shininess);
-
-    // Diffuse Maps
-    std::vector<Texture> diffuse_maps = LoadMaterialTextures(mat, aiTextureType_DIFFUSE);
-    textures.insert(textures.end(), diffuse_maps.begin(), diffuse_maps.end());
-
-    // Specular Maps
-    std::vector<Texture> specular_maps = LoadMaterialTextures(mat, aiTextureType_SPECULAR);
-    textures.insert(textures.end(), specular_maps.begin(), specular_maps.end());
-
-    // Normal Maps
-    std::vector<Texture> normal_maps = LoadMaterialTextures(mat, aiTextureType_NORMALS);
-    textures.insert(textures.end(), normal_maps.begin(), normal_maps.end());
-
-    // Emissive Maps
-    std::vector<Texture> emissive_maps = LoadMaterialTextures(mat, aiTextureType_EMISSIVE);
-    textures.insert(textures.end(), emissive_maps.begin(), emissive_maps.end());
-
-    return { to_glm(ambient), to_glm(diffuse), to_glm(specular), to_glm(emissive), shininess, textures };
-}
-
-std::vector<Texture> LoadMaterialTextures(const aiMaterial* mat, const aiTextureType type) 
-{
-    std::vector<Texture> textures;
-
-    for (unsigned int i = 0; i < mat->GetTextureCount(type); ++i) 
-    {
-        aiString str;
-
-        mat->GetTexture(type, i, &str);
-
-        // prevents already loaded textures from being loaded again
-        bool skip = false;
-
-        for (const auto& texture : textures_loaded)
+        for (unsigned int i = 0; i < mesh->mNumFaces; ++i)
         {
-            if (std::strcmp(texture.path.data(), str.C_Str()) == 0) 
+            const auto face = mesh->mFaces[i];
+
+            for (unsigned int j = 0; j < face.mNumIndices; ++j)
+                indices.push_back(face.mIndices[j]);
+        }
+
+        return indices;
+    }
+
+    auto extract_bones(const aiMesh* mesh, std::vector<Vertex>& vertices) -> std::pair<std::vector<Bone>, std::unordered_map<std::string, int>>
+    {
+        std::vector<Bone> bones;
+        std::unordered_map<std::string, int> bone_map;
+
+        VK_TRACE("Num Bones: {0}", mesh->mNumBones);
+
+        for (unsigned int i = 0; i < mesh->mNumBones; ++i)
+        {
+            const auto& imported_bone = *mesh->mBones[i];
+
+        	auto name = std::string { imported_bone.mName.data };
+
+            if (bone_map.find(name) == bone_map.end())
             {
-                textures.push_back(texture);
+                auto bone = Bone{};
 
-                skip = true;
+            	bone.name = name;
+                bone.index = static_cast<int>(bone_map.size());
+                bone.offset = to_glm(imported_bone.mOffsetMatrix); // inverse-bind pose matrix
 
-                break;
+                bone_map[bone.name] = bone.index;
+
+                bones.push_back(std::move(bone));
+            }
+
+            const auto bone_index = bone_map.at(name);
+
+            for (unsigned int j = 0; j < imported_bone.mNumWeights; ++j)
+            {
+                const auto& imported_weight = imported_bone.mWeights[j];
+                const auto index = static_cast<int>(imported_weight.mVertexId);
+                const auto bone_weight = imported_weight.mWeight;
+
+                std::fill(std::begin(vertices[index].bone_ids), std::end(vertices[index].bone_ids), bone_index);
+                std::fill(std::begin(vertices[index].bone_weights), std::end(vertices[index].bone_weights), bone_weight);
             }
         }
 
-        if (!skip)  // if texture has not already been loaded
-        {
-            Texture&& texture {};
+        return std::make_pair(bones, bone_map);
+    }
 
-            // Don't load ID yet.
-            texture.path = str.C_Str();
+    auto extract_textures(const aiMaterial* material, const aiTextureType type)->std::vector<Texture>
+    {
+        std::vector<Texture> textures;
+
+        const auto count = material->GetTextureCount(type);
+
+        textures.reserve(count);
+
+        for (unsigned int i = 0; i < count; ++i)
+        {
+            auto imported_path = aiString{};
+
+        	material->GetTexture(type, i, &imported_path);
+            
+            auto&& texture = Texture{};
+
+            texture.path = imported_path.C_Str();
 
             auto final_path = IS_CORE_ASSET ? "assets/" + texture.path : "coreAssets/textures/" + texture.path;
             texture.SetID(LoadTexture(final_path, false, false));
 
-            textures.push_back(texture);
-            textures_loaded.push_back(std::move(texture));
+            textures.emplace_back(std::move(texture));
         }
+
+        return textures;
     }
 
-    return textures;
+    auto extract_animations(const aiScene* scene)->std::vector<Animation>
+    {
+        std::vector<Animation> animations;
+
+        VK_TRACE("Num Animations: {0}", scene->mNumAnimations);
+
+        for (unsigned int i = 0; i < scene->mNumAnimations; ++i)
+        {
+            const auto& imported_animation = *scene->mAnimations[i];
+
+            Animation animation{};
+
+            animation.name = std::string(imported_animation.mName.C_Str());
+            animation.frame_rate = static_cast<float>(imported_animation.mTicksPerSecond);
+            animation.duration = static_cast<float>(imported_animation.mDuration);
+
+            for (unsigned int j = 0; j < imported_animation.mNumChannels; ++j)
+            {
+                const auto& imported_animation_channel = *imported_animation.mChannels[j];
+
+                Animation::Channel channel{};
+                channel.name = std::string(imported_animation_channel.mNodeName.C_Str());
+
+                for (unsigned int k = 0; k < imported_animation_channel.mNumPositionKeys; ++k)
+                {
+                    Transform frame{};
+
+                    frame.position = to_glm(imported_animation_channel.mPositionKeys[k].mValue);
+                    frame.scale = to_glm(imported_animation_channel.mScalingKeys[k].mValue);
+                    frame.rotation = to_glm(imported_animation_channel.mRotationKeys[k].mValue);
+
+                    channel.frames.emplace_back(frame);
+                }
+
+                animation.channels.emplace_back(std::move(channel));
+            }
+
+            VK_TRACE("Loaded Animation: {0} with {1} channels.", animation.name, animation.channels.size());
+
+            animations.emplace_back(std::move(animation));
+        }
+
+        return animations;
+    }
 }
