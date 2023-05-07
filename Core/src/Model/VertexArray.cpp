@@ -9,7 +9,7 @@
 
 namespace Vakol::Model
 {
-    std::vector<Vertex>& Convert(std::vector<float>& arr)
+    std::vector<Vertex> Convert(std::vector<float>& arr)
     {
         const auto arr_size = arr.size();
         constexpr auto elements = sizeof(Vertex) / sizeof(float);

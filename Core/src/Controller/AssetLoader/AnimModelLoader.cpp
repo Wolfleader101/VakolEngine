@@ -91,8 +91,21 @@ namespace Vakol::Controller
 
     auto process_mesh(const aiScene* scene, const aiMesh* assimp_mesh)->Mesh
     {
-        Mesh mesh{extract_vertices(assimp_mesh), extract_indices(assimp_mesh)};
-        process_material(scene->mMaterials[assimp_mesh->mMaterialIndex]);
+    	auto vertices = extract_vertices(assimp_mesh);
+    	auto indices = extract_indices(assimp_mesh);
+        auto [bones, bone_map] = extract_bones(assimp_mesh, vertices);
+
+        VK_TRACE(bones.size());
+        VK_TRACE(bone_map.size());
+
+        for (auto& [name, index, offset] : bones)
+        {
+            VK_TRACE(name);
+        }
+
+        Mesh mesh{ vertices, indices };
+
+        //process_material(scene->mMaterials[assimp_mesh->mMaterialIndex]);
 
         // auto [bones, bone_map] = extract_bones(assimp_mesh, std::move(Vakol::Model::Convert(std::move(mesh.vertices()))));
         // mesh.set(bones);
@@ -158,6 +171,8 @@ namespace Vakol::Controller
     {
         std::vector<Bone> bones;
         std::unordered_map<std::string, int> bone_map;
+
+        VK_TRACE(mesh->mNumBones);
 
         for (unsigned int i = 0; i < mesh->mNumBones; ++i)
         {

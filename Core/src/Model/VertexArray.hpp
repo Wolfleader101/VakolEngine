@@ -63,7 +63,7 @@ namespace Vakol::Model
         const int NUM_VERTS_PER_PATCH = NUM_PATCH_PTS;
     };
 
-    std::vector<Vertex>& Convert(std::vector<float>& arr);
+    std::vector<Vertex> Convert(std::vector<float>& arr);
 	std::vector<float> Convert(std::vector<Vertex>& arr);
 
     class VertexArray
@@ -104,7 +104,8 @@ namespace Vakol::Model
     	[[nodiscard]] const std::vector<float>& GetConstVertices() const { return this->vertices; }
         [[nodiscard]] std::vector<float>& GetVertices() { return this->vertices; }
 
-        [[nodiscard]] const std::vector<unsigned int>& GetIndices() const { return this->indices; }
+        [[nodiscard]] const std::vector<unsigned int>& GetConstIndices() const { return this->indices; }
+        [[nodiscard]] std::vector<unsigned int>& GetIndices() { return this->indices; }
 
     	void set_mode(const DRAW_MODE mode) { this->info.draw_mode = mode; }
     	void set_type(const DRAW_TYPE type) { this->info.draw_type = type; }

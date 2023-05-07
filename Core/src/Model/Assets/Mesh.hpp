@@ -37,8 +37,8 @@ namespace Vakol::Model::Assets
         void set(std::unordered_map<std::string, int>& map) { this->bone_map = std::move(map); }
 
         [[nodiscard]] const std::vector<float>& const_vertices() const { return this->m_vertex_array->GetConstVertices(); }
-        [[nodiscard]] std::vector<float>& vertices() const { return this->m_vertex_array->GetVertices(); }
 
+        [[nodiscard]] std::vector<float>& vertices() const { return this->m_vertex_array->GetVertices(); }
         [[nodiscard]] const std::vector<unsigned int>& indices() const { return this->m_vertex_array->GetIndices(); }
 
         [[nodiscard]] int nVertices() const { return this->m_vertex_array->GetVertexCount(); }
