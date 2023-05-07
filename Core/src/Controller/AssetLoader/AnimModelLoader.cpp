@@ -101,6 +101,7 @@ namespace Vakol::Controller
         for (auto& [name, index, offset] : bones)
         {
             VK_TRACE(name);
+            VK_TRACE(index);
         }
 
         Mesh mesh{ vertices, indices };
