@@ -36,4 +36,6 @@ namespace Vakol::Model::Assets
 	void Shader::SetMat3(const char* name, const glm::mat3& value) const { glUniformMatrix3fv(glGetUniformLocation(this->m_ID, name), 1, GL_FALSE, glm::value_ptr(value)); }
 
 	void Shader::SetMat4(const char* name, const glm::mat4& value) const { glUniformMatrix4fv(glGetUniformLocation(this->m_ID, name), 1, GL_FALSE, glm::value_ptr(value)); }
+
+	void Shader::SetMat4v(const char* name, const int count, const void* data) const { glUniformMatrix4fv(glGetUniformLocation(this->m_ID, name), static_cast<GLsizei>(count), GL_FALSE, static_cast<const float*>(data)); }
 }

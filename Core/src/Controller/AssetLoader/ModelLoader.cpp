@@ -207,6 +207,8 @@ namespace Vakol::Controller
             vertex.bone_weights[i] = bone_weight;
         };
 
+        VK_TRACE(mesh.mNumBones);
+
         for (unsigned int i = 0; i < mesh.mNumBones; ++i)
         {
             const aiString& bone_name = mesh.mBones[i]->mName;

@@ -11,34 +11,50 @@ out VS_OUT
 {
     vec3  normal;
     vec2  uv;
+    ivec4  bone_ids;
+    vec4  bone_weights;
 } vs_out;
 
 layout (std140, binding = 1) uniform Matrices
 {
-    mat4 PV_MATRIX;
+    mat4 PROJECTION_MATRIX;
     mat4 VIEW_MATRIX;
+    mat4 PV_MATRIX;
     mat4 MODEL_MATRIX;
 };
 
-uniform mat4 BONE_TRANSFORMS[206];
+const int MAX_BONES = 100;
+const int MAX_BONE_INFLUENCE = 4;
+uniform mat4 BONE_TRANSFORMS[52];
 
 void main()
 {   
-    mat4 S = mat4(1.0);
+    vec4 total_position = vec4(0.0);
 
-    for (int i = 0; i < 4; ++i)
+    ivec4 bone_ids = ivec4(aBoneIDs * 52);
+
+    for (int i = 0; i < MAX_BONE_INFLUENCE; ++i)
     {
-        int bone_id = int(aBoneIDs[i]);
+        if (bone_ids[i] == -1) continue;
 
-        if (bone_id >= 0)
-            S += BONE_TRANSFORMS[bone_id] * aBoneWeights[i];
+        if (bone_ids[i] >= MAX_BONES)
+        {
+            total_position = vec4(aPos, 1.0);
+            break;
+        }
+
+        vec4 local_position = BONE_TRANSFORMS[bone_ids[i]] * vec4(aPos, 1.0);
+
+        total_position += local_position * aBoneWeights[i];
     }
 
-    if (int(aBoneIDs[0]) < 0)
-        S = mat4(1.0);
+    mat4 VIEW_MODEL = VIEW_MATRIX * MODEL_MATRIX;
 
     vs_out.normal = aNormal;
     vs_out.uv = aTexCoords;
 
-    gl_Position = PV_MATRIX * MODEL_MATRIX * S * vec4(aPos, 1.0);
+    vs_out.bone_ids = bone_ids;
+    vs_out.bone_weights = aBoneWeights;
+
+    gl_Position = PROJECTION_MATRIX * VIEW_MODEL * total_position;
 }

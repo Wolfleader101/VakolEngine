@@ -13,6 +13,8 @@
 #include <glm/gtc/type_ptr.hpp>
 #pragma warning(pop)
 
+#include <Controller/Logger.hpp>
+
 namespace Vakol::Model::Assets
 {
 	struct BoneInfo
@@ -216,7 +218,7 @@ namespace Vakol::Model::Assets
 	class Animation
 	{
 	public:
-		static constexpr size_t MAX_BONE_COUNT = 206;
+		static constexpr auto MAX_BONE_COUNT = 100;
 
 		Animation() = default;
 
@@ -248,6 +250,21 @@ namespace Vakol::Model::Assets
 
 				transforms[bone_index] = global_inverse * parent_transform * bone_transform * bone->offset;
 			}
+		}
+
+		[[nodiscard]] auto nTransforms() const ->std::vector<glm::mat4>
+		{
+			return transforms;
+		}
+
+		[[nodiscard]] auto nTransform(const int i) const ->glm::mat4
+		{
+			return transforms.at(i);
+		}
+
+		[[nodiscard]] auto nNumTransforms() const -> int
+		{
+			return static_cast<int>(transforms.size());
 		}
 
 	private:

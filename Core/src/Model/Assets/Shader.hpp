@@ -22,7 +22,7 @@ namespace Vakol::Model::Assets
         void Bind() const;
         void Unbind() const;
 
-        inline const unsigned int GetID() const { return m_ID; }
+        [[nodiscard]] unsigned int GetID() const { return m_ID; }
 
     public:
         void SetBool(const char* name, const bool value) const;
@@ -42,6 +42,7 @@ namespace Vakol::Model::Assets
 
         void SetMat3(const char* name, const glm::mat3& value) const;
         void SetMat4(const char* name, const glm::mat4& value) const;
+        void SetMat4v(const char* name, const int count, const void* data) const;
 
     private:
         unsigned int m_ID = 0;

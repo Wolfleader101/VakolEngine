@@ -58,7 +58,7 @@ namespace Vakol::View
         // this corresponds to the uniform buffer in each shader that has one.
         // layout (std140, binding = 1) uniform <name>
         // std140 - memory layout, binding - index, uniform (typeof buffer)
-        AddBuffer(GL_UNIFORM_BUFFER, 3 * sizeof(glm::mat4), 1, GL_STATIC_DRAW);
+        AddBuffer(GL_UNIFORM_BUFFER, 4 * sizeof(glm::mat4), 1, GL_STATIC_DRAW);
         // add a uniform buffer which size is that of a 4x4 matrix with a binding index of 1
     };
 
@@ -90,33 +90,38 @@ namespace Vakol::View
     {
         VK_ASSERT(drawable.model_ptr, "\n\nModel ptr is nullptr");
 
-        const auto& shader = drawable.model_ptr->GetShader();
+    	auto& model = *drawable.model_ptr;
+        const auto& shader = *model.GetShader();
 
-        VK_ASSERT(shader, "\n\nShader is nullptr");
+        VK_ASSERT(&shader, "\n\nShader is nullptr");
 
-        shader->Bind();
+        model.animation().Update(time.deltaTime);
+
+        shader.Bind();
 
         // at index 0, with an offset of 0 (since PV_MATRIX is the only element in the buffer), with a size of a 4x4 matrix, set PV_MATRIX
-        SetBufferSubData(0, 0, sizeof(glm::mat4), glm::value_ptr(camera.GetMatrix(PV_MATRIX)));
-        SetBufferSubData(0, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(camera.GetMatrix(VIEW_MATRIX)));
+        SetBufferSubData(0, 0, sizeof(glm::mat4), value_ptr(camera.GetMatrix(PROJECTION_MATRIX)));
+    	SetBufferSubData(0, sizeof(glm::mat4), sizeof(glm::mat4), value_ptr(camera.GetMatrix(VIEW_MATRIX)));
+        SetBufferSubData(0, 2 * sizeof(glm::mat4), sizeof(glm::mat4), value_ptr(camera.GetMatrix(PV_MATRIX)));
 
         auto model_matrix = glm::mat4(1.0f); // start off with an identity matrix
 
-        model_matrix = glm::translate(model_matrix, trans.pos);
+        model_matrix = translate(model_matrix, trans.pos);
 
-        model_matrix = glm::scale(model_matrix, trans.scale);
+        model_matrix = scale(model_matrix, trans.scale);
 
-        model_matrix = glm::rotate(model_matrix, glm::radians(trans.rot.x), glm::vec3(1.0f, 0.0f, 0.0f));
-        model_matrix = glm::rotate(model_matrix, glm::radians(trans.rot.y), glm::vec3(0.0f, 1.0f, 0.0f));
-        model_matrix = glm::rotate(model_matrix, glm::radians(trans.rot.z), glm::vec3(0.0f, 0.0f, 1.0f));
+        model_matrix = rotate(model_matrix, glm::radians(trans.rot.x), glm::vec3(1.0f, 0.0f, 0.0f));
+        model_matrix = rotate(model_matrix, glm::radians(trans.rot.y), glm::vec3(0.0f, 1.0f, 0.0f));
+        model_matrix = rotate(model_matrix, glm::radians(trans.rot.z), glm::vec3(0.0f, 0.0f, 1.0f));
 
-        SetBufferSubData(0, 2 * sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(model_matrix));
+        SetBufferSubData(0, 3 * sizeof(glm::mat4), sizeof(glm::mat4), value_ptr(model_matrix));
 
-        drawable.model_ptr->animation().Update(time.deltaTime * 10.0f);
+        for (int i = 0; i < model.animation().nNumTransforms(); ++i)
+            shader.SetMat4(("BONE_TRANSFORMS[" + std::to_string(i) + "]").c_str(), model.animation().nTransform(i));
 
-        for (int i = 0; i < drawable.model_ptr->nMeshes(); ++i) 
+        for (int i = 0; i < model.nMeshes(); ++i) 
         {
-            const auto& mesh = drawable.model_ptr->meshes().at(i);
+            const auto& mesh = model.meshes().at(i);
             const auto& material = mesh.GetMaterial();
 
             for (int j = 0; j < material->GetTextureCount(); ++j)
@@ -128,7 +133,7 @@ namespace Vakol::View
             mesh.Draw();
         }
 
-        shader->Unbind();
+        shader.Unbind();
     }
 
     void GLRenderer::Update() const 
