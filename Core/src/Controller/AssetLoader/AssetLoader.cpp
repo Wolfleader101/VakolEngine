@@ -32,12 +32,12 @@ namespace Vakol::Controller
         return *ret;
     }
 
-    std::shared_ptr<::Model> AssetLoader::GetModel(const std::string& file) 
+    std::shared_ptr<::Model> AssetLoader::GetModel(const std::string& file, const float scale) 
     {
         std::shared_ptr<::Model> ret;
 
         if (const auto itr = m_ModelMap.find(file); itr == m_ModelMap.end()) {
-            ret = std::make_shared<::Model>(LoadModel(file));
+            ret = std::make_shared<::Model>(LoadModel(file, scale));
 
             if (ret->meshes().empty())
             {

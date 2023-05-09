@@ -52,13 +52,13 @@ namespace Vakol::Controller
 
     bool IS_CORE_ASSET = false;
 
-    ::Model LoadModel(const std::string& path)
+    ::Model LoadModel(const std::string& path, const float scale)
     {
         auto importer = Assimp::Importer{};
 
         IS_CORE_ASSET = path.find("coreAssets/");
 
-        static_cast<void>(importer.SetPropertyFloat(AI_CONFIG_GLOBAL_SCALE_FACTOR_KEY, 0.05f));
+        static_cast<void>(importer.SetPropertyFloat(AI_CONFIG_GLOBAL_SCALE_FACTOR_KEY, scale));
         VK_ASSERT(FileExists(path), "File could not be found!");
 
         const auto* scene = importer.ReadFile(path.c_str(), ASSIMP_LOADER_OPTIONS);

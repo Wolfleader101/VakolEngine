@@ -89,9 +89,9 @@ namespace Vakol::Model::Assets
 
 		glm::mat4 interpolate_frames_at(const float time)
 		{
-			const auto translation = interpolate_position(time);
+			const auto translation=   interpolate_position(time);
 			const auto scale =		   interpolate_scaling(time);
-			const auto rotation =	  interpolate_rotation(time);
+			const auto rotation =	   interpolate_rotation(time);
 
 			prev_time = time;
 
@@ -103,7 +103,7 @@ namespace Vakol::Model::Assets
 		template <typename Key>
 		struct KeyTimeCompare
 		{
-			bool operator()(const Key& lhs, const Key& rhs) const noexcept { return lhs.timestamp < rhs.timestamp; }
+			bool operator()(const Key& lhs, const Key& rhs) const noexcept   { return lhs.timestamp < rhs.timestamp; }
 			bool operator()(const float time, const Key& rhs) const noexcept { return time < rhs.timestamp; }
 			bool operator()(const Key& lhs, const float time) const noexcept { return lhs.timestamp < time; }
 		};
@@ -248,7 +248,7 @@ namespace Vakol::Model::Assets
 				const size_t bone_index = bone->bone_index;
 				VK_ASSERT(bone_index < m_transforms.size(), "\n\nTOO MANY BONES!");
 
-				m_transforms[bone_index] = global_inverse * parent_transform * bone_transform * bone->offset;
+				m_transforms[bone_index] = global_inverse * bone_transform * bone->offset;
 			}
 		}
 
@@ -268,7 +268,7 @@ namespace Vakol::Model::Assets
 		}
 
 	private:
-		glm::mat4 global_inverse = glm::mat4(1.0f);
+		glm::mat4 global_inverse{};
 		std::vector<glm::mat4> m_transforms;
 		std::vector<AnimNode> nodes;
 

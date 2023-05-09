@@ -26,13 +26,6 @@ namespace Vakol::Controller
         Entlist = &scene.entityList;
     }
 
-    void System::Drawable_Init() {
-        m_registry->view<Drawable>().each(
-            [&](Drawable& drawable) { drawable.model_ptr = AssetLoader::GetModel(drawable.name); }
-
-        );
-    }
-
     void System::Drawable_Update(const Time& time, const Controller::Camera& camera,
                                  const std::shared_ptr<View::Renderer> renderer) {
         m_registry->view<Components::Transform, Components::Drawable>().each(

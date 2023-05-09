@@ -112,7 +112,7 @@ namespace Vakol::Controller {
         entityList.Deserialize(folder + "/EntityList.json");
 
         System::BindScene(*this);
-        System::Drawable_Init();
+        //System::Drawable_Init();
         System::Physics_Init();
 
         std::ifstream input(folder + "/Scene.json");

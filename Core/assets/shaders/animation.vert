@@ -34,21 +34,21 @@ void main()
 {  
     mat4 S = mat4(0.0f);
 
-    ivec4 bone_ids = aBoneIDs;
+    vec4 normalized_weights = aBoneWeights / dot(aBoneWeights, vec4(1.0));
 
     for (int i = 0; i < 4; ++i)
     {
-        if (bone_ids[i] >= 0)
-            S += (BONE_TRANSFORMS[bone_ids[i]] * aBoneWeights[i]);
+        if (aBoneIDs[i] >= 0)
+            S += BONE_TRANSFORMS[aBoneIDs[i]] * normalized_weights[i];
     }
 
-    if (bone_ids[0] < 0)
+    if (aBoneIDs[0] < 0)
         S = mat4(1.0);
 
     vs_out.normal = aNormal;
     vs_out.uv = aTexCoords;
 
-    vs_out.bone_ids = bone_ids;
+    vs_out.bone_ids = aBoneIDs;
     vs_out.bone_weights = aBoneWeights;
 
     gl_Position = PV_MATRIX * MODEL_MATRIX * S * vec4(aPos, 1.0);
