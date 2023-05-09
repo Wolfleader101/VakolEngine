@@ -19,15 +19,21 @@ namespace Vakol::Model::Assets
         Model(std::vector<Mesh>&& meshes) : m_meshes(std::move(meshes)) {}
         Model(std::vector<Mesh>& meshes) : m_meshes(std::move(meshes)) {}
 
-        void SetShader(const std::string& path) 
-        { 
-            this->m_shader = std::make_shared<Shader>(path);
-            this->m_shader->Bind(); 
-        }
+        Model(std::vector<Mesh>&& meshes, Animation&& animation) : m_meshes(std::move(meshes)), m_animation(std::make_shared<Animation>(std::move(animation))) {}
+        Model(std::vector<Mesh>& meshes, Animation& animation) : m_meshes(std::move(meshes)), m_animation(std::make_shared<Animation>(std::move(animation))) {}
+
+        void set_shader(const std::string& path)  {  this->m_shader = std::make_shared<Shader>(path); this->m_shader->Bind(); }
         
-        std::shared_ptr<Shader> GetShader() { return m_shader; }
+        std::shared_ptr<Shader>& shader() { return m_shader; }
+        [[nodiscard]] const std::shared_ptr<Shader>& c_shader() const { return m_shader; }
+
+        std::shared_ptr<Animation>& animation() { return m_animation; }
+        [[nodiscard]] const std::shared_ptr<Animation>& c_animation() { return m_animation; }
+
+        [[nodiscard]] int numTransforms() const { return m_animation->numTransforms(); }
+        [[nodiscard]] const std::vector<glm::mat4>& transforms() const { return m_animation->transforms(); }
         
-        [[nodiscard]] Mesh nMesh(const int index = 0) const { return m_meshes.at(index); }
+        [[nodiscard]] Mesh mesh(const int index = 0) const { return m_meshes.at(index); }
 
         [[nodiscard]] const std::vector<Mesh>& meshes() const { return m_meshes; }
         [[nodiscard]] std::vector<Mesh>& meshes() { return m_meshes; }
@@ -36,6 +42,7 @@ namespace Vakol::Model::Assets
 
     private:
         std::vector<Mesh> m_meshes;
+        std::shared_ptr<Animation> m_animation = nullptr;
         std::shared_ptr<Shader> m_shader = nullptr;
     };
 

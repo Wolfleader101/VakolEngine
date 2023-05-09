@@ -223,7 +223,7 @@ namespace Vakol::Model::Assets
 		Animation() = default;
 
 		Animation(const glm::mat4& root_inverse, std::vector<AnimNode>&& nodes, const unsigned int bone_count, const float duration, const float tps)
-			: global_inverse(root_inverse), transforms(MAX_BONE_COUNT, glm::mat4(1.0f)), nodes(std::move(nodes)), bone_count(bone_count), duration(duration), ticks_per_second(tps)
+			: global_inverse(root_inverse), m_transforms(MAX_BONE_COUNT, glm::mat4(1.0f)), nodes(std::move(nodes)), bone_count(bone_count), duration(duration), ticks_per_second(tps)
 		{
 			VK_ASSERT(bone_count <= MAX_BONE_COUNT, "\n\nTOO MANY BONES!!");
 		}
@@ -246,30 +246,30 @@ namespace Vakol::Model::Assets
 				if (!bone) continue;
 
 				const size_t bone_index = bone->bone_index;
-				VK_ASSERT(bone_index < transforms.size(), "\n\nTOO MANY BONES!");
+				VK_ASSERT(bone_index < m_transforms.size(), "\n\nTOO MANY BONES!");
 
-				transforms[bone_index] = global_inverse * parent_transform * bone_transform * bone->offset;
+				m_transforms[bone_index] = global_inverse * parent_transform * bone_transform * bone->offset;
 			}
 		}
 
-		[[nodiscard]] auto nTransforms() const ->std::vector<glm::mat4>
+		[[nodiscard]] const std::vector<glm::mat4>& transforms() const
 		{
-			return transforms;
+			return m_transforms;
 		}
 
-		[[nodiscard]] auto nTransform(const int i) const ->glm::mat4
+		[[nodiscard]] const glm::mat4& nTransform(const int i) const
 		{
-			return transforms.at(i);
+			return m_transforms.at(i);
 		}
 
-		[[nodiscard]] auto nNumTransforms() const -> int
+		[[nodiscard]] auto numTransforms() const -> int
 		{
-			return static_cast<int>(transforms.size());
+			return static_cast<int>(m_transforms.size());
 		}
 
 	private:
 		glm::mat4 global_inverse = glm::mat4(1.0f);
-		std::vector<glm::mat4> transforms;
+		std::vector<glm::mat4> m_transforms;
 		std::vector<AnimNode> nodes;
 
 		[[maybe_unused]] unsigned int bone_count = 0;

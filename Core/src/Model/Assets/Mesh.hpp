@@ -26,7 +26,7 @@ namespace Vakol::Model::Assets
 
         [[nodiscard]] const std::shared_ptr<Material>& GetMaterial() const { return this->m_material; }
 
-        [[nodiscard]] const std::vector<Vertex>& cvertices() const { return this->m_vertex_array->GetConstVertices(); }
+        [[nodiscard]] const std::vector<Vertex>& c_vertices() const { return this->m_vertex_array->GetConstVertices(); }
 
         [[nodiscard]] std::vector<Vertex>& vertices() const { return this->m_vertex_array->GetVertices(); }
         [[nodiscard]] const std::vector<unsigned int>& indices() const { return this->m_vertex_array->GetIndices(); }

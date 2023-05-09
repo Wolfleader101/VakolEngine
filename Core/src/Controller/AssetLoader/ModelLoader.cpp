@@ -59,7 +59,7 @@ namespace Vakol::Controller
 
         IS_CORE_ASSET = path.find("coreAssets/");
 
-        static_cast<void>(importer.SetPropertyFloat(AI_CONFIG_GLOBAL_SCALE_FACTOR_KEY, 1.0f));
+        static_cast<void>(importer.SetPropertyFloat(AI_CONFIG_GLOBAL_SCALE_FACTOR_KEY, 0.01f));
         VK_ASSERT(FileExists(path), "File could not be found!");
 
         const auto* scene = importer.ReadFile(path.c_str(), ASSIMP_LOADER_OPTIONS);
@@ -72,10 +72,10 @@ namespace Vakol::Controller
 
         BoneInfoRemap bone_info;
 
-        auto meshes = process_meshes(*scene, bone_info);
-        auto animation = extract_animation(*scene, -1, bone_info);
+        //auto meshes = 
+        //auto animation = 
 
-        return {meshes, animation };
+        return { process_meshes(*scene, bone_info) , extract_animation(*scene, -1, bone_info) };
     }
 
     // iteratively iterate through each node for meshes
@@ -114,7 +114,7 @@ namespace Vakol::Controller
         extract_bones(assimp_mesh, vertices, bone_info);
         auto material = process_material(*scene.mMaterials[assimp_mesh.mMaterialIndex]);
 
-        return { vertices, indices, material };
+        return { vertices, indices, sizeof(Vertex), material };
     }
 
     auto process_material(const aiMaterial& material)->MaterialSpec

@@ -240,12 +240,12 @@ namespace Vakol::Controller
 
             if (const auto model = terrain.GetModel())
             {
-                model->nMesh().SetDrawMode(DRAW_MODE::STRIPS);
-                model->nMesh().SetDrawType(DRAW_TYPE::ELEMENTS);
+                model->mesh().SetDrawMode(DRAW_MODE::STRIPS);
+                model->mesh().SetDrawType(DRAW_TYPE::ELEMENTS);
 
-                model->nMesh().SetDrawModeInfo((terrain.GetSize() - 1) / 1); // num strips
+                model->mesh().SetDrawModeInfo((terrain.GetSize() - 1) / 1); // num strips
 
-                model->nMesh().SetNumTrisPerStrip(terrain.GetSize() / 1 * 2 - 2);
+                model->mesh().SetNumTrisPerStrip(terrain.GetSize() / 1 * 2 - 2);
 
                 ent->GetComponent<Drawable>().model_ptr = model;
             }
@@ -265,10 +265,10 @@ namespace Vakol::Controller
 
             if (const auto model = terrain.GetModel())
             {
-                model->nMesh().SetDrawMode(DRAW_MODE::PATCHES);
-                model->nMesh().SetDrawType(DRAW_TYPE::ARRAYS);
+                model->mesh().SetDrawMode(DRAW_MODE::PATCHES);
+                model->mesh().SetDrawType(DRAW_TYPE::ARRAYS);
 
-                model->nMesh().SetDrawModeInfo(400); // num patches
+                model->mesh().SetDrawModeInfo(400); // num patches
 
                 ent->GetComponent<Drawable>().model_ptr = model;
             }
@@ -307,10 +307,10 @@ namespace Vakol::Controller
 #pragma warning(pop)
 
         model_type.set_function("get_mesh_count", &Assets::Model::nMeshes);
-        model_type.set_function("get_mesh", &Assets::Model::nMesh);
+        model_type.set_function("get_mesh", &Assets::Model::mesh);
 
-        model_type.set_function("set_shader", &Assets::Model::SetShader);
-        model_type.set_function("get_shader", &Assets::Model::GetShader);
+        model_type.set_function("set_shader", &Assets::Model::set_shader);
+        model_type.set_function("get_shader", &Assets::Model::shader);
 
         mesh_type.set_function("get_material", &Mesh::GetMaterial);
 

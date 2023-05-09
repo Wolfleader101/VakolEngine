@@ -51,5 +51,5 @@ void main()
     vs_out.bone_ids = bone_ids;
     vs_out.bone_weights = aBoneWeights;
 
-    gl_Position = PV_MATRIX * MODEL_MATRIX * S * vec4(aPos, 1.0);
+    gl_Position = PV_MATRIX * MODEL_MATRIX * vec4(aPos, 1.0);
 }
