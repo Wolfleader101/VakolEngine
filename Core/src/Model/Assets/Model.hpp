@@ -19,9 +19,6 @@ namespace Vakol::Model::Assets
         Model(std::vector<Mesh>&& meshes) : m_meshes(std::move(meshes)) {}
         Model(std::vector<Mesh>& meshes) : m_meshes(std::move(meshes)) {}
 
-        Model(std::vector<Mesh>&& meshes, Animation&& animation) : m_meshes(std::move(meshes)), m_animation(std::move(animation)) {}
-        Model(std::vector<Mesh>& meshes, Animation& animation) : m_meshes(std::move(meshes)), m_animation(std::move(animation)) {}
-
         void SetShader(const std::string& path) 
         { 
             this->m_shader = std::make_shared<Shader>(path);
@@ -32,8 +29,6 @@ namespace Vakol::Model::Assets
         
         [[nodiscard]] Mesh nMesh(const int index = 0) const { return m_meshes.at(index); }
 
-        [[nodiscard]] Animation& animation() { return m_animation;  }
-
         [[nodiscard]] const std::vector<Mesh>& meshes() const { return m_meshes; }
         [[nodiscard]] std::vector<Mesh>& meshes() { return m_meshes; }
 
@@ -41,7 +36,6 @@ namespace Vakol::Model::Assets
 
     private:
         std::vector<Mesh> m_meshes;
-        Animation m_animation {};
         std::shared_ptr<Shader> m_shader = nullptr;
     };
 

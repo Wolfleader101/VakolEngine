@@ -1,7 +1,7 @@
 function init(scene, entity)
     
     entity:get_transform().pos = Vector3.new(-10.0, 0.0, 10.0);
-    entity:get_transform().scale = Vector3.new(0.1, 0.1, 0.1);
+    --entity:get_transform().scale = Vector3.new(0.1, 0.1, 0.1);
     entity:get_transform().rot = Vector3.new(0.0, -90.0, 0.0);
 
     local model = entity:add_model("assets/models/dancing_vampire.dae") -- get model and add a drawable component

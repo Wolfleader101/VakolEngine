@@ -9,10 +9,10 @@
 
 namespace Vakol::Model
 {
-    std::vector<Vertex> Convert(std::vector<float>& arr)
+    std::vector<Vertex> Convert(std::vector<float>& arr, const size_t size)
     {
         const auto arr_size = arr.size();
-        constexpr auto elements = sizeof(Vertex) / sizeof(float);
+        const auto elements = static_cast<int>(size / sizeof(float));
 
 #if VERBOSE_DEBUG
         VK_TRACE("Converting vector of Vertex to vector of floats.");
@@ -128,10 +128,9 @@ namespace Vakol::Model
         return output;
     }
 
-    VertexArray::VertexArray(std::vector<float>&& vertices, std::vector<unsigned int>&& indices, const int size) : vertices(vertices), indices(indices)
+    VertexArray::VertexArray(std::vector<Vertex>&& vertices, std::vector<unsigned int>&& indices, const size_t size) : vertices(vertices), indices(indices)
     {
         int total_elements = static_cast<int>(size / sizeof(float));
-        auto used_elements = 0;
 
         this->n_vertices = static_cast<int>(this->vertices.size());
         this->n_indices = static_cast<int>(this->indices.size());
@@ -161,7 +160,7 @@ namespace Vakol::Model
         this->Bind();
 
         glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
-        glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(n_vertices * sizeof(float)), this->vertices.data(), GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(n_vertices * size), this->vertices.data(), GL_STATIC_DRAW);
 
         if (n_indices > 0)
         {
@@ -169,69 +168,71 @@ namespace Vakol::Model
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLsizeiptr>(n_indices * sizeof(unsigned int)), this->indices.data(), GL_STATIC_DRAW);
         }
 
-        if (total_elements >= 3)
-        {
-            this->SetVertexAttributeData(0, 3, GL_FLOAT, GL_FALSE, size, nullptr); // Positions
-            used_elements += 3;
-            total_elements -= 3;
-        }
+        SetVertexAttributeData(0, 3, GL_FLOAT, GL_FALSE, size, nullptr);
+        SetVertexAttributeData(1, 3, GL_FLOAT, GL_FALSE, size, reinterpret_cast<const void*>(offsetof(Vertex, normal)));
+        SetVertexAttributeData(2, 2, GL_FLOAT, GL_FALSE, size, reinterpret_cast<const void*>(offsetof(Vertex, uv)));
+        SetVertexAttributeData(3, 3, GL_FLOAT, GL_FALSE, size, reinterpret_cast<const void*>(offsetof(Vertex, tangent)));
+        SetVertexAttributeData(4, 3, GL_FLOAT, GL_FALSE, size, reinterpret_cast<const void*>(offsetof(Vertex, bitangent)));
+        SetVertexAttributeIData(5, 4, GL_INT, size, reinterpret_cast<const void*>(offsetof(Vertex, bone_ids)));
+        SetVertexAttributeData(6, 4, GL_FLOAT, GL_FALSE, size, reinterpret_cast<const void*>(offsetof(Vertex, bone_weights)));
 
-        if (total_elements >= 2)
-        {
-            if (total_elements >= 3)
-            {
-                this->SetVertexAttributeData(1, 3, GL_FLOAT, GL_FALSE, size, reinterpret_cast<const void*>(used_elements * sizeof(float))); // Normals
-                total_elements -= 3;
-                used_elements += 3;
-            }
-            else
-            {
-                this->SetVertexAttributeData(1, 2, GL_FLOAT, GL_FALSE, size, reinterpret_cast<const void*>(used_elements * sizeof(float))); // UVs
-                total_elements -= 2;
-                used_elements += 2;
-            }
-        }
 
-        if (total_elements >= 2)
-        {
-            this->SetVertexAttributeData(2, 2, GL_FLOAT, GL_FALSE, size, reinterpret_cast<const void*>(used_elements * sizeof(float))); // UVs (with normals)
-            total_elements -= 2;
-            used_elements += 2;
-        }
+        //if (total_elements >= 3)
+        //{
+        //    this->SetVertexAttributeData(0, 3, GL_FLOAT, GL_FALSE, size, nullptr); // Positions
+        //    total_elements -= 3;
+        //}
 
-        if (total_elements >= 3)
-        {
-            this->SetVertexAttributeData(3, 3, GL_FLOAT, GL_FALSE, size, reinterpret_cast<const void*>(used_elements * sizeof(float))); // Tangents
-            total_elements -= 3;
-            used_elements += 3;
-        }
+        //if (total_elements >= 2)
+        //{
+        //    if (total_elements >= 3)
+        //    {
+        //        this->SetVertexAttributeData(1, 3, GL_FLOAT, GL_FALSE, size, reinterpret_cast<const void*>(offsetof(Vertex, normal))); // Normals
+        //        total_elements -= 3;
+        //    }
+        //    else
+        //    {
+        //        this->SetVertexAttributeData(1, 2, GL_FLOAT, GL_FALSE, size, reinterpret_cast<const void*>(5 * sizeof(float))); // UVs
+        //        total_elements -= 2;
+        //    }
+        //}
 
-        if (total_elements >= 3)
-        {
-            this->SetVertexAttributeData(4, 3, GL_FLOAT, GL_FALSE, size, reinterpret_cast<const void*>(used_elements * sizeof(float))); // Bitangents
-            total_elements -= 3;
-        	used_elements += 3;
-        }
+        //if (total_elements >= 2)
+        //{
+        //    this->SetVertexAttributeData(2, 2, GL_FLOAT, GL_FALSE, size, reinterpret_cast<const void*>(offsetof(Vertex, uv))); // UVs (with normals)
+        //    total_elements -= 2;
+        //}
 
-        if (total_elements >= 4)
-        {
-            this->SetVertexAttributeData(5, 4, GL_FLOAT, GL_FALSE, size, reinterpret_cast<const void*>(used_elements * sizeof(float))); // Bone IDs
-            total_elements -= 4;
-            used_elements += 4;
-        }
+        //if (total_elements >= 3)
+        //{
+        //    this->SetVertexAttributeData(3, 3, GL_FLOAT, GL_FALSE, size, reinterpret_cast<const void*>(offsetof(Vertex, tangent))); // Tangents
+        //    total_elements -= 3;
+        //}
 
-        if (total_elements >= 4)
-        {
-            this->SetVertexAttributeData(6, 4, GL_FLOAT, GL_FALSE, size, reinterpret_cast<const void*>(used_elements * sizeof(float))); // Bone Weights
-            total_elements -= 4;
-            used_elements += 4;
-        }
+        //if (total_elements >= 3)
+        //{
+        //    this->SetVertexAttributeData(4, 3, GL_FLOAT, GL_FALSE, size, reinterpret_cast<const void*>(offsetof(Vertex, bitangent))); // Bitangents
+        //    total_elements -= 3;
+        //}
 
-        VK_ASSERT(total_elements == 0 && used_elements == static_cast<int>(size / sizeof(float)), "\n\nReserved Vertex data was not fully allocated.");
+        //if (total_elements >= 4)
+        //{
+        //    glEnableVertexAttribArray(5);
+        //	glVertexAttribIPointer(5, 4, GL_INT, size, reinterpret_cast<const void*>(offsetof(Vertex, bone_ids))); // Bone IDs
+        //    total_elements -= 4;
+        //}
+
+        //if (total_elements >= 4)
+        //{
+        //    this->SetVertexAttributeData(6, 4, GL_FLOAT, GL_FALSE, size, reinterpret_cast<const void*>(offsetof(Vertex, bone_weights))); // Bone Weights
+        //    total_elements -= 4;
+        //}
+
+        //VK_ASSERT(total_elements == 0, "\n\nReserved Vertex data was not fully allocated.");
 
         glPatchParameteri(GL_PATCH_VERTICES, NUM_PATCH_PTS);
 
-        this->Unbind();
+        Unbind();
         glBindBuffer(GL_ARRAY_BUFFER, 0); // turns out this is perfectly legal, don't unbind EBO though!
     }
 
@@ -285,13 +286,19 @@ namespace Vakol::Model
 
     void VertexArray::GenArray(const unsigned int n, unsigned int* array) { glGenVertexArrays(static_cast<GLsizei>(n), array); }
 
-    void VertexArray::SetVertexAttributeData(const int index, const int n, const unsigned int type, const bool normalized, const int stride, const void* data)
+    void VertexArray::SetVertexAttributeData(const unsigned int index, const int n, const unsigned int type, const bool normalized, const size_t stride, const void* data)
     {
         glEnableVertexAttribArray(index); // enable the vertex attribute at the specific index/location first
         glVertexAttribPointer(static_cast<GLuint>(index), static_cast<GLint>(n), static_cast<GLenum>(type), normalized, static_cast<GLsizei>(stride), data);
     }
 
+    void VertexArray::SetVertexAttributeIData(const unsigned int index, const int n, const unsigned int type, const size_t stride, const void* data)
+    {
+        glEnableVertexAttribArray(index);
+        glVertexAttribIPointer(static_cast<GLuint>(index), static_cast<GLint>(n), static_cast<GLenum>(type), static_cast<GLsizei>(stride), data);
+    }
+
     void VertexArray::Bind() const { glBindVertexArray(this->ID); }
 
-    void VertexArray::Unbind() const { glBindVertexArray(0); }
+    void VertexArray::Unbind() { glBindVertexArray(0); }
 }

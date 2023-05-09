@@ -63,18 +63,18 @@ namespace Vakol::Model
         const int NUM_VERTS_PER_PATCH = NUM_PATCH_PTS;
     };
 
-    std::vector<Vertex> Convert(std::vector<float>& arr);
+    std::vector<Vertex> Convert(std::vector<float>& arr, const size_t size);
 	std::vector<float> Convert(std::vector<Vertex>& arr);
 
     class VertexArray
     {
     public:
-        VertexArray(std::vector<float>&& vertices, std::vector<unsigned int>&& indices, const int size);
+        VertexArray(std::vector<Vertex>&& vertices, std::vector<unsigned int>&& indices, const size_t size);
         ~VertexArray();
 
         void Draw() const;
 
-        void GenArray(const unsigned int n, unsigned int* array);
+        static void GenArray(const unsigned int n, unsigned int* array);
 
         /// @brief Specify the data of a vertex attribute.
         /// @param index The location at which this vertex attribute occurs. 
@@ -88,21 +88,22 @@ namespace Vakol::Model
         /// @param data  the byte offset from the starting vertex attribute
         /// Example 1: Position (aPos) = (void*)0 -> *Position does not need any offset since it starts first*
         /// Example 2: Normal (aNormal) = (void*)offset of(Vertex, normal) *if using Vertex struct* OR (void*)(3 * sizeof(float))
-        void SetVertexAttributeData(const int index, const int n, const unsigned int type, const bool normalized, const int stride, const void* data);
+        static void SetVertexAttributeData(const unsigned int index, const int n, const unsigned int type, const bool normalized, const size_t stride, const void* data);
+        static void SetVertexAttributeIData(const unsigned int index, const int n, const unsigned int type, const size_t stride, const void* data);
 
         void Bind() const;
-        void Unbind() const;
+        static void Unbind();
 
     	[[nodiscard]] unsigned int GetId() const { return this->ID; }
 
     	[[nodiscard]] int GetVertexCount() const { return this->n_vertices; }
     	[[nodiscard]] int GetIndexCount() const { return this->n_indices; }
 
-        void set(std::vector<float>& in_vertices) { this->vertices = std::move(in_vertices); }
+        void set(std::vector<Vertex>& in_vertices) { this->vertices = std::move(in_vertices); }
         void set(std::vector<unsigned int>& in_indices) { this->indices = std::move(in_indices); }
 
-    	[[nodiscard]] const std::vector<float>& GetConstVertices() const { return this->vertices; }
-        [[nodiscard]] std::vector<float>& GetVertices() { return this->vertices; }
+    	[[nodiscard]] const std::vector<Vertex>& GetConstVertices() const { return this->vertices; }
+        [[nodiscard]] std::vector<Vertex>& GetVertices() { return this->vertices; }
 
         [[nodiscard]] const std::vector<unsigned int>& GetConstIndices() const { return this->indices; }
         [[nodiscard]] std::vector<unsigned int>& GetIndices() { return this->indices; }
@@ -139,7 +140,7 @@ namespace Vakol::Model
 
         DrawInfo info;
 
-        std::vector<float> vertices;
+        std::vector<Vertex> vertices;
         std::vector<unsigned int> indices;
     };
 }

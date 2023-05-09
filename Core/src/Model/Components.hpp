@@ -143,7 +143,9 @@ namespace Vakol::Model::Components {
         Drawable() = default;
         explicit Drawable(std::string&& file);
         std::string name; //for serialization
+
         std::shared_ptr<Assets::Model> model_ptr;
+        std::shared_ptr<Assets::Animation> animation_ptr;
 
         template<class Archive>
         void serialize(Archive& ar)

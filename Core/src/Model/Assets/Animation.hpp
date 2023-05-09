@@ -55,19 +55,19 @@ namespace Vakol::Model::Assets
 
 	struct KeyPosition
 	{
-		glm::vec3 position;
+		glm::vec3 position{};
 		float timestamp = 0.0f;
 	};
 
 	struct KeyScale
 	{
-		glm::vec3 scale;
+		glm::vec3 scale{};
 		float timestamp = 0.0f;
 	};
 
 	struct KeyRotation
 	{
-		glm::quat rotation;
+		glm::quat rotation{};
 		float timestamp = 0.0f;
 	};
 
@@ -119,7 +119,7 @@ namespace Vakol::Model::Assets
 				itr = frames.cbegin() + 1;
 
 			VK_ASSERT(itr != frames.cend(), "");
-			const auto index = static_cast<int>(std::distance(frames.cbegin(), itr) - 1);
+			const auto index = static_cast<int>(std::distance(frames.cbegin(), itr)) - 1;
 
 			VK_ASSERT(index >= 0, "");
 			VK_ASSERT(index < static_cast<int>(frames.size()) - 1, "");
@@ -185,7 +185,7 @@ namespace Vakol::Model::Assets
 
 			const float scale_factor = GetScaleFactor(timestamp, next.timestamp, time);
 
-			const auto& target_rotation = glm::normalize(glm::slerp(rotation, next.rotation, scale_factor));
+			const auto& target_rotation = normalize(slerp(rotation, next.rotation, scale_factor));
 
 			return mat4_cast(target_rotation);
 		}
@@ -200,7 +200,7 @@ namespace Vakol::Model::Assets
 			const auto& next = scales.at(p0 + 1);
 
 			const float scale_factor = GetScaleFactor(timestamp, next.timestamp, time);
-			const auto& target_scale = glm::mix(scale, next.scale, scale_factor);
+			const auto& target_scale = mix(scale, next.scale, scale_factor);
 
 			return glm::scale(glm::mat4(1.0f), target_scale);
 		}
@@ -268,7 +268,7 @@ namespace Vakol::Model::Assets
 		}
 
 	private:
-		glm::mat4 global_inverse;
+		glm::mat4 global_inverse = glm::mat4(1.0f);
 		std::vector<glm::mat4> transforms;
 		std::vector<AnimNode> nodes;
 

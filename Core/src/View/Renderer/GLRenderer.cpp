@@ -91,11 +91,12 @@ namespace Vakol::View
         VK_ASSERT(drawable.model_ptr, "\n\nModel ptr is nullptr");
 
     	auto& model = *drawable.model_ptr;
+        const auto& animation = *drawable.animation_ptr;
+
         const auto& shader = *model.GetShader();
 
         VK_ASSERT(&shader, "\n\nShader is nullptr");
-
-        model.animation().Update(time.deltaTime);
+        VK_ASSERT(&animation, "\n\nAnimation is nullptr");
 
         shader.Bind();
 
@@ -116,8 +117,7 @@ namespace Vakol::View
 
         SetBufferSubData(0, 3 * sizeof(glm::mat4), sizeof(glm::mat4), value_ptr(model_matrix));
 
-        for (int i = 0; i < model.animation().nNumTransforms(); ++i)
-            shader.SetMat4(("BONE_TRANSFORMS[" + std::to_string(i) + "]").c_str(), model.animation().nTransform(i));
+        shader.SetMat4v("BONE_TRANSFORMS", animation.nNumTransforms(), value_ptr(animation.nTransform(0)));
 
         for (int i = 0; i < model.nMeshes(); ++i) 
         {
