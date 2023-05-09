@@ -90,12 +90,12 @@ namespace Vakol::Model::Assets
 		glm::mat4 interpolate_frames_at(const float time)
 		{
 			const auto translation = interpolate_position(time);
-			const auto rotation =	  interpolate_rotation(time);
 			const auto scale =		   interpolate_scaling(time);
+			const auto rotation =	  interpolate_rotation(time);
 
 			prev_time = time;
 
-			return translation * rotation * scale;
+			return translation * scale * rotation;
 		}
 
 	private:

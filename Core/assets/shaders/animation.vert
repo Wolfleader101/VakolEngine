@@ -28,13 +28,13 @@ layout (std140, binding = 1) uniform Matrices
 //    mat4 BONE_TRANSFORMS[];
 //};
 
-uniform mat4 BONE_TRANSFORMS[100];
+uniform mat4 BONE_TRANSFORMS[52];
 
 void main()
 {  
     mat4 S = mat4(0.0f);
 
-    ivec4 bone_ids = aBoneIDs * 52;
+    ivec4 bone_ids = aBoneIDs;
 
     for (int i = 0; i < 4; ++i)
     {
@@ -51,5 +51,5 @@ void main()
     vs_out.bone_ids = bone_ids;
     vs_out.bone_weights = aBoneWeights;
 
-    gl_Position = PV_MATRIX * MODEL_MATRIX * vec4(aPos, 1.0);
+    gl_Position = PV_MATRIX * MODEL_MATRIX * S * vec4(aPos, 1.0);
 }

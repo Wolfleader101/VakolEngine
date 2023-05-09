@@ -23,8 +23,7 @@ using namespace Vakol::Model::Assets;
 namespace Vakol::Controller
 {
     constexpr unsigned int ASSIMP_LOADER_OPTIONS =
-        aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs |
-        aiProcess_JoinIdenticalVertices | aiProcess_CalcTangentSpace | aiProcess_LimitBoneWeights | aiProcess_GlobalScale;
+        aiProcess_Triangulate | aiProcess_CalcTangentSpace | aiProcess_FlipUVs | aiProcess_LimitBoneWeights | aiProcess_GlobalScale;
 
     static glm::mat4 to_glm(const aiMatrix4x4& m)
     {
@@ -59,7 +58,7 @@ namespace Vakol::Controller
 
         IS_CORE_ASSET = path.find("coreAssets/");
 
-        static_cast<void>(importer.SetPropertyFloat(AI_CONFIG_GLOBAL_SCALE_FACTOR_KEY, 0.01f));
+        static_cast<void>(importer.SetPropertyFloat(AI_CONFIG_GLOBAL_SCALE_FACTOR_KEY, 0.05f));
         VK_ASSERT(FileExists(path), "File could not be found!");
 
         const auto* scene = importer.ReadFile(path.c_str(), ASSIMP_LOADER_OPTIONS);
@@ -72,10 +71,7 @@ namespace Vakol::Controller
 
         BoneInfoRemap bone_info;
 
-        //auto meshes = 
-        //auto animation = 
-
-        return { process_meshes(*scene, bone_info) , extract_animation(*scene, -1, bone_info) };
+        return { process_meshes(*scene, bone_info), extract_animation(*scene, -1, bone_info) };
     }
 
     // iteratively iterate through each node for meshes
@@ -278,17 +274,6 @@ namespace Vakol::Controller
         	bone.positions.push_back(data);
         }
 
-        bone.scales.reserve(channel.mNumScalingKeys);
-        for (unsigned int index = 0; index < channel.mNumScalingKeys; ++index)
-        {
-            KeyScale data;
-
-            data.scale = to_glm(channel.mPositionKeys[index].mValue);
-            data.timestamp = static_cast<float>(channel.mScalingKeys[index].mTime);
-
-            bone.scales.push_back(data);
-        }
-
         bone.rotations.reserve(channel.mNumRotationKeys);
         for (unsigned int index = 0; index < channel.mNumRotationKeys; ++index)
         {
@@ -298,6 +283,17 @@ namespace Vakol::Controller
             data.timestamp = static_cast<float>(channel.mRotationKeys[index].mTime);
 
             bone.rotations.push_back(data);
+        }
+
+        bone.scales.reserve(channel.mNumScalingKeys);
+        for (unsigned int index = 0; index < channel.mNumScalingKeys; ++index)
+        {
+            KeyScale data;
+
+            data.scale = to_glm(channel.mScalingKeys[index].mValue);
+            data.timestamp = static_cast<float>(channel.mScalingKeys[index].mTime);
+
+            bone.scales.push_back(data);
         }
 
         return bone;
@@ -319,6 +315,8 @@ namespace Vakol::Controller
 
         const auto duration = static_cast<float>(animation->mDuration);
         const auto ticks_per_second = static_cast<float>(animation->mTicksPerSecond);
+
+        VK_TRACE("Duration: {0} | Ticks Per Second {1}", duration, ticks_per_second);
 
         std::vector<AnimNode> nodes;
         std::vector<const aiString*> node_names;
