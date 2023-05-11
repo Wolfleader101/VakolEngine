@@ -3,6 +3,8 @@
 #include <Controller/AssetLoader/FileLoader.hpp>
 #include <Controller/AssetLoader/TextureLoader.hpp>
 
+#include <Model/Assets/md2.hpp>
+
 #include <stack>
 
 #include <assimp/postprocess.h>
@@ -72,7 +74,10 @@ namespace Vakol::Controller
             animated = false; // force animations off
         }
 
+        md2_model_t model{};
         BoneInfoRemap bone_info;
+
+        LoadMD2File(path.c_str(), model);
 
         if (animated)
             return { process_meshes(*scene, bone_info), extract_animation(*scene, -1, bone_info) };

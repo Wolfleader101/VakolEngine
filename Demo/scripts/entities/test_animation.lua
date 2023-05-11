@@ -1,10 +1,14 @@
 function init(scene, entity)
     
     entity:get_transform().pos = Vector3.new(-10.0, 0.0, 10.0);
-    entity:get_transform().rot = Vector3.new(0.0, -90.0, 0.0);
+    --entity:get_transform().rot = Vector3.new(0.0, -90.0, 0.0);
+    entity:get_transform().rot = Vector3.new(-90.0, 0.0, 90.0);
 
-    local model = entity:add_model("assets/models/dancing_vampire.dae", 0.1, true) -- get model and add a drawable component
-    model:set_shader("coreAssets/shaders/animation.prog") -- set the shader on the model (automatically binds it)
+    --local model = entity:add_model("assets/models/dancing_vampire.dae", 0.1, true) -- get model and add a drawable component
+    --model:set_shader("coreAssets/shaders/animation.prog") -- set the shader on the model (automatically binds it)
+
+    local model = entity:add_model("assets/models/monsters/soldier/tris.md2", 1.0, false);
+    model:set_shader("coreAssets/shaders/basic.prog");
     
     local shader = model:get_shader(); -- get the shader from the model
 

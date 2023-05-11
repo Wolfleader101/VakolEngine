@@ -9,6 +9,33 @@
 
 #include <stb_image.h>
 
+#include <Model/Assets/md2.hpp>
+
+int LoadMD2File(const char* path, md2_model_t& mdl)
+{
+	FILE* fptr = nullptr;
+
+	if (const auto error = fopen_s(&fptr, path, "rb"))
+	{
+		VK_ERROR("File {0} could not be opened.", path);
+		return EXIT_FAILURE;
+	}
+
+	/* Read header */
+	const auto size = fread(&mdl.header, 1, sizeof(md2_header_t), fptr);
+
+	if (mdl.header.identity != ID_ALIAS_HEADER || mdl.header.version != ALIAS_VERSION)
+	{
+		VK_ERROR("Bad Version or Identifier");
+
+		const int success = fclose(fptr);
+
+		return success;
+	}
+
+	return EXIT_SUCCESS;
+}
+
 std::string LoadFile(const std::string& path)
 {
 	std::string result;

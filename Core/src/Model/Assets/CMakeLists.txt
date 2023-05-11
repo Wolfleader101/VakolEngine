@@ -2,6 +2,8 @@ SET(ASSETS
 
 	src/Model/Assets/Animation.hpp
 
+	src/Model/Assets/md2.hpp
+
 	src/Model/Assets/Model.hpp
 
 	src/Model/Assets/Mesh.hpp

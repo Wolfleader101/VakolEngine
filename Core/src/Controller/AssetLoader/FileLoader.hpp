@@ -2,6 +2,9 @@
 
 #include <string>
 
+struct md2_model_t;
+
+int LoadMD2File(const char* path, md2_model_t& mdl);
 std::string LoadFile(const std::string& path);
 
 unsigned char* LoadImage(std::string&& path, int& width, int& height);
