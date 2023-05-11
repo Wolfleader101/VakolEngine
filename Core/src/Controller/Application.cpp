@@ -5,7 +5,6 @@
 #include <Controller/Physics/PhysicsPool.hpp>
 #include <Controller/Scene.hpp>
 #include <Controller/System.hpp>
-#include <Model/Assets/Texture.hpp>
 #include <Model/Components.hpp>
 #include <View/Renderer/RendererFactory.hpp>
 
@@ -34,7 +33,6 @@ namespace Vakol::Controller {
         m_window->SetEventCallback(BIND_EVENT_FN(OnEvent));
 
         m_gui.Init(m_window);
-
 
         VK_INFO("Calling main.lua...");
 

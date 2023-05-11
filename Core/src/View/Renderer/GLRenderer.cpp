@@ -95,7 +95,8 @@ namespace Vakol::View
         const auto& shader = *model.c_shader();
         VK_ASSERT(&shader, "\n\nShader is nullptr");
 
-        model.animation()->Update(time.deltaTime);
+        if (model.isAnimated())
+			model.animation()->Update(time.deltaTime);
 
         shader.Bind();
 
@@ -108,15 +109,16 @@ namespace Vakol::View
 
         model_matrix = translate(model_matrix, trans.pos);
 
+        model_matrix = scale(model_matrix, trans.scale);
+
         model_matrix = rotate(model_matrix, glm::radians(trans.rot.x), glm::vec3(1.0f, 0.0f, 0.0f));
         model_matrix = rotate(model_matrix, glm::radians(trans.rot.y), glm::vec3(0.0f, 1.0f, 0.0f));
         model_matrix = rotate(model_matrix, glm::radians(trans.rot.z), glm::vec3(0.0f, 0.0f, 1.0f));
 
-        model_matrix = scale(model_matrix, trans.scale);
-
         SetBufferSubData(0, 3 * sizeof(glm::mat4), sizeof(glm::mat4), value_ptr(model_matrix));
 
-        shader.SetMat4v("BONE_TRANSFORMS", model.numTransforms(), value_ptr(model.transforms()[0]));
+        if (model.isAnimated())
+			shader.SetMat4v("BONE_TRANSFORMS", model.numTransforms(), value_ptr(model.transforms()[0]));
 
         for (int i = 0; i < model.nMeshes(); ++i) 
         {

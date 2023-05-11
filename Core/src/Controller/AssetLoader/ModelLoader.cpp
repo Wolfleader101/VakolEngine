@@ -50,9 +50,9 @@ namespace Vakol::Controller
     auto process_mesh(const aiScene& scene, const aiMesh& assimp_mesh, BoneInfoRemap& bone_info)->Mesh;
     auto process_material(const aiMaterial& material)->MaterialSpec;
 
-    bool IS_CORE_ASSET = false;
+    bool IS_CORE_ASSET = false; // A poor hack at best
 
-    ::Model LoadModel(const std::string& path, const float scale)
+    ::Model LoadModel(const std::string& path, const float scale, bool animated)
     {
         auto importer = Assimp::Importer{};
 
@@ -66,12 +66,18 @@ namespace Vakol::Controller
         if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
         {
             VK_ERROR("ERROR::ASSIMP:: {0}", importer.GetErrorString());
+
             importer.ReadFile("coreAssets/models/error.obj", aiProcess_Triangulate);
+
+            animated = false; // force animations off
         }
 
         BoneInfoRemap bone_info;
 
-        return { process_meshes(*scene, bone_info), extract_animation(*scene, -1, bone_info) };
+        if (animated)
+            return { process_meshes(*scene, bone_info), extract_animation(*scene, -1, bone_info) };
+    // else
+        return { process_meshes(*scene, bone_info) };
     }
 
     // iteratively iterate through each node for meshes
@@ -203,8 +209,6 @@ namespace Vakol::Controller
             vertex.bone_weights[i] = bone_weight;
         };
 
-        VK_TRACE(mesh.mNumBones);
-
         for (unsigned int i = 0; i < mesh.mNumBones; ++i)
         {
             const aiString& bone_name = mesh.mBones[i]->mName;
@@ -303,7 +307,7 @@ namespace Vakol::Controller
     {
         if (scene.mNumAnimations == 0)
         {
-            VK_WARN("No Animations Found!");
+            VK_ERROR("No Animations Found!");
             return {};
         }
 
@@ -315,8 +319,6 @@ namespace Vakol::Controller
 
         const auto duration = static_cast<float>(animation->mDuration);
         const auto ticks_per_second = static_cast<float>(animation->mTicksPerSecond);
-
-        VK_TRACE("Duration: {0} | Ticks Per Second {1}", duration, ticks_per_second);
 
         std::vector<AnimNode> nodes;
         std::vector<const aiString*> node_names;

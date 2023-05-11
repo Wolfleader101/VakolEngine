@@ -19,10 +19,12 @@ namespace Vakol::Model::Assets
         Model(std::vector<Mesh>&& meshes) : m_meshes(std::move(meshes)) {}
         Model(std::vector<Mesh>& meshes) : m_meshes(std::move(meshes)) {}
 
-        Model(std::vector<Mesh>&& meshes, Animation&& animation) : m_meshes(std::move(meshes)), m_animation(std::make_shared<Animation>(std::move(animation))) {}
-        Model(std::vector<Mesh>& meshes, Animation& animation) : m_meshes(std::move(meshes)), m_animation(std::make_shared<Animation>(std::move(animation))) {}
+        Model(std::vector<Mesh>&& meshes, Animation&& animation) : m_meshes(std::move(meshes)), m_animation(std::make_shared<Animation>(std::move(animation))), m_animated(true) {}
+        Model(std::vector<Mesh>& meshes, Animation& animation) : m_meshes(std::move(meshes)), m_animation(std::make_shared<Animation>(std::move(animation))), m_animated(true) {}
 
         void set_shader(const std::string& path)  {  this->m_shader = std::make_shared<Shader>(path); this->m_shader->Bind(); }
+
+        [[nodiscard]] bool isAnimated() const { return m_animated; }
         
         std::shared_ptr<Shader>& shader() { return m_shader; }
         [[nodiscard]] const std::shared_ptr<Shader>& c_shader() const { return m_shader; }
@@ -44,6 +46,8 @@ namespace Vakol::Model::Assets
         std::vector<Mesh> m_meshes;
         std::shared_ptr<Animation> m_animation = nullptr;
         std::shared_ptr<Shader> m_shader = nullptr;
+
+        bool m_animated = false;
     };
 
 }
