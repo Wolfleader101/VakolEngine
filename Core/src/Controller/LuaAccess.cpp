@@ -79,7 +79,9 @@ namespace Vakol::Controller
 
             auto mul_overload = sol::overload([](const glm::vec4& u, const glm::vec4& v) -> glm::vec4 { return u * v; },
                 [](const glm::vec4& v, const float k) -> glm::vec4 { return v * k; },
-                [](const float k, const glm::vec4& v) -> glm::vec4 { return k * v; });
+                [](const float k, const glm::vec4& v) -> glm::vec4 { return k * v; },
+                [](const glm::mat4& m, const glm::vec4& v) -> glm::vec4 { return m * v; },
+                [](const glm::vec4& v, const glm::mat4& m) -> glm::vec4 { return v * m; });
 
             auto add_overload = sol::overload([](const glm::vec4& u, const glm::vec4& v) -> glm::vec4 { return u + v; });
 
@@ -98,6 +100,41 @@ namespace Vakol::Controller
             vec4["g"] = &glm::vec4::g;
             vec4["b"] = &glm::vec4::b;
             vec4["a"] = &glm::vec4::a;
+        }
+
+        {
+            sol::constructors<glm::mat4(), glm::mat4(float), glm::mat4(glm::vec4, glm::vec4, glm::vec4, glm::vec4)> ctor;
+
+            auto mul_overload = sol::overload([](const glm::mat4& lhs, const glm::mat4& rhs) -> glm::mat4 { return lhs * rhs; },
+                [](const glm::mat4& m, const float k) -> glm::mat4 { return m * k; },
+                [](const float k, const glm::mat4& m) -> glm::mat4 { return k * m; });
+
+            auto mat4 = lua.new_usertype<glm::mat4>("Matrix4x4", ctor, sol::meta_function::multiplication, mul_overload);
+
+            lua.set_function("translate", [](const glm::mat4& matrix, const glm::vec3& translation)
+            {
+                return translate(matrix, translation);
+            });
+
+            lua.set_function("scale", [](const glm::mat4& matrix, const glm::vec3& scale)
+            {
+                return glm::scale(matrix, scale);
+            });
+
+            lua.set_function("rotate", [](const glm::mat4& matrix, const float angle, const glm::vec3& axis)
+            {
+                return rotate(matrix, angle, axis);
+            });
+
+            lua.set_function("inverse", [](const glm::mat4& matrix)
+            {
+                return inverse(matrix);
+            });
+
+            lua.set_function("transpose", [](const glm::mat4& matrix)
+            {
+                return transpose(matrix);
+            });
         }
     }
 
@@ -294,6 +331,12 @@ namespace Vakol::Controller
                 ent->GetComponent<Drawable>().model_ptr = model;
 
             return model;
+        });
+
+        entity_type.set_function("instantiate_model", [](const std::shared_ptr<Assets::Model>& model, const sol::as_table_t<std::vector<glm::mat4>>& matrices, int amount)
+        {
+			
+            CreateInstances(model->meshes(), matrices.value());
         });
 
 #pragma warning(push)

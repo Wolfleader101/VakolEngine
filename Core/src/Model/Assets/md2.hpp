@@ -2,6 +2,9 @@
 
 #include <glm/vec3.hpp>
 
+#include <vector>
+#include <string>
+
 // https://github.com/id-Software/Quake-2/blob/master/qcommon/qfiles.h
 // http://tfc.duke.free.fr/coding/md2-specs-en.html
 
@@ -45,27 +48,27 @@ struct md2_header_t
 
 	int num_skins;              /* number of skins */
 	int num_vertices;           /* number of vertices per frame */
-	int num_uv;                 /* number of texture coordinates */
+	int num_uvs;                /* number of texture coordinates */
 	int num_tris;               /* number of triangles */
-	int num_glcmds;             /* number of opengl commands */
+	int num_gl_cmds;             /* number of opengl commands */
 	int num_frames;             /* number of frames */
 
 	int offset_skins;           /* offset skin data */
-	int offset_uv;              /* offset texture coordinate data */
+	int offset_uvs;             /* offset texture coordinate data */
 	int offset_tris;            /* offset triangle data */
 	int offset_frames;          /* offset frame data */
-	int offset_glcmds;          /* offset OpenGL command data */
+	int offset_gl_cmds;         /* offset OpenGL command data */
 	int offset_end;             /* offset end of file */
 };
 
 /* Texture name */
 struct md2_skin_t
 {
-	char name[MAX_SKIN_NAME];		/* texture file name */
+	std::string name;			/* texture file name */
 };
 
 /* Texture coords */
-struct md2_texCoord_t
+struct md2_uv_t
 {
 	short u;
 	short v;
@@ -90,11 +93,16 @@ struct md2_frame_t
 {
 	glm::vec3 scale;               /* scale factor */
 	glm::vec3 translate;           /* translation vector */
-	char name[16];				   /* frame name */
-	md2_vertex_t* verts;	   /* list of frame's vertices */
+	std::string name;			   /* frame name */
+	md2_vertex_t* verts;		   /* list of frame's vertices */
 };
 
 struct md2_model_t
 {
 	md2_header_t header;
+	std::vector<md2_skin_t> skins;
+	std::vector<md2_uv_t> uvs;
+	std::vector<md2_triangle_t> triangles;
+	std::vector<md2_frame_t> frames;
+	std::vector<int> gl_cmds;
 };

@@ -19,36 +19,47 @@ namespace Vakol::Model::Assets
 {
 	struct BoneInfo
 	{
-		int index = -1;
+		int index = -1; // Index of the bone
 
-		// Inverse-bind matrix or inverse bind pose matrix or "offset" matrix:
-			// https://stackoverflow.com/questions/50143649/what-does-moffsetmatrix-actually-do-in-assimp.
+		// Inverse-bind matrix or offset matrix
 		glm::mat4 offset;
+
+		// The 'offset' matrix represents the transformation that brings a vertex from the bone's local space to the model's space.
 	};
 
 	struct BoneInfoRemap
 	{
-		std::map<std::string, BoneInfo, std::less<>> name_to_info; // less-than comparison
+		std::map<std::string, BoneInfo, std::less<>> name_to_info; // Map to store bone information, using bone names as keys
 
-		int next_bone_id = 0;
+		int next_bone_id = 0; // Next available bone ID for adding new bones
 
+		// Add a new bone to the map with the given name and bone-to-model transformation matrix
 		int add_new_bone(std::string&& name, const glm::mat4& bone_to_model)
 		{
+			// Insert the new bone into the map
 			auto [itr, inserted] = name_to_info.insert(std::make_pair(std::move(name), BoneInfo{ -1, bone_to_model }));
 
-			VK_ASSERT(inserted, "\n\nInserting duplicate bone.");
+			if (!inserted)
+			{
+				VK_ERROR("Duplicate bone encountered: {0}", itr->first);
+				return 0;
+				// Handle the duplicate bone case here, such as logging an error, throwing an exception, or taking any necessary action.
+			}
 
+			// Retrieve the inserted bone's index and set it to the next available bone ID
 			auto& [index, offset] = itr->second;
-
 			index = next_bone_id++;
 
 			return index;
 		}
 
+		// Get the BoneInfo pointer for the bone with the given name
 		const BoneInfo* get(const char* name) const
 		{
+			// Find the bone in the map based on the name
 			const auto itr = name_to_info.find(name);
 
+			// Return the BoneInfo pointer if the bone is found, otherwise return nullptr
 			return itr != name_to_info.end() ? &itr->second : nullptr;
 		}
 	};
@@ -74,32 +85,32 @@ namespace Vakol::Model::Assets
 	struct BoneKeyFrame
 	{
 		int bone_index = -1;
-		// offset = model-space to bone-space
 		glm::mat4 offset = glm::mat4(1.0f); // start off with an identity matrix
 
 		std::vector<KeyPosition> positions;
 		std::vector<KeyScale> scales;
 		std::vector<KeyRotation> rotations;
 
-		// remember previous frame's state to find next frame keys quicker
+		// Variables to remember the state of the previous frame
 		float prev_time = -1;
 		int prev_position_index = -1;
 		int prev_scale_index = -1;
 		int prev_rotation_index = -1;
 
+		// Interpolates the frames at the given time and returns the resulting transformation matrix
 		glm::mat4 interpolate_frames_at(const float time)
 		{
 			const auto translation=   interpolate_position(time);
-			const auto scale =		   interpolate_scaling(time);
 			const auto rotation =	   interpolate_rotation(time);
+			const auto scale =		   interpolate_scaling(time);
 
 			prev_time = time;
 
-			return translation * scale * rotation;
+			return translation * rotation * scale;
 		}
 
 	private:
-
+		// Comparator for keyframes based on their timestamps
 		template <typename Key>
 		struct KeyTimeCompare
 		{
@@ -108,23 +119,29 @@ namespace Vakol::Model::Assets
 			bool operator()(const Key& lhs, const float time) const noexcept { return lhs.timestamp < time; }
 		};
 
+		// Returns the index of the frame in the vector that corresponds to the given time
 		template <typename Key>
 		static int GetFrameIndex(const std::vector<Key>& frames, float time, unsigned int start_offset, unsigned int end_offset)
 		{
-			VK_ASSERT(frames.size() >= 2, "");
+			VK_ASSERT(frames.size() >= 2, "\n\nThere must be at least 2 animation frames"); // Ensure that there are at least 2 frames
 
+			// Find the iterator pointing to the first element with a timestamp not less than the target time
 			auto itr = std::lower_bound(frames.cbegin() + start_offset, frames.cbegin() + end_offset, time, KeyTimeCompare<Key>{});
 
 			if (itr == frames.cbegin())
 				itr = frames.cbegin() + 1;
 
-			VK_ASSERT(itr != frames.cend(), "");
-			const auto index = static_cast<int>(std::distance(frames.cbegin(), itr)) - 1;
+			VK_ASSERT(itr != frames.cend(), "\n\nInvalid Iterator!");
+			const auto index = static_cast<int>(std::distance(frames.cbegin(), itr)) - 1; // Calculate the index of the frame
 
-			VK_ASSERT(index >= 0, "");
-			VK_ASSERT(index < static_cast<int>(frames.size()) - 1, "");
-			VK_ASSERT(frames.at(index).timestamp <= time, "");
-			VK_ASSERT(frames.at(index + 1).timestamp >= time, "");
+			VK_ASSERT(index >= 0, "\n\nIndex must not be non-negative!"); // Ensure that the index is not negative
+			VK_ASSERT(index < static_cast<int>(frames.size()) - 1, "\n\nIndex must be within a valid range of animation frames!"); // Ensure that the index is within the valid range of frames
+
+			// Ensure that the frame at the index has a timestamp less than or equal to the target time
+			VK_ASSERT(frames.at(index).timestamp <= time, "\n\nFrame must have a timestamp less-than or equal-to the target time!");
+
+			// Ensure that the frame at the next index has a timestamp greater than or equal to the target time
+			VK_ASSERT(frames.at(index + 1).timestamp >= time, "\n\nThe next frame must have a timestamp greater-than or equal-to the target time!"); 
 
 			return index;
 		}
@@ -132,31 +149,36 @@ namespace Vakol::Model::Assets
 		template <typename Key>
 		static int UpdateFrameIndex(const std::vector<Key>& frames, const float time, const int prev_index, const float prev_time)
 		{
-			VK_ASSERT(prev_index < static_cast<int>(frames.size()), "");
+			// Assert that the previous index is within the range of frames
+			VK_ASSERT(prev_index < static_cast<int>(frames.size()),
+			          "\n\nPrevious frame index must be within the valid range of frames!");
 
+			// If no previous index exists, return the frame index based on the entire range of frames
 			if (prev_index < 0)
 				return GetFrameIndex(frames, time, 0, static_cast<unsigned int>(frames.size()));
 
-			VK_ASSERT(prev_index >= 0, "");
-			VK_ASSERT(prev_time >= 0, "");
+			VK_ASSERT(prev_index >= 0, "\n\nPrevious frame index must be non-negative!");
+			VK_ASSERT(prev_time >= 0, "\n\nPrevious time frame must be non-negative!");
 
+			// If the current time is greater than or equal to the previous time, return the frame index based on the range from the previous index to the end of frames
 			if (time >= prev_time)
 				return GetFrameIndex(frames, time, prev_index, static_cast<unsigned int>(frames.size()));
 
+			// Otherwise, return the frame index based on the range from the beginning of frames to the previous index
 			return GetFrameIndex(frames, time, 0, prev_index);
 		}
 
 		static float GetScaleFactor(const float prev_timestamp, const float next_timestamp, const float time)
 		{
-			VK_ASSERT(time >= prev_timestamp, "");
-			VK_ASSERT(next_timestamp > prev_timestamp, "");
+			VK_ASSERT(time >= prev_timestamp, "\n\nCurrent time must be greater-than or equal-to the previous keyframe timestamp!"); // Assert that the current time is greater than or equal to the previous timestamp
+			VK_ASSERT(next_timestamp > prev_timestamp, "\n\nThe next timestamp must be greater-than or equal-to the previous keyframe timestamp!");  // Assert that the next timestamp is greater than the previous timestamp
 
-			const auto progress = time - prev_timestamp;
-			const auto total = next_timestamp - prev_timestamp;
+			const auto progress = time - prev_timestamp; // Calculate the time progress from the previous timestamp to the current time
+			const auto total = next_timestamp - prev_timestamp; // Calculate the total time duration between the previous and next timestamps
 
-			VK_ASSERT(progress <= total, "");
+			VK_ASSERT(progress <= total, "\n\nProgess must be within the total duration!"); // Assert that the progress is within the total duration
 
-			return progress / total;
+			return progress / total; // Return the scale factor, which represents the relative progress within the total duration
 		}
 
 		[[nodiscard]] glm::mat4 interpolate_position(const float time)
@@ -230,25 +252,25 @@ namespace Vakol::Model::Assets
 
 		void Update(const float delta_time)
 		{
-			current_time += ticks_per_second * delta_time;
-			current_time = fmod(current_time, duration);
+			current_time += ticks_per_second * delta_time; // Update the current time based on the ticks per second and delta time
+			current_time = fmod(current_time, duration); // Wrap the current time within the duration of the animation
 
 			for (int i = 0, count = static_cast<int>(nodes.size()); i < count; ++i)
 			{
 				auto& [bone, bone_transform, parent, node_transform] = nodes[i];
-				VK_ASSERT(i > parent, "");
+				VK_ASSERT(i > parent, "\n\nNode index must be greater than parent index!"); // Assert that the node index is greater than its parent index
 
-				const glm::mat4& transform = bone ? bone->interpolate_frames_at(current_time) : node_transform;
-				const glm::mat4& parent_transform = parent >= 0 ? nodes[parent].bone_transform : glm::mat4(1.0f);
+				const glm::mat4& transform = bone ? bone->interpolate_frames_at(current_time) : node_transform; // Interpolate the transform based on the bone or node animation
+				const glm::mat4& parent_transform = parent >= 0 ? nodes[parent].bone_transform : glm::mat4(1.0f); // Get the parent's transform or use the identity matrix if no parent
 
-				bone_transform = parent_transform * transform;
+				bone_transform = parent_transform * transform; // Compute the final bone transform by combining the parent and current transform
 
-				if (!bone) continue;
+				if (!bone) continue; // Skip further processing if the node is not associated with a bone
 
 				const size_t bone_index = bone->bone_index;
 				VK_ASSERT(bone_index < m_transforms.size(), "\n\nTOO MANY BONES!");
 
-				m_transforms[bone_index] = global_inverse * bone_transform * bone->offset;
+				m_transforms[bone_index] = global_inverse * bone_transform * bone->offset; // Compute the final bone transform matrix and store it in m_transforms
 			}
 		}
 

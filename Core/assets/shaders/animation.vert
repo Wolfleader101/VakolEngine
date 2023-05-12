@@ -28,7 +28,7 @@ layout (std140, binding = 1) uniform Matrices
 //    mat4 BONE_TRANSFORMS[];
 //};
 
-uniform mat4 BONE_TRANSFORMS[52];
+uniform mat4 BONE_TRANSFORMS[128];
 
 void main()
 {  
