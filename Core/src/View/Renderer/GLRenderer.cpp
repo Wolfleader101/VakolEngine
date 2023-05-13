@@ -95,6 +95,9 @@ namespace Vakol::View
         const auto& shader = *model.c_shader();
         VK_ASSERT(&shader, "\n\nShader is nullptr");
 
+        if (model.isAnimated())
+            model.animation()->Update(time.deltaTime);
+
         shader.Bind();
 
         // at index 0, with an offset of 0 (since PV_MATRIX is the only element in the buffer), with a size of a 4x4 matrix, set PV_MATRIX
@@ -113,6 +116,9 @@ namespace Vakol::View
         model_matrix = scale(model_matrix, trans.scale);
 
         SetBufferSubData(0, 3 * sizeof(glm::mat4), sizeof(glm::mat4), value_ptr(model_matrix));
+
+        if (model.isAnimated())
+            shader.SetMat4v("BONE_TRANSFORMS", model.numTransforms(), value_ptr(model.transforms()[0]));
 
         for (int i = 0; i < model.nMeshes(); ++i) 
         {

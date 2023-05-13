@@ -25,29 +25,31 @@ using namespace Vakol::Model::Assets;
 namespace Vakol::Controller
 {
     constexpr unsigned int ASSIMP_LOADER_OPTIONS =
-        aiProcess_Triangulate | aiProcess_CalcTangentSpace | aiProcess_FlipUVs | aiProcess_JoinIdenticalVertices | aiProcess_GlobalScale;
+        aiProcess_Triangulate | aiProcess_CalcTangentSpace | aiProcess_FlipUVs | aiProcess_LimitBoneWeights | aiProcess_GlobalScale;
 
     static glm::mat4 to_glm(const aiMatrix4x4& m)
     {
-    	glm::vec4 c1{ m.a1, m.b1, m.c1, m.d1 };
-    	glm::vec4 c2{ m.a2, m.b2, m.c2, m.d2 };
-    	glm::vec4 c3{ m.a3, m.b3, m.c3, m.d3 };
-    	glm::vec4 c4{ m.a4, m.b4, m.c4, m.d4 };
+        glm::vec4 c1{ m.a1, m.b1, m.c1, m.d1 };
+        glm::vec4 c2{ m.a2, m.b2, m.c2, m.d2 };
+        glm::vec4 c3{ m.a3, m.b3, m.c3, m.d3 };
+        glm::vec4 c4{ m.a4, m.b4, m.c4, m.d4 };
 
         return { c1, c2, c3, c4 };
     }
 
     static glm::quat to_glm(aiQuaternion& v) { return { v.w, v.x, v.y, v.z }; }
-    static glm::vec3 to_glm(aiColor3D& v) { return { v.r, v.g, v.b}; }
+    static glm::vec3 to_glm(aiColor3D& v) { return { v.r, v.g, v.b }; }
     static glm::vec3 to_glm(aiVector3D& v) { return { v.x, v.y, v.z }; }
 
-    auto extract_vertices(const aiMesh& mesh) -> std::vector<Vertex>;
-    auto extract_indices(const aiMesh& mesh)-> std::vector<unsigned int>;
-    auto extract_bones(const aiMesh& mesh, std::vector<Vertex>& vertices)->void;
+    auto extract_vertices(const aiMesh& mesh)->std::vector<Vertex>;
+    auto extract_indices(const aiMesh& mesh)->std::vector<unsigned int>;
+    auto extract_bones(const aiMesh& mesh, std::vector<Vertex>& vertices, BoneInfoRemap& bone_info)->void;
     auto extract_textures(const aiMaterial& material, aiTextureType type)->std::vector<Texture>;
+    auto extract_bone_keyframes(const aiNodeAnim& channel, const BoneInfo& bone_info)->BoneKeyFrame;
+    auto extract_animation(const aiScene& scene, int animation_index, const BoneInfoRemap& bone_info)->Animation;
 
-    auto process_meshes(const aiScene& scene)->std::vector<Mesh>;
-    auto process_mesh(const aiScene& scene, const aiMesh& assimp_mesh)->Mesh;
+    auto process_meshes(const aiScene& scene, BoneInfoRemap& bone_info)->std::vector<Mesh>;
+    auto process_mesh(const aiScene& scene, const aiMesh& mesh, BoneInfoRemap& bone_info)->Mesh;
     auto process_material(const aiMaterial& material)->MaterialSpec;
 
     bool IS_CORE_ASSET = false; // A poor hack at best
@@ -72,49 +74,39 @@ namespace Vakol::Controller
             animated = false; // force animations off
         }
 
+        BoneInfoRemap bone_info;
 
-        VK_TRACE("Number of Meshes: {0}", scene->mNumMeshes);
         if (animated)
-            VK_TRACE("ANIMATED");
-    // else
-        return { process_meshes(*scene) };
+            return { process_meshes(*scene, bone_info), extract_animation(*scene, -1, bone_info) };
+        // else
+        return { process_meshes(*scene, bone_info) };
     }
 
     // iteratively iterate through each node for meshes
-    auto process_meshes(const aiScene& scene)->std::vector<Mesh>
+    auto process_meshes(const aiScene& scene, BoneInfoRemap& bone_info)->std::vector<Mesh>
     {
         std::vector<Mesh> meshes;
 
-        std::stack<const aiNode*> nodes;
-
-        nodes.push(scene.mRootNode);
-
-        while(!nodes.empty())
+        // Fetch meshes in current node
+        for (unsigned int i = 0; i < scene.mNumMeshes; ++i)
         {
-            const auto& node = *nodes.top(); // current node
-            nodes.pop();
+            const auto& mesh = *scene.mMeshes[i];
 
-            // Fetch meshes in current node
-            for (unsigned int i = 0; i < node.mNumMeshes; ++i)
-            {
-                VK_TRACE(i);
-                const auto& mesh = *scene.mMeshes[node.mMeshes[i]];
-                
-                meshes.push_back(process_mesh(scene, mesh));
-            }
-
-            for (unsigned int i = 0; i < node.mNumChildren; ++i)
-                nodes.push(node.mChildren[i]);
+            meshes.push_back(process_mesh(scene, mesh, bone_info));
         }
 
         return meshes;
     }
 
-    auto process_mesh(const aiScene& scene, const aiMesh& assimp_mesh)->Mesh
+    auto process_mesh(const aiScene& scene, const aiMesh& mesh, BoneInfoRemap& bone_info)->Mesh
     {
-    	auto vertices = extract_vertices(assimp_mesh);
-    	auto indices = extract_indices(assimp_mesh);
-        auto material = process_material(*scene.mMaterials[assimp_mesh.mMaterialIndex]);
+        auto vertices = extract_vertices(mesh);
+        auto indices = extract_indices(mesh);
+
+        if (mesh.HasBones())
+			extract_bones(mesh, vertices, bone_info);
+
+        auto material = process_material(*scene.mMaterials[mesh.mMaterialIndex]);
 
         return { vertices, indices, sizeof(Vertex), material };
     }
@@ -123,7 +115,7 @@ namespace Vakol::Controller
     {
         std::vector<Texture> textures;
 
-        aiColor3D ambient, diffuse, specular, normal, emission;
+        aiColor3D ambient, diffuse, specular, emission;
         float shininess;
 
         material.Get(AI_MATKEY_COLOR_AMBIENT, ambient);
@@ -142,7 +134,7 @@ namespace Vakol::Controller
         textures.insert(textures.end(), std::make_move_iterator(normal_maps.begin()), std::make_move_iterator(normal_maps.end()));
         textures.insert(textures.end(), std::make_move_iterator(emission_maps.begin()), std::make_move_iterator(emission_maps.end()));
 
-        return {to_glm(ambient), to_glm(diffuse), to_glm(specular), to_glm(emission), shininess, std::move(textures) };
+        return { to_glm(ambient), to_glm(diffuse), to_glm(specular), to_glm(emission), shininess, std::move(textures) };
     }
 
     auto extract_vertices(const aiMesh& mesh)-> std::vector<Vertex>
@@ -153,7 +145,7 @@ namespace Vakol::Controller
 
         for (unsigned int i = 0; i < mesh.mNumVertices; ++i)
         {
-            Vertex vertex {};
+            Vertex vertex{};
 
             vertex.position = to_glm(mesh.mVertices[i]);
             vertex.normal = to_glm(mesh.mNormals[i]);
@@ -191,6 +183,50 @@ namespace Vakol::Controller
         return indices;
     }
 
+    auto extract_bones(const aiMesh& mesh, std::vector<Vertex>& vertices, BoneInfoRemap& bone_info)->void
+    {
+        auto add_bone_weight_to_vertex = [](Vertex& vertex, const int bone_index, const float bone_weight)
+        {
+            // There should only be up to 4 bone influences supported.
+            const auto itr = std::find_if(std::begin(vertex.bone_ids), std::end(vertex.bone_ids), [&](const int index)
+            {
+                    return index < 0;
+            });
+
+            if (itr == std::end(vertex.bone_ids)) return;
+            if (bone_weight == 0.0f) return;
+
+            const size_t i = std::distance(std::begin(vertex.bone_ids), itr); // Number of elements between two iterators
+
+            vertex.bone_ids[i] = bone_index;
+            vertex.bone_weights[i] = bone_weight;
+        };
+
+        for (unsigned int i = 0; i < mesh.mNumBones; ++i)
+        {
+            const aiString& bone_name = mesh.mBones[i]->mName;
+
+            const auto bone_index = bone_info.add_new_bone(std::string(bone_name.data, bone_name.length), to_glm(mesh.mBones[i]->mOffsetMatrix));
+
+            const aiBone* const bone = mesh.mBones[i];
+
+            VK_ASSERT(bone, "Bone is nullptr");
+
+            const aiVertexWeight* const weights = bone->mWeights;
+
+            for (unsigned int j = 0; j < bone->mNumWeights; ++j)
+            {
+                const auto vertex_id = weights[j].mVertexId;
+                const auto bone_weight = weights[j].mWeight;
+
+                VK_ASSERT(vertex_id <= static_cast<unsigned int>(vertices.size()), "id must not be greater than number of vertices!");
+                VK_ASSERT(vertex_id <= static_cast<unsigned int>(vertices.size()), "\n\nVertex ID must not be greater than the number of vertices!");
+
+                add_bone_weight_to_vertex(vertices[vertex_id], bone_index, bone_weight);
+            }
+        }
+    }
+
     auto extract_textures(const aiMaterial& material, const aiTextureType type)->std::vector<Texture>
     {
         std::vector<Texture> textures;
@@ -203,8 +239,8 @@ namespace Vakol::Controller
         {
             auto imported_path = aiString{};
 
-        	material.GetTexture(type, i, &imported_path);
-            
+            material.GetTexture(type, i, &imported_path);
+
             auto&& texture = Texture{};
 
             texture.path = imported_path.C_Str();
@@ -218,4 +254,147 @@ namespace Vakol::Controller
         return textures;
     }
 
+    auto extract_bone_keyframes(const aiNodeAnim& channel, const BoneInfo& bone_info)->BoneKeyFrame
+    {
+        BoneKeyFrame bone;
+
+        // Set the bone index and offset from the provided BoneInfo
+        bone.bone_index = bone_info.index;
+        bone.offset = bone_info.offset;
+
+        // Extract position keyframes
+        bone.positions.reserve(channel.mNumPositionKeys);
+        for (unsigned int index = 0; index < channel.mNumPositionKeys; ++index)
+        {
+            KeyPosition data;
+
+            data.position = to_glm(channel.mPositionKeys[index].mValue);
+            data.timestamp = static_cast<float>(channel.mPositionKeys[index].mTime);
+
+            bone.positions.push_back(data);
+        }
+
+        // Extract rotation keyframes
+        bone.rotations.reserve(channel.mNumRotationKeys);
+        for (unsigned int index = 0; index < channel.mNumRotationKeys; ++index)
+        {
+            KeyRotation data;
+
+            data.rotation = to_glm(channel.mRotationKeys[index].mValue);
+            data.timestamp = static_cast<float>(channel.mRotationKeys[index].mTime);
+
+            bone.rotations.push_back(data);
+        }
+
+        // Extract scale keyframes
+        bone.scales.reserve(channel.mNumScalingKeys);
+        for (unsigned int index = 0; index < channel.mNumScalingKeys; ++index)
+        {
+            KeyScale data;
+
+            data.scale = to_glm(channel.mScalingKeys[index].mValue);
+            data.timestamp = static_cast<float>(channel.mScalingKeys[index].mTime);
+
+            bone.scales.push_back(data);
+        }
+
+        return bone;
+    }
+
+    auto extract_animation(const aiScene& scene, int animation_index, const BoneInfoRemap& bone_info)->Animation
+    {
+        // Check if there are any animations in the scene
+        if (scene.mNumAnimations == 0)
+        {
+            VK_WARN("No Animations Found!");
+            return {}; // Return an empty Animation object
+        }
+
+        // Ensure the animation index is non-negative
+        animation_index = std::max(0, animation_index);
+
+        // Verify that the animation index is within the valid range
+        VK_ASSERT(static_cast<unsigned int>(animation_index) < scene.mNumAnimations, "Index is less than number of animations!");
+
+        // Retrieve the animation from the scene
+        const aiAnimation* const animation = scene.mAnimations[animation_index];
+
+        // Convert the animation duration and ticks per second to float
+        const auto duration = static_cast<float>(animation->mDuration);
+        const auto ticks_per_second = static_cast<float>(animation->mTicksPerSecond);
+
+        // Containers for storing animation node data and node names
+        std::vector<AnimNode> nodes;
+        std::vector<const aiString*> node_names;
+
+        // Struct for representing a node during depth-first search traversal
+        struct Node
+        {
+            const aiNode* src = nullptr; // Source node
+            int parent = -1; // Index of the parent node in the 'nodes' vector
+        };
+
+        std::stack<Node> node_search;
+        node_search.push(Node{ scene.mRootNode, -1 }); // Push the root node with no associated parent node (-1)
+
+        // Depth-first search traversal to extract animation node data
+        while (!node_search.empty())
+        {
+            const auto [src, parent] = node_search.top();
+            node_search.pop();
+
+            AnimNode node;
+            node.parent = parent;
+            node.node_transform = to_glm(src->mTransformation);
+
+            // Ensure that the parent index is within the valid range
+            VK_ASSERT(node.parent < static_cast<int>(nodes.size()), "Parent index out of valid range");
+
+            // Store the current node and its name
+            nodes.push_back(node);
+            node_names.push_back(&src->mName);
+
+            const auto parent_index = static_cast<int>(nodes.size() - 1);
+
+            // Add the children of the current node to the search stack
+            for (unsigned int i = 0; i < src->mNumChildren; ++i)
+                node_search.push(Node{ src->mChildren[i], parent_index });
+        }
+
+        // Extract bone keyframes for each channel in the animation
+        for (unsigned int i = 0; i < animation->mNumChannels; ++i)
+        {
+            const auto channel = animation->mChannels[i];
+
+            const aiString& bone_name = channel->mNodeName;
+
+            // Find the node with a matching name in the 'node_names' vector
+            auto itr = std::find_if(node_names.cbegin(), node_names.cend(), [&bone_name](const aiString* node_name)
+            {
+                return bone_name == *node_name;
+            });
+
+            // Ensure that a matching node is found
+            VK_ASSERT(itr != node_names.end(), "\n\nNo node matching a bone.");
+
+            // Calculate the index of the node in the 'nodes' vector
+            const auto index = static_cast<int>(std::distance(node_names.cbegin(), itr));
+
+            // Retrieve the bone info based on the bone name
+            const BoneInfo* info = bone_info.get(bone_name.C_Str());
+
+            VK_ASSERT(info, "\n\nNo bone info remap matching a bone");
+
+            auto& [bone, bone_transform, parent, node_transform] = nodes[index];
+
+            VK_ASSERT(!bone.has_value(), "\n\nTwo or more bones matching same node.");
+
+            bone.emplace(extract_bone_keyframes(*channel, *info));
+        }
+
+        const auto& root_transform = to_glm(scene.mRootNode->mTransformation);
+        const auto bone_count = static_cast<unsigned int>(bone_info.name_to_info.size());
+
+        return { inverse(root_transform), std::move(nodes), bone_count, duration, ticks_per_second };
+    }
 }
