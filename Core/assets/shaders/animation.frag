@@ -5,8 +5,6 @@ in VS_OUT
 {
 	vec3  normal;
     vec2  uv;
-	ivec4  bone_ids;
-	vec4  bone_weights;
 } fs_in;
 
 uniform sampler2D diffuse_map;

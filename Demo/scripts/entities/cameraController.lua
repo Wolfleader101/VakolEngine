@@ -3,7 +3,7 @@ function init(scene, entity)
 
     camera:set_yaw(95);
 
-    camera:set_pos(0, -5.0, -90);
+    camera:set_pos(0, -5.0, -10);
 
     print("Initialising Camera");
 

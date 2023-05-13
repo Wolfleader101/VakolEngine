@@ -335,7 +335,7 @@ namespace Vakol::Controller
 
         entity_type.set_function("instantiate_model", [](const std::shared_ptr<Assets::Model>& model, const sol::as_table_t<std::vector<glm::mat4>>& matrices, int amount)
         {
-			
+            VK_TRACE(matrices.value().size());
             CreateInstances(model->meshes(), matrices.value());
         });
 
@@ -588,5 +588,12 @@ namespace Vakol::Controller
 
         scenePhysicType.set_function("enable_debug", &ScenePhysics::EnableDebug);
 
+    }
+
+    std::vector<glm::mat4> create_mat4_vector() { return {}; }
+
+    void RegisterOther(sol::state& lua)
+    {
+        lua.set_function("vector_mat4", &create_mat4_vector);
     }
 }  // namespace Vakol::Controller

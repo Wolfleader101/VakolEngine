@@ -40,8 +40,6 @@ namespace Vakol::Controller {
 
         const sol::function lua_main = lua.GetState()["main"];
 
-        lua_main();
-
         m_running = true;
     }
 
@@ -57,6 +55,7 @@ namespace Vakol::Controller {
         RegisterGUIWindow(lua.GetState(), &m_gui);  // Register GUI Window
     	RegisterRenderer(lua.GetState());
     	RegisterPhysics(lua.GetState());
+        RegisterOther(lua.GetState());
     }
 
     std::optional<Model::GameConfig> Application::LoadConfig() 
