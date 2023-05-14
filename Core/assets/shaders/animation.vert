@@ -32,17 +32,15 @@ uniform mat4 BONE_TRANSFORMS[56];
 
 void main()
 {  
-    mat4 S = mat4(0.0f);
-
-    //vec4 normalized_weights = aBoneWeights / dot(aBoneWeights, vec4(1.0));
+    mat4 BONE_MATRIX = mat4(0.0f);
 
     for (int i = 0; i < 4; ++i)
-         S += BONE_TRANSFORMS[aBoneIDs[i]] * aBoneWeights[i];
+         BONE_MATRIX += BONE_TRANSFORMS[aBoneIDs[i]] * aBoneWeights[i];
 
     vs_out.normal = aNormal;
     vs_out.uv = aTexCoords;
     vs_out.bone_ids = aBoneIDs;
     vs_out.bone_weights = aBoneWeights;
 
-    gl_Position = PV_MATRIX * MODEL_MATRIX * S * vec4(aPos, 1.0);
+    gl_Position = PV_MATRIX * MODEL_MATRIX * BONE_MATRIX * vec4(aPos, 1.0);
 }

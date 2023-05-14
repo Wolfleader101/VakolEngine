@@ -1,68 +1,20 @@
 #pragma once
 
 #include <vector>
-#include <string>
-
-#include <optional>
-#include <map>
 
 #pragma warning(push)
 #pragma warning(disable:4201)
-#include <glm/gtc/quaternion.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 #pragma warning(pop)
+
+#include <optional>
 
 #include <Controller/Logger.hpp>
 
+#include <Model/Assets/Bone.hpp>
+
 namespace Vakol::Model::Assets
 {
-	struct BoneInfo
-	{
-		int index = -1; // Index of the bone
-
-		// Inverse-bind matrix or offset matrix
-		glm::mat4 offset;
-
-		// The 'offset' matrix represents the transformation that brings a vertex from the bone's local space to the model's space.
-	};
-
-	struct BoneInfoRemap
-	{
-		std::map<std::string, BoneInfo, std::less<>> name_to_info; // Map to store bone information, using bone names as keys
-
-		int next_bone_id = 0; // Next available bone ID for adding new bones
-
-		// Add a new bone to the map with the given name and bone-to-model transformation matrix
-		int add_new_bone(std::string&& name, const glm::mat4& bone_to_model)
-		{
-			// Insert the new bone into the map
-			auto [itr, inserted] = name_to_info.insert(std::make_pair(std::move(name), BoneInfo{ -1, bone_to_model }));
-
-			if (!inserted)
-			{
-				VK_ERROR("Duplicate bone encountered: {0}", itr->first);
-				return -1;
-			}
-
-			// Retrieve the inserted bone's index and set it to the next available bone ID
-			auto& [index, offset] = itr->second;
-			index = next_bone_id++;
-
-			return index;
-		}
-
-		// Get the BoneInfo pointer for the bone with the given name
-		const BoneInfo* get(const char* name) const
-		{
-			// Find the bone in the map based on the name
-			const auto itr = name_to_info.find(name);
-
-			// Return the BoneInfo pointer if the bone is found, otherwise return nullptr
-			return itr != name_to_info.end() ? &itr->second : nullptr;
-		}
-	};
-
 	struct KeyPosition
 	{
 		glm::vec3 position{};
@@ -81,20 +33,20 @@ namespace Vakol::Model::Assets
 		float timestamp = 0.0f;
 	};
 
-	struct BoneKeyFrame
+	struct KeyFrame
 	{
-		int bone_index = -1;
+		int index = -1;
 		glm::mat4 offset = glm::mat4(1.0f); // start off with an identity matrix
 
 		std::vector<KeyPosition> positions;
-		std::vector<KeyScale> scales;
+		std::vector<KeyScale>    scales;
 		std::vector<KeyRotation> rotations;
 
 		// Variables to remember the state of the previous frame
 		float prev_time = -1;
-		int prev_position_index = -1;
-		int prev_scale_index = -1;
-		int prev_rotation_index = -1;
+		int	  prev_position_index = -1;
+		int   prev_scale_index = -1;
+		int   prev_rotation_index = -1;
 
 		// Interpolates the frames at the given time and returns the resulting transformation matrix
 		glm::mat4 interpolate_frames_at(const float time)
@@ -229,7 +181,7 @@ namespace Vakol::Model::Assets
 
 	struct AnimNode
 	{
-		std::optional<BoneKeyFrame> bone;
+		std::optional<KeyFrame> bone;
 		glm::mat4 bone_transform{};
 
 		int parent = -1;
@@ -266,7 +218,7 @@ namespace Vakol::Model::Assets
 
 				if (!bone) continue; // Skip further processing if the node is not associated with a bone
 
-				const size_t bone_index = bone->bone_index;
+				const size_t bone_index = bone->index;
 				VK_ASSERT(bone_index < m_transforms.size(), "\n\nTOO MANY BONES!");
 
 				m_transforms[bone_index] = global_inverse * bone_transform * bone->offset; // Compute the final bone transform matrix and store it in m_transforms
