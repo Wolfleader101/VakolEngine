@@ -37,6 +37,9 @@ void main()
     for (int i = 0; i < 4; ++i)
          BONE_MATRIX += BONE_TRANSFORMS[aBoneIDs[i]] * aBoneWeights[i];
 
+    if (aBoneIDs[0] < 0)
+        BONE_MATRIX = mat4(1.0);
+
     vs_out.normal = aNormal;
     vs_out.uv = aTexCoords;
     vs_out.bone_ids = aBoneIDs;

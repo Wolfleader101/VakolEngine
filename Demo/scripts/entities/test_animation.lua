@@ -3,9 +3,15 @@ function init(scene, entity)
     entity:get_transform().pos = Vector3.new(-10.0, 0.0, 10.0);
     entity:get_transform().rot = Vector3.new(0.0, 85.0, 0.0);
 
-    local model = entity:add_model("assets/models/test.gltf", 0.1, true) -- get model and add a drawable component
+    local model = entity:add_model("assets/models/silly_dance.dae", 0.1, true) -- get model and add a drawable component
     model:set_shader("coreAssets/shaders/animation.prog") -- set the shader on the model (automatically binds it)
     
+      local material = mesh:get_material();
+
+    material:add_texture(height_map);
+
+    shader:set_int("height_map", 0);
+
     local shader = model:get_shader(); -- get the shader from the model
 
     shader:set_int("diffuse_map", 0);

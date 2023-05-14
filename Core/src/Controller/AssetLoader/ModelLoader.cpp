@@ -311,10 +311,6 @@ namespace Vakol::Controller
         // Ensure the animation index is non-negative
         animation_index = std::max(0, animation_index);
 
-
-        VK_TRACE("NUM ANIMATIONS: {0}", scene.mNumAnimations);
-        VK_TRACE("INDEX: {0}",animation_index);
-
         // Verify that the animation index is within the valid range
         VK_ASSERT(static_cast<unsigned int>(animation_index) < scene.mNumAnimations, "Index is less than number of animations!");
 
@@ -385,7 +381,7 @@ namespace Vakol::Controller
             // Retrieve the bone info based on the bone name
             const Bone* info = bone_map.get(bone_name.C_Str());
 
-            VK_ASSERT(info, "\n\nNo bone info remap matching a bone");
+            VK_ASSERT(info, "\n\nNo bone matches any existing bone!");
 
             auto& [bone, bone_transform, parent, node_transform] = nodes[index];
 
