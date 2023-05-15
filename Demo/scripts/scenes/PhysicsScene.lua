@@ -1,5 +1,5 @@
 function init(scene)
-    --scene:create_entity("physics plane", "physics_plane.lua");
+    --scene:create_entity("physics plane", "entities/physics_plane.lua");
     scene:create_entity("physics example", "entities/physics_example.lua");
     
     

@@ -7,17 +7,19 @@ function init(scene, entity)
 
     local trans = entity:get_transform();
     
-    trans.scale.x = 1;
-    trans.scale.y = 1;
-    trans.scale.z = 1;
+    trans.scale.x = 2;
+    trans.scale.y = 2;
+    trans.scale.z = 2;
 
     trans.pos.y = 100;
 
-
+    
     
     local r = entity:add_rigid();
 
     local rData = rigidData.new();
+
+    
 
     --rData.angular_lock = phyVec3.new(0, 0, 0);
 
@@ -25,6 +27,7 @@ function init(scene, entity)
     local collider = entity:add_collider();
 
     collider.Shape = Shape.Sphere;
+    
     
 
     entity:physics_init(scene); 
@@ -34,11 +37,13 @@ function init(scene, entity)
    
     --r:toggle_gravity();
 
-    local vel = vec3.new();
+    local vel = Vector3.new();
 
     --vel.x = 1;
 
     r:set_velocity(vel);
+
+    
 
     vel.x = 0.5;
     vel.y = 0.5;
@@ -47,12 +52,11 @@ function init(scene, entity)
 
 
     r:set_angular_damp(0);
-    print("ree");
     r:set_angular_velocity(vel);
     
     
     
-    
+    print("oof");
     --local trans = entity:get_transform();
     --print("sdf");
     

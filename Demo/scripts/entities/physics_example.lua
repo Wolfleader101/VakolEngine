@@ -11,8 +11,7 @@ function init(scene, entity)
     trans.scale.y = 5;
     trans.scale.z = 5;
 
-
-
+    
     
     local r = entity:add_rigid();
 
@@ -22,13 +21,12 @@ function init(scene, entity)
     collider.Shape = Shape.Box;
 
     entity:physics_init(scene); 
-    
 
-    -- print("bruh");
    
     r:toggle_gravity();
 
-    local vel = vec3.new();
+
+    local vel = Vector3.new();
 
     --vel.x = 1;
 
@@ -41,17 +39,8 @@ function init(scene, entity)
 
 
     r:set_angular_damp(0);
-    print("ree");
+    
     r:set_angular_velocity(vel);
-    
-    
-    
-    
-    --local trans = entity:get_transform();
-    --print("sdf");
-    
-
-    
     
 
 end

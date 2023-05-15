@@ -228,13 +228,13 @@ namespace Vakol::Controller
 
         entity_type.set_function("get_transform", &Entity::GetComponent<Components::Transform>);
 
-        entity_type.set_function("create_height_map_terrain", [](Entity* ent, std::string&& path)
+        entity_type.set_function("create_height_map_terrain", [](Entity* ent, std::string&& path, float min, float max)
         {
             if (!ent->HasComponent<Components::Drawable>()) ent->AddComponent<Components::Drawable>();
 
             if (ent->HasComponent<Terrain>()) ent->RemoveComponent<Terrain>();
 
-            ent->AddComponent<Terrain>(LoadHeightMapTerrain(std::move(path), 0, 80));
+            ent->AddComponent<Terrain>(LoadHeightMapTerrain(std::move(path), min, max));
 
         	auto terrain = ent->GetComponent<Terrain>();
 

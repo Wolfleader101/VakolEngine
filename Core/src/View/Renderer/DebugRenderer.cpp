@@ -44,9 +44,12 @@ namespace Vakol::View
 
         m_rp3dRenderer = &m_World->getDebugRenderer();
 
+        
+
         m_rp3dRenderer->setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::COLLIDER_AABB, true);
 		m_rp3dRenderer->setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::COLLISION_SHAPE, true);
 		m_rp3dRenderer->setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::CONTACT_POINT, true);
+        
         
         
     }
