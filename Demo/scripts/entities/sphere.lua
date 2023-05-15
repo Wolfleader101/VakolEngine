@@ -11,7 +11,7 @@ function init(scene, entity)
     trans.scale.y = 1;
     trans.scale.z = 1;
 
-    trans.pos.y = 100;
+    trans.pos.y = 30;
 
     
     
@@ -25,6 +25,8 @@ function init(scene, entity)
 
 
     local collider = entity:add_collider();
+
+    entity:get_bounds_from_model();
 
     collider.Shape = Shape.Sphere;
     
