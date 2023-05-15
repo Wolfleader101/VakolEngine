@@ -89,6 +89,22 @@ std::string LoadFile(const std::string& path)
 	return result;
 }
 
+unsigned char* LoadImage(const int size, int& width, int& height, int& nrChannels, const bool flip, const void* data)
+{
+	// OpenGL be like: Nah we want textures upside down.
+	stbi_set_flip_vertically_on_load(flip);
+
+	const auto img_data = stbi_load_from_memory(static_cast<const stbi_uc* const>(data), size, &width, &height, &nrChannels, 0);
+
+	if (!img_data)
+	{
+		VK_ERROR("ERROR::FileLoader::LoadImage(): Failed to load embedded image");
+		stbi_image_free(img_data);
+	}
+
+	return img_data;
+}
+
 unsigned char* LoadImage(std::string&& path, int& width, int& height)
 {
 	unsigned char* result = nullptr;
@@ -138,7 +154,7 @@ bool FileExists(const std::string& file)
 {
 	const auto s = std::filesystem::file_status{};
 
-	return std::filesystem::status_known(s) ? std::filesystem::exists(s) : std::filesystem::exists(file);
+	return status_known(s) ? exists(s) : std::filesystem::exists(file);
 }
 
 std::string GetFileSuffix(const std::string& path, const char ch)

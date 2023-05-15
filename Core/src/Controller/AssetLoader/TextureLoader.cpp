@@ -6,15 +6,49 @@
 #include <glad/glad.h>
 
 unsigned int LoadGLTexture(std::string&, const bool, const bool, const bool);
-unsigned int LoadGLTexture(const int, float, const int, const float, const float);
+unsigned int LoadGLTexture(const int, const bool, const bool, const void*);
 
 namespace Vakol::Controller
 {
+    unsigned int LoadTexture(const int size, const bool gamma, const bool flip, const void* data) { return LoadGLTexture(size, gamma, flip, data); }
 	unsigned int LoadTexture(std::string& path, const bool gamma, const bool flip) { return ::LoadGLTexture(path, false, gamma, flip); }
     // gamma correction only applies for RGB/RGBA channels
     unsigned int LoadRawTexture(std::string& path) { return ::LoadGLTexture(path, true, false, false); }
 }
 
+unsigned int LoadGLTexture(const int size, const bool gamma, const bool flip, const void* data)
+{
+    unsigned int ID = 0;
+
+    glGenTextures(1, &ID);
+    glBindTexture(GL_TEXTURE_2D, ID);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+    int width = 0, height = 0, channels = 1;
+    auto img_data = LoadImage(size, width, height, channels, flip, data);
+
+    if (!img_data) img_data = LoadImage("coreAssets/textures/error.png", width, height, channels, flip);
+    VK_ASSERT(img_data, "\n\ndata was nullptr");
+
+    const GLint internal_format = (channels == 1) ? GL_R8 : (channels > 3) ? (gamma) ? GL_SRGB8_ALPHA8 : GL_RGBA8 : (gamma) ? GL_SRGB8 : GL_RGB8;
+    const GLenum data_format = (channels == 1) ? GL_RED : (channels > 3) ? GL_RGBA : GL_RGB;
+
+    glTexImage2D(GL_TEXTURE_2D, 0, internal_format, width, height, 0, data_format, GL_UNSIGNED_BYTE, img_data);
+
+    glGenerateMipmap(GL_TEXTURE_2D);
+
+    delete[] img_data;
+	img_data = nullptr;
+
+    glBindTexture(GL_TEXTURE_2D, 0); // unbind
+
+    return ID;
+}
 
 unsigned int LoadGLTexture(std::string& path, const bool raw, const bool gamma, const bool flip)
 {

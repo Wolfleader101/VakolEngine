@@ -90,15 +90,16 @@ namespace Vakol::View
     {
         VK_ASSERT(drawable.model_ptr, "\n\nModel ptr is nullptr");
 
-    	auto& model = *drawable.model_ptr;
+        const auto model = drawable.model_ptr;
 
-        const auto& shader = *model.c_shader();
+        const auto shader = model->c_shader();
         VK_ASSERT(&shader, "\n\nShader is nullptr");
 
-        if (model.isAnimated())
-            model.animation()->Update(time.deltaTime);
+        if (model->isAnimated()) model->animation()->Update(time.deltaTime);
 
-        shader.Bind();
+        shader->Bind();
+
+        shader->SetVec3("VIEW_POS", camera.GetPos());
 
         // at index 0, with an offset of 0 (since PV_MATRIX is the only element in the buffer), with a size of a 4x4 matrix, set PV_MATRIX
         SetBufferSubData(0, 0, sizeof(glm::mat4), value_ptr(camera.GetMatrix(PROJECTION_MATRIX)));
@@ -117,12 +118,13 @@ namespace Vakol::View
 
         SetBufferSubData(0, 3 * sizeof(glm::mat4), sizeof(glm::mat4), value_ptr(model_matrix));
 
-        if (model.isAnimated())
-            shader.SetMat4v("BONE_TRANSFORMS", model.numTransforms(), value_ptr(model.transforms()[0]));
+        shader->SetMat3("NORMAL_MATRIX", glm::mat3(transpose(inverse(model_matrix))));
 
-        for (int i = 0; i < model.nMeshes(); ++i) 
+        if (model->isAnimated()) shader->SetMat4v("BONE_TRANSFORMS", model->numTransforms(), value_ptr(model->transforms()[0]));
+
+        for (int i = 0; i < model->nMeshes(); ++i) 
         {
-            const auto& mesh = model.meshes().at(i);
+            const auto& mesh = model->meshes().at(i);
             const auto& material = mesh.GetMaterial();
 
             for (int j = 0; j < material->GetTextureCount(); ++j)
@@ -134,12 +136,12 @@ namespace Vakol::View
             mesh.Draw();
         }
 
-        shader.Unbind();
+        shader->Unbind();
     }
 
     void GLRenderer::Update() const 
     {
-        ClearColor(VAKOL_CLASSIC);
+        ClearColor(VAKOL_DARK);
         ClearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 }

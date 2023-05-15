@@ -42,14 +42,14 @@ namespace Vakol::Controller
     auto extract_vertices(const aiMesh& mesh)->std::vector<Vertex>;
     auto extract_indices(const aiMesh& mesh)->std::vector<unsigned int>;
     auto extract_bones(const aiMesh& mesh, std::vector<Vertex>& vertices, BoneMap& bone_map)->void;
-    auto extract_textures(const aiMaterial& material, aiTextureType type)->std::vector<Texture>;
+    auto extract_textures(const aiScene& scene, const aiMaterial* material, aiTextureType type)->std::vector<Texture>;
 
     auto extract_keyframes(const aiNodeAnim& channel, const Bone& bone_info)->KeyFrame;
     auto extract_animation(const aiScene& scene, int animation_index, const BoneMap& bone_map)->Animation;
 
     auto process_meshes(const aiScene& scene, BoneMap& bone_map)->std::vector<Mesh>;
     auto process_mesh(const aiScene& scene, const aiMesh& mesh, BoneMap& bone_map)->Mesh;
-    auto process_material(const aiMaterial& material)->MaterialSpec;
+    auto process_material(const aiScene& scene, const aiMaterial* material)->MaterialSpec;
 
     bool IS_CORE_ASSET = false; // A poor hack at best
 
@@ -107,28 +107,28 @@ namespace Vakol::Controller
         if (mesh.HasBones())
 			extract_bones(mesh, vertices, bone_map);
 
-        auto material = process_material(*scene.mMaterials[mesh.mMaterialIndex]);
+        auto material = process_material(scene, scene.mMaterials[mesh.mMaterialIndex]);
 
         return { vertices, indices, sizeof(Vertex), material };
     }
 
-    auto process_material(const aiMaterial& material)->MaterialSpec
+    auto process_material(const aiScene& scene, const aiMaterial* material)->MaterialSpec
     {
         std::vector<Texture> textures;
 
         aiColor3D ambient, diffuse, specular, emission;
         float shininess;
 
-        material.Get(AI_MATKEY_COLOR_AMBIENT, ambient);
-        material.Get(AI_MATKEY_COLOR_DIFFUSE, diffuse);
-        material.Get(AI_MATKEY_COLOR_SPECULAR, specular);
-        material.Get(AI_MATKEY_COLOR_EMISSIVE, emission);
-        material.Get(AI_MATKEY_SHININESS, shininess);
+        material->Get(AI_MATKEY_COLOR_AMBIENT, ambient);
+        material->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse);
+        material->Get(AI_MATKEY_COLOR_SPECULAR, specular);
+        material->Get(AI_MATKEY_COLOR_EMISSIVE, emission);
+        material->Get(AI_MATKEY_SHININESS, shininess);
 
-        auto diffuse_maps = extract_textures(material, aiTextureType_DIFFUSE);
-        auto specular_maps = extract_textures(material, aiTextureType_SPECULAR);
-        auto normal_maps = extract_textures(material, aiTextureType_NORMALS);
-        auto emission_maps = extract_textures(material, aiTextureType_EMISSIVE);
+        auto diffuse_maps = extract_textures(scene, material, aiTextureType_DIFFUSE);
+        auto specular_maps = extract_textures(scene, material, aiTextureType_SPECULAR);
+        auto normal_maps = extract_textures(scene, material, aiTextureType_NORMALS);
+        auto emission_maps = extract_textures(scene, material, aiTextureType_EMISSIVE);
 
         textures.insert(textures.end(), std::make_move_iterator(diffuse_maps.begin()), std::make_move_iterator(diffuse_maps.end()));
         textures.insert(textures.end(), std::make_move_iterator(specular_maps.begin()), std::make_move_iterator(specular_maps.end()));
@@ -227,26 +227,37 @@ namespace Vakol::Controller
         }
     }
 
-    auto extract_textures(const aiMaterial& material, const aiTextureType type)->std::vector<Texture>
+    auto extract_textures(const aiScene& scene, const aiMaterial* material, const aiTextureType type)->std::vector<Texture>
     {
         std::vector<Texture> textures;
 
-        const auto count = material.GetTextureCount(type);
+        const auto count = material->GetTextureCount(type);
 
         textures.reserve(count);
 
         for (unsigned int i = 0; i < count; ++i)
         {
             auto imported_path = aiString{};
-
-            material.GetTexture(type, i, &imported_path);
-
             auto&& texture = Texture{};
 
-            texture.path = imported_path.C_Str();
+            if (material->GetTexture(type, i, &imported_path) == AI_SUCCESS)
+            {
+                if (const auto embedded_texture = scene.GetEmbeddedTexture(imported_path.C_Str()))
+                {
+                    const auto size = embedded_texture->mWidth;
 
-            auto final_path = IS_CORE_ASSET ? "assets/" + texture.path : "coreAssets/textures/" + texture.path;
-            texture.SetID(LoadTexture(final_path, false, false));
+                    if (type == aiTextureType_AMBIENT || type == aiTextureType_DIFFUSE) // Only apply SRGB gamma correction to textures with more than 1 channel
+                        texture.SetID(LoadTexture(static_cast<int>(size), true, false, embedded_texture->pcData));
+                    else
+						texture.SetID(LoadTexture(static_cast<int>(size), false, false, embedded_texture->pcData));
+                }
+                else
+                {
+                    texture.path = imported_path.C_Str();
+					auto final_path = IS_CORE_ASSET ? "assets/" + texture.path : "coreAssets/textures/" + texture.path;
+					texture.SetID(LoadTexture(final_path, false, false));
+                }
+            }
 
             textures.push_back(std::move(texture));
         }
