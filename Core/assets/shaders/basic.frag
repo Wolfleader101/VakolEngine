@@ -4,9 +4,13 @@ out vec4 FragColor;
 in float height;
 in vec2 TexCoords;
 
+uniform sampler2D diffuse_map;
+
+uniform vec3 tint = vec3(1.0);
+
 void main()
 {
-     float h = (height + 16.0) / 32.0;
-     
-     FragColor = vec4(h, h, h, 1.0);
+     //FragColor = vec4(tint, 1.0);
+
+     FragColor = texture(diffuse_map, TexCoords) * vec4(tint, 1.0);
 }

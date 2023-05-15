@@ -4,8 +4,8 @@
 
 std::string LoadFile(const std::string& path);
 
-unsigned char* LoadImage(const std::string& path, int& width, int& height);
-unsigned char* LoadImage(const std::string& path, int& width, int& height, int& nrChannels, const bool flip);
+unsigned char* LoadImage(std::string&& path, int& width, int& height);
+unsigned char* LoadImage(std::string&& path, int& width, int& height, int& nrChannels, const bool flip);
 unsigned char* LoadNoiseImage(const int size, float scale, const int octaves, const float persistence, const float lacunarity);
 
 /* Helper Functions */

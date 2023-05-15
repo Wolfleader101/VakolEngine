@@ -1,6 +1,8 @@
 function init(scene, entity)
     print("Initialising Camera");
 
+    print_warn("CHECK LUA FILES FOR ANY CHANGES I MAY HAVE MADE REGARDING CAMERA MOVEMENT");
+
 end
 
 local speed = 10;

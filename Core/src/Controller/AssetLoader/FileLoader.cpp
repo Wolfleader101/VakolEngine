@@ -40,7 +40,7 @@ std::string LoadFile(const std::string& path)
 	return result;
 }
 
-unsigned char* LoadImage(const std::string& path, int& width, int& height)
+unsigned char* LoadImage(std::string&& path, int& width, int& height)
 {
 	unsigned char* result = nullptr;
 	size_t size = 0;
@@ -72,12 +72,12 @@ unsigned char* LoadImage(const std::string& path, int& width, int& height)
 	return result;
 }
 
-unsigned char* LoadImage(const std::string& path, int& width, int& height, int& channels, const bool flip = true)
+unsigned char* LoadImage(std::string&& path, int& width, int& height, int& channels, const bool flip = true)
 {
 	// OpenGL be like: Nah we want textures upside down.
     stbi_set_flip_vertically_on_load(flip);
     
-    const auto data = stbi_load(path.c_str(), &width, &height, &channels, 0);
+    auto data = stbi_load(path.c_str(), &width, &height, &channels, 0);
 
     if (!data)
     {

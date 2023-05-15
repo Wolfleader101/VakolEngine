@@ -78,6 +78,8 @@ namespace Vakol::Controller {
 
         const Input& GetInput() const { return m_input; }
 
+        void RegisterLua();
+
        private:
         /**
          * @brief

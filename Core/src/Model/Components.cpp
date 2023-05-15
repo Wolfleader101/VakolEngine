@@ -97,27 +97,27 @@ namespace Vakol::Model::Components
     {
         Collider::Bounds bounds;
 
-        rp3d::Vector3& max = bounds.max;
-        rp3d::Vector3& min = bounds.min;
+        //rp3d::Vector3& max = bounds.max;
+        //rp3d::Vector3& min = bounds.min;
 
         const auto& firstVert = model.model_ptr->GetMeshes().begin()->GetVertexArray()->GetVertices().begin();
 
-        max = min = rp3d::Vector3(firstVert->position.x, firstVert->position.y, firstVert->position.z);
+        // max = min = rp3d::Vector3(firstVert->position.x, firstVert->position.y, firstVert->position.z);
 
-        rp3d::Vector3 tempVert;
+        // rp3d::Vector3 tempVert;
 
-        for (auto& msh : model.model_ptr->GetMeshes()) 
-        {
-            for (auto& vertex : msh.GetVertexArray()->GetVertices()) 
-            {
-                tempVert.x = vertex.position.x;
-                tempVert.y = vertex.position.y;
-                tempVert.z = vertex.position.z;
+        // for (auto& msh : model.model_ptr->GetMeshes()) 
+        // {
+        //     for (auto& vertex : msh.GetVertexArray()->GetVertices()) 
+        //     {
+        //         tempVert.x = vertex.position.x;
+        //         tempVert.y = vertex.position.y;
+        //         tempVert.z = vertex.position.z;
 
-                max = rp3d::Vector3::max(max, tempVert);
-                min = rp3d::Vector3::min(min, tempVert);
-            }
-        }
+        //         max = rp3d::Vector3::max(max, tempVert);
+        //         min = rp3d::Vector3::min(min, tempVert);
+        //     }
+        // }
 
         bounds.center = (bounds.max + bounds.min) / 2.0f;
         bounds.extents = (bounds.max - bounds.min) / 2.0f;

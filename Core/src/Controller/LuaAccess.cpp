@@ -1,88 +1,155 @@
 #include "LuaAccess.hpp"
 
+#pragma warning(push)
+#pragma warning(disable:4201)
 #include <glm/gtc/type_ptr.hpp>
+#pragma warning(pop)
 
 #include "AssetLoader/AssetLoader.hpp"
-#include "Controller/Physics/ScenePhysics.hpp"
+#include "AssetLoader/TextureLoader.hpp"
+
+#include "System.hpp"
+
 #include "Model/Assets/Material.hpp"
 #include "Model/Components.hpp"
-#include "Model/gl/GLInstance.hpp"
-#include "System.hpp"
+#include "Model/Instance.hpp"
 #include "View/GUI/GUIWindow.hpp"
 
-namespace Vakol::Controller {
-    void RegisterMath(sol::state& lua) {
-        auto vec3 = lua.new_usertype<glm::vec3>("vec3");
-        vec3["x"] = &glm::vec3::x;
-        vec3["y"] = &glm::vec3::y;
-        vec3["z"] = &glm::vec3::z;
+namespace Vakol::Controller
+{
+    void RegisterMath(sol::state& lua)
+	{
+        {
+            sol::constructors<glm::vec2(), glm::vec2(float), glm::vec2(float, float)> ctor; // allow for constructors
 
-        auto vec2 = lua.new_usertype<glm::vec2>("vec2");
-        vec2["x"] = &glm::vec2::x;
-        vec2["y"] = &glm::vec2::y;
+            auto div_overload = sol::overload([](const glm::vec2& v, const float k) -> glm::vec2 { return v / k; },
+                [](const float k, const glm::vec2& v) -> glm::vec2 { return k / v; });
+
+            auto mul_overload = sol::overload([](const glm::vec2& u, const glm::vec2& v) -> glm::vec2 { return u * v; },
+                [](const glm::vec2& v, const float k) -> glm::vec2 { return v * k; },
+                [](const float k, const glm::vec2& v) -> glm::vec2 { return k * v; });
+
+            auto add_overload = sol::overload([](const glm::vec2& u, const glm::vec2& v) -> glm::vec2 { return u + v; });
+
+            auto sub_overload = sol::overload([](const glm::vec2& u, const glm::vec2& v) -> glm::vec2 { return u - v; });
+
+            auto vec2 = lua.new_usertype<glm::vec2>("Vector2", ctor,
+                sol::meta_function::multiplication, mul_overload, sol::meta_function::division, div_overload,
+                sol::meta_function::addition, add_overload, sol::meta_function::subtraction, sub_overload);
+
+            vec2["x"] = &glm::vec2::x;
+            vec2["y"] = &glm::vec2::y;
+
+            vec2["r"] = &glm::vec2::r;
+            vec2["g"] = &glm::vec2::g;
+        }
+
+        {
+            sol::constructors<glm::vec3(), glm::vec3(float), glm::vec3(float, float, float)> ctor; // allow for constructors
+
+            auto div_overload = sol::overload([](const glm::vec3& v, const float k) -> glm::vec3 { return v / k; },
+                [](const float k, const glm::vec3& v) -> glm::vec3 { return k / v; });
+
+            auto mul_overload = sol::overload([](const glm::vec3& u, const glm::vec3& v) -> glm::vec3 { return u * v; },
+                [](const glm::vec3& v, const float k) -> glm::vec3 { return v * k; },
+                [](const float k, const glm::vec3& v) -> glm::vec3 { return k * v; });
+
+            auto add_overload = sol::overload([](const glm::vec3& u, const glm::vec3& v) -> glm::vec3 { return u + v; });
+
+            auto sub_overload = sol::overload([](const glm::vec3& u, const glm::vec3& v) -> glm::vec3 { return u - v; });
+
+            auto vec3 = lua.new_usertype<glm::vec3>("Vector3", ctor,
+                sol::meta_function::multiplication, mul_overload, sol::meta_function::division, div_overload,
+                sol::meta_function::addition, add_overload, sol::meta_function::subtraction, sub_overload);
+
+            vec3["x"] = &glm::vec3::x;
+            vec3["y"] = &glm::vec3::y;
+            vec3["z"] = &glm::vec3::z;
+
+            vec3["r"] = &glm::vec3::r;
+            vec3["g"] = &glm::vec3::g;
+            vec3["b"] = &glm::vec3::b;
+        }
+
+        {
+            sol::constructors<glm::vec4(), glm::vec4(float), glm::vec4(float, float, float, float)> ctor; // allow for constructors
+
+            auto div_overload = sol::overload([](const glm::vec4& v, const float k) -> glm::vec4 { return v / k; },
+                [](const float k, const glm::vec4& v) -> glm::vec4 { return k / v; });
+
+            auto mul_overload = sol::overload([](const glm::vec4& u, const glm::vec4& v) -> glm::vec4 { return u * v; },
+                [](const glm::vec4& v, const float k) -> glm::vec4 { return v * k; },
+                [](const float k, const glm::vec4& v) -> glm::vec4 { return k * v; });
+
+            auto add_overload = sol::overload([](const glm::vec4& u, const glm::vec4& v) -> glm::vec4 { return u + v; });
+
+            auto sub_overload = sol::overload([](const glm::vec4& u, const glm::vec4& v) -> glm::vec4 { return u - v; });
+
+            auto vec4 = lua.new_usertype<glm::vec4>("Vector4", ctor,
+                sol::meta_function::multiplication, mul_overload, sol::meta_function::division, div_overload,
+                sol::meta_function::addition, add_overload, sol::meta_function::subtraction, sub_overload);
+
+            vec4["x"] = &glm::vec4::x;
+            vec4["y"] = &glm::vec4::y;
+            vec4["z"] = &glm::vec4::z;
+            vec4["w"] = &glm::vec4::w;
+
+            vec4["r"] = &glm::vec4::r;
+            vec4["g"] = &glm::vec4::g;
+            vec4["b"] = &glm::vec4::b;
+            vec4["a"] = &glm::vec4::a;
+        }
     }
 
     
 
     void RegisterLogger(sol::state& lua) {
-        lua.set_function("print", [](sol::variadic_args va) {
-            auto arg = va[0];
-
-            if (arg.get_type() == sol::type::string) {
+        lua.set_function("print", [](const sol::variadic_args& va)
+        {
+	        if (const auto arg = va[0]; arg.get_type() == sol::type::string) 
                 Logger::ScriptPrintTrace(va[0].get<std::string>());
-            } else if (arg.get_type() == sol::type::number) {
+            else if (arg.get_type() == sol::type::number)
                 Logger::ScriptPrintTrace(std::to_string(va[0].get<float>()));
-            }
         });
-        lua.set_function("print_info", [](sol::variadic_args va) {
-            auto arg = va[0];
-
-            if (arg.get_type() == sol::type::string) {
+        lua.set_function("print_info", [](const sol::variadic_args& va) 
+		{
+	        if (const auto arg = va[0]; arg.get_type() == sol::type::string) 
                 Logger::ScriptPrintInfo(va[0].get<std::string>());
-            } else if (arg.get_type() == sol::type::number) {
+            else if (arg.get_type() == sol::type::number)
                 Logger::ScriptPrintInfo(std::to_string(va[0].get<float>()));
-            }
         });
-        lua.set_function("print_warn", [](sol::variadic_args va) {
-            auto arg = va[0];
-
-            if (arg.get_type() == sol::type::string) {
+        lua.set_function("print_warn", [](const sol::variadic_args& va)
+        {
+	        if (const auto arg = va[0]; arg.get_type() == sol::type::string) 
                 Logger::ScriptPrintWarn(va[0].get<std::string>());
-            } else if (arg.get_type() == sol::type::number) {
+            else if (arg.get_type() == sol::type::number)
                 Logger::ScriptPrintWarn(std::to_string(va[0].get<float>()));
-            }
         });
-        lua.set_function("print_err", [](sol::variadic_args va) {
-            auto arg = va[0];
-
-            if (arg.get_type() == sol::type::string) {
+        lua.set_function("print_err", [](const sol::variadic_args& va) 
+        {
+	        if (const auto arg = va[0]; arg.get_type() == sol::type::string)
                 Logger::ScriptPrintError(va[0].get<std::string>());
-            } else if (arg.get_type() == sol::type::number) {
+            else if (arg.get_type() == sol::type::number)
                 Logger::ScriptPrintError(std::to_string(va[0].get<float>()));
-            }
         });
-        lua.set_function("print_crit", [](sol::variadic_args va) {
-            auto arg = va[0];
-
-            if (arg.get_type() == sol::type::string) {
+        lua.set_function("print_critical", [](const sol::variadic_args& va) 
+        {
+	        if (const auto arg = va[0]; arg.get_type() == sol::type::string)
                 Logger::ScriptPrintCrit(va[0].get<std::string>());
-            } else if (arg.get_type() == sol::type::number) {
+            else if (arg.get_type() == sol::type::number)
                 Logger::ScriptPrintCrit(std::to_string(va[0].get<float>()));
-            }
         });
     }
 
-    void RegisterAssetLoader(sol::state& lua) {
-        lua.set_function("load_texture", [](const std::string& path) {
-            auto tex = AssetLoader::GetTexture(path);
-
-            if (tex == nullptr) return false;
-
-            return true;
+    void RegisterAssetLoader(sol::state& lua)
+	{
+        lua.set_function("load_texture", [](std::string& path) 
+        {
+			return AssetLoader::GetTexture(path); // no checks... just raw doggin it LOL
         });
 
         lua.set_function("load_model", [](const std::string& path) {
-            auto model = AssetLoader::GetModel(path);
+	        const auto model = AssetLoader::GetModel(path);
 
             if (model == nullptr) return false;
 
@@ -90,7 +157,7 @@ namespace Vakol::Controller {
         });
 
         lua.set_function("load_shader", [](const std::string& path) {
-            auto shader = AssetLoader::GetShader(path);
+	        const auto shader = AssetLoader::GetShader(path);
 
             if (shader == nullptr) return false;
 
@@ -101,20 +168,20 @@ namespace Vakol::Controller {
     void RegisterApplication(sol::state& lua, Application* app) {
         lua.set_function("add_scene", &Application::AddScene, app);
 
-        auto TimeType = lua.new_usertype<Time>("Time");
-        TimeType["delta_time"] = &Time::deltaTime;
-        TimeType["curr_time"] = &Time::curTime;
-        TimeType["prev_time"] = &Time::prevTime;
-        TimeType["fps"] = &Time::fps;
+        auto time_type = lua.new_usertype<Time>("Time");
+        time_type["delta_time"] = &Time::deltaTime;
+        time_type["curr_time"] = &Time::curTime;
+        time_type["prev_time"] = &Time::prevTime;
+        time_type["fps"] = &Time::fps;
 
         lua["Time"] = &app->GetTime();
 
-        auto InputType = lua.new_usertype<Input>("Input");
-        InputType.set_function("get_key", &Input::GetKey);
-        InputType.set_function("get_key_down", &Input::GetKeyDown);
-        InputType.set_function("get_key_up", &Input::GetKeyUp);
-        InputType.set_function("get_mouse_pos", &Input::GetMousePos);
-        InputType.set_function("get_delta_mouse_pos", &Input::GetDeltaMousePos);
+        auto input_type = lua.new_usertype<Input>("Input");
+        input_type.set_function("get_key", &Input::GetKey);
+        input_type.set_function("get_key_down", &Input::GetKeyDown);
+        input_type.set_function("get_key_up", &Input::GetKeyUp);
+        input_type.set_function("get_mouse_pos", &Input::GetMousePos);
+        input_type.set_function("get_delta_mouse_pos", &Input::GetDeltaMousePos);
 
         lua["Input"] = &app->GetInput();
 
@@ -135,240 +202,200 @@ namespace Vakol::Controller {
             "KEY_Z", Input::KEY::KEY_Z, "KEY_LEFT_SHIFT", Input::KEY::KEY_LEFT_SHIFT);
     }
 
-    void RegisterEntity(sol::state& lua) {
-        auto entityType = lua.new_usertype<Entity>("entity");
-        auto modelType = lua.new_usertype<Assets::Model>("model");
-        auto meshType = lua.new_usertype<Assets::Mesh>("mesh");
-        auto materialType = lua.new_usertype<Assets::Material>("material");
-        auto textureType = lua.new_usertype<Assets::Texture>("texture");
-        auto shaderType = lua.new_usertype<Shader>("shader");
+    void RegisterEntity(sol::state& lua)
+	{
+        auto entity_type = lua.new_usertype<Entity>("entity");
+        auto model_type = lua.new_usertype<Assets::Model>("model");
+        auto mesh_type = lua.new_usertype<Assets::Mesh>("mesh");
+        auto material_type = lua.new_usertype<Assets::Material>("material");
+        auto shader_type = lua.new_usertype<Assets::Shader>("shader");
 
-        lua.set_function("raw_texture", [](const std::string& path) { return Texture(path); });
+        lua.set_function("create_raw_texture", [](std::string& path)
+        {
+        	auto texture = Assets::Texture(path);
+            texture.SetID(LoadRawTexture(texture.path));
 
-        lua.set_function("noise_texture",
-                         [](const int size, float scale, const int octaves, const float persistence,
-                            const float lacunarity) { return Texture(size, scale, octaves, persistence, lacunarity); });
-
-        lua.set_function("texture", [](const std::string& path, const bool gamma, const bool flip) {
-            return Texture(path, gamma, flip);
+            return texture;
         });
 
-                entityType.set_function("get_transform", &Entity::GetComponent<Model::Components::Transform>);
+        lua.set_function("create_texture", [](std::string& path, const bool gamma, const bool flip)
+        {
+            auto texture = Assets::Texture(path);
+            texture.SetID(LoadTexture(texture.path, gamma, flip));
 
-         //entityType.set_function("add_heightmap_terrain", [](Entity* ent, const std::string& path) -> Terrain& {
-         //    if (!ent->HasComponent<Model::Components::Drawable>()) ent->AddComponent<Model::Components::Drawable>();
+            return texture;
+        });
 
-         //    if (ent->HasComponent<Terrain>()) ent->RemoveComponent<Terrain>();
+        entity_type.set_function("get_transform", &Entity::GetComponent<Components::Transform>);
 
-         //    ent->AddComponent<Terrain>(path);
-
-         //    auto& terrain = ent->GetComponent<Terrain>();
-
-         //   terrain.SetHeightMap(path);
-
-         //    auto model = terrain.GetModel();  // doesn't that look nice?
-
-         //    const auto size = terrain.GetSize();
-
-         //    if (model) {
-         //        model->GetMesh().GetVertexArray()->SetDrawMode(TRIANGLE_STRIPS);
-         //        model->GetMesh().GetVertexArray()->SetStrips((size - 1) / 1, (size / 1) * 2 - 2);
-
-         //        ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
-         //    }
-
-         //    return terrain;
-         //});
-
-        entityType.set_function("add_noisemap_terrain", [](Entity* ent, const int size, float scale, const int octaves,
-                                                           const float persistence, const float lacunarity) {
-            if (!ent->HasComponent<Model::Components::Drawable>()) ent->AddComponent<Model::Components::Drawable>();
+        entity_type.set_function("create_height_map_terrain", [](Entity* ent, std::string&& path)
+        {
+            if (!ent->HasComponent<Components::Drawable>()) ent->AddComponent<Components::Drawable>();
 
             if (ent->HasComponent<Terrain>()) ent->RemoveComponent<Terrain>();
 
-            ent->AddComponent<Terrain>(size, scale, octaves, persistence, lacunarity);
+            ent->AddComponent<Terrain>(LoadHeightMapTerrain(std::move(path)));
 
-            auto terrain = ent->GetComponent<Terrain>();
+        	auto terrain = ent->GetComponent<Terrain>();
 
-            auto model = terrain.GetModel();  // doesn't that look nice?
+            if (const auto model = terrain.GetModel())
+            {
+                model->GetMesh().SetDrawMode(DRAW_MODE::STRIPS);
+                model->GetMesh().SetDrawType(DRAW_TYPE::ELEMENTS);
 
-            if (model) {
-                model->GetMesh().GetVertexArray()->SetDrawMode(TRIANGLE_STRIPS);
-                model->GetMesh().GetVertexArray()->SetStrips((size - 1) / 1, (size / 1) * 2 - 2);
+                model->GetMesh().SetDrawModeInfo((terrain.GetSize() - 1) / 1); // num strips
 
-                ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
+                model->GetMesh().SetNumTrisPerStrip(terrain.GetSize() / 1 * 2 - 2);
+
+                ent->GetComponent<Components::Drawable>().model_ptr = model;
             }
 
             return terrain;
         });
 
-        entityType.set_function(
-            "add_fault_formation_terrain", [](Entity* ent, const int size, const int iterations, const float filter,
-                                              const bool random, const int minHeight, const int maxHeight) {
-                if (!ent->HasComponent<Model::Components::Drawable>()) ent->AddComponent<Model::Components::Drawable>();
-                if (ent->HasComponent<Terrain>()) ent->RemoveComponent<Terrain>();
+        entity_type.set_function("create_clod_terrain", [](Entity* ent, std::string&& path)
+        {
+            if (!ent->HasComponent<Components::Drawable>()) ent->AddComponent<Components::Drawable>();
 
-                ent->AddComponent<Terrain>(size, iterations, filter, random, minHeight, maxHeight);
-
-                auto terrain = ent->GetComponent<Terrain>();
-
-                auto model = terrain.GetModel();  // doesn't that look nice?
-
-                if (model) {
-                    model->GetMesh().GetVertexArray()->SetDrawMode(TRIANGLE_STRIPS);
-                    model->GetMesh().GetVertexArray()->SetStrips((size - 1) / 1, (size / 1) * 2 - 2);
-
-                    ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
-                }
-
-                return terrain;
-            });
-
-        entityType.set_function("add_clod_terrain", [](Entity* ent, const std::string& path) {
-            if (!ent->HasComponent<Model::Components::Drawable>()) ent->AddComponent<Model::Components::Drawable>();
             if (ent->HasComponent<Terrain>()) ent->RemoveComponent<Terrain>();
 
-            ent->AddComponent<Terrain>(path);
+            ent->AddComponent<Terrain>(LoadCLODTerrain(std::move(path)));
 
-            auto terrain = ent->GetComponent<Terrain>();
+        	auto terrain = ent->GetComponent<Terrain>();
 
-            auto model = terrain.GetModel();  // doesn't that look nice?
+            if (const auto model = terrain.GetModel())
+            {
+                model->GetMesh().SetDrawMode(DRAW_MODE::PATCHES);
+                model->GetMesh().SetDrawType(DRAW_TYPE::ARRAYS);
 
-            if (model) {
-                model->GetMesh().GetVertexArray()->SetDrawMode(QUAD_PATCHES);
-                model->GetMesh().GetVertexArray()->SetPatches(400, 4);
+                model->GetMesh().SetDrawModeInfo(400); // num patches
 
-                ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
+                ent->GetComponent<Components::Drawable>().model_ptr = model;
             }
 
             return terrain;
         });
 
-        entityType.set_function("get_terrain", [](Entity* ent) {
-            if (ent->HasComponent<Terrain>()) {
-                return ent->GetComponent<Terrain>();
-            }
+#pragma warning(push)
+#pragma warning(disable:4715) // disable that annoying warning for not all code path return a value
+        entity_type.set_function("get_terrain", [](const Entity* ent) 
+        {
+            if (ent->HasComponent<Terrain>()) return ent->GetComponent<Terrain>();
         });
+#pragma warning(pop)
 
-        entityType.set_function("add_model", [](Entity* ent, const std::string& path) {
-            if (!ent->HasComponent<Model::Components::Drawable>()) ent->AddComponent<Model::Components::Drawable>();
+        entity_type.set_function("add_model", [](Entity* ent, const std::string& path) 
+        {
+            if (!ent->HasComponent<Components::Drawable>()) ent->AddComponent<Components::Drawable>();
 
             auto model = AssetLoader::GetModel(path);
 
-            if (model) {
-                model->GetMesh().GetVertexArray()->SetDrawMode(ELEMENTS);
-                ent->GetComponent<Model::Components::Drawable>().model_ptr = model;
-                return model;
+            if (model) 
+            {
+                ent->GetComponent<Components::Drawable>().model_ptr = model;
             }
+
+            return model;
         });
 
-        entityType.set_function("get_model", [](Entity* ent) {
-            if (ent->HasComponent<Model::Components::Drawable>()) {
-                return ent->GetComponent<Model::Components::Drawable>().model_ptr;
-            }
+#pragma warning(push)
+#pragma warning(disable:4715) // disable that annoying warning for not all code path return a value
+        entity_type.set_function("get_model", [](const Entity* ent) 
+        {
+            if (ent->HasComponent<Components::Drawable>()) return ent->GetComponent<Components::Drawable>().model_ptr;
         });
+#pragma warning(pop)
 
-        modelType.set_function("get_mesh_count", &Assets::Model::GetMeshCount);
-        modelType.set_function("get_mesh", &Assets::Model::GetMesh);
+        model_type.set_function("get_mesh_count", &Assets::Model::GetMeshCount);
+        model_type.set_function("get_mesh", &Assets::Model::GetMesh);
 
-        modelType.set_function("set_shader", &Assets::Model::SetShader);
-        modelType.set_function("get_shader", &Assets::Model::GetShader);
+        model_type.set_function("set_shader", &Assets::Model::SetShader);
+        model_type.set_function("get_shader", &Assets::Model::GetShader);
 
-        meshType.set_function("get_material", &Assets::Mesh::GetMaterial);
+        mesh_type.set_function("get_material", &Assets::Mesh::GetMaterial);
 
-        materialType.set_function("add_texture", &Assets::Material::AddTexture);
-        materialType.set_function("get_texture", &Assets::Material::GetTexture);
+        material_type.set_function("add_texture", &Assets::Material::AddTexture);
+        material_type.set_function("get_texture", &Assets::Material::GetTexture);
 
-        // materialType.set_function("get_ambient", &Assets::Material::GetAmbientColor);
-        // materialType.set_function("get_diffuse", &Assets::Material::GetDiffuseColor);
-        // materialType.set_function("get_specular", &Assets::Material::GetSpecularColor);
-        // materialType.set_function("get_shininess", &Assets::Material::GetShininess);
+        shader_type.set_function("set_int", &Assets::Shader::SetInt);
+        shader_type.set_function("set_bool", &Assets::Shader::SetBool);
+        shader_type.set_function("set_float", &Assets::Shader::SetFloat);
+        shader_type.set_function("set_vec2", sol::resolve<void(const char*, const float, const float) const>(&Assets::Shader::SetVec2));
+        shader_type.set_function("set_vec3", sol::resolve<void(const char*, const float, const float, const float) const>(&Assets::Shader::SetVec3));
+        shader_type.set_function("set_vec4", sol::resolve<void(const char*, const float, const float, const float, const float) const>(&Assets::Shader::SetVec4));
 
-        // materialType.set_function("set_ambient", &Assets::Material::SetAmbientColor);
-        // materialType.set_function("set_diffuse", &Assets::Material::SetDiffuseColor);
-        // materialType.set_function("set_specular", &Assets::Material::SetSpecularColor);
-        // materialType.set_function("set_shininess", &Assets::Material::SetShininess);
-
-        textureType.set_function("bind_texture", &Assets::Texture::Bind);
-        textureType.set_function("unbind_texture", &Assets::Texture::Unbind);
-
-        shaderType.set_function("set_int", &Assets::Shader::SetInt);
-        shaderType.set_function("set_bool", &Assets::Shader::SetBool);
-        shaderType.set_function("set_float", &Assets::Shader::SetFloat);
-        shaderType.set_function("set_vec2", &Assets::Shader::SetVec2);
-        shaderType.set_function("set_vec3", &Assets::Shader::SetVec3);
-        shaderType.set_function("set_vec4", &Assets::Shader::SetVec4);
-
-
-        entityType.set_function("physics_init", [](Entity* ent, Scene& scene)
+        entity_type.set_function("physics_init", [](Entity* ent, Scene& scene)
         {
                 System::BindScene(scene);
                 System::Physics_InitEntity(*ent);
         });
 
 
-        entityType.set_function("add_rigid", [](Entity* ent) -> RigidBody&
+        entity_type.set_function("add_rigid", [](Entity* ent) -> RigidBody&
         {
 
-            if (!ent->HasComponent<Components::RigidBody>()) ent->AddComponent<Components::RigidBody>();
-            return ent->GetComponent<Components::RigidBody>();
+            if (!ent->HasComponent<RigidBody>()) ent->AddComponent<RigidBody>();
+            return ent->GetComponent<RigidBody>();
         });
 
-        entityType.set_function("get_rigid", [](Entity* ent) -> Components::RigidBody&
+        entity_type.set_function("get_rigid", [](const Entity* ent) -> RigidBody&
         {
-            if (ent->HasComponent<Components::RigidBody>()) return ent->GetComponent<Components::RigidBody>();
+            if (ent->HasComponent<RigidBody>()) return ent->GetComponent<RigidBody>();
             
             VK_CRITICAL("No rigid body component found on entity");
             assert(0);
         
         });
 
-        entityType.set_function("add_collider", [](Entity* ent)
+        entity_type.set_function("add_collider", [](Entity* ent)
         {
             if (!ent->HasComponent<Components::Collider>()) ent->AddComponent<Components::Collider>();
             return ent->GetComponent<Components::Collider>();
         });
 
-        entityType.set_function("get_collider", [](Entity* ent) -> Components::Collider&
+        entity_type.set_function("get_collider", [](const Entity* ent) -> Collider&
         {
-            if (ent->HasComponent<Components::Collider>()) return ent->GetComponent<Components::Collider>();
+            if (ent->HasComponent<Components::Collider>()) return ent->GetComponent<Collider>();
             
             VK_CRITICAL("No collider component found on entity");
             assert(0);
         
         });
-        
 
     }
 
-    void RegisterECS(sol::state& lua) {
-        auto TransformType = lua.new_usertype<Model::Components::Transform>("transform");
-        auto terrainType = lua.new_usertype<Terrain>("terrain");
+    void RegisterECS(sol::state& lua)
+	{
+        auto transform_type = lua.new_usertype<Components::Transform>("transform");
+        auto terrain_type = lua.new_usertype<Terrain>("terrain");
 
-        TransformType["pos"] = &Model::Components::Transform::pos;
-        TransformType["rot"] = &Model::Components::Transform::rot;
-        TransformType["scale"] = &Model::Components::Transform::scale;
+        transform_type["pos"] = &Components::Transform::pos;
+        transform_type["rot"] = &Components::Transform::rot;
+        transform_type["scale"] = &Components::Transform::scale;
 
         // terrainType.set_function("load_heightmap", &Terrain::LoadHeightMap);
         // terrainType.set_function("load_texture", &Terrain::LoadTexture);
         // terrainType.set_function("generate", &Terrain::Generate);
 
-        terrainType.set_function("get_height", &Terrain::GetHeight);
-        terrainType.set_function("get_size", &Terrain::GetSize);
-        terrainType.set_function("get_model", &Terrain::GetModel);
-        terrainType.set_function("set_heightmap", &Terrain::SetHeightMap);
+        terrain_type.set_function("get_height", &Terrain::GetHeight);
+        terrain_type.set_function("get_size", &Terrain::GetSize);
+        terrain_type.set_function("get_model", &Terrain::GetModel);
     }
 
     void RegisterScene(sol::state& lua) {
-        auto sceneType = lua.new_usertype<Scene>("scene");
-        auto cameraType = lua.new_usertype<Camera>("camera");
+        auto scene_type = lua.new_usertype<Scene>("scene");
+        auto camera_type = lua.new_usertype<Camera>("camera");
 
-        sceneType.set_function("create_entity", &Scene::CreateEntity);
-        sceneType.set_function("get_camera", &Scene::GetCamera);
-        sceneType.set_function("get_entity", &Scene::GetEntity);
+        scene_type.set_function("create_entity", &Scene::CreateEntity);
+        scene_type.set_function("get_camera", &Scene::GetCamera);
+        scene_type.set_function("get_entity", &Scene::GetEntity);
 
-        sceneType.set_function("add_terrain_physics", [](Scene* scene, Entity& ent) 
-        {
+        camera_type.set_function("get_pos", &Camera::GetPos);
+        camera_type.set_function("set_pos", &Camera::SetPos);
+        camera_type.set_function("get_forward", &Camera::GetForward);
+        camera_type.set_function("get_right", &Camera::GetRight);
+        
+        scene_type.set_function("add_terrain_physics", [](Scene* scene, const Entity ent) {
             if (!ent.HasComponent<Terrain>()) {
                 VK_WARN("Entity does not have a terrain component. Can't add physics");
                 return;
@@ -380,42 +407,38 @@ namespace Vakol::Controller {
             System::Physics_AddTerrain(terrain);
         });
 
-        sceneType.set_function("get_physics", [](Scene* scene) ->ScenePhysics& { return *scene->scenePhysics; });
+        scene_type.set_function("get_physics", [](const Scene* scene) ->ScenePhysics& { return *scene->scenePhysics; });
 
-        cameraType.set_function("get_pos", &Camera::GetPos);
-        cameraType.set_function("set_pos", &Camera::SetPos);
-        cameraType.set_function("get_forward", &Camera::GetForward);
-        cameraType.set_function("get_right", &Camera::GetRight);
+        camera_type.set_function("get_pitch", &Camera::GetPitch);
+        camera_type.set_function("set_pitch", &Camera::SetPitch);
 
-        cameraType.set_function("get_pitch", &Camera::GetPitch);
-        cameraType.set_function("set_pitch", &Camera::SetPitch);
-
-        cameraType.set_function("get_yaw", &Camera::GetYaw);
-        cameraType.set_function("set_yaw", &Camera::SetYaw);
+        camera_type.set_function("get_yaw", &Camera::GetYaw);
+        camera_type.set_function("set_yaw", &Camera::SetYaw);
     }
 
-    void RegisterGUIWindow(sol::state& lua, View::GUIWindow* gui) {
-        auto guiWindowType =
+    void RegisterGUIWindow(sol::state& lua, View::GUIWindow* gui)
+	{
+        auto gui_window_type =
             lua.new_usertype<View::GUIWindow>("gui");  // Creates a new usertype of the type 'View::GUIWindow'
 
         lua["GUI"] = gui;
 
         // REGISTERS C++ FUNCTIONS TO LUA
-        guiWindowType.set_function("start_window", &View::GUIWindow::StartWindowCreation);
+        gui_window_type.set_function("start_window", &View::GUIWindow::StartWindowCreation);
 
-        guiWindowType.set_function("get_fps", &View::GUIWindow::GetFramesPerSecond);
+        gui_window_type.set_function("get_fps", &View::GUIWindow::GetFramesPerSecond);
 
-        guiWindowType.set_function("add_text", &View::GUIWindow::AddText);
-        guiWindowType.set_function("add_button", &View::GUIWindow::AddButton);
-        guiWindowType.set_function("add_checkbox", &View::GUIWindow::AddCheckbox);
+        gui_window_type.set_function("add_text", &View::GUIWindow::AddText);
+        gui_window_type.set_function("add_button", &View::GUIWindow::AddButton);
+        gui_window_type.set_function("add_checkbox", &View::GUIWindow::AddCheckbox);
 
-        guiWindowType.set_function("add_integer_slider", &View::GUIWindow::AddIntSlider);
-        guiWindowType.set_function("add_float_slider", &View::GUIWindow::AddFloatSlider);
+        gui_window_type.set_function("add_integer_slider", &View::GUIWindow::AddIntSlider);
+        gui_window_type.set_function("add_float_slider", &View::GUIWindow::AddFloatSlider);
 
-        guiWindowType.set_function("add_vector_integer_slider", &View::GUIWindow::AddVecIntSlider);
-        guiWindowType.set_function("add_vector_float_slider", &View::GUIWindow::AddVecFloatSlider);
+        gui_window_type.set_function("add_vector_integer_slider", &View::GUIWindow::AddVecIntSlider);
+        gui_window_type.set_function("add_vector_float_slider", &View::GUIWindow::AddVecFloatSlider);
 
-        guiWindowType.set_function("end_window", &View::GUIWindow::EndWindowCreation);
+        gui_window_type.set_function("end_window", &View::GUIWindow::EndWindowCreation);
     }
 
     void RegisterRenderer(sol::state& lua) {}
@@ -444,8 +467,6 @@ namespace Vakol::Controller {
             rigidDataType["gravity"] = &Components::RigidBody::RigidData::grav;
             rigidDataType["linear_damp"] = &Components::RigidBody::RigidData::LDamp;
             rigidDataType["angular_damp"] = &Components::RigidBody::RigidData::ADamp;
-            rigidDataType["angular_lock"] = &Components::RigidBody::RigidData::AngularLock;
-        
 
 
 
@@ -461,7 +482,6 @@ namespace Vakol::Controller {
                     );
             
             colliderType["Shape"] = &Components::Collider::ShapeName;
-            colliderType["UseModelBounds"] = &Components::Collider::DrawableBounds;
 
         auto ColliderBoundsType = lua.new_usertype<Components::Collider::Bounds>("colliderBounds");
 

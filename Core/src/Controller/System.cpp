@@ -101,7 +101,7 @@ namespace Vakol::Controller {
             });
     }
 
-    void System::Physics_InitEntity(Entity& ent)
+    void System::Physics_InitEntity(Entity& ent) 
     {
         auto& trans = ent.GetComponent<Transform>();
         auto& rigid = ent.GetComponent<RigidBody>();
@@ -139,24 +139,8 @@ namespace Vakol::Controller {
 
                 col.OwningBody = &rigid;
 
-                Collider::Bounds& bounds = col.bounds;
-                if (col.DrawableBounds)
-                {
-                    if(ent.HasComponent<Drawable>())
-                    {
-                        auto& draw = ent.GetComponent<Drawable>();
+            const Collider::Bounds& bounds = col.bounds;
 
-                        bounds = getBounds(draw);
-                    }
-                    else
-                    {
-                        VK_ERROR("getBounds flag set to true without having model. Using standard bounds");
-                    }
-	                
-                }
-
-
-				
                 if (col.ShapeName == Collider::ShapeName::BOX) 
                 {
                     col.Shape = PhysicsPool::m_Common.createBoxShape(
@@ -178,25 +162,25 @@ namespace Vakol::Controller {
                         VK_CRITICAL("Trying to add triangle mesh collider without providing model!");
                         assert(0);
                     }
-                    Drawable& draw = ent.GetComponent<Drawable>();
 
-                    auto MeshPtr = PhysicsPool::m_Common.createTriangleMesh();
+                    const auto& draw = ent.GetComponent<Drawable>();
 
-                    for (auto& mesh : draw.model_ptr->GetMeshes()) {
-                        rp3d::TriangleVertexArray* triArray = nullptr;
+                    const auto mesh_ptr = PhysicsPool::m_Common.createTriangleMesh();
 
-                        triArray = new rp3d::TriangleVertexArray(
-                            mesh.GetVertexArray()->GetVertexCount(), mesh.GetVertexArray()->GetVertices().data(),
-                            sizeof(float) * 3, mesh.GetVertexArray()->GetIndexCount() / 3,
-                            mesh.GetVertexArray()->GetIndices().data(), sizeof(unsigned int) * 3,
-                            rp3d::TriangleVertexArray::VertexDataType::VERTEX_FLOAT_TYPE,
-                            rp3d::TriangleVertexArray::IndexDataType::INDEX_INTEGER_TYPE);
+                    for (auto& mesh : draw.model_ptr->GetMeshes()) 
+                    {
+	                    const auto tri_array = new rp3d::TriangleVertexArray(
+		                    mesh.nVertices(), mesh.vertices().data(),
+		                    sizeof(float) * 3, mesh.nIndices() / 3,
+		                    mesh.indices().data(), sizeof(unsigned int) * 3,
+		                    rp3d::TriangleVertexArray::VertexDataType::VERTEX_FLOAT_TYPE,
+		                    rp3d::TriangleVertexArray::IndexDataType::INDEX_INTEGER_TYPE);
 
-                        MeshPtr->addSubpart(triArray);
+                        mesh_ptr->addSubpart(tri_array);
                     };
 
                     col.Shape = PhysicsPool::m_Common.createConcaveMeshShape(
-                        MeshPtr, rp3d::Vector3(trans.scale.x, trans.scale.y, trans.scale.z));
+                        mesh_ptr, rp3d::Vector3(trans.scale.x, trans.scale.y, trans.scale.z));
 
                 } else {
                     VK_CRITICAL("Failed Collider Initialization! No collider shape given.");
@@ -211,6 +195,6 @@ namespace Vakol::Controller {
         rigid.initialized = true;
     };
 
-    void System::Physics_AddTerrain(const Terrain& ter) { m_SP->AddTerrain(ter); }
+    void System::Physics_AddTerrain(Terrain& ter) { m_SP->AddTerrain(ter); }
 
 }  // namespace Vakol::Controller
