@@ -7,9 +7,9 @@ function init(scene, entity)
 
     local trans = entity:get_transform();
     
-    trans.scale.x = 2;
-    trans.scale.y = 2;
-    trans.scale.z = 2;
+    trans.scale.x = 1;
+    trans.scale.y = 1;
+    trans.scale.z = 1;
 
     trans.pos.y = 100;
 
