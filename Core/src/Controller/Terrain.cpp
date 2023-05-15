@@ -51,7 +51,7 @@ namespace Vakol::Controller
             for (int z = 0; z < this->m_size; ++z)
                 this->m_data.push_back(data[x * m_size + z]);
 
-        SetHeightMap();
+        SetHeightMap(); //used for physics. Need floats. Is duplicating but who is that hurting
         delete[] data;
         data = nullptr;
 
