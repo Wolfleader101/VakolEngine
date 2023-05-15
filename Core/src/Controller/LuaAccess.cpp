@@ -234,7 +234,7 @@ namespace Vakol::Controller
 
             if (ent->HasComponent<Terrain>()) ent->RemoveComponent<Terrain>();
 
-            ent->AddComponent<Terrain>(LoadHeightMapTerrain(std::move(path)));
+            ent->AddComponent<Terrain>(LoadHeightMapTerrain(std::move(path), 0, 80));
 
         	auto terrain = ent->GetComponent<Terrain>();
 

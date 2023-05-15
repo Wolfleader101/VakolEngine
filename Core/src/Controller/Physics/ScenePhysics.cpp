@@ -75,7 +75,7 @@ namespace Vakol::Controller::Physics {
 
         // auto& vertexData = terr.GetStaticVertices();
 
-    	const auto trans = rp3d::Transform(rp3d::Vector3(0, 0, 0), rp3d::Quaternion::identity());
+        const auto trans = rp3d::Transform::identity();
         m_Terrain = m_World->createRigidBody(trans);
         m_Terrain->setType(rp3d::BodyType::STATIC);
 

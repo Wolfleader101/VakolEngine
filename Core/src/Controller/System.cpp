@@ -195,6 +195,6 @@ namespace Vakol::Controller {
         rigid.initialized = true;
     };
 
-    void System::Physics_AddTerrain(Terrain& ter) { m_SP->AddTerrain(ter); }
+    void System::Physics_AddTerrain(const Terrain& ter) { m_SP->AddTerrain(ter); }
 
 }  // namespace Vakol::Controller

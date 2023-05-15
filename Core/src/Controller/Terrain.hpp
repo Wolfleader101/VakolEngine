@@ -26,6 +26,13 @@ namespace Vakol::Controller
         
         [[nodiscard]] Model::Assets::Mesh load_height_map_mesh() const;
     	[[nodiscard]] Model::Assets::Mesh load_clod_terrain_mesh() const;
+
+        const std::vector<float>& GetHeightMap() const { return this->m_height_map; }
+        const std::vector<unsigned char>& GetData() const { return this->m_data; };
+
+        void SetMinMax(std::pair<float, float>&& minmax) { this->m_min_height = minmax.first; this->m_max_height = minmax.second; }
+		[[nodiscard]] std::pair<float, float> GetMinMax() const { return {this->m_min_height, this->m_max_height}; }
+
     private:
 
         Model::Assets::Mesh load_fault_formation_mesh(const int size, const int iterations, const float filter, const bool random, const int minHeight, const int maxHeight);
@@ -42,7 +49,9 @@ namespace Vakol::Controller
         };
 
         static void GenRandomPoints(Point& p1, Point& p2, const int size);
-        static void NormalizeValues(std::vector<float>& arr, const int size);
+        void NormalizeValues(std::vector<float>& arr, const int size);
+
+        void SetHeightMap();
 
         static void ApplyFIRFilter(std::vector<float>& arr, const int size, const float filter);
         static float FirSinglePass(std::vector<float>& arr, const int index, const float prev, const float filter);
@@ -58,6 +67,6 @@ namespace Vakol::Controller
         std::vector<unsigned char> m_data;
     };
 
-    Terrain LoadHeightMapTerrain(std::string&& path);
+    Terrain LoadHeightMapTerrain(std::string&& path, float min, float max);
     Terrain LoadCLODTerrain(std::string&& path);
 }

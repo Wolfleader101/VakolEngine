@@ -1,17 +1,20 @@
 function init(scene)
     --scene:create_entity("physics plane", "physics_plane.lua");
-    scene:create_entity("physics example", "physics_example.lua");
+    scene:create_entity("physics example", "entities/physics_example.lua");
     
-    scene:create_entity("Fly Cam", "FlyCam.lua");
-
+    
+    scene:create_entity("Fly Cam", "entities/FlyCam.lua");
+    
     scene:create_entity("Terrain", "entities/physicsTerrain.lua");
+    
 
     scene:create_entity("Sphere", "entities/sphere.lua");
+    
 
     local phy = scene:get_physics();
 
 
-    --phy:enable_debug(true);
+    phy:enable_debug(true);
 end
 
 
