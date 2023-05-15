@@ -11,8 +11,6 @@ out VS_OUT
 {
     vec3  normal;
     vec2  uv;
-    flat ivec4 bone_ids;
-    vec4 bone_weights;
 } vs_out;
 
 layout (std140, binding = 1) uniform Matrices
@@ -28,7 +26,7 @@ layout (std140, binding = 1) uniform Matrices
 //    mat4 BONE_TRANSFORMS[];
 //};
 
-uniform mat4 BONE_TRANSFORMS[56];
+uniform mat4 BONE_TRANSFORMS[100]; // TODO: Make this into a shader buffer storage
 
 void main()
 {  
@@ -42,8 +40,6 @@ void main()
 
     vs_out.normal = aNormal;
     vs_out.uv = aTexCoords;
-    vs_out.bone_ids = aBoneIDs;
-    vs_out.bone_weights = aBoneWeights;
 
     gl_Position = PV_MATRIX * MODEL_MATRIX * BONE_MATRIX * vec4(aPos, 1.0);
 }

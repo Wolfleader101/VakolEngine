@@ -91,6 +91,8 @@ namespace Vakol::Controller
         {
             const auto& mesh = *scene.mMeshes[i];
 
+            VK_TRACE("Mesh {0} | Number of bones {1}", i, mesh.mNumBones);
+
             meshes.push_back(process_mesh(scene, mesh, bone_map));
         }
 
@@ -372,16 +374,20 @@ namespace Vakol::Controller
                 return bone_name == *node_name;
             });
 
+
             // Ensure that a matching node is found
             VK_ASSERT(itr != node_names.end(), "\n\nNo node matching a bone.");
 
             // Calculate the index of the node in the 'nodes' vector
             const auto index = static_cast<int>(std::distance(node_names.cbegin(), itr));
 
+            // Blender includes an armature node *we don't want that!*
+            if (strcmp(bone_name.C_Str(), "Armature") == 0) continue;
+
             // Retrieve the bone info based on the bone name
             const Bone* info = bone_map.get(bone_name.C_Str());
 
-            VK_ASSERT(info, "\n\nNo bone matches any existing bone!");
+            VK_ASSERT(info, "\n\nSee Previous Error Message");
 
             auto& [bone, bone_transform, parent, node_transform] = nodes[index];
 

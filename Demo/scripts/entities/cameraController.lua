@@ -1,9 +1,7 @@
 function init(scene, entity)
     local camera = scene:get_camera();
 
-    camera:set_yaw(95);
-
-    camera:set_pos(0, -5.0, -10);
+    camera:set_pos(0.0, 2.0, 2.0);
 
     print("Initialising Camera");
 

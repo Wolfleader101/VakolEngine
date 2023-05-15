@@ -357,10 +357,17 @@ namespace Vakol::Controller
 
         material_type.set_function("add_texture", &Assets::Material::AddTexture);
         material_type.set_function("get_texture", &Assets::Material::GetTexture);
+        material_type.set_function("get_ambient_color", &Assets::Material::GetAmbientColor);
+        material_type.set_function("get_diffuse_color", &Assets::Material::GetDiffuseColor);
 
         shader_type.set_function("set_int", &Assets::Shader::SetInt);
         shader_type.set_function("set_bool", &Assets::Shader::SetBool);
         shader_type.set_function("set_float", &Assets::Shader::SetFloat);
+
+        shader_type.set_function("set_vec2v", sol::resolve<void(const char*, const glm::vec2&) const>(&Assets::Shader::SetVec2));
+        shader_type.set_function("set_vec3v", sol::resolve<void(const char*, const glm::vec3&) const>(&Assets::Shader::SetVec3));
+        shader_type.set_function("set_vec4v", sol::resolve<void(const char*, const glm::vec4&) const>(&Assets::Shader::SetVec4));
+
         shader_type.set_function("set_vec2", sol::resolve<void(const char*, const float, const float) const>(&Assets::Shader::SetVec2));
         shader_type.set_function("set_vec3", sol::resolve<void(const char*, const float, const float, const float) const>(&Assets::Shader::SetVec3));
         shader_type.set_function("set_vec4", sol::resolve<void(const char*, const float, const float, const float, const float) const>(&Assets::Shader::SetVec4));
