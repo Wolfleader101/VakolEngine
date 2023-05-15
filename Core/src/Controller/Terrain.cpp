@@ -69,7 +69,7 @@ namespace Vakol::Controller
             for (int x = 0; x < m_size; ++x) 
             {
                 const auto pixel_offset = m_height_map.data() + (z * m_size + x);
-                const auto y = pixel_offset[0];
+                const auto y = pixel_offset[0] - (m_max_height - m_min_height) / 2.0f;
 
                 vertices.push_back((-m_size / 2.0f + m_size * x / static_cast<float>(m_size)) * 1.0f); 
                 vertices.push_back(y);
