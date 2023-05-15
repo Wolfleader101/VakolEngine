@@ -109,16 +109,18 @@ namespace Vakol::Controller {
 
         for (int z = 0; z < size; ++z) {
             for (int x = 0; x < size; ++x) {
-                unsigned char y = static_cast<unsigned char>(m_heightMap.at(z * size + x));
+                float y = m_heightMap.at(z * size + x);
 
                 vertices.push_back({
-                    glm::vec3((-size / 2.0f + size * x / static_cast<float>(size)) * 1.0f, (y * 0.4f - 16.0f),
-                              (-size / 2.0f + size * z / static_cast<float>(size)) * 1.0f),
+                    glm::vec3(
+                        (-size / 2.0f + size * x / static_cast<float>(size)) * 1.0f,
+                        y - (maxHeight + minHeight) / 2.0f,
+                        (-size / 2.0f + size * z / static_cast<float>(size)) * 1.0f),
                     glm::vec3(0.0f, 1.0f, 0.0f),  // normal
                     glm::vec2((x / static_cast<float>(size)), (z / static_cast<float>(size))),
                     glm::vec3(0.0f),  // tangent
                     glm::vec3(0.0f)   // bitangent
-                });
+                    });
             }
         }
 
@@ -210,27 +212,24 @@ namespace Vakol::Controller {
         return values;
     }
 
-    void Terrain::NormalizeValues(std::vector<float>& arr, const int size) {
-        float min = arr.at(0);
-        float max = arr.at(0);
+    void Terrain::NormalizeValues(std::vector<float>& arr, const int size)
+	{
 
-        float height;
+        float Oldmin = std::min_element(arr.begin(), arr.end())[0];
+        float Oldmax = std::max_element(arr.begin(), arr.end())[0];
 
-        // find min and max of height values
-        for (int i = 1; i < size * size; ++i) {
-            if (arr.at(i) > max)
-                max = arr[i];
-            else if (arr.at(i) < min)
-                min = arr[i];
-        }
 
         // find range of the altitude
-        if (max <= min) return;
+        if (Oldmax <= Oldmin) return;
 
-        height = max - min;
+        float oldRange = Oldmax - Oldmin;
+        float newRange = m_maxHeight - m_minHeight;
 
-        // scale values between 0-255
-        for (int i = 0; i < size * size; ++i) arr[i] = ((arr.at(i) - min) / height) * 255.0f;
+        float height = Oldmax - Oldmin;
+
+        for (int i = 0; i < size * size; ++i) {
+            arr[i] = (((arr.at(i) - Oldmin) * newRange) / oldRange) + m_minHeight;
+        }
     }
 
     const Model::Assets::Mesh Terrain::LoadCLODTerrain(const int size) {

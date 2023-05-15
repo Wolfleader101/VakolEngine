@@ -62,25 +62,20 @@ namespace Vakol::Controller::Physics {
         const unsigned size = terr.GetSize();
 
         // get the min and max from height data
-        float minH = HeightData[0];
-        float maxH = HeightData[0];
-        for (unsigned i = 0; i < HeightData.size(); i++) {
-            if (HeightData[i] < minH) {
-                minH = HeightData[i];
-            }
-            if (HeightData[i] > maxH) {
-                maxH = HeightData[i];
-            }
-        }
+         float minH = std::min_element(HeightData.begin(), HeightData.end())[0];
+         float maxH = std::max_element(HeightData.begin(), HeightData.end())[0];
+
+        
+        
 
         
         rp3d::HeightFieldShape* height = PhysicsPool::m_Common.createHeightFieldShape(
             size, size, minH, maxH, HeightData.data(), rp3d::HeightFieldShape::HeightDataType::HEIGHT_FLOAT_TYPE, 1,
-            1 );
+            1  );
 
         // auto& vertexData = terr.GetStaticVertices();
 
-        const auto trans = rp3d::Transform::identity();
+    	const auto trans = rp3d::Transform(rp3d::Vector3(0, 0, 0), rp3d::Quaternion::identity());
         m_Terrain = m_World->createRigidBody(trans);
         m_Terrain->setType(rp3d::BodyType::STATIC);
 

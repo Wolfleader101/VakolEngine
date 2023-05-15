@@ -28,6 +28,8 @@ namespace Vakol::Controller {
 
         ~Terrain(){};
 
+        std::pair <float, float> GetMinMaxHeight() const { return {m_minHeight, m_maxHeight}; }
+
        private:
         void GenerateStaticVertices(const int size);
         const Model::Assets::Mesh LoadHeightMap(unsigned char* data);
@@ -59,7 +61,7 @@ namespace Vakol::Controller {
 
         int m_size;
 
-        int m_minHeight;
-        int m_maxHeight;
+        float m_minHeight;
+        float m_maxHeight;
     };
 }  // namespace Vakol::Controller

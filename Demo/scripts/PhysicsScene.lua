@@ -4,14 +4,14 @@ function init(scene)
     
     scene:create_entity("Fly Cam", "FlyCam.lua");
 
-    scene:create_entity("Terrain", "entities/terrain.lua");
+    scene:create_entity("Terrain", "entities/physicsTerrain.lua");
 
     scene:create_entity("Sphere", "entities/sphere.lua");
 
     local phy = scene:get_physics();
 
 
-    phy:enable_debug(true);
+    --phy:enable_debug(true);
 end
 
 

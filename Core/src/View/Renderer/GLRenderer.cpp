@@ -154,7 +154,7 @@ namespace Vakol::View {
     }
 
     void GLRenderer::Update() const {
-        ClearColor(VAKOL_CLASSIC);
+        ClearColor(VAKOL_DARK);
         ClearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 }  // namespace Vakol::View

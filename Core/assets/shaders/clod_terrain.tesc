@@ -19,7 +19,7 @@ out vec2 TextureCoord[];
 const int MIN_TESS_LEVEL = 4;
 const int MAX_TESS_LEVEL = 32;
 const float MIN_DISTANCE = 5;
-const float MAX_DISTANCE = 10000;
+const float MAX_DISTANCE = 200;
 
 void main()
 {
