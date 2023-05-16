@@ -1,22 +1,20 @@
 #pragma once
 
-#include <string>
 #include <memory>
 
 #include <Model/Shader.hpp>
-#include <Model/VertexArray.hpp>
 
 namespace Vakol::Model
 {
 	struct Skybox
 	{
-		Skybox()
-		{
-			shader = std::make_shared<Shader>("coreAssets/shaders/skybox.prog");
-		}
+		Skybox() = default;
 
+		void Init();
+		void Draw(const glm::mat4& projection, const glm::mat4& view) const;
+
+	private:
 		std::shared_ptr<Shader> shader = nullptr;
-
 		unsigned int CUBEMAP_ID = 0;
 	};
 }

@@ -45,15 +45,15 @@ unsigned int LoadGLTexture(std::vector<const char*>&& faces, const bool gamma, c
     	//if (!data) data = LoadImage("coreAssets/textures/error.png", width, height, channels, flip);
         VK_ASSERT(data, "\n\ndata was nullptr");
 
-        //const GLint internal_format = (channels == 1) ? GL_R8 : (channels > 3) ? (gamma) ? GL_SRGB8_ALPHA8 : GL_RGBA8 : (gamma) ? GL_SRGB8 : GL_RGB8;
-        //const GLenum data_format = (channels == 1) ? GL_RED : (channels > 3) ? GL_RGBA : GL_RGB;
+        const GLint internal_format = (channels == 1) ? GL_R8 : (channels > 3) ? (gamma) ? GL_SRGB8_ALPHA8 : GL_RGBA8 : (gamma) ? GL_SRGB8 : GL_RGB8;
+        const GLenum data_format = (channels == 1) ? GL_RED : (channels > 3) ? GL_RGBA : GL_RGB;
 
-        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, internal_format, width, height, 0, data_format, GL_UNSIGNED_BYTE, data);
 
         delete[] data;
         data = nullptr;
 
-        //glBindTexture(GL_TEXTURE_2D, 0); // unbind individual faces
+        glBindTexture(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0); // unbind individual faces
     }
 
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -62,7 +62,7 @@ unsigned int LoadGLTexture(std::vector<const char*>&& faces, const bool gamma, c
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-    //glBindTexture(GL_TEXTURE_CUBE_MAP, 0); // unbind cube map
+    glBindTexture(GL_TEXTURE_CUBE_MAP, 0); // unbind cube map
 
     return ID;
 }
