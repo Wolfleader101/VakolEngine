@@ -7,7 +7,7 @@ function init(scene, entity)
     entity:get_transform().pos = Vector3.new(0.0, 0.0, -4.0);
     entity:get_transform().rot = Vector3.new(0.0, 85.0, 0.0);
 
-    local model = entity:add_model("assets/models/robot_dance.fbx", 1.0, true) -- get model and add a drawable component
+    local model = entity:add_model("assets/models/test.glb", 0.01, true) -- get model and add a drawable component
     model:set_shader("coreAssets/shaders/animation.prog") -- set the shader on the model (automatically binds it)
 
     model:set_animation_state(0);
@@ -26,5 +26,9 @@ function init(scene, entity)
 end
 
 function update(scene, entity)
-    
+    if (Input:get_key_down(KEYS["KEY_0"])) then
+        print("Animation State 0.");
+        -- local model = entity:get_model();
+        -- model:set_animation_state(1);
+    end
 end
