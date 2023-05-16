@@ -353,16 +353,21 @@ namespace Vakol::Controller {
                 assert(0);
             }
         });
+
+        entity_type.set_function("add_fsm", [&](Entity* ent) -> Components::FSM& {
+            if (!ent->HasComponent<Components::FSM>()) ent->AddComponent<Components::FSM>(lua);
+            return ent->GetComponent<Components::FSM>();
+        });
     }
 
     void RegisterECS(sol::state& lua) {
         auto transform_type = lua.new_usertype<Components::Transform>("transform");
-        auto terrain_type = lua.new_usertype<Terrain>("terrain");
 
         transform_type["pos"] = &Components::Transform::pos;
         transform_type["rot"] = &Components::Transform::rot;
         transform_type["scale"] = &Components::Transform::scale;
 
+        auto terrain_type = lua.new_usertype<Terrain>("terrain");
         // terrainType.set_function("load_heightmap", &Terrain::LoadHeightMap);
         // terrainType.set_function("load_texture", &Terrain::LoadTexture);
         // terrainType.set_function("generate", &Terrain::Generate);
@@ -370,6 +375,12 @@ namespace Vakol::Controller {
         terrain_type.set_function("get_height", &Terrain::GetHeight);
         terrain_type.set_function("get_size", &Terrain::GetSize);
         terrain_type.set_function("get_model", &Terrain::GetModel);
+
+        auto fsm_type = lua.new_usertype<Components::FSM>("FSM");
+        fsm_type["get_state"] = &Components::FSM::GetState;
+        fsm_type["change_state"] = &Components::FSM::ChangeState;
+        fsm_type["add_state"] = &Components::FSM::AddState;
+        fsm_type["update"] = &Components::FSM::Update;
     }
 
     void RegisterScene(sol::state& lua) {

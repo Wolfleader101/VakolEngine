@@ -135,6 +135,26 @@ namespace Vakol::Model::Components {
         }
     };
 
+    /**
+     * @brief a finite state machine that can be controlled in lua
+     *
+     */
+    struct FSM {
+        FSM(sol::state& lua);
+
+        void AddState(const std::string& stateName, sol::function callback);
+
+        void ChangeState(const std::string& stateName);
+
+        std::string GetState();
+
+        void Update();
+
+       private:
+        std::string currentState;
+        sol::table states;
+    };
+
     struct Drawable {
         Drawable() = default;
         Drawable(std::string&& file);

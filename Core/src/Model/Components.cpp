@@ -30,6 +30,32 @@ namespace Vakol::Model::Components {
         init();
     };
 
+    FSM::FSM(sol::state& lua) {
+        // Create a new table in the Lua state for the states
+        states = lua.create_table();
+    }
+
+    void FSM::AddState(const std::string& stateName, sol::function callback) {
+        // Add a new state to the states table
+        states[stateName] = callback;
+    }
+
+    void FSM::ChangeState(const std::string& stateName) {
+        // Change the current state
+        currentState = stateName;
+    }
+
+    std::string FSM::GetState() {
+        // Get the current state
+        return currentState;
+    }
+
+    void FSM::Update() {
+        // Call the callback for the current state
+        sol::function callback = states[currentState];
+        callback();
+    }
+
     Drawable::Drawable(std::string&& file)
         : name(std::move(file))  // WOW! EFFICIENT!
     {
