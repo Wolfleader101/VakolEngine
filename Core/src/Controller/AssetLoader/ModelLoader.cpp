@@ -23,7 +23,8 @@ using namespace Vakol::Model::Assets;
 namespace Vakol::Controller
 {
     constexpr unsigned int ASSIMP_LOADER_OPTIONS =
-        aiProcess_Triangulate | aiProcess_CalcTangentSpace | aiProcess_FlipUVs | aiProcess_LimitBoneWeights | aiProcess_GlobalScale;
+        aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_CalcTangentSpace | 
+        aiProcess_FlipUVs     | aiProcess_LimitBoneWeights | aiProcess_GlobalScale;
 
     static glm::mat4 to_glm(const aiMatrix4x4& m)
     {

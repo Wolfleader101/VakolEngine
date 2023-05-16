@@ -120,7 +120,7 @@ namespace Vakol::View
 
         SetBufferSubData(0, 3 * sizeof(glm::mat4), sizeof(glm::mat4), value_ptr(model_matrix));
 
-        shader->SetMat3("NORMAL_MATRIX", glm::mat3(transpose(inverse(model_matrix))));
+        //shader->SetMat3("NORMAL_MATRIX", glm::mat3(transpose(inverse(model_matrix))));
 
         if (model->isAnimated()) shader->SetMat4v("BONE_TRANSFORMS", model->numTransforms(), value_ptr(model->transforms()[0]));
 

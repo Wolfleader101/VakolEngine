@@ -12,6 +12,7 @@ out VS_OUT
     vec3  fragPos;
     vec3  normal;
     vec2  uv;
+    mat3  TBN;
 } vs_out;
 
 layout (std140, binding = 1) uniform Matrices
@@ -21,8 +22,6 @@ layout (std140, binding = 1) uniform Matrices
     mat4 PV_MATRIX;
     mat4 MODEL_MATRIX;
 };
-
-uniform mat3 NORMAL_MATRIX;
 
 //layout (std430, binding = 2) buffer Bones
 //{
@@ -38,12 +37,20 @@ void main()
     for (int i = 0; i < 4; ++i)
          BONE_MATRIX += BONE_TRANSFORMS[aBoneIDs[i]] * aBoneWeights[i];
 
+    // if no bones (for debug bind pose)
     if (aBoneIDs[0] < 0)
         BONE_MATRIX = mat4(1.0);
 
-    vs_out.fragPos = vec3(MODEL_MATRIX * vec4(aPos, 1.0));
-    vs_out.normal = NORMAL_MATRIX * aNormal;
+    vs_out.fragPos = vec3(MODEL_MATRIX * BONE_MATRIX * vec4(aPos, 1.0));
     vs_out.uv = aTexCoords;
+
+    mat3 MS = mat3(MODEL_MATRIX * BONE_MATRIX);
+    vec3 T = normalize(MS * aTangent);
+    vec3 B = normalize(MS * aBitangent);
+    vec3 N = normalize(MS * aNormal);
+
+    vs_out.TBN = mat3(T, B, N);
+    vs_out.normal = N;
 
     gl_Position = PV_MATRIX * MODEL_MATRIX * BONE_MATRIX * vec4(aPos, 1.0);
 }
