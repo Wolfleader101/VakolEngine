@@ -14,7 +14,7 @@ function init(scene)
     local phy = scene:get_physics();
 
 
-    phy:enable_debug(true);
+    -- phy:enable_debug(true);
 end
 
 

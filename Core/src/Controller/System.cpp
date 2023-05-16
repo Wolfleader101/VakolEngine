@@ -41,20 +41,19 @@ namespace Vakol::Controller {
         m_registry->view<Components::Script>().each([&](auto entity_id, auto& script) {
             lua.RunFile("scripts/" + script.script_name);
 
+            lua.GetState()["scene"] = scene;
+            lua.GetState()["entity"] = list.GetEntity(static_cast<unsigned int>(entity_id));
+
             sol::function update = lua.GetState()["update"];
-
-            auto ent = list.GetEntity(static_cast<unsigned int>(entity_id));
-
-            update(*scene, ent);
+            update();
         });
     }
 
-    void System::Physics_Init()  
-    {
+    void System::Physics_Init() {
         auto view = m_registry->view<Components::RigidBody>();
 
         for (auto entity : view) {
-            Physics_InitEntity(Entlist->GetEntity((uint32_t) entity));
+            Physics_InitEntity(Entlist->GetEntity((uint32_t)entity));
         }
     }
 
@@ -89,9 +88,8 @@ namespace Vakol::Controller {
                     rigid.Data.LDamp = rigid.RigidBodyPtr->getLinearDamping();
                     rigid.Data.AngularLock = rigid.RigidBodyPtr->getAngularLockAxisFactor();
                     rigid.Data.Orientation = rigid.RigidBodyPtr->getTransform().getOrientation().getVectorV();
-                    
-                    
-                    rigid.Type = (RigidBody::BodyType) rigid.RigidBodyPtr->getType(); 
+
+                    rigid.Type = (RigidBody::BodyType)rigid.RigidBodyPtr->getType();
 
                     rp3d::Vector3 pos(trans.pos.x, trans.pos.y, trans.pos.z);
                     rp3d::Quaternion quat = rp3d::Quaternion::fromEulerAngles(trans.rot.x, trans.rot.y, trans.rot.z);
@@ -101,15 +99,13 @@ namespace Vakol::Controller {
             });
     }
 
-    void System::Physics_InitEntity(Entity& ent) 
-    {
+    void System::Physics_InitEntity(Entity& ent) {
         auto& trans = ent.GetComponent<Transform>();
         auto& rigid = ent.GetComponent<RigidBody>();
 
         if (rigid.initialized) return;
 
-        if(!ent.HasComponent<RigidBody>())
-        {
+        if (!ent.HasComponent<RigidBody>()) {
             VK_CRITICAL("No rigid body component found on entity: {0}", ent.GetHandle());
             assert(0);
             return;
@@ -132,64 +128,51 @@ namespace Vakol::Controller {
 
         rigid.prevTransform = rpTrans;
 
-        if(ent.HasComponent<Collider>())
-        {
+        if (ent.HasComponent<Collider>()) {
             auto& col = ent.GetComponent<Collider>();
-        
 
-                col.OwningBody = &rigid;
+            col.OwningBody = &rigid;
 
             const Collider::Bounds& bounds = col.bounds;
 
-                if (col.ShapeName == Collider::ShapeName::BOX) 
-                {
-                    col.Shape = PhysicsPool::m_Common.createBoxShape(
-                        (bounds.extents) * rp3d::Vector3(trans.scale.x, trans.scale.y, trans.scale.z));
-                }
-                else if (col.ShapeName == Collider::ShapeName::SPHERE) 
-                {
-                    col.Shape = PhysicsPool::m_Common.createSphereShape(bounds.radius * trans.scale.x);
-                } 
-                else if (col.ShapeName == Collider::ShapeName::CAPSULE) 
-                {
-                    col.Shape = PhysicsPool::m_Common.createCapsuleShape(bounds.extents.x * trans.scale.x,
-                                                                        bounds.extents.y * trans.scale.y);
-                } 
-                else if (col.ShapeName == Collider::ShapeName::TRIANGLE_MESH) 
-                {
-
-                    if (!ent.HasComponent<Drawable>()) {
-                        VK_CRITICAL("Trying to add triangle mesh collider without providing model!");
-                        assert(0);
-                    }
-
-                    const auto& draw = ent.GetComponent<Drawable>();
-
-                    const auto mesh_ptr = PhysicsPool::m_Common.createTriangleMesh();
-
-                    for (auto& mesh : draw.model_ptr->GetMeshes()) 
-                    {
-	                    const auto tri_array = new rp3d::TriangleVertexArray(
-		                    mesh.nVertices(), mesh.vertices().data(),
-		                    sizeof(float) * 3, mesh.nIndices() / 3,
-		                    mesh.indices().data(), sizeof(unsigned int) * 3,
-		                    rp3d::TriangleVertexArray::VertexDataType::VERTEX_FLOAT_TYPE,
-		                    rp3d::TriangleVertexArray::IndexDataType::INDEX_INTEGER_TYPE);
-
-                        mesh_ptr->addSubpart(tri_array);
-                    };
-
-                    col.Shape = PhysicsPool::m_Common.createConcaveMeshShape(
-                        mesh_ptr, rp3d::Vector3(trans.scale.x, trans.scale.y, trans.scale.z));
-
-                } else {
-                    VK_CRITICAL("Failed Collider Initialization! No collider shape given.");
+            if (col.ShapeName == Collider::ShapeName::BOX) {
+                col.Shape = PhysicsPool::m_Common.createBoxShape(
+                    (bounds.extents) * rp3d::Vector3(trans.scale.x, trans.scale.y, trans.scale.z));
+            } else if (col.ShapeName == Collider::ShapeName::SPHERE) {
+                col.Shape = PhysicsPool::m_Common.createSphereShape(bounds.radius * trans.scale.x);
+            } else if (col.ShapeName == Collider::ShapeName::CAPSULE) {
+                col.Shape = PhysicsPool::m_Common.createCapsuleShape(bounds.extents.x * trans.scale.x,
+                                                                     bounds.extents.y * trans.scale.y);
+            } else if (col.ShapeName == Collider::ShapeName::TRIANGLE_MESH) {
+                if (!ent.HasComponent<Drawable>()) {
+                    VK_CRITICAL("Trying to add triangle mesh collider without providing model!");
                     assert(0);
                 }
 
-                col.ColliderPtr = rigid.RigidBodyPtr->addCollider(col.Shape, rp3d::Transform::identity());
-                col.OwningBody = &rigid;
-            
+                const auto& draw = ent.GetComponent<Drawable>();
+
+                const auto mesh_ptr = PhysicsPool::m_Common.createTriangleMesh();
+
+                for (auto& mesh : draw.model_ptr->GetMeshes()) {
+                    const auto tri_array = new rp3d::TriangleVertexArray(
+                        mesh.nVertices(), mesh.vertices().data(), sizeof(float) * 3, mesh.nIndices() / 3,
+                        mesh.indices().data(), sizeof(unsigned int) * 3,
+                        rp3d::TriangleVertexArray::VertexDataType::VERTEX_FLOAT_TYPE,
+                        rp3d::TriangleVertexArray::IndexDataType::INDEX_INTEGER_TYPE);
+
+                    mesh_ptr->addSubpart(tri_array);
+                };
+
+                col.Shape = PhysicsPool::m_Common.createConcaveMeshShape(
+                    mesh_ptr, rp3d::Vector3(trans.scale.x, trans.scale.y, trans.scale.z));
+
+            } else {
+                VK_CRITICAL("Failed Collider Initialization! No collider shape given.");
+                assert(0);
+            }
+
+            col.ColliderPtr = rigid.RigidBodyPtr->addCollider(col.Shape, rp3d::Transform::identity());
+            col.OwningBody = &rigid;
         }
 
         rigid.initialized = true;

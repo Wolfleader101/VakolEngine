@@ -1,5 +1,6 @@
 #include "Scene.hpp"
 
+#include <Controller/Camera.hpp>
 #include <Controller/Serialization/Serializable.hpp>
 #include <Model/Components.hpp>
 #include <Model/Entity.hpp>
@@ -8,8 +9,6 @@
 
 #include "LuaAccess.hpp"
 #include "System.hpp"
-
-#include <Controller/Camera.hpp>
 
 namespace Vakol::Controller {
     Scene::Scene(const std::string& name, const std::string& scriptName, LuaState& lua,
@@ -24,28 +23,28 @@ namespace Vakol::Controller {
         lua.RunFile("scripts/" + scriptName);
         System::BindScene(*this);
 
+        // lua.GetState()["scene"] = this;
+
         sol::function init = lua.GetState()["init"];
 
         init(*this);
-        
     }
 
     const std::string& Scene::getName() const { return name; }
 
     void Scene::setName(const std::string& newName) { name = newName; }
 
-    Model::Entity Scene::CreateEntity(const std::string tag, const std::string scriptName) 
-    {
+    Model::Entity Scene::CreateEntity(const std::string tag, const std::string name) {
         auto ent = entityList.CreateEntity();
         ent.GetComponent<Model::Components::Tag>().tag = tag;
-        if (scriptName.length() != 0) ent.AddComponent<Model::Components::Script>(scriptName, lua, ent, *this);
+        if (name.length() != 0) ent.AddComponent<Model::Components::Script>(name, lua, ent, *this);
         return ent;
     }
 
-    void Scene::Update(const Time& time, const std::shared_ptr<View::Renderer> renderer) 
-    {
+    void Scene::Update(const Time& time, const std::shared_ptr<View::Renderer> renderer) {
         lua.RunFile("scripts/" + scriptName);
 
+        // lua.GetState()["scene"] = this;
         sol::function update = lua.GetState()["update"];
 
         update(*this);
@@ -57,12 +56,9 @@ namespace Vakol::Controller {
         System::Drawable_Update(time, cam, renderer);
 
         cam.Update(time.deltaTime);
-
-    	
     }
 
-    std::shared_ptr<Entity> Scene::GetEntity(const std::string& tag) 
-    {
+    std::shared_ptr<Entity> Scene::GetEntity(const std::string& tag) {
         Entity ent;
         entityList.m_Registry.view<Model::Components::Tag>().each([&](auto entity, auto& tagComponent) {
             if (tagComponent.tag == tag) {
@@ -75,12 +71,9 @@ namespace Vakol::Controller {
 
     namespace fs = std::filesystem;
 
-    void Scene::Serialize(const std::string& folder) const
-	{
-
+    void Scene::Serialize(const std::string& folder) const {
         std::string temp = folder;
         std::replace(temp.begin(), temp.end(), '/', '\\');  // replace / with \\ for filesystem
-
 
         std::string folderPath = "\\" + temp + "\\" + name;
         fs::path currentPath = fs::current_path();
