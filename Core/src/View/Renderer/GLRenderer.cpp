@@ -14,7 +14,6 @@
 #include <vector>
 
 #include <Model/Components.hpp>
-#include <Controller/AssetLoader/TextureLoader.hpp>
 
 /*
 Distance	Constant	Linear	Quadratic

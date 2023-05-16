@@ -31,7 +31,18 @@ namespace Vakol::Model::Assets
 
         void UpdateAnimation(const float delta_time) { m_animations.at(m_animation_state).Update(delta_time); }
 
-        void SetAnimationState(const int state) { m_animation_state = state; }
+        void SetAnimationState(int state)
+        {
+            const auto size = static_cast<int>(m_animations.size());
+
+            if (state < size && state > 0)
+				m_animation_state = state;
+            else
+            {
+                state = std::max(0, size - 1);
+                m_animation_state = state;
+            }
+        }
 
         [[nodiscard]] int numTransforms() const { return m_animations.at(m_animation_state).numTransforms(); }
         [[nodiscard]] const std::vector<glm::mat4>& transforms() const { return m_animations.at(m_animation_state).transforms(); }

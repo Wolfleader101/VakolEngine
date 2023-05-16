@@ -7,10 +7,10 @@ function init(scene, entity)
     entity:get_transform().pos = Vector3.new(0.0, 0.0, -4.0);
     entity:get_transform().rot = Vector3.new(0.0, 85.0, 0.0);
 
-    local model = entity:add_model("assets/models/test.glb", 0.01, true) -- get model and add a drawable component
+    local model = entity:add_model("assets/models/belly_dance.fbx", 1.0, true) -- get model and add a drawable component
     model:set_shader("coreAssets/shaders/animation.prog") -- set the shader on the model (automatically binds it)
 
-    model:set_animation_state(RUN_STATE);
+    model:set_animation_state(0);
 
     local shader = model:get_shader(); -- get the shader from the model
 
