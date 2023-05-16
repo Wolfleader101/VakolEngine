@@ -57,47 +57,29 @@ namespace Vakol::Controller::Physics {
         return m_DebugRenderer.IsEnabled();
     }
 
-    void ScenePhysics::AddTerrain(Terrain& terr) {
-        // auto& HeightData = terr.GetHeightMap();
-        // const unsigned size = terr.GetSize();
+    void ScenePhysics::AddTerrain(const Terrain& terr) {
+        auto& HeightData = terr.GetHeightMap();
+        const unsigned size = terr.GetSize();
 
-        // // get the min and max from height data
-        // float minH = HeightData[0];
-        // float maxH = HeightData[0];
-        // for (unsigned i = 0; i < HeightData.size(); i++) {
-        //     if (HeightData[i] < minH) {
-        //         minH = HeightData[i];
-        //     }
-        //     if (HeightData[i] > maxH) {
-        //         maxH = HeightData[i];
-        //     }
-        // }
+        // get the min and max from height data
+         float minH = std::min_element(HeightData.begin(), HeightData.end())[0];
+         float maxH = std::max_element(HeightData.begin(), HeightData.end())[0];
 
-        // // rp3d::HeightFieldShape* height = PhysicsPool::m_Common.createHeightFieldShape(
-        // //     size, size, minH, maxH, HeightData.data(), rp3d::HeightFieldShape::HeightDataType::HEIGHT_FLOAT_TYPE, 1,
-        // //     1);
+        
+        
+
+        
+        rp3d::HeightFieldShape* height = PhysicsPool::m_Common.createHeightFieldShape(
+            size, size, minH, maxH, HeightData.data(), rp3d::HeightFieldShape::HeightDataType::HEIGHT_FLOAT_TYPE, 1,
+            1  );
 
         // auto& vertexData = terr.GetStaticVertices();
-        // auto& indexData = terr.GetModel()->GetMesh().GetVertexArray()->GetIndices();
 
-        // auto MeshPtr = PhysicsPool::m_Common.createTriangleMesh();
+        const auto trans = rp3d::Transform::identity();
+        m_Terrain = m_World->createRigidBody(trans);
+        m_Terrain->setType(rp3d::BodyType::STATIC);
 
-        // rp3d::TriangleVertexArray* triArray = nullptr;
-
-        // triArray = new rp3d::TriangleVertexArray(vertexData.size(), vertexData.data(), sizeof(float) * 3,
-        //                                          indexData.size() / 3, indexData.data(), sizeof(unsigned int) * 3,
-        //                                          rp3d::TriangleVertexArray::VertexDataType::VERTEX_FLOAT_TYPE,
-        //                                          rp3d::TriangleVertexArray::IndexDataType::INDEX_INTEGER_TYPE);
-
-        // MeshPtr->addSubpart(triArray);
-
-        // auto col = PhysicsPool::m_Common.createConcaveMeshShape(MeshPtr, rp3d::Vector3(1, 1, 1));
-
-        // const auto trans = rp3d::Transform::identity();
-        // m_Terrain = m_World->createRigidBody(trans);
-        // m_Terrain->setType(rp3d::BodyType::STATIC);
-
-        // m_Terrain->addCollider(col, trans);
+        m_Terrain->addCollider(height, trans);
     }
 
 }  // namespace Vakol::Controller::Physics

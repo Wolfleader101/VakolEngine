@@ -228,13 +228,13 @@ namespace Vakol::Controller
 
         entity_type.set_function("get_transform", &Entity::GetComponent<Components::Transform>);
 
-        entity_type.set_function("create_height_map_terrain", [](Entity* ent, std::string&& path)
+        entity_type.set_function("create_height_map_terrain", [](Entity* ent, std::string&& path, float min, float max)
         {
             if (!ent->HasComponent<Components::Drawable>()) ent->AddComponent<Components::Drawable>();
 
             if (ent->HasComponent<Terrain>()) ent->RemoveComponent<Terrain>();
 
-            ent->AddComponent<Terrain>(LoadHeightMapTerrain(std::move(path)));
+            ent->AddComponent<Terrain>(LoadHeightMapTerrain(std::move(path), min, max));
 
         	auto terrain = ent->GetComponent<Terrain>();
 
@@ -347,7 +347,7 @@ namespace Vakol::Controller
         
         });
 
-        entity_type.set_function("add_collider", [](Entity* ent)
+        entity_type.set_function("add_collider", [](Entity* ent) -> Collider&
         {
             if (!ent->HasComponent<Components::Collider>()) ent->AddComponent<Components::Collider>();
             return ent->GetComponent<Components::Collider>();
@@ -361,6 +361,23 @@ namespace Vakol::Controller
             assert(0);
         
         });
+
+        entity_type.set_function("get_bounds_from_model", [](Entity* ent) -> void
+        {
+			if (ent->HasComponent<Components::Drawable, Components::Collider>())
+			{
+		        const auto& model = ent->GetComponent<Components::Drawable>();
+
+                auto& collider = ent->GetComponent<Components::Collider>();
+
+                collider.bounds = getBounds(model);
+			}
+			else
+			{
+				VK_CRITICAL("drawable and collider must be present to get bounds from");
+				assert(0);
+			}
+		});
 
     }
 

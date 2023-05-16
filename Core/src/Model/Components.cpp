@@ -97,32 +97,41 @@ namespace Vakol::Model::Components
     {
         Collider::Bounds bounds;
 
-        //rp3d::Vector3& max = bounds.max;
-        //rp3d::Vector3& min = bounds.min;
+        rp3d::Vector3& max = bounds.max;
+        rp3d::Vector3& min = bounds.min;
 
-        // const auto firstVert = model.model_ptr->GetMeshes().begin()->GetVertexArray()->GetVertices().begin();
+        // Assuming each vertex is represented by 3 floats (x, y, z).
+        const std::vector<float>& vertices = model.model_ptr->GetMeshes().begin()->vertices();
 
-        // max = min = rp3d::Vector3(firstVert->position.x, firstVert->position.y, firstVert->position.z);
+        if (vertices.size() < 3)
+        {
+            throw std::runtime_error("Insufficient vertices data");
+        }
 
-        // rp3d::Vector3 tempVert;
+        max = min = rp3d::Vector3(vertices[0], vertices[1], vertices[2]);
 
-        // for (auto& msh : model.model_ptr->GetMeshes()) 
-        // {
-        //     for (auto& vertex : msh.GetVertexArray()->GetVertices()) 
-        //     {
-        //         tempVert.x = vertex.position.x;
-        //         tempVert.y = vertex.position.y;
-        //         tempVert.z = vertex.position.z;
+        rp3d::Vector3 tempVert;
 
-        //         max = rp3d::Vector3::max(max, tempVert);
-        //         min = rp3d::Vector3::min(min, tempVert);
-        //     }
-        // }
+        for (auto& msh : model.model_ptr->GetMeshes())
+        {
+            const std::vector<float>& vertices = msh.vertices();
 
-        bounds.center = (bounds.max + bounds.min) / 2.0f;
-        bounds.extents = (bounds.max - bounds.min) / 2.0f;
+            for (size_t i = 0; i < vertices.size(); i += 3)
+            {
+
+                tempVert.x = vertices[i];
+                tempVert.y = vertices[i + 1];
+                tempVert.z = vertices[i + 2];
+
+                max = rp3d::Vector3::max(max, tempVert);
+                min = rp3d::Vector3::min(min, tempVert);
+            }
+        }
+
+        bounds.center = (max + min) / 2.0f;
+        bounds.extents = (max - min) / 2.0f;
         bounds.size = bounds.extents * 2;
-        bounds.radius = bounds.extents.length();
+        bounds.radius = bounds.extents.length() / 2.0f;
 
         return bounds;
     }
