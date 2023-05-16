@@ -14,6 +14,7 @@
 #include <vector>
 
 #include <Model/Components.hpp>
+#include <Controller/AssetLoader/TextureLoader.hpp>
 
 /*
 Distance	Constant	Linear	Quadratic
@@ -30,6 +31,54 @@ Distance	Constant	Linear	Quadratic
 600	        1.0	        0.007	0.0002
 3250	    1.0	        0.0014	0.000007
 */
+
+float skybox_vertices[] =
+{
+    // positions          
+    -1.0f,  1.0f, -1.0f,
+    -1.0f, -1.0f, -1.0f,
+     1.0f, -1.0f, -1.0f,
+     1.0f, -1.0f, -1.0f,
+     1.0f,  1.0f, -1.0f,
+    -1.0f,  1.0f, -1.0f,
+
+    -1.0f, -1.0f,  1.0f,
+    -1.0f, -1.0f, -1.0f,
+    -1.0f,  1.0f, -1.0f,
+    -1.0f,  1.0f, -1.0f,
+    -1.0f,  1.0f,  1.0f,
+    -1.0f, -1.0f,  1.0f,
+
+     1.0f, -1.0f, -1.0f,
+     1.0f, -1.0f,  1.0f,
+     1.0f,  1.0f,  1.0f,
+     1.0f,  1.0f,  1.0f,
+     1.0f,  1.0f, -1.0f,
+     1.0f, -1.0f, -1.0f,
+
+    -1.0f, -1.0f,  1.0f,
+    -1.0f,  1.0f,  1.0f,
+     1.0f,  1.0f,  1.0f,
+     1.0f,  1.0f,  1.0f,
+     1.0f, -1.0f,  1.0f,
+    -1.0f, -1.0f,  1.0f,
+
+    -1.0f,  1.0f, -1.0f,
+     1.0f,  1.0f, -1.0f,
+     1.0f,  1.0f,  1.0f,
+     1.0f,  1.0f,  1.0f,
+    -1.0f,  1.0f,  1.0f,
+    -1.0f,  1.0f, -1.0f,
+
+    -1.0f, -1.0f, -1.0f,
+    -1.0f, -1.0f,  1.0f,
+     1.0f, -1.0f, -1.0f,
+     1.0f, -1.0f, -1.0f,
+    -1.0f, -1.0f,  1.0f,
+     1.0f, -1.0f,  1.0f
+};
+
+unsigned int SKYBOX_VAO, SKYBOX_VBO;
 
 constexpr glm::vec4 VAKOL_CLASSIC = glm::vec4(0.52941f, 0.80784f, 0.92157f, 1.0f);
 
@@ -60,7 +109,24 @@ namespace Vakol::View
         // std140 - memory layout, binding - index, uniform (typeof buffer)
         AddBuffer(GL_UNIFORM_BUFFER, 4 * sizeof(glm::mat4), 1, GL_STATIC_DRAW);
         // add a uniform buffer which size is that of a 4x4 matrix with a binding index of 1
-    };
+
+        glGenVertexArrays(1, &SKYBOX_VAO);
+        glGenBuffers(1, &SKYBOX_VBO);
+
+        glBindVertexArray(SKYBOX_VAO);
+
+        glBindBuffer(GL_ARRAY_BUFFER, SKYBOX_VBO);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(skybox_vertices), &skybox_vertices[0], GL_STATIC_DRAW);
+
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+
+        glBindVertexArray(0);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+        std::vector faces = {"assets/textures/skybox/right.png", "assets/textures/skybox/left.png", "assets/textures/skybox/top.png", "assets/textures/skybox/bottom.png", "assets/textures/skybox/front.png", "assets/textures/skybox/back.png"};
+        skybox->CUBEMAP_ID = Controller::LoadTexture(std::move(faces), false, false);
+    }
 
     void GLRenderer::AddBuffer(const unsigned int type, const int size, const int binding, const void* data, const unsigned int usage)
     {
@@ -137,6 +203,25 @@ namespace Vakol::View
         }
 
         shader->Unbind();
+
+
+        /* SKYBOX */
+        glDepthFunc(GL_LEQUAL);
+
+        skybox->shader->Bind();
+
+        const auto view = glm::mat4(glm::mat3(camera.GetMatrix(VIEW_MATRIX)));
+        skybox->shader->SetMat4("PV_MATRIX", camera.GetMatrix(PROJECTION_MATRIX) * view);
+
+        glBindVertexArray(SKYBOX_VAO);
+        glActiveTexture(GL_TEXTURE0);
+
+        glBindTexture(GL_TEXTURE_CUBE_MAP, skybox->CUBEMAP_ID);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+
+        glBindVertexArray(0);
+
+        glDepthFunc(GL_LESS);
     }
 
     void GLRenderer::Update() const 

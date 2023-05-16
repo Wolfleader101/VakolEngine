@@ -1,11 +1,14 @@
 #pragma once
 
 #include "Renderer.hpp"
+
 #include <Model/Buffer.hpp>
+#include <Model/Skybox.hpp>
 
 namespace Vakol::View 
 {
-    using Vakol::Model::Buffer;
+    using Model::Skybox;
+    using Model::Buffer;
 
     class GLRenderer : public Renderer 
     {
@@ -52,5 +55,6 @@ namespace Vakol::View
         }
     private:
         std::vector<std::shared_ptr<Buffer>> buffers;
+        std::shared_ptr<Skybox> skybox = std::make_shared<Skybox>();
     };
 }

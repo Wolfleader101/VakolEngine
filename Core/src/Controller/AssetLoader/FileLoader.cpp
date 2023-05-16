@@ -134,6 +134,22 @@ unsigned char* LoadImage(std::string&& path, int& width, int& height)
 	return result;
 }
 
+unsigned char* LoadImage(const char* path, int& width, int& height, int& channels, const bool flip = true)
+{
+	// OpenGL be like: Nah we want textures upside down.
+	stbi_set_flip_vertically_on_load(flip);
+
+	const auto data = stbi_load(path, &width, &height, &channels, 0);
+
+	if (!data)
+	{
+		VK_ERROR("ERROR::FileLoader::LoadImage(): Failed to load image at path {0}", path);
+		stbi_image_free(data);
+	}
+
+	return data;
+}
+
 unsigned char* LoadImage(std::string&& path, int& width, int& height, int& channels, const bool flip = true)
 {
 	// OpenGL be like: Nah we want textures upside down.

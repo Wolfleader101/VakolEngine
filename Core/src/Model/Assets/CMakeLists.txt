@@ -14,7 +14,4 @@ SET(ASSETS
 
 	src/Model/Assets/Material.hpp
 
-	src/Model/Assets/Shader.hpp
-	src/Model/Assets/Shader.cpp
-
 PARENT_SCOPE)

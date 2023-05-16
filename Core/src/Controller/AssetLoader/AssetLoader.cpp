@@ -13,7 +13,7 @@ namespace Vakol::Controller
 
     std::unordered_map<std::string, std::shared_ptr<Texture>> AssetLoader::m_TextureMap;
     std::unordered_map<std::string, std::shared_ptr<::Model>> AssetLoader::m_ModelMap;
-    std::unordered_map<std::string, std::shared_ptr<Shader>> AssetLoader::m_ShaderMap;
+    std::unordered_map<std::string, std::shared_ptr<Model::Shader>> AssetLoader::m_ShaderMap;
 
     Texture& AssetLoader::GetTexture(std::string& file) 
     {
@@ -53,14 +53,14 @@ namespace Vakol::Controller
         return ret;
     }
 
-    std::shared_ptr<Shader> AssetLoader::GetShader(const std::string& file) 
+    std::shared_ptr<Model::Shader> AssetLoader::GetShader(const std::string& file) 
     {
-        std::shared_ptr<Shader> ret;
+        std::shared_ptr<Model::Shader> ret;
 
         const auto itr = m_ShaderMap.find(file);
 
         if (itr == m_ShaderMap.end()) {
-            ret = std::make_shared<Shader>(file);
+            ret = std::make_shared<Model::Shader>(file);
 
             if (ret->GetID() == 0) return nullptr;  // if shader didn't load
 

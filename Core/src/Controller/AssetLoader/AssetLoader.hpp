@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Model/Assets/Model.hpp>
-#include <Model/Assets/Shader.hpp>
+#include <Model/Shader.hpp>
 #include <Model/Assets/Texture.hpp>
 
 #include <memory>
@@ -19,11 +19,11 @@ namespace Vakol::Controller
 
         static Model::Assets::Texture& GetTexture(std::string& file);
         static std::shared_ptr<Model::Assets::Model> GetModel(const std::string& file, const float scale, bool animated);
-        static std::shared_ptr<Model::Assets::Shader> GetShader(const std::string& file);
+        static std::shared_ptr<Model::Shader> GetShader(const std::string& file);
 
     private:
         static std::unordered_map<std::string, std::shared_ptr<Model::Assets::Texture>> m_TextureMap;
         static std::unordered_map<std::string, std::shared_ptr<Model::Assets::Model>> m_ModelMap;
-        static std::unordered_map<std::string, std::shared_ptr<Model::Assets::Shader>> m_ShaderMap;
+        static std::unordered_map<std::string, std::shared_ptr<Model::Shader>> m_ShaderMap;
     };
 }  // namespace Vakol::Controller

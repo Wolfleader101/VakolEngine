@@ -13,7 +13,7 @@
 #include <vector>
 
 #include "Controller/Logger.hpp"
-#include "Model/Assets/Shader.hpp"
+#include "Model/Shader.hpp"
 
 #include "View/Renderer/Renderer.hpp"
 
@@ -25,7 +25,7 @@ namespace Vakol::Controller::Physics
 namespace Vakol::View
 {
 
-    using Shader = Vakol::Model::Assets::Shader;
+    using Shader = Vakol::Model::Shader;
     class DebugRenderer
     {
         public:

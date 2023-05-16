@@ -3,7 +3,7 @@
 #include <memory>
 
 #include "Mesh.hpp"
-#include "Shader.hpp"
+#include "Model/Shader.hpp"
 #include "Animation.hpp"
 
 namespace Vakol::Model::Assets 
