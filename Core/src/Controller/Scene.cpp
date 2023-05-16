@@ -19,35 +19,36 @@ namespace Vakol::Controller {
           entityList(),
           scenePhysics(SP),
           active(active),
-          cam(glm::vec3(0.0f, 0.0f, 2.0f)) {
+          cam(glm::vec3(0.0f, 0.0f, 2.0f)),
+          sceneGlobals(lua.GetState().create_table()) {
         lua.RunFile("scripts/" + scriptName);
         System::BindScene(*this);
 
-        // lua.GetState()["scene"] = this;
+        lua.GetState()["scene"] = this;
 
         sol::function init = lua.GetState()["init"];
 
-        init(*this);
+        init();
     }
 
     const std::string& Scene::getName() const { return name; }
 
     void Scene::setName(const std::string& newName) { name = newName; }
 
-    Model::Entity Scene::CreateEntity(const std::string tag, const std::string name) {
+    Model::Entity Scene::CreateEntity(const std::string tag, const std::string sname) {
         auto ent = entityList.CreateEntity();
         ent.GetComponent<Model::Components::Tag>().tag = tag;
-        if (name.length() != 0) ent.AddComponent<Model::Components::Script>(name, lua, ent, *this);
+        if (sname.length() != 0) ent.AddComponent<Model::Components::Script>(sname, lua, ent, *this);
         return ent;
     }
 
     void Scene::Update(const Time& time, const std::shared_ptr<View::Renderer> renderer) {
         lua.RunFile("scripts/" + scriptName);
 
-        // lua.GetState()["scene"] = this;
+        lua.GetState()["scene"] = this;
         sol::function update = lua.GetState()["update"];
 
-        update(*this);
+        update();
 
         scenePhysics->Update(time, cam);
 

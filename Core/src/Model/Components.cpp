@@ -18,8 +18,11 @@ namespace Vakol::Model::Components {
     Script::Script(const std::string& scriptName, Controller::LuaState& lua, Model::Entity& entity,
                    Controller::Scene& scene)
         : script_name(scriptName) {
-        lua.GetState()["scene"] = scene;
+        lua.GetState()["scene"] = std::ref(scene);
         lua.GetState()["entity"] = entity;
+
+        state = lua.GetState().create_table();
+        lua.GetState()["state"] = state;
 
         lua.RunFile("scripts/" + scriptName);
 
