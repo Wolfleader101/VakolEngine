@@ -7,9 +7,11 @@
 
 namespace Vakol::Controller
 {
-    Terrain LoadHeightMapTerrain(std::string&& path)
+    Terrain LoadHeightMapTerrain(std::string&& path, float min, float max)
     {
         Terrain terrain {};
+
+        terrain.SetMinMax({ min, max });
 
         int size;
         const auto data = LoadImage(std::move(path), size, size);
@@ -18,6 +20,8 @@ namespace Vakol::Controller
         terrain.SetData(data);
 
         terrain.SetModel(terrain.load_height_map_mesh());
+
+        
 
         return terrain;
     }
@@ -47,8 +51,10 @@ namespace Vakol::Controller
             for (int z = 0; z < this->m_size; ++z)
                 this->m_data.push_back(data[x * m_size + z]);
 
+        SetHeightMap(); //used for physics. Need floats. Is duplicating but who is that hurting
         delete[] data;
         data = nullptr;
+
     }
 
 	Model::Assets::Mesh Terrain::load_height_map_mesh() const
@@ -62,11 +68,11 @@ namespace Vakol::Controller
         for (int z = 0; z < m_size; ++z) {
             for (int x = 0; x < m_size; ++x) 
             {
-                const auto pixel_offset = m_data.data() + (z * m_size + x);
-                const auto y = pixel_offset[0];
+                const auto pixel_offset = m_height_map.data() + (z * m_size + x);
+                const auto y = pixel_offset[0] - (m_max_height - m_min_height) / 2.0f;
 
                 vertices.push_back((-m_size / 2.0f + m_size * x / static_cast<float>(m_size)) * 1.0f); 
-                vertices.push_back(y * 0.1f - 16.0f);
+                vertices.push_back(y);
                 vertices.push_back((-m_size / 2.0f + m_size * z / static_cast<float>(m_size)) * 1.0f);
                 vertices.push_back(x / static_cast<float>(m_size));
                 vertices.push_back(z / static_cast<float>(m_size));
@@ -265,28 +271,21 @@ namespace Vakol::Controller
         return new_val;
     }
 
-    void Terrain::NormalizeValues(std::vector<float>& arr, const int size)
-	{
-        float min = arr.at(0);
-        float max = arr.at(0);
-
-        // find min and max of height values
-        for (int i = 1; i < size * size; ++i) 
-        {
-            if (arr.at(i) > max)
-                max = arr[i];
-            else if (arr.at(i) < min)
-                min = arr[i];
-        }
-
+   
+    void Terrain::NormalizeValues(std::vector<float>&arr, const int size)
+    {
+        float Oldmin = std::min_element(arr.begin(), arr.end())[0];
+        float Oldmax = std::max_element(arr.begin(), arr.end())[0];
         // find range of the altitude
-        if (max <= min) return;
-
-        const float height = max - min;
-
-        // scale values between 0-255
-        for (int i = 0; i < size * size; ++i) arr[i] = ((arr.at(i) - min) / height) * 255.0f;
+        if (Oldmax <= Oldmin) return;
+        float oldRange = Oldmax - Oldmin;
+        float newRange = m_max_height - m_min_height;
+        float height = Oldmax - Oldmin;
+        for (int i = 0; i < size * size; ++i) {
+            arr[i] = (((arr.at(i) - Oldmin) * newRange) / oldRange) + m_min_height;
+        }
     }
+    
 
 	float Terrain::GetHeight(float x, float z) const 
     {
@@ -307,4 +306,15 @@ namespace Vakol::Controller
 
         return height;
     }
+
+    void Terrain::SetHeightMap()
+    {
+	    for(float value : m_data)
+			m_height_map.push_back(value);
+
+        NormalizeValues(m_height_map, m_size);
+
+	    
+    }
+
 }

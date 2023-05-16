@@ -11,6 +11,11 @@
 
 namespace Vakol::Model::Components 
 {
+    rp3d::Vector3 to_rp3d(const glm::vec3& v)
+    {
+        return { v.x, v.y, v.z };
+    }
+
     Transform::Transform(const glm::vec3& pos, const glm::vec3& rot, const glm::vec3& scale)
         : pos(pos), rot(rot), scale(scale){};
 
@@ -94,36 +99,42 @@ namespace Vakol::Model::Components
         bounds = data;
     }
 
+    // THIS HAS BEEN MODIFIED BY ME (CALEB)
     Collider::Bounds GetBounds(const Drawable& model) 
     {
         Collider::Bounds bounds;
 
-        //rp3d::Vector3& max = bounds.max;
-        //rp3d::Vector3& min = bounds.min;
+        rp3d::Vector3& max = bounds.max;
+        rp3d::Vector3& min = bounds.min;
 
-        // const auto firstVert = model.model_ptr->GetMeshes().begin()->GetVertexArray()->GetVertices().begin();
+        // Assuming each vertex is represented by 3 floats (x, y, z).
+    	std::vector<Vertex> vertices = model.model_ptr->meshes().begin()->c_vertices();
 
-        // max = min = rp3d::Vector3(firstVert->position.x, firstVert->position.y, firstVert->position.z);
+        if (vertices.size() < 3)
+        {
+            throw std::runtime_error("Insufficient vertices data");
+        }
 
-        // rp3d::Vector3 tempVert;
+        const auto& position = vertices.begin()->position;
+        max = min = rp3d::Vector3(position.x, position.y, position.z);
 
-        // for (auto& msh : model.model_ptr->GetMeshes()) 
-        // {
-        //     for (auto& vertex : msh.GetVertexArray()->GetVertices()) 
-        //     {
-        //         tempVert.x = vertex.position.x;
-        //         tempVert.y = vertex.position.y;
-        //         tempVert.z = vertex.position.z;
+        for (auto& msh : model.model_ptr->meshes())
+        {
+            vertices = msh.c_vertices();
 
-        //         max = rp3d::Vector3::max(max, tempVert);
-        //         min = rp3d::Vector3::min(min, tempVert);
-        //     }
-        // }
+            for (const auto& vertex : vertices)
+            {
+                const auto temp = to_rp3d(vertex.position);
 
-        bounds.center = (bounds.max + bounds.min) / 2.0f;
-        bounds.extents = (bounds.max - bounds.min) / 2.0f;
+                max = rp3d::Vector3::max(max, temp);
+                min = rp3d::Vector3::min(min, temp);
+            }
+        }
+
+        bounds.center = (max + min) / 2.0f;
+        bounds.extents = (max - min) / 2.0f;
         bounds.size = bounds.extents * 2;
-        bounds.radius = bounds.extents.length();
+        bounds.radius = bounds.extents.length() / 2.0f;
 
         return bounds;
     }

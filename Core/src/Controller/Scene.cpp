@@ -27,7 +27,7 @@ namespace Vakol::Controller {
         sol::function init = lua.GetState()["init"];
 
         init(*this);
-
+        
     }
 
     const std::string& Scene::getName() const { return name; }

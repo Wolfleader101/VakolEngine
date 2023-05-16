@@ -25,7 +25,7 @@ namespace Vakol::Controller::Physics
         void EnableDebug(bool enable);
         bool IsDebugEnabled();
 
-        void AddTerrain(Terrain& terrain);
+        void AddTerrain(const Terrain& terrain);
 
        private:
         ScenePhysics(rp3d::PhysicsWorld* newWorld);
