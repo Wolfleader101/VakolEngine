@@ -6,8 +6,10 @@
 
 #include <Controller/AssetLoader/TextureLoader.hpp>
 
-std::vector skybox_faces = { "assets/textures/skybox/right.png", "assets/textures/skybox/left.png", "assets/textures/skybox/top.png",
-							 "assets/textures/skybox/bottom.png", "assets/textures/skybox/front.png", "assets/textures/skybox/back.png" };
+// Keep in this order
+std::vector skybox_faces = { "assets/textures/skybox/Stolen/right.jpg", "assets/textures/skybox/Stolen/left.jpg",
+							 "assets/textures/skybox/Stolen/top.jpg",   "assets/textures/skybox/Stolen/bottom.jpg",
+							 "assets/textures/skybox/Stolen/front.jpg", "assets/textures/skybox/Stolen/back.jpg" };
 
 float skybox_vertices[] =
 {

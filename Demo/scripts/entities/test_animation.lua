@@ -7,7 +7,7 @@ function init(scene, entity)
     entity:get_transform().pos = Vector3.new(0.0, 0.0, -4.0);
     entity:get_transform().rot = Vector3.new(0.0, 85.0, 0.0);
 
-    local model = entity:add_model("assets/models/walk_rifle.fbx", 1.0, true) -- get model and add a drawable component
+    local model = entity:add_model("assets/models/twirl.fbx", 1.0, true) -- get model and add a drawable component
     model:set_shader("coreAssets/shaders/animation.prog") -- set the shader on the model (automatically binds it)
 
     model:set_animation_state(WALK_STATE);
