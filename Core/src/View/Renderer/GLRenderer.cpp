@@ -58,8 +58,15 @@ namespace Vakol::View
         // this corresponds to the uniform buffer in each shader that has one.
         // layout (std140, binding = 1) uniform <name>
         // std140 - memory layout, binding - index, uniform (typeof buffer)
-        AddBuffer(GL_UNIFORM_BUFFER, 4 * sizeof(glm::mat4), 1, GL_STATIC_DRAW);
         // add a uniform buffer which size is that of a 4x4 matrix with a binding index of 1
+        AddBuffer(GL_UNIFORM_BUFFER, 4 * sizeof(glm::mat4), 1, GL_STATIC_DRAW);
+        AddBuffer(GL_UNIFORM_BUFFER, 5 * sizeof(float), 2, GL_STATIC_DRAW);
+
+    	SetBufferSubData(1, 0, sizeof(float), &LIGHT_CONSTANT);
+        SetBufferSubData(1, 1 * sizeof(float), sizeof(float), &LIGHT_LINEAR);
+        SetBufferSubData(1, 2 * sizeof(float), sizeof(float), &LIGHT_QUADRATIC);
+        SetBufferSubData(1, 3 * sizeof(float), sizeof(float), &LIGHT_CUT_OFF);
+        SetBufferSubData(1, 4 * sizeof(float), sizeof(float), &LIGHT_OUTER_CUT_OFF);
 
         skybox->Init();
     }

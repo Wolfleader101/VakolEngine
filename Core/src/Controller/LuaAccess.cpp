@@ -138,9 +138,8 @@ namespace Vakol::Controller
         }
     }
 
-    
-
-    void RegisterLogger(sol::state& lua) {
+    void RegisterLogger(sol::state& lua)
+	{
         lua.set_function("print", [](const sol::variadic_args& va)
         {
 	        if (const auto arg = va[0]; arg.get_type() == sol::type::string) 
@@ -185,7 +184,8 @@ namespace Vakol::Controller
 			return AssetLoader::GetTexture(path); // no checks... just raw doggin it LOL
         });
 
-        lua.set_function("load_model", [](const std::string& path, const float scale = 1.0f, const bool animated = false) {
+        lua.set_function("load_model", [](const std::string& path, const float scale = 1.0f, const bool animated = false) 
+        {
 	        const auto model = AssetLoader::GetModel(path, scale, animated);
 
             if (model == nullptr) return false;
@@ -193,7 +193,8 @@ namespace Vakol::Controller
             return true;
         });
 
-        lua.set_function("load_shader", [](const std::string& path) {
+        lua.set_function("load_shader", [](const std::string& path) 
+        {
 	        const auto shader = AssetLoader::GetShader(path);
 
             if (shader == nullptr) return false;
@@ -202,7 +203,8 @@ namespace Vakol::Controller
         });
     }
 
-    void RegisterApplication(sol::state& lua, Application* app) {
+    void RegisterApplication(sol::state& lua, Application* app)
+	{
         lua.set_function("add_scene", &Application::AddScene, app);
 
         auto time_type = lua.new_usertype<Time>("Time");
@@ -376,8 +378,8 @@ namespace Vakol::Controller
 
         entity_type.set_function("physics_init", [](Entity* ent, Scene& scene)
         {
-                System::BindScene(scene);
-                System::Physics_InitEntity(*ent);
+            System::BindScene(scene);
+            System::Physics_InitEntity(*ent);
         });
 
 
@@ -474,7 +476,8 @@ namespace Vakol::Controller
                 return;
             }
 
-            auto& terrain = ent.GetComponent<Terrain>();
+            const auto& terrain = ent.GetComponent<Terrain>();
+
             System::BindScene(*scene);
 
             System::Physics_AddTerrain(terrain);

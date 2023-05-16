@@ -6,7 +6,6 @@ function init(scene)
     scene:create_entity("Fly Cam", "entities/FlyCam.lua");
     
     scene:create_entity("Terrain", "entities/physicsTerrain.lua");
-    
 
     scene:create_entity("Sphere", "entities/sphere.lua");
     

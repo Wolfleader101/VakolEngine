@@ -23,7 +23,7 @@ layout (std140, binding = 1) uniform Matrices
     mat4 MODEL_MATRIX;
 };
 
-//layout (std430, binding = 2) buffer Bones
+//layout (std430, binding = 3) buffer Bones
 //{
 //    mat4 BONE_TRANSFORMS[];
 //};
