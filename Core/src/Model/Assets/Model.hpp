@@ -19,8 +19,8 @@ namespace Vakol::Model::Assets
         Model(std::vector<Mesh>&& meshes) : m_meshes(std::move(meshes)) {}
         Model(std::vector<Mesh>& meshes) : m_meshes(std::move(meshes)) {}
 
-        Model(std::vector<Mesh>&& meshes, Animation&& animation) : m_meshes(std::move(meshes)), m_animation(std::make_shared<Animation>(std::move(animation))), m_animated(true) {}
-        Model(std::vector<Mesh>& meshes, Animation& animation) : m_meshes(std::move(meshes)), m_animation(std::make_shared<Animation>(std::move(animation))), m_animated(true) {}
+        Model(std::vector<Mesh>&& meshes, std::vector<Animation>&& animations) : m_meshes(std::move(meshes)), m_animations(std::move(animations)), m_animated(true) {}
+        Model(std::vector<Mesh>& meshes, std::vector<Animation>& animations) : m_meshes(std::move(meshes)), m_animations(std::move(animations)), m_animated(true) {}
 
         void set_shader(const std::string& path)  {  this->m_shader = std::make_shared<Shader>(path); this->m_shader->Bind(); }
 
@@ -29,11 +29,12 @@ namespace Vakol::Model::Assets
         std::shared_ptr<Shader>& shader() { return m_shader; }
         [[nodiscard]] const std::shared_ptr<Shader>& c_shader() const { return m_shader; }
 
-        std::shared_ptr<Animation>& animation() { return m_animation; }
-        [[nodiscard]] const std::shared_ptr<Animation>& c_animation() { return m_animation; }
+        void UpdateAnimation(const float delta_time) { m_animations.at(m_animation_state).Update(delta_time); }
 
-        [[nodiscard]] int numTransforms() const { return m_animation->numTransforms(); }
-        [[nodiscard]] const std::vector<glm::mat4>& transforms() const { return m_animation->transforms(); }
+        void SetAnimationState(const int state) { m_animation_state = state; }
+
+        [[nodiscard]] int numTransforms() const { return m_animations.at(m_animation_state).numTransforms(); }
+        [[nodiscard]] const std::vector<glm::mat4>& transforms() const { return m_animations.at(m_animation_state).transforms(); }
         
         [[nodiscard]] Mesh mesh(const int index = 0) const { return m_meshes.at(index); }
 
@@ -44,8 +45,10 @@ namespace Vakol::Model::Assets
 
     private:
         std::vector<Mesh> m_meshes;
-        std::shared_ptr<Animation> m_animation = nullptr;
+        std::vector<Animation> m_animations;
         std::shared_ptr<Shader> m_shader = nullptr;
+
+        int m_animation_state = 0;
 
         bool m_animated = false;
     };

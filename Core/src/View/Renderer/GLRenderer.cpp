@@ -95,7 +95,7 @@ namespace Vakol::View
         const auto shader = model->c_shader();
         VK_ASSERT(&shader, "\n\nShader is nullptr");
 
-        if (model->isAnimated()) model->animation()->Update(time.deltaTime);
+        if (model->isAnimated()) model->UpdateAnimation(time.deltaTime);
 
         shader->Bind();
 
@@ -141,7 +141,7 @@ namespace Vakol::View
 
     void GLRenderer::Update() const 
     {
-        ClearColor(VAKOL_DARK);
+        ClearColor(VAKOL_CLASSIC);
         ClearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 }

@@ -45,7 +45,7 @@ namespace Vakol::Controller
     auto extract_textures(const aiScene& scene, const aiMaterial* material, aiTextureType type)->std::vector<Texture>;
 
     auto extract_keyframes(const aiNodeAnim& channel, const Bone& bone_info)->KeyFrame;
-    auto extract_animation(const aiScene& scene, int animation_index, const BoneMap& bone_map)->Animation;
+    auto extract_animations(const aiScene& scene, const BoneMap& bone_map)->std::vector<Animation>;
 
     auto process_meshes(const aiScene& scene, BoneMap& bone_map)->std::vector<Mesh>;
     auto process_mesh(const aiScene& scene, const aiMesh& mesh, BoneMap& bone_map)->Mesh;
@@ -75,8 +75,10 @@ namespace Vakol::Controller
 
         BoneMap bone_map;
 
-        if (animated)
-            return { process_meshes(*scene, bone_map), extract_animation(*scene, -1, bone_map) };
+        if (animated && scene->mNumAnimations > 0)
+        {
+            return { process_meshes(*scene, bone_map), extract_animations(*scene, bone_map) };
+        }
         // else
         return { process_meshes(*scene, bone_map) };
     }
@@ -312,104 +314,97 @@ namespace Vakol::Controller
         return key_frame;
     }
 
-    auto extract_animation(const aiScene& scene, int animation_index, const BoneMap& bone_map)->Animation
+    auto extract_animations(const aiScene& scene, const BoneMap& bone_map)->std::vector<Animation>
     {
-        // Check if there are any animations in the scene
-        if (scene.mNumAnimations == 0)
+        std::vector<Animation> animations;
+
+        for (unsigned int animation_index = 0; animation_index < scene.mNumAnimations; ++animation_index)
         {
-            VK_WARN("No Animations Found!");
-            return {}; // Return an empty Animation object
-        }
+            // Retrieve the animation from the scene
+            const aiAnimation* const animation = scene.mAnimations[animation_index];
 
-        // Ensure the animation index is non-negative
-        animation_index = std::max(0, animation_index);
+            // Convert the animation duration and ticks per second to float
+            const auto duration = static_cast<float>(animation->mDuration);
+            const auto ticks_per_second = static_cast<float>(animation->mTicksPerSecond);
 
-        // Verify that the animation index is within the valid range
-        VK_ASSERT(static_cast<unsigned int>(animation_index) < scene.mNumAnimations, "Index is less than number of animations!");
+            // Containers for storing animation node data and node names
+            std::vector<AnimNode> nodes;
+            std::vector<const aiString*> node_names;
 
-        // Retrieve the animation from the scene
-        const aiAnimation* const animation = scene.mAnimations[animation_index];
-
-        // Convert the animation duration and ticks per second to float
-        const auto duration = static_cast<float>(animation->mDuration);
-        const auto ticks_per_second = static_cast<float>(animation->mTicksPerSecond);
-
-        // Containers for storing animation node data and node names
-        std::vector<AnimNode> nodes;
-        std::vector<const aiString*> node_names;
-
-        // Struct for representing a node during depth-first search traversal
-        struct Node
-        {
-            const aiNode* src = nullptr; // Source node
-            int parent = -1; // Index of the parent node in the 'nodes' vector
-        };
-
-        std::stack<Node> node_search;
-        node_search.push(Node{ scene.mRootNode, -1 }); // Push the root node with no associated parent node (-1)
-
-        // Depth-first search traversal to extract animation node data
-        while (!node_search.empty())
-        {
-            const auto [src, parent] = node_search.top();
-            node_search.pop();
-
-            AnimNode node;
-            node.parent = parent;
-            node.node_transform = to_glm(src->mTransformation);
-
-            // Ensure that the parent index is within the valid range
-            VK_ASSERT(node.parent < static_cast<int>(nodes.size()), "Parent index out of valid range");
-
-            // Store the current node and its name
-            nodes.push_back(node);
-            node_names.push_back(&src->mName);
-
-            const auto parent_index = static_cast<int>(nodes.size() - 1);
-
-            // Add the children of the current node to the search stack
-            for (unsigned int i = 0; i < src->mNumChildren; ++i)
-                node_search.push(Node{ src->mChildren[i], parent_index });
-        }
-
-        // Extract bone keyframes for each channel in the animation
-        for (unsigned int i = 0; i < animation->mNumChannels; ++i)
-        {
-            const auto channel = animation->mChannels[i];
-
-            const aiString& bone_name = channel->mNodeName;
-
-            // Find the node with a matching name in the 'node_names' vector
-            auto itr = std::find_if(node_names.cbegin(), node_names.cend(), [&bone_name](const aiString* node_name)
+            // Struct for representing a node during depth-first search traversal
+            struct Node
             {
-                return bone_name == *node_name;
-            });
+                const aiNode* src = nullptr; // Source node
+                int parent = -1; // Index of the parent node in the 'nodes' vector
+            };
 
+            std::stack<Node> node_search;
+            node_search.push(Node{ scene.mRootNode, -1 }); // Push the root node with no associated parent node (-1)
 
-            // Ensure that a matching node is found
-            VK_ASSERT(itr != node_names.end(), "\n\nNo node matching a bone.");
+            // Depth-first search traversal to extract animation node data
+            while (!node_search.empty())
+            {
+                const auto [src, parent] = node_search.top();
+                node_search.pop();
 
-            // Calculate the index of the node in the 'nodes' vector
-            const auto index = static_cast<int>(std::distance(node_names.cbegin(), itr));
+                AnimNode node;
+                node.parent = parent;
+                node.node_transform = to_glm(src->mTransformation);
 
-            // Blender includes an armature node *we don't want that!*
-            if (strcmp(bone_name.C_Str(), "Armature") == 0) continue;
+                // Ensure that the parent index is within the valid range
+                VK_ASSERT(node.parent < static_cast<int>(nodes.size()), "Parent index out of valid range");
 
-            // Retrieve the bone info based on the bone name
-            const Bone* info = bone_map.get(bone_name.C_Str());
+                // Store the current node and its name
+                nodes.push_back(node);
+                node_names.push_back(&src->mName);
 
-            VK_ASSERT(info, "\n\nSee Previous Error Message");
+                const auto parent_index = static_cast<int>(nodes.size() - 1);
 
-            auto& [bone, bone_transform, parent, node_transform] = nodes[index];
+                // Add the children of the current node to the search stack
+                for (unsigned int i = 0; i < src->mNumChildren; ++i)
+                    node_search.push(Node{ src->mChildren[i], parent_index });
+            }
 
-            VK_ASSERT(!bone.has_value(), "\n\nTwo or more bones matching same node.");
+            // Extract bone keyframes for each channel in the animation
+            for (unsigned int i = 0; i < animation->mNumChannels; ++i)
+            {
+                const auto channel = animation->mChannels[i];
 
-            bone.emplace(extract_keyframes(*channel, *info));
+                const aiString& bone_name = channel->mNodeName;
+
+                // Find the node with a matching name in the 'node_names' vector
+                auto itr = std::find_if(node_names.cbegin(), node_names.cend(), [&bone_name](const aiString* node_name)
+                    {
+                        return bone_name == *node_name;
+                    });
+
+                // Ensure that a matching node is found
+                VK_ASSERT(itr != node_names.end(), "\n\nNo node matching a bone.");
+
+                // Calculate the index of the node in the 'nodes' vector
+                const auto index = static_cast<int>(std::distance(node_names.cbegin(), itr));
+
+                // Blender includes an armature node *we don't want that!*
+                if (strcmp(bone_name.C_Str(), "Armature") == 0) continue;
+
+                // Retrieve the bone info based on the bone name
+                const Bone* info = bone_map.get(bone_name.C_Str());
+
+                VK_ASSERT(info, "\n\nSee Previous Error Message");
+
+                auto& [bone, bone_transform, parent, node_transform] = nodes[index];
+
+                VK_ASSERT(!bone.has_value(), "\n\nTwo or more bones matching same node.");
+
+                bone.emplace(extract_keyframes(*channel, *info));
+            }
+
+            const auto& root_transform = to_glm(scene.mRootNode->mTransformation);
+            const auto bone_count = static_cast<unsigned int>(bone_map.name_to_info.size());
+
+            animations.push_back( Animation(inverse(root_transform), std::move(nodes), bone_count, duration, ticks_per_second));
         }
 
-        const auto& root_transform = to_glm(scene.mRootNode->mTransformation);
-        const auto bone_count = static_cast<unsigned int>(bone_map.name_to_info.size());
-
-        return { inverse(root_transform), std::move(nodes), bone_count, duration, ticks_per_second };
+        return animations;
     }
 }

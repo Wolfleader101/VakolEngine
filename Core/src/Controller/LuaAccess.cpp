@@ -347,6 +347,8 @@ namespace Vakol::Controller
         });
 #pragma warning(pop)
 
+        model_type.set_function("set_animation_state", &Assets::Model::SetAnimationState);
+
         model_type.set_function("get_mesh_count", &Assets::Model::nMeshes);
         model_type.set_function("get_mesh", &Assets::Model::mesh);
 
