@@ -32,16 +32,23 @@ uniform vec3 VIEW_POS;
 
 void main()
 {
-    vec3 light_color = vec3(1.0);
+    vec3 light_color = vec3(0.8);
 
-    float ambient_K = 0.6;
+    float ambient_K = 0.4;
     float specular_K = 0.6;
 
     vec3 ambient = ambient_K * light_color;
 
     vec3 N = vec3(texture(material.normal_map, fs_in.uv));
-    N = N * 2.0 - 1.0;
-    N = normalize(fs_in.TBN * N);
+    
+    if (N.r < 0.01 && N.g < 0.01 && N.b < 0.01)
+        N = normalize(fs_in.normal);
+    else
+    {
+        N = N * 2.0 - 1.0;
+        N = normalize(fs_in.TBN * N);
+    }
+
 
     vec3 light_dir = normalize(light.position - fs_in.fragPos);
     float diff = max(dot(N, light_dir), 0.0);
@@ -53,6 +60,10 @@ void main()
     vec3 specular = material.shininess * spec * light_color;
 
     vec3 color = vec3(texture(material.diffuse_map, fs_in.uv));
+    
+    if (color.r < 0.01 && color.g < 0.01 && color.b < 0.01)
+        color = vec3(1.0);
+
     vec3 result = (ambient + diffuse + specular) * color;
 
     FragColor = vec4(result, 1.0);
