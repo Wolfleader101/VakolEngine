@@ -18,7 +18,7 @@ namespace Vakol::Controller {
 
         void SetAspect(const float _aspect);
 
-        void Update(float deltaTime);
+        void Update();
 
         const glm::vec3& GetPos() const { return position; }
 

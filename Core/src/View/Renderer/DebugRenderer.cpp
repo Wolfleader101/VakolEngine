@@ -173,7 +173,7 @@ namespace Vakol::View
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(PhysicsDebugVertex), (void*)(3 * sizeof(float)));
         glEnableVertexAttribArray(1);
 
-        glDrawArrays(GL_LINES, 0, m_DebugData.size());
+        glDrawArrays(GL_LINES, 0, static_cast<GLsizei>(m_DebugData.size()));
 
         // Unbind the VAO
         glBindVertexArray(0);

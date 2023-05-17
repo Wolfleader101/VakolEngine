@@ -1,7 +1,6 @@
 #version 460 core
 out vec4 FragColor;
 
-in float height;
 in vec2 TexCoords;
 
 uniform sampler2D diffuse_map;

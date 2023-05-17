@@ -2,12 +2,14 @@
 layout (location = 0) in vec3 aPos;
 layout (location = 2) in vec2 aTexCoords;
 layout (location = 3) in mat4 aInstanceMatrix;
-// location 4, 5, 6 are reserved for instanceMatrix
+// location 4, 5, 6 are also reserved for instanceMatrix
 
 out vec2 TexCoords;
 
 layout (std140, binding = 1) uniform Matrices
 {
+    uniform mat4 PROJECTION_MATRIX;
+    uniform mat4 VIEW_MATRIX;
     uniform mat4 PV_MATRIX;
 };
 

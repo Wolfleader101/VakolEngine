@@ -1,14 +1,19 @@
 #pragma once
 
 #include <glad/glad.h>
+
+#pragma warning(push)
+#pragma warning(disable:4201)
 #include <glm/vec3.hpp>
+#pragma warning(pop)
+
 #include <reactphysics3d/reactphysics3d.h>
 
 #include <memory>
 #include <vector>
 
 #include "Controller/Logger.hpp"
-#include "Model/Assets/Shader.hpp"
+#include "Model/Shader.hpp"
 
 #include "View/Renderer/Renderer.hpp"
 
@@ -20,7 +25,7 @@ namespace Vakol::Controller::Physics
 namespace Vakol::View
 {
 
-    using Shader = Vakol::Model::Assets::Shader;
+    using Shader = Vakol::Model::Shader;
     class DebugRenderer
     {
         public:

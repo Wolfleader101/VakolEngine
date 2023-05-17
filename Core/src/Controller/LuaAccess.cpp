@@ -79,7 +79,9 @@ namespace Vakol::Controller
 
             auto mul_overload = sol::overload([](const glm::vec4& u, const glm::vec4& v) -> glm::vec4 { return u * v; },
                 [](const glm::vec4& v, const float k) -> glm::vec4 { return v * k; },
-                [](const float k, const glm::vec4& v) -> glm::vec4 { return k * v; });
+                [](const float k, const glm::vec4& v) -> glm::vec4 { return k * v; },
+                [](const glm::mat4& m, const glm::vec4& v) -> glm::vec4 { return m * v; },
+                [](const glm::vec4& v, const glm::mat4& m) -> glm::vec4 { return v * m; });
 
             auto add_overload = sol::overload([](const glm::vec4& u, const glm::vec4& v) -> glm::vec4 { return u + v; });
 
@@ -99,11 +101,45 @@ namespace Vakol::Controller
             vec4["b"] = &glm::vec4::b;
             vec4["a"] = &glm::vec4::a;
         }
+
+        {
+            sol::constructors<glm::mat4(), glm::mat4(float), glm::mat4(glm::vec4, glm::vec4, glm::vec4, glm::vec4)> ctor;
+
+            auto mul_overload = sol::overload([](const glm::mat4& lhs, const glm::mat4& rhs) -> glm::mat4 { return lhs * rhs; },
+                [](const glm::mat4& m, const float k) -> glm::mat4 { return m * k; },
+                [](const float k, const glm::mat4& m) -> glm::mat4 { return k * m; });
+
+            auto mat4 = lua.new_usertype<glm::mat4>("Matrix4x4", ctor, sol::meta_function::multiplication, mul_overload);
+
+            lua.set_function("translate", [](const glm::mat4& matrix, const glm::vec3& translation)
+            {
+                return translate(matrix, translation);
+            });
+
+            lua.set_function("scale", [](const glm::mat4& matrix, const glm::vec3& scale)
+            {
+                return glm::scale(matrix, scale);
+            });
+
+            lua.set_function("rotate", [](const glm::mat4& matrix, const float angle, const glm::vec3& axis)
+            {
+                return rotate(matrix, angle, axis);
+            });
+
+            lua.set_function("inverse", [](const glm::mat4& matrix)
+            {
+                return inverse(matrix);
+            });
+
+            lua.set_function("transpose", [](const glm::mat4& matrix)
+            {
+                return transpose(matrix);
+            });
+        }
     }
 
-    
-
-    void RegisterLogger(sol::state& lua) {
+    void RegisterLogger(sol::state& lua)
+	{
         lua.set_function("print", [](const sol::variadic_args& va)
         {
 	        if (const auto arg = va[0]; arg.get_type() == sol::type::string) 
@@ -148,15 +184,17 @@ namespace Vakol::Controller
 			return AssetLoader::GetTexture(path); // no checks... just raw doggin it LOL
         });
 
-        lua.set_function("load_model", [](const std::string& path) {
-	        const auto model = AssetLoader::GetModel(path);
+        lua.set_function("load_model", [](const std::string& path, const float scale = 1.0f, const bool animated = false) 
+        {
+	        const auto model = AssetLoader::GetModel(path, scale, animated);
 
             if (model == nullptr) return false;
 
             return true;
         });
 
-        lua.set_function("load_shader", [](const std::string& path) {
+        lua.set_function("load_shader", [](const std::string& path) 
+        {
 	        const auto shader = AssetLoader::GetShader(path);
 
             if (shader == nullptr) return false;
@@ -165,7 +203,8 @@ namespace Vakol::Controller
         });
     }
 
-    void RegisterApplication(sol::state& lua, Application* app) {
+    void RegisterApplication(sol::state& lua, Application* app)
+	{
         lua.set_function("add_scene", &Application::AddScene, app);
 
         auto time_type = lua.new_usertype<Time>("Time");
@@ -206,9 +245,9 @@ namespace Vakol::Controller
 	{
         auto entity_type = lua.new_usertype<Entity>("entity");
         auto model_type = lua.new_usertype<Assets::Model>("model");
-        auto mesh_type = lua.new_usertype<Assets::Mesh>("mesh");
+        auto mesh_type = lua.new_usertype<Mesh>("mesh");
         auto material_type = lua.new_usertype<Assets::Material>("material");
-        auto shader_type = lua.new_usertype<Assets::Shader>("shader");
+        auto shader_type = lua.new_usertype<Shader>("shader");
 
         lua.set_function("create_raw_texture", [](std::string& path)
         {
@@ -226,11 +265,11 @@ namespace Vakol::Controller
             return texture;
         });
 
-        entity_type.set_function("get_transform", &Entity::GetComponent<Components::Transform>);
+        entity_type.set_function("get_transform", &Entity::GetComponent<Transform>);
 
         entity_type.set_function("create_height_map_terrain", [](Entity* ent, std::string&& path, float min, float max)
         {
-            if (!ent->HasComponent<Components::Drawable>()) ent->AddComponent<Components::Drawable>();
+            if (!ent->HasComponent<Drawable>()) ent->AddComponent<Drawable>();
 
             if (ent->HasComponent<Terrain>()) ent->RemoveComponent<Terrain>();
 
@@ -240,14 +279,14 @@ namespace Vakol::Controller
 
             if (const auto model = terrain.GetModel())
             {
-                model->GetMesh().SetDrawMode(DRAW_MODE::STRIPS);
-                model->GetMesh().SetDrawType(DRAW_TYPE::ELEMENTS);
+                model->mesh().SetDrawMode(DRAW_MODE::STRIPS);
+                model->mesh().SetDrawType(DRAW_TYPE::ELEMENTS);
 
-                model->GetMesh().SetDrawModeInfo((terrain.GetSize() - 1) / 1); // num strips
+                model->mesh().SetDrawModeInfo((terrain.GetSize() - 1) / 1); // num strips
 
-                model->GetMesh().SetNumTrisPerStrip(terrain.GetSize() / 1 * 2 - 2);
+                model->mesh().SetNumTrisPerStrip(terrain.GetSize() / 1 * 2 - 2);
 
-                ent->GetComponent<Components::Drawable>().model_ptr = model;
+                ent->GetComponent<Drawable>().model_ptr = model;
             }
 
             return terrain;
@@ -255,7 +294,7 @@ namespace Vakol::Controller
 
         entity_type.set_function("create_clod_terrain", [](Entity* ent, std::string&& path)
         {
-            if (!ent->HasComponent<Components::Drawable>()) ent->AddComponent<Components::Drawable>();
+            if (!ent->HasComponent<Drawable>()) ent->AddComponent<Drawable>();
 
             if (ent->HasComponent<Terrain>()) ent->RemoveComponent<Terrain>();
 
@@ -265,12 +304,12 @@ namespace Vakol::Controller
 
             if (const auto model = terrain.GetModel())
             {
-                model->GetMesh().SetDrawMode(DRAW_MODE::PATCHES);
-                model->GetMesh().SetDrawType(DRAW_TYPE::ARRAYS);
+                model->mesh().SetDrawMode(DRAW_MODE::PATCHES);
+                model->mesh().SetDrawType(DRAW_TYPE::ARRAYS);
 
-                model->GetMesh().SetDrawModeInfo(400); // num patches
+                model->mesh().SetDrawModeInfo(400); // num patches
 
-                ent->GetComponent<Components::Drawable>().model_ptr = model;
+                ent->GetComponent<Drawable>().model_ptr = model;
             }
 
             return terrain;
@@ -284,50 +323,63 @@ namespace Vakol::Controller
         });
 #pragma warning(pop)
 
-        entity_type.set_function("add_model", [](Entity* ent, const std::string& path) 
+        entity_type.set_function("add_model", [](Entity* ent, const std::string& path, const float scale = 1.0f, const bool animated = false) 
         {
-            if (!ent->HasComponent<Components::Drawable>()) ent->AddComponent<Components::Drawable>();
+            if (!ent->HasComponent<Drawable>()) ent->AddComponent<Drawable>();
 
-            auto model = AssetLoader::GetModel(path);
+            auto model = AssetLoader::GetModel(path, scale, animated);
 
             if (model) 
-            {
-                ent->GetComponent<Components::Drawable>().model_ptr = model;
-            }
+                ent->GetComponent<Drawable>().model_ptr = model;
 
             return model;
+        });
+
+        entity_type.set_function("instantiate_model", [](const std::shared_ptr<Assets::Model>& model, const sol::as_table_t<std::vector<glm::mat4>>& matrices, int amount)
+        {
+            VK_TRACE(matrices.value().size());
+            CreateInstances(model->meshes(), matrices.value());
         });
 
 #pragma warning(push)
 #pragma warning(disable:4715) // disable that annoying warning for not all code path return a value
         entity_type.set_function("get_model", [](const Entity* ent) 
         {
-            if (ent->HasComponent<Components::Drawable>()) return ent->GetComponent<Components::Drawable>().model_ptr;
+            if (ent->HasComponent<Drawable>()) return ent->GetComponent<Drawable>().model_ptr;
         });
 #pragma warning(pop)
 
-        model_type.set_function("get_mesh_count", &Assets::Model::GetMeshCount);
-        model_type.set_function("get_mesh", &Assets::Model::GetMesh);
+        model_type.set_function("set_animation_state", &Assets::Model::SetAnimationState);
 
-        model_type.set_function("set_shader", &Assets::Model::SetShader);
-        model_type.set_function("get_shader", &Assets::Model::GetShader);
+        model_type.set_function("get_mesh_count", &Assets::Model::nMeshes);
+        model_type.set_function("get_mesh", &Assets::Model::mesh);
 
-        mesh_type.set_function("get_material", &Assets::Mesh::GetMaterial);
+        model_type.set_function("set_shader", &Assets::Model::set_shader);
+        model_type.set_function("get_shader", &Assets::Model::shader);
+
+        mesh_type.set_function("get_material", &Mesh::GetMaterial);
 
         material_type.set_function("add_texture", &Assets::Material::AddTexture);
         material_type.set_function("get_texture", &Assets::Material::GetTexture);
+        material_type.set_function("get_ambient_color", &Assets::Material::GetAmbientColor);
+        material_type.set_function("get_diffuse_color", &Assets::Material::GetDiffuseColor);
 
-        shader_type.set_function("set_int", &Assets::Shader::SetInt);
-        shader_type.set_function("set_bool", &Assets::Shader::SetBool);
-        shader_type.set_function("set_float", &Assets::Shader::SetFloat);
-        shader_type.set_function("set_vec2", sol::resolve<void(const char*, const float, const float) const>(&Assets::Shader::SetVec2));
-        shader_type.set_function("set_vec3", sol::resolve<void(const char*, const float, const float, const float) const>(&Assets::Shader::SetVec3));
-        shader_type.set_function("set_vec4", sol::resolve<void(const char*, const float, const float, const float, const float) const>(&Assets::Shader::SetVec4));
+        shader_type.set_function("set_int", &Shader::SetInt);
+        shader_type.set_function("set_bool", &Shader::SetBool);
+        shader_type.set_function("set_float", &Shader::SetFloat);
+
+        shader_type.set_function("set_vec2v", sol::resolve<void(const char*, const glm::vec2&) const>(&Shader::SetVec2));
+        shader_type.set_function("set_vec3v", sol::resolve<void(const char*, const glm::vec3&) const>(&Shader::SetVec3));
+        shader_type.set_function("set_vec4v", sol::resolve<void(const char*, const glm::vec4&) const>(&Shader::SetVec4));
+
+        shader_type.set_function("set_vec2", sol::resolve<void(const char*, const float, const float) const>(&Shader::SetVec2));
+        shader_type.set_function("set_vec3", sol::resolve<void(const char*, const float, const float, const float) const>(&Shader::SetVec3));
+        shader_type.set_function("set_vec4", sol::resolve<void(const char*, const float, const float, const float, const float) const>(&Shader::SetVec4));
 
         entity_type.set_function("physics_init", [](Entity* ent, Scene& scene)
         {
-                System::BindScene(scene);
-                System::Physics_InitEntity(*ent);
+            System::BindScene(scene);
+            System::Physics_InitEntity(*ent);
         });
 
 
@@ -338,6 +390,8 @@ namespace Vakol::Controller
             return ent->GetComponent<RigidBody>();
         });
 
+#pragma warning(push)
+#pragma warning(disable:4715) // disable that annoying warning for not all code path return a value
         entity_type.set_function("get_rigid", [](const Entity* ent) -> RigidBody&
         {
             if (ent->HasComponent<RigidBody>()) return ent->GetComponent<RigidBody>();
@@ -346,21 +400,42 @@ namespace Vakol::Controller
             assert(0);
         
         });
+#pragma warning(pop)
 
         entity_type.set_function("add_collider", [](Entity* ent) -> Collider&
         {
-            if (!ent->HasComponent<Components::Collider>()) ent->AddComponent<Components::Collider>();
-            return ent->GetComponent<Components::Collider>();
+            if (!ent->HasComponent<Collider>()) ent->AddComponent<Collider>();
+            return ent->GetComponent<Collider>();
         });
 
+#pragma warning(push)
+#pragma warning(disable:4715) // disable that annoying warning for not all code path return a value
         entity_type.set_function("get_collider", [](const Entity* ent) -> Collider&
         {
-            if (ent->HasComponent<Components::Collider>()) return ent->GetComponent<Collider>();
+            if (ent->HasComponent<Collider>()) return ent->GetComponent<Collider>();
             
             VK_CRITICAL("No collider component found on entity");
             assert(0);
         
         });
+#pragma warning(pop)
+
+        entity_type.set_function("get_bounds_from_model", [](Entity* ent) -> void
+        {
+			if (ent->HasComponent<Components::Drawable, Components::Collider>())
+			{
+		        const auto& model = ent->GetComponent<Components::Drawable>();
+
+                auto& collider = ent->GetComponent<Components::Collider>();
+
+                collider.bounds = GetBounds(model);
+			}
+			else
+			{
+				VK_CRITICAL("drawable and collider must be present to get bounds from");
+				assert(0);
+			}
+		});
 
         entity_type.set_function("get_bounds_from_model", [](Entity* ent) -> void
         {
@@ -383,12 +458,12 @@ namespace Vakol::Controller
 
     void RegisterECS(sol::state& lua)
 	{
-        auto transform_type = lua.new_usertype<Components::Transform>("transform");
+        auto transform_type = lua.new_usertype<Transform>("transform");
         auto terrain_type = lua.new_usertype<Terrain>("terrain");
 
-        transform_type["pos"] = &Components::Transform::pos;
-        transform_type["rot"] = &Components::Transform::rot;
-        transform_type["scale"] = &Components::Transform::scale;
+        transform_type["pos"] = &Transform::pos;
+        transform_type["rot"] = &Transform::rot;
+        transform_type["scale"] = &Transform::scale;
 
         // terrainType.set_function("load_heightmap", &Terrain::LoadHeightMap);
         // terrainType.set_function("load_texture", &Terrain::LoadTexture);
@@ -418,7 +493,8 @@ namespace Vakol::Controller
                 return;
             }
 
-            auto& terrain = ent.GetComponent<Terrain>();
+            const auto& terrain = ent.GetComponent<Terrain>();
+
             System::BindScene(*scene);
 
             System::Physics_AddTerrain(terrain);
@@ -458,7 +534,7 @@ namespace Vakol::Controller
         gui_window_type.set_function("end_window", &View::GUIWindow::EndWindowCreation);
     }
 
-    void RegisterRenderer(sol::state& lua) {}
+    void RegisterRenderer([[maybe_unused]] sol::state& lua) {}
 
     void RegisterPhysics(sol::state& lua) {
         auto scenePhysicType = lua.new_usertype<ScenePhysics>("scenePhysics");
@@ -468,45 +544,45 @@ namespace Vakol::Controller
             rp3dVec3["y"] = &rp3d::Vector3::y;
             rp3dVec3["z"] = &rp3d::Vector3::z;
 
-        auto rigidType = lua.new_usertype<Components::RigidBody>("rigidBody");
+        auto rigidType = lua.new_usertype<RigidBody>("rigidBody");
 
             lua["BodyType"] = lua.create_table_with( 
-                    "Static", RigidBody::BodyType::STATIC, 
-                    "Kinematic", RigidBody::BodyType::KINEMATIC, 
-                    "Dynamic", RigidBody::BodyType::DYNAMIC
+                    "Static", RigidBody::BODY_TYPE::STATIC, 
+                    "Kinematic", RigidBody::BODY_TYPE::KINEMATIC, 
+                    "Dynamic", RigidBody::BODY_TYPE::DYNAMIC
                     );
 
-            rigidType["BodyType"] = &Components::RigidBody::Type;
+            rigidType["BodyType"] = &RigidBody::Type;
 
-        auto rigidDataType = lua.new_usertype<Components::RigidBody::RigidData>("rigidData");
+        auto rigidDataType = lua.new_usertype<RigidBody::RigidData>("rigidData");
 
-            rigidDataType["mass"] = &Components::RigidBody::RigidData::mass;
-            rigidDataType["gravity"] = &Components::RigidBody::RigidData::grav;
-            rigidDataType["linear_damp"] = &Components::RigidBody::RigidData::LDamp;
-            rigidDataType["angular_damp"] = &Components::RigidBody::RigidData::ADamp;
+            rigidDataType["mass"] = &RigidBody::RigidData::mass;
+            rigidDataType["gravity"] = &RigidBody::RigidData::grav;
+            rigidDataType["linear_damp"] = &RigidBody::RigidData::LDamp;
+            rigidDataType["angular_damp"] = &RigidBody::RigidData::ADamp;
 
 
 
         
 
-        auto colliderType = lua.new_usertype<Components::Collider>("collider");
+        auto colliderType = lua.new_usertype<Collider>("collider");
 
             lua["Shape"] = lua.create_table_with(
-                    "Box", Collider::ShapeName::BOX,
-                    "Sphere", Collider::ShapeName::SPHERE,
-                    "Capsule", Collider::ShapeName::CAPSULE,
-                    "TriangleMesh", Collider::ShapeName::TRIANGLE_MESH
+                    "Box", Collider::SHAPE_NAME::BOX,
+                    "Sphere", Collider::SHAPE_NAME::SPHERE,
+                    "Capsule", Collider::SHAPE_NAME::CAPSULE,
+                    "TriangleMesh", Collider::SHAPE_NAME::TRIANGLE_MESH
                     );
             
-            colliderType["Shape"] = &Components::Collider::ShapeName;
+            colliderType["Shape"] = &Collider::ShapeName;
 
-        auto ColliderBoundsType = lua.new_usertype<Components::Collider::Bounds>("colliderBounds");
+        auto ColliderBoundsType = lua.new_usertype<Collider::Bounds>("colliderBounds");
 
-            ColliderBoundsType["min"] = &Components::Collider::Bounds::min;
-            ColliderBoundsType["max"] = &Components::Collider::Bounds::max;
-            ColliderBoundsType["center"] = &Components::Collider::Bounds::center;
-            ColliderBoundsType["extents"] = &Components::Collider::Bounds::extents;
-            ColliderBoundsType["radius"] = &Components::Collider::Bounds::radius;
+            ColliderBoundsType["min"] = &Collider::Bounds::min;
+            ColliderBoundsType["max"] = &Collider::Bounds::max;
+            ColliderBoundsType["center"] = &Collider::Bounds::center;
+            ColliderBoundsType["extents"] = &Collider::Bounds::extents;
+            ColliderBoundsType["radius"] = &Collider::Bounds::radius;
 
         
 
@@ -514,43 +590,43 @@ namespace Vakol::Controller
             
 
             
-        rigidType.set_function("set_data", [](Components::RigidBody* rigid, const Components::RigidBody::RigidData& data) 
+        rigidType.set_function("set_data", [](RigidBody* rigid, const RigidBody::RigidData& data) 
         {
             rigid->SetRigidData(data);
         });
 
-        rigidType.set_function("toggle_gravity", [](Components::RigidBody* rigid) 
+        rigidType.set_function("toggle_gravity", [](RigidBody* rigid) 
         {
             rigid->ToggleGravity();
         });
 
-        rigidType.set_function("set_body_type", [](Components::RigidBody* rigid, Components::RigidBody::BodyType type) 
+        rigidType.set_function("set_body_type", [](RigidBody* rigid, const RigidBody::BODY_TYPE type) 
         {
             rigid->SetBodyType(type);
         });
 
-        rigidType.set_function("set_velocity", [](Components::RigidBody* rigid, const glm::vec3& vel) 
+        rigidType.set_function("set_velocity", [](const RigidBody* rigid, const glm::vec3& vel) 
         {
             rigid->SetVelocity(vel);
         });
 
-        rigidType.set_function("set_angular_velocity", [](Components::RigidBody* rigid, const glm::vec3& vel) 
+        rigidType.set_function("set_angular_velocity", [](const RigidBody* rigid, const glm::vec3& vel) 
         {
             rigid->SetAngularVelocity(vel);
         });
 
-        rigidType.set_function("set_linear_damp", [](Components::RigidBody* rigid, float damp) 
+        rigidType.set_function("set_linear_damp", [](const RigidBody* rigid, const float damp) 
         {
             rigid->SetLinearDamp(damp);
         });
 
-        rigidType.set_function("set_angular_damp", [](Components::RigidBody* rigid, float damp) 
+        rigidType.set_function("set_angular_damp", [](const RigidBody* rigid, const float damp) 
         {
             rigid->SetAngularDamp(damp);
         });
 
         
-        colliderType.set_function("set_bounds", [](Components::Collider* collider, const Components::Collider::Bounds& bounds) 
+        colliderType.set_function("set_bounds", [](Collider* collider, const Collider::Bounds& bounds) 
         {
             collider->SetBounds(bounds);
         });
@@ -558,5 +634,12 @@ namespace Vakol::Controller
 
         scenePhysicType.set_function("enable_debug", &ScenePhysics::EnableDebug);
 
+    }
+
+    std::vector<glm::mat4> create_mat4_vector() { return {}; }
+
+    void RegisterOther(sol::state& lua)
+    {
+        lua.set_function("vector_mat4", &create_mat4_vector);
     }
 }  // namespace Vakol::Controller

@@ -1,7 +1,9 @@
 function init(scene, entity)
-    print("Initialising Camera");
+    local camera = scene:get_camera();
 
-    print_warn("CHECK LUA FILES FOR ANY CHANGES I MAY HAVE MADE REGARDING CAMERA MOVEMENT");
+    camera:set_pos(0.0, 2.0, 2.0);
+
+    print("Initialising Camera");
 
 end
 
@@ -9,6 +11,7 @@ local speed = 10;
 local sprintSpeed = 50;
 
 function update(scene, entity)
+
     local dir = { x = 0, y = 0, z = 0 };
     local velocity = 0;
 
@@ -40,6 +43,8 @@ function update(scene, entity)
         y = old_pos.y + (forward.y * dir.z + right.y * dir.x) * velocity,
         z = old_pos.z + (forward.z * dir.z + right.z * dir.x) * velocity,
     }
+
+    -- print(new_pos.x .. ' ' .. new_pos.y .. ' ' .. new_pos.z);
 
     -- local terr_entity = scene:get_entity("terrain");
     -- local terr_scale = terr_entity:get_transform().scale;

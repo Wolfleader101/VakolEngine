@@ -16,7 +16,6 @@ namespace Vakol::Model::Assets
         [[nodiscard]] unsigned int GetID() const { return this->m_ID; }
 
         std::string path;
-        std::string type;
     private:
         unsigned int m_ID = 0;
     };

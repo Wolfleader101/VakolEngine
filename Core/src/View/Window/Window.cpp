@@ -9,7 +9,7 @@
 
 using namespace Vakol::Controller;
 
-void APIENTRY DebugOutput(const unsigned int source, const unsigned int type, const unsigned int id, const unsigned int severity, int length, const char* message, const void* userParam)
+void APIENTRY DebugOutput(const unsigned int source, const unsigned int type, const unsigned int id, const unsigned int severity, [[maybe_unused]] int length, const char* message, [[maybe_unused]] const void* userParam)
 {
     if(id == 131169 || id == 131185 || id == 131218 || id == 131204) return; // ignore these non-significant error codes
 

@@ -5,7 +5,6 @@
 #include <Controller/Physics/PhysicsPool.hpp>
 #include <Controller/Scene.hpp>
 #include <Controller/System.hpp>
-#include <Model/Assets/Texture.hpp>
 #include <Model/Components.hpp>
 #include <View/Renderer/RendererFactory.hpp>
 
@@ -35,14 +34,11 @@ namespace Vakol::Controller {
 
         m_gui.Init(m_window);
 
-
         VK_INFO("Calling main.lua...");
 
         lua.RunFile("scripts/main.lua");
 
         const sol::function lua_main = lua.GetState()["main"];
-
-        lua_main();
 
         m_running = true;
     }
@@ -59,6 +55,7 @@ namespace Vakol::Controller {
         RegisterGUIWindow(lua.GetState(), &m_gui);  // Register GUI Window
     	RegisterRenderer(lua.GetState());
     	RegisterPhysics(lua.GetState());
+        RegisterOther(lua.GetState());
     }
 
     std::optional<Model::GameConfig> Application::LoadConfig() 

@@ -40,8 +40,7 @@ namespace Vakol::Model::Assets
         { 
             VK_ASSERT(GetTextureCount() > index, "\n\nTexture index out of bounds.");
 
-            if (!this->m_spec.textures.empty())
-                return this->m_spec.textures.at(index);
+            return this->m_spec.textures.at(index);
         }
 
         [[nodiscard]] std::vector<Texture> GetTextures() const { return this->m_spec.textures; }
