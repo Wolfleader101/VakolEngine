@@ -5,13 +5,11 @@
 #include <algorithm>
 #include <cstdlib>
 
-namespace Vakol::Controller
-{
-    Terrain LoadHeightMapTerrain(std::string&& path, float min, float max)
-    {
-        Terrain terrain {};
+namespace Vakol::Controller {
+    Terrain LoadHeightMapTerrain(std::string&& path, float min, float max) {
+        Terrain terrain{};
 
-        terrain.SetMinMax({ min, max });
+        terrain.SetMinMax({min, max});
 
         int size;
         const auto data = LoadImage(std::move(path), size, size);
@@ -21,14 +19,11 @@ namespace Vakol::Controller
 
         terrain.SetModel(terrain.load_height_map_mesh());
 
-        
-
         return terrain;
     }
 
-    Terrain LoadCLODTerrain(std::string&& path)
-    {
-        Terrain terrain {};
+    Terrain LoadCLODTerrain(std::string&& path) {
+        Terrain terrain{};
 
         int size;
         const auto data = LoadImage(std::move(path), size, size);
@@ -41,24 +36,20 @@ namespace Vakol::Controller
         return terrain;
     }
 
-    void Terrain::SetData(const unsigned char* data)
-    {
+    void Terrain::SetData(const unsigned char* data) {
         const auto size = static_cast<size_t>(this->m_size);
 
         this->m_data.reserve(size * size);
 
         for (int x = 0; x < this->m_size; ++x)
-            for (int z = 0; z < this->m_size; ++z)
-                this->m_data.push_back(data[x * m_size + z]);
+            for (int z = 0; z < this->m_size; ++z) this->m_data.push_back(data[x * m_size + z]);
 
-        SetHeightMap(); //used for physics. Need floats. Is duplicating but who is that hurting
+        SetHeightMap();  // used for physics. Need floats. Is duplicating but who is that hurting
         delete[] data;
         data = nullptr;
-
     }
 
-	Model::Assets::Mesh Terrain::load_height_map_mesh() const
-	{
+    Model::Assets::Mesh Terrain::load_height_map_mesh() const {
         std::vector<float> vertices;
 
         const auto size = static_cast<size_t>(m_size);
@@ -66,12 +57,11 @@ namespace Vakol::Controller
         // allocate memory to reduce number of allocation calls in push_back
 
         for (int z = 0; z < m_size; ++z) {
-            for (int x = 0; x < m_size; ++x) 
-            {
+            for (int x = 0; x < m_size; ++x) {
                 const auto pixel_offset = m_height_map.data() + (z * m_size + x);
                 const auto y = pixel_offset[0] - (m_max_height - m_min_height) / 2.0f;
 
-                vertices.push_back((-m_size / 2.0f + m_size * x / static_cast<float>(m_size)) * 1.0f); 
+                vertices.push_back((-m_size / 2.0f + m_size * x / static_cast<float>(m_size)) * 1.0f);
                 vertices.push_back(y);
                 vertices.push_back((-m_size / 2.0f + m_size * z / static_cast<float>(m_size)) * 1.0f);
                 vertices.push_back(x / static_cast<float>(m_size));
@@ -85,10 +75,8 @@ namespace Vakol::Controller
 
         indices.reserve((size - 1) * size * 2);
 
-        for (int i = 0; i < m_size - 1; i += lod) 
-        {
-            for (int j = 0; j < m_size; j += lod) 
-            {
+        for (int i = 0; i < m_size - 1; i += lod) {
+            for (int j = 0; j < m_size; j += lod) {
                 for (int k = 0; k < 2; ++k) {
                     indices.push_back(j + m_size * (i + k * lod));
                 }
@@ -98,9 +86,9 @@ namespace Vakol::Controller
         return {vertices, indices, 5 * sizeof(float)};
     }
 
-	Model::Assets::Mesh Terrain::load_fault_formation_mesh(const int size, const int iterations, const float filter,
-	                                                       const bool random, const int minHeight, const int maxHeight)
-	{
+    Model::Assets::Mesh Terrain::load_fault_formation_mesh(const int size, const int iterations, const float filter,
+                                                           const bool random, const int minHeight,
+                                                           const int maxHeight) {
         Point p1, p2;
 
         m_height_map.resize(static_cast<size_t>(size) * static_cast<size_t>(size));
@@ -110,15 +98,15 @@ namespace Vakol::Controller
 
         if (random) srand(static_cast<unsigned int>(time(nullptr)));
 
-        for (int itr = 0; itr < iterations; ++itr)
-        {
+        for (int itr = 0; itr < iterations; ++itr) {
             const int displacement = m_max_height - (m_max_height - m_min_height) * itr / iterations;
 
             GenRandomPoints(p1, p2, size);
 
             for (int z = 0; z < size; ++z) {
                 for (int x = 0; x < size; ++x) {
-	                if (const int cross_product = (x - p1.x) * (p2.z - p1.z) - (p2.x - p1.x) * (z - p1.z); cross_product > 0) {
+                    if (const int cross_product = (x - p1.x) * (p2.z - p1.z) - (p2.x - p1.x) * (z - p1.z);
+                        cross_product > 0) {
                         m_height_map[z * size + x] += static_cast<float>(displacement);
                     }
                 }
@@ -130,18 +118,17 @@ namespace Vakol::Controller
 
         std::vector<float> vertices;
 
-        vertices.reserve(static_cast<size_t>(size) * static_cast<size_t>(size));  // allocate memory to reduce number of allocation calls in push_back
+        vertices.reserve(
+            static_cast<size_t>(size) *
+            static_cast<size_t>(size));  // allocate memory to reduce number of allocation calls in push_back
 
-        for (int z = 0; z < size; ++z) 
-        {
-            for (int x = 0; x < size; ++x) 
-            {
+        for (int z = 0; z < size; ++z) {
+            for (int x = 0; x < size; ++x) {
                 const auto y = static_cast<unsigned char>(m_height_map.at(z * size + x));
 
-                vertices.push_back((-size / 2.0f + size * x / static_cast<float>(size)) * 1.0f); 
+                vertices.push_back((-size / 2.0f + size * x / static_cast<float>(size)) * 1.0f);
                 vertices.push_back(y * 0.4f - 16.0f);
                 vertices.push_back((-size / 2.0f + size * z / static_cast<float>(size)) * 1.0f);
-                    
 
                 vertices.push_back(x / static_cast<float>(size));
                 vertices.push_back(z / static_cast<float>(size));
@@ -165,8 +152,7 @@ namespace Vakol::Controller
         return {vertices, indices, 5 * sizeof(float)};
     }
 
-	Model::Assets::Mesh Terrain::load_clod_terrain_mesh() const
-    {
+    Model::Assets::Mesh Terrain::load_clod_terrain_mesh() const {
         std::vector<float> vertices;
 
         constexpr auto patch_size = 5 * sizeof(float);  // position (3 floats) + uv (2 floats) = 20 bytes
@@ -175,43 +161,40 @@ namespace Vakol::Controller
 
         constexpr auto num_patches = static_cast<int>(patch_size);
 
-        for (int i = 0; i <= num_patches - 1; i++)
-        {
-            for (int j = 0; j <= num_patches - 1; j++)
-            {
+        for (int i = 0; i <= num_patches - 1; i++) {
+            for (int j = 0; j <= num_patches - 1; j++) {
                 vertices.push_back(-m_size / 2.0f + m_size * j / static_cast<float>(num_patches));  // v.z
-                vertices.push_back(0.0f);                                         // v.y
+                vertices.push_back(0.0f);                                                           // v.y
                 vertices.push_back(-m_size / 2.0f + m_size * i / static_cast<float>(num_patches));  // v.x
-                vertices.push_back(i / static_cast<float>(num_patches));                        // u
-                vertices.push_back(j / static_cast<float>(num_patches));                        // v
+                vertices.push_back(i / static_cast<float>(num_patches));                            // u
+                vertices.push_back(j / static_cast<float>(num_patches));                            // v
 
                 vertices.push_back(-m_size / 2.0f + m_size * j / static_cast<float>(num_patches));        // v.z
-                vertices.push_back(0.0f);                                               // v.y
+                vertices.push_back(0.0f);                                                                 // v.y
                 vertices.push_back(-m_size / 2.0f + m_size * (i + 1) / static_cast<float>(num_patches));  // v.x
-                vertices.push_back((i + 1) / static_cast<float>(num_patches));                        // u
-                vertices.push_back(j / static_cast<float>(num_patches));                              // v
+                vertices.push_back((i + 1) / static_cast<float>(num_patches));                            // u
+                vertices.push_back(j / static_cast<float>(num_patches));                                  // v
 
                 vertices.push_back(-m_size / 2.0f + m_size * (j + 1) / static_cast<float>(num_patches));  // v.z
-                vertices.push_back(0.0f);                                               // v.y
+                vertices.push_back(0.0f);                                                                 // v.y
                 vertices.push_back(-m_size / 2.0f + m_size * i / static_cast<float>(num_patches));        // v.x
-                vertices.push_back(i / static_cast<float>(num_patches));                              // u
-                vertices.push_back((j + 1) / static_cast<float>(num_patches));                        // v
+                vertices.push_back(i / static_cast<float>(num_patches));                                  // u
+                vertices.push_back((j + 1) / static_cast<float>(num_patches));                            // v
 
                 vertices.push_back(-m_size / 2.0f + m_size * (j + 1) / static_cast<float>(num_patches));  // v.z
-                vertices.push_back(0.0f);                                               // v.y
+                vertices.push_back(0.0f);                                                                 // v.y
                 vertices.push_back(-m_size / 2.0f + m_size * (i + 1) / static_cast<float>(num_patches));  // v.x
-                vertices.push_back((i + 1) / static_cast<float>(num_patches));                        // u
-                vertices.push_back((j + 1) / static_cast<float>(num_patches));                        // v
+                vertices.push_back((i + 1) / static_cast<float>(num_patches));                            // u
+                vertices.push_back((j + 1) / static_cast<float>(num_patches));                            // v
             }
         }
 
         std::vector<unsigned int> indices;
 
-        return { vertices, indices, num_patches };
+        return {vertices, indices, num_patches};
     }
 
-    void Terrain::GenRandomPoints(Point& p1, Point& p2, const int size)
-	{
+    void Terrain::GenRandomPoints(Point& p1, Point& p2, const int size) {
         p1.x = rand() % size;
         p1.z = rand() % size;
 
@@ -230,8 +213,7 @@ namespace Vakol::Controller
         } while (p1 == p2);
     }
 
-    void Terrain::ApplyFIRFilter(std::vector<float>& arr, const int size, const float filter)
-	{
+    void Terrain::ApplyFIRFilter(std::vector<float>& arr, const int size, const float filter) {
         // left to right
         for (int z = 0; z < size; ++z) {
             float prev = arr.at(z * size + 0);
@@ -261,19 +243,16 @@ namespace Vakol::Controller
         }
     }
 
-    float Terrain::FirSinglePass(std::vector<float>& arr, const int index, const float prev, const float filter)
-	{
-		const auto cur_val = arr.at(index);
-		const auto new_val = filter * prev + (1 - filter) * cur_val;
+    float Terrain::FirSinglePass(std::vector<float>& arr, const int index, const float prev, const float filter) {
+        const auto cur_val = arr.at(index);
+        const auto new_val = filter * prev + (1 - filter) * cur_val;
 
         arr[index] = new_val;
 
         return new_val;
     }
 
-   
-    void Terrain::NormalizeValues(std::vector<float>&arr, const int size)
-    {
+    void Terrain::NormalizeValues(std::vector<float>& arr, const int size) {
         float Oldmin = std::min_element(arr.begin(), arr.end())[0];
         float Oldmax = std::max_element(arr.begin(), arr.end())[0];
         // find range of the altitude
@@ -285,36 +264,47 @@ namespace Vakol::Controller
             arr[i] = (((arr.at(i) - Oldmin) * newRange) / oldRange) + m_min_height;
         }
     }
-    
 
-	float Terrain::GetHeight(float x, float z) const 
-    {
+    float Terrain::GetHeight(float x, float z) const {
+        // Shift x and z to the range [0, m_size)
+        x = (x + m_size / 2.0f);
+        z = (z + m_size / 2.0f);
+
         // Clamp x and z to the terrain's dimensions
-        x = std::clamp(x, -m_size / 2.0f, m_size / 2.0f - m_size / (m_size - 1));
-        z = std::clamp(z, -m_size / 2.0f, m_size / 2.0f - m_size / (m_size - 1));
+        x = std::clamp(x, 0.0f, m_size - 1.0f);
+        z = std::clamp(z, 0.0f, m_size - 1.0f);
 
-        // Normalize x and z to the range [0, 1]
-        const float norm_x = (x + m_size / 2.0f) / m_size;
-        const float norm_z = (z + m_size / 2.0f) / m_size;
+        // Calculate the height map indices using the coordinates
+        int xInt = static_cast<int>(x);
+        int zInt = static_cast<int>(z);
 
-        // Calculate the height map indices using the normalized coordinates
-        const auto i = static_cast<unsigned int>(norm_x * (m_size - 1));
-        const auto j = static_cast<unsigned int>(norm_z * (m_size - 1));
+        // Calculate the fractions
+        float fracX = x - xInt;
+        float fracZ = z - zInt;
 
-        // Get the height at the corresponding height map index
-        const float height = m_height_map[std::min(static_cast<int>(i), m_size - 1) * m_size + std::min(static_cast<int>(j), m_size - 1)];
+        // Indices of the four corners of the cell
+        int x0 = std::clamp(xInt, 0, m_size - 2);
+        int z0 = std::clamp(zInt, 0, m_size - 2);
+        int x1 = x0 + 1;
+        int z1 = z0 + 1;
+
+        // Heights at the four corners
+        float h00 = m_height_map[z0 * m_size + x0];
+        float h10 = m_height_map[z0 * m_size + x1];
+        float h01 = m_height_map[z1 * m_size + x0];
+        float h11 = m_height_map[z1 * m_size + x1];
+
+        // Bilinear interpolation
+        float height = h00 * (1 - fracX) * (1 - fracZ) + h10 * fracX * (1 - fracZ) + h01 * (1 - fracX) * fracZ +
+                       h11 * fracX * fracZ;
 
         return height;
     }
 
-    void Terrain::SetHeightMap()
-    {
-	    for(float value : m_data)
-			m_height_map.push_back(value);
+    void Terrain::SetHeightMap() {
+        for (float value : m_data) m_height_map.push_back(value);
 
         NormalizeValues(m_height_map, m_size);
-
-	    
     }
 
-}
+}  // namespace Vakol::Controller

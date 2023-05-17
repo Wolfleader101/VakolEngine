@@ -1,9 +1,6 @@
 #include "LuaAccess.hpp"
 
-#pragma warning(push)
-#pragma warning(disable : 4201)
 #include <glm/gtc/type_ptr.hpp>
-#pragma warning(pop)
 
 #include "AssetLoader/AssetLoader.hpp"
 #include "AssetLoader/TextureLoader.hpp"
@@ -72,6 +69,8 @@ namespace Vakol::Controller {
             vec3["r"] = &glm::vec3::r;
             vec3["g"] = &glm::vec3::g;
             vec3["b"] = &glm::vec3::b;
+
+            vec3.set_function("magnitude", [](const glm::vec3& v) -> float { return glm::length(v); });
         }
 
         {
@@ -200,7 +199,7 @@ namespace Vakol::Controller {
             "KEY_Z", Input::KEY::KEY_Z, "KEY_LEFT_SHIFT", Input::KEY::KEY_LEFT_SHIFT);
     }
 
-    void RegisterEntity(sol::state& lua) {
+    void RegisterEntity(LuaState& state, sol::state& lua) {
         auto entity_type = lua.new_usertype<Entity>("entity");
         auto model_type = lua.new_usertype<Assets::Model>("model");
         auto mesh_type = lua.new_usertype<Assets::Mesh>("mesh");
@@ -355,7 +354,7 @@ namespace Vakol::Controller {
         });
 
         entity_type.set_function("add_fsm", [&](Entity* ent) -> Components::FSM& {
-            if (!ent->HasComponent<Components::FSM>()) ent->AddComponent<Components::FSM>(lua);
+            if (!ent->HasComponent<Components::FSM>()) ent->AddComponent<Components::FSM>(state);
             return ent->GetComponent<Components::FSM>();
         });
     }

@@ -45,8 +45,7 @@ namespace Vakol::Controller {
             lua.GetState()["entity"] = list.GetEntity(static_cast<unsigned int>(entity_id));
             lua.GetState()["state"] = script.state;
 
-            sol::function update = lua.GetState()["update"];
-            update();
+            lua.RunFunction("update");
         });
     }
 

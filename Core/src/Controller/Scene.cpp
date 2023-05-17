@@ -26,9 +26,7 @@ namespace Vakol::Controller {
 
         lua.GetState()["scene"] = this;
 
-        sol::function init = lua.GetState()["init"];
-
-        init();
+        lua.RunFunction("init");
     }
 
     const std::string& Scene::getName() const { return name; }
@@ -46,9 +44,7 @@ namespace Vakol::Controller {
         lua.RunFile("scripts/" + scriptName);
 
         lua.GetState()["scene"] = this;
-        sol::function update = lua.GetState()["update"];
-
-        update();
+        lua.RunFunction("update");
 
         scenePhysics->Update(time, cam);
 

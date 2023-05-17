@@ -1,4 +1,4 @@
-function init(scene, entity)
+function init()
     local camera = scene:get_camera();
 
     local terrain = entity:add_terrain_heightmap("coreAssets/textures/Heightmaps/height_map.raw");
@@ -41,7 +41,7 @@ local function lerp(a, b, t)
     return a + (b - a) * t
 end
 
-function update(scene, entity)
+function update()
     -- local amplitude = 2.0
     -- local frequency = 1.0
     -- local theta = Time.curr_time * frequency

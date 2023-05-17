@@ -1,14 +1,18 @@
-function init(scene, entity)
+function init()
     print("Initialising Camera");
 
     print_warn("CHECK LUA FILES FOR ANY CHANGES I MAY HAVE MADE REGARDING CAMERA MOVEMENT");
 
+    state.speed = 1.5;
+    state.sprintSpeed = 2;
+
+    local camera = scene:get_camera();
+    local pos = camera:get_pos();
+    scene.globals.player = {pos = pos}
+
 end
 
-local speed = 10;
-local sprintSpeed = 50;
-
-function update(scene, entity)
+function update()
     local dir = { x = 0, y = 0, z = 0 };
     local velocity = 0;
 
@@ -25,9 +29,9 @@ function update(scene, entity)
         dir.x = 1;
     end
     if (Input:get_key(KEYS["KEY_LEFT_SHIFT"])) then
-        velocity = sprintSpeed * Time["delta_time"];
+        velocity = state.sprintSpeed * Time["delta_time"];
     else
-        velocity = speed * Time["delta_time"];
+        velocity = state.speed * Time["delta_time"];
     end
 
     local camera = scene:get_camera();
@@ -37,15 +41,17 @@ function update(scene, entity)
 
     local new_pos = {
         x = old_pos.x + (forward.x * dir.z + right.x * dir.x) * velocity,
-        y = old_pos.y + (forward.y * dir.z + right.y * dir.x) * velocity,
+        y = 0,
         z = old_pos.z + (forward.z * dir.z + right.z * dir.x) * velocity,
     }
 
-    -- local terr_entity = scene:get_entity("terrain");
-    -- local terr_scale = terr_entity:get_transform().scale;
-    -- new_pos.y = (terr_entity:get_terrain():get_height(new_pos.x / terr_scale.x, new_pos.z / terr_scale.z) * terr_scale.y) + 7.5;
+    local terr_entity = scene:get_entity("terrain");
+    local terr_scale = terr_entity:get_transform().scale;
+    new_pos.y = (terr_entity:get_terrain():get_height(new_pos.x / terr_scale.x, new_pos.z / terr_scale.z) * terr_scale.y) - 14.5;
     
     camera:set_pos(new_pos.x, new_pos.y, new_pos.z);
+    scene.globals.player.pos = new_pos;
+
 
     local delta_mouse_pos = Input:get_delta_mouse_pos();
     camera:set_yaw(camera:get_yaw() + delta_mouse_pos.x * 0.05);

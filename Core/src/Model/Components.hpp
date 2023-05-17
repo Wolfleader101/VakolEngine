@@ -140,7 +140,7 @@ namespace Vakol::Model::Components {
      *
      */
     struct FSM {
-        FSM(sol::state& lua);
+        FSM(Controller::LuaState& lua);
 
         void AddState(const std::string& stateName, sol::function callback);
 
@@ -153,6 +153,7 @@ namespace Vakol::Model::Components {
        private:
         std::string currentState;
         sol::table states;
+        Controller::LuaState& lua;
     };
 
     struct Drawable {

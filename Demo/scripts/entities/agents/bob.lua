@@ -1,20 +1,31 @@
 function init()
     state.fsm = entity:add_fsm();
 
-
-
     state.fsm:add_state("idle", function()
         -- print("Bob is idle")
-        if(Input:get_key(KEYS["KEY_W"])) then
-            state.fsm:change_state("moving")
-        end
+
+        local diff = scene.globals.player.pos;
+        diff.x = diff.x - entity:get_transform().pos.x;
+        diff.y = diff.y - entity:get_transform().pos.y;
+        diff.z = diff.z - entity:get_transform().pos.z;
+        local player_dist = diff:magnitude();
+        print(diff.x .. " " .. diff.y .. " " .. diff.z)
+        print_err(player_dist)
+
+
+        -- if(playerDist < 10) then
+        --     state.fsm:change_state("attacking")
+        -- end
+        -- if(Input:get_key(KEYS["KEY_A"])) then
+        --     state.fsm:change_state("moving")
+        -- end
     end)
 
     state.fsm:add_state("moving", function()
         -- print("Bob is moving")
-        if(Input:get_key(KEYS["KEY_S"])) then
-            state.fsm:change_state("idle")
-        end
+        -- if(Input:get_key(KEYS["KEY_S"])) then
+        --     state.fsm:change_state("idle")
+        -- end
 
     --        -- Transition to the 'attacking' state if an enemy is nearby
     -- if isEnemyNearby() then

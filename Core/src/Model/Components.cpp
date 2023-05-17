@@ -26,13 +26,12 @@ namespace Vakol::Model::Components {
 
         lua.RunFile("scripts/" + scriptName);
 
-        sol::function init = lua.GetState()["init"];
-        init();
+        lua.RunFunction("init");
     };
 
-    FSM::FSM(sol::state& lua) {
+    FSM::FSM(Controller::LuaState& lua) : lua(lua) {
         // Create a new table in the Lua state for the states
-        states = lua.create_table();
+        states = lua.GetState().create_table();
     }
 
     void FSM::AddState(const std::string& stateName, sol::function callback) {
@@ -53,7 +52,7 @@ namespace Vakol::Model::Components {
     void FSM::Update() {
         // Call the callback for the current state
         sol::function callback = states[currentState];
-        callback();
+        lua.RunFunction(callback);
     }
 
     Drawable::Drawable(std::string&& file)

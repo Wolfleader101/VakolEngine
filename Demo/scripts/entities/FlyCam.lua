@@ -1,12 +1,11 @@
-function init(scene, entity)
-    print("Initialising Camera");
-
+function init()
+    print("Initialising Fly Camera");
 end
 
 local speed = 10;
 local sprintSpeed = 50;
 
-function update(scene, entity)
+function update()
     local dir = { x = 0, y = 0, z = 0 };
     local velocity = 0;
 
