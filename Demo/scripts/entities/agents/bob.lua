@@ -4,12 +4,9 @@ function init()
     state.fsm:add_state("idle", function()
         -- print("Bob is idle")
 
-        local diff = scene.globals.player.pos;
-        diff.x = diff.x - entity:get_transform().pos.x;
-        diff.y = diff.y - entity:get_transform().pos.y;
-        diff.z = diff.z - entity:get_transform().pos.z;
+        local diff = scene.globals.player.pos - entity:get_transform().pos;
         local player_dist = diff:magnitude();
-        print(diff.x .. " " .. diff.y .. " " .. diff.z)
+        -- print(diff.x .. " " .. diff.y .. " " .. diff.z)
         print_err(player_dist)
 
 

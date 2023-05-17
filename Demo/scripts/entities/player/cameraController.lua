@@ -39,11 +39,11 @@ function update()
     local forward = camera:get_forward();
     local right = camera:get_right();
 
-    local new_pos = {
-        x = old_pos.x + (forward.x * dir.z + right.x * dir.x) * velocity,
-        y = 0,
-        z = old_pos.z + (forward.z * dir.z + right.z * dir.x) * velocity,
-    }
+    local new_pos = Vector3.new(
+        old_pos.x + (forward.x * dir.z + right.x * dir.x) * velocity,
+        0,
+        old_pos.z + (forward.z * dir.z + right.z * dir.x) * velocity
+    )
 
     local terr_entity = scene:get_entity("terrain");
     local terr_scale = terr_entity:get_transform().scale;
