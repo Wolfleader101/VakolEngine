@@ -2,12 +2,19 @@ function init()
     state.fsm = entity:add_fsm();
 
 
+
     state.fsm:add_state("idle", function()
-        print("Bob is idle")
+        -- print("Bob is idle")
+        if(Input:get_key(KEYS["KEY_W"])) then
+            state.fsm:change_state("moving")
+        end
     end)
 
     state.fsm:add_state("moving", function()
-        print("Bob is moving")
+        -- print("Bob is moving")
+        if(Input:get_key(KEYS["KEY_S"])) then
+            state.fsm:change_state("idle")
+        end
 
     --        -- Transition to the 'attacking' state if an enemy is nearby
     -- if isEnemyNearby() then
@@ -28,6 +35,7 @@ function init()
     state.fsm:change_state("idle")
 
     print_err("Bob is ready")
+    scene.globals.bobState = state.fsm;
 
 end
 
