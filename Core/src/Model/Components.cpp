@@ -108,7 +108,7 @@ namespace Vakol::Model::Components
         rp3d::Vector3& min = bounds.min;
 
         // Assuming each vertex is represented by 3 floats (x, y, z).
-    	std::vector<Vertex> vertices = model.model_ptr->meshes().begin()->c_vertices();
+    	  std::vector<Vertex> vertices = model.model_ptr->meshes().begin()->c_vertices();
 
         if (vertices.size() < 3)
         {
@@ -130,7 +130,7 @@ namespace Vakol::Model::Components
                 min = rp3d::Vector3::min(min, temp);
             }
         }
-
+      
         bounds.center = (max + min) / 2.0f;
         bounds.extents = (max - min) / 2.0f;
         bounds.size = bounds.extents * 2;

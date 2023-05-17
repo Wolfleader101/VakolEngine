@@ -437,6 +437,23 @@ namespace Vakol::Controller
 			}
 		});
 
+        entity_type.set_function("get_bounds_from_model", [](Entity* ent) -> void
+        {
+			if (ent->HasComponent<Components::Drawable, Components::Collider>())
+			{
+		        const auto& model = ent->GetComponent<Components::Drawable>();
+
+                auto& collider = ent->GetComponent<Components::Collider>();
+
+                collider.bounds = getBounds(model);
+			}
+			else
+			{
+				VK_CRITICAL("drawable and collider must be present to get bounds from");
+				assert(0);
+			}
+		});
+
     }
 
     void RegisterECS(sol::state& lua)
