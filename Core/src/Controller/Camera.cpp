@@ -30,11 +30,13 @@ namespace Vakol::Controller {
                 VK_WARN("Invalid Matrix Type!");
                 break;
         }
+
+        return glm::mat4(1.0f);
     }
 
     void Camera::SetAspect(const float _aspect) { this->aspect = _aspect; }
 
-    void Camera::Update(float deltaTime) {
+    void Camera::Update() {
         glm::vec3 front;
 
         front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));

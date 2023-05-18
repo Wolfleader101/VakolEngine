@@ -10,6 +10,8 @@
 #include <sstream>
 
 namespace Vakol::Model::Components {
+    rp3d::Vector3 to_rp3d(const glm::vec3& v) { return {v.x, v.y, v.z}; }
+
     Transform::Transform(const glm::vec3& pos, const glm::vec3& rot, const glm::vec3& scale)
         : pos(pos), rot(rot), scale(scale){};
 
@@ -58,10 +60,10 @@ namespace Vakol::Model::Components {
     Drawable::Drawable(std::string&& file)
         : name(std::move(file))  // WOW! EFFICIENT!
     {
-        model_ptr = Controller::AssetLoader::GetModel(name);
+        model_ptr = Controller::AssetLoader::GetModel(name, 1.0f, false);
     }
 
-    TagType::TagType(uint8_t type) : type(EntityType(type)){};
+    TagType::TagType(uint8_t type) : type(ENTITY_TYPE(type)){};
 
     Tag::Tag(const std::string& tag) : tag(tag){};
 
@@ -81,60 +83,59 @@ namespace Vakol::Model::Components {
         RigidBodyPtr->enableGravity(Data.grav);
     }
 
-    void RigidBody::SetBodyType(BodyType t) {
+    void RigidBody::SetBodyType(const BODY_TYPE t) {
         Type = t;
-        RigidBodyPtr->setType((rp3d::BodyType)Type);
+
+        RigidBodyPtr->setType(static_cast<rp3d::BodyType>(Type));
     }
 
-    void RigidBody::SetVelocity(const glm::vec3& vel) {
+    void RigidBody::SetVelocity(const glm::vec3& vel) const {
         RigidBodyPtr->setLinearVelocity(rp3d::Vector3(vel.x, vel.y, vel.z));
     }
 
-    void RigidBody::SetAngularVelocity(const glm::vec3& vel) {
+    void RigidBody::SetAngularVelocity(const glm::vec3& vel) const {
         RigidBodyPtr->setAngularVelocity(rp3d::Vector3(vel.x, vel.y, vel.z));
     }
 
-    void RigidBody::SetAngularDamp(float Damp) { RigidBodyPtr->setAngularDamping(Damp); }
+    void RigidBody::SetAngularDamp(const float damp) const { RigidBodyPtr->setAngularDamping(damp); }
 
-    void RigidBody::SetLinearDamp(float Damp) { RigidBodyPtr->setLinearDamping(Damp); }
+    void RigidBody::SetLinearDamp(const float damp) const { RigidBodyPtr->setLinearDamping(damp); }
 
-    Collider::Collider(RigidBody& owner, std::optional<Bounds> Data) {
+    Collider::Collider(RigidBody& owner, const std::optional<Bounds>& data) {
         OwningBody = &owner;
 
-        if (!Data.has_value()) return;
+        if (!data.has_value()) return;
 
-        bounds = Data.value();
+        bounds = data.value();
     }
 
     void Collider::SetBounds(const Bounds& data) { bounds = data; }
 
-    Collider::Bounds getBounds(const Drawable& model) {
+    // THIS HAS BEEN MODIFIED BY ME (CALEB)
+    Collider::Bounds GetBounds(const Drawable& model) {
         Collider::Bounds bounds;
 
         rp3d::Vector3& max = bounds.max;
         rp3d::Vector3& min = bounds.min;
 
         // Assuming each vertex is represented by 3 floats (x, y, z).
-        const std::vector<float>& vertices = model.model_ptr->GetMeshes().begin()->vertices();
+        std::vector<Vertex> vertices = model.model_ptr->meshes().begin()->c_vertices();
 
         if (vertices.size() < 3) {
             throw std::runtime_error("Insufficient vertices data");
         }
 
-        max = min = rp3d::Vector3(vertices[0], vertices[1], vertices[2]);
+        const auto& position = vertices.begin()->position;
+        max = min = rp3d::Vector3(position.x, position.y, position.z);
 
-        rp3d::Vector3 tempVert;
+        for (auto& msh : model.model_ptr->meshes()) {
+            vertices = msh.c_vertices();
 
-        for (auto& msh : model.model_ptr->GetMeshes()) {
-            const std::vector<float>& vertices = msh.vertices();
+            for (const auto& vertex : vertices) {
+                const auto temp = to_rp3d(vertex.position);
 
-            for (size_t i = 0; i < vertices.size(); i += 3) {
-                tempVert.x = vertices[i];
-                tempVert.y = vertices[i + 1];
-                tempVert.z = vertices[i + 2];
-
-                max = rp3d::Vector3::max(max, tempVert);
-                min = rp3d::Vector3::min(min, tempVert);
+                max = rp3d::Vector3::max(max, temp);
+                min = rp3d::Vector3::min(min, temp);
             }
         }
 

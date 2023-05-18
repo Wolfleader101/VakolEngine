@@ -1,8 +1,8 @@
 function init()
     
-    entity:get_transform().pos = Vector3.new(5, 0, 0);
+    entity:get_transform().pos = Vector3.new(5, 0, 10);
     
-    local model = entity:add_model("coreAssets/models/kiki_resized.obj") -- get model and add a drawable component
+    local model = entity:add_model("coreAssets/models/kiki.obj") -- get model and add a drawable component
     
     model:set_shader("coreAssets/shaders/kiki.prog") -- set the shader on the model (automatically binds it)
 

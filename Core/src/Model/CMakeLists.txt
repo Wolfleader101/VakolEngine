@@ -19,6 +19,12 @@ src/Model/Buffer.cpp
 src/Model/VertexArray.hpp
 src/Model/VertexArray.cpp
 
+src/Model/Skybox.hpp
+src/Model/Skybox.cpp
+
+src/Model/Shader.hpp
+src/Model/Shader.cpp
+
 src/Model/Instance.hpp
 src/Model/Instance.cpp
 

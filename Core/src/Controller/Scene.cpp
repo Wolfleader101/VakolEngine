@@ -52,7 +52,7 @@ namespace Vakol::Controller {
 
         System::Drawable_Update(time, cam, renderer);
 
-        cam.Update(time.deltaTime);
+        cam.Update();
     }
 
     std::shared_ptr<Entity> Scene::GetEntity(const std::string& tag) {
@@ -101,7 +101,7 @@ namespace Vakol::Controller {
         entityList.Deserialize(folder + "/EntityList.json");
 
         System::BindScene(*this);
-        System::Drawable_Init();
+        // System::Drawable_Init();
         System::Physics_Init();
 
         std::ifstream input(folder + "/Scene.json");

@@ -80,12 +80,12 @@ namespace Vakol::Controller {
     }
 
     void EntityList::Serialize(const std::string& file) const {
-        privateSerialize<cereal::JSONOutputArchive, Transform, Tag, EntityType, TagType, Script, RigidBody, Collider,
+        privateSerialize<cereal::JSONOutputArchive, Transform, Tag, ENTITY_TYPE, TagType, Script, RigidBody, Collider,
                          Drawable>(file);
     }
 
     void EntityList::Deserialize(const std::string& file) {
-        privateDeserialize<cereal::JSONInputArchive, Transform, Tag, EntityType, TagType, Script, RigidBody, Collider,
+        privateDeserialize<cereal::JSONInputArchive, Transform, Tag, ENTITY_TYPE, TagType, Script, RigidBody, Collider,
                            Drawable>(file);
     }
 

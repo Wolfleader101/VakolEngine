@@ -4,5 +4,5 @@
 
 namespace Vakol::Controller
 {
-    const unsigned int LoadShader(const std::string& path);
+	unsigned int LoadShader(const std::string& path);
 }
