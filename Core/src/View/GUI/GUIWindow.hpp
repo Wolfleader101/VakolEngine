@@ -29,6 +29,8 @@ namespace Vakol::View {
          * @brief Creates a new frame for the window
          */
     	void CreateNewFrame();
+
+        void EndFrame();
         /**
          * @brief Starts the creation of a GUI window
          *

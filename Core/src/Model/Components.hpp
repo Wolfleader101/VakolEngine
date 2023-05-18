@@ -217,7 +217,7 @@ namespace Vakol::Model::Components {
 
     struct Collider
     {
-        enum ShapeName {
+        enum SHAPE_NAME {
             BOX,
             SPHERE,
             CAPSULE,
@@ -253,7 +253,7 @@ namespace Vakol::Model::Components {
         RigidBody* OwningBody = nullptr;
         rp3d::Collider* ColliderPtr = nullptr;
         rp3d::CollisionShape* Shape = nullptr;
-        ShapeName ShapeName = BOX;
+        SHAPE_NAME ShapeName = BOX;
         bool DrawableBounds = false;
 
         Bounds bounds;

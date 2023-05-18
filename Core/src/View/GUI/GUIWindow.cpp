@@ -28,6 +28,13 @@ namespace Vakol::View {
         ImGui::NewFrame();             // Creates a new frame
     };
 
+    void GUIWindow::EndFrame()
+    {
+        ImGui::Render();                           // Renders the ImGui frame
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());  // Renders the ImGui draw data
+        ImGui::EndFrame();
+    }
+
     void GUIWindow::StartWindowCreation(const std::string& windowName, const float width, const float height, const float x, float y) const
     {
         ImGui::Begin(windowName.c_str(), nullptr, windowFlags);  // Begins the creation of the Window

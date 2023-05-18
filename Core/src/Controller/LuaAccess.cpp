@@ -445,7 +445,7 @@ namespace Vakol::Controller
 
                 auto& collider = ent->GetComponent<Components::Collider>();
 
-                collider.bounds = getBounds(model);
+                collider.bounds = GetBounds(model);
 			}
 			else
 			{
@@ -518,6 +518,11 @@ namespace Vakol::Controller
 
         // REGISTERS C++ FUNCTIONS TO LUA
         gui_window_type.set_function("start_window", &View::GUIWindow::StartWindowCreation);
+
+        gui_window_type.set_function("update", &View::GUIWindow::Update);
+
+        gui_window_type.set_function("start_frame", &View::GUIWindow::CreateNewFrame);
+        gui_window_type.set_function("end_frame", &View::GUIWindow::EndFrame);
 
         gui_window_type.set_function("get_fps", &View::GUIWindow::GetFramesPerSecond);
 
