@@ -1,10 +1,8 @@
 function init()
     print("Initialising Camera");
 
-    print_warn("CHECK LUA FILES FOR ANY CHANGES I MAY HAVE MADE REGARDING CAMERA MOVEMENT");
-
-    state.speed = 1.5;
-    state.sprintSpeed = 2;
+    state.speed = 2;
+    state.sprintSpeed = 3;
 
     local camera = scene:get_camera();
     local pos = camera:get_pos();
@@ -29,9 +27,9 @@ function update()
         dir.x = 1;
     end
     if (Input:get_key(KEYS["KEY_LEFT_SHIFT"])) then
-        velocity = state.sprintSpeed * Time["delta_time"];
+        velocity = state.sprintSpeed * Time.delta_time;
     else
-        velocity = state.speed * Time["delta_time"];
+        velocity = state.speed * Time.delta_time;
     end
 
     local camera = scene:get_camera();
@@ -47,7 +45,7 @@ function update()
 
     local terr_entity = scene:get_entity("terrain");
     local terr_scale = terr_entity:get_transform().scale;
-    new_pos.y = (terr_entity:get_terrain():get_height(new_pos.x / terr_scale.x, new_pos.z / terr_scale.z) * terr_scale.y) + 0.5;
+    new_pos.y = (terr_entity:get_terrain():get_height(new_pos.x / terr_scale.x, new_pos.z / terr_scale.z) * terr_scale.y) + 0.15;
     
     camera:set_pos(new_pos.x, new_pos.y, new_pos.z);
     scene.globals.player.pos = new_pos;
