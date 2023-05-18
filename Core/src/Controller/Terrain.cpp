@@ -289,10 +289,11 @@ namespace Vakol::Controller {
         int z1 = z0 + 1;
 
         // Heights at the four corners
-        float h00 = m_height_map[z0 * m_size + x0];
-        float h10 = m_height_map[z0 * m_size + x1];
-        float h01 = m_height_map[z1 * m_size + x0];
-        float h11 = m_height_map[z1 * m_size + x1];
+        auto vertices = m_model->GetMesh().vertices();
+        float h00 = vertices[(z0 * m_size + x0) * 5 + 1];  // +1 to access y
+        float h10 = vertices[(z0 * m_size + x1) * 5 + 1];  // +1 to access y
+        float h01 = vertices[(z1 * m_size + x0) * 5 + 1];  // +1 to access y
+        float h11 = vertices[(z1 * m_size + x1) * 5 + 1];  // +1 to access y
 
         // Bilinear interpolation
         float height = h00 * (1 - fracX) * (1 - fracZ) + h10 * fracX * (1 - fracZ) + h01 * (1 - fracX) * fracZ +
