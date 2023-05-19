@@ -5,7 +5,8 @@
 
 #include <iostream>
 
-#define VERBOSE_DEBUG 0
+#define VERBOSE_FLOAT_DEBUG 0
+#define VERBOSE_VERTEX_DEBUG 0
 
 namespace Vakol::Model
 {
@@ -14,7 +15,7 @@ namespace Vakol::Model
         const auto arr_size = arr.size();
         const auto elements = static_cast<int>(size / sizeof(float));
 
-#if VERBOSE_DEBUG
+#if VERBOSE_FLOAT_DEBUG
         VK_TRACE("Converting vector of Vertex to vector of floats.");
 
         std::cout << std::endl;
@@ -35,112 +36,46 @@ namespace Vakol::Model
 
         output.reserve(arr_size / elements);
 
+        Vertex vertex{};
+
         for (auto i = static_cast<size_t>(0); i < arr_size; i += elements)
         {
-            Vertex vertex{};
+			vertex.position = { arr.at(i), arr.at(i + 1), arr.at(i + 2) };
 
-            if (elements >= 3)
+            if (elements >= 5 && elements < 8)
+                vertex.uv = { arr.at(i + 3), arr.at(i + 4) };
+
+            if (elements >= 8)
             {
-				vertex.position = { arr.at(i), arr.at(i + 1), arr.at(i + 2) };
-
-				if (elements >= 5 && elements < 8)
-                    vertex.uv = { arr.at(3), arr.at(4) };
-
-            	if (elements >= 8)
-            	{
-                    vertex.normal = { arr.at(i + 3), arr.at(i + 4), arr.at(i + 5) };
-					vertex.uv = { arr.at(6), arr.at(7) };
-            	}
-
-                if (elements >= 14)
-                {
-					vertex.tangent = { arr.at(8), arr.at(9), arr.at(10) };
-					vertex.bitangent = { arr.at(11), arr.at(12), arr.at(13) };
-                }
-
-                if (elements >= 22)
-                {
-					vertex.bone_ids[0] = static_cast<int>(arr.at(14));
-                    vertex.bone_ids[1] = static_cast<int>(arr.at(15));
-                    vertex.bone_ids[2] = static_cast<int>(arr.at(16));
-                    vertex.bone_ids[3] = static_cast<int>(arr.at(17));
-
-                    vertex.bone_weights[0] = arr.at(18);
-                    vertex.bone_weights[1] = arr.at(19);
-                    vertex.bone_weights[2] = arr.at(20);
-                    vertex.bone_weights[3] = arr.at(21);
-                }
-	            
+                vertex.normal = { arr.at(i + 3), arr.at(i + 4), arr.at(i + 5) };
+				vertex.uv = { arr.at(6), arr.at(7) };
             }
 
-            output.push_back(vertex);
-        }
+            if (elements >= 14)
+            {
+				vertex.tangent = { arr.at(8), arr.at(9), arr.at(10) };
+				vertex.bitangent = { arr.at(11), arr.at(12), arr.at(13) };
+            }
 
-        VK_TRACE("SIZE: {0}", output.size());
+            if (elements >= 22)
+            {
+				vertex.bone_ids[0] = static_cast<int>(arr.at(14));
+                vertex.bone_ids[1] = static_cast<int>(arr.at(15));
+                vertex.bone_ids[2] = static_cast<int>(arr.at(16));
+                vertex.bone_ids[3] = static_cast<int>(arr.at(17));
 
-        arr.~vector();
+                vertex.bone_weights[0] = arr.at(18);
+                vertex.bone_weights[1] = arr.at(19);
+                vertex.bone_weights[2] = arr.at(20);
+                vertex.bone_weights[3] = arr.at(21);
+            }
 
-        return output;
-    }
-
-	std::vector<float> Convert(std::vector<Vertex>& arr)
-    {
-        std::vector<float> output;
-
-        const auto arr_size = arr.size();
-        constexpr auto elements = sizeof(Vertex) / sizeof(float);
-
-#if VERBOSE_DEBUG
-        VK_TRACE("Converting vector of floats to vector of Vertex.");
-
-        std::cout << std::endl;
-
-        VK_TRACE("Vector info:");
-        std::cout << std::endl;
-        VK_TRACE("Vector Size = {0}", arr_size);
-        VK_TRACE("Vertex Size = {0}", size);
-        VK_TRACE("Vertex Elements = {0} (number of floats)", elements);
-
-        std::cout << std::endl;
-#endif
-
-        VK_ASSERT(!arr.empty(), "\n\nNo point converting an empty vector");
-        VK_ASSERT(elements == 3 || elements == 5 || elements == 8 || elements == 14 || elements == 22, "\n\nUnknown Vertex size.");
-
-        output.reserve(arr.size() * elements);
-
-        for (auto i = static_cast<size_t>(0); i < arr_size; i++) // this is really hacky, but it works, aaaaand i'm just lazy
-        {
-            const auto& [position, normal, uv, tangent, bitangent, bone_ids, bone_weights] = arr.at(i);
-
-            output.push_back(position.x); // Position 0
-            output.push_back(position.y);
-            output.push_back(position.z);
-
-            output.push_back(normal.x); // Position 1
-            output.push_back(normal.y);
-            output.push_back(normal.z);
-
-            output.push_back(uv.x); // Position 2 
-            output.push_back(uv.y);
-
-            output.push_back(tangent.x); // Position 3
-            output.push_back(tangent.y);
-            output.push_back(tangent.z);
-
-            output.push_back(bitangent.x); // Position 4
-            output.push_back(bitangent.y);
-            output.push_back(bitangent.z);
-
-            output.push_back(static_cast<float>(bone_ids[0])); // Position 5
-            output.push_back(static_cast<float>(bone_ids[1]));
-            output.push_back(static_cast<float>(bone_ids[2]));
-            output.push_back(static_cast<float>(bone_ids[3]));
-
-            output.push_back(bone_weights[0]); // Position 6
-            output.push_back(bone_weights[1]);
-            output.push_back(bone_weights[2]);
-            output.push_back(bone_weights[3]);
+            if (i % elements == 0)
+            {
+                //VK_TRACE("{0} {1} {2}", vertex.position.x, vertex.position.y, vertex.position.z);
+                //VK_TRACE("{0} {1}", vertex.uv.x, vertex.uv.y);
+                output.push_back(vertex);
+            }
         }
 
         arr.~vector();
@@ -148,16 +83,18 @@ namespace Vakol::Model
         return output;
     }
 
-    VertexArray::VertexArray(std::vector<Vertex>&& vertices, std::vector<unsigned int>&& indices, const size_t size) : vertices(vertices), indices(indices)
+    VertexArray::VertexArray(std::vector<Vertex>&& vertices, std::vector<unsigned int>&& indices, size_t size) : vertices(vertices), indices(indices)
     {
         int total_elements = static_cast<int>(size / sizeof(float));
 
         this->n_vertices = static_cast<int>(this->vertices.size());
         this->n_indices = static_cast<int>(this->indices.size());
 
+        if (size != sizeof(Vertex)) size = sizeof(Vertex);
+
         VK_ASSERT(n_vertices > 0, "\n\nCannot create empty vertex array.");
 
-    #if VERBOSE_DEBUG
+#if VERBOSE_VERTEX_DEBUG
         std::cout << std::endl;
 
         VK_TRACE("Vector info:");
@@ -169,7 +106,7 @@ namespace Vakol::Model
         VK_TRACE("Vertex Elements = {0} (number of floats)", total_elements);
 
         std::cout << std::endl;
-    #endif
+#endif
 
         GenArray(1, &this->ID);
         glGenBuffers(1, &this->VBO);
@@ -180,7 +117,7 @@ namespace Vakol::Model
         this->Bind();
 
         glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
-        glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(n_vertices * size), this->vertices.data(), GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(n_vertices * sizeof(Vertex)), this->vertices.data(), GL_STATIC_DRAW);
 
         if (n_indices > 0)
         {
@@ -188,11 +125,16 @@ namespace Vakol::Model
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLsizeiptr>(n_indices * sizeof(unsigned int)), this->indices.data(), GL_STATIC_DRAW);
         }
 
-
         if (total_elements >= 3)
         {
 			SetVertexAttributeData(0, 3, GL_FLOAT, GL_FALSE, size, nullptr);
             total_elements -= 3;
+        }
+
+        if (total_elements >= 2 && total_elements <= 3)
+        {
+            SetVertexAttributeData(1, 2, GL_FLOAT, GL_FALSE, size, reinterpret_cast<const void*>(3 * sizeof(float)));
+            total_elements -= 2;
         }
 
         if (total_elements >= 3)
@@ -284,7 +226,7 @@ namespace Vakol::Model
             }
         }
 
-        this->Unbind();
+        Unbind();
     }
 
     void VertexArray::GenArray(const unsigned int n, unsigned int* array) { glGenVertexArrays(static_cast<GLsizei>(n), array); }

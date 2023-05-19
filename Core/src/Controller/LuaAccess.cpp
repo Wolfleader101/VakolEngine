@@ -267,7 +267,7 @@ namespace Vakol::Controller
 
         entity_type.set_function("get_transform", &Entity::GetComponent<Transform>);
 
-        entity_type.set_function("create_height_map_terrain", [](Entity* ent, std::string&& path, float min, float max)
+        entity_type.set_function("create_height_map_terrain", [](Entity* ent, std::string&& path, const float min, const float max)
         {
             if (!ent->HasComponent<Drawable>()) ent->AddComponent<Drawable>();
 
@@ -445,7 +445,7 @@ namespace Vakol::Controller
 
                 auto& collider = ent->GetComponent<Components::Collider>();
 
-                collider.bounds = getBounds(model);
+                collider.bounds = GetBounds(model);
 			}
 			else
 			{
@@ -568,10 +568,10 @@ namespace Vakol::Controller
         auto colliderType = lua.new_usertype<Collider>("collider");
 
             lua["Shape"] = lua.create_table_with(
-                    "Box", Collider::SHAPE_NAME::BOX,
-                    "Sphere", Collider::SHAPE_NAME::SPHERE,
-                    "Capsule", Collider::SHAPE_NAME::CAPSULE,
-                    "TriangleMesh", Collider::SHAPE_NAME::TRIANGLE_MESH
+                    "Box", Collider::ShapeName::BOX,
+                    "Sphere", Collider::ShapeName::SPHERE,
+                    "Capsule", Collider::ShapeName::CAPSULE,
+                    "TriangleMesh", Collider::ShapeName::TRIANGLE_MESH
                     );
             
             colliderType["Shape"] = &Collider::ShapeName;

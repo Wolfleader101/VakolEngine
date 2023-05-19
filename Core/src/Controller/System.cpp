@@ -134,21 +134,21 @@ namespace Vakol::Controller
 
             const Collider::Bounds& bounds = col.bounds;
 
-            if (col.ShapeName == Collider::SHAPE_NAME::BOX) 
+            if (col.ShapeName == Collider::ShapeName::BOX) 
             {
                 col.Shape = PhysicsPool::m_Common.createBoxShape(
                     (bounds.extents) * rp3d::Vector3(trans.scale.x, trans.scale.y, trans.scale.z));
             }
-            else if (col.ShapeName == Collider::SHAPE_NAME::SPHERE) 
+            else if (col.ShapeName == Collider::ShapeName::SPHERE) 
             {
                 col.Shape = PhysicsPool::m_Common.createSphereShape(bounds.radius * trans.scale.x);
             } 
-            else if (col.ShapeName == Collider::SHAPE_NAME::CAPSULE) 
+            else if (col.ShapeName == Collider::ShapeName::CAPSULE) 
             {
                 col.Shape = PhysicsPool::m_Common.createCapsuleShape(bounds.extents.x * trans.scale.x,
                                                                     bounds.extents.y * trans.scale.y);
             } 
-            else if (col.ShapeName == Collider::SHAPE_NAME::TRIANGLE_MESH) 
+            else if (col.ShapeName == Collider::ShapeName::TRIANGLE_MESH) 
             {
 
                 if (!ent.HasComponent<Drawable>()) {

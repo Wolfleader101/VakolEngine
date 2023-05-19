@@ -1,11 +1,10 @@
 function init(scene, entity)
     
-    entity:get_transform().pos = Vector3.new(5, 0, 10);
+    entity:get_transform().pos = Vector3.new(0, 0, 5);
     
-    local model = entity:add_model("coreAssets/models/kiki.obj") -- get model and add a drawable component
+    local model = entity:add_model("coreAssets/models/kiki.obj", 0.5, false) -- get model and add a drawable component
     
     model:set_shader("coreAssets/shaders/kiki.prog") -- set the shader on the model (automatically binds it)
-
 
     local mesh = model:get_mesh(0);
     local material = mesh:get_material();

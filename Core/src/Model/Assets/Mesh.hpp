@@ -17,7 +17,10 @@ namespace Vakol::Model::Assets
             : m_vertex_array(std::make_shared<VertexArray>(std::move(vertices), std::move(indices), size)), m_material(std::make_shared<Material>(std::move(spec))) {}
 
         Mesh(std::vector<float>& vertices, std::vector<unsigned int>& indices, const size_t size, MaterialSpec&& spec = std::move(DEFAULT))
-            : m_vertex_array(std::make_shared<VertexArray>(Convert(vertices, size), std::move(indices), size)), m_material(std::make_shared<Material>(std::move(spec))) {}
+            : m_vertex_array(std::make_shared<VertexArray>(Convert(vertices, size), std::move(indices), size)), m_material(std::make_shared<Material>(std::move(spec)))
+        {
+            VK_TRACE(size);
+        }
 
         [[nodiscard]] unsigned int GetId() const { return this->m_vertex_array->GetId(); }
 
