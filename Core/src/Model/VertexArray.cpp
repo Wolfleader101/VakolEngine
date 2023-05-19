@@ -133,7 +133,7 @@ namespace Vakol::Model
 
         if (total_elements >= 2 && total_elements <= 3)
         {
-            SetVertexAttributeData(1, 2, GL_FLOAT, GL_FALSE, size, reinterpret_cast<const void*>(3 * sizeof(float)));
+            SetVertexAttributeData(1, 2, GL_FLOAT, GL_FALSE, size, reinterpret_cast<const void*>(offsetof(Vertex, uv)));
             total_elements -= 2;
         }
 
