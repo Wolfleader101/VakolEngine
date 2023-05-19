@@ -1,4 +1,4 @@
-function init(scene, entity)
+function init()
     local camera = scene:get_camera();
 
     camera:set_pos(0.0, 25.0, 2.0);
@@ -11,7 +11,6 @@ function init(scene, entity)
     local camera = scene:get_camera();
     local pos = camera:get_pos();
     scene.globals.player = {pos = pos}
-
 end
 
 function update()

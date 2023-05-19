@@ -1,4 +1,4 @@
-function init(scene, entity)
+function init()
 
     local IDLE_STATE = 0;
     local WALK_STATE = 1;
@@ -26,6 +26,6 @@ function init(scene, entity)
     shader:set_int("material.emission_map", 3);
 end
 
-function update(scene, entity)
+function update()
 
 end
