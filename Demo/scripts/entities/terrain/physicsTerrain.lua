@@ -1,7 +1,7 @@
 function init()
     print("Initialising Terrain");
   
-    local terrain = entity:create_height_map_terrain("coreAssets/textures/Heightmaps/height128.raw", 0, 1); -- size
+    local terrain = entity:create_height_map_terrain("coreAssets/textures/Heightmaps/height128.raw", 0, 30); -- size
 
     -- entity:get_transform().pos = Vector3.new(1.1, -0.75, 1.1);
     -- entity:get_transform().scale = Vector3.new(1, 1, 1);

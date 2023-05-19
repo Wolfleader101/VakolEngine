@@ -112,7 +112,6 @@ namespace Vakol::Controller {
     void Application::Run() {
         while (m_running) {
             m_time.Update();
-            m_input.Update();
             m_gui.CreateNewFrame();
 
             m_renderer->Update();
@@ -124,7 +123,7 @@ namespace Vakol::Controller {
             }
 
             m_gui.Update();
-
+            m_input.Update();
             m_window->OnUpdate();
         }
     }

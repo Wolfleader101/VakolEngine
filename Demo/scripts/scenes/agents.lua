@@ -1,7 +1,6 @@
 function init()
     print("agents scene");
     scene:create_entity("Player Camera Controller", "entities/player/cameraController.lua");
-    -- scene:create_entity("Fly Cam", "entities/FlyCam.lua");
     
     scene:create_entity("terrain", "entities/terrain/physicsTerrain.lua");
 
@@ -12,10 +11,24 @@ function init()
 end
 
 function update()
-    -- GUI:start_window("Agents Window", 240.0, 240.0, 10.0, 10.0);
+    if (Input:get_key_down(KEYS["KEY_Z"])) then
+        print("TEST")
+    end
 
-    -- GUI:add_text("GAME FPS: " .. Time.fps);
-    -- GUI:add_text("Bob State:  " .. scene.globals.bobState:get_state());
+    if (Input:get_key(KEYS["KEY_Z"])) then
+        print_err("TEST")
+    end
+    GUI:start_window("Agents Window", 240.0, 240.0, 10.0, 10.0);
 
-    -- GUI:end_window();
+    GUI:add_text("GAME FPS: " .. Time.fps);
+    GUI:add_text("Bob State:  " .. scene.globals.bobState:get_state());
+
+    GUI:end_window();
+
+    GUI:start_window("WINDOW 2", 240.0, 240.0, 250.0, 250.0);
+
+    GUI:add_text("GAME FPS: " .. Time.fps);
+    GUI:add_text("Bob State:  " .. scene.globals.bobState:get_state());
+
+    GUI:end_window();
 end
