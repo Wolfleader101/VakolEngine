@@ -25,7 +25,7 @@ function update()
 
     GUI:end_window();
 
-        GUI:start_window("Agents Window", 240.0, 240.0, 250.0, 250.0);
+    GUI:start_window("WINDOW 2", 240.0, 240.0, 250.0, 250.0);
 
     GUI:add_text("GAME FPS: " .. Time.fps);
     GUI:add_text("Bob State:  " .. scene.globals.bobState:get_state());

@@ -9,7 +9,6 @@ namespace Vakol::View {
     GUIWindow::GUIWindow() {
         IMGUI_CHECKVERSION();  // Checks the version of IMGUI
 
-        ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
         windowFlags = 0;
     };
 
@@ -30,7 +29,7 @@ namespace Vakol::View {
 
     void GUIWindow::StartWindowCreation(const std::string& windowName, const float width, const float height,
                                         const float x, float y) const {
-        ImGui::Begin(windowName.c_str(), nullptr, windowFlags);  // Begins the creation of the Window
+        ImGui::Begin(windowName.c_str());  // Begins the creation of the Window
 
         ImGui::SetWindowPos({x, y}, ImGuiCond_Once);  // Sets the position of the window
 
@@ -114,9 +113,6 @@ namespace Vakol::View {
 
     void GUIWindow::EndWindowCreation() {
         ImGui::End();  // Ends the creation of the window
-
-        ImGui::Render();                                         // Renders the window
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());  // Retreives the data needed for OpenGL
     };
 
     GUIWindow::~GUIWindow() {
