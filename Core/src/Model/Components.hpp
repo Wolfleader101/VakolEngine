@@ -6,7 +6,7 @@
 #include <Controller/Physics/ScenePhysics.hpp>
 
 #pragma warning(push)
-#pragma warning(disable:4201)
+#pragma warning(disable : 4201)
 #include <glm/glm.hpp>
 #pragma warning(pop)
 
@@ -16,7 +16,6 @@
 #include "Controller/Scene.hpp"
 #include "Entity.hpp"
 #include "Model/Assets/Model.hpp"
-
 
 namespace Vakol::Model::Components {
     /**
@@ -49,8 +48,8 @@ namespace Vakol::Model::Components {
         Transform(const glm::vec3& pos, const glm::vec3& rot, const glm::vec3& scale);
 
         glm::vec3 pos = glm::vec3(0, 0, 0); /**< XYZ position */
-        
-        glm::vec3 rot = glm::vec3(0, 0, 0);   /**< XYZ rotation */
+
+        glm::vec3 rot = glm::vec3(0, 0, 0); /**< XYZ rotation */
 
         glm::vec3 scale = glm::vec3(1, 1, 1); /**< XYZ scale */
 
@@ -117,7 +116,6 @@ namespace Vakol::Model::Components {
         void serialize(Archive& ar) {
             ar(cereal::make_nvp("TagType", type));
         }
-
     };
 
     /**
@@ -127,6 +125,7 @@ namespace Vakol::Model::Components {
      */
     struct Script {
         std::string script_name;
+        sol::table state;
 
         Script() = default;
         explicit Script(const std::string& name);
@@ -139,27 +138,44 @@ namespace Vakol::Model::Components {
         }
     };
 
+    /**
+     * @brief a finite state machine that can be controlled in lua
+     *
+     */
+    struct FSM {
+        FSM(Controller::LuaState& lua);
+
+        void AddState(const std::string& stateName, sol::function callback);
+
+        void ChangeState(const std::string& stateName);
+
+        std::string GetState();
+
+        void Update();
+
+       private:
+        std::string currentState;
+        sol::table states;
+        Controller::LuaState& lua;
+    };
+
     struct Drawable {
         Drawable() = default;
         explicit Drawable(std::string&& file);
-        std::string name; //for serialization
+        std::string name;  // for serialization
 
         std::shared_ptr<Assets::Model> model_ptr;
 
-        template<class Archive>
-        void serialize(Archive& ar)
-        {
+        template <class Archive>
+        void serialize(Archive& ar) {
             ar(cereal::make_nvp("Model", name));
         }
     };
 
-
     using namespace Vakol::Controller::Physics;
 
-    struct RigidBody
-    {
-        enum BODY_TYPE
-        {
+    struct RigidBody {
+        enum BODY_TYPE {
             STATIC = rp3d::BodyType::STATIC,
             KINEMATIC = rp3d::BodyType::KINEMATIC,
             DYNAMIC = rp3d::BodyType::DYNAMIC
@@ -168,15 +184,13 @@ namespace Vakol::Model::Components {
         RigidBody() = default;
 
         bool initialized = false;
-        struct RigidData
-        {
-            float mass = 3;			/**< Mass of object*/
-            bool grav = true;				/**< If gravity is enabled on the object*/
-            float LDamp = 0;			/**< Linear Dampening*/
-            float ADamp = 1;			/**< Angular Dampening*/
-            rp3d::Vector3 AngularLock = { 0,1,0 }; /**< Angular lock axis factor */
-            rp3d::Vector3 Orientation = { 0,0,0 }; /**< Orientation */
-
+        struct RigidData {
+            float mass = 3;                        /**< Mass of object*/
+            bool grav = true;                      /**< If gravity is enabled on the object*/
+            float LDamp = 0;                       /**< Linear Dampening*/
+            float ADamp = 1;                       /**< Angular Dampening*/
+            rp3d::Vector3 AngularLock = {0, 1, 0}; /**< Angular lock axis factor */
+            rp3d::Vector3 Orientation = {0, 0, 0}; /**< Orientation */
         };
 
         void SetRigidData(const RigidData& data);
@@ -187,17 +201,16 @@ namespace Vakol::Model::Components {
         void SetLinearDamp(float damp) const;
         void SetAngularDamp(float damp) const;
 
-        //rigid body
+        // rigid body
         std::shared_ptr<ScenePhysics> owningWorld = nullptr;
         rp3d::RigidBody* RigidBodyPtr = nullptr;
-        BODY_TYPE Type = BODY_TYPE::DYNAMIC; //default
+        BODY_TYPE Type = BODY_TYPE::DYNAMIC;  // default
         RigidData Data;
 
         rp3d::Transform prevTransform;
 
         template <class Archive>
-        void serialize(Archive& ar)
-        {
+        void serialize(Archive& ar) {
             ar(cereal::make_nvp("Mass", Data.mass));
             ar(cereal::make_nvp("Gravity", Data.grav));
             ar(cereal::make_nvp("Linear Dampening", Data.LDamp));
@@ -214,37 +227,32 @@ namespace Vakol::Model::Components {
         }
     };
 
+    struct Collider {
+        enum ShapeName { BOX, SPHERE, CAPSULE, TRIANGLE_MESH };
 
-    struct Collider
-    {
-        enum ShapeName {
-            BOX,
-            SPHERE,
-            CAPSULE,
-            TRIANGLE_MESH
-        };
-        
-        struct Bounds
-        {
-            rp3d::Vector3 min = { 0,0,0 }; /**< minimum vertice*/
-            rp3d::Vector3 max = { 1,1,1 }; /**< Maximum vertice*/
-            rp3d::Vector3 center = { 0.5f, 0.5f, 0.5f }; /**< Average of all vertices*/
-            rp3d::Vector3 extents = { 0.5f, 0.5f, 0.5f }; /**< Extent of vertices*/
-            rp3d::Vector3 size = { 1,1,1 }; /**< Size of vertices*/
+        struct Bounds {
+            rp3d::Vector3 min = {0, 0, 0};              /**< minimum vertice*/
+            rp3d::Vector3 max = {1, 1, 1};              /**< Maximum vertice*/
+            rp3d::Vector3 center = {0.5f, 0.5f, 0.5f};  /**< Average of all vertices*/
+            rp3d::Vector3 extents = {0.5f, 0.5f, 0.5f}; /**< Extent of vertices*/
+            rp3d::Vector3 size = {1, 1, 1};             /**< Size of vertices*/
 
             float radius = 0.5f * extents.length(); /**< Radius*/
 
             template <class Archive>
-            void serialize(Archive& ar)
-            {
-                ar(cereal::make_nvp("min.x", min.x), cereal::make_nvp("min.y", min.y), cereal::make_nvp("min.z", min.z));
-                ar(cereal::make_nvp("max.x", max.x), cereal::make_nvp("max.y", max.y), cereal::make_nvp("max.z", max.z));
-                ar(cereal::make_nvp("centre.x", center.x), cereal::make_nvp("centre.y", center.y), cereal::make_nvp("centre.z", center.z));
-                ar(cereal::make_nvp("extents.x", extents.x), cereal::make_nvp("extents.y", extents.y), cereal::make_nvp("extents.z", extents.z));
-                ar(cereal::make_nvp("size.x", size.x), cereal::make_nvp("size.y", size.y), cereal::make_nvp("size.z", size.z));
+            void serialize(Archive& ar) {
+                ar(cereal::make_nvp("min.x", min.x), cereal::make_nvp("min.y", min.y),
+                   cereal::make_nvp("min.z", min.z));
+                ar(cereal::make_nvp("max.x", max.x), cereal::make_nvp("max.y", max.y),
+                   cereal::make_nvp("max.z", max.z));
+                ar(cereal::make_nvp("centre.x", center.x), cereal::make_nvp("centre.y", center.y),
+                   cereal::make_nvp("centre.z", center.z));
+                ar(cereal::make_nvp("extents.x", extents.x), cereal::make_nvp("extents.y", extents.y),
+                   cereal::make_nvp("extents.z", extents.z));
+                ar(cereal::make_nvp("size.x", size.x), cereal::make_nvp("size.y", size.y),
+                   cereal::make_nvp("size.z", size.z));
                 ar(cereal::make_nvp("radius", radius));
             }
-
         };
 
         Collider() = default;
@@ -261,12 +269,10 @@ namespace Vakol::Model::Components {
         void SetBounds(const Bounds& data);
 
         template <class Archive>
-        void serialize(Archive& ar)
-        {
+        void serialize(Archive& ar) {
             ar(cereal::make_nvp("CollisionShape", ShapeName));
 
             ar(cereal::make_nvp("Bounds", bounds));
-
         }
     };
 

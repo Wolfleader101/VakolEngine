@@ -1,4 +1,4 @@
-function init(scene, entity)
+function init()
 
     --local ent = scene:create_entity("basicEntity.lua");
     local model = entity:add_model("coreAssets/models/sphere.obj");
@@ -68,7 +68,7 @@ function init(scene, entity)
 
 end
 
-function update(scene, entity)
+function update()
     
 end
 

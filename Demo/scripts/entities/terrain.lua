@@ -1,4 +1,4 @@
-function init(scene, entity)
+function init()
     print("Initialising Terrain");
     local terrain = entity:create_height_map_terrain("coreAssets/textures/Heightmaps/height128.raw", 0, 30);
     local diffuse_map = create_texture("coreAssets/textures/grass.png", false, false);
@@ -15,6 +15,6 @@ function init(scene, entity)
     shader:set_int("diffuse_map", 0);
 end
 
-function update(scene, entity)
+function update()
 
 end

@@ -1,4 +1,4 @@
-function init(scene, entity)
+function init()
     
     entity:get_transform().pos = Vector3.new(0, 10, 5);
     entity:get_transform().rot = Vector3.new(15, -90, 0);
@@ -18,7 +18,7 @@ end
 --     return a + (b - a) * t
 -- end
 
-function update(scene, entity)
+function update()
     -- local amplitude = 2.0
     -- local frequency = 1.0
     -- local theta = Time.curr_time * frequency

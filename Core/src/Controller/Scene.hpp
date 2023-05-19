@@ -30,7 +30,7 @@ namespace Vakol::Controller {
 
         void Update(const Time& time, const std::shared_ptr<View::Renderer> renderer);
 
-        Model::Entity CreateEntity(const std::string tag, const std::string scriptName);
+        Model::Entity CreateEntity(const std::string tag, const std::string sname);
 
         void Serialize(const std::string& folder) const;
         void Deserialize(const std::string& folder);
@@ -40,6 +40,8 @@ namespace Vakol::Controller {
         std::shared_ptr<Physics::ScenePhysics> scenePhysics;
         Camera& GetCamera() { return cam; }
         std::shared_ptr<Entity> GetEntity(const std::string& tag);
+
+        sol::table sceneGlobals;
 
        private:
         LuaState& lua;
