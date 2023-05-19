@@ -12,7 +12,8 @@ namespace Vakol::Controller {
 
         sol::protected_function_result RunFile(const std::string& file);
 
-        void RunScript(const std::string& script);
+        void RunFunction(std::string funcName);
+        void RunFunction(sol::function luaFunction);
 
        private:
         sol::state lua;

@@ -1,4 +1,4 @@
-function init(scene, entity)
+function init()
     print("Initialising Terrain");
     -- Terrain = entity:create_height_map_terrain("coreAssets/textures/Heightmaps/height128.raw");
     Terrain = entity:create_clod_terrain("coreAssets/textures/Heightmaps/height128.raw");
@@ -18,6 +18,6 @@ function init(scene, entity)
     shader:set_int("height_map", 0);
 end
 
-function update(scene, entity)
+function update()
 
 end

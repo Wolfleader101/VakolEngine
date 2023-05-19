@@ -1,4 +1,4 @@
-function init(scene, entity)
+function init()
     --local terrain = entity:add_noisemap_terrain(1024, 30, 2, 0.5, 2.0) -- size, scale, octaves, persistence, lacunarity
     local terrain = entity:add_clod_terrain("coreAssets/textures/HeightMaps/height128.raw"); -- size
     scene:add_terrain_physics(entity);
@@ -105,7 +105,7 @@ local function lerp(a, b, t)
     return a + (b - a) * t
 end
 
-function update(scene, entity)
+function update()
     -- local amplitude = 2.0
     -- local frequency = 1.0
     -- local theta = Time.curr_time * frequency

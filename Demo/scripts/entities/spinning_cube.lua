@@ -1,4 +1,4 @@
-function init(scene, entity)
+function init()
   
     local model = entity:add_model("coreAssets/models/cube.obj", 1.0, false) -- get model and add a drawable component
     model:set_shader("coreAssets/shaders/basic.prog") -- set the shader on the model (automatically binds it)
@@ -14,7 +14,7 @@ local function lerp(a, b, t)
     return a + (b - a) * t
 end
 
-function update(scene, entity)
+function update()
     local amplitude = 2.0
     local frequency = 1.0
 
