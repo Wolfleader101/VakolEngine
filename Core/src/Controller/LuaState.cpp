@@ -5,7 +5,8 @@
 
 #include "Logger.hpp"
 
-std::string getStatusString(sol::call_status status) {
+std::string getStatusString(const sol::call_status status)
+{
     switch (status) {
         case sol::call_status::ok:
             return "ok";
@@ -43,11 +44,11 @@ namespace Vakol::Controller {
         auto result = lua.safe_script_file(file, &sol::script_pass_on_error);
 
         if (!result.valid()) {
-            sol::error err = result;
-            sol::call_status status = result.status();
+	        const sol::error err = result;
+            const sol::call_status status = result.status();
             std::ostringstream oss;
             oss << "Lua script execution error: " << err.what() << " (status: " << getStatusString(status) << ")";
-            std::string errorMsg = oss.str();
+	        const std::string errorMsg = oss.str();
 
             VK_ERROR(errorMsg);
         }
@@ -55,7 +56,7 @@ namespace Vakol::Controller {
         return result;
     }
 
-    void LuaState::RunFunction(std::string funcName) {
+    void LuaState::RunFunction(const std::string& funcName) {
         sol::function func = lua[funcName];
 
         if (!func.valid()) {
@@ -67,9 +68,8 @@ namespace Vakol::Controller {
             return;
         }
 
-        sol::protected_function_result result = func();
-
-        if (!result.valid()) {
+        if (sol::protected_function_result result = func(); !result.valid()) 
+        {
             sol::error err = result;
             sol::call_status status = result.status();
 
@@ -81,7 +81,8 @@ namespace Vakol::Controller {
         }
     }
 
-    void LuaState::RunFunction(sol::function luaFunction) {
+    void LuaState::RunFunction(const sol::function& luaFunction)
+	{
         if (!luaFunction.valid()) {
             std::ostringstream oss;
             oss << "Lua script execution error: Invalid function";
@@ -91,9 +92,7 @@ namespace Vakol::Controller {
             return;
         }
 
-        sol::protected_function_result result = luaFunction();
-
-        if (!result.valid()) {
+        if (sol::protected_function_result result = luaFunction(); !result.valid()) {
             sol::error err = result;
             sol::call_status status = result.status();
 
@@ -104,4 +103,4 @@ namespace Vakol::Controller {
             VK_ERROR(errorMsg);
         }
     }
-}  // namespace Vakol::Controller
+}

@@ -129,7 +129,7 @@ namespace Vakol::Controller {
             col.OwningBody = &rigid;
 
             const Collider::Bounds& bounds = col.bounds;
-
+          
             if (col.ShapeName == Collider::ShapeName::BOX) {
                 col.Shape = PhysicsPool::m_Common.createBoxShape(
                     (bounds.extents) * rp3d::Vector3(trans.scale.x, trans.scale.y, trans.scale.z));

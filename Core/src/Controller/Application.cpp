@@ -15,10 +15,12 @@ namespace Vakol::Controller {
 
     Application::Application() : m_window(nullptr), m_renderer(nullptr), m_running(false) { Logger::Init(); };
 
-    void Application::Init() {
+    void Application::Init()
+	{
         RegisterLua();
 
         auto config = LoadConfig();
+
         if (!config) {
             VK_CRITICAL("CONFIG COULD NOT BE LOADED");
             return;

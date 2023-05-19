@@ -7,7 +7,6 @@ function init()
     local camera = scene:get_camera();
     local pos = camera:get_pos();
     scene.globals.player = {pos = pos}
-
 end
 
 function update()
