@@ -261,7 +261,7 @@ namespace Vakol::Model::Components {
         RigidBody* OwningBody = nullptr;
         rp3d::Collider* ColliderPtr = nullptr;
         rp3d::CollisionShape* Shape = nullptr;
-        SHAPE_NAME ShapeName = BOX;
+        ShapeName ShapeName = BOX;
         bool DrawableBounds = false;
 
         Bounds bounds;
