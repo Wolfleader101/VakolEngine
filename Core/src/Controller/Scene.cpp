@@ -1,5 +1,6 @@
 #include "Scene.hpp"
 
+#include <Controller/Camera.hpp>
 #include <Controller/Serialization/Serializable.hpp>
 #include <Model/Components.hpp>
 #include <Model/Entity.hpp>
@@ -8,8 +9,6 @@
 
 #include "LuaAccess.hpp"
 #include "System.hpp"
-
-#include <Controller/Camera.hpp>
 
 namespace Vakol::Controller {
     Scene::Scene(const std::string& name, const std::string& scriptName, LuaState& lua,
@@ -20,26 +19,24 @@ namespace Vakol::Controller {
           entityList(),
           scenePhysics(SP),
           active(active),
-          cam(glm::vec3(0.0f, 0.0f, 2.0f)) {
+          cam(glm::vec3(0.0f, 0.0f, 2.0f)),
+          sceneGlobals(lua.GetState().create_table()) {
         lua.RunFile("scripts/" + scriptName);
         System::BindScene(*this);
 
-        sol::function init = lua.GetState()["init"];
+        lua.GetState()["scene"] = this;
 
-        init(*this);
-        
+        lua.RunFunction("init");
     }
 
     const std::string& Scene::getName() const { return name; }
 
     void Scene::setName(const std::string& newName) { name = newName; }
 
-    Model::Entity Scene::CreateEntity(const std::string tag, const std::string _name) 
-    {
+    Model::Entity Scene::CreateEntity(const std::string tag, const std::string sname) {
         auto ent = entityList.CreateEntity();
         ent.GetComponent<Model::Components::Tag>().tag = tag;
-        if (_name.length() != 0) ent.AddComponent<Model::Components::Script>(_name, lua, ent, *this);
-
+        if (sname.length() != 0) ent.AddComponent<Model::Components::Script>(sname, lua, ent, *this);
         return ent;
     }
 
@@ -52,9 +49,8 @@ namespace Vakol::Controller {
     {
         lua.RunFile("scripts/" + scriptName);
 
-        sol::function update = lua.GetState()["update"];
-
-        update(*this);
+        lua.GetState()["scene"] = this;
+        lua.RunFunction("update");
 
         scenePhysics->Update(time, cam);
 
@@ -63,12 +59,9 @@ namespace Vakol::Controller {
         System::Drawable_Update(time, cam, renderer);
 
         cam.Update();
-
-    	
     }
 
-    std::shared_ptr<Entity> Scene::GetEntity(const std::string& tag) 
-    {
+    std::shared_ptr<Entity> Scene::GetEntity(const std::string& tag) {
         Entity ent;
         entityList.m_Registry.view<Model::Components::Tag>().each([&](auto entity, auto& tagComponent) {
             if (tagComponent.tag == tag) {
@@ -81,12 +74,9 @@ namespace Vakol::Controller {
 
     namespace fs = std::filesystem;
 
-    void Scene::Serialize(const std::string& folder) const
-	{
-
+    void Scene::Serialize(const std::string& folder) const {
         std::string temp = folder;
         std::replace(temp.begin(), temp.end(), '/', '\\');  // replace / with \\ for filesystem
-
 
         std::string folderPath = "\\" + temp + "\\" + name;
         fs::path currentPath = fs::current_path();
@@ -117,7 +107,7 @@ namespace Vakol::Controller {
         entityList.Deserialize(folder + "/EntityList.json");
 
         System::BindScene(*this);
-        //System::Drawable_Init();
+        // System::Drawable_Init();
         System::Physics_Init();
 
         std::ifstream input(folder + "/Scene.json");

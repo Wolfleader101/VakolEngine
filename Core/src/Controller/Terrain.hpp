@@ -5,41 +5,42 @@
 #include <string>
 #include <vector>
 
-namespace Vakol::Controller
-{
-    class Terrain
-	{
-    public:
+namespace Vakol::Controller {
+    class Terrain {
+       public:
         Terrain() = default;
 
         void SetModel(Model::Assets::Mesh&& mesh) { this->m_model = std::make_shared<Model::Assets::Model>(mesh); }
-        void SetModel(Model::Assets::Model&& model) { this->m_model = std::make_shared<Model::Assets::Model>(std::move(model)); }
-        [[nodiscard]] std::shared_ptr<Model::Assets::Model> GetModel() const { return this->m_model; }
+        void SetModel(Model::Assets::Model&& model) {
+            this->m_model = std::make_shared<Model::Assets::Model>(std::move(model));
+        }
+        std::shared_ptr<Model::Assets::Model> GetModel() const { return this->m_model; }
 
         void SetData(const unsigned char* data);
 
-        [[nodiscard]] int GetSize() const { return this->m_size; }
-        
+        int GetSize() const { return this->m_size; }
+
         void SetSize(const int size) { this->m_size = size; }
 
-        [[nodiscard]] float GetHeight(const float x, const float z) const;
-        
-        [[nodiscard]] Model::Assets::Mesh load_height_map_mesh() const;
-    	[[nodiscard]] Model::Assets::Mesh load_clod_terrain_mesh() const;
+        float GetHeight(float x, float z) const;
+
+        Model::Assets::Mesh load_height_map_mesh() const;
+        Model::Assets::Mesh load_clod_terrain_mesh() const;
 
         const std::vector<float>& GetHeightMap() const { return this->m_height_map; }
         const std::vector<unsigned char>& GetData() const { return this->m_data; };
 
-        void SetMinMax(std::pair<float, float>&& minmax) { this->m_min_height = minmax.first; this->m_max_height = minmax.second; }
-		[[nodiscard]] std::pair<float, float> GetMinMax() const { return {this->m_min_height, this->m_max_height}; }
+        void SetMinMax(std::pair<float, float>&& minmax) {
+            this->m_min_height = minmax.first;
+            this->m_max_height = minmax.second;
+        }
+        [[nodiscard]] std::pair<float, float> GetMinMax() const { return {this->m_min_height, this->m_max_height}; }
 
-    private:
+       private:
+        Model::Assets::Mesh load_fault_formation_mesh(const int size, const int iterations, const float filter,
+                                                      const bool random, const int minHeight, const int maxHeight);
 
-        Model::Assets::Mesh load_fault_formation_mesh(const int size, const int iterations, const float filter, const bool random, const int minHeight, const int maxHeight);
-
-
-        struct Point
-    	{
+        struct Point {
             int x = 0;
             int z = 0;
 
@@ -69,4 +70,4 @@ namespace Vakol::Controller
 
     Terrain LoadHeightMapTerrain(std::string&& path, float min, float max);
     Terrain LoadCLODTerrain(std::string&& path);
-}
+}  // namespace Vakol::Controller

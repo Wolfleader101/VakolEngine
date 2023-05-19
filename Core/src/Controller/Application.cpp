@@ -15,11 +15,12 @@ namespace Vakol::Controller {
 
     Application::Application() : m_window(nullptr), m_renderer(nullptr), m_running(false) { Logger::Init(); };
 
-    void Application::Init() 
-    {
+    void Application::Init()
+	{
         RegisterLua();
 
         auto config = LoadConfig();
+
         if (!config) {
             VK_CRITICAL("CONFIG COULD NOT BE LOADED");
             return;
@@ -43,23 +44,21 @@ namespace Vakol::Controller {
         m_running = true;
     }
 
-    void Application::RegisterLua()
-    {
-	    RegisterLogger(lua.GetState());
+    void Application::RegisterLua() {
+        RegisterLogger(lua.GetState());
         RegisterMath(lua.GetState());
-        RegisterEntity(lua.GetState());
+        RegisterEntity(lua, lua.GetState());
         RegisterECS(lua.GetState());
         RegisterAssetLoader(lua.GetState());
         RegisterApplication(lua.GetState(), this);
         RegisterScene(lua.GetState());
         RegisterGUIWindow(lua.GetState(), &m_gui);  // Register GUI Window
-    	RegisterRenderer(lua.GetState());
-    	RegisterPhysics(lua.GetState());
+        RegisterRenderer(lua.GetState());
+        RegisterPhysics(lua.GetState());
         RegisterOther(lua.GetState());
     }
 
-    std::optional<Model::GameConfig> Application::LoadConfig() 
-    {
+    std::optional<Model::GameConfig> Application::LoadConfig() {
         VK_INFO("Loading game_config.lua...");
 
         lua.RunFile("scripts/game_config.lua");
@@ -110,14 +109,11 @@ namespace Vakol::Controller {
         return cfg;
     }
 
-    Application::~Application() {
-        
-    }
+    Application::~Application() {}
 
     void Application::Run() {
         while (m_running) {
             m_time.Update();
-            m_input.Update();
             m_gui.CreateNewFrame();
 
             m_renderer->Update();
@@ -131,7 +127,7 @@ namespace Vakol::Controller {
             }
 
             m_gui.Update();
-
+            m_input.Update();
             m_window->OnUpdate();
         }
     }

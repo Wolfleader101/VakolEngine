@@ -42,6 +42,8 @@ namespace Vakol::Controller {
         Camera& GetCamera() { return cam; }
         std::shared_ptr<Entity> GetEntity(const std::string& tag);
 
+        sol::table sceneGlobals;
+
        private:
         LuaState& lua;
         std::string scriptName;

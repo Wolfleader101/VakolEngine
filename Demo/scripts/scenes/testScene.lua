@@ -1,18 +1,14 @@
-function init(scene)
-
-    --print("init");
-    --scene:create_entity("Start Menu", "misc/start_menu.lua");
-    --scene:create_entity("Camera Controller", "entities/cameraController.lua");
+function init()
+    scene:create_entity("Camera Controller", "entities/player/cameraController.lua");
     --scene:create_entity("spinning Cube", "entities/spinning_cube.lua");
     --scene:create_entity("instancing example", "entities/instancing.lua");
     --scene:create_entity("kiki", "entities/kiki_test.lua");
     --scene:create_entity("animated model", "entities/test_animation.lua");
-    --scene:create_entity("terrain", "entities/terrain.lua");
-
+    scene:create_entity("terrain", "entities/terrain.lua");
 end
 
-function update(scene)
-    -- GUI:start_window("FPS Window", 240.0, 240.0, 10.0, 10.0);
+function update()
+    GUI:start_window("FPS Window", 240.0, 240.0, 10.0, 10.0);
 
     -- local fps = GUI:get_fps()
     -- GUI:add_text("GUI FPS: " .. math.floor(fps));

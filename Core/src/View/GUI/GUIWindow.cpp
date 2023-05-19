@@ -1,13 +1,12 @@
 #include "GUIWindow.hpp"
 
-#include <Controller/Logger.hpp>
-
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 
+#include <Controller/Logger.hpp>
+
 namespace Vakol::View {
-    GUIWindow::GUIWindow()
-	{
+    GUIWindow::GUIWindow() {
         IMGUI_CHECKVERSION();  // Checks the version of IMGUI
 
         windowFlags = 0;
@@ -54,7 +53,8 @@ namespace Vakol::View {
 
     void GUIWindow::AddText(const std::string& inputText) { ImGui::Text(inputText.c_str()); };
 
-    void GUIWindow::AddButton(const std::string& buttonName, float width, float height, const std::function<void()>& inputFunction) {
+    void GUIWindow::AddButton(const std::string& buttonName, float width, float height,
+                              const std::function<void()>& inputFunction) {
         if (ImGui::Button(buttonName.c_str(), {width, height})) {
             inputFunction();  // Runs the given input function
         }
@@ -64,12 +64,13 @@ namespace Vakol::View {
         ImGui::Checkbox(checkboxName.c_str(), checkBoxValue);
     };
 
-    void GUIWindow::AddIntSlider(const std::string& sliderName, int* sliderValue, const int minValue, const int maxValue) {
+    void GUIWindow::AddIntSlider(const std::string& sliderName, int* sliderValue, const int minValue,
+                                 const int maxValue) {
         ImGui::SliderInt(sliderName.c_str(), sliderValue, minValue, maxValue);
     };
 
-    void GUIWindow::AddVecIntSlider(const std::string& sliderName, int sliderValue[], const int size, const int minValue, const int maxValue)
-	{
+    void GUIWindow::AddVecIntSlider(const std::string& sliderName, int sliderValue[], const int size,
+                                    const int minValue, const int maxValue) {
         switch (size) {
             case 2:
                 ImGui::SliderInt2(sliderName.c_str(), sliderValue, minValue, maxValue);
@@ -90,13 +91,14 @@ namespace Vakol::View {
         }
     };
 
-    void GUIWindow::AddFloatSlider(const std::string& sliderName, float* sliderValue, const float minValue, const float maxValue) {
+    void GUIWindow::AddFloatSlider(const std::string& sliderName, float* sliderValue, const float minValue,
+                                   const float maxValue) {
         ImGui::SliderFloat(sliderName.c_str(), sliderValue, minValue, maxValue);
     };
 
-    void GUIWindow::AddVecFloatSlider(const std::string& sliderName, float sliderValue[], const int size, const float minValue, const float maxValue) {
-        switch (size)
-    	{
+    void GUIWindow::AddVecFloatSlider(const std::string& sliderName, float sliderValue[], const int size,
+                                      const float minValue, const float maxValue) {
+        switch (size) {
             case 2:
                 ImGui::SliderFloat2(sliderName.c_str(), sliderValue, minValue, maxValue);
 
@@ -116,16 +118,11 @@ namespace Vakol::View {
         }
     };
 
-    void GUIWindow::EndWindowCreation()
-	{
+    void GUIWindow::EndWindowCreation() {
         ImGui::End();  // Ends the creation of the window
-
-        ImGui::Render();                                         // Renders the window
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());  // Retreives the data needed for OpenGL
     };
 
-    GUIWindow::~GUIWindow()
-	{
+    GUIWindow::~GUIWindow() {
         if (!is_initialised) return;
 
         ImGui_ImplOpenGL3_Shutdown();  // Shuts down OpenGL support
