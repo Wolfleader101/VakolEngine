@@ -124,6 +124,8 @@ namespace Vakol::Controller {
 
             //! update scenes lua
             for (auto& scene : scenes) {
+                if (!scene.active) continue;
+
                 System::BindScene(scene);
                 scene.Update(m_time, m_renderer);
             }

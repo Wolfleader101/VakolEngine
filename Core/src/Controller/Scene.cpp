@@ -43,7 +43,10 @@ namespace Vakol::Controller {
         return ent;
     }
 
-    void Scene::DestroyEntity(Entity entity) { entityList.RemoveEntity(entity); }
+    void Scene::DestroyEntity(Entity entity)
+    {
+	    entityList.RemoveEntity(entity);
+    }
 
     void Scene::Update(const Time& time, const std::shared_ptr<View::Renderer> renderer) 
     {

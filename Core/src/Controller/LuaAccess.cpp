@@ -479,7 +479,12 @@ namespace Vakol::Controller
         auto camera_type = lua.new_usertype<Camera>("camera");
 
         scene_type.set_function("create_entity", &Scene::CreateEntity);
-        scene_type.set_function("destroy_entity", &Scene::DestroyEntity);
+
+        scene_type.set_function("set_active", [](Scene* scene, bool active)
+            {
+                scene->active = active;
+            });
+
         scene_type.set_function("get_camera", &Scene::GetCamera);
         scene_type.set_function("get_entity", &Scene::GetEntity);
 
