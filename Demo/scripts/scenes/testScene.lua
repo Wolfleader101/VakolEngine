@@ -1,4 +1,4 @@
-function init(scene)
+function init()
     --scene:create_entity("Start Menu", "misc/start_menu.lua");
     scene:create_entity("Camera Controller", "entities/cameraController.lua");
     scene:create_entity("spinning Cube", "entities/spinning_cube.lua");
@@ -8,7 +8,7 @@ function init(scene)
     scene:create_entity("terrain", "entities/terrain.lua");
 end
 
-function update(scene)
+function update()
     -- GUI:start_window("FPS Window", 240.0, 240.0, 10.0, 10.0);
 
     -- local fps = GUI:get_fps()

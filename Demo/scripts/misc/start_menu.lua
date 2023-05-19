@@ -16,13 +16,14 @@ end
 
 function init()
 
+    
 
 end
 
 
 function update()
 
-
+    print("update");
     if (Input:get_key(KEYS["KEY_1"])) then
         add_scene("scenes/testScene.lua", "Test Scene");
         
