@@ -265,12 +265,12 @@ namespace Vakol::Controller {
                                      auto terrain = ent->GetComponent<Terrain>();
 
                                      if (const auto model = terrain.GetModel()) {
-                                         model->GetMesh().SetDrawMode(DRAW_MODE::STRIPS);
-                                         model->GetMesh().SetDrawType(DRAW_TYPE::ELEMENTS);
+                                         model->mesh().SetDrawMode(DRAW_MODE::STRIPS);
+                                         model->mesh().SetDrawType(DRAW_TYPE::ELEMENTS);
 
-                                         model->GetMesh().SetDrawModeInfo((terrain.GetSize() - 1) / 1);  // num strips
+                                         model->mesh().SetDrawModeInfo((terrain.GetSize() - 1) / 1);  // num strips
 
-                                         model->GetMesh().SetNumTrisPerStrip(terrain.GetSize() / 1 * 2 - 2);
+                                         model->mesh().SetNumTrisPerStrip(terrain.GetSize() / 1 * 2 - 2);
 
                                          ent->GetComponent<Components::Drawable>().model_ptr = model;
                                      }
@@ -340,7 +340,7 @@ namespace Vakol::Controller {
         material_type.set_function("get_ambient_color", &Assets::Material::GetAmbientColor);
         material_type.set_function("get_diffuse_color", &Assets::Material::GetDiffuseColor);
 
-        shader_type.set_function("set_int", &Assets::Shader::SetInt);
+        shader_type.set_function("set_int", &Shader::SetInt);
         shader_type.set_function("set_float", &Shader::SetFloat);
 
         shader_type.set_function("set_vec2v",
@@ -404,13 +404,11 @@ namespace Vakol::Controller {
                 auto& collider = ent->GetComponent<Components::Collider>();
 
                 collider.bounds = GetBounds(model);
-			}
-			else
-			{
-				VK_CRITICAL("drawable and collider must be present to get bounds from");
-				assert(0);
-			}
-		});
+            } else {
+                VK_CRITICAL("drawable and collider must be present to get bounds from");
+                assert(0);
+            }
+        });
 
         entity_type.set_function("add_fsm", [&](Entity* ent) -> Components::FSM& {
             if (!ent->HasComponent<Components::FSM>()) ent->AddComponent<Components::FSM>(state);
@@ -530,14 +528,11 @@ namespace Vakol::Controller {
 
         auto colliderType = lua.new_usertype<Collider>("collider");
 
-            lua["Shape"] = lua.create_table_with(
-                    "Box", Collider::ShapeName::BOX,
-                    "Sphere", Collider::ShapeName::SPHERE,
-                    "Capsule", Collider::ShapeName::CAPSULE,
-                    "TriangleMesh", Collider::ShapeName::TRIANGLE_MESH
-                    );
-            
-            colliderType["Shape"] = &Collider::ShapeName;
+        lua["Shape"] =
+            lua.create_table_with("Box", Collider::ShapeName::BOX, "Sphere", Collider::ShapeName::SPHERE, "Capsule",
+                                  Collider::ShapeName::CAPSULE, "TriangleMesh", Collider::ShapeName::TRIANGLE_MESH);
+
+        colliderType["Shape"] = &Collider::ShapeName;
 
         auto ColliderBoundsType = lua.new_usertype<Collider::Bounds>("colliderBounds");
 

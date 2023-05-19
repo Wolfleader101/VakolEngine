@@ -129,24 +129,16 @@ namespace Vakol::Controller {
             col.OwningBody = &rigid;
 
             const Collider::Bounds& bounds = col.bounds;
-
-            if (col.ShapeName == Collider::ShapeName::BOX) 
-            {
+          
+            if (col.ShapeName == Collider::ShapeName::BOX) {
                 col.Shape = PhysicsPool::m_Common.createBoxShape(
                     (bounds.extents) * rp3d::Vector3(trans.scale.x, trans.scale.y, trans.scale.z));
-            }
-            else if (col.ShapeName == Collider::ShapeName::SPHERE) 
-            {
+            } else if (col.ShapeName == Collider::ShapeName::SPHERE) {
                 col.Shape = PhysicsPool::m_Common.createSphereShape(bounds.radius * trans.scale.x);
-            } 
-            else if (col.ShapeName == Collider::ShapeName::CAPSULE) 
-            {
+            } else if (col.ShapeName == Collider::ShapeName::CAPSULE) {
                 col.Shape = PhysicsPool::m_Common.createCapsuleShape(bounds.extents.x * trans.scale.x,
-                                                                    bounds.extents.y * trans.scale.y);
-            } 
-            else if (col.ShapeName == Collider::ShapeName::TRIANGLE_MESH) 
-            {
-
+                                                                     bounds.extents.y * trans.scale.y);
+            } else if (col.ShapeName == Collider::ShapeName::TRIANGLE_MESH) {
                 if (!ent.HasComponent<Drawable>()) {
                     VK_CRITICAL("Trying to add triangle mesh collider without providing model!");
                     assert(0);

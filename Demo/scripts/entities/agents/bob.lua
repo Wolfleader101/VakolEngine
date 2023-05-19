@@ -7,7 +7,7 @@ function init()
         local diff = scene.globals.player.pos - entity:get_transform().pos;
         local player_dist = diff:magnitude();
         -- print(diff.x .. " " .. diff.y .. " " .. diff.z)
-        print_err(player_dist)
+        -- print_err(player_dist)
 
 
         -- if(playerDist < 10) then
