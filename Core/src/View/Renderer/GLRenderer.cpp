@@ -139,7 +139,7 @@ namespace Vakol::View
             for (int j = 0; j < material->GetTextureCount(); ++j)
             {
                 glActiveTexture(GL_TEXTURE0 + j);
-                glBindTexture(GL_TEXTURE_2D, material->GetTexture(j).GetID());
+                glBindTexture(GL_TEXTURE_2D, material->GetTexture(j));
             }
 
             mesh.Draw();

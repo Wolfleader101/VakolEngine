@@ -172,7 +172,8 @@ namespace Vakol::Controller {
     }
 
     void RegisterAssetLoader(sol::state& lua) {
-        lua.set_function("load_texture", [](std::string& path) {
+        lua.set_function("load_texture", [](const std::string& path) {
+
             return AssetLoader::GetTexture(path);  // no checks... just raw doggin it LOL
         });
 
@@ -238,18 +239,20 @@ namespace Vakol::Controller {
         auto material_type = lua.new_usertype<Assets::Material>("material");
         auto shader_type = lua.new_usertype<Shader>("shader");
 
-        lua.set_function("create_raw_texture", [](std::string& path) {
+        lua.set_function("create_raw_texture", [](std::string& path) 
+        {
             auto texture = Assets::Texture(path);
             texture.SetID(LoadRawTexture(texture.path));
 
-            return texture;
+            return texture.GetID();
         });
 
-        lua.set_function("create_texture", [](std::string& path, const bool gamma, const bool flip) {
+        lua.set_function("create_texture", [](std::string& path, const bool gamma, const bool flip) 
+        {
             auto texture = Assets::Texture(path);
             texture.SetID(LoadTexture(texture.path, gamma, flip));
 
-            return texture;
+            return texture.GetID();
         });
 
         entity_type.set_function("get_transform", &Entity::GetComponent<Transform>);
@@ -272,7 +275,7 @@ namespace Vakol::Controller {
 
 		         model->mesh().SetNumTrisPerStrip(terrain.GetSize() / 1 * 2 - 2);
 
-		         ent->GetComponent<Components::Drawable>().model_ptr = model;
+		         ent->GetComponent<Drawable>().model_ptr = model;
 		     }
 
 		     return terrain;

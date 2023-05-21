@@ -17,12 +17,12 @@ namespace Vakol::Controller
         static std::string texture_path;
         static std::string shader_path;
 
-        static Model::Assets::Texture& GetTexture(std::string& file);
-        static std::shared_ptr<Model::Assets::Model> GetModel(const std::string& file, const float scale, bool animated);
+        static unsigned int GetTexture(const std::string& file);
+        static std::shared_ptr<Model::Assets::Model> GetModel(const std::string& file, float scale, bool animated);
         static std::shared_ptr<Model::Shader> GetShader(const std::string& file);
 
     private:
-        static std::unordered_map<std::string, std::shared_ptr<Model::Assets::Texture>> m_TextureMap;
+        static std::unordered_map<std::string, unsigned int> m_TextureMap;
         static std::unordered_map<std::string, std::shared_ptr<Model::Assets::Model>> m_ModelMap;
         static std::unordered_map<std::string, std::shared_ptr<Model::Shader>> m_ShaderMap;
     };

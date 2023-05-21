@@ -18,33 +18,32 @@ namespace Vakol::Model::Assets
         glm::vec3 SPECULAR = glm::vec3(0.0f);
         glm::vec3 EMISSIVE = glm::vec3(0.0f);
         float SHININESS = 32.0f;
-
-        std::vector<Texture> textures;
     };
 
-    inline MaterialSpec&& DEFAULT = {glm::vec3(1.0f), glm::vec3(0.6f), glm::vec3(0.2f), glm::vec3(0.0f), 32.0f };
+    inline MaterialSpec&& DEFAULT = {glm::vec3(1.0f), glm::vec3(0.6f), glm::vec3(0.2f), glm::vec3(0.0f), 32.0f};
 
     class Material 
     {
     public:
-	    explicit Material(MaterialSpec&& spec) : m_spec(std::move(spec)) {}
-
-        void AddTexture(Texture& texture)
+	    explicit Material(MaterialSpec spec) : m_spec(std::move(spec))
 	    {
-            VK_TRACE(texture.path);
-
-		    this->m_spec.textures.push_back(std::move(texture));
+            //this->m_textures = m_spec.textures;
 	    }
 
-        [[nodiscard]] Texture GetTexture(const int index) const 
+        void AddTexture(const unsigned int texture)
+	    {
+            this->m_textures.push_back(texture);
+	    }
+
+        [[nodiscard]] unsigned int GetTexture(const int index) const 
         { 
             VK_ASSERT(GetTextureCount() > index, "\n\nTexture index out of bounds.");
 
-            return this->m_spec.textures.at(index);
+            return this->m_textures.at(index);
         }
 
-        [[nodiscard]] std::vector<Texture> GetTextures() const { return this->m_spec.textures; }
-        [[nodiscard]] int GetTextureCount() const { return static_cast<int>(this->m_spec.textures.size()); }
+        [[nodiscard]] std::vector<unsigned int> GetTextures() const { return this->m_textures; }
+        [[nodiscard]] int GetTextureCount() const { return static_cast<int>(this->m_textures.size()); }
 
         void SetAmbientColor(const float r, const float g, const float b)  { this->m_spec.AMBIENT = glm::vec3(r,g,b); }
         void SetDiffuseColor(const float r, const float g, const float b)  { this->m_spec.DIFFUSE = glm::vec3(r,g,b); }
@@ -58,5 +57,6 @@ namespace Vakol::Model::Assets
 
     private:
         MaterialSpec m_spec;
+        std::vector<unsigned int> m_textures;
     };
 }
