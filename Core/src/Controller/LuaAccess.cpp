@@ -71,6 +71,7 @@ namespace Vakol::Controller {
             vec3["b"] = &glm::vec3::b;
 
             vec3.set_function("magnitude", [](const glm::vec3& v) -> float { return glm::length(v); });
+            vec3.set_function("normalize", [](const glm::vec3& v) -> glm::vec3 { return glm::normalize(v); });
         }
 
         {
@@ -254,32 +255,31 @@ namespace Vakol::Controller {
 
         entity_type.set_function("get_transform", &Entity::GetComponent<Transform>);
 
-        entity_type.set_function("create_height_map_terrain", [](Entity* ent, std::string&& path, const float min, const float max)
-        {
-            if (!ent->HasComponent<Drawable>()) ent->AddComponent<Drawable>();
+        entity_type.set_function("create_height_map_terrain",
+                                 [](Entity* ent, std::string&& path, const float min, const float max) {
+                                     if (!ent->HasComponent<Drawable>()) ent->AddComponent<Drawable>();
 
-		     if (ent->HasComponent<Terrain>()) ent->RemoveComponent<Terrain>();
+                                     if (ent->HasComponent<Terrain>()) ent->RemoveComponent<Terrain>();
 
-		     ent->AddComponent<Terrain>(LoadHeightMapTerrain(std::move(path), min, max));
+                                     ent->AddComponent<Terrain>(LoadHeightMapTerrain(std::move(path), min, max));
 
-		     auto terrain = ent->GetComponent<Terrain>();
+                                     auto terrain = ent->GetComponent<Terrain>();
 
-		     if (const auto model = terrain.GetModel()) {
-		         model->mesh().SetDrawMode(DRAW_MODE::STRIPS);
-		         model->mesh().SetDrawType(DRAW_TYPE::ELEMENTS);
+                                     if (const auto model = terrain.GetModel()) {
+                                         model->mesh().SetDrawMode(DRAW_MODE::STRIPS);
+                                         model->mesh().SetDrawType(DRAW_TYPE::ELEMENTS);
 
-		         model->mesh().SetDrawModeInfo((terrain.GetSize() - 1) / 1);  // num strips
+                                         model->mesh().SetDrawModeInfo((terrain.GetSize() - 1) / 1);  // num strips
 
-		         model->mesh().SetNumTrisPerStrip(terrain.GetSize() / 1 * 2 - 2);
+                                         model->mesh().SetNumTrisPerStrip(terrain.GetSize() / 1 * 2 - 2);
 
-		         ent->GetComponent<Components::Drawable>().model_ptr = model;
-		     }
+                                         ent->GetComponent<Components::Drawable>().model_ptr = model;
+                                     }
 
-		     return terrain;
-		});
+                                     return terrain;
+                                 });
 
-        entity_type.set_function("create_clod_terrain", [](Entity* ent, std::string&& path) 
-        {
+        entity_type.set_function("create_clod_terrain", [](Entity* ent, std::string&& path) {
             if (!ent->HasComponent<Drawable>()) ent->AddComponent<Drawable>();
 
             if (ent->HasComponent<Terrain>()) ent->RemoveComponent<Terrain>();
@@ -351,13 +351,11 @@ namespace Vakol::Controller {
         shader_type.set_function("set_vec4v",
                                  sol::resolve<void(const char*, const glm::vec4&) const>(&Shader::SetVec4));
 
-        shader_type.set_function("set_vec2",
-                                 sol::resolve<void(const char*, float, float) const>(&Shader::SetVec2));
-        shader_type.set_function(
-            "set_vec3", sol::resolve<void(const char*, float, float, float) const>(&Shader::SetVec3));
-        shader_type.set_function(
-            "set_vec4", sol::resolve<void(const char*, float, float, float, float) const>(
-                            &Shader::SetVec4));
+        shader_type.set_function("set_vec2", sol::resolve<void(const char*, float, float) const>(&Shader::SetVec2));
+        shader_type.set_function("set_vec3",
+                                 sol::resolve<void(const char*, float, float, float) const>(&Shader::SetVec3));
+        shader_type.set_function("set_vec4",
+                                 sol::resolve<void(const char*, float, float, float, float) const>(&Shader::SetVec4));
 
         entity_type.set_function("physics_init", [](Entity* ent, Scene& scene) { System::BindScene(scene); });
 
@@ -544,9 +542,7 @@ namespace Vakol::Controller {
         ColliderBoundsType["radius"] = &Collider::Bounds::radius;
 
         rigidType.set_function("set_data",
-                               [](RigidBody* rigid, const RigidBody::RigidData& data) {
-                                   rigid->SetRigidData(data);
-                               });
+                               [](RigidBody* rigid, const RigidBody::RigidData& data) { rigid->SetRigidData(data); });
 
         rigidType.set_function("toggle_gravity", [](RigidBody* rigid) { rigid->ToggleGravity(); });
 
@@ -573,10 +569,8 @@ namespace Vakol::Controller {
         colliderType.set_function(
             "set_bounds", [](Collider* collider, const Collider::Bounds& bounds) { collider->SetBounds(bounds); });
 
-        colliderType.set_function("set_bounds",
-                                  [](Collider* collider, const Collider::Bounds& bounds) {
-                                      collider->SetBounds(bounds);
-                                  });
+        colliderType.set_function(
+            "set_bounds", [](Collider* collider, const Collider::Bounds& bounds) { collider->SetBounds(bounds); });
 
         scenePhysicType.set_function("enable_debug", &ScenePhysics::EnableDebug);
     }

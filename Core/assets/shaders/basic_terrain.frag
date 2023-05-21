@@ -12,5 +12,5 @@ void main()
 
      //FragColor = vec4(h, h, h, 1.0);
 
-     FragColor = texture(diffuse_map, TexCoords); // if you want to use textures, un-comment this
+     FragColor = texture(diffuse_map, TexCoords * 20); // if you want to use textures, un-comment this
 }
