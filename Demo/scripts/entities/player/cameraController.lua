@@ -44,7 +44,7 @@ function update()
 
     local terr_entity = scene:get_entity("terrain");
     local terr_scale = terr_entity:get_transform().scale;
-    new_pos.y = (terr_entity:get_terrain():get_height(new_pos.x / terr_scale.x, new_pos.z / terr_scale.z) * terr_scale.y) + 0.15;
+    new_pos.y = (terr_entity:get_terrain():get_height(new_pos.x / terr_scale.x, new_pos.z / terr_scale.z) * terr_scale.y) + 0.1;
     
     camera:set_pos(new_pos.x, new_pos.y, new_pos.z);
     scene.globals.player.pos = new_pos;
