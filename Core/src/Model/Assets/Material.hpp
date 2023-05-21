@@ -30,7 +30,7 @@ namespace Vakol::Model::Assets
     public:
 	    explicit Material(const MaterialSpec& spec) : m_spec(spec)
 	    {
-            //this->m_textures = m_spec.textures;
+            this->m_textures = std::move(m_spec.textures);
 	    }
 
         void AddTexture(const unsigned int texture)

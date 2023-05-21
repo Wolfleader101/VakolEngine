@@ -138,7 +138,7 @@ namespace Vakol::Controller
         textures.insert(textures.end(), std::make_move_iterator(normal_maps.begin()), std::make_move_iterator(normal_maps.end()));
         textures.insert(textures.end(), std::make_move_iterator(emission_maps.begin()), std::make_move_iterator(emission_maps.end()));
 
-        return { to_glm(ambient), to_glm(diffuse), to_glm(specular), to_glm(emission), shininess };
+        return { to_glm(ambient), to_glm(diffuse), to_glm(specular), to_glm(emission), shininess, textures };
     }
 
     auto extract_vertices(const aiMesh& mesh)-> std::vector<Vertex>

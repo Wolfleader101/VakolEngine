@@ -43,9 +43,10 @@ uniform vec3 tint = vec3(1.0);
 
 vec4 BlinnPhong(const vec3 normal, const vec4 color)
 {
-    vec4 ambient = 0.1 * color;
+    vec4 ambient = 0.2 * color;
 
-    vec3 light_dir = normalize(light.position - fs_in.fragPos);
+    //vec3 light_dir = normalize(light.position - fs_in.fragPos);
+    vec3 light_dir = normalize(-light.direction);
     float diff = max(dot(light_dir, normal), 0.0);
     vec4 diffuse = diff * color;
 
@@ -56,12 +57,12 @@ vec4 BlinnPhong(const vec3 normal, const vec4 color)
     float spec = pow(max(dot(normal, halfway_dir), 0.0), material.shininess);
     vec4 specular = vec4(vec3(0.6), 1.0) * spec;
 
-    float distance = length(light.position - fs_in.fragPos);
-    float attenuation = 1.0 / (constant + linear * distance + quadratic * (distance * distance));
-
-    ambient *= attenuation;
-    diffuse *= attenuation;
-    specular *= attenuation;
+//    float distance = length(light.position - fs_in.fragPos);
+//    float attenuation = 1.0 / (constant + linear * distance + quadratic * (distance * distance));
+//
+//    ambient *= attenuation;
+//    diffuse *= attenuation;
+//    specular *= attenuation;
 
     return ambient + diffuse + specular;
 }

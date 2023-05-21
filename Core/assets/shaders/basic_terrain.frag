@@ -1,8 +1,33 @@
 #version 460 core
 out vec4 FragColor;
 
-in vec2 TexCoords;
+struct Light
+{
+    vec3 position;
+    vec3 direction;
+};
+
+layout (std140, binding = 2) uniform LightInfo
+{
+    float constant;
+    float linear;
+    float quadratic;
+
+    float cut_off;
+    float outer_cut_off;
+};
+
+in VS_OUT 
+{
+    vec3 FragPos;
+    vec2 TexCoords;
+} fs_in;
+
 in float Height;
+
+uniform Light light;
+
+uniform sampler2D light_map;
 
 uniform sampler2D layer_1;
 uniform sampler2D layer_2;
@@ -11,23 +36,52 @@ uniform sampler2D layer_4;
 uniform sampler2D layer_5;
 uniform sampler2D layer_6;
 
-uniform vec2 uv_scale = vec2(20.0);
+uniform vec3 VIEW_POS;
 
-const float level_1 = 15.0;
-const float level_2 = 35.0;
-const float level_3 = 55.0;
-const float level_4 = 75.0;
-const float level_5 = 100.0;
-const float level_6 = 125.0;
+uniform vec2 uv_scale = vec2(1.0);
+
+const float level_1 = 20.0;
+const float level_2 = 30.0;
+const float level_3 = 40.0;
+const float level_4 = 60.0;
+const float level_5 = 75.0;
+const float level_6 = 100.0;
+
+vec4 BlinnPhong(vec3 normal, vec4 color)
+{
+    vec4 ambient = 0.6 * color;
+
+    vec3 light_dir = normalize(-light.direction);
+    float diff = max(dot(light_dir, normal), 0.0);
+    vec4 diffuse = diff * color;
+
+    vec3 view_dir = normalize(VIEW_POS - fs_in.FragPos);
+    vec3 reflect_dir = reflect(-light_dir, normal);
+    
+    vec3 halfway_dir = normalize(light_dir + view_dir);
+    float spec = pow(max(dot(normal, halfway_dir), 0.0), 32.0);
+    vec4 specular = vec4(vec3(0.6), 1.0) * spec;
+
+//    float distance = length(light.position - fs_in.FragPos);
+//    float attenuation = 1.0 / (constant + linear * distance + quadratic * (distance * distance));
+//
+//    ambient *= attenuation;
+//    diffuse *= attenuation;
+//    specular *= attenuation;
+
+    return ambient + diffuse + specular;
+}
 
 void main()
 {
-	vec4 color_1 = texture(layer_1, TexCoords * uv_scale);
-	vec4 color_2 = texture(layer_2, TexCoords * uv_scale);
-	vec4 color_3 = texture(layer_3, TexCoords * uv_scale);
-	vec4 color_4 = texture(layer_4, TexCoords * uv_scale);
-	vec4 color_5 = texture(layer_5, TexCoords * uv_scale);
-	vec4 color_6 = texture(layer_6, TexCoords * uv_scale);
+    vec4 lighting = vec4(texture(light_map, fs_in.TexCoords * vec2(1.0, 0.5)).rrr, 1.0);
+
+	vec4 color_1 = texture(layer_1, fs_in.TexCoords * (uv_scale * 5)) * vec4(vec3(0.9), 1.0);
+	vec4 color_2 = texture(layer_2, fs_in.TexCoords * (uv_scale * 5));
+	vec4 color_3 = texture(layer_3, fs_in.TexCoords * (uv_scale * 1));
+	vec4 color_4 = texture(layer_4, fs_in.TexCoords * (uv_scale * 2));
+	vec4 color_5 = texture(layer_5, fs_in.TexCoords * (uv_scale * 4));
+	vec4 color_6 = texture(layer_6, fs_in.TexCoords * (uv_scale * 1.5));
 
 	vec4 result = vec4(vec3(0.0), 1.0);
 
@@ -67,5 +121,5 @@ void main()
         result = mix(color_5, color_6, factor);
     }
 		
-	FragColor = result;
+	FragColor = result * lighting;
 }

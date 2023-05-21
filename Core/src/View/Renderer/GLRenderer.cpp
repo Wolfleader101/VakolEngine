@@ -32,15 +32,13 @@ Distance	Constant	Linear	Quadratic
 */
 
 constexpr glm::vec4 VAKOL_CLASSIC = glm::vec4(0.52941f, 0.80784f, 0.92157f, 1.0f);
-
 constexpr glm::vec4 VAKOL_FOGGY = glm::vec4(0.4f, 0.4f, 0.4f, 1.0);
 constexpr glm::vec4 VAKOL_FOGGY_2 = glm::vec4(0.8f, 0.8f, 0.8f, 0.0);
-
 constexpr glm::vec4 VAKOL_DARK = glm::vec4(0.1f, 0.1f, 0.1f, 1.0f);
 
 constexpr float LIGHT_CONSTANT = 1.0f;
-constexpr float LIGHT_LINEAR = 0.09f;
-constexpr float LIGHT_QUADRATIC = 0.032f;
+constexpr float LIGHT_LINEAR = 0.045;
+constexpr float LIGHT_QUADRATIC = 0.0075f;
 
 const float LIGHT_CUT_OFF = glm::cos(glm::radians(7.5f));
 const float LIGHT_OUTER_CUT_OFF = glm::cos(glm::radians(12.5f));
