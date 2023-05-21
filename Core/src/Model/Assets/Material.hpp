@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <utility>
 #include <vector>
 
 #include "Texture.hpp"
@@ -18,14 +19,16 @@ namespace Vakol::Model::Assets
         glm::vec3 SPECULAR = glm::vec3(0.0f);
         glm::vec3 EMISSIVE = glm::vec3(0.0f);
         float SHININESS = 32.0f;
+
+        std::vector<unsigned int> textures;
     };
 
-    inline MaterialSpec&& DEFAULT = {glm::vec3(1.0f), glm::vec3(0.6f), glm::vec3(0.2f), glm::vec3(0.0f), 32.0f};
+    inline MaterialSpec DEFAULT = {glm::vec3(1.0f), glm::vec3(0.6f), glm::vec3(0.2f), glm::vec3(0.0f), 32.0f, {}};
 
     class Material 
     {
     public:
-	    explicit Material(MaterialSpec spec) : m_spec(std::move(spec))
+	    explicit Material(const MaterialSpec& spec) : m_spec(spec)
 	    {
             //this->m_textures = m_spec.textures;
 	    }

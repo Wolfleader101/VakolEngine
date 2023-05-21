@@ -16,7 +16,7 @@ layout (std140, binding = 1) uniform Matrices
 void main()
 {   
     TexCoords = aTexCoords;
-    Height = aPos.y;
+    Height = ((aPos.y + 16) / 64.0) * 255.0;
 
     gl_Position = PV_MATRIX * MODEL_MATRIX * vec4(aPos, 1.0);
 }
