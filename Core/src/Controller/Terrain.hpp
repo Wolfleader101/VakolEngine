@@ -31,8 +31,8 @@ namespace Vakol::Controller {
         const std::vector<unsigned char>& GetData() const { return this->m_data; };
 
         void SetMinMax(std::pair<float, float>&& minmax) {
-            this->m_min_height = minmax.first;
-            this->m_max_height = minmax.second;
+            this->m_min_height = static_cast<int>(minmax.first);
+            this->m_max_height = static_cast<int>(minmax.second);
         }
         [[nodiscard]] std::pair<float, float> GetMinMax() const { return {this->m_min_height, this->m_max_height}; }
 

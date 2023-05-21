@@ -66,6 +66,10 @@ namespace Vakol::View
         SetBufferSubData(1, 3 * sizeof(float), sizeof(float), &LIGHT_CUT_OFF);
         SetBufferSubData(1, 4 * sizeof(float), sizeof(float), &LIGHT_OUTER_CUT_OFF);
 
+        ATTACHMENT attachment{ {GL_COLOR_ATTACHMENT0, GL_RGB8, GL_RGB, 800, 600}, {GL_DEPTH_STENCIL_ATTACHMENT, GL_DEPTH24_STENCIL8} };
+
+        framebuffers.push_back(std::make_shared<FrameBuffer>(attachment, true));
+
         skybox->Init();
     }
 
@@ -148,9 +152,19 @@ namespace Vakol::View
         skybox->Draw(camera.GetMatrix(PROJECTION_MATRIX), camera.GetMatrix(VIEW_MATRIX));
     }
 
-    void GLRenderer::Update() const 
+    void GLRenderer::Update(const int index) const 
     {
         ClearColor(VAKOL_CLASSIC);
         ClearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        if (index > -1)
+        {
+            framebuffers.at(index)->ClearColor(VAKOL_DARK);
+
+            if (framebuffers.at(index)->HasDepth())
+                framebuffers.at(index)->ClearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            else
+                framebuffers.at(index)->ClearBuffer(GL_COLOR_BUFFER_BIT);
+        }
     }
 }

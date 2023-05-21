@@ -1,8 +1,8 @@
 function init()
     print("Initialising Camera");
 
-    state.speed = 2;
-    state.sprintSpeed = 3;
+    state.speed = 1;
+    state.sprintSpeed = 1.5;
 
     local camera = scene:get_camera();
     local pos = camera:get_pos();
