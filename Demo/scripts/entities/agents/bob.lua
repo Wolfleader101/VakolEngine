@@ -35,16 +35,14 @@ function init()
         local diff = scene.globals.player.pos - entity:get_transform().pos;
         local player_dist = diff:magnitude();
 
-        -- print(diff.x .. " " .. diff.y .. " " .. diff.z)
-        -- print_err(player_dist)
-
-
-        -- if(playerDist < 10) then
-        --     state.fsm:change_state("attacking")
-        -- end
-        if(Input:get_key(KEYS["KEY_2"])) then
-            state.fsm:change_state("moving")
+        if player_dist < 3 then
+            state.fsm:change_state("attacking")
         end
+
+
+        -- if(Input:get_key(KEYS["KEY_2"])) then
+        --     state.fsm:change_state("moving")
+        -- end
     end)
     
     state.fsm:add_state("moving", function()
@@ -58,20 +56,32 @@ function init()
         if(Input:get_key(KEYS["KEY_1"])) then
             state.fsm:change_state("idle")
         end
-
-    --        -- Transition to the 'attacking' state if an enemy is nearby
-    -- if isEnemyNearby() then
-    --     state.fsm:change_state("attacking")
-    -- end
-
-    -- -- Transition to the 'idle' state if Bob reached his destination
-    -- if isDestinationReached() then
-    --     state.fsm:change_state("idle")
-    -- end
     end)
 
     state.fsm:add_state("attacking", function()
-        print("Bob is attacking")
+        state.model:set_animation_state(2); 
+
+        -- Calculate direction vector towards the player
+        local direction = (scene.globals.player.pos - entity:get_transform().pos):normalize();
+
+        -- Move towards the player
+        local speed = 1;  -- Adjust this value as needed, can later be set as global variable based on difficulty
+        local newPos = entity:get_transform().pos + direction * speed * Time.delta_time;
+        entity:get_transform().pos.x = newPos.x;
+        entity:get_transform().pos.z = newPos.z;
+
+        -- Rotate to face the player
+        local targetRotation = math.atan(direction.x, direction.z);  -- Compute target rotation (assuming Y-up coordinate system)
+        targetRotation = targetRotation * (180 / math.pi);  -- Convert from radians to degrees
+        entity:get_transform().rot.y = targetRotation;  -- Set entity's Y rotation to face the player (adjust this according to your coordinate system)
+
+
+        -- If player is no longer within 10m radius, switch back to 'idle' state
+        local diff = scene.globals.player.pos - entity:get_transform().pos;
+        local player_dist = diff:magnitude();
+        if player_dist > 4 then
+            state.fsm:change_state("idle")
+        end
     end)
 
     -- Set the initial state
