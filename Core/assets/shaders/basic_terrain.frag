@@ -117,7 +117,7 @@ void main()
     {
         float delta = level_6 - level_5;
         float factor = (Height - level_5) / delta;
-
+        
         result = mix(color_5, color_6, factor);
     }
 		
