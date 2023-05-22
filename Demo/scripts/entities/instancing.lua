@@ -1,6 +1,7 @@
 function init()
     local TREEAMOUNT = 10;
     local matrices = vector_mat4();
+    local mesh = vector_mesh();
 
     ------------------------------------------------------------------------------------------------
     -- STATIC PROPS
@@ -28,9 +29,10 @@ function init()
         mdl_m = rotate(mdl_m, 0.0, Vector3.new(0.0, 0.0, 1.0));
 
         matrices:add(mdl_m);
+        mesh:add(model:get_mesh(0));
     end
 
-    entity:instantiate_model(model, matrices, TREEAMOUNT);
+    entity:instantiate_model(models, matrices, TREEAMOUNT);
 
     shader:set_vec3v("light.position", Vector3.new(2.0, 2.0, -4.0));
 
