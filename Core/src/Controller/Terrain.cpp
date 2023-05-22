@@ -6,10 +6,10 @@
 #include <cstdlib>
 
 namespace Vakol::Controller {
-    Terrain LoadHeightMapTerrain(std::string&& path, float min, float max) {
+    Terrain LoadHeightMapTerrain(std::string&& path, const float min, const float max) {
         Terrain terrain{};
 
-        terrain.SetMinMax({min, max});
+        terrain.SetMinMax(min, max);
 
         int size;
         const auto data = LoadImage(std::move(path), size, size);
