@@ -2,6 +2,8 @@ function init()
     print("agents scene");
     scene:create_entity("terrain", "entities/terrain/physicsTerrain.lua");
 
+    scene:create_entity("instancing", "entities/instancing.lua");
+
     scene:create_entity("Player Camera Controller", "entities/player/cameraController.lua");
     
     scene:create_entity("Jeff", "entities/agents/jeff.lua");
