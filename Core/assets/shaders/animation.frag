@@ -45,7 +45,7 @@ vec4 BlinnPhong(const vec3 normal, const vec4 color)
 {
     vec4 ambient = 0.1 * color;
 
-    vec3 light_dir = normalize(light.position - fs_in.fragPos);
+    vec3 light_dir = normalize(-light.direction);
     float diff = max(dot(light_dir, normal), 0.0);
     vec4 diffuse = diff * color;
 

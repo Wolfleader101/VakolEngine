@@ -37,7 +37,7 @@ namespace Vakol::View
 
         static void ClearBuffer(unsigned int buffer_bit);
 
-        void Draw([[maybe_unused]] const Controller::Time& time, const Controller::Camera& camera, Model::Components::Transform, const Model::Components::Drawable& drawable) const override;
+        void Draw([[maybe_unused]] const Controller::Time& time, const Controller::Camera& camera, const Model::Components::Transform& transform, const Model::Components::Drawable& drawable) const override;
 
         void Update() const override;
 

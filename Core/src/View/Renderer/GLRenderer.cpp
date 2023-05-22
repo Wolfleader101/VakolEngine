@@ -50,7 +50,7 @@ namespace Vakol::View
     GLRenderer::GLRenderer(const std::shared_ptr<Window>& window) : Renderer(window) 
     {
         glEnable(GL_DEPTH_TEST);
-        //glEnable(GL_CULL_FACE);
+        glEnable(GL_CULL_FACE);
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -95,7 +95,7 @@ namespace Vakol::View
     void GLRenderer::ClearBuffer(const unsigned int buffer_bit)
     { glClear(buffer_bit); }
 
-    void GLRenderer::Draw([[maybe_unused]] const Controller::Time& time, const Controller::Camera& camera, const Model::Components::Transform trans, const Model::Components::Drawable& drawable) const 
+    void GLRenderer::Draw([[maybe_unused]] const Controller::Time& time, const Controller::Camera& camera, const Components::Transform& transform, const Components::Drawable& drawable) const 
     {
         VK_ASSERT(drawable.model_ptr, "\n\nModel ptr is nullptr");
 
@@ -117,13 +117,13 @@ namespace Vakol::View
 
         auto model_matrix = glm::mat4(1.0f); // start off with an identity matrix
 
-        model_matrix = translate(model_matrix, trans.pos);
+        model_matrix = translate(model_matrix, transform.pos);
 
-        model_matrix = rotate(model_matrix, glm::radians(trans.rot.x), glm::vec3(1.0f, 0.0f, 0.0f));
-        model_matrix = rotate(model_matrix, glm::radians(trans.rot.y), glm::vec3(0.0f, 1.0f, 0.0f));
-        model_matrix = rotate(model_matrix, glm::radians(trans.rot.z), glm::vec3(0.0f, 0.0f, 1.0f));
+        model_matrix = rotate(model_matrix, glm::radians(transform.rot.x), glm::vec3(1.0f, 0.0f, 0.0f));
+        model_matrix = rotate(model_matrix, glm::radians(transform.rot.y), glm::vec3(0.0f, 1.0f, 0.0f));
+        model_matrix = rotate(model_matrix, glm::radians(transform.rot.z), glm::vec3(0.0f, 0.0f, 1.0f));
 
-        model_matrix = scale(model_matrix, trans.scale);
+        model_matrix = scale(model_matrix, transform.scale);
 
         SetBufferSubData(0, 3 * sizeof(glm::mat4), sizeof(glm::mat4), value_ptr(model_matrix));
 
@@ -133,7 +133,7 @@ namespace Vakol::View
 
         for (int i = 0; i < model->nMeshes(); ++i) 
         {
-            const auto& mesh = model->meshes().at(i);
+            const auto& mesh = model->mesh(i);
             const auto& material = mesh.GetMaterial();
 
             for (int j = 0; j < material->GetTextureCount(); ++j)
