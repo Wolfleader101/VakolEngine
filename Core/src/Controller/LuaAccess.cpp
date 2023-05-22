@@ -578,4 +578,6 @@ namespace Vakol::Controller {
     std::vector<glm::mat4> create_mat4_vector() { return {}; }
 
     void RegisterOther(sol::state& lua) { lua.set_function("vector_mat4", &create_mat4_vector); }
+
+    void RegisterInstance(sol::state& lua) { lua.set_function("create_instances", &CreateInstances); }
 }  // namespace Vakol::Controller

@@ -5,6 +5,7 @@
 #include "Application.hpp"
 #include "Logger.hpp"
 #include "Scene.hpp"
+#include "Model/Instance.hpp"
 
 namespace Vakol::Controller {
     void RegisterAssetLoader(sol::state& lua);
@@ -18,4 +19,5 @@ namespace Vakol::Controller {
     void RegisterScene(sol::state& lua);
     void RegisterMath(sol::state& lua);
     void RegisterOther(sol::state& lua);
+    void RegisterInstance(sol::state& lua);
 }  // namespace Vakol::Controller
