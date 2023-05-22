@@ -12,7 +12,7 @@ namespace Vakol::Controller {
 
         void SetModel(Model::Assets::Mesh&& mesh) { this->m_model = std::make_shared<Model::Assets::Model>(mesh); }
         void SetModel(Model::Assets::Model&& model) { this->m_model = std::make_shared<Model::Assets::Model>(std::move(model)); }
-        std::shared_ptr<Model::Assets::Model> GetModel() const { return this->m_model; }
+        const std::shared_ptr<Model::Assets::Model>& GetModel() const { return this->m_model; }
 
         void SetData(const unsigned char* data);
 
@@ -70,5 +70,5 @@ namespace Vakol::Controller {
     };
 
     Terrain LoadHeightMapTerrain(std::string&& path, float min, float max);
-    Terrain LoadCLODTerrain(std::string&& path);
+    Terrain LoadCLODTerrain(std::string&& path, float min, float max);
 }  // namespace Vakol::Controller

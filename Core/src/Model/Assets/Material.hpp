@@ -20,7 +20,7 @@ namespace Vakol::Model::Assets
         glm::vec3 EMISSIVE = glm::vec3(0.0f);
         float SHININESS = 32.0f;
 
-        std::vector<unsigned int> textures;
+        std::vector<Texture> textures;
     };
 
     inline MaterialSpec DEFAULT = {glm::vec3(1.0f), glm::vec3(0.6f), glm::vec3(0.2f), glm::vec3(0.0f), 32.0f, {}};
@@ -32,11 +32,11 @@ namespace Vakol::Model::Assets
 
         void AddTexture(Texture& texture) { this->m_textures.push_back(std::move(texture)); }
 
-        [[nodiscard]] const Texture& GetTexture(const int index) const 
+        [[nodiscard]] unsigned int GetTexture(const int index) const 
         { 
             VK_ASSERT(GetTextureCount() > index, "\n\nTexture index out of bounds.");
 
-            return this->m_textures.at(index);
+            return this->m_textures.at(index).GetID();
         }
 
         [[nodiscard]] const std::vector<Texture>& GetTextures() const { return this->m_textures; }

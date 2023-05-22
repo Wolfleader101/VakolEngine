@@ -1,8 +1,10 @@
 function init()
     print("Initialising Terrain");
   
-    local terrain = entity:create_height_map_terrain("coreAssets/textures/Heightmaps/terrain2.raw", 0, 60); -- size
+    --local terrain = entity:create_height_map_terrain("coreAssets/textures/Heightmaps/terrain2.raw", 0, 60); -- size
+    local terrain = entity:create_clod_terrain("coreAssets/textures/Heightmaps/terrain2.raw");
 
+    local heightmap = create_raw_texture("coreAssets/textures/Heightmaps/terrain2.raw");
     local lightmap = create_raw_texture("coreAssets/textures/lightmap.raw");
     
     local layer_1 = create_texture("coreAssets/textures/Terrain/dirt_0.jpg", false, false);
@@ -20,6 +22,7 @@ function init()
     local mesh = model:get_mesh(0);
     local material = mesh:get_material();
 
+    material:add_texture(heightmap);
     material:add_texture(lightmap);
 
     material:add_texture(layer_1);
@@ -33,7 +36,7 @@ function init()
     material:add_texture(layer_9);
     material:add_texture(layer_10);
 
-    model:set_shader("coreAssets/shaders/basic_terrain.prog");
+    model:set_shader("coreAssets/shaders/clod_terrain.prog");
     local shader = model:get_shader();
 
     --shader:set_bool("enable_fog", true);
@@ -42,18 +45,19 @@ function init()
 
     shader:set_vec2v("uv_scale", Vector2.new(10));
 
-    shader:set_int("light_map", 0);
+    shader:set_int("height_map", 0);
+    shader:set_int("light_map", 1);
 
-    shader:set_int("layer_1", 1);
-    shader:set_int("layer_2", 2);
-    shader:set_int("layer_3", 3);
-    shader:set_int("layer_4", 4);
-    shader:set_int("layer_5", 5);
-    shader:set_int("layer_6", 6);
-    shader:set_int("layer_7", 7);
-    shader:set_int("layer_8", 8);
-    shader:set_int("layer_9", 9);
-    shader:set_int("layer_10", 10);
+    shader:set_int("layer_1", 2);
+    shader:set_int("layer_2", 3);
+    shader:set_int("layer_3", 4);
+    shader:set_int("layer_4", 5);
+    shader:set_int("layer_5", 6);
+    shader:set_int("layer_6", 7);
+    shader:set_int("layer_7", 8);
+    shader:set_int("layer_8", 9);
+    shader:set_int("layer_9", 10);
+    shader:set_int("layer_10", 11);
 
     scene:add_terrain_physics(entity);
 

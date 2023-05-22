@@ -6,7 +6,8 @@
 #include <cstdlib>
 
 namespace Vakol::Controller {
-    Terrain LoadHeightMapTerrain(std::string&& path, const float min, const float max) {
+    Terrain LoadHeightMapTerrain(std::string&& path, const float min, const float max)
+	{
         Terrain terrain{};
 
         terrain.SetMinMax(min, max);
@@ -22,8 +23,11 @@ namespace Vakol::Controller {
         return terrain;
     }
 
-    Terrain LoadCLODTerrain(std::string&& path) {
+    Terrain LoadCLODTerrain(std::string&& path, const float min, const float max)
+	{
         Terrain terrain{};
+
+        terrain.SetMinMax(min, max);
 
         int size;
         const auto data = LoadImage(std::move(path), size, size);
@@ -36,7 +40,8 @@ namespace Vakol::Controller {
         return terrain;
     }
 
-    void Terrain::SetData(const unsigned char* data) {
+    void Terrain::SetData(const unsigned char* data)
+	{
         const auto size = static_cast<size_t>(this->m_size);
 
         this->m_data.reserve(size * size);
@@ -45,6 +50,7 @@ namespace Vakol::Controller {
             for (int z = 0; z < this->m_size; ++z) this->m_data.push_back(data[x * m_size + z]);
 
         SetHeightMap();  // used for physics. Need floats. Is duplicating but who is that hurting
+
         delete[] data;
         data = nullptr;
     }
@@ -61,9 +67,9 @@ namespace Vakol::Controller {
                 const auto pixel_offset = m_height_map.data() + (z * m_size + x);
                 const auto y = pixel_offset[0] - (m_max_height - m_min_height) / 2.0f;
 
-                vertices.push_back((-m_size / 2.0f + m_size * x / static_cast<float>(m_size)) * 1.0f);
+                vertices.push_back(-m_size / 2.0f + m_size * x / static_cast<float>(m_size));
                 vertices.push_back(y);
-                vertices.push_back((-m_size / 2.0f + m_size * z / static_cast<float>(m_size)) * 1.0f);
+                vertices.push_back(-m_size / 2.0f + m_size * z / static_cast<float>(m_size));
                 vertices.push_back(x / static_cast<float>(m_size));
                 vertices.push_back(z / static_cast<float>(m_size));
             }
@@ -152,46 +158,24 @@ namespace Vakol::Controller {
         return {vertices, indices, 5 * sizeof(float)};
     }
 
-    Model::Assets::Mesh Terrain::load_clod_terrain_mesh() const {
+    Model::Assets::Mesh Terrain::load_clod_terrain_mesh() const
+	{
         std::vector<float> vertices;
-
-        constexpr auto patch_size = 5 * sizeof(float);  // position (3 floats) + uv (2 floats) = 20 bytes
-
-        vertices.reserve(patch_size * patch_size * patch_size);
-
-        constexpr auto num_patches = static_cast<int>(patch_size);
-
-        for (int i = 0; i <= num_patches - 1; i++) {
-            for (int j = 0; j <= num_patches - 1; j++) {
-                vertices.push_back(-m_size / 2.0f + m_size * j / static_cast<float>(num_patches));  // v.z
-                vertices.push_back(0.0f);                                                           // v.y
-                vertices.push_back(-m_size / 2.0f + m_size * i / static_cast<float>(num_patches));  // v.x
-                vertices.push_back(i / static_cast<float>(num_patches));                            // u
-                vertices.push_back(j / static_cast<float>(num_patches));                            // v
-
-                vertices.push_back(-m_size / 2.0f + m_size * j / static_cast<float>(num_patches));        // v.z
-                vertices.push_back(0.0f);                                                                 // v.y
-                vertices.push_back(-m_size / 2.0f + m_size * (i + 1) / static_cast<float>(num_patches));  // v.x
-                vertices.push_back((i + 1) / static_cast<float>(num_patches));                            // u
-                vertices.push_back(j / static_cast<float>(num_patches));                                  // v
-
-                vertices.push_back(-m_size / 2.0f + m_size * (j + 1) / static_cast<float>(num_patches));  // v.z
-                vertices.push_back(0.0f);                                                                 // v.y
-                vertices.push_back(-m_size / 2.0f + m_size * i / static_cast<float>(num_patches));        // v.x
-                vertices.push_back(i / static_cast<float>(num_patches));                                  // u
-                vertices.push_back((j + 1) / static_cast<float>(num_patches));                            // v
-
-                vertices.push_back(-m_size / 2.0f + m_size * (j + 1) / static_cast<float>(num_patches));  // v.z
-                vertices.push_back(0.0f);                                                                 // v.y
-                vertices.push_back(-m_size / 2.0f + m_size * (i + 1) / static_cast<float>(num_patches));  // v.x
-                vertices.push_back((i + 1) / static_cast<float>(num_patches));                            // u
-                vertices.push_back((j + 1) / static_cast<float>(num_patches));                            // v
-            }
-        }
-
         std::vector<unsigned int> indices;
 
-        return {vertices, indices, num_patches};
+        constexpr auto patch_size = 5 * sizeof(float);
+
+        constexpr auto size = static_cast<int>(patch_size);
+
+        for (int z = 0; z < size; ++z)
+        {
+	        for (int x = 0; x < size; ++x)
+	        {
+		        VK_TRACE()
+	        }
+        }
+
+        return {vertices, indices, patch_size};
     }
 
     void Terrain::GenRandomPoints(Point& p1, Point& p2, const int size) {
@@ -302,7 +286,8 @@ namespace Vakol::Controller {
         return height;
     }
 
-    void Terrain::SetHeightMap() {
+    void Terrain::SetHeightMap()
+	{
         for (float value : m_data) m_height_map.push_back(value);
 
         NormalizeValues(m_height_map, m_size);

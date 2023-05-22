@@ -33,7 +33,7 @@ function init()
         local diff = scene.globals.player.pos - entity:get_transform().pos;
         local player_dist = diff:magnitude();
 
-        if player_dist < 3 then
+        if player_dist < 10 and player_dist > 1 then
             state.fsm:change_state("attacking")
         end
 
@@ -73,11 +73,11 @@ function init()
         targetRotation = targetRotation * (180 / math.pi);  -- Convert from radians to degrees
         entity:get_transform().rot.y = targetRotation;  -- Set entity's Y rotation to face the player (adjust this according to your coordinate system)
 
-
         -- If player is no longer within 10m radius, switch back to 'idle' state
         local diff = scene.globals.player.pos - entity:get_transform().pos;
         local player_dist = diff:magnitude();
-        if player_dist > 10 then
+
+        if player_dist > 10 or player_dist < 1 then
             state.fsm:change_state("idle")
         end
     end)

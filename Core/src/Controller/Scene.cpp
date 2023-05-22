@@ -10,17 +10,18 @@
 #include "LuaAccess.hpp"
 #include "System.hpp"
 
-namespace Vakol::Controller {
-    Scene::Scene(const std::string& name, const std::string& scriptName, LuaState& lua,
-                 std::shared_ptr<Physics::ScenePhysics> SP, bool active)
-        : name(name),
-          scriptName(scriptName),
-          lua(lua),
-          entityList(),
-          scenePhysics(SP),
+namespace Vakol::Controller
+{
+    Scene::Scene(std::string& name, const std::string& scriptName, LuaState& lua, const std::shared_ptr<ScenePhysics>& SP, const bool active)
+        : 
           active(active),
-          cam(glm::vec3(0.0f, 0.0f, 2.0f)),
-          sceneGlobals(lua.GetState().create_table()) {
+          scenePhysics(SP),
+          sceneGlobals(lua.GetState().create_table()),
+          lua(lua),
+          scriptName(scriptName),
+          name(std::move(name)),
+          cam(glm::vec3(0.0f, 0.0f, 2.0f))
+	{
         lua.RunFile("scripts/" + scriptName);
         System::BindScene(*this);
 
@@ -33,14 +34,14 @@ namespace Vakol::Controller {
 
     void Scene::setName(const std::string& newName) { name = newName; }
 
-    Model::Entity Scene::CreateEntity(const std::string tag, const std::string sname) {
+    Entity Scene::CreateEntity(const std::string& tag, const std::string& sname) {
         auto ent = entityList.CreateEntity();
-        ent.GetComponent<Model::Components::Tag>().tag = tag;
-        if (sname.length() != 0) ent.AddComponent<Model::Components::Script>(sname, lua, ent, *this);
+        ent.GetComponent<Tag>().tag = tag;
+        if (sname.length() != 0) ent.AddComponent<Script>(sname, lua, ent, *this);
         return ent;
     }
 
-    void Scene::Update(const Time& time, const std::shared_ptr<View::Renderer> renderer) {
+    void Scene::Update(const Time& time, const std::shared_ptr<View::Renderer>& renderer) {
         lua.RunFile("scripts/" + scriptName);
 
         lua.GetState()["scene"] = this;

@@ -43,7 +43,7 @@ namespace Vakol::Controller
     auto extract_vertices(const aiMesh& mesh)->std::vector<Vertex>;
     auto extract_indices(const aiMesh& mesh)->std::vector<unsigned int>;
     auto extract_bones(const aiMesh& mesh, std::vector<Vertex>& vertices, BoneMap& bone_map)->void;
-    auto extract_textures(const aiScene& scene, const aiMaterial* material, aiTextureType type)->std::vector<unsigned int>;
+    auto extract_textures(const aiScene& scene, const aiMaterial* material, aiTextureType type)->std::vector<Texture>;
 
     auto extract_keyframes(const aiNodeAnim& channel, const Bone& bone_info)->KeyFrame;
     auto extract_animations(const aiScene& scene, const BoneMap& bone_map)->std::vector<Animation>;
@@ -117,7 +117,7 @@ namespace Vakol::Controller
 
     auto process_material(const aiScene& scene, const aiMaterial* material)->MaterialSpec
     {
-        std::vector<unsigned int> textures;
+        std::vector<Texture> textures;
 
         aiColor3D ambient, diffuse, specular, emission;
         float shininess;
@@ -138,7 +138,7 @@ namespace Vakol::Controller
         textures.insert(textures.end(), std::make_move_iterator(normal_maps.begin()), std::make_move_iterator(normal_maps.end()));
         textures.insert(textures.end(), std::make_move_iterator(emission_maps.begin()), std::make_move_iterator(emission_maps.end()));
 
-        return { to_glm(ambient), to_glm(diffuse), to_glm(specular), to_glm(emission), shininess, textures };
+        return { to_glm(ambient), to_glm(diffuse), to_glm(specular), to_glm(emission), shininess, std::move(textures) };
     }
 
     auto extract_vertices(const aiMesh& mesh)-> std::vector<Vertex>
@@ -230,9 +230,9 @@ namespace Vakol::Controller
         }
     }
 
-    auto extract_textures(const aiScene& scene, const aiMaterial* material, const aiTextureType type)->std::vector<unsigned int>
+    auto extract_textures(const aiScene& scene, const aiMaterial* material, const aiTextureType type)->std::vector<Texture>
     {
-        std::vector<unsigned int> textures;
+        std::vector<Texture> textures;
 
         const auto count = material->GetTextureCount(type);
 
@@ -262,7 +262,7 @@ namespace Vakol::Controller
                 }
             }
 
-            textures.push_back(texture.GetID());
+            textures.push_back(std::move(texture));
         }
 
         return textures;

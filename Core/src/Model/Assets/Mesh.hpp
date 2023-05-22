@@ -13,12 +13,12 @@ namespace Vakol::Model::Assets {
         Mesh(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, const size_t size,
 			MaterialSpec spec = DEFAULT)
             : m_vertex_array(std::make_shared<VertexArray>(std::move(vertices), std::move(indices), size)),
-              m_material(std::make_shared<Material>(spec)) {}
+              m_material(std::make_shared<Material>(std::move(spec))) {}
 
         Mesh(std::vector<float>& vertices, std::vector<unsigned int>& indices, const size_t size,
 			MaterialSpec spec = DEFAULT)
             : m_vertex_array(std::make_shared<VertexArray>(Convert(vertices, size), std::move(indices), size)),
-              m_material(std::make_shared<Material>(spec)) {}
+              m_material(std::make_shared<Material>(std::move(spec))) {}
 
         [[nodiscard]] unsigned int GetId() const { return this->m_vertex_array->GetId(); }
 

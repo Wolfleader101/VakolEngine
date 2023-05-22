@@ -5,7 +5,7 @@ layout (location = 1) in vec2 aTexCoords;
 // interface block
 out VS_OUT 
 {
-    vec3 FragPos;
+    vec4 FragCoords;
     vec2 TexCoords;
 } vs_out;
 
@@ -19,9 +19,13 @@ layout (std140, binding = 1) uniform Matrices
     mat4 MODEL_MATRIX;
 };
 
+uniform bool enable_fog = false;
+
 void main()
 {   
-    vs_out.FragPos = vec3(MODEL_MATRIX * vec4(aPos, 1.0));
+    if (enable_fog)
+        vs_out.FragCoords = VIEW_MATRIX * MODEL_MATRIX * vec4(aPos, 1.0);
+
     vs_out.TexCoords = aTexCoords;
 
     Height = ((aPos.y + 16) / 64.0) * 255.0;
