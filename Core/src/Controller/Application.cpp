@@ -122,6 +122,8 @@ namespace Vakol::Controller {
             for (auto& scene : scenes) {
                 if (!scene.active) continue;
 
+                if (!scene.initialized) scene.Init();
+
                 System::BindScene(scene);
                 scene.Update(m_time, m_renderer);
             }

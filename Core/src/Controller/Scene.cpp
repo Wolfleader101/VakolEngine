@@ -20,14 +20,26 @@ namespace Vakol::Controller {
           scenePhysics(SP),
           active(active),
           cam(glm::vec3(0.0f, 0.0f, 2.0f)),
-          sceneGlobals(lua.GetState().create_table()) {
-        lua.RunFile("scripts/" + scriptName);
-        System::BindScene(*this);
+          sceneGlobals() {
+        
+        
 
+        
+    }
+
+    void Scene::Init()
+    {
+        
+        lua.RunFile("scripts/" + scriptName);
+        sceneGlobals = lua.GetState().create_named_table(name);
         lua.GetState()["scene"] = this;
 
         lua.RunFunction("init");
+        initialized = true;
+
+        System::BindScene(*this);
     }
+
 
     const std::string& Scene::getName() const { return name; }
 

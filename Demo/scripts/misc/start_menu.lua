@@ -27,7 +27,7 @@ function update()
     if (Input:get_key(KEYS["KEY_1"])) then
         add_scene("scenes/testScene.lua", "Test Scene");
         print("yessir");
-        scene:set_active(false);
+        --scene:set_active(false);
         print("oof");
     end
 

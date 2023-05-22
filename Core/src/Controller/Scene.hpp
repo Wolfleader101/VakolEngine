@@ -20,6 +20,8 @@ namespace Vakol::Controller {
          */
         Scene(const std::string& name, const std::string& scriptName, LuaState& lua,
               std::shared_ptr<Physics::ScenePhysics> SP, bool active = false);
+
+        void Init();
         /**
          * @brief the entity list of scene
          */
@@ -37,6 +39,7 @@ namespace Vakol::Controller {
         void Deserialize(const std::string& folder);
 
         bool active = false;
+        bool initialized = false;
 
         std::shared_ptr<Physics::ScenePhysics> scenePhysics;
         Camera& GetCamera() { return cam; }
