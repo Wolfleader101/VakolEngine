@@ -315,12 +315,11 @@ namespace Vakol::Controller {
             return model;
         });
 
-        entity_type.set_function("instantiate_model",
-                                 [](const std::shared_ptr<Assets::Model>& model,
+        entity_type.set_function(   "instantiate_model", [](Entity* ent, const std::shared_ptr<Assets::Model>& model,
                                     const sol::as_table_t<std::vector<glm::mat4>>& matrices, int amount) {
-                                     VK_TRACE(matrices.value().size());
-                                     CreateInstances(model->meshes(), matrices.value());
-                                 });
+                                    VK_TRACE(matrices.value().size());
+                                    CreateInstances(model->meshes(), matrices.value());
+                                    });
 
         entity_type.set_function("get_model", [](const Entity* ent) {
             if (ent->HasComponent<Drawable>()) return ent->GetComponent<Drawable>().model_ptr;
