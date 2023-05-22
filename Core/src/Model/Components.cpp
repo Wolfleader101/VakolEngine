@@ -119,7 +119,7 @@ namespace Vakol::Model::Components {
         rp3d::Vector3& min = bounds.min;
 
         // Assuming each vertex is represented by 3 floats (x, y, z).
-        std::vector<Vertex> vertices = model.model_ptr->meshes().begin()->c_vertices();
+        auto& vertices = model.model_ptr->meshes().begin()->vertices();
 
         if (vertices.size() < 3) {
             throw std::runtime_error("Insufficient vertices data");
@@ -129,7 +129,7 @@ namespace Vakol::Model::Components {
         max = min = rp3d::Vector3(position.x, position.y, position.z);
 
         for (auto& msh : model.model_ptr->meshes()) {
-            vertices = msh.c_vertices();
+            vertices = msh.vertices();
 
             for (const auto& vertex : vertices) {
                 const auto temp = to_rp3d(vertex.position);

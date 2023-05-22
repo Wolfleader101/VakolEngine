@@ -289,7 +289,7 @@ namespace Vakol::Controller {
         int z1 = z0 + 1;
 
         // Heights at the four corners
-        auto vertices = m_model->mesh().vertices();
+        auto& vertices = m_model->mesh().vertices();
         float h00 = vertices[(z0 * m_size + x0)].position.y;
         float h10 = vertices[(z0 * m_size + x1)].position.y;
         float h01 = vertices[(z1 * m_size + x0)].position.y;

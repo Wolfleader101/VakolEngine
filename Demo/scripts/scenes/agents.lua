@@ -1,13 +1,13 @@
 function init()
     print("agents scene");
-    scene:create_entity("Player Camera Controller", "entities/player/cameraController.lua");
-    
     scene:create_entity("terrain", "entities/terrain/physicsTerrain.lua");
 
+    scene:create_entity("Player Camera Controller", "entities/player/cameraController.lua");
+    
     scene:create_entity("Jeff", "entities/agents/jeff.lua");
     scene:create_entity("Bob", "entities/agents/bob.lua");
-
 end
+
 
 function update()
     if (Input:get_key_down(KEYS["KEY_Z"])) then

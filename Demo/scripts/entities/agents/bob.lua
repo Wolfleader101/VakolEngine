@@ -94,9 +94,8 @@ end
 
 
 function update()
-        local pos = entity:get_transform().pos;
-        local terr_entity = scene:get_entity("terrain");
-        local terr_scale = terr_entity:get_transform().scale;
-        pos.y = (terr_entity:get_terrain():get_height(pos.x / terr_scale.x, pos.z / terr_scale.z) * terr_scale.y) + 0.01;
     state.fsm:update()
+    local pos = entity:get_transform().pos;
+    local terr_scale = scene.globals.terrain.transform.scale;
+    pos.y = (scene.globals.terrain.terr:get_height(pos.x / terr_scale.x, pos.z / terr_scale.z) * terr_scale.y) + 0.03;
 end
