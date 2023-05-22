@@ -2,7 +2,13 @@
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec2 aTexCoords;
 
-out vec2 TexCoords;
+// interface block
+out VS_OUT 
+{
+    vec3 FragPos;
+    vec2 TexCoords;
+} vs_out;
+
 out float Height;
 
 layout (std140, binding = 1) uniform Matrices
@@ -15,8 +21,10 @@ layout (std140, binding = 1) uniform Matrices
 
 void main()
 {   
-    TexCoords = aTexCoords;
-    Height = aPos.y;
+    vs_out.FragPos = vec3(MODEL_MATRIX * vec4(aPos, 1.0));
+    vs_out.TexCoords = aTexCoords;
+
+    Height = ((aPos.y + 16) / 64.0) * 255.0;
 
     gl_Position = PV_MATRIX * MODEL_MATRIX * vec4(aPos, 1.0);
 }

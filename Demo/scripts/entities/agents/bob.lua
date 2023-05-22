@@ -12,10 +12,10 @@ function init()
 
     local shader = state.model:get_shader(); -- get the shader from the model
 
-    shader:set_vec3v("light.position", Vector3.new(2.0, 2.0, -4.0));
-    -- shader:set_vec3v("light.direction", Vector3.new(math.rad(0.0), math.rad(0.0), math.rad(90.0)));
+    --shader:set_vec3v("light.position", Vector3.new(2.0, 2.0, -4.0));
+    shader:set_vec3v("light.direction", Vector3.new(math.rad(0.0), math.rad(0.0), math.rad(90.0)));
 
-    shader:set_float("material.shininess", 16.0);
+    shader:set_float("material.shininess", 32.0);
     shader:set_vec3v("tint", Vector3.new(0.2, 0.65, 0.9));
 
     shader:set_int("material.diffuse_map", 0);
@@ -23,14 +23,12 @@ function init()
     shader:set_int("material.normal_map", 2);
     shader:set_int("material.emission_map", 3);
 
-
-
     state.fsm = entity:add_fsm();
 
     state.fsm:add_state("idle", function()
         -- print("Bob is idle")
 
-        state.model:set_animation_state(0);
+        state.model:set_animation_state(IDLE_STATE);
 
         local diff = scene.globals.player.pos - entity:get_transform().pos;
         local player_dist = diff:magnitude();
@@ -47,7 +45,7 @@ function init()
     
     state.fsm:add_state("moving", function()
         -- print("Bob is moving")
-        state.model:set_animation_state(2);
+        state.model:set_animation_state(RUN_STATE);
 
         local pos = entity:get_transform().pos;
         pos.x = pos.x;
@@ -59,7 +57,7 @@ function init()
     end)
 
     state.fsm:add_state("attacking", function()
-        state.model:set_animation_state(2); 
+        state.model:set_animation_state(RUN_STATE); 
 
         -- Calculate direction vector towards the player
         local direction = (scene.globals.player.pos - entity:get_transform().pos):normalize();

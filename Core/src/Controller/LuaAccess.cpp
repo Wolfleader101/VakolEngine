@@ -10,8 +10,10 @@
 #include "System.hpp"
 #include "View/GUI/GUIWindow.hpp"
 
-namespace Vakol::Controller {
-    void RegisterMath(sol::state& lua) {
+namespace Vakol::Controller
+{
+    void RegisterMath(sol::state& lua)
+	{
         {
             sol::constructors<glm::vec2(), glm::vec2(float), glm::vec2(float, float)> ctor;  // allow for constructors
 
@@ -139,7 +141,8 @@ namespace Vakol::Controller {
         }
     }
 
-    void RegisterLogger(sol::state& lua) {
+    void RegisterLogger(sol::state& lua)
+	{
         lua.set_function("print", [](const sol::variadic_args& va) {
             if (const auto arg = va[0]; arg.get_type() == sol::type::string)
                 Logger::ScriptPrintTrace(va[0].get<std::string>());
@@ -179,23 +182,20 @@ namespace Vakol::Controller {
 
         lua.set_function("load_model",
                          [](const std::string& path, const float scale = 1.0f, const bool animated = false) {
-                             const auto model = AssetLoader::GetModel(path, scale, animated);
-
-                             if (model == nullptr) return false;
+	                         if (const auto model = AssetLoader::GetModel(path, scale, animated); model == nullptr) return false;
 
                              return true;
                          });
 
         lua.set_function("load_shader", [](const std::string& path) {
-            const auto shader = AssetLoader::GetShader(path);
-
-            if (shader == nullptr) return false;
+	        if (const auto shader = AssetLoader::GetShader(path); shader == nullptr) return false;
 
             return true;
         });
     }
 
-    void RegisterApplication(sol::state& lua, Application* app) {
+    void RegisterApplication(sol::state& lua, Application* app)
+	{
         lua.set_function("add_scene", &Application::AddScene, app);
 
         auto time_type = lua.new_usertype<Time>("Time");
@@ -317,7 +317,8 @@ namespace Vakol::Controller {
 
         entity_type.set_function("instantiate_model",
                                  [](const std::shared_ptr<Assets::Model>& model,
-                                    const sol::as_table_t<std::vector<glm::mat4>>& matrices, int amount) {
+                                    const sol::as_table_t<std::vector<glm::mat4>>& matrices, int amount) 
+								 {
                                      VK_TRACE(matrices.value().size());
                                      CreateInstances(model->meshes(), matrices.value());
                                  });
@@ -383,7 +384,7 @@ namespace Vakol::Controller {
             assert(0);
         });
 
-        entity_type.set_function("get_bounds_from_model", [](Entity* ent) -> void {
+        entity_type.set_function("get_bounds_from_model", [](const Entity* ent) -> void {
             if (ent->HasComponent<Drawable, Collider>()) {
                 const auto& model = ent->GetComponent<Drawable>();
 
@@ -396,11 +397,11 @@ namespace Vakol::Controller {
             }
         });
 
-        entity_type.set_function("get_bounds_from_model", [](Entity* ent) -> void {
+        entity_type.set_function("get_bounds_from_model", [](const Entity* ent) -> void {
             if (ent->HasComponent<Drawable, Collider>()) {
                 const auto& model = ent->GetComponent<Drawable>();
 
-                auto& collider = ent->GetComponent<Components::Collider>();
+                auto& collider = ent->GetComponent<Collider>();
 
                 collider.bounds = GetBounds(model);
             } else {
@@ -409,7 +410,7 @@ namespace Vakol::Controller {
             }
         });
 
-        entity_type.set_function("add_fsm", [&](Entity* ent) -> Components::FSM& {
+        entity_type.set_function("add_fsm", [&](Entity* ent) -> FSM& {
             if (!ent->HasComponent<FSM>()) ent->AddComponent<FSM>(state);
             return ent->GetComponent<FSM>();
         });
