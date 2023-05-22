@@ -5,7 +5,7 @@ function init()
     
     entity:get_transform().pos = Vector3.new(3.0, 0, -7.0);
 
-    state.model = entity:add_model("assets/models/test.glb", 0.001, true) -- get model and add a drawable component
+    state.model = entity:add_model("assets/models/test.glb", 0.003, true) -- get model and add a drawable component
     state.model:set_shader("coreAssets/shaders/animation.prog") -- set the shader on the model (automatically binds it)
 
     state.model:set_animation_state(IDLE_STATE);
@@ -63,7 +63,7 @@ function init()
         local direction = (scene.globals.player.pos - entity:get_transform().pos):normalize();
 
         -- Move towards the player
-        local speed = 1;  -- Adjust this value as needed, can later be set as global variable based on difficulty
+        local speed = 2;  -- Adjust this value as needed, can later be set as global variable based on difficulty
         local newPos = entity:get_transform().pos + direction * speed * Time.delta_time;
         entity:get_transform().pos.x = newPos.x;
         entity:get_transform().pos.z = newPos.z;
@@ -77,7 +77,7 @@ function init()
         -- If player is no longer within 10m radius, switch back to 'idle' state
         local diff = scene.globals.player.pos - entity:get_transform().pos;
         local player_dist = diff:magnitude();
-        if player_dist > 4 then
+        if player_dist > 10 then
             state.fsm:change_state("idle")
         end
     end)

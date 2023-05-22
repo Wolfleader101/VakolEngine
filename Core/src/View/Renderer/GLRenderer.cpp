@@ -133,7 +133,7 @@ namespace Vakol::View
 
         for (int i = 0; i < model->nMeshes(); ++i) 
         {
-            const auto& mesh = model->meshes().at(i);
+            const auto& mesh = model->mesh(i);
             const auto& material = mesh.GetMaterial();
 
             for (int j = 0; j < material->GetTextureCount(); ++j)

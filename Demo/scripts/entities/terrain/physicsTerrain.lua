@@ -1,16 +1,20 @@
 function init()
     print("Initialising Terrain");
   
-    local terrain = entity:create_height_map_terrain("coreAssets/textures/Heightmaps/terrain.raw", 0, 30); -- size
+    local terrain = entity:create_height_map_terrain("coreAssets/textures/Heightmaps/terrain.raw", 0, 60); -- size
 
     local lightmap = create_raw_texture("coreAssets/textures/lightmap.raw");
     
-    local layer_1 = create_texture("coreAssets/textures/extras/clover.png", false, false);
-    local layer_2 = create_texture("coreAssets/textures/extras/grass.png", false, false);
-    local layer_3 = create_texture("coreAssets/textures/extras/grass_dark.png", false, false);
-    local layer_4 = create_texture("coreAssets/textures/extras/cliff_rock.jpg", false, false);
-    local layer_5 = create_texture("coreAssets/textures/extras/rocks.jpg", false, false);
-    local layer_6 = create_texture("coreAssets/textures/extras/snow.png", false, false);
+    local layer_1 = create_texture("coreAssets/textures/Terrain/dirt_0.jpg", false, false);
+    local layer_2 = create_texture("coreAssets/textures/Terrain/dirt_3.jpg", false, false);
+    local layer_3 = create_texture("coreAssets/textures/Terrain/dirt_cracked.jpg", false, false);
+    local layer_4 = create_texture("coreAssets/textures/Terrain/patch_grass_1.jpg", false, false);
+    local layer_5 = create_texture("coreAssets/textures/Terrain/grass_0.png", false, false);
+    local layer_6 = create_texture("coreAssets/textures/Terrain/grass_rock.jpg", false, false);
+    local layer_7 = create_texture("coreAssets/textures/Terrain/rocks_0.jpg", false, false);
+    local layer_8 = create_texture("coreAssets/textures/Terrain/snow_cracks.jpg", false, false);
+    local layer_9 = create_texture("coreAssets/textures/Terrain/snow_0.jpg", false, false);
+    local layer_10 = create_texture("coreAssets/textures/Terrain/snow.png", false, false);
 
     local model = terrain:get_model();
     local mesh = model:get_mesh(0);
@@ -24,12 +28,14 @@ function init()
     material:add_texture(layer_4);
     material:add_texture(layer_5);
     material:add_texture(layer_6);
+    material:add_texture(layer_7);
+    material:add_texture(layer_8);
+    material:add_texture(layer_9);
+    material:add_texture(layer_10);
 
     model:set_shader("coreAssets/shaders/basic_terrain.prog");
     local shader = model:get_shader();
 
-    shader:set_vec3v("light.position",  Vector3.new(0.0, 60.0, 0.0));
-    shader:set_vec3v("light.direction", Vector3.new(math.rad(0.0), math.rad(0.0), math.rad(-90.0)))
     shader:set_vec2v("uv_scale", Vector2.new(10));
 
     shader:set_int("light_map", 0);
@@ -40,6 +46,10 @@ function init()
     shader:set_int("layer_4", 4);
     shader:set_int("layer_5", 5);
     shader:set_int("layer_6", 6);
+    shader:set_int("layer_7", 7);
+    shader:set_int("layer_8", 8);
+    shader:set_int("layer_9", 9);
+    shader:set_int("layer_10", 10);
 
     scene:add_terrain_physics(entity);
 
