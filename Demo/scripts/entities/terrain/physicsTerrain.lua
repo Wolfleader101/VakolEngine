@@ -1,7 +1,7 @@
 function init()
     print("Initialising Terrain");
   
-    local terrain = entity:create_height_map_terrain("coreAssets/textures/Heightmaps/terrain.raw", 0, 30); -- size
+    local terrain = entity:create_height_map_terrain("coreAssets/textures/Heightmaps/terrain_1025.raw", 0, 30); -- size
 
     local diffuse_map = create_texture("coreAssets/textures/grass.png", false, false);
 
