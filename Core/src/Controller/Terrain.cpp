@@ -5,6 +5,8 @@
 #include <algorithm>
 #include <cstdlib>
 
+#include <iostream>
+
 namespace Vakol::Controller {
     Terrain LoadHeightMapTerrain(std::string&& path, const float min, const float max)
 	{
@@ -167,11 +169,29 @@ namespace Vakol::Controller {
 
         constexpr auto size = static_cast<int>(patch_size);
 
-        for (int z = 0; z < size; ++z)
+        for (int i = 0; i < size; ++i)
         {
-	        for (int x = 0; x < size; ++x)
+	        for (int j = 0; j < size; ++j)
 	        {
-		        VK_TRACE()
+                const auto pixel_offset = m_height_map.data() + (i * size + j);
+                const auto height = pixel_offset[0] - (m_max_height - m_min_height) / 2.0f;
+
+                for (int k = 0; k < Model::NUM_PATCH_PTS; ++k)
+                {
+                    const auto x = -m_size / 2.0f + m_size * static_cast<float>(i * 3 + k % 2) / static_cast<float>(size);
+                    const auto z = -m_size / 2.0f + m_size * static_cast<float>(j * 3 + k / 2) / static_cast<float>(size);
+
+                    VK_TRACE("X: {0}, Z: {1} | i = {2}", x, z, k);
+
+                	const auto u = i / (static_cast<float>(size) * 3.0f);
+					const auto v = j / (static_cast<float>(size) * 3.0f);
+
+                    VK_TRACE("U: {0}, V: {1}", u, v);
+
+                    if (k == 3)
+                        std::cout << std::endl;
+                }
+
 	        }
         }
 

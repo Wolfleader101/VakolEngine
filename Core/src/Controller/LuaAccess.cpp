@@ -272,9 +272,10 @@ namespace Vakol::Controller
 
 	         ent->AddComponent<Terrain>(LoadHeightMapTerrain(std::move(path), min, max));
 
-	         auto terrain = ent->GetComponent<Terrain>();
+	         auto& terrain = ent->GetComponent<Terrain>();
 
-	         if (const auto model = terrain.GetModel()) {
+	         if (const auto& model = terrain.GetModel()) 
+             {
 	             model->mesh().SetDrawMode(DRAW_MODE::STRIPS);
 	             model->mesh().SetDrawType(DRAW_TYPE::ELEMENTS);
 
@@ -288,16 +289,17 @@ namespace Vakol::Controller
 	         return terrain;
 	     });
 
-        entity_type.set_function("create_clod_terrain", [](Entity* ent, std::string&& path, const float min, const float max) {
+        entity_type.set_function("create_clod_terrain", [](Entity* ent, std::string&& path, const float min, const float max) 
+        {
             if (!ent->HasComponent<Drawable>()) ent->AddComponent<Drawable>();
 
             if (ent->HasComponent<Terrain>()) ent->RemoveComponent<Terrain>();
 
             ent->AddComponent<Terrain>(LoadCLODTerrain(std::move(path), min, max));
 
-            auto terrain = ent->GetComponent<Terrain>();
+            auto& terrain = ent->GetComponent<Terrain>();
 
-            if (const auto model = terrain.GetModel()) {
+            if (const auto& model = terrain.GetModel()) {
                 model->mesh().SetDrawMode(DRAW_MODE::PATCHES);
                 model->mesh().SetDrawType(DRAW_TYPE::ARRAYS);
 

@@ -2,7 +2,7 @@ function init()
     print("Initialising Terrain");
   
     --local terrain = entity:create_height_map_terrain("coreAssets/textures/Heightmaps/terrain2.raw", 0, 60); -- size
-    local terrain = entity:create_clod_terrain("coreAssets/textures/Heightmaps/terrain2.raw");
+    local terrain = entity:create_clod_terrain("coreAssets/textures/Heightmaps/terrain2.raw", 0, 60);
 
     local heightmap = create_raw_texture("coreAssets/textures/Heightmaps/terrain2.raw");
     local lightmap = create_raw_texture("coreAssets/textures/lightmap.raw");
