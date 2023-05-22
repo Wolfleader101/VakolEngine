@@ -11,16 +11,16 @@ namespace Vakol::Model::Assets {
         Mesh() = default;
 
         Mesh(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, const size_t size,
-             const MaterialSpec& spec = DEFAULT)
+			MaterialSpec spec = DEFAULT)
             : m_vertex_array(std::make_shared<VertexArray>(std::move(vertices), std::move(indices), size)),
               m_material(std::make_shared<Material>(spec)) {}
 
         Mesh(std::vector<float>& vertices, std::vector<unsigned int>& indices, const size_t size,
-             const MaterialSpec& spec = DEFAULT)
+			MaterialSpec spec = DEFAULT)
             : m_vertex_array(std::make_shared<VertexArray>(Convert(vertices, size), std::move(indices), size)),
               m_material(std::make_shared<Material>(spec)) {}
 
-        unsigned int GetId() const { return this->m_vertex_array->GetId(); }
+        [[nodiscard]] unsigned int GetId() const { return this->m_vertex_array->GetId(); }
 
         void SetMaterial(MaterialSpec& spec) {
             if (!this->m_material) this->m_material = std::make_shared<Material>(std::move(spec));
@@ -29,15 +29,15 @@ namespace Vakol::Model::Assets {
             if (!this->m_material) this->m_material = std::make_shared<Material>(std::move(spec));
         }
 
-        const std::shared_ptr<Material>& GetMaterial() const { return this->m_material; }
+        [[nodiscard]] const std::shared_ptr<Material>& GetMaterial() const { return this->m_material; }
 
-        const std::vector<Vertex>& c_vertices() const { return this->m_vertex_array->GetConstVertices(); }
+        [[nodiscard]] const std::vector<Vertex>& c_vertices() const { return this->m_vertex_array->GetConstVertices(); }
 
-        std::vector<Vertex>& vertices() const { return this->m_vertex_array->GetVertices(); }
-        const std::vector<unsigned int>& indices() const { return this->m_vertex_array->GetIndices(); }
+        [[nodiscard]] std::vector<Vertex>& vertices() const { return this->m_vertex_array->GetVertices(); }
+        [[nodiscard]] const std::vector<unsigned int>& indices() const { return this->m_vertex_array->GetIndices(); }
 
-        int nVertices() const { return this->m_vertex_array->GetVertexCount(); }
-        int nIndices() const { return this->m_vertex_array->GetIndexCount(); }
+        [[nodiscard]] int nVertices() const { return this->m_vertex_array->GetVertexCount(); }
+        [[nodiscard]] int nIndices() const { return this->m_vertex_array->GetIndexCount(); }
 
         /// @brief .
         /// @param mode the mode of drawing: DEFAULT, INSTANCED, STRIPS, PATCHES
@@ -53,7 +53,7 @@ namespace Vakol::Model::Assets {
 
         void Draw() const { this->m_vertex_array->Draw(); }
 
-       private:
+    private:
         std::shared_ptr<VertexArray> m_vertex_array;
 
         std::shared_ptr<Material> m_material;

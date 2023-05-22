@@ -28,24 +28,18 @@ namespace Vakol::Model::Assets
     class Material 
     {
     public:
-	    explicit Material(const MaterialSpec& spec) : m_spec(spec)
-	    {
-            this->m_textures = std::move(m_spec.textures);
-	    }
+        explicit Material(MaterialSpec&& spec) : m_spec(std::move(spec)) { this->m_textures = std::move(m_spec.textures); }
 
-        void AddTexture(const unsigned int texture)
-	    {
-            this->m_textures.push_back(texture);
-	    }
+        void AddTexture(Texture& texture) { this->m_textures.push_back(std::move(texture)); }
 
-        [[nodiscard]] unsigned int GetTexture(const int index) const 
+        [[nodiscard]] const Texture& GetTexture(const int index) const 
         { 
             VK_ASSERT(GetTextureCount() > index, "\n\nTexture index out of bounds.");
 
             return this->m_textures.at(index);
         }
 
-        [[nodiscard]] std::vector<unsigned int> GetTextures() const { return this->m_textures; }
+        [[nodiscard]] const std::vector<Texture>& GetTextures() const { return this->m_textures; }
         [[nodiscard]] int GetTextureCount() const { return static_cast<int>(this->m_textures.size()); }
 
         void SetAmbientColor(const float r, const float g, const float b)  { this->m_spec.AMBIENT = glm::vec3(r,g,b); }
@@ -60,6 +54,6 @@ namespace Vakol::Model::Assets
 
     private:
         MaterialSpec m_spec;
-        std::vector<unsigned int> m_textures;
+        std::vector<Texture> m_textures;
     };
 }

@@ -6,10 +6,10 @@
 #include <cstdlib>
 
 namespace Vakol::Controller {
-    Terrain LoadHeightMapTerrain(std::string&& path, float min, float max) {
+    Terrain LoadHeightMapTerrain(std::string&& path, const float min, const float max) {
         Terrain terrain{};
 
-        terrain.SetMinMax({min, max});
+        terrain.SetMinMax(min, max);
 
         int size;
         const auto data = LoadImage(std::move(path), size, size);
@@ -289,7 +289,7 @@ namespace Vakol::Controller {
         int z1 = z0 + 1;
 
         // Heights at the four corners
-        auto vertices = m_model->mesh().vertices();
+        auto& vertices = m_model->mesh().vertices();
         float h00 = vertices[(z0 * m_size + x0)].position.y;
         float h10 = vertices[(z0 * m_size + x1)].position.y;
         float h01 = vertices[(z1 * m_size + x0)].position.y;

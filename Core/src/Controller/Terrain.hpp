@@ -11,9 +11,7 @@ namespace Vakol::Controller {
         Terrain() = default;
 
         void SetModel(Model::Assets::Mesh&& mesh) { this->m_model = std::make_shared<Model::Assets::Model>(mesh); }
-        void SetModel(Model::Assets::Model&& model) {
-            this->m_model = std::make_shared<Model::Assets::Model>(std::move(model));
-        }
+        void SetModel(Model::Assets::Model&& model) { this->m_model = std::make_shared<Model::Assets::Model>(std::move(model)); }
         std::shared_ptr<Model::Assets::Model> GetModel() const { return this->m_model; }
 
         void SetData(const unsigned char* data);
@@ -28,17 +26,20 @@ namespace Vakol::Controller {
         Model::Assets::Mesh load_clod_terrain_mesh() const;
 
         const std::vector<float>& GetHeightMap() const { return this->m_height_map; }
-        const std::vector<unsigned char>& GetData() const { return this->m_data; };
+        const std::vector<unsigned char>& GetData() const { return this->m_data; }
 
-        void SetMinMax(std::pair<float, float>&& minmax) {
-            this->m_min_height = static_cast<int>(minmax.first);
-            this->m_max_height = static_cast<int>(minmax.second);
+        void SetMinMax(const float min, const float max)
+    	{
+            this->m_min_height = min;
+            this->m_max_height = max;
         }
-        [[nodiscard]] std::pair<float, float> GetMinMax() const { return {this->m_min_height, this->m_max_height}; }
 
-       private:
-        Model::Assets::Mesh load_fault_formation_mesh(const int size, const int iterations, const float filter,
-                                                      const bool random, const int minHeight, const int maxHeight);
+        [[nodiscard]] float GetMinHeight() const { return static_cast<float>(this->m_min_height); }
+        [[nodiscard]] float GetMaxHeight() const { return static_cast<float>(this->m_max_height); }
+
+    private:
+        Model::Assets::Mesh load_fault_formation_mesh( int size, int iterations, float filter,
+                                                       bool random, int minHeight, int maxHeight);
 
         struct Point {
             int x = 0;
@@ -61,8 +62,8 @@ namespace Vakol::Controller {
 
         int m_size = 0;
 
-        int m_min_height = 0;
-        int m_max_height = 0;
+        float m_min_height = 0.0f;
+        float m_max_height = 0.0f;
 
         std::vector<float> m_height_map;
         std::vector<unsigned char> m_data;
