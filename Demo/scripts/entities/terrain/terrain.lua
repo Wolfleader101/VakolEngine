@@ -39,6 +39,8 @@ function init()
     shader:set_int("layer_4", 4);
     shader:set_int("layer_5", 5);
     shader:set_int("layer_6", 6);
+
+    scene.globals.terrain = {transform = entity:get_transform(), terr = entity:get_terrain()};
 end
 
 function update()
