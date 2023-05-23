@@ -6,9 +6,9 @@ function start_menu()
 
     GUI:add_text("---- MENU ----");
 
-    GUI:add_text("1 - Start Game");
+    GUI:add_text("1 - Start/Continue Game");
     GUI:add_text("2 - Options");
-    GUI:add_text("esc - Exit");
+    GUI:add_text("ESC - Exit");
 
     GUI:end_window();
     
@@ -26,7 +26,13 @@ function update()
     
     if (Input:get_key_down(KEYS["KEY_1"])) then
         scene:set_active(false);
-        add_scene("scenes/testScene.lua", "Test Scene");
+
+        local game = get_scene("Test Scene");
+        game:set_active(true);
+    end
+
+    if(Input:get_key_down(KEYS["KEY_ESC"])) then
+        app_run(false);
     end
 end
 

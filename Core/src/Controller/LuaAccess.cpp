@@ -195,7 +195,10 @@ namespace Vakol::Controller {
     }
 
     void RegisterApplication(sol::state& lua, Application* app) {
+
+        lua.set_function("app_run", &Application::SetRunning, app);
         lua.set_function("add_scene", &Application::AddScene, app);
+        lua.set_function("get_scene", &Application::GetScene, app);
 
         auto time_type = lua.new_usertype<Time>("Time");
         time_type["delta_time"] = &Time::deltaTime;
@@ -228,7 +231,7 @@ namespace Vakol::Controller {
             Input::KEY::KEY_O, "KEY_P", Input::KEY::KEY_P, "KEY_Q", Input::KEY::KEY_Q, "KEY_R", Input::KEY::KEY_R,
             "KEY_S", Input::KEY::KEY_S, "KEY_T", Input::KEY::KEY_T, "KEY_U", Input::KEY::KEY_U, "KEY_V",
             Input::KEY::KEY_V, "KEY_W", Input::KEY::KEY_W, "KEY_X", Input::KEY::KEY_X, "KEY_Y", Input::KEY::KEY_Y,
-            "KEY_Z", Input::KEY::KEY_Z, "KEY_LEFT_SHIFT", Input::KEY::KEY_LEFT_SHIFT);
+            "KEY_Z", Input::KEY::KEY_Z, "KEY_LEFT_SHIFT", Input::KEY::KEY_LEFT_SHIFT, "KEY_ESC", Input::KEY::KEY_ESCAPE);
     }
 
     void RegisterEntity(LuaState& state, sol::state& lua) {

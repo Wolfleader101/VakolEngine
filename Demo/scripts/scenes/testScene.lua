@@ -31,4 +31,11 @@ function update()
     GUI:add_text("ESC - Exit");
 
     GUI:end_window();
+
+    if(Input:get_key_down(KEYS["KEY_ESC"])) then
+        scene:set_active(false);
+
+        local menu = get_scene("Start Scene");
+        menu:set_active(true);
+    end
 end

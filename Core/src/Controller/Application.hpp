@@ -73,6 +73,9 @@ namespace Vakol::Controller {
         const int GetHeight() const { return m_window->GetHeight(); }
 
         void AddScene(std::string scriptName, std::string scene_name = "");
+        Scene& GetScene(const std::string& sceneName);
+
+        void SetRunning(bool run) { m_running = run; }
 
         const Time& GetTime() const { return m_time; }
 

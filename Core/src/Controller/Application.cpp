@@ -144,6 +144,19 @@ namespace Vakol::Controller {
                                true));
     }
 
+    Scene& Application::GetScene(const std::string& sceneName)
+    {
+	    for (auto& scene : scenes)
+	    {
+	    	if (scene.getName() == sceneName) return scene;
+		}
+
+        VK_CRITICAL("Scene: {0} could not be found.", sceneName);
+		assert(false);
+    }
+
+
+
     void Application::OnEvent(Event& ev) {
         EventDispatcher dispatcher(ev);
         dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
@@ -178,12 +191,8 @@ namespace Vakol::Controller {
     }
 
     bool Application::OnKeyPressed(KeyPressedEvent& kev) {
-        if (kev.GetKeyCode() == GLFW_KEY_ESCAPE || kev.GetKeyCode() == GLFW_KEY_X) {
-            m_running = false;
-            return true;
-        }
-
-        if (kev.GetKeyCode() == GLFW_KEY_K) {
+        
+    	if (kev.GetKeyCode() == GLFW_KEY_K) {
             m_renderer->ToggleWireframe();
         }
 
