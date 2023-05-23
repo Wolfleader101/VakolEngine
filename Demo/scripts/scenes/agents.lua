@@ -15,6 +15,8 @@ function update()
 
     GUI:add_text("GAME FPS: " .. Time.fps);
     GUI:add_text("Bob State:  " .. scene.globals.bobState:get_state());
+    GUI:add_text("Key '0' " .. " Pause Animation");
+    GUI:add_text("Key '9' " .. " Reset Animation");
 
     GUI:end_window();
 end

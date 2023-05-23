@@ -344,6 +344,8 @@ namespace Vakol::Controller
 
         model_type.set_function("set_animation_state", &Assets::Model::SetAnimationState);
         model_type.set_function("update_animation", &Assets::Model::UpdateAnimation);
+        model_type.set_function("blend_animations", &Assets::Model::BlendAnimations);
+
 
         model_type.set_function("reset_current_animation", sol::resolve<void()>(&Assets::Model::ResetAnimation));
         model_type.set_function("reset_animation", sol::resolve<void(int)>(&Assets::Model::ResetAnimation));

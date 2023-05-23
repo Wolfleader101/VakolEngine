@@ -196,7 +196,7 @@ namespace Vakol::Model::Assets
 		Animation() = default;
 
 		Animation(const glm::mat4& root_inverse, std::vector<AnimNode>&& nodes, const unsigned int bone_count, const float duration, const float tps)
-			: global_inverse(root_inverse), m_transforms(MAX_BONE_COUNT, glm::mat4(1.0f)), nodes(std::move(nodes)), bone_count(bone_count), duration(duration), ticks_per_second(tps)
+			: global_inverse(root_inverse), m_transforms(MAX_BONE_COUNT, glm::mat4(1.0f)), m_nodes(std::move(nodes)), bone_count(bone_count), duration(duration), ticks_per_second(tps)
 		{
 			VK_ASSERT(bone_count <= MAX_BONE_COUNT, "\n\nTOO MANY DAMN BONES!!");
 		}
@@ -206,13 +206,13 @@ namespace Vakol::Model::Assets
 			current_time += ticks_per_second * delta_time; // Update the current time based on the ticks per second and delta time
 			current_time = fmod(current_time, duration); // Wrap the current time within the duration of the animation
 
-			for (int i = 0, count = static_cast<int>(nodes.size()); i < count; ++i)
+			for (int i = 0, count = numNodes(); i < count; ++i)
 			{
-				auto& [bone, bone_transform, parent, node_transform] = nodes[i];
+				auto& [bone, bone_transform, parent, node_transform] = m_nodes.at(i);
 				VK_ASSERT(i > parent, "\n\nNode index must be greater than parent index!"); // Assert that the node index is greater than its parent index
 
-				const glm::mat4& transform = bone ? bone->interpolate_frames_at(current_time) : node_transform; // Interpolate the transform based on the bone or node animation
-				const glm::mat4& parent_transform = parent >= 0 ? nodes[parent].bone_transform : glm::mat4(1.0f); // Get the parent's transform or use the identity matrix if no parent
+				const auto& transform = bone ? bone->interpolate_frames_at(current_time) : node_transform; // Interpolate the transform based on the bone or node animation
+				const auto& parent_transform = parent >= 0 ? m_nodes.at(parent).bone_transform : glm::mat4(1.0f); // Get the parent's transform or use the identity matrix if no parent
 
 				bone_transform = parent_transform * transform; // Compute the final bone transform by combining the parent and current transform
 
@@ -225,20 +225,67 @@ namespace Vakol::Model::Assets
 			}
 		}
 
+		void BlendAnimations(Animation& first, Animation& second, const float blend_factor, const float delta_time)
+		{
+			// blend current time based on the blend factor
+			current_time = blend_factor * first.duration + (1.0f - blend_factor) * second.duration;
+			current_time += ticks_per_second * delta_time;
+
+			const float blended_duration = blend_factor * first.duration + (1.0f - blend_factor) * second.duration;
+			current_time = fmod(current_time, blended_duration);
+
+			for (int i = 0; i < numNodes(); ++i)
+			{
+				auto& [bone, bone_transform, parent, node_transform] = first.m_nodes[i];
+				auto& [other_bone, other_bone_transform, other_parent, other_node_transform] = second.m_nodes[i];
+				VK_ASSERT(i > parent, "\n\nNode index must be greater than parent index!"); // Assert that the node index is greater than its parent index
+				VK_ASSERT(i > other_parent, "\n\nNode index must be greater than parent index!"); // Assert that the node index is greater than its parent index
+
+				// Interpolate the bone transformations from both animations
+				const auto& transform_0 = bone ? bone->interpolate_frames_at(current_time) : node_transform;
+				const auto& transform_1 = other_bone ? other_bone->interpolate_frames_at(current_time) : other_bone_transform;
+
+				const auto interpolated_transform = mix(transform_0, transform_1, blend_factor);
+
+				// Combine the interpolated transform with the parent's transform
+				const auto& parent_transform = parent >= 0 ? first.m_nodes.at(parent).bone_transform : glm::mat4(1.0f);
+				const auto& blended_transform = parent_transform * interpolated_transform;
+
+				if (!bone && !other_bone) continue;
+
+				if (bone)
+				{
+					const size_t bone_index = bone->index;
+					m_transforms[bone_index] = global_inverse * blended_transform * bone->offset;
+					VK_ASSERT(bone_index < m_transforms.size(), "\n\nTOO MANY BONES!");
+				}
+
+				if (other_bone)
+				{
+					const size_t bone_index = other_bone->index;
+					m_transforms[bone_index] = global_inverse * blended_transform * other_bone->offset;
+					VK_ASSERT(bone_index < m_transforms.size(), "\n\nTOO MANY BONES!");
+				}
+			}
+		}
+
+
 		[[nodiscard]] const std::vector<glm::mat4>& transforms() const { return m_transforms; }
 
 		void ResetAnimation() { current_time = 0.0f; }
 
 		[[nodiscard]] const glm::mat4& nTransform(const int i) const { return m_transforms.at(i); }
 
+		[[nodiscard]] auto numNodes() const -> int { return static_cast<int>(m_nodes.size()); }
 		[[nodiscard]] auto numTransforms() const -> int { return static_cast<int>(m_transforms.size()); }
 
 	private:
 		glm::mat4 global_inverse{};
 		std::vector<glm::mat4> m_transforms;
-		std::vector<AnimNode> nodes;
+		std::vector<AnimNode> m_nodes;
 
 		[[maybe_unused]] unsigned int bone_count = 0;
+		[[maybe_unused]] int node_count = 0;
 
 		float current_time = 0.0f;
 		float duration = 0.0f;
