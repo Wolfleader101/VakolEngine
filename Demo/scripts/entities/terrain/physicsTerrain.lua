@@ -36,7 +36,7 @@ function init()
     model:set_shader("coreAssets/shaders/basic_terrain.prog");
     local shader = model:get_shader();
 
-    shader:set_bool("enable_fog", true);
+    shader:set_bool("enable_fog", false);
     shader:set_float("FOG_DENSITY", 0.025);
     shader:set_vec4v("FOG_COLOR", Vector4.new(1.0, 1.0, 1.0, 0.0));
 
