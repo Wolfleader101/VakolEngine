@@ -39,7 +39,7 @@ namespace Vakol::Controller {
         /**
          * @brief destructor of the application
          */
-        ~Application();
+        ~Application() = default;
 
         /**
          * @brief run the application

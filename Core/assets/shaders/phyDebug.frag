@@ -1,12 +1,12 @@
-#version 330 core
+#version 460 core
 
 // In variables
 in vec3 color;
 
 // Out variables
-out vec4 colorOut;
+out vec4 FragColor;
 
-void main() {
-
-   colorOut = vec4(color, 1.0);
+void main() 
+{
+   FragColor = vec4(color, 1.0);
 }

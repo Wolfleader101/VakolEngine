@@ -14,25 +14,28 @@
 
 using namespace Components;
 
-namespace Vakol::Controller {
+namespace Vakol::Controller
+{
     entt::registry* System::m_registry = nullptr;
     std::shared_ptr<ScenePhysics> System::m_SP = nullptr;
-    Controller::EntityList* System::Entlist = nullptr;
+    EntityList* System::Entlist = nullptr;
 
-    void System::BindScene(Scene& scene) {
+    void System::BindScene(Scene& scene)
+	{
         m_registry = &scene.entityList.m_Registry;
         m_SP = scene.scenePhysics;
         Entlist = &scene.entityList;
     }
 
-    void System::Drawable_Update(const Time& time, const Controller::Camera& camera,
-                                 const std::shared_ptr<View::Renderer> renderer) {
-        m_registry->view<Components::Transform, Components::Drawable>().each(
-            [&](auto& trans, Components::Drawable& drawable) { renderer->Draw(time, camera, trans, drawable); });
+    void System::Drawable_Update(const Time& time, const Camera& camera, const std::shared_ptr<View::Renderer>& renderer)
+	{
+        m_registry->view<Transform, Drawable>().each([&](const auto& transform, const Drawable& drawable) { renderer->Draw(time, camera, transform, drawable); });
     }
 
-    void System::Script_Update(LuaState& lua, EntityList& list, Scene* scene) {
-        m_registry->view<Components::Script>().each([&](auto entity_id, auto& script) {
+    void System::Script_Update(LuaState& lua, EntityList& list, Scene* scene)
+	{
+        m_registry->view<Script>().each([&](auto entity_id, auto& script) 
+        {
             lua.RunFile("scripts/" + script.script_name);
 
             lua.GetState()["scene"] = scene;
@@ -43,16 +46,21 @@ namespace Vakol::Controller {
         });
     }
 
-    void System::Physics_Init() {
-        auto view = m_registry->view<Components::RigidBody>();
+    void System::Physics_Init()
+	{
+		const auto view = m_registry->view<RigidBody>();
 
-        for (auto entity : view) {
-            Physics_InitEntity(Entlist->GetEntity((uint32_t)entity));
+        for (auto entity : view) 
+        {
+            auto&& ent = Entlist->GetEntity(static_cast<uint32_t>(entity));
+            Physics_InitEntity(ent);
         }
     }
 
-    void System::Physics_UpdateTransforms(float factor) {
-        m_registry->view<Transform, RigidBody>().each([&](auto& trans, auto& rigid) {
+    void System::Physics_UpdateTransforms(const float factor)
+	{
+        m_registry->view<Transform, RigidBody>().each([&](auto& trans, auto& rigid) 
+        {
             rp3d::Transform curr_transform = rigid.RigidBodyPtr->getTransform();
 
             // Compute the interpolated transform of the rigid body
@@ -66,13 +74,14 @@ namespace Vakol::Controller {
 
             auto& rp3dQuat = interpolatedTransform.getOrientation();
 
-            glm::quat glmQuat(rp3dQuat.w, rp3dQuat.x, rp3dQuat.y, rp3dQuat.z);
+            const glm::quat glmQuat(rp3dQuat.w, rp3dQuat.x, rp3dQuat.y, rp3dQuat.z);
 
             trans.rot = glm::eulerAngles(glmQuat);
         });
     }
 
-    void System::Physics_SerializationPrep() {
+    void System::Physics_SerializationPrep()
+	{
         m_registry->view<RigidBody, Transform>().each(  // can deduce that a collider can't exist without a rigidbody
             [&](RigidBody& rigid, const Transform& trans) {
                 if (rigid.RigidBodyPtr) {

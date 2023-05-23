@@ -52,8 +52,6 @@ unsigned int LoadGLTexture(std::vector<const char*>&& faces, const bool gamma, c
 
         delete[] data;
         data = nullptr;
-
-        glBindTexture(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0); // unbind individual faces
     }
 
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);

@@ -24,7 +24,8 @@ namespace Vakol::Model::Components {
      * @brief store the position, rotation, and scale of an entity
      *
      */
-    struct Transform {
+    struct Transform
+	{
         /**
          * @brief Construct a new Transform object
          *
@@ -74,15 +75,16 @@ namespace Vakol::Model::Components {
      * @brief Component storing a string describing the entity
      *
      */
-    struct Tag {
+    struct Tag
+	{
         /**
          * @brief Returns bool indicating if string is empty
          *
          */
-        bool IsEmpty() const { return tag.size() == 0; }
+        [[nodiscard]] bool IsEmpty() const { return tag.empty(); }
 
         Tag() = default;
-        explicit Tag(const std::string&);
+        explicit Tag(std::string&);
 
         std::string tag; /**< String object containing data*/
 
@@ -128,7 +130,7 @@ namespace Vakol::Model::Components {
         sol::table state;
 
         Script() = default;
-        explicit Script(const std::string& name);
+        explicit Script(std::string& name);
 
         Script(const std::string& script, Controller::LuaState& lua, Model::Entity& entity, Controller::Scene& scene);
 
@@ -142,10 +144,11 @@ namespace Vakol::Model::Components {
      * @brief a finite state machine that can be controlled in lua
      *
      */
-    struct FSM {
-        FSM(Controller::LuaState& lua);
+    struct FSM
+	{
+		explicit FSM(Controller::LuaState& lua);
 
-        void AddState(const std::string& stateName, sol::function callback);
+        void AddState(const std::string& stateName, const sol::function& callback);
 
         void ChangeState(const std::string& stateName);
 
@@ -153,7 +156,7 @@ namespace Vakol::Model::Components {
 
         void Update();
 
-       private:
+    private:
         std::string currentState;
         sol::table states;
         Controller::LuaState& lua;

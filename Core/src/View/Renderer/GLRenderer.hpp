@@ -8,7 +8,9 @@
 namespace Vakol::View 
 {
     using Model::Skybox;
+
     using Model::Buffer;
+    using Model::FrameBuffer;
 
     class GLRenderer final : public Renderer 
     {
@@ -25,11 +27,14 @@ namespace Vakol::View
         // Same function as previous, allows the user to pre-store data in the buffer beforehand (useful if you don't need to update the data every frame)
         void AddBuffer(unsigned int type, int size, int binding, const void* data, unsigned int usage);
 
+        void BindFrameBuffer(const int index = 0) const { if (static_cast<int>(framebuffers.size()) > index) framebuffers.at(index)->Bind(); }
+        void UnbindFrameBuffer(const int index = 0) const { if (static_cast<int>(framebuffers.size()) > index) framebuffers.at(index)->Unbind(); }
+
         /// @brief x
         /// @param index the index in the GLRenderer buffer vector at which the element resides in
         /// @param offset the byte offset at which the element occurs. for example: if we stored two floats and I wanted to access the first float value, the offset would be 0. If I wanted the second float value then the offset would be sizeof(float).
         /// @param size size of the element
-        /// @param data 
+        /// @param data stuff
         void SetBufferSubData(int index, int offset, int size, const void* data) const;
 
         static void ClearColor(const glm::vec4& color = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
@@ -37,9 +42,9 @@ namespace Vakol::View
 
         static void ClearBuffer(unsigned int buffer_bit);
 
-        void Draw([[maybe_unused]] const Controller::Time& time, const Controller::Camera& camera, Model::Components::Transform, const Model::Components::Drawable& drawable) const override;
+        void Draw([[maybe_unused]] const Controller::Time& time, const Controller::Camera& camera, const Model::Components::Transform& transform, const Model::Components::Drawable& drawable) const override;
 
-        void Update() const override;
+        void Update(int index) const override;
 
         void ToggleWireframe() override 
         {
@@ -52,6 +57,8 @@ namespace Vakol::View
         }
     private:
         std::vector<std::shared_ptr<Buffer>> buffers;
+        std::vector<std::shared_ptr<FrameBuffer>> framebuffers;
+
         std::shared_ptr<Skybox> skybox = std::make_shared<Skybox>();
     };
 }

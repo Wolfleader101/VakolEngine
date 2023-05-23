@@ -120,6 +120,9 @@ unsigned int CompileGLShader(std::string&& v_code, std::string&& f_code, std::st
         success = CheckCompileErrors(tess_eval, "TESS_EVALUATION");
     }
 
+    if (success) VK_INFO("Shader compiled with no known issues");
+    else VK_WARN("Compile errors were detected, better go and re-check your code.");
+
     const auto id = glCreateProgram();
 	glAttachShader(id, vertex);
 	glAttachShader(id, fragment);
@@ -149,9 +152,6 @@ unsigned int CompileGLShader(std::string&& v_code, std::string&& f_code, std::st
         glDeleteShader(tess_eval);
 
     std::cout << std::endl;
-    
-    if (success) VK_INFO("Shader compiled with no known issues");
-    else VK_WARN("Compile errors were detected, better go and re-check your code.");
 
     return id;
 }

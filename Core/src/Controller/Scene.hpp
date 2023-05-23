@@ -30,7 +30,7 @@ namespace Vakol::Controller {
         const std::string& getName() const;
         void setName(const std::string& newName);
 
-        void Update(const Time& time, const std::shared_ptr<View::Renderer> renderer);
+        void Update(const Time& time, const std::shared_ptr<View::Renderer>& renderer);
 
         Model::Entity CreateEntity(const std::string tag, const std::string scriptName);
         void DestroyEntity(Entity entity);
