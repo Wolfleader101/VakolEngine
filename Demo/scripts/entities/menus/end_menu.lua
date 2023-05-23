@@ -6,7 +6,7 @@ function end_menu()
 
     GUI:add_text("---- Team Vakol ----");
 
-    GUI:add_image("assets/textures/TeamVakol.jpg", 617, 617);
+    GUI:add_image("assets/textures/vakol.png", 670, 670);
     GUI:add_text("Q - Exit");
 
     GUI:end_window();
