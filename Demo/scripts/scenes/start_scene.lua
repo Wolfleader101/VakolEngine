@@ -1,6 +1,5 @@
 function init()
-    
-    scene:create_entity("Start Menu", "misc/start_menu.lua");
+    scene:create_entity("Start Menu", "entities/menus/start_menu.lua");
 end
 
 

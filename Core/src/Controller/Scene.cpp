@@ -20,16 +20,9 @@ namespace Vakol::Controller {
           scenePhysics(SP),
           active(active),
           cam(glm::vec3(0.0f, 0.0f, 2.0f)),
-          sceneGlobals() {
-        
-        
+          sceneGlobals() {}
 
-        
-    }
-
-    void Scene::Init()
-    {
-        
+    void Scene::Init() {
         lua.RunFile("scripts/" + scriptName);
         sceneGlobals = lua.GetState().create_named_table(name);
         lua.GetState()["scene"] = this;
@@ -39,7 +32,6 @@ namespace Vakol::Controller {
 
         System::BindScene(*this);
     }
-
 
     const std::string& Scene::getName() const { return name; }
 
@@ -52,13 +44,9 @@ namespace Vakol::Controller {
         return ent;
     }
 
-    void Scene::DestroyEntity(Entity entity)
-    {
-	    entityList.RemoveEntity(entity);
-    }
+    void Scene::DestroyEntity(Entity entity) { entityList.RemoveEntity(entity); }
 
-    void Scene::Update(const Time& time, const std::shared_ptr<View::Renderer> renderer) 
-    {
+    void Scene::Update(const Time& time, const std::shared_ptr<View::Renderer> renderer) {
         lua.RunFile("scripts/" + scriptName);
 
         lua.GetState()["scene"] = this;

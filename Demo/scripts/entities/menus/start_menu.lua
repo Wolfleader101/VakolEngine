@@ -22,17 +22,12 @@ end
 
 
 function update()
-
-    
-    if (Input:get_key(KEYS["KEY_1"])) then
-        add_scene("scenes/testScene.lua", "Test Scene");
-        print("yessir");
-        --scene:set_active(false);
-        print("oof");
-    end
-
     start_menu();
-
+    
+    if (Input:get_key_down(KEYS["KEY_1"])) then
+        scene:set_active(false);
+        add_scene("scenes/testScene.lua", "Test Scene");
+    end
 end
 
 

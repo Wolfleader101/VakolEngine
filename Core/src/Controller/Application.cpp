@@ -13,10 +13,12 @@
 namespace Vakol::Controller {
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
-    Application::Application() : m_window(nullptr), m_renderer(nullptr), m_running(false) { Logger::Init(); };
+    Application::Application() : m_window(nullptr), m_renderer(nullptr), m_running(false) {
+        Logger::Init();
+        scenes.reserve(10);
+    };
 
-    void Application::Init()
-	{
+    void Application::Init() {
         RegisterLua();
 
         auto config = LoadConfig();
