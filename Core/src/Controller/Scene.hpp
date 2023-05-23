@@ -18,8 +18,8 @@ namespace Vakol::Controller {
          * @brief Construct a new Scene object
          *
          */
-        Scene(const std::string& name, const std::string& scriptName, LuaState& lua,
-              std::shared_ptr<Physics::ScenePhysics> SP, bool active = false);
+        Scene(std::string& name, const std::string& scriptName, LuaState& lua,
+              const std::shared_ptr<Physics::ScenePhysics>& SP, bool active = false);
         /**
          * @brief the entity list of scene
          */
@@ -28,9 +28,9 @@ namespace Vakol::Controller {
         const std::string& getName() const;
         void setName(const std::string& newName);
 
-        void Update(const Time& time, const std::shared_ptr<View::Renderer> renderer);
+        void Update(const Time& time, const std::shared_ptr<View::Renderer>& renderer);
 
-        Model::Entity CreateEntity(const std::string tag, const std::string sname);
+        Model::Entity CreateEntity(const std::string& tag, const std::string& sname);
 
         void Serialize(const std::string& folder) const;
         void Deserialize(const std::string& folder);

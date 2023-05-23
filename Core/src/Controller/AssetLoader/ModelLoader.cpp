@@ -403,7 +403,7 @@ namespace Vakol::Controller
             const auto& root_transform = to_glm(scene.mRootNode->mTransformation);
             const auto bone_count = static_cast<unsigned int>(bone_map.name_to_info.size());
 
-            animations.push_back( Animation(inverse(root_transform), std::move(nodes), bone_count, duration, ticks_per_second));
+            animations.emplace_back(inverse(root_transform), std::move(nodes), bone_count, duration, ticks_per_second);
         }
 
         return animations;

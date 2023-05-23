@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <utility>
 #include <vector>
 
 #include "Texture.hpp"
@@ -27,15 +28,15 @@ namespace Vakol::Model::Assets
     class Material 
     {
     public:
-	    explicit Material(MaterialSpec&& spec) : m_spec(std::move(spec)) { this->m_textures = std::move(m_spec.textures); }
+        explicit Material(MaterialSpec&& spec) : m_spec(std::move(spec)) { this->m_textures = std::move(m_spec.textures); }
 
         void AddTexture(Texture& texture) { this->m_textures.push_back(std::move(texture)); }
 
-        [[nodiscard]] const Texture& GetTexture(const int index) const 
+        [[nodiscard]] unsigned int GetTexture(const int index) const 
         { 
             VK_ASSERT(GetTextureCount() > index, "\n\nTexture index out of bounds.");
 
-            return this->m_textures.at(index);
+            return this->m_textures.at(index).GetID();
         }
 
         [[nodiscard]] const std::vector<Texture>& GetTextures() const { return this->m_textures; }

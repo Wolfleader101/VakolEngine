@@ -109,10 +109,10 @@ namespace Vakol::Controller {
         return cfg;
     }
 
-    Application::~Application() {}
-
-    void Application::Run() {
-        while (m_running) {
+    void Application::Run()
+	{
+        while (m_running) 
+        {
             m_time.Update();
             m_gui.CreateNewFrame();
 

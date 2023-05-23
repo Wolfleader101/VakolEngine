@@ -3,20 +3,20 @@
 #include <glm/mat4x4.hpp>
 #include <glm/vec3.hpp>
 
-const unsigned char PROJECTION_MATRIX = 0x0;
-const unsigned char VIEW_MATRIX = 0x1;
+constexpr unsigned char PROJECTION_MATRIX = 0x0;
+constexpr unsigned char VIEW_MATRIX = 0x1;
 
-const unsigned char PV_MATRIX = 0x2;
-
-namespace Vakol::Controller {
-    class Camera {
-       public:
+namespace Vakol::Controller
+{
+    class Camera
+	{
+    public:
         Camera() = default;
-        Camera(const glm::vec3& position);
+        explicit Camera(const glm::vec3& position);
 
-        const glm::mat4 GetMatrix(const unsigned char type) const;
+        const glm::mat4& GetMatrix(unsigned char type) const;
 
-        void SetAspect(const float _aspect);
+        void SetAspect(float _aspect);
 
         void Update();
 
@@ -24,23 +24,23 @@ namespace Vakol::Controller {
 
         void SetPos(const float x, const float y, const float z) { position = glm::vec3(x, y, z); }
 
-        const glm::vec3 GetForward() const { return forward; }
-        const glm::vec3 GetRight() const { return right; }
+        const glm::vec3& GetForward() const { return forward; }
+        const glm::vec3& GetRight() const { return right; }
 
-        const float GetPitch() const { return pitch; }
-        const float GetYaw() const { return yaw; }
+    	float GetPitch() const { return pitch; }
+    	float GetYaw() const { return yaw; }
 
-        void SetPitch(float _pitch) { pitch = _pitch; }
-        void SetYaw(float _yaw) { yaw = _yaw; }
+        void SetPitch(const float _pitch) { pitch = _pitch; }
+        void SetYaw(const float _yaw) { yaw = _yaw; }
 
-       private:
+    private:
         float pitch = 0.0f;
         float yaw = -90.0f;
 
         float fov = 45.0f;
         float aspect = 1.3f;
         float near = 0.01f;
-        float far = 10000.0f;
+        float far = 500.0f;
 
         glm::mat4 PROJECTION = glm::mat4(1.0f);
         glm::mat4 VIEW = glm::mat4(1.0f);

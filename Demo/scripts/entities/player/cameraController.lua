@@ -2,7 +2,7 @@ function init()
     print("Initialising Camera");
 
     state.speed = 2;
-    state.sprintSpeed = 30;
+    state.sprintSpeed = 4;
     state.flying = false;
 
     local camera = scene:get_camera();
@@ -51,9 +51,9 @@ function update()
         local terr_scale = scene.globals.terrain.transform.scale;
         new_pos.y = (scene.globals.terrain.terr:get_height(new_pos.x / terr_scale.x, new_pos.z / terr_scale.z) * terr_scale.y) + 0.5;
     end
+
     camera:set_pos(new_pos.x, new_pos.y, new_pos.z);
     scene.globals.player.pos = new_pos;
-
 
     local delta_mouse_pos = Input:get_delta_mouse_pos();
     camera:set_yaw(camera:get_yaw() + delta_mouse_pos.x * 0.05);

@@ -3,11 +3,15 @@ out vec4 FragColor;
 
 in VS_OUT 
 {
-    vec3 FragPos;
+    vec4 FragCoords;
     vec2 TexCoords;
 } fs_in;
 
 in float Height;
+
+uniform float FOG_DENSITY = 0.1;
+uniform vec4 FOG_COLOR = vec4(1.0, 1.0, 1.0, 0.0);
+uniform bool enable_fog = false;
 
 uniform sampler2D light_map;
 
@@ -35,18 +39,29 @@ const float level_8 = 155.0;
 const float level_9 = 180.0;
 const float level_10 = 255.0;
 
+float calculate_fog(float fogCoords)
+{
+    float result = 0.0;
+
+    // result = exp(-density * fogCoords); // Equation 1
+
+    result = exp(-pow(FOG_DENSITY * fogCoords, 2.0)); // Equation 2
+
+    return 1.0 - clamp(result, 0.0, 1.0);
+}
+
 void main()
 {
     vec4 lighting = vec4(texture(light_map, fs_in.TexCoords * vec2(1.0, 1.0)).rrr, 1.0);
 
 	vec4 color_1 = texture(layer_1, fs_in.TexCoords * (uv_scale * 6));
 	vec4 color_2 = texture(layer_2, fs_in.TexCoords * (uv_scale * 2));
-	vec4 color_3 = texture(layer_3, fs_in.TexCoords * (uv_scale * 4));
+	vec4 color_3 = texture(layer_3, fs_in.TexCoords * (uv_scale * 10));
 	vec4 color_4 = texture(layer_4, fs_in.TexCoords * (uv_scale * 4));
 	vec4 color_5 = texture(layer_5, fs_in.TexCoords * (uv_scale * 4));
 	vec4 color_6 = texture(layer_6, fs_in.TexCoords * (uv_scale * 15));
 	vec4 color_7 = texture(layer_7, fs_in.TexCoords * (uv_scale * 4));
-	vec4 color_8 = texture(layer_8, fs_in.TexCoords * (uv_scale * 15));
+	vec4 color_8 = texture(layer_8, fs_in.TexCoords * (uv_scale * 25));
 	vec4 color_9 = texture(layer_9, fs_in.TexCoords * (uv_scale * 4));
 	vec4 color_10 = texture(layer_10, fs_in.TexCoords * (uv_scale * 1.5));
 
@@ -119,6 +134,12 @@ void main()
         
         result = mix(color_9, color_10, factor);
     }
-		
-	FragColor = result * lighting;
+	
+    if (enable_fog)
+    {
+        float fogCoords = abs(fs_in.FragCoords.z / fs_in.FragCoords.w);
+        FragColor = mix(result, FOG_COLOR, calculate_fog(fogCoords));
+    }
+    else
+        FragColor = result * lighting;
 }

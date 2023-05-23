@@ -1,7 +1,5 @@
 #pragma once
 
-#include <glad/glad.h>
-
 #pragma warning(push)
 #pragma warning(disable:4201)
 #include <glm/vec3.hpp>
@@ -12,7 +10,6 @@
 #include <memory>
 #include <vector>
 
-#include "Controller/Logger.hpp"
 #include "Model/Shader.hpp"
 
 #include "View/Renderer/Renderer.hpp"
@@ -24,48 +21,45 @@ namespace Vakol::Controller::Physics
 
 namespace Vakol::View
 {
+    using Shader = Model::Shader;
 
-    using Shader = Vakol::Model::Shader;
     class DebugRenderer
     {
-        public:
+    public:
+        void SetShader(const std::shared_ptr<Shader>& shader);
 
-            void SetShader(const std::shared_ptr<Shader>& shader);
+        void Enable(bool enable);
+        [[nodiscard]] bool IsEnabled() const;
 
-            void Enable(bool enable);
-            bool IsEnabled();
+        void Update();
+        void Draw(const Controller::Camera& camera) const;
 
-            void Update();
-            void Draw(const Controller::Camera& camera) const;
+    private:
+        DebugRenderer() = default;
+        explicit DebugRenderer(rp3d::PhysicsWorld* WorldPtr);
 
+        struct PhysicsDebugVertex {
+            glm::vec3 xyz;
+            glm::vec3 color;   
+	    };
 
-        private:
+        void EnableWorldDebug();
+        void DisableWorldDebug();
 
-            DebugRenderer() = default;
-            DebugRenderer(rp3d::PhysicsWorld* WorldPtr);
-            struct PhysicsDebugVertex {
-                glm::vec3 xyz;
-                glm::vec3 color;   
-		    };
+        void GetDebugColor(const uint32_t& color, glm::vec3& outColor) const;
 
-            void EnableWorldDebug();
-            void DisableWorldDebug();
+        void GetTriangles();
+        void GetLines();
 
-            void GetDebugColor(const uint32_t& color, glm::vec3& outColor) const;
+        std::vector<PhysicsDebugVertex> m_DebugData;
 
-            void GetTriangles();
-            void GetLines();
+        rp3d::PhysicsWorld* m_World = nullptr;
+        std::shared_ptr<Shader> m_Shader = nullptr;
+        rp3d::DebugRenderer* m_rp3dRenderer = nullptr;
 
-            std::vector<PhysicsDebugVertex> m_DebugData;
+        uint32_t m_VAO{}, m_VBO{};
 
-            rp3d::PhysicsWorld* m_World = nullptr;
-            std::shared_ptr<Shader> m_Shader = nullptr;
-            rp3d::DebugRenderer* m_rp3dRenderer = nullptr;
-
-            uint32_t m_VAO, m_VBO;
-
-            friend class Vakol::Controller::Physics::ScenePhysics;
+        friend class Controller::Physics::ScenePhysics;
     };
-
 }
 

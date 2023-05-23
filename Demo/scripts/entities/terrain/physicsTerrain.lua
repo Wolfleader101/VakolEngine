@@ -1,7 +1,7 @@
 function init()
     print("Initialising Terrain");
   
-    local terrain = entity:create_height_map_terrain("coreAssets/textures/Heightmaps/terrain.raw", 0, 60); -- size
+    local terrain = entity:create_height_map_terrain("coreAssets/textures/Heightmaps/terrain2.raw", 0, 60); -- size
 
     local lightmap = create_raw_texture("coreAssets/textures/lightmap.raw");
     
@@ -36,6 +36,10 @@ function init()
     model:set_shader("coreAssets/shaders/basic_terrain.prog");
     local shader = model:get_shader();
 
+    shader:set_bool("enable_fog", false);
+    shader:set_float("FOG_DENSITY", 0.025);
+    shader:set_vec4v("FOG_COLOR", Vector4.new(1.0, 1.0, 1.0, 0.0));
+
     shader:set_vec2v("uv_scale", Vector2.new(10));
 
     shader:set_int("light_map", 0);
@@ -57,7 +61,5 @@ function init()
 end
 
 function update()
-
-    
     
 end

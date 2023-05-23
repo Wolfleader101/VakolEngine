@@ -183,7 +183,7 @@ namespace Vakol::Controller
 	{
         lua.set_function("load_texture", [](std::string& path) 
         {
-            return AssetLoader::GetTexture(path);  // no checks... just raw doggin it LOL
+            return AssetLoader::GetTexture(std::move(path));  // no checks... just raw doggin it LOL
         });
 
         lua.set_function("load_model", [](const std::string& path, const float scale = 1.0f, const bool animated = false) 
@@ -246,18 +246,20 @@ namespace Vakol::Controller
         auto material_type = lua.new_usertype<Assets::Material>("material");
         auto shader_type = lua.new_usertype<Shader>("shader");
 
-        lua.set_function("create_raw_texture", [](std::string& path) {
+        lua.set_function("create_raw_texture", [](std::string& path) 
+        {
             auto texture = Assets::Texture(path);
             texture.SetID(LoadRawTexture(texture.path));
 
             return texture;
         });
 
-        lua.set_function("create_texture", [](std::string& path, const bool gamma, const bool flip) {
-            auto texture = Assets::Texture(path);
+        lua.set_function("create_texture", [](std::string& path, const bool gamma, const bool flip) 
+        {
+            auto&& texture = Assets::Texture(std::move(path));
             texture.SetID(LoadTexture(texture.path, gamma, flip));
 
-            return texture;
+            return std::move(texture);
         });
 
         entity_type.set_function("get_transform", &Entity::GetComponent<Transform>);
@@ -270,9 +272,10 @@ namespace Vakol::Controller
 
 	         ent->AddComponent<Terrain>(LoadHeightMapTerrain(std::move(path), min, max));
 
-	         auto terrain = ent->GetComponent<Terrain>();
+	         auto& terrain = ent->GetComponent<Terrain>();
 
-	         if (const auto model = terrain.GetModel()) {
+	         if (const auto& model = terrain.GetModel()) 
+             {
 	             model->mesh().SetDrawMode(DRAW_MODE::STRIPS);
 	             model->mesh().SetDrawType(DRAW_TYPE::ELEMENTS);
 
@@ -280,22 +283,23 @@ namespace Vakol::Controller
 
 	             model->mesh().SetNumTrisPerStrip(terrain.GetSize() / 1 * 2 - 2);
 
-	             ent->GetComponent<Components::Drawable>().model_ptr = model;
+	             ent->GetComponent<Drawable>().model_ptr = model;
 	         }
 
 	         return terrain;
 	     });
 
-        entity_type.set_function("create_clod_terrain", [](Entity* ent, std::string&& path) {
+        entity_type.set_function("create_clod_terrain", [](Entity* ent, std::string&& path, const float min, const float max) 
+        {
             if (!ent->HasComponent<Drawable>()) ent->AddComponent<Drawable>();
 
             if (ent->HasComponent<Terrain>()) ent->RemoveComponent<Terrain>();
 
-            ent->AddComponent<Terrain>(LoadCLODTerrain(std::move(path)));
+            ent->AddComponent<Terrain>(LoadCLODTerrain(std::move(path), min, max));
 
-            auto terrain = ent->GetComponent<Terrain>();
+            auto& terrain = ent->GetComponent<Terrain>();
 
-            if (const auto model = terrain.GetModel()) {
+            if (const auto& model = terrain.GetModel()) {
                 model->mesh().SetDrawMode(DRAW_MODE::PATCHES);
                 model->mesh().SetDrawType(DRAW_TYPE::ARRAYS);
 
@@ -349,6 +353,7 @@ namespace Vakol::Controller
         material_type.set_function("get_ambient_color", &Assets::Material::GetAmbientColor);
         material_type.set_function("get_diffuse_color", &Assets::Material::GetDiffuseColor);
 
+        shader_type.set_function("set_bool", &Shader::SetBool);
         shader_type.set_function("set_int", &Shader::SetInt);
         shader_type.set_function("set_float", &Shader::SetFloat);
 

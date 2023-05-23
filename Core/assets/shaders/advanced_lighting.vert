@@ -4,7 +4,8 @@ layout (location = 1) in vec3 aNormal;
 layout (location = 2) in vec2 aTexCoords;
 
 // interface block
-out VS_OUT {
+out VS_OUT 
+{
     vec4 FragCoords;
     vec3 FragPos;
     vec3 Normal;
@@ -13,12 +14,13 @@ out VS_OUT {
 
 layout (std140, binding = 1) uniform Matrices
 {
-    mat4 PV_MATRIX;
+    mat4 PROJECTION_MATRIX;
     mat4 VIEW_MATRIX;
+    mat4 PV_MATRIX;
+    mat4 MODEL_MATRIX;
 };
 
 uniform mat3 NORMAL_MATRIX;
-uniform mat4 MODEL_MATRIX;
 
 uniform bool enable_fog = false;
 
