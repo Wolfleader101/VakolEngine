@@ -37,8 +37,8 @@ function init()
     local shader = model:get_shader();
 
     shader:set_bool("enable_fog", true);
-    shader:set_float("FOG_DENSITY", 0.2);
-    shader:set_vec4v("FOG_COLOR", Vector4.new(1.0, 1.0, 1.0, 1.0));
+    shader:set_float("FOG_DENSITY", 0.025);
+    shader:set_vec4v("FOG_COLOR", Vector4.new(1.0, 1.0, 1.0, 0.0));
 
     shader:set_vec2v("uv_scale", Vector2.new(10));
 
