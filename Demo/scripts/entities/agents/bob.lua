@@ -13,9 +13,14 @@ function init()
     local ATTACK_STATE_PUNCH_LIGHT = 7;
     local ATTACK_STATE_SLAM_HEAVY = 8; 
 
+    local ATTACK_DISTANCE = 0.75;
+    local RUN_DISTANCE = 3.0;
+    local VIEW_DISTANCE = 10.0;
+
     TIMER = 0.0;
+    PAUSE_ANIMATION = false;
     
-    entity:get_transform().pos = Vector3.new(2.7, 0, -7.0);
+    entity:get_transform().pos = Vector3.new(2.7, 0, -12.0);
 
     state.model = entity:add_model("assets/models/enemy.glb", 0.003, true) -- get model and add a drawable component
     state.model:set_shader("coreAssets/shaders/animation.prog") -- set the shader on the model (automatically binds it)
@@ -43,7 +48,11 @@ function init()
         local diff = scene.globals.player.pos - entity:get_transform().pos;
         local player_dist = diff:magnitude();
 
-        if (player_dist < 7) then
+        if (not PAUSE_ANIMATION) then
+            state.model:update_animation(Time.delta_time);
+        end
+
+        if (player_dist < VIEW_DISTANCE) then
             state.fsm:change_state("idle_player_spotted");
         end
     end)
@@ -59,6 +68,10 @@ function init()
         targetRotation = targetRotation * (180 / math.pi);  -- Convert from radians to degrees
         entity:get_transform().rot.y = targetRotation;  -- Set entity's Y rotation to face the player (adjust this according to your coordinate system)
 
+        if (not PAUSE_ANIMATION) then
+            state.model:update_animation(Time.delta_time);
+        end
+
         if (wait(2.5)) then
             state.fsm:change_state("chase");
             TIMER = 0.0;
@@ -66,13 +79,11 @@ function init()
     end)
 
     state.fsm:add_state("chase", function()
-        state.model:set_animation_state(RUN_STATE_ENRAGED); 
-
         -- Calculate direction vector towards the player
         local direction = (scene.globals.player.pos - entity:get_transform().pos):normalize();
 
         -- Move towards the player
-        local speed = 4;  -- Adjust this value as needed, can later be set as global variable based on difficulty
+        local speed = 3.5;  -- Adjust this value as needed, can later be set as global variable based on difficulty
         local newPos = entity:get_transform().pos + direction * speed * Time.delta_time;
         entity:get_transform().pos.x = newPos.x;
         entity:get_transform().pos.z = newPos.z;
@@ -86,11 +97,23 @@ function init()
         local diff = scene.globals.player.pos - entity:get_transform().pos;
         local player_dist = diff:magnitude();
 
-        if player_dist > 7 then
+        if (player_dist > RUN_DISTANCE) then
+            state.model:set_animation_state(RUN_STATE_ENRAGED);
+            speed = 3.5;
+        elseif (player_dist < RUN_DISTANCE) then
+            state.model:set_animation_state(RUN_STATE_REGULAR);
+            speed = 1.5;
+        end
+
+        if (not PAUSE_ANIMATION) then
+            state.model:update_animation(Time.delta_time);
+        end
+
+        if player_dist > VIEW_DISTANCE then
             state.fsm:change_state("idle_search")
         end
         
-        if player_dist < 0.75 then
+        if player_dist <= ATTACK_DISTANCE then
             state.fsm:change_state("attack")
         end
     end)
@@ -111,8 +134,12 @@ function init()
         local diff = scene.globals.player.pos - entity:get_transform().pos;
         local player_dist = diff:magnitude();
 
-        if (player_dist > 0.65) then
-            if (wait(0.5)) then
+        if (not PAUSE_ANIMATION) then
+            state.model:update_animation(Time.delta_time);
+        end
+
+        if (player_dist >= ATTACK_DISTANCE) then
+            if (wait(0.6) and player_dist >= ATTACK_DISTANCE) then
                 state.fsm:change_state("chase");
                 TIMER = 0.0;
             end
@@ -142,4 +169,8 @@ function update()
     local pos = entity:get_transform().pos;
     local terr_scale = scene.globals.terrain.transform.scale;
     pos.y = (scene.globals.terrain.terr:get_height(pos.x / terr_scale.x, pos.z / terr_scale.z) * terr_scale.y) + 0.05;
+
+    if (Input:get_key_down(KEYS["KEY_0"])) then
+        PAUSE_ANIMATION = not PAUSE_ANIMATION;
+    end
 end

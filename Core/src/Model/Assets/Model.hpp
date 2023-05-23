@@ -35,9 +35,18 @@ namespace Vakol::Model::Assets {
 
         void UpdateAnimation(const float delta_time) { m_animations.at(m_animation_state).Update(delta_time); }
 
+    	void ResetAnimation() { m_animations.at(m_animation_state).ResetAnimation(); }
+
+    	void ResetAnimation(const int state)
+    	{
+        	VK_ASSERT(state < numAnimations() && state >= 0, "\n\nAnimation Index out of bounds!");
+
+        	m_animations.at(state).ResetAnimation();
+    	}
+
         void SetAnimationState(int state)
     	{
-	        if (const auto size = static_cast<int>(m_animations.size()); state < size && state >= 0)
+	        if (const auto size = numAnimations(); state < size && state >= 0)
                 m_animation_state = state;
             else 
             {
@@ -46,7 +55,9 @@ namespace Vakol::Model::Assets {
             }
         }
 
+        [[nodiscard]] int numAnimations() const { return static_cast<int>(m_animations.size()); }
         [[nodiscard]] int numTransforms() const { return m_animations.at(m_animation_state).numTransforms(); }
+
     	[[nodiscard]] const std::vector<glm::mat4>& transforms() const { return m_animations.at(m_animation_state).transforms(); }
 
         [[nodiscard]] const Mesh& mesh(const int index = 0) const { return m_meshes.at(index); }

@@ -106,8 +106,6 @@ namespace Vakol::View
         const auto& shader = model->c_shader();
         VK_ASSERT(&shader, "\n\nShader is nullptr");
 
-        if (model->isAnimated()) model->UpdateAnimation(time.deltaTime);
-
         shader->Bind();
 
         const auto& projection = camera.GetMatrix(PROJECTION_MATRIX);

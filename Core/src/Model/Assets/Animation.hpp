@@ -198,7 +198,7 @@ namespace Vakol::Model::Assets
 		Animation(const glm::mat4& root_inverse, std::vector<AnimNode>&& nodes, const unsigned int bone_count, const float duration, const float tps)
 			: global_inverse(root_inverse), m_transforms(MAX_BONE_COUNT, glm::mat4(1.0f)), nodes(std::move(nodes)), bone_count(bone_count), duration(duration), ticks_per_second(tps)
 		{
-			VK_ASSERT(bone_count <= MAX_BONE_COUNT, "\n\nTOO MANY BONES!!");
+			VK_ASSERT(bone_count <= MAX_BONE_COUNT, "\n\nTOO MANY DAMN BONES!!");
 		}
 
 		void Update(const float delta_time)
@@ -225,20 +225,13 @@ namespace Vakol::Model::Assets
 			}
 		}
 
-		[[nodiscard]] const std::vector<glm::mat4>& transforms() const
-		{
-			return m_transforms;
-		}
+		[[nodiscard]] const std::vector<glm::mat4>& transforms() const { return m_transforms; }
 
-		[[nodiscard]] const glm::mat4& nTransform(const int i) const
-		{
-			return m_transforms.at(i);
-		}
+		void ResetAnimation() { current_time = 0.0f; }
 
-		[[nodiscard]] auto numTransforms() const -> int
-		{
-			return static_cast<int>(m_transforms.size());
-		}
+		[[nodiscard]] const glm::mat4& nTransform(const int i) const { return m_transforms.at(i); }
+
+		[[nodiscard]] auto numTransforms() const -> int { return static_cast<int>(m_transforms.size()); }
 
 	private:
 		glm::mat4 global_inverse{};

@@ -143,14 +143,18 @@ namespace Vakol::Controller
 
     void RegisterLogger(sol::state& lua)
 	{
-        lua.set_function("print", [](const sol::variadic_args& va) {
+        lua.set_function("print", [](const sol::variadic_args& va) 
+        {
             if (const auto arg = va[0]; arg.get_type() == sol::type::string)
                 Logger::ScriptPrintTrace(va[0].get<std::string>());
             else if (arg.get_type() == sol::type::number)
                 Logger::ScriptPrintTrace(std::to_string(va[0].get<float>()));
+            else if (arg.get_type() == sol::type::boolean)
+                Logger::ScriptPrintTrace(std::to_string(va[0].get<bool>()));
         });
 
-        lua.set_function("print_info", [](const sol::variadic_args& va) {
+        lua.set_function("print_info", [](const sol::variadic_args& va) 
+        {
             if (const auto arg = va[0]; arg.get_type() == sol::type::string)
                 Logger::ScriptPrintInfo(va[0].get<std::string>());
             else if (arg.get_type() == sol::type::number)
@@ -339,6 +343,10 @@ namespace Vakol::Controller
         });
 
         model_type.set_function("set_animation_state", &Assets::Model::SetAnimationState);
+        model_type.set_function("update_animation", &Assets::Model::UpdateAnimation);
+
+        model_type.set_function("reset_current_animation", sol::resolve<void()>(&Assets::Model::ResetAnimation));
+        model_type.set_function("reset_animation", sol::resolve<void(int)>(&Assets::Model::ResetAnimation));
 
         model_type.set_function("get_mesh_count", &Assets::Model::nMeshes);
         model_type.set_function("get_mesh", &Assets::Model::mesh);
