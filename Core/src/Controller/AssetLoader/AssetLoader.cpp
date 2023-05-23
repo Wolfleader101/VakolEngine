@@ -22,8 +22,10 @@ namespace Vakol::Controller
         if (const auto itr = m_TextureMap.find(file); itr == m_TextureMap.end()) 
         {
             Texture texture{};
+            texture.path = file;
 
             texture.SetID(LoadTexture(texture.path, false, false));
+            *ret = texture;
 
         	m_TextureMap[file] = ret;
         } else

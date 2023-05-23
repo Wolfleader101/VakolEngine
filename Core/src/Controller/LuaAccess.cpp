@@ -520,6 +520,12 @@ namespace Vakol::Controller
         gui_window_type.set_function("add_text", &View::GUIWindow::AddText);
         gui_window_type.set_function("add_button", &View::GUIWindow::AddButton);
         gui_window_type.set_function("add_checkbox", &View::GUIWindow::AddCheckbox);
+        gui_window_type.set_function("add_image", [](View::GUIWindow* gui, const std::string& path, float width, float height)
+        {
+            auto tex = AssetLoader::GetTexture(path);
+        	unsigned texID = tex->GetID();
+	        gui->AddImage(texID, {width, height});
+		});
 
         gui_window_type.set_function("add_integer_slider", &View::GUIWindow::AddIntSlider);
         gui_window_type.set_function("add_float_slider", &View::GUIWindow::AddFloatSlider);
@@ -530,7 +536,10 @@ namespace Vakol::Controller
         gui_window_type.set_function("end_window", &View::GUIWindow::EndWindowCreation);
     }
 
-    void RegisterRenderer([[maybe_unused]] sol::state& lua) {}
+    void RegisterRenderer([[maybe_unused]] sol::state& lua)
+    {
+	    
+    }
 
     void RegisterPhysics(sol::state& lua) {
         auto scenePhysicType = lua.new_usertype<ScenePhysics>("scenePhysics");

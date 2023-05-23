@@ -51,7 +51,12 @@ namespace Vakol::View {
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());  // Renders the UI to the screen
     }
 
-    void GUIWindow::AddText(const std::string& inputText) { ImGui::Text(inputText.c_str()); };
+    void GUIWindow::AddText(const std::string& inputText) { ImGui::Text(inputText.c_str()); }
+
+    void GUIWindow::AddImage(unsigned id, const ImVec2& imageSize)
+    {
+        ImGui::Image((void*)id, imageSize);
+    };
 
     void GUIWindow::AddButton(const std::string& buttonName, float width, float height,
                               const std::function<void()>& inputFunction) {
