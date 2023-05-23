@@ -1,14 +1,26 @@
 function init()
-    local IDLE_STATE = 0;
-    local WALK_STATE = 1;
-    local RUN_STATE = 2;
-    
-    entity:get_transform().pos = Vector3.new(3.0, 0, -7.0);
+    local IDLE_STATE_DEFAULT = 0;
+    local IDLE_STATE_SEARCH = 1;
 
-    state.model = entity:add_model("assets/models/test.glb", 0.003, true) -- get model and add a drawable component
+    local IDLE_STATE_PLAYER_SPOTTED = 2;
+
+    local RUN_STATE_REGULAR = 3;
+    local RUN_STATE_ENRAGED = 4;
+
+    local ATTACK_STATE_SLASH_LIGHT = 5;
+    local ATTACK_STATE_SLASH_HEAVY = 6;
+
+    local ATTACK_STATE_PUNCH_LIGHT = 7;
+    local ATTACK_STATE_SLAM_HEAVY = 8; 
+
+    TIMER = 0.0;
+    
+    entity:get_transform().pos = Vector3.new(2.7, 0, -7.0);
+
+    state.model = entity:add_model("assets/models/enemy.glb", 0.003, true) -- get model and add a drawable component
     state.model:set_shader("coreAssets/shaders/animation.prog") -- set the shader on the model (automatically binds it)
 
-    state.model:set_animation_state(IDLE_STATE);
+    state.model:set_animation_state(IDLE_STATE_SEARCH);
 
     local shader = state.model:get_shader(); -- get the shader from the model
 
@@ -25,45 +37,42 @@ function init()
 
     state.fsm = entity:add_fsm();
 
-    state.fsm:add_state("idle", function()
-        -- print("Bob is idle")
-
-        state.model:set_animation_state(IDLE_STATE);
+    state.fsm:add_state("idle_search", function()
+        state.model:set_animation_state(IDLE_STATE_SEARCH)
 
         local diff = scene.globals.player.pos - entity:get_transform().pos;
         local player_dist = diff:magnitude();
 
-        if player_dist < 10 and player_dist > 1 then
-            state.fsm:change_state("attacking")
-        end
-
-
-        -- if(Input:get_key(KEYS["KEY_2"])) then
-        --     state.fsm:change_state("moving")
-        -- end
-    end)
-    
-    state.fsm:add_state("moving", function()
-        -- print("Bob is moving")
-        state.model:set_animation_state(RUN_STATE);
-
-        local pos = entity:get_transform().pos;
-        pos.x = pos.x;
-        pos.z = pos.z + 0.5 * Time.delta_time;
-
-        if(Input:get_key(KEYS["KEY_1"])) then
-            state.fsm:change_state("idle")
+        if (player_dist < 7) then
+            state.fsm:change_state("idle_player_spotted");
         end
     end)
 
-    state.fsm:add_state("attacking", function()
-        state.model:set_animation_state(RUN_STATE); 
+    state.fsm:add_state("idle_player_spotted", function()
+        state.model:set_animation_state(IDLE_STATE_PLAYER_SPOTTED);
+
+        -- Calculate direction vector towards the player
+        local direction = (scene.globals.player.pos - entity:get_transform().pos):normalize();
+
+        -- Rotate to face the player
+        local targetRotation = math.atan(direction.x, direction.z);  -- Compute target rotation (assuming Y-up coordinate system)
+        targetRotation = targetRotation * (180 / math.pi);  -- Convert from radians to degrees
+        entity:get_transform().rot.y = targetRotation;  -- Set entity's Y rotation to face the player (adjust this according to your coordinate system)
+
+        if (wait(2.5)) then
+            state.fsm:change_state("chase");
+            TIMER = 0.0;
+        end
+    end)
+
+    state.fsm:add_state("chase", function()
+        state.model:set_animation_state(RUN_STATE_ENRAGED); 
 
         -- Calculate direction vector towards the player
         local direction = (scene.globals.player.pos - entity:get_transform().pos):normalize();
 
         -- Move towards the player
-        local speed = 2;  -- Adjust this value as needed, can later be set as global variable based on difficulty
+        local speed = 4;  -- Adjust this value as needed, can later be set as global variable based on difficulty
         local newPos = entity:get_transform().pos + direction * speed * Time.delta_time;
         entity:get_transform().pos.x = newPos.x;
         entity:get_transform().pos.z = newPos.z;
@@ -77,23 +86,60 @@ function init()
         local diff = scene.globals.player.pos - entity:get_transform().pos;
         local player_dist = diff:magnitude();
 
-        if player_dist > 10 or player_dist < 1 then
-            state.fsm:change_state("idle")
+        if player_dist > 7 then
+            state.fsm:change_state("idle_search")
+        end
+        
+        if player_dist < 0.75 then
+            state.fsm:change_state("attack")
+        end
+    end)
+
+    state.fsm:add_state("attack", function()
+        -- Calculate direction vector towards the player
+        local direction = (scene.globals.player.pos - entity:get_transform().pos):normalize();
+
+        -- Rotate to face the player
+        local targetRotation = math.atan(direction.x, direction.z);  -- Compute target rotation (assuming Y-up coordinate system)
+        targetRotation = targetRotation * (180 / math.pi);  -- Convert from radians to degrees
+        entity:get_transform().rot.y = targetRotation;  -- Set entity's Y rotation to face the player (adjust this according to your coordinate system)
+
+        --random_anim = math.random(ATTACK_STATE_SLASH_LIGHT, ATTACK_STATE_SLAM_HEAVY);
+        state.model:set_animation_state(ATTACK_STATE_SLASH_LIGHT);
+
+        -- If player is no longer within 1m radius, switch back to 'chase' state
+        local diff = scene.globals.player.pos - entity:get_transform().pos;
+        local player_dist = diff:magnitude();
+
+        if (player_dist > 0.65) then
+            if (wait(0.5)) then
+                state.fsm:change_state("chase");
+                TIMER = 0.0;
+            end
         end
     end)
 
     -- Set the initial state
-    state.fsm:change_state("idle")
+    state.fsm:change_state("idle_search")
 
     print_err("Bob is ready")
     scene.globals.bobState = state.fsm;
 
 end
 
+function wait(seconds)
+    TIMER = TIMER + Time.delta_time;
+
+    if (TIMER >= seconds) then
+        return true;
+    end
+
+    return false;
+end
 
 function update()
     state.fsm:update()
     local pos = entity:get_transform().pos;
     local terr_scale = scene.globals.terrain.transform.scale;
-    pos.y = (scene.globals.terrain.terr:get_height(pos.x / terr_scale.x, pos.z / terr_scale.z) * terr_scale.y) + 0.03;
+    pos.y = (scene.globals.terrain.terr:get_height(pos.x / terr_scale.x, pos.z / terr_scale.z) * terr_scale.y) + 0.05;
 end
