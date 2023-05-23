@@ -1,8 +1,8 @@
 function init()
     print("Initialising Camera");
 
-    state.speed = 20;
-    state.sprintSpeed = 100;
+    state.speed = 2;
+    state.sprintSpeed = 4;
     state.flying = false;
 
     local camera = scene:get_camera();
@@ -47,10 +47,10 @@ function update()
         old_pos.z + (forward.z * dir.z + right.z * dir.x) * velocity
     )
 
-    --if (not state.flying) then
-        --local terr_scale = scene.globals.terrain.transform.scale;
-        --new_pos.y = (scene.globals.terrain.terr:get_height(new_pos.x / terr_scale.x, new_pos.z / terr_scale.z) * terr_scale.y) + 0.5;
-    --end
+    if (not state.flying) then
+        local terr_scale = scene.globals.terrain.transform.scale;
+        new_pos.y = (scene.globals.terrain.terr:get_height(new_pos.x / terr_scale.x, new_pos.z / terr_scale.z) * terr_scale.y) + 0.5;
+    end
 
     camera:set_pos(new_pos.x, new_pos.y, new_pos.z);
     scene.globals.player.pos = new_pos;
