@@ -1,15 +1,14 @@
 function init()
     print("Initialising Terrain");
   
-    local terrain = entity:create_height_map_terrain("coreAssets/textures/Heightmaps/height128.raw", 0, 1); -- size
+    local terrain = entity:create_height_map_terrain("coreAssets/textures/Heightmaps/height128.raw", 0, 10); -- size
 
     local lightmap = create_raw_texture("coreAssets/textures/lightmap.raw");
     
     local layer_1 = create_texture("coreAssets/textures/Terrain/dirt_0.jpg", false, false);
     local layer_2 = create_texture("coreAssets/textures/Terrain/dirt_3.jpg", false, false);
     local layer_3 = create_texture("coreAssets/textures/Terrain/dirt_cracked.jpg", false, false);
-    --local layer_4 = create_texture("coreAssets/textures/Terrain/patch_grass_1.jpg", false, false);
-    local layer_4 = create_texture("assets/textures/vakol.jpg", false, false);
+    local layer_4 = create_texture("coreAssets/textures/Terrain/patch_grass_1.jpg", false, false);
     local layer_5 = create_texture("coreAssets/textures/Terrain/grass_0.png", false, false);
     local layer_6 = create_texture("coreAssets/textures/Terrain/grass_rock.jpg", false, false);
     local layer_7 = create_texture("coreAssets/textures/Terrain/rocks_0.jpg", false, false);

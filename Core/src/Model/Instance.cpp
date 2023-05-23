@@ -4,7 +4,7 @@
 
 namespace Vakol::Model
 {
-    void CreateInstances(const std::vector<Mesh>& meshes, const std::vector<glm::mat4>& matrices, const int amount)
+    void CreateInstances(const std::vector<Mesh>& meshes, const std::vector<glm::mat4>& matrices, const int amount, const int start_index)
     {
         unsigned int buffer;
 
@@ -33,22 +33,22 @@ namespace Vakol::Model
 
             // set the attribute location to 3, reserving 4 GL_FLOATS in the vertex array
 
-            glEnableVertexAttribArray(3);
-            glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), nullptr);
+			glEnableVertexAttribArray(start_index);
+            glVertexAttribPointer(start_index, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), nullptr);
 
-            glEnableVertexAttribArray(4);
-            glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), reinterpret_cast<void*>(sizeof(glm::vec4)));
+            glEnableVertexAttribArray(start_index + 1);
+            glVertexAttribPointer(start_index + 1, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), reinterpret_cast<void*>(sizeof(glm::vec4)));
 
-            glEnableVertexAttribArray(5);
-            glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), reinterpret_cast<void*>(2 * sizeof(glm::vec4)));
+            glEnableVertexAttribArray(start_index + 2);
+            glVertexAttribPointer(start_index + 2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), reinterpret_cast<void*>(2 * sizeof(glm::vec4)));
 
-            glEnableVertexAttribArray(6);
-            glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), reinterpret_cast<void*>(3 * sizeof(glm::vec4)));
+            glEnableVertexAttribArray(start_index + 3);
+            glVertexAttribPointer(start_index + 3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), reinterpret_cast<void*>(3 * sizeof(glm::vec4)));
 
-            glVertexAttribDivisor(3, 1);
-            glVertexAttribDivisor(4, 1);
-            glVertexAttribDivisor(5, 1);
-            glVertexAttribDivisor(6, 1);
+            glVertexAttribDivisor(start_index, 1);
+            glVertexAttribDivisor(start_index + 1, 1);
+            glVertexAttribDivisor(start_index + 2, 1);
+            glVertexAttribDivisor(start_index + 3, 1);
 
             glBindVertexArray(0);
         }

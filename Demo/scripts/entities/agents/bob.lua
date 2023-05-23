@@ -1,4 +1,7 @@
 function init()
+    local SPAWN_AMOUNT = 5;
+    local matrices = vector_mat4(SPAWN_AMOUNT);
+
     local IDLE_STATE_DEFAULT = 0;
     local IDLE_STATE_SEARCH = 1;
 
@@ -18,8 +21,12 @@ function init()
     local RUN_DISTANCE = 2.5;
     local VIEW_DISTANCE = 10.0;
 
-    local RUN_SPEED = 1.75;
-    local SPRINT_SPEED = 4.25;
+    local SPRINT_STATE = 1;
+
+    local RUN_SPEED = 1.5;
+    local SPRINT_SPEED = 4.0;
+
+    local INSTANCED_MODEL = false;
 
     TIMER = 0.0;
     PAUSE_ANIMATION = false;
@@ -30,6 +37,24 @@ function init()
     state.model = entity:add_model("assets/models/enemy.glb", 0.003, true) -- get model and add a drawable component
     state.model:set_shader("coreAssets/shaders/animation.prog") -- set the shader on the model (automatically binds it)
 
+    if (INSTANCED_MODEL) then
+        for i = 1, SPAWN_AMOUNT do
+            local mdl_m = Matrix4x4.new(1.0);
+
+            mdl_m = translate(mdl_m, entity:get_transform().pos + Vector3.new(1.5 * i, 0.0, 0.0));
+
+            mdl_m = rotate(mdl_m, math.rad(entity:get_transform().rot.x), Vector3.new(1.0, 0.0, 0.0));
+            mdl_m = rotate(mdl_m, math.rad(entity:get_transform().rot.y), Vector3.new(0.0, 1.0, 0.0));
+            mdl_m = rotate(mdl_m, math.rad(entity:get_transform().rot.z), Vector3.new(0.0, 0.0, 1.0));
+
+            mdl_m = scale(mdl_m, entity:get_transform().scale);
+
+            matrices[i] = mdl_m;
+        end
+
+        instantiate_model(state.model, matrices, SPAWN_AMOUNT);
+    end
+
     state.model:set_animation_state(IDLE_STATE_SEARCH);
 
     local shader = state.model:get_shader(); -- get the shader from the model
@@ -39,6 +64,8 @@ function init()
 
     shader:set_float("material.shininess", 32.0);
     shader:set_vec3v("tint", Vector3.new(0.2, 0.65, 0.9));
+
+    shader:set_bool("instanced", INSTANCED_MODEL);
 
     shader:set_int("material.diffuse_map", 0);
     shader:set_int("material.specular_map", 1);
@@ -88,7 +115,8 @@ function init()
         local direction = (scene.globals.player.pos - entity:get_transform().pos):normalize();
 
         -- Move towards the player
-        local speed = SPRINT_SPEED;  -- Adjust this value as needed, can later be set as global variable based on difficulty
+        local speed = SPRINT_STATE and SPRINT_SPEED or not SPRINT_STATE and RUN_SPEED;  -- Adjust this value as needed, can later be set as global variable based on difficulty
+
         local newPos = entity:get_transform().pos + direction * speed * Time.delta_time;
         entity:get_transform().pos.x = newPos.x;
         entity:get_transform().pos.z = newPos.z;
@@ -104,10 +132,10 @@ function init()
 
         if (player_dist < RUN_DISTANCE) then
             state.model:set_animation_state(RUN_STATE_REGULAR);
-            speed = RUN_SPEED;
+            SPRINT_STATE = 0;
         elseif (player_dist > RUN_DISTANCE) then
-                state.model:set_animation_state(RUN_STATE_ENRAGED);
-                speed = SPRINT_SPEED;
+            state.model:set_animation_state(RUN_STATE_ENRAGED);
+            SPRINT_STATE = 1;
         end
 
         if (not PAUSE_ANIMATION) then

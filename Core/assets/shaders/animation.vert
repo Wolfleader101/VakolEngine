@@ -6,6 +6,7 @@ layout (location = 3) in vec3  aTangent;
 layout (location = 4) in vec3  aBitangent;
 layout (location = 5) in ivec4 aBoneIDs;
 layout (location = 6) in vec4  aBoneWeights;
+layout (location = 7) in mat4  aInstanceMatrix;
 
 out VS_OUT
 {
@@ -30,6 +31,8 @@ layout (std140, binding = 1) uniform Matrices
 
 uniform mat4 BONE_TRANSFORMS[100]; // TODO: Make this into a shader buffer storage
 
+uniform bool instanced = false;
+
 void main()
 {  
     mat4 BONE_MATRIX = mat4(0.0f);
@@ -52,5 +55,8 @@ void main()
     vs_out.TBN = mat3(T, B, N);
     vs_out.normal = N;
 
-    gl_Position = PV_MATRIX * MODEL_MATRIX * BONE_MATRIX * vec4(aPos, 1.0);
+    if (instanced)
+        gl_Position = PV_MATRIX * aInstanceMatrix * BONE_MATRIX * vec4(aPos, 1.0);
+    else
+        gl_Position = PV_MATRIX * MODEL_MATRIX * BONE_MATRIX * vec4(aPos, 1.0);
 }

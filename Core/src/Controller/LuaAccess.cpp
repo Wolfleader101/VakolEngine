@@ -268,7 +268,8 @@ namespace Vakol::Controller
 
         lua.set_function("instantiate_model", [](const std::shared_ptr<Assets::Model>& model, const std::vector<glm::mat4>& matrices, const int amount) 
 		{
-            CreateInstances(model->meshes(), matrices, amount);
+            // start_index is 7 for animations, otherwise its 3 for non-animated shit
+            CreateInstances(model->meshes(), matrices, amount, 3);
         });
 
         entity_type.set_function("get_transform", &Entity::GetComponent<Transform>);
@@ -601,7 +602,14 @@ namespace Vakol::Controller
         scenePhysicType.set_function("enable_debug", &ScenePhysics::EnableDebug);
     }
 
-    std::vector<glm::mat4> create_mat4_vector() { return {}; }
+    std::vector<glm::mat4> create_mat4_vector(const int reserve)
+	{
+    	std::vector<glm::mat4> vector;
+
+        vector.reserve(reserve);
+
+        return vector;
+    }
 
     void RegisterOther(sol::state& lua) { lua.set_function("vector_mat4", &create_mat4_vector); }
 }
