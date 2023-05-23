@@ -28,7 +28,7 @@ function update()
 
 
     GUI:add_text("K - Toggle wireframe");
-    GUI:add_text("ESC - Exit");
+    GUI:add_text("ESC - Menu");
 
     GUI:end_window();
 
