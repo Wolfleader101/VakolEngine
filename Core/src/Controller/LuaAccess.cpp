@@ -185,9 +185,9 @@ namespace Vakol::Controller
 
     void RegisterAssetLoader(sol::state& lua)
 	{
-        lua.set_function("load_texture", [](std::string& path) 
+        lua.set_function("load_texture", [](const std::string& path) 
         {
-            return AssetLoader::GetTexture(std::move(path));  // no checks... just raw doggin it LOL
+            return AssetLoader::GetTexture(path);  // no checks... just raw doggin it LOL
         });
 
         lua.set_function("load_model", [](const std::string& path, const float scale = 1.0f, const bool animated = false) 
@@ -266,6 +266,11 @@ namespace Vakol::Controller
             return std::move(texture);
         });
 
+        lua.set_function("instantiate_model", [](const std::shared_ptr<Assets::Model>& model, const std::vector<glm::mat4>& matrices, const int amount) 
+		{
+            CreateInstances(model->meshes(), matrices, amount);
+        });
+
         entity_type.set_function("get_transform", &Entity::GetComponent<Transform>);
 
         entity_type.set_function("create_height_map_terrain", [](Entity* ent, std::string&& path, const float min, const float max) 
@@ -331,12 +336,6 @@ namespace Vakol::Controller
             return model;
         });
 
-        entity_type.set_function("instantiate_model", [](const std::shared_ptr<Assets::Model>& model, const sol::as_table_t<std::vector<glm::mat4>>& matrices, int amount) 
-		{
-            VK_TRACE(matrices.value().size());
-            CreateInstances(model->meshes(), matrices.value());
-        });
-
         entity_type.set_function("get_model", [](const Entity* ent) 
         {
             if (ent->HasComponent<Drawable>()) return ent->GetComponent<Drawable>().model_ptr;
@@ -344,11 +343,11 @@ namespace Vakol::Controller
 
         model_type.set_function("set_animation_state", &Assets::Model::SetAnimationState);
         model_type.set_function("update_animation", &Assets::Model::UpdateAnimation);
-        model_type.set_function("blend_animations", &Assets::Model::BlendAnimations);
-
 
         model_type.set_function("reset_current_animation", sol::resolve<void()>(&Assets::Model::ResetAnimation));
         model_type.set_function("reset_animation", sol::resolve<void(int)>(&Assets::Model::ResetAnimation));
+
+        model_type.set_function("get_animation_duration", &Assets::Model::animation_duration_s);
 
         model_type.set_function("get_mesh_count", &Assets::Model::nMeshes);
         model_type.set_function("get_mesh", &Assets::Model::mesh);

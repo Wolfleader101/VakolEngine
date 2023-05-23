@@ -35,14 +35,6 @@ namespace Vakol::Model::Assets {
 
         void UpdateAnimation(const float delta_time) { m_animations.at(m_animation_state).Update(delta_time); }
 
-        void BlendAnimations(const int state_1, const int state_2, const float blend_factor, const float delta_time)
-        {
-	        VK_ASSERT(state_1 < numAnimations() && state_1 >= 0, "\n\nAnimation 1 Index out of bounds!");
-            VK_ASSERT(state_2 < numAnimations() && state_2 >= 0, "\n\nAnimation 2 Index out of bounds!");
-
-            m_animations.at(m_animation_state).BlendAnimations(m_animations.at(state_1), m_animations.at(state_2), blend_factor, delta_time);
-        }
-
     	void ResetAnimation() { m_animations.at(m_animation_state).ResetAnimation(); }
 
     	void ResetAnimation(const int state)
@@ -65,6 +57,9 @@ namespace Vakol::Model::Assets {
 
         [[nodiscard]] int numAnimations() const { return static_cast<int>(m_animations.size()); }
         [[nodiscard]] int numTransforms() const { return m_animations.at(m_animation_state).numTransforms(); }
+
+        [[nodiscard]] float animation_duration_s() const { return m_animations.at(m_animation_state).duration_s(); }
+        [[nodiscard]] float animation_duration_ms() const { return m_animations.at(m_animation_state).duration_ms(); }
 
     	[[nodiscard]] const std::vector<glm::mat4>& transforms() const { return m_animations.at(m_animation_state).transforms(); }
 

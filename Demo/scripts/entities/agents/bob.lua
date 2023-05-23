@@ -13,12 +13,17 @@ function init()
     local ATTACK_STATE_PUNCH_LIGHT = 7;
     local ATTACK_STATE_SLAM_HEAVY = 8; 
 
-    local ATTACK_DISTANCE = 0.75;
-    local RUN_DISTANCE = 3.0;
+    local MIN_ATTACK_DISTANCE = 0.7;
+    local MAX_ATTACK_DISTANCE = 1.2;
+    local RUN_DISTANCE = 2.5;
     local VIEW_DISTANCE = 10.0;
+
+    local RUN_SPEED = 1.75;
+    local SPRINT_SPEED = 4.25;
 
     TIMER = 0.0;
     PAUSE_ANIMATION = false;
+    ONCE = false;
     
     entity:get_transform().pos = Vector3.new(2.7, 0, -12.0);
 
@@ -83,7 +88,7 @@ function init()
         local direction = (scene.globals.player.pos - entity:get_transform().pos):normalize();
 
         -- Move towards the player
-        local speed = 3.5;  -- Adjust this value as needed, can later be set as global variable based on difficulty
+        local speed = SPRINT_SPEED;  -- Adjust this value as needed, can later be set as global variable based on difficulty
         local newPos = entity:get_transform().pos + direction * speed * Time.delta_time;
         entity:get_transform().pos.x = newPos.x;
         entity:get_transform().pos.z = newPos.z;
@@ -97,26 +102,26 @@ function init()
         local diff = scene.globals.player.pos - entity:get_transform().pos;
         local player_dist = diff:magnitude();
 
-        --if (player_dist > RUN_DISTANCE) then
-        --    state.model:set_animation_state(RUN_STATE_ENRAGED);
-        --    speed = 3.5;
-        --elseif (player_dist < RUN_DISTANCE) then
-        --    state.model:set_animation_state(RUN_STATE_REGULAR);
-        --    speed = 1.5;
-        --end
+        if (player_dist < RUN_DISTANCE) then
+            state.model:set_animation_state(RUN_STATE_REGULAR);
+            speed = RUN_SPEED;
+        elseif (player_dist > RUN_DISTANCE) then
+                state.model:set_animation_state(RUN_STATE_ENRAGED);
+                speed = SPRINT_SPEED;
+        end
 
-        --if (not PAUSE_ANIMATION) then
-        --    state.model:update_animation(Time.delta_time);
-        --end
+        if (not PAUSE_ANIMATION) then
+            state.model:update_animation(Time.delta_time);
+        end
 
-        --if player_dist > VIEW_DISTANCE then
-        --    state.fsm:change_state("idle_search")
-        --end
+        if player_dist > VIEW_DISTANCE then
+            state.fsm:change_state("idle_search")
+        end
         
-        --if player_dist <= ATTACK_DISTANCE then
-        --    state.fsm:change_state("attack")
-        --    state.model:reset_current_animation();
-        --end
+        if player_dist < MIN_ATTACK_DISTANCE then
+            ONCE = false;
+            state.fsm:change_state("attack")
+        end
     end)
 
     state.fsm:add_state("attack", function()
@@ -128,8 +133,13 @@ function init()
         targetRotation = targetRotation * (180 / math.pi);  -- Convert from radians to degrees
         entity:get_transform().rot.y = targetRotation;  -- Set entity's Y rotation to face the player (adjust this according to your coordinate system)
 
-        --random_anim = math.random(ATTACK_STATE_SLASH_LIGHT, ATTACK_STATE_SLAM_HEAVY);
-        state.model:set_animation_state(ATTACK_STATE_SLASH_LIGHT);
+        local random_attack = ATTACK_STATE_SLASH_LIGHT;
+
+        if (not ONCE) then
+            random_attack = math.random(ATTACK_STATE_SLASH_LIGHT, ATTACK_STATE_SLAM_HEAVY);
+            state.model:set_animation_state(random_attack);
+            ONCE = not ONCE;
+        end
 
         -- If player is no longer within 1m radius, switch back to 'chase' state
         local diff = scene.globals.player.pos - entity:get_transform().pos;
@@ -139,11 +149,13 @@ function init()
             state.model:update_animation(Time.delta_time);
         end
 
-        if (player_dist >= ATTACK_DISTANCE) then
-            if (wait(0.6) and player_dist >= ATTACK_DISTANCE) then
+        if (player_dist > MAX_ATTACK_DISTANCE) then
+            if (wait(state.model:get_animation_duration() * 0.15)) then
+                state.model:reset_current_animation();
                 state.fsm:change_state("chase");
                 TIMER = 0.0;
             end
+
         end
     end)
 
