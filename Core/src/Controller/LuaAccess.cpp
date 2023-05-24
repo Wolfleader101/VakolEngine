@@ -204,9 +204,11 @@ namespace Vakol::Controller
         });
     }
 
-    void RegisterApplication(sol::state& lua, Application* app)
-	{
+    void RegisterApplication(sol::state& lua, Application* app) {
+
+        lua.set_function("app_run", &Application::SetRunning, app);
         lua.set_function("add_scene", &Application::AddScene, app);
+        lua.set_function("get_scene", &Application::GetScene, app);
 
         auto time_type = lua.new_usertype<Time>("Time");
         time_type["delta_time"] = &Time::deltaTime;
@@ -239,7 +241,7 @@ namespace Vakol::Controller
             Input::KEY::KEY_O, "KEY_P", Input::KEY::KEY_P, "KEY_Q", Input::KEY::KEY_Q, "KEY_R", Input::KEY::KEY_R,
             "KEY_S", Input::KEY::KEY_S, "KEY_T", Input::KEY::KEY_T, "KEY_U", Input::KEY::KEY_U, "KEY_V",
             Input::KEY::KEY_V, "KEY_W", Input::KEY::KEY_W, "KEY_X", Input::KEY::KEY_X, "KEY_Y", Input::KEY::KEY_Y,
-            "KEY_Z", Input::KEY::KEY_Z, "KEY_LEFT_SHIFT", Input::KEY::KEY_LEFT_SHIFT);
+            "KEY_Z", Input::KEY::KEY_Z, "KEY_LEFT_SHIFT", Input::KEY::KEY_LEFT_SHIFT, "KEY_ESC", Input::KEY::KEY_ESCAPE);
     }
 
     void RegisterEntity(LuaState& state, sol::state& lua)
@@ -470,6 +472,12 @@ namespace Vakol::Controller
         scene_type["globals"] = &Scene::sceneGlobals;
 
         scene_type.set_function("create_entity", &Scene::CreateEntity);
+
+        scene_type.set_function("set_active", [](Scene* scene, bool active)
+            {
+                scene->active = active;
+            });
+
         scene_type.set_function("get_camera", &Scene::GetCamera);
         scene_type.set_function("get_entity", &Scene::GetEntity);
 
@@ -512,11 +520,22 @@ namespace Vakol::Controller
         // REGISTERS C++ FUNCTIONS TO LUA
         gui_window_type.set_function("start_window", &View::GUIWindow::StartWindowCreation);
 
+        gui_window_type.set_function("update", &View::GUIWindow::Update);
+
+        gui_window_type.set_function("start_frame", &View::GUIWindow::CreateNewFrame);
+        gui_window_type.set_function("end_frame", &View::GUIWindow::EndFrame);
+
         gui_window_type.set_function("get_fps", &View::GUIWindow::GetFramesPerSecond);
 
         gui_window_type.set_function("add_text", &View::GUIWindow::AddText);
         gui_window_type.set_function("add_button", &View::GUIWindow::AddButton);
         gui_window_type.set_function("add_checkbox", &View::GUIWindow::AddCheckbox);
+        gui_window_type.set_function("add_image", [](View::GUIWindow* gui, const std::string& path, float width, float height)
+        {
+            auto tex = AssetLoader::GetTexture(path);
+        	unsigned texID = tex->GetID();
+	        gui->AddImage(texID, {width, height});
+		});
 
         gui_window_type.set_function("add_integer_slider", &View::GUIWindow::AddIntSlider);
         gui_window_type.set_function("add_float_slider", &View::GUIWindow::AddFloatSlider);
@@ -527,7 +546,10 @@ namespace Vakol::Controller
         gui_window_type.set_function("end_window", &View::GUIWindow::EndWindowCreation);
     }
 
-    void RegisterRenderer([[maybe_unused]] sol::state& lua) {}
+    void RegisterRenderer([[maybe_unused]] sol::state& lua)
+    {
+	    
+    }
 
     void RegisterPhysics(sol::state& lua) {
         auto scenePhysicType = lua.new_usertype<ScenePhysics>("scenePhysics");

@@ -29,6 +29,8 @@ namespace Vakol::View {
          * @brief Creates a new frame for the window
          */
     	void CreateNewFrame();
+
+        void EndFrame();
         /**
          * @brief Starts the creation of a GUI window
          *
@@ -54,6 +56,15 @@ namespace Vakol::View {
          * @param inputText The text to be set in the UI
          */
     	void AddText(const std::string& inputText);
+
+
+        /**
+         * \brief  Adds an image to the UI Window
+         * \param imageName  
+         * \param imagePath 
+         * \param imageSize 
+         */
+        void AddImage(unsigned id, const ImVec2& imageSize);
         /**
          * @brief Adds a button to a given window
          *
@@ -108,6 +119,8 @@ namespace Vakol::View {
          * @param maxValue the maximum value of the slider
          */
     	void AddVecFloatSlider(const std::string& sliderName, float sliderValue[], const int size, const float minValue, const float maxValue);
+
+
         /**
          * @brief Ends the creation of a GUI window
          */
