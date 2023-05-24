@@ -54,16 +54,21 @@ namespace Vakol::View {
          * @brief Add a text string to the UI Window
          *
          * @param inputText The text to be set in the UI
+         * @param centerX
+         * @param centerY
+         * @param fontSize
          */
-    	void AddText(const std::string& inputText) const;
+    	void AddText(const std::string& inputText, bool centerX, bool centerY, float fontSize) const;
 
 
         /**
          * \brief Adds an image to the UI Window
          * \param id
-         * \param imageSize 
+         * \param imageSize
+         * \param centerX
+         * \param centerY
          */
-        void AddImage(unsigned id, const ImVec2& imageSize) const;
+        void AddImage(unsigned int id, const ImVec2& imageSize, bool centerX, bool centerY) const;
         /**
          * @brief Adds a button to a given window
          *

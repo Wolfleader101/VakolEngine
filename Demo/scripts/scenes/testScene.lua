@@ -12,24 +12,24 @@ function update()
     GUI:start_window("FPS Window", 240.0, 240.0, 10.0, 10.0);
 
     local fps = GUI:get_fps()
-    GUI:add_text("GUI FPS: " .. math.floor(fps));
-    GUI:add_text("GAME FPS: " .. Time.fps);
-    GUI:add_text("Delta Time:  " .. string.format("%.4f", Time.delta_time));
+    GUI:add_text("GUI FPS: " .. math.floor(fps), false, false, 1.0);
+    GUI:add_text("GAME FPS: " .. Time.fps, false, false, 1.0);
+    GUI:add_text("Delta Time:  " .. string.format("%.4f", Time.delta_time), false, false, 1.0);
 
-    GUI:add_text(" ");
+    GUI:add_text(" ", false, false, 1.0);
 
-    GUI:add_text("CONTROLS:");
+    GUI:add_text("CONTROLS:", false, false, 1.0);
 
-    GUI:add_text("W - Move left");
-    GUI:add_text("A - Move forward");
-    GUI:add_text("S - Move left");
-    GUI:add_text("D - Move right");
+    GUI:add_text("W - Move left", false, false, 1.0);
+    GUI:add_text("A - Move forward", false, false, 1.0);
+    GUI:add_text("S - Move left", false, false, 1.0);
+    GUI:add_text("D - Move right", false, false, 1.0);
 
-    GUI:add_text("MOUSE - Move camera");
+    GUI:add_text("MOUSE - Move camera", false, false, 1.0);
 
 
-    GUI:add_text("K - Toggle wireframe");
-    GUI:add_text("ESC - Menu");
+    GUI:add_text("K - Toggle wireframe", false, false, 1.0);
+    GUI:add_text("ESC - Menu", false, false, 1.0);
 
     GUI:end_window();
 

@@ -56,12 +56,62 @@ namespace Vakol::View
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());  // Renders the UI to the screen
     }
 
-    void GUIWindow::AddText(const std::string& inputText) const { ImGui::Text(inputText.c_str()); }
-
-    void GUIWindow::AddImage(const unsigned id, const ImVec2& imageSize) const
+    void GUIWindow::AddText(const std::string& inputText, const bool centerX, const bool centerY, const float fontSize) const
     {
+        if (centerX)
+        {
+	        const auto windowWidth = ImGui::GetWindowSize().x;
+			const auto textWidth   = ImGui::CalcTextSize(inputText.c_str()).x;
+
+			ImGui::SetCursorPosX((windowWidth - textWidth) * 0.5f);
+        }
+        else if (centerY)
+        {
+	        const auto windowHeight = ImGui::GetWindowSize().y;
+            const auto textHeight = ImGui::CalcTextSize(inputText.c_str()).y;
+
+            ImGui::SetCursorPosY((windowHeight - textHeight) * 0.5f);
+        }
+        else if (centerX && centerY)
+        {
+	        const auto windowWidth = ImGui::GetWindowSize().x;
+			const auto textWidth   = ImGui::CalcTextSize(inputText.c_str()).x;
+
+            const auto windowHeight = ImGui::GetWindowSize().y;
+            const auto textHeight = ImGui::CalcTextSize(inputText.c_str()).y;
+
+            ImGui::SetCursorPosX((windowWidth - textWidth) * 0.5f);
+            ImGui::SetCursorPosY((windowHeight - textHeight) * 0.5f);
+        }
+
+        ImGui::SetWindowFontScale(fontSize);
+
+	    ImGui::Text(inputText.c_str());
+    }
+
+    void GUIWindow::AddImage(const unsigned id, const ImVec2& imageSize, const bool centerX, const bool centerY) const
+    {
+        if (centerX)
+        {
+			const auto width = ImGui::GetWindowSize().x;
+			ImGui::SetCursorPosX((width - imageSize.x) * 0.5f);
+        }
+        else if (centerY)
+        {
+	        const auto height = ImGui::GetWindowSize().y;
+            ImGui::SetCursorPosY((height - imageSize.y) * 0.5f);
+        }
+        else if (centerX && centerY)
+        {
+	        const auto width = ImGui::GetWindowSize().x;
+            const auto height = ImGui::GetWindowSize().y;
+
+			ImGui::SetCursorPosX((width - imageSize.x) * 0.5f);
+            ImGui::SetCursorPosY((height - imageSize.y) * 0.5f);
+        }
+
         ImGui::Image(reinterpret_cast<void*>(static_cast<intptr_t>(id)), imageSize);
-    };
+    }
 
     void GUIWindow::AddButton(const std::string& buttonName, float width, float height, const std::function<void()>& inputFunction) const
     {
