@@ -143,14 +143,18 @@ namespace Vakol::Controller
 
     void RegisterLogger(sol::state& lua)
 	{
-        lua.set_function("print", [](const sol::variadic_args& va) {
+        lua.set_function("print", [](const sol::variadic_args& va) 
+        {
             if (const auto arg = va[0]; arg.get_type() == sol::type::string)
                 Logger::ScriptPrintTrace(va[0].get<std::string>());
             else if (arg.get_type() == sol::type::number)
                 Logger::ScriptPrintTrace(std::to_string(va[0].get<float>()));
+            else if (arg.get_type() == sol::type::boolean)
+                Logger::ScriptPrintTrace(std::to_string(va[0].get<bool>()));
         });
 
-        lua.set_function("print_info", [](const sol::variadic_args& va) {
+        lua.set_function("print_info", [](const sol::variadic_args& va) 
+        {
             if (const auto arg = va[0]; arg.get_type() == sol::type::string)
                 Logger::ScriptPrintInfo(va[0].get<std::string>());
             else if (arg.get_type() == sol::type::number)
@@ -181,14 +185,14 @@ namespace Vakol::Controller
 
     void RegisterAssetLoader(sol::state& lua)
 	{
-        lua.set_function("load_texture", [](std::string& path) 
+        lua.set_function("load_texture", [](const std::string& path) 
         {
-            return AssetLoader::GetTexture(std::move(path));  // no checks... just raw doggin it LOL
+            return AssetLoader::GetTexture(path);  // no checks... just raw doggin it LOL
         });
 
-        lua.set_function("load_model", [](const std::string& path, const float scale = 1.0f, const bool animated = false) 
+        lua.set_function("load_model", [](const std::string& path, const float scale = 1.0f, const bool animated = false, const bool backfaceCull = true)
         {
-			if (const auto model = AssetLoader::GetModel(path, scale, animated); model == nullptr) return false;
+			if (const auto model = AssetLoader::GetModel(path, scale, animated, backfaceCull); model == nullptr) return false;
 
             return true;
          });
@@ -264,6 +268,12 @@ namespace Vakol::Controller
             return std::move(texture);
         });
 
+        lua.set_function("instantiate_model", [](const std::shared_ptr<Assets::Model>& model, const std::vector<glm::mat4>& matrices, const int amount) 
+		{
+            // start_index is 7 for animations, otherwise its 3 for non-animated shit
+            CreateInstances(model->meshes(), matrices, amount, 3);
+        });
+
         entity_type.set_function("get_transform", &Entity::GetComponent<Transform>);
 
         entity_type.set_function("create_height_map_terrain", [](Entity* ent, std::string&& path, const float min, const float max) 
@@ -318,21 +328,15 @@ namespace Vakol::Controller
             if (ent->HasComponent<Terrain>()) return ent->GetComponent<Terrain>();
         });
 
-        entity_type.set_function("add_model", [](Entity* ent, const std::string& path, const float scale = 1.0f, const bool animated = false) 
+        entity_type.set_function("add_model", [](Entity* ent, const std::string& path, const float scale = 1.0f, const bool animated = false, const bool backfaceCull = true)
 		{
             if (!ent->HasComponent<Drawable>()) ent->AddComponent<Drawable>();
 
-            auto model = AssetLoader::GetModel(path, scale, animated);
+            auto model = AssetLoader::GetModel(path, scale, animated, backfaceCull); 
 
             if (model) ent->GetComponent<Drawable>().model_ptr = model;
 
             return model;
-        });
-
-        entity_type.set_function("instantiate_model", [](const std::shared_ptr<Assets::Model>& model, const sol::as_table_t<std::vector<glm::mat4>>& matrices, int amount) 
-		{
-            VK_TRACE(matrices.value().size());
-            CreateInstances(model->meshes(), matrices.value());
         });
 
         entity_type.set_function("get_model", [](const Entity* ent) 
@@ -341,6 +345,12 @@ namespace Vakol::Controller
         });
 
         model_type.set_function("set_animation_state", &Assets::Model::SetAnimationState);
+        model_type.set_function("update_animation", &Assets::Model::UpdateAnimation);
+
+        model_type.set_function("reset_current_animation", sol::resolve<void()>(&Assets::Model::ResetAnimation));
+        model_type.set_function("reset_animation", sol::resolve<void(int)>(&Assets::Model::ResetAnimation));
+
+        model_type.set_function("get_animation_duration", &Assets::Model::animation_duration_s);
 
         model_type.set_function("get_mesh_count", &Assets::Model::nMeshes);
         model_type.set_function("get_mesh", &Assets::Model::mesh);
@@ -614,7 +624,14 @@ namespace Vakol::Controller
         scenePhysicType.set_function("enable_debug", &ScenePhysics::EnableDebug);
     }
 
-    std::vector<glm::mat4> create_mat4_vector() { return {}; }
+    std::vector<glm::mat4> create_mat4_vector(const int reserve)
+	{
+    	std::vector<glm::mat4> vector;
+
+        vector.reserve(reserve);
+
+        return vector;
+    }
 
     void RegisterOther(sol::state& lua) { lua.set_function("vector_mat4", &create_mat4_vector); }
 }

@@ -18,7 +18,7 @@ namespace Vakol::Controller
         static std::string shader_path;
 
         static std::shared_ptr<Model::Assets::Texture> GetTexture(const std::string& file);
-        static std::shared_ptr<Model::Assets::Model> GetModel(const std::string& file, float scale, bool animated);
+        static std::shared_ptr<Model::Assets::Model> GetModel(const std::string& file, float scale, bool animated, bool backfaceCull);
         static std::shared_ptr<Model::Shader> GetShader(const std::string& file);
 
     private:

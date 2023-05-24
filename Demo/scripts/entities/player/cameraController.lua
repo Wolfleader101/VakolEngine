@@ -2,7 +2,7 @@ function init()
     print("Initialising Camera");
 
     state.speed = 2;
-    state.sprintSpeed = 4;
+    state.sprintSpeed = 4.25;
     state.flying = false;
 
     local camera = scene:get_camera();

@@ -50,8 +50,8 @@ namespace Vakol::View
         glEnable(GL_DEPTH_TEST);
         //glEnable(GL_CULL_FACE);
 
-        //glEnable(GL_BLEND);
-        //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         // this corresponds to the uniform buffer in each shader that has one.
         // layout (std140, binding = 1) uniform <name>
@@ -106,7 +106,10 @@ namespace Vakol::View
         const auto& shader = model->c_shader();
         VK_ASSERT(&shader, "\n\nShader is nullptr");
 
-        if (model->isAnimated()) model->UpdateAnimation(time.deltaTime);
+        if (!model->cullBackface())
+        {
+            glDisable(GL_CULL_FACE);
+        }
 
         shader->Bind();
 
@@ -149,6 +152,9 @@ namespace Vakol::View
         }
 
         shader->Unbind();
+
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK); 
 
         skybox->Draw(projection, view);
     }

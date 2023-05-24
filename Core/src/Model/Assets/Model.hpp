@@ -29,15 +29,26 @@ namespace Vakol::Model::Assets {
         }
 
         [[nodiscard]] bool isAnimated() const { return m_animated; }
+		[[nodiscard]] bool cullBackface() const { return m_cullBackface; }
+        [[nodiscard]] void SetCullBackface(bool cull) { m_cullBackface = cull; }
 
         std::shared_ptr<Shader>& shader() { return m_shader; }
         [[nodiscard]] const std::shared_ptr<Shader>& c_shader() const { return m_shader; }
 
         void UpdateAnimation(const float delta_time) { m_animations.at(m_animation_state).Update(delta_time); }
 
+    	void ResetAnimation() { m_animations.at(m_animation_state).ResetAnimation(); }
+
+    	void ResetAnimation(const int state)
+    	{
+        	VK_ASSERT(state < numAnimations() && state >= 0, "\n\nAnimation Index out of bounds!");
+
+        	m_animations.at(state).ResetAnimation();
+    	}
+
         void SetAnimationState(int state)
     	{
-	        if (const auto size = static_cast<int>(m_animations.size()); state < size && state >= 0)
+	        if (const auto size = numAnimations(); state < size && state >= 0)
                 m_animation_state = state;
             else 
             {
@@ -46,7 +57,12 @@ namespace Vakol::Model::Assets {
             }
         }
 
+        [[nodiscard]] int numAnimations() const { return static_cast<int>(m_animations.size()); }
         [[nodiscard]] int numTransforms() const { return m_animations.at(m_animation_state).numTransforms(); }
+
+        [[nodiscard]] float animation_duration_s() const { return m_animations.at(m_animation_state).duration_s(); }
+        [[nodiscard]] float animation_duration_ms() const { return m_animations.at(m_animation_state).duration_ms(); }
+
     	[[nodiscard]] const std::vector<glm::mat4>& transforms() const { return m_animations.at(m_animation_state).transforms(); }
 
         [[nodiscard]] const Mesh& mesh(const int index = 0) const { return m_meshes.at(index); }
@@ -64,6 +80,7 @@ namespace Vakol::Model::Assets {
         int m_animation_state = 0;
 
         bool m_animated = false;
+        bool m_cullBackface = true;
     };
 
 }

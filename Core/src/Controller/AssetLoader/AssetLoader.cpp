@@ -37,7 +37,7 @@ namespace Vakol::Controller
         return ret;
     }
 
-    std::shared_ptr<::Model> AssetLoader::GetModel(const std::string& file, const float scale, bool animated) 
+    std::shared_ptr<::Model> AssetLoader::GetModel(const std::string& file, const float scale, bool animated, bool backfaceCull) 
     {
         std::shared_ptr<::Model> ret;
 
@@ -54,6 +54,8 @@ namespace Vakol::Controller
         } else {
             ret = m_ModelMap[file];
         }
+
+        ret->SetCullBackface(backfaceCull); 
 
         return ret;
     }
