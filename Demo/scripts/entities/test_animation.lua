@@ -14,8 +14,8 @@ function init()
 
     local shader = model:get_shader(); -- get the shader from the model
 
-    shader:set_vec3v("light.position", Vector3.new(2.0, 2.0, -4.0));
-    -- shader:set_vec3v("light.direction", Vector3.new(math.rad(0.0), math.rad(0.0), math.rad(90.0)));
+    --shader:set_vec3v("light.position", Vector3.new(2.0, 2.0, -4.0));
+    shader:set_vec3v("light.direction", Vector3.new(math.rad(0.0), math.rad(0.0), math.rad(90.0)));
 
     shader:set_float("material.shininess", 16.0);
     shader:set_vec3v("tint", Vector3.new(0.2, 0.65, 0.9));
