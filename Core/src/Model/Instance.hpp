@@ -6,5 +6,5 @@ namespace Vakol::Model
 {
     using Assets::Mesh;
 
-    void CreateInstances(const std::vector<Mesh>& meshes, const std::vector<glm::mat4>& matrices);
+    void CreateInstances(const std::vector<Mesh>& meshes, const std::vector<glm::mat4>& matrices, int amount, int start_index = 3);
 }

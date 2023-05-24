@@ -10,8 +10,10 @@
 #include "System.hpp"
 #include "View/GUI/GUIWindow.hpp"
 
-namespace Vakol::Controller {
-    void RegisterMath(sol::state& lua) {
+namespace Vakol::Controller
+{
+    void RegisterMath(sol::state& lua)
+	{
         {
             sol::constructors<glm::vec2(), glm::vec2(float), glm::vec2(float, float)> ctor;  // allow for constructors
 
@@ -139,31 +141,40 @@ namespace Vakol::Controller {
         }
     }
 
-    void RegisterLogger(sol::state& lua) {
-        lua.set_function("print", [](const sol::variadic_args& va) {
+    void RegisterLogger(sol::state& lua)
+	{
+        lua.set_function("print", [](const sol::variadic_args& va) 
+        {
             if (const auto arg = va[0]; arg.get_type() == sol::type::string)
                 Logger::ScriptPrintTrace(va[0].get<std::string>());
             else if (arg.get_type() == sol::type::number)
                 Logger::ScriptPrintTrace(std::to_string(va[0].get<float>()));
+            else if (arg.get_type() == sol::type::boolean)
+                Logger::ScriptPrintTrace(std::to_string(va[0].get<bool>()));
         });
-        lua.set_function("print_info", [](const sol::variadic_args& va) {
+
+        lua.set_function("print_info", [](const sol::variadic_args& va) 
+        {
             if (const auto arg = va[0]; arg.get_type() == sol::type::string)
                 Logger::ScriptPrintInfo(va[0].get<std::string>());
             else if (arg.get_type() == sol::type::number)
                 Logger::ScriptPrintInfo(std::to_string(va[0].get<float>()));
         });
+
         lua.set_function("print_warn", [](const sol::variadic_args& va) {
             if (const auto arg = va[0]; arg.get_type() == sol::type::string)
                 Logger::ScriptPrintWarn(va[0].get<std::string>());
             else if (arg.get_type() == sol::type::number)
                 Logger::ScriptPrintWarn(std::to_string(va[0].get<float>()));
         });
+
         lua.set_function("print_err", [](const sol::variadic_args& va) {
             if (const auto arg = va[0]; arg.get_type() == sol::type::string)
                 Logger::ScriptPrintError(va[0].get<std::string>());
             else if (arg.get_type() == sol::type::number)
                 Logger::ScriptPrintError(std::to_string(va[0].get<float>()));
         });
+
         lua.set_function("print_critical", [](const sol::variadic_args& va) {
             if (const auto arg = va[0]; arg.get_type() == sol::type::string)
                 Logger::ScriptPrintCrit(va[0].get<std::string>());
@@ -172,30 +183,29 @@ namespace Vakol::Controller {
         });
     }
 
-    void RegisterAssetLoader(sol::state& lua) {
-        lua.set_function("load_texture", [](std::string& path) {
+    void RegisterAssetLoader(sol::state& lua)
+	{
+        lua.set_function("load_texture", [](const std::string& path) 
+        {
             return AssetLoader::GetTexture(path);  // no checks... just raw doggin it LOL
         });
 
-        lua.set_function("load_model",
-                         [](const std::string& path, const float scale = 1.0f, const bool animated = false) {
-                             const auto model = AssetLoader::GetModel(path, scale, animated);
+        lua.set_function("load_model", [](const std::string& path, const float scale = 1.0f, const bool animated = false) 
+        {
+			if (const auto model = AssetLoader::GetModel(path, scale, animated); model == nullptr) return false;
 
-                             if (model == nullptr) return false;
-
-                             return true;
-                         });
+            return true;
+         });
 
         lua.set_function("load_shader", [](const std::string& path) {
-            const auto shader = AssetLoader::GetShader(path);
-
-            if (shader == nullptr) return false;
+	        if (const auto shader = AssetLoader::GetShader(path); shader == nullptr) return false;
 
             return true;
         });
     }
 
-    void RegisterApplication(sol::state& lua, Application* app) {
+    void RegisterApplication(sol::state& lua, Application* app)
+	{
         lua.set_function("add_scene", &Application::AddScene, app);
 
         auto time_type = lua.new_usertype<Time>("Time");
@@ -232,63 +242,74 @@ namespace Vakol::Controller {
             "KEY_Z", Input::KEY::KEY_Z, "KEY_LEFT_SHIFT", Input::KEY::KEY_LEFT_SHIFT);
     }
 
-    void RegisterEntity(LuaState& state, sol::state& lua) {
+    void RegisterEntity(LuaState& state, sol::state& lua)
+	{
         auto entity_type = lua.new_usertype<Entity>("entity");
         auto model_type = lua.new_usertype<Assets::Model>("model");
         auto mesh_type = lua.new_usertype<Mesh>("mesh");
         auto material_type = lua.new_usertype<Assets::Material>("material");
         auto shader_type = lua.new_usertype<Shader>("shader");
 
-        lua.set_function("create_raw_texture", [](std::string& path) {
+        lua.set_function("create_raw_texture", [](std::string& path) 
+        {
             auto texture = Assets::Texture(path);
             texture.SetID(LoadRawTexture(texture.path));
 
             return texture;
         });
 
-        lua.set_function("create_texture", [](std::string& path, const bool gamma, const bool flip) {
-            auto texture = Assets::Texture(path);
+        lua.set_function("create_texture", [](std::string& path, const bool gamma, const bool flip) 
+        {
+            auto&& texture = Assets::Texture(std::move(path));
             texture.SetID(LoadTexture(texture.path, gamma, flip));
 
-            return texture;
+            return std::move(texture);
+        });
+
+        lua.set_function("instantiate_model", [](const std::shared_ptr<Assets::Model>& model, const std::vector<glm::mat4>& matrices, const int amount) 
+		{
+            // start_index is 7 for animations, otherwise its 3 for non-animated shit
+            CreateInstances(model->meshes(), matrices, amount, 3);
         });
 
         entity_type.set_function("get_transform", &Entity::GetComponent<Transform>);
 
-        entity_type.set_function("create_height_map_terrain",
-                                 [](Entity* ent, std::string&& path, const float min, const float max) {
-                                     if (!ent->HasComponent<Drawable>()) ent->AddComponent<Drawable>();
+        entity_type.set_function("create_height_map_terrain", [](Entity* ent, std::string&& path, const float min, const float max) 
+        {
+	         if (!ent->HasComponent<Drawable>()) ent->AddComponent<Drawable>();
 
-                                     if (ent->HasComponent<Terrain>()) ent->RemoveComponent<Terrain>();
+	         if (ent->HasComponent<Terrain>()) ent->RemoveComponent<Terrain>();
 
-                                     ent->AddComponent<Terrain>(LoadHeightMapTerrain(std::move(path), min, max));
+	         ent->AddComponent<Terrain>(LoadHeightMapTerrain(std::move(path), min, max));
 
-                                     auto terrain = ent->GetComponent<Terrain>();
+	         auto& terrain = ent->GetComponent<Terrain>();
 
-                                     if (const auto model = terrain.GetModel()) {
-                                         model->mesh().SetDrawMode(DRAW_MODE::STRIPS);
-                                         model->mesh().SetDrawType(DRAW_TYPE::ELEMENTS);
+	         if (const auto& model = terrain.GetModel()) 
+             {
+	             model->mesh().SetDrawMode(DRAW_MODE::STRIPS);
+	             model->mesh().SetDrawType(DRAW_TYPE::ELEMENTS);
 
-                                         model->mesh().SetDrawModeInfo((terrain.GetSize() - 1) / 1);  // num strips
+	             model->mesh().SetDrawModeInfo((terrain.GetSize() - 1) / 1);  // num strips
 
-                                         model->mesh().SetNumTrisPerStrip(terrain.GetSize() / 1 * 2 - 2);
+	             model->mesh().SetNumTrisPerStrip(terrain.GetSize() / 1 * 2 - 2);
 
-                                         ent->GetComponent<Components::Drawable>().model_ptr = model;
-                                     }
+	             ent->GetComponent<Drawable>().model_ptr = model;
+	         }
 
-                                     return terrain;
-                                 });
+	         return terrain;
+	     });
 
-        entity_type.set_function("create_clod_terrain", [](Entity* ent, std::string&& path) {
+        entity_type.set_function("create_clod_terrain", [](Entity* ent, std::string&& path, const float min, const float max) 
+        {
             if (!ent->HasComponent<Drawable>()) ent->AddComponent<Drawable>();
 
             if (ent->HasComponent<Terrain>()) ent->RemoveComponent<Terrain>();
 
-            ent->AddComponent<Terrain>(LoadCLODTerrain(std::move(path)));
+            ent->AddComponent<Terrain>(LoadCLODTerrain(std::move(path), min, max));
 
-            auto terrain = ent->GetComponent<Terrain>();
+            auto& terrain = ent->GetComponent<Terrain>();
 
-            if (const auto model = terrain.GetModel()) {
+            if (const auto& model = terrain.GetModel()) {
                 model->mesh().SetDrawMode(DRAW_MODE::PATCHES);
                 model->mesh().SetDrawType(DRAW_TYPE::ARRAYS);
 
@@ -300,12 +321,13 @@ namespace Vakol::Controller {
             return terrain;
         });
 
-        entity_type.set_function("get_terrain", [](const Entity* ent) {
+        entity_type.set_function("get_terrain", [](const Entity* ent) 
+        {
             if (ent->HasComponent<Terrain>()) return ent->GetComponent<Terrain>();
         });
 
-        entity_type.set_function("add_model", [](Entity* ent, const std::string& path, const float scale = 1.0f,
-                                                 const bool animated = false) {
+        entity_type.set_function("add_model", [](Entity* ent, const std::string& path, const float scale = 1.0f, const bool animated = false) 
+		{
             if (!ent->HasComponent<Drawable>()) ent->AddComponent<Drawable>();
 
             auto model = AssetLoader::GetModel(path, scale, animated);
@@ -315,17 +337,18 @@ namespace Vakol::Controller {
             return model;
         });
 
-        entity_type.set_function(   "instantiate_model", [](Entity* ent, const std::shared_ptr<Assets::Model>& model,
-                                    const sol::as_table_t<std::vector<glm::mat4>>& matrices, int amount) {
-                                    VK_TRACE(matrices.value().size());
-                                    CreateInstances(model->meshes(), matrices.value());
-                                    });
-
-        entity_type.set_function("get_model", [](const Entity* ent) {
+        entity_type.set_function("get_model", [](const Entity* ent) 
+        {
             if (ent->HasComponent<Drawable>()) return ent->GetComponent<Drawable>().model_ptr;
         });
 
         model_type.set_function("set_animation_state", &Assets::Model::SetAnimationState);
+        model_type.set_function("update_animation", &Assets::Model::UpdateAnimation);
+
+        model_type.set_function("reset_current_animation", sol::resolve<void()>(&Assets::Model::ResetAnimation));
+        model_type.set_function("reset_animation", sol::resolve<void(int)>(&Assets::Model::ResetAnimation));
+
+        model_type.set_function("get_animation_duration", &Assets::Model::animation_duration_s);
 
         model_type.set_function("get_mesh_count", &Assets::Model::nMeshes);
         model_type.set_function("get_mesh", &Assets::Model::mesh);
@@ -340,6 +363,7 @@ namespace Vakol::Controller {
         material_type.set_function("get_ambient_color", &Assets::Material::GetAmbientColor);
         material_type.set_function("get_diffuse_color", &Assets::Material::GetDiffuseColor);
 
+        shader_type.set_function("set_bool", &Shader::SetBool);
         shader_type.set_function("set_int", &Shader::SetInt);
         shader_type.set_function("set_float", &Shader::SetFloat);
 
@@ -358,8 +382,10 @@ namespace Vakol::Controller {
 
         entity_type.set_function("physics_init", [](Entity* ent, Scene& scene) { System::BindScene(scene); });
 
-        entity_type.set_function("add_rigid", [](Entity* ent) -> RigidBody& {
+        entity_type.set_function("add_rigid", [](Entity* ent) -> RigidBody& 
+        {
             if (!ent->HasComponent<RigidBody>()) ent->AddComponent<RigidBody>();
+
             return ent->GetComponent<RigidBody>();
         });
 
@@ -382,7 +408,7 @@ namespace Vakol::Controller {
             assert(0);
         });
 
-        entity_type.set_function("get_bounds_from_model", [](Entity* ent) -> void {
+        entity_type.set_function("get_bounds_from_model", [](const Entity* ent) -> void {
             if (ent->HasComponent<Drawable, Collider>()) {
                 const auto& model = ent->GetComponent<Drawable>();
 
@@ -395,11 +421,11 @@ namespace Vakol::Controller {
             }
         });
 
-        entity_type.set_function("get_bounds_from_model", [](Entity* ent) -> void {
+        entity_type.set_function("get_bounds_from_model", [](const Entity* ent) -> void {
             if (ent->HasComponent<Drawable, Collider>()) {
                 const auto& model = ent->GetComponent<Drawable>();
 
-                auto& collider = ent->GetComponent<Components::Collider>();
+                auto& collider = ent->GetComponent<Collider>();
 
                 collider.bounds = GetBounds(model);
             } else {
@@ -408,7 +434,7 @@ namespace Vakol::Controller {
             }
         });
 
-        entity_type.set_function("add_fsm", [&](Entity* ent) -> Components::FSM& {
+        entity_type.set_function("add_fsm", [&](Entity* ent) -> FSM& {
             if (!ent->HasComponent<FSM>()) ent->AddComponent<FSM>(state);
             return ent->GetComponent<FSM>();
         });
@@ -452,8 +478,10 @@ namespace Vakol::Controller {
         camera_type.set_function("get_forward", &Camera::GetForward);
         camera_type.set_function("get_right", &Camera::GetRight);
 
-        scene_type.set_function("add_terrain_physics", [](Scene* scene, const Entity ent) {
-            if (!ent.HasComponent<Terrain>()) {
+        scene_type.set_function("add_terrain_physics", [](Scene* scene, const Entity ent) 
+        {
+            if (!ent.HasComponent<Terrain>()) 
+            {
                 VK_WARN("Entity does not have a terrain component. Can't add physics");
                 return;
             }
@@ -465,8 +493,7 @@ namespace Vakol::Controller {
             System::Physics_AddTerrain(terrain);
         });
 
-        scene_type.set_function("get_physics",
-                                [](const Scene* scene) -> ScenePhysics& { return *scene->scenePhysics; });
+        scene_type.set_function("get_physics", [](const Scene* scene) -> ScenePhysics& { return *scene->scenePhysics; });
 
         camera_type.set_function("get_pitch", &Camera::GetPitch);
         camera_type.set_function("set_pitch", &Camera::SetPitch);
@@ -475,7 +502,8 @@ namespace Vakol::Controller {
         camera_type.set_function("set_yaw", &Camera::SetYaw);
     }
 
-    void RegisterGUIWindow(sol::state& lua, View::GUIWindow* gui) {
+    void RegisterGUIWindow(sol::state& lua, View::GUIWindow* gui)
+	{
         auto gui_window_type =
             lua.new_usertype<View::GUIWindow>("gui");  // Creates a new usertype of the type 'View::GUIWindow'
 
@@ -574,12 +602,14 @@ namespace Vakol::Controller {
         scenePhysicType.set_function("enable_debug", &ScenePhysics::EnableDebug);
     }
 
-    std::vector<glm::mat4> create_mat4_vector() { return {}; }
-    std::vector<Mesh> create_mesh_vector() { return {}; }
+    std::vector<glm::mat4> create_mat4_vector(const int reserve)
+	{
+    	std::vector<glm::mat4> vector;
 
-    void RegisterOther(sol::state& lua) 
-    { 
-        lua.set_function("vector_mat4", &create_mat4_vector); 
-        lua.set_function("vector_mesh", &create_mesh_vector); 
+        vector.reserve(reserve);
+
+        return vector;
     }
-}  // namespace Vakol::Controller
+
+    void RegisterOther(sol::state& lua) { lua.set_function("vector_mat4", &create_mat4_vector); }
+}
