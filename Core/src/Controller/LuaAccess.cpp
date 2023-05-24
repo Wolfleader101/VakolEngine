@@ -530,11 +530,13 @@ namespace Vakol::Controller
         gui_window_type.set_function("add_text", &View::GUIWindow::AddText);
         gui_window_type.set_function("add_button", &View::GUIWindow::AddButton);
         gui_window_type.set_function("add_checkbox", &View::GUIWindow::AddCheckbox);
-        gui_window_type.set_function("add_image", [](View::GUIWindow* gui, const std::string& path, float width, float height)
+
+        gui_window_type.set_function("add_image", [](const View::GUIWindow* GUI, const std::string& path, const float width, const float height, const bool centerX, const bool centerY)
         {
-            auto tex = AssetLoader::GetTexture(path);
-        	unsigned texID = tex->GetID();
-	        gui->AddImage(texID, {width, height});
+	        const auto& tex = AssetLoader::GetTexture(path);
+            const unsigned int texID = tex->GetID();
+
+	        GUI->AddImage(texID, {width, height}, centerX, centerY);
 		});
 
         gui_window_type.set_function("add_integer_slider", &View::GUIWindow::AddIntSlider);

@@ -2,13 +2,19 @@
 function start_menu()
     GUI:start_window("Start Menu", 500.0, 500.0 , 960 - 250, 540 - 250); 
 
-    GUI:add_text("Welcome to Places Unkown!");
+    GUI:add_text("Welcome to Places Unkown!", true, true, 2.0);
+    
+    GUI:add_text(" ", true, true, 2.0);
 
-    GUI:add_text("---- MENU ----");
+    GUI:add_text("---- MENU ----", true, true, 2.0);
 
-    GUI:add_text("1 - Start/Continue Game");
-    GUI:add_text("2 - Options");
-    GUI:add_text("ESC - Exit");
+    GUI:add_text("1 - Start/Continue Game", true, true, 2.0);
+    GUI:add_text("2 - Options", true, true, 2.0);
+
+    GUI:add_text(" ", true, true, 2.0);
+    GUI:add_text(" ", true, true, 2.0);
+
+    GUI:add_text("ESC - Exit", true, true, 2.0);
 
     GUI:end_window();
     
@@ -16,10 +22,7 @@ end
 
 function init()
 
-    
-
 end
-
 
 function update()
     start_menu();

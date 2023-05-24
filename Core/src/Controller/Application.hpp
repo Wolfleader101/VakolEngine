@@ -5,7 +5,6 @@
 #include <View/Window/Window.hpp>
 #include <memory>
 
-#include "Events/Event.hpp"
 #include "Events/KeyEvent.hpp"
 #include "Events/WindowEvent.hpp"
 #include "Time.hpp"
@@ -63,19 +62,19 @@ namespace Vakol::Controller {
          *
          * @return const int
          */
-        const int GetWidth() const { return m_window->GetWidth(); }
+        int GetWidth() const { return m_window->GetWidth(); }
 
         /**
          * @brief Get the Height of window
          *
          * @return const int
          */
-        const int GetHeight() const { return m_window->GetHeight(); }
+        int GetHeight() const { return m_window->GetHeight(); }
 
-        void AddScene(std::string scriptName, std::string scene_name = "");
+        void AddScene(const std::string& scriptName, const std::string& scene_name = "");
         Scene& GetScene(const std::string& sceneName);
 
-        void SetRunning(bool run) { m_running = run; }
+        void SetRunning(const bool run) { m_running = run; }
 
         const Time& GetTime() const { return m_time; }
 
@@ -83,7 +82,7 @@ namespace Vakol::Controller {
 
         void RegisterLua();
 
-       private:
+    private:
         /**
          * @brief
          *
@@ -93,7 +92,7 @@ namespace Vakol::Controller {
          */
         bool OnWindowClose(WindowCloseEvent& ev);
 
-        bool OnWindowResize(WindowResizeEvent& ev);
+        bool OnWindowResize(const WindowResizeEvent& ev) const;
 
         /**
          * @brief on keyboard press event

@@ -10,12 +10,14 @@
 
 #include "Logger.hpp"
 
-namespace Vakol::Controller {
+namespace Vakol::Controller
+{
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
-    Application::Application() : m_window(nullptr), m_renderer(nullptr), m_running(false) {
-        Logger::Init();
-        scenes.reserve(10);
+    Application::Application() : m_window(nullptr), m_renderer(nullptr), m_running(false), m_input()
+    {
+	    Logger::Init();
+	    scenes.reserve(10);
     };
 
     void Application::Init() {
@@ -28,8 +30,7 @@ namespace Vakol::Controller {
             return;
         }
 
-        m_window = std::make_shared<View::Window>(config.value().name, config.value().windowWidth,
-                                                  config.value().windowHeight);
+        m_window = std::make_shared<View::Window>(config.value().name, config.value().windowWidth, config.value().windowHeight);
 
         m_renderer = CreateRenderer(config.value().rendererType, m_window);
 
@@ -46,7 +47,8 @@ namespace Vakol::Controller {
         m_running = true;
     }
 
-    void Application::RegisterLua() {
+    void Application::RegisterLua()
+	{
         RegisterLogger(lua.GetState());
         RegisterMath(lua.GetState());
         RegisterEntity(lua, lua.GetState());
@@ -136,12 +138,13 @@ namespace Vakol::Controller {
         }
     }
 
-    void Application::AddScene(std::string scriptName, std::string scene_name) {
-        std::string sceneName = scene_name.length() == 0 ? "Scene" + std::to_string(scenes.size()) : scene_name;
+    void Application::AddScene(const std::string& scriptName, const std::string& scene_name)
+	{
+	    const std::string sceneName = scene_name.length() == 0 ? "Scene" + std::to_string(scenes.size()) : scene_name;
 
-        scenes.push_back(Scene(sceneName, scriptName, lua,
-                               std::make_shared<Physics::ScenePhysics>(Physics::PhysicsPool::CreatePhysicsWorld()),
-                               true));
+	    const auto ref = std::make_shared<ScenePhysics>(PhysicsPool::CreatePhysicsWorld());
+
+        scenes.push_back(Scene(sceneName,scriptName, lua, ref, true));
     }
 
     Scene& Application::GetScene(const std::string& sceneName)
@@ -155,10 +158,10 @@ namespace Vakol::Controller {
 		assert(false);
     }
 
-
-
-    void Application::OnEvent(Event& ev) {
+    void Application::OnEvent(Event& ev)
+	{
         EventDispatcher dispatcher(ev);
+
         dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
         dispatcher.Dispatch<KeyPressedEvent>(BIND_EVENT_FN(OnKeyPressed));
         dispatcher.Dispatch<KeyReleasedEvent>(BIND_EVENT_FN(OnKeyReleased));
@@ -184,7 +187,8 @@ namespace Vakol::Controller {
         return true;
     }
 
-    bool Application::OnWindowResize(WindowResizeEvent& ev) {
+    bool Application::OnWindowResize(const WindowResizeEvent& ev) const
+    {
         glViewport(0, 0, ev.GetWidth(), ev.GetHeight());
 
         return true;

@@ -24,13 +24,13 @@ namespace Vakol::View {
          *
          * @param window The GLFW window the UI will be inside of
          */
-    	void Init(const std::shared_ptr<View::Window>& window);
+    	void Init(const std::shared_ptr<Window>& window) const;
         /**
          * @brief Creates a new frame for the window
          */
-    	void CreateNewFrame();
+    	void CreateNewFrame() const;
 
-        void EndFrame();
+        void EndFrame() const;
         /**
          * @brief Starts the creation of a GUI window
          *
@@ -40,31 +40,35 @@ namespace Vakol::View {
          * @param x
          * @param y
          */
-        void StartWindowCreation(const std::string& windowName, const float width, const float height, const float x, const float y) const;
+        void StartWindowCreation(const std::string& windowName, float width, float height, float x, float y) const;
         /**
          * @brief Returns the FPS of the current window
          */
-    	float GetFramesPerSecond();
+    	float GetFramesPerSecond() const;
         /**
          * @brief An update function to call new frame
          *
          */
-    	void Update();
+    	void Update() const;
         /**
          * @brief Add a text string to the UI Window
          *
          * @param inputText The text to be set in the UI
+         * @param centerX
+         * @param centerY
+         * @param fontSize
          */
-    	void AddText(const std::string& inputText);
+    	void AddText(const std::string& inputText, bool centerX, bool centerY, float fontSize) const;
 
 
         /**
-         * \brief  Adds an image to the UI Window
-         * \param imageName  
-         * \param imagePath 
-         * \param imageSize 
+         * \brief Adds an image to the UI Window
+         * \param id
+         * \param imageSize
+         * \param centerX
+         * \param centerY
          */
-        void AddImage(unsigned id, const ImVec2& imageSize);
+        void AddImage(unsigned int id, const ImVec2& imageSize, bool centerX, bool centerY) const;
         /**
          * @brief Adds a button to a given window
          *
@@ -73,7 +77,7 @@ namespace Vakol::View {
          * @param height The height of the button
          * @param inputFunction A function passed into the button to be run when the button is pressed
          */
-    	void AddButton(const std::string& buttonName, float width, float height, const std::function<void()>& inputFunction);
+    	void AddButton(const std::string& buttonName, float width, float height, const std::function<void()>& inputFunction) const;
         /**
          * @brief Adds a checkbox to a given window
          *
@@ -89,9 +93,9 @@ namespace Vakol::View {
          * @param minValue The minimum value of the slider
          * @param maxValue the maximum value of the slider
          */
-    	void AddIntSlider(const std::string& sliderName, int* sliderValue, int minValue, int maxValue);
+    	void AddIntSlider(const std::string& sliderName, int* sliderValue, int minValue, int maxValue) const;
         /**
-         * @brief Adds a Vecotr based Integer Slider to the window
+         * @brief Adds a Vector based Integer Slider to the window
          *
          * @param sliderName The name of the slider
          * @param size the size of an array
@@ -99,7 +103,7 @@ namespace Vakol::View {
          * @param minValue The minimum value of the slider
          * @param maxValue the maximum value of the slider
          */
-    	void AddVecIntSlider(const std::string& sliderName, int sliderValue[], const int size, const int minValue, const int maxValue);
+    	void AddVecIntSlider(const std::string& sliderName, int sliderValue[], const int size, const int minValue, const int maxValue) const;
         /**
          * @brief Adds a Float Slider to the window
          *
@@ -108,9 +112,10 @@ namespace Vakol::View {
          * @param minValue The minimum value of the slider
          * @param maxValue the maximum value of the slider
          */
-    	void AddFloatSlider(const std::string& sliderName, float* sliderValue, const float minValue, const float maxValue);
-        /**
-         * @brief Adds a Vecotr based Float Slider to the window
+    	void AddFloatSlider(const std::string& sliderName, float* sliderValue, const float minValue, const float maxValue) const;
+
+    	/**
+         * @brief Adds a Vector based Float Slider to the window
          *
          * @param sliderName The name of the slider
          * @param size The size of the given array
@@ -118,19 +123,18 @@ namespace Vakol::View {
          * @param minValue The minimum value of the slider
          * @param maxValue the maximum value of the slider
          */
-    	void AddVecFloatSlider(const std::string& sliderName, float sliderValue[], const int size, const float minValue, const float maxValue);
-
+    	void AddVecFloatSlider(const std::string& sliderName, float sliderValue[], const int size, const float minValue, const float maxValue) const;
 
         /**
          * @brief Ends the creation of a GUI window
          */
-    	void EndWindowCreation();
+    	void EndWindowCreation() const;
         /**
          * @brief A basic deconstructor for the GUI
          */
         ~GUIWindow();
 
-       private:
+    private:
         ImGuiWindowFlags windowFlags;
 
         bool is_initialised = false;
