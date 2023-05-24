@@ -190,9 +190,9 @@ namespace Vakol::Controller
             return AssetLoader::GetTexture(path);  // no checks... just raw doggin it LOL
         });
 
-        lua.set_function("load_model", [](const std::string& path, const float scale = 1.0f, const bool animated = false) 
+        lua.set_function("load_model", [](const std::string& path, const float scale = 1.0f, const bool animated = false, const bool backfaceCull = true)
         {
-			if (const auto model = AssetLoader::GetModel(path, scale, animated); model == nullptr) return false;
+			if (const auto model = AssetLoader::GetModel(path, scale, animated, backfaceCull); model == nullptr) return false;
 
             return true;
          });
@@ -326,11 +326,11 @@ namespace Vakol::Controller
             if (ent->HasComponent<Terrain>()) return ent->GetComponent<Terrain>();
         });
 
-        entity_type.set_function("add_model", [](Entity* ent, const std::string& path, const float scale = 1.0f, const bool animated = false) 
+        entity_type.set_function("add_model", [](Entity* ent, const std::string& path, const float scale = 1.0f, const bool animated = false, const bool backfaceCull = true)
 		{
             if (!ent->HasComponent<Drawable>()) ent->AddComponent<Drawable>();
 
-            auto model = AssetLoader::GetModel(path, scale, animated);
+            auto model = AssetLoader::GetModel(path, scale, animated, backfaceCull); 
 
             if (model) ent->GetComponent<Drawable>().model_ptr = model;
 

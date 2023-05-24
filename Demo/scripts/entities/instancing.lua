@@ -5,7 +5,7 @@ function init()
 
     print_warn("LOOK AT LUA ACCESS INSTANCE FUNCTION FOR INSTANCING ANIMATED MODELS!!");
 
-    local model = entity:add_model("coreAssets/models/Imported/OpenGameArt/musdasch/tree.glb", 0.1, false) -- get model and add a drawable component
+    local model = entity:add_model("coreAssets/models/Imported/OpenGameArt/musdasch/tree.glb", 0.1, false, false) -- get model and add a drawable component
     model:set_shader("coreAssets/shaders/instance.prog") -- set the shader on the model (automatically binds it)
     
     local shader = model:get_shader(); -- get the shader from the model
