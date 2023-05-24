@@ -16,10 +16,7 @@ end
 
 function init()
 
-    
-
 end
-
 
 function update()
     start_menu();

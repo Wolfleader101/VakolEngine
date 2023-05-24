@@ -142,9 +142,9 @@ namespace Vakol::Controller
 	{
 	    const std::string sceneName = scene_name.length() == 0 ? "Scene" + std::to_string(scenes.size()) : scene_name;
 
-    	auto ref = std::make_shared<ScenePhysics>(PhysicsPool::CreatePhysicsWorld());
+	    const auto ref = std::make_shared<ScenePhysics>(PhysicsPool::CreatePhysicsWorld());
 
-        scenes.push_back(Scene(sceneName, scriptName, lua, ref, true));
+        scenes.push_back(Scene(sceneName,scriptName, lua, ref, true));
     }
 
     Scene& Application::GetScene(const std::string& sceneName)

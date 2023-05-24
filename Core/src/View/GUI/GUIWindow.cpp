@@ -5,7 +5,8 @@
 
 #include <Controller/Logger.hpp>
 
-namespace Vakol::View {
+namespace Vakol::View
+{
     GUIWindow::GUIWindow()
 	{
         IMGUI_CHECKVERSION();  // Checks the version of IMGUI

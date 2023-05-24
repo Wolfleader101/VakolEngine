@@ -19,7 +19,7 @@ namespace Vakol::Controller {
          *
          */
         Scene(const std::string& name, const std::string& scriptName, LuaState& lua,
-              std::shared_ptr<Physics::ScenePhysics>& SP, bool active);
+              const std::shared_ptr<Physics::ScenePhysics>& SP, bool active);
 
         void Init();
         /**
@@ -32,7 +32,7 @@ namespace Vakol::Controller {
 
         void Update(const Time& time, const std::shared_ptr<View::Renderer>& renderer);
 
-        Entity CreateEntity(const std::string& tag, const std::string& scriptName);
+        Entity CreateEntity(const std::string& tag, const std::string& sname);
         void DestroyEntity(Entity entity);
 
         void Serialize(const std::string& folder) const;
@@ -47,7 +47,7 @@ namespace Vakol::Controller {
 
         sol::table sceneGlobals;
 
-       private:
+    private:
         LuaState& lua;
         std::string scriptName;
         std::string name;

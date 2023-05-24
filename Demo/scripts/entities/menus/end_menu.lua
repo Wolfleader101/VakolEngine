@@ -15,10 +15,7 @@ end
 
 function init()
 
-    
-
 end
-
 
 function update()
     end_menu();
