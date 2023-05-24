@@ -30,7 +30,7 @@ namespace Vakol::Controller {
 
         void Update(const Time& time, const std::shared_ptr<View::Renderer>& renderer);
 
-        Model::Entity CreateEntity(const std::string& tag, const std::string& sname);
+        Entity CreateEntity(const std::string& tag, const std::string& sname);
 
         void Serialize(const std::string& folder) const;
         void Deserialize(const std::string& folder);
