@@ -1,6 +1,6 @@
 function init()
-    local TREEAMOUNT = 2000;
-    local ROCKAMOUNT = 250;
+    local TREEAMOUNT = 6000;
+    local ROCKAMOUNT = 2000;
     local WATERLEVEL = 10.0;
 
     local treeMatrices = vector_mat4(TREEAMOUNT);
@@ -8,14 +8,15 @@ function init()
 
     print_warn("LOOK AT LUA ACCESS INSTANCE FUNCTION FOR INSTANCING ANIMATED MODELS!!");
 
-    local tree = entity:add_model("coreAssets/models/Imported/OpenGameArt/musdasch/tree.glb", 0.1, false, false) -- get model and add a drawable component
-    local rock = entity:add_model("coreAssets/models/Imported/Free3D/pateljay/rock.fbx", 0.1, false, true) -- get model and add a drawable component
-
+    local tree = entity:add_model("coreAssets/models/Imported/OpenGameArt/Yughues/pine/snow_pine_tree.obj", 0.1, false, false) -- get model and add a drawable component
     tree:set_shader("coreAssets/shaders/instance.prog") -- set the shader on the model (automatically binds it)
-    rock:set_shader("coreAssets/shaders/instance.prog") -- set the shader on the model (automatically binds it)
+
+    local rockEntity = scene:create_entity("rockEntity", "")
+    local rockModel = rockEntity:add_model("coreAssets/models/Imported/OpenGameArt/mastahcez/stone.fbx", 75.0, false, true) -- get model and add a drawable component
+    rockModel:set_shader("coreAssets/shaders/instance.prog") -- set the shader on the model (automatically binds it)
     
     local treeShader = tree:get_shader(); -- get the shader from the model
-    local rockShader = rock:get_shader(); -- get the shader from the model
+    local rockShader = rockModel:get_shader(); -- get the shader from the model
 
     -- Trees
     for i = 1, TREEAMOUNT do
@@ -59,7 +60,7 @@ function init()
             pos = Vector3.new(math.random(-512.0, 512.0), 0.0, math.random(-512.0, 512.0));
 
             local terr_scale = scene.globals.terrain.transform.scale;
-            pos.y = (scene.globals.terrain.terr:get_height(pos.x / terr_scale.x, pos.z / terr_scale.z) * terr_scale.y) + 0.015;
+            pos.y = (scene.globals.terrain.terr:get_height(pos.x / terr_scale.x, pos.z / terr_scale.z) * terr_scale.y) + 0.25;
         end
 
         mdl_m = translate(mdl_m, pos);
@@ -73,7 +74,7 @@ function init()
         rockMatrices[i] = mdl_m;
     end
 
-    instantiate_model(rock, rockMatrices, ROCKAMOUNT);
+    instantiate_model(rockModel, rockMatrices, ROCKAMOUNT);
 
     rockShader:set_int("diffuse_map", 0);
 end
