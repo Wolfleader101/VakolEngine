@@ -5,6 +5,8 @@
 #include "Application.hpp"
 #include "Logger.hpp"
 #include "Scene.hpp"
+#include "Model/Instance.hpp"
+
 
 namespace Vakol::Controller {
     void RegisterAssetLoader(sol::state& lua);

@@ -13,10 +13,12 @@
 namespace Vakol::Controller {
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
-    Application::Application() : m_window(nullptr), m_renderer(nullptr), m_running(false) { Logger::Init(); };
+    Application::Application() : m_window(nullptr), m_renderer(nullptr), m_running(false) {
+        Logger::Init();
+        scenes.reserve(10);
+    };
 
-    void Application::Init()
-	{
+    void Application::Init() {
         RegisterLua();
 
         auto config = LoadConfig();
@@ -120,6 +122,10 @@ namespace Vakol::Controller {
 
             //! update scenes lua
             for (auto& scene : scenes) {
+                if (!scene.active) continue;
+
+                if (!scene.initialized) scene.Init();
+
                 System::BindScene(scene);
                 scene.Update(m_time, m_renderer);
             }
@@ -137,6 +143,19 @@ namespace Vakol::Controller {
                                std::make_shared<Physics::ScenePhysics>(Physics::PhysicsPool::CreatePhysicsWorld()),
                                true));
     }
+
+    Scene& Application::GetScene(const std::string& sceneName)
+    {
+	    for (auto& scene : scenes)
+	    {
+	    	if (scene.getName() == sceneName) return scene;
+		}
+
+        VK_CRITICAL("Scene: {0} could not be found.", sceneName);
+		assert(false);
+    }
+
+
 
     void Application::OnEvent(Event& ev) {
         EventDispatcher dispatcher(ev);
@@ -172,12 +191,8 @@ namespace Vakol::Controller {
     }
 
     bool Application::OnKeyPressed(KeyPressedEvent& kev) {
-        if (kev.GetKeyCode() == GLFW_KEY_ESCAPE || kev.GetKeyCode() == GLFW_KEY_X) {
-            m_running = false;
-            return true;
-        }
-
-        if (kev.GetKeyCode() == GLFW_KEY_K) {
+        
+    	if (kev.GetKeyCode() == GLFW_KEY_K) {
             m_renderer->ToggleWireframe();
         }
 

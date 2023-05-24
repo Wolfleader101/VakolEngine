@@ -1,6 +1,6 @@
 function init()
     print("Initialising Terrain");
-    local terrain = entity:create_height_map_terrain("coreAssets/textures/Heightmaps/height128.raw", 0, 30);
+    local terrain = entity:create_height_map_terrain("coreAssets/textures/Heightmaps/terrain_2048.raw", 0, 30);
 
     local lightmap = create_raw_texture("coreAssets/textures/lightmap.raw");
     
@@ -39,6 +39,8 @@ function init()
     shader:set_int("layer_4", 4);
     shader:set_int("layer_5", 5);
     shader:set_int("layer_6", 6);
+
+    scene.globals.terrain = {transform = entity:get_transform(), terr = entity:get_terrain()};
 end
 
 function update()

@@ -12,34 +12,39 @@
 
 namespace Vakol::Controller
 {
-    Scene::Scene(std::string& name, const std::string& scriptName, LuaState& lua, const std::shared_ptr<ScenePhysics>& SP, const bool active)
-        : 
+    Scene::Scene(const std::string& name, const std::string& scriptName, LuaState& lua, std::shared_ptr<ScenePhysics>& SP, bool active)
+        :
+	      name(name),
+	      scriptName(scriptName),
+		  scenePhysics(SP),
+		  lua(lua),
           active(active),
-          scenePhysics(SP),
-          sceneGlobals(lua.GetState().create_table()),
-          lua(lua),
-          scriptName(scriptName),
-          name(std::move(name)),
-          cam(glm::vec3(0.0f, 0.0f, 2.0f))
-	{
-        lua.RunFile("scripts/" + scriptName);
-        System::BindScene(*this);
+          cam(glm::vec3(0.0f, 0.0f, 2.0f)),
+          sceneGlobals() {}
 
+    void Scene::Init() {
+        lua.RunFile("scripts/" + scriptName);
+        sceneGlobals = lua.GetState().create_named_table(name);
         lua.GetState()["scene"] = this;
 
         lua.RunFunction("init");
+        initialized = true;
+
+        System::BindScene(*this);
     }
 
     const std::string& Scene::getName() const { return name; }
 
     void Scene::setName(const std::string& newName) { name = newName; }
 
-    Entity Scene::CreateEntity(const std::string& tag, const std::string& sname) {
+    Model::Entity Scene::CreateEntity(const std::string& tag, const std::string& scriptName) {
         auto ent = entityList.CreateEntity();
         ent.GetComponent<Tag>().tag = tag;
-        if (sname.length() != 0) ent.AddComponent<Script>(sname, lua, ent, *this);
+        if (scriptName.length() != 0) ent.AddComponent<Script>(scriptName, lua, ent, *this);
         return ent;
     }
+
+    void Scene::DestroyEntity(Entity entity) { entityList.RemoveEntity(entity); }
 
     void Scene::Update(const Time& time, const std::shared_ptr<View::Renderer>& renderer) {
         lua.RunFile("scripts/" + scriptName);

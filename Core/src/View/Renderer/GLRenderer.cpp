@@ -106,6 +106,11 @@ namespace Vakol::View
         const auto& shader = model->c_shader();
         VK_ASSERT(&shader, "\n\nShader is nullptr");
 
+        if (!model->cullBackface())
+        {
+            glDisable(GL_CULL_FACE);
+        }
+
         shader->Bind();
 
         const auto& projection = camera.GetMatrix(PROJECTION_MATRIX);
@@ -147,6 +152,9 @@ namespace Vakol::View
         }
 
         shader->Unbind();
+
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK); 
 
         skybox->Draw(projection, view);
     }

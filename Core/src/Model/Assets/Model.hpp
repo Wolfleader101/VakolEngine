@@ -34,6 +34,8 @@ namespace Vakol::Model::Assets
         }
 
         [[nodiscard]] bool isAnimated() const { return m_animated; }
+		[[nodiscard]] bool cullBackface() const { return m_cullBackface; }
+        [[nodiscard]] void SetCullBackface(bool cull) { m_cullBackface = cull; }
 
         std::shared_ptr<Shader>& shader() { return m_shader; }
         [[nodiscard]] const std::shared_ptr<Shader>& c_shader() const { return m_shader; }
@@ -111,6 +113,7 @@ namespace Vakol::Model::Assets
         int m_animation_state = 0;
 
         bool m_animated = false;
+        bool m_cullBackface = true;
     };
 
 }
