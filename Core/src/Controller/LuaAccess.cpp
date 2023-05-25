@@ -192,6 +192,7 @@ namespace Vakol::Controller
 
         lua.set_function("load_model", [](const std::string& path, const float scale = 1.0f, const bool animated = false, const bool backfaceCull = true)
         {
+			return AssetLoader::GetModel(path, scale, animated, backfaceCull);
          });
 
         lua.set_function("load_shader", [](const std::string& path) {

@@ -62,7 +62,6 @@ namespace Vakol::Model::Assets
             }
         }
 
-
         [[nodiscard]] int numAnimations() const { return static_cast<int>(m_animations.size()); }
         [[nodiscard]] int numAnimationTransforms() const { return m_animations.at(m_animation_state).numTransforms(); }
     	[[nodiscard]] const std::vector<glm::mat4>& animation_transforms() const { return m_animations.at(m_animation_state).transforms(); }
