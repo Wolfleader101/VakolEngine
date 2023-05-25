@@ -64,9 +64,8 @@ namespace Vakol::View {
         glfwInit();
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
-        glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
-        glfwWindowHint(GLFW_SAMPLES, 4);
+        glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, false);
+        //glfwWindowHint(GLFW_SAMPLES, 4);
 
         /* Initialize the library */
         if (!glfwInit()) return;
@@ -88,15 +87,13 @@ namespace Vakol::View {
             return;
         }
 
-        VK_INFO("OPENGL IS REAL!");
-
         // enable OpenGL debug context if context allows for debug context
         int flags; glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
         if (flags & GL_CONTEXT_FLAG_DEBUG_BIT)
         {
             glEnable(GL_DEBUG_OUTPUT);
             glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS); // makes sure errors are displayed synchronously
-            glDebugMessageCallback(DebugOutput, nullptr);
+            //glDebugMessageCallback(DebugOutput, nullptr);
             glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
         }
 

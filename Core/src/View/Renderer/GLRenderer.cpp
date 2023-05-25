@@ -70,7 +70,8 @@ namespace Vakol::View
 
         framebuffers.push_back(std::make_shared<FrameBuffer>(attachment, true));
 
-        skybox->Init();
+        if (isSkybox)
+			skybox->Init();
     }
 
     void GLRenderer::AddBuffer(const unsigned int type, const int size, const int binding, const void* data, const unsigned int usage)
@@ -102,6 +103,8 @@ namespace Vakol::View
         VK_ASSERT(drawable.model_ptr, "\n\nModel ptr is nullptr");
 
         const auto& model = drawable.model_ptr;
+
+        if (model->isAnimated()) model->UpdateAnimation(time.deltaTime);
 
         const auto& shader = model->c_shader();
         VK_ASSERT(&shader, "\n\nShader is nullptr");
@@ -156,7 +159,8 @@ namespace Vakol::View
         glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK); 
 
-        skybox->Draw(projection, view);
+        if (isSkybox)
+			skybox->Draw(projection, view);
     }
 
     void GLRenderer::Update(const int index) const 

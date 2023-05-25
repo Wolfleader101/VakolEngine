@@ -15,16 +15,38 @@ namespace Vakol::Controller
     std::unordered_map<std::string, std::shared_ptr<::Model>> AssetLoader::m_ModelMap;
     std::unordered_map<std::string, std::shared_ptr<Model::Shader>> AssetLoader::m_ShaderMap;
 
-    std::shared_ptr<Texture> AssetLoader::GetTexture(const std::string& file) 
+    std::shared_ptr<Texture> AssetLoader::GetTexture(const std::string& file, const bool gamma, const bool flip) 
     {
-        std::shared_ptr<Texture> ret = std::make_shared<Texture>();
+	    auto ret = std::make_shared<Texture>();
 
         if (const auto itr = m_TextureMap.find(file); itr == m_TextureMap.end()) 
         {
             Texture texture{};
             texture.path = file;
 
-            texture.SetID(LoadTexture(texture.path, false, false));
+            texture.SetID(LoadTexture(texture.path, gamma, flip));
+
+            if(texture.GetID() == 0) return nullptr;  // if texture didn't load
+
+            *ret = texture;
+
+        	m_TextureMap[file] = ret;
+        } else
+            ret = m_TextureMap[file];
+
+        return ret;
+    }
+
+    std::shared_ptr<Texture> AssetLoader::GetTexture(const std::string& file)
+    {
+	    auto ret = std::make_shared<Texture>();
+
+        if (const auto itr = m_TextureMap.find(file); itr == m_TextureMap.end()) 
+        {
+            Texture texture{};
+            texture.path = file;
+
+            texture.SetID(LoadRawTexture(texture.path));
 
             if(texture.GetID() == 0) return nullptr;  // if texture didn't load
 

@@ -55,6 +55,8 @@ namespace Vakol::View
             else
                 glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         }
+
+        void ToggleSkybox() override  { isSkybox = !isSkybox; }
     private:
         std::vector<std::shared_ptr<Buffer>> buffers;
         std::vector<std::shared_ptr<FrameBuffer>> framebuffers;

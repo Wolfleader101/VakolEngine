@@ -47,9 +47,12 @@ namespace Vakol::View
         virtual void ClearBuffer(unsigned int buffer_bit) const = 0;
 
         virtual void ToggleWireframe() = 0;
+        virtual void ToggleSkybox() = 0;
 
     protected:
         bool isWireframe = false;
+        bool isSkybox = true;
+
         std::shared_ptr<Window> m_window = nullptr;
     };
 }

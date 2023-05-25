@@ -185,9 +185,9 @@ namespace Vakol::Controller
 
     void RegisterAssetLoader(sol::state& lua)
 	{
-        lua.set_function("load_texture", [](const std::string& path) 
+        lua.set_function("load_texture", [](const std::string& path, const bool gamma, const bool flip) 
         {
-            return AssetLoader::GetTexture(path);  // no checks... just raw doggin it LOL
+            return AssetLoader::GetTexture(path, gamma, flip);  // no checks... just raw doggin it LOL
         });
 
         lua.set_function("load_model", [](const std::string& path, const float scale = 1.0f, const bool animated = false, const bool backfaceCull = true)
@@ -251,22 +251,6 @@ namespace Vakol::Controller
         auto mesh_type = lua.new_usertype<Mesh>("mesh");
         auto material_type = lua.new_usertype<Assets::Material>("material");
         auto shader_type = lua.new_usertype<Shader>("shader");
-
-        lua.set_function("create_raw_texture", [](std::string& path) 
-        {
-            auto texture = Assets::Texture(path);
-            texture.SetID(LoadRawTexture(texture.path));
-
-            return texture;
-        });
-
-        lua.set_function("create_texture", [](std::string& path, const bool gamma, const bool flip) 
-        {
-            auto&& texture = Assets::Texture(std::move(path));
-            texture.SetID(LoadTexture(texture.path, gamma, flip));
-
-            return std::move(texture);
-        });
 
         lua.set_function("instantiate_model", [](const std::shared_ptr<Assets::Model>& model, const std::vector<glm::mat4>& matrices, const int amount) 
 		{
@@ -345,6 +329,45 @@ namespace Vakol::Controller
             if (ent->HasComponent<Drawable>()) return ent->GetComponent<Drawable>().model_ptr;
         });
 
+
+        entity_type.set_function("set_shader", [](const Entity* ent, const std::string& path)
+        {
+	        if (!ent->HasComponent<Drawable>())
+	        {
+		        VK_ERROR("Drawable Component is needed to set shader!");
+                return;
+	        }
+
+            const auto& model = ent->GetComponent<Drawable>().model_ptr;
+            const auto& shader = AssetLoader::GetShader(path);
+
+            model->set_shader(shader);
+        });
+
+        entity_type.set_function("add_texture", [](const Entity* ent, const int mesh_index, const std::string& path, const bool gamma, const bool flip)
+        {
+            if (!ent->HasComponent<Drawable>())
+            {
+	            VK_ERROR("Drawable component is needed to add texture to material!");
+                return;
+            }
+
+            const auto& model = ent->GetComponent<Drawable>().model_ptr;
+            model->mesh(mesh_index).GetMaterial()->AddTexture(*AssetLoader::GetTexture(path, gamma, flip));
+        });
+
+        entity_type.set_function("add_raw_texture", [](const Entity* ent, const int mesh_index, const std::string& path)
+        {
+	        if (!ent->HasComponent<Drawable>())
+            {
+	            VK_ERROR("Drawable component is needed to add texture to material!");
+                return;
+            }
+
+            const auto& model = ent->GetComponent<Drawable>().model_ptr;
+            model->mesh(mesh_index).GetMaterial()->AddTexture(*AssetLoader::GetTexture(path));
+        });
+
         model_type.set_function("set_animation_state", &Assets::Model::SetAnimationState);
         model_type.set_function("update_animation", &Assets::Model::UpdateAnimation);
 
@@ -359,13 +382,12 @@ namespace Vakol::Controller
         model_type.set_function("get_mesh_count", &Assets::Model::nMeshes);
         model_type.set_function("get_mesh", &Assets::Model::mesh);
 
-        model_type.set_function("set_shader", &Assets::Model::set_shader);
         model_type.set_function("get_shader", &Assets::Model::shader);
 
         mesh_type.set_function("get_material", &Mesh::GetMaterial);
 
-        material_type.set_function("add_texture", &Assets::Material::AddTexture);
         material_type.set_function("get_texture", &Assets::Material::GetTexture);
+
         material_type.set_function("get_ambient_color", &Assets::Material::GetAmbientColor);
         material_type.set_function("get_diffuse_color", &Assets::Material::GetDiffuseColor);
 
@@ -538,7 +560,7 @@ namespace Vakol::Controller
 
         gui_window_type.set_function("add_image", [](const View::GUIWindow* GUI, const std::string& path, const float width, const float height, const bool centerX, const bool centerY)
         {
-	        const auto& tex = AssetLoader::GetTexture(path);
+	        const auto& tex = AssetLoader::GetTexture(path, false, false);
             const unsigned int texID = tex->GetID();
 
 	        GUI->AddImage(texID, {width, height}, centerX, centerY);
@@ -553,11 +575,32 @@ namespace Vakol::Controller
         gui_window_type.set_function("end_window", &View::GUIWindow::EndWindowCreation);
     }
 
-    void RegisterRenderer([[maybe_unused]] sol::state& lua, const std::shared_ptr<View::Renderer>& renderer)
+    void RegisterRenderer(sol::state& lua, const std::shared_ptr<View::Renderer>& renderer)
     {
         lua.set_function("add_shader_storage_buffer_data", [&](const int size, const int binding, const std::vector<glm::mat4>& data)->void
         {
             renderer->AddBuffer(GL_SHADER_STORAGE_BUFFER, size, binding, data.data(), GL_STATIC_DRAW);
+        });
+
+        lua.set_function("toggle_wireframe", [&]
+        {
+        	renderer->ToggleWireframe();
+        });
+
+        lua.set_function("toggle_skybox", [&]
+        {
+	        renderer->ToggleSkybox();
+        });
+
+        lua.set_function("clear_color_v", [&](const glm::vec4& color)
+        {
+            renderer->ClearColor(color);
+        });
+
+        lua.set_function("clear_color", [&](const float r, const float g, const float b, const float a)
+        {
+            renderer->ClearColor(r, g, b, a);
+            renderer->ClearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         });
     }
 

@@ -26,9 +26,9 @@ namespace Vakol::Model::Assets
         Model(std::vector<Mesh>& meshes, std::vector<Animation>& animations)
             : m_meshes(std::move(meshes)), m_animations(std::move(animations)), m_animated(true) {}
 
-        void set_shader(const std::string& path)
+        void set_shader(const std::shared_ptr<Shader>& shader)
     	{
-            this->m_shader = std::make_shared<Shader>(path);
+            this->m_shader = shader;
             this->m_shader->Bind();
         }
 
