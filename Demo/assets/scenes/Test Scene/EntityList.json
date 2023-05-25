@@ -1,0 +1,77 @@
+{
+    "ActiveEntityList": [
+        {
+            "handle": 0
+        },
+        {
+            "handle": 1
+        }
+    ],
+    "value0": 2,
+    "value1": 0,
+    "value2": 0,
+    "value3": 1,
+    "value4": 2,
+    "value5": 0,
+    "value6": {
+        "pos.x": 0.0,
+        "pos.y": 0.0,
+        "pos.z": 0.0,
+        "rot.x": 0.0,
+        "rot.y": 0.0,
+        "rot.z": 0.0,
+        "scale.x": 1.0,
+        "scale.y": 1.0,
+        "scale.z": 1.0
+    },
+    "value7": 1,
+    "value8": {
+        "pos.x": 0.0,
+        "pos.y": 0.0,
+        "pos.z": 0.0,
+        "rot.x": 0.0,
+        "rot.y": 0.0,
+        "rot.z": 0.0,
+        "scale.x": 1.0,
+        "scale.y": 1.0,
+        "scale.z": 1.0
+    },
+    "value9": 2,
+    "value10": 0,
+    "value11": {
+        "tag": "Camera Controller"
+    },
+    "value12": 1,
+    "value13": {
+        "tag": "terrain"
+    },
+    "value14": 0,
+    "value15": 2,
+    "value16": 0,
+    "value17": {
+        "TagType": 0
+    },
+    "value18": 1,
+    "value19": {
+        "TagType": 0
+    },
+    "value20": 2,
+    "value21": 0,
+    "value22": {
+        "ScriptName": "entities/player/cameraController.lua"
+    },
+    "value23": 1,
+    "value24": {
+        "ScriptName": "entities/terrain/physicsTerrain.lua"
+    },
+    "value25": 0,
+    "value26": 0,
+    "value27": 1,
+    "value28": 1,
+    "value29": {
+        "Model": "",
+        "Import Scale": 1.0,
+        "Animated": false,
+        "Back Face Culling": true
+    }
+}

@@ -137,6 +137,7 @@ namespace Vakol::Model::Components {
         template <class Archive>
         void serialize(Archive& ar) {
             ar(cereal::make_nvp("ScriptName", script_name));
+            //ar(cereal::make_nvp("State Table",state));
         }
     };
 
@@ -165,13 +166,21 @@ namespace Vakol::Model::Components {
     struct Drawable {
         Drawable() = default;
         explicit Drawable(std::string&& file);
+        Drawable(const std::string& file, const float scale, bool animated, bool backfaceCull);
         std::string name;  // for serialization
+
+        float scale = 1.0f;
+        bool animated = false;
+        bool backfaceCull = true;
 
         std::shared_ptr<Assets::Model> model_ptr;
 
         template <class Archive>
         void serialize(Archive& ar) {
             ar(cereal::make_nvp("Model", name));
+            ar(cereal::make_nvp("Import Scale", scale));
+            ar(cereal::make_nvp("Animated", animated));
+            ar(cereal::make_nvp("Back Face Culling", backfaceCull));
         }
     };
 

@@ -6,6 +6,8 @@
 #include <vector>
 
 namespace Vakol::Controller {
+
+    enum class TerrainType { FAULT, HEIGHT, CLOD }; //for serializing
     class Terrain {
        public:
         Terrain() = default;
