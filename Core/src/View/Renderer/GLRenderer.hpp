@@ -37,10 +37,10 @@ namespace Vakol::View
         /// @param data stuff
         void SetBufferSubData(int index, int offset, int size, const void* data) const override;
 
-    	void ClearColor(const glm::vec4& color = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)) override;
-    	void ClearColor(float r, float g, float b, float a = 1.0f) override;
+    	void ClearColor(const glm::vec4& color = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)) const override;
+    	void ClearColor(float r, float g, float b, float a = 1.0f) const override;
 
-    	void ClearBuffer(unsigned int buffer_bit) override;
+    	void ClearBuffer(unsigned int buffer_bit) const override;
 
         void Draw([[maybe_unused]] const Controller::Time& time, const Controller::Camera& camera, const Model::Components::Transform& transform, const Model::Components::Drawable& drawable) const override;
 

@@ -14,7 +14,7 @@ namespace Vakol::Controller
     void RegisterEntity(LuaState& state, sol::state& lua);
     void RegisterECS(sol::state& lua);
     void RegisterGUIWindow(sol::state& lua, View::GUIWindow* gui);
-    void RegisterRenderer(sol::state& lua, View::Renderer* renderer);
+    void RegisterRenderer(sol::state& lua, const std::shared_ptr<View::Renderer>& renderer);
     void RegisterPhysics(sol::state& lua);
     void RegisterScene(sol::state& lua);
     void RegisterMath(sol::state& lua);

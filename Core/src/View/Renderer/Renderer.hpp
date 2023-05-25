@@ -41,10 +41,10 @@ namespace Vakol::View
         /// @param data stuff
         virtual void SetBufferSubData(int index, int offset, int size, const void* data) const = 0;
 
-    	virtual void ClearColor(const glm::vec4& color = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)) = 0;
-        virtual void ClearColor(float r, float g, float b, float a = 1.0f) = 0;
+    	virtual void ClearColor(const glm::vec4& color = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)) const = 0;
+        virtual void ClearColor(float r, float g, float b, float a = 1.0f) const = 0;
 
-        virtual void ClearBuffer(unsigned int buffer_bit) = 0;
+        virtual void ClearBuffer(unsigned int buffer_bit) const = 0;
 
         virtual void ToggleWireframe() = 0;
 

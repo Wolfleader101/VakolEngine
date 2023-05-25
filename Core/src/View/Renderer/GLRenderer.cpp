@@ -88,13 +88,13 @@ namespace Vakol::View
         buffers.at(index)->SetSubData(offset, size, data);
     }
 
-    void GLRenderer::ClearColor(const glm::vec4& color)
+    void GLRenderer::ClearColor(const glm::vec4& color) const
     { glClearColor(color.r, color.g, color.b, color.a); }
 
-    void GLRenderer::ClearColor(const float r, const float g, const float b, const float a)
+    void GLRenderer::ClearColor(const float r, const float g, const float b, const float a) const
     { glClearColor(r, g, b, a); }
 
-    void GLRenderer::ClearBuffer(const unsigned int buffer_bit)
+    void GLRenderer::ClearBuffer(const unsigned int buffer_bit) const
     { glClear(buffer_bit); }
 
     void GLRenderer::Draw([[maybe_unused]] const Controller::Time& time, const Controller::Camera& camera, const Components::Transform& transform, const Components::Drawable& drawable) const 
@@ -135,7 +135,7 @@ namespace Vakol::View
 
         //shader->SetMat3("NORMAL_MATRIX", glm::mat3(transpose(inverse(model_matrix))));
 
-		if (model->isAnimated()) model->SetBufferSubData(0, 0, model->numAnimationTransforms() * sizeof(glm::mat4), model->animation_data());
+		if (model->isAnimated()) SetBufferSubData(2, 0, model->numAnimationTransforms() * sizeof(glm::mat4), model->animation_data());
 
         for (int i = 0; i < model->nMeshes(); ++i) 
         {

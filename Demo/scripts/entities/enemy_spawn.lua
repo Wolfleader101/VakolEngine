@@ -1,8 +1,8 @@
 function init()
-	state.model = load_model("assets/models/enemy.glb", 0.003, true, true);
+	state.model = entity:add_model("assets/models/enemy.glb", 0.003, true, true);
 	state.model:set_shader("coreAssets/shaders/animation.prog");
 
-    entity:add_shader_storage_buffer_data(state.model:get_num_anim_transforms() * 64, 3, state.model:get_anim_transforms());
+    add_shader_storage_buffer_data(state.model:get_num_anim_transforms() * 64, 3, state.model:get_anim_transforms());
 
     state.model:set_animation_state(0);
 

@@ -192,8 +192,10 @@ namespace Vakol::Controller
 
         lua.set_function("load_model", [](const std::string& path, const float scale = 1.0f, const bool animated = false, const bool backfaceCull = true)
         {
-			return AssetLoader::GetModel(path, scale, animated, backfaceCull);
-         });
+			if (const auto model = AssetLoader::GetModel(path, scale, animated, backfaceCull); model == nullptr) return false;
+
+            return true;
+        });
 
         lua.set_function("load_shader", [](const std::string& path) {
 	        if (const auto shader = AssetLoader::GetShader(path); shader == nullptr) return false;
@@ -271,45 +273,6 @@ namespace Vakol::Controller
             const auto start_index = model->isAnimated() ? 7 : 3;
 
             CreateInstances(model->meshes(), matrices, amount, start_index);
-        });
-
-        entity_type.set_function("add_uniform_buffer", [](const Entity* ent, const int size, const int binding)->void
-        {
-            if (!ent->HasComponent<Drawable>())
-            {
-            	VK_ERROR("\n\nYou need an associated model before adding a buffer to it.");
-                return;
-            }
-
-            const auto& model = ent->GetComponent<Drawable>().model_ptr;
-
-            model->AddBuffer(GL_UNIFORM_BUFFER, size, binding, GL_STATIC_DRAW);
-        });
-
-        entity_type.set_function("add_shader_storage_buffer_data", [](const Entity* ent, const int size, const int binding, const std::vector<glm::mat4>& data)->void
-        {
-            if (!ent->HasComponent<Drawable>())
-            {
-            	VK_ERROR("\n\nYou need an associated model before adding a buffer to it.");
-                return;
-            }
-
-            const auto& model = ent->GetComponent<Drawable>().model_ptr;
-
-            model->AddBuffer(GL_SHADER_STORAGE_BUFFER, size, binding, data.data(),GL_STATIC_DRAW);
-        });
-
-        entity_type.set_function("add_shader_storage_buffer", [](const Entity* ent, const int size, const int binding)->void
-        {
-            if (!ent->HasComponent<Drawable>())
-            {
-            	VK_ERROR("\n\nYou need an associated model before adding a buffer to it.");
-                return;
-            }
-
-            const auto& model = ent->GetComponent<Drawable>().model_ptr;
-
-            model->AddBuffer(GL_SHADER_STORAGE_BUFFER, size, binding, GL_STATIC_DRAW);
         });
 
         entity_type.set_function("get_transform", &Entity::GetComponent<Transform>);
@@ -590,9 +553,12 @@ namespace Vakol::Controller
         gui_window_type.set_function("end_window", &View::GUIWindow::EndWindowCreation);
     }
 
-    void RegisterRenderer([[maybe_unused]] sol::state& lua, View::Renderer* renderer)
+    void RegisterRenderer([[maybe_unused]] sol::state& lua, const std::shared_ptr<View::Renderer>& renderer)
     {
-	    auto renderer_type = lua.new_usertype<View::Renderer>("renderer");
+        lua.set_function("add_shader_storage_buffer_data", [&](const int size, const int binding, const std::vector<glm::mat4>& data)->void
+        {
+            renderer->AddBuffer(GL_SHADER_STORAGE_BUFFER, size, binding, data.data(), GL_STATIC_DRAW);
+        });
     }
 
     void RegisterPhysics(sol::state& lua) {
