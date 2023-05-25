@@ -20,8 +20,8 @@ function init()
 
     local SPRINT_STATE = 1;
 
-    local RUN_SPEED = 1.5;
-    local SPRINT_SPEED = 4.0;
+    local RUN_SPEED = 1.25;
+    local SPRINT_SPEED = 3.0;
 
     TIMER = 0.0;
     PAUSE_ANIMATION = false;
