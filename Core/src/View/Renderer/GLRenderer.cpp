@@ -138,7 +138,8 @@ namespace Vakol::View
 
         //shader->SetMat3("NORMAL_MATRIX", glm::mat3(transpose(inverse(model_matrix))));
 
-		if (model->isAnimated()) SetBufferSubData(2, 0, model->numAnimationTransforms() * sizeof(glm::mat4), model->animation_data());
+		if (model->isAnimated()) shader->SetMat4v("BONE_TRANSFORMS", model->numAnimationTransforms(), value_ptr(model->animation_transforms()[0]));
+            //model->SetBufferSubData(0, 0, model->numAnimationTransforms() * sizeof(glm::mat4), model->animation_data());
 
         for (int i = 0; i < model->nMeshes(); ++i) 
         {

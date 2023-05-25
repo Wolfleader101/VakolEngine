@@ -375,6 +375,18 @@ namespace Vakol::Controller
             model->mesh(mesh_index).GetMaterial()->AddTexture(*AssetLoader::GetTexture(path));
         });
 
+        entity_type.set_function("add_shader_storage_buffer_data", [](const Entity* ent, const int size, const int binding, const std::vector<glm::mat4>& data)->void
+        {
+            if (!ent->HasComponent<Drawable>())
+            {
+	            VK_ERROR("Drawable component is needed to add shader buffer data!");
+                return;
+            }
+
+            const auto& model = ent->GetComponent<Drawable>().model_ptr;
+            model->AddBuffer(GL_SHADER_STORAGE_BUFFER, size, binding, data.data(), GL_STATIC_DRAW);
+        });
+
         model_type.set_function("set_animation_state", &Assets::Model::SetAnimationState);
         model_type.set_function("update_animation", &Assets::Model::UpdateAnimation);
 
@@ -587,11 +599,6 @@ namespace Vakol::Controller
 
     void RegisterRenderer(sol::state& lua, const std::shared_ptr<View::Renderer>& renderer)
     {
-        lua.set_function("add_shader_storage_buffer_data", [&](const int size, const int binding, const std::vector<glm::mat4>& data)->void
-        {
-            renderer->AddBuffer(GL_SHADER_STORAGE_BUFFER, size, binding, data.data(), GL_STATIC_DRAW);
-        });
-
         lua.set_function("toggle_wireframe", [&]
         {
         	renderer->ToggleWireframe();

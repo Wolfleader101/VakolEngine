@@ -29,12 +29,8 @@ function init()
     
     entity:get_transform().pos = Vector3.new(2.7, 0, -12.0);
 
-    for i = 1, 5 do
-        state.model = entity:add_model("assets/models/enemy.glb", 0.003, true, true) -- get model and add a drawable component
-        entity:set_shader("coreAssets/shaders/animation.prog") -- set the shader on the model (automatically binds it)
-    end
-
-    add_shader_storage_buffer_data(state.model:get_num_anim_transforms() * 64, 3, state.model:get_anim_transforms());
+    state.model = entity:add_model("assets/models/enemy.glb", 0.003, true, true) -- get model and add a drawable component
+    entity:set_shader("coreAssets/shaders/animation.prog") -- set the shader on the model (automatically binds it)
 
     state.model:set_animation_state(IDLE_STATE_SEARCH);
 

@@ -12,16 +12,13 @@ function init()
 
     entity:get_transform().rot = Vector3.new(0.0, 0.0, 0.0);
 
-    state.model = entity:add_model("assets/models/enemy.glb", 0.003, true, false) -- get model and add a drawable component
-    state.model:set_shader("coreAssets/shaders/animation.prog") -- set the shader on the model (automatically binds it)
-
-    entity:add_shader_storage_buffer_data(state.model:get_num_anim_transforms() * 64, 3, state.model:get_anim_transforms());
+    state.model = entity:add_model("assets/models/enemy.glb", 0.003, true, true) -- get model and add a drawable component
+    entity:set_shader("coreAssets/shaders/animation.prog") -- set the shader on the model (automatically binds it)
 
     state.model:set_animation_state(WALK_STATE);
 
     local shader = state.model:get_shader(); -- get the shader from the model
 
-    --shader:set_vec3v("light.position", Vector3.new(2.0, 2.0, -4.0));
     shader:set_vec3v("light.direction", Vector3.new(math.rad(0.0), math.rad(0.0), math.rad(90.0)));
 
     shader:set_float("material.shininess", 16.0);
@@ -34,5 +31,4 @@ function init()
 end
 
 function update()
-    state.model:update_animation(Time.delta_time);
 end

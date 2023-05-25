@@ -24,10 +24,7 @@ layout (std140, binding = 1) uniform Matrices
     mat4 MODEL_MATRIX;
 };
 
-layout (std430, binding = 3) buffer Bones
-{
-    mat4 BONE_TRANSFORMS[];
-};
+uniform mat4 BONE_TRANSFORMS[100];
 
 uniform bool instanced = false;
 
