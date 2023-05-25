@@ -132,7 +132,7 @@ namespace Vakol::Model::Components {
         Script() = default;
         explicit Script(std::string& name);
 
-        Script(const std::string& script, Controller::LuaState& lua, Model::Entity& entity, Controller::Scene& scene);
+        Script(const std::string& script, Controller::LuaState& lua, Entity& entity, Controller::Scene& scene);
 
         template <class Archive>
         void serialize(Archive& ar) {

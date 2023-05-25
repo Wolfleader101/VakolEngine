@@ -192,9 +192,6 @@ namespace Vakol::Controller
 
         lua.set_function("load_model", [](const std::string& path, const float scale = 1.0f, const bool animated = false, const bool backfaceCull = true)
         {
-			if (const auto model = AssetLoader::GetModel(path, scale, animated, backfaceCull); model == nullptr) return false;
-
-            return true;
          });
 
         lua.set_function("load_shader", [](const std::string& path) {
@@ -270,8 +267,48 @@ namespace Vakol::Controller
 
         lua.set_function("instantiate_model", [](const std::shared_ptr<Assets::Model>& model, const std::vector<glm::mat4>& matrices, const int amount) 
 		{
-            // start_index is 7 for animations, otherwise its 3 for non-animated shit
-            CreateInstances(model->meshes(), matrices, amount, 3);
+            const auto start_index = model->isAnimated() ? 7 : 3;
+
+            CreateInstances(model->meshes(), matrices, amount, start_index);
+        });
+
+        entity_type.set_function("add_uniform_buffer", [](const Entity* ent, const int size, const int binding)->void
+        {
+            if (!ent->HasComponent<Drawable>())
+            {
+            	VK_ERROR("\n\nYou need an associated model before adding a buffer to it.");
+                return;
+            }
+
+            const auto& model = ent->GetComponent<Drawable>().model_ptr;
+
+            model->AddBuffer(GL_UNIFORM_BUFFER, size, binding, GL_STATIC_DRAW);
+        });
+
+        entity_type.set_function("add_shader_storage_buffer_data", [](const Entity* ent, const int size, const int binding, const std::vector<glm::mat4>& data)->void
+        {
+            if (!ent->HasComponent<Drawable>())
+            {
+            	VK_ERROR("\n\nYou need an associated model before adding a buffer to it.");
+                return;
+            }
+
+            const auto& model = ent->GetComponent<Drawable>().model_ptr;
+
+            model->AddBuffer(GL_SHADER_STORAGE_BUFFER, size, binding, data.data(),GL_STATIC_DRAW);
+        });
+
+        entity_type.set_function("add_shader_storage_buffer", [](const Entity* ent, const int size, const int binding)->void
+        {
+            if (!ent->HasComponent<Drawable>())
+            {
+            	VK_ERROR("\n\nYou need an associated model before adding a buffer to it.");
+                return;
+            }
+
+            const auto& model = ent->GetComponent<Drawable>().model_ptr;
+
+            model->AddBuffer(GL_SHADER_STORAGE_BUFFER, size, binding, GL_STATIC_DRAW);
         });
 
         entity_type.set_function("get_transform", &Entity::GetComponent<Transform>);
@@ -349,6 +386,9 @@ namespace Vakol::Controller
 
         model_type.set_function("reset_current_animation", sol::resolve<void()>(&Assets::Model::ResetAnimation));
         model_type.set_function("reset_animation", sol::resolve<void(int)>(&Assets::Model::ResetAnimation));
+
+        model_type.set_function("get_anim_transforms", &Assets::Model::animation_transforms);
+        model_type.set_function("get_num_anim_transforms", &Assets::Model::numAnimationTransforms);
 
         model_type.set_function("get_animation_duration", &Assets::Model::animation_duration_s);
 
@@ -442,7 +482,8 @@ namespace Vakol::Controller
         });
     }
 
-    void RegisterECS(sol::state& lua) {
+    void RegisterECS(sol::state& lua)
+	{
         auto transform_type = lua.new_usertype<Transform>("transform");
 
         transform_type["pos"] = &Transform::pos;
@@ -465,7 +506,8 @@ namespace Vakol::Controller
         fsm_type["update"] = &FSM::Update;
     }
 
-    void RegisterScene(sol::state& lua) {
+    void RegisterScene(sol::state& lua)
+	{
         auto scene_type = lua.new_usertype<Scene>("scene");
         auto camera_type = lua.new_usertype<Camera>("camera");
 
@@ -473,10 +515,10 @@ namespace Vakol::Controller
 
         scene_type.set_function("create_entity", &Scene::CreateEntity);
 
-        scene_type.set_function("set_active", [](Scene* scene, bool active)
-            {
-                scene->active = active;
-            });
+        scene_type.set_function("set_active", [](Scene* scene, const bool active)
+        {
+            scene->active = active;
+        });
 
         scene_type.set_function("get_camera", &Scene::GetCamera);
         scene_type.set_function("get_entity", &Scene::GetEntity);
@@ -512,8 +554,7 @@ namespace Vakol::Controller
 
     void RegisterGUIWindow(sol::state& lua, View::GUIWindow* gui)
 	{
-        auto gui_window_type =
-            lua.new_usertype<View::GUIWindow>("gui");  // Creates a new usertype of the type 'View::GUIWindow'
+        auto gui_window_type = lua.new_usertype<View::GUIWindow>("gui");  // Creates a new usertype of the type 'View::GUIWindow'
 
         lua["GUI"] = gui;
 
@@ -548,9 +589,9 @@ namespace Vakol::Controller
         gui_window_type.set_function("end_window", &View::GUIWindow::EndWindowCreation);
     }
 
-    void RegisterRenderer([[maybe_unused]] sol::state& lua)
+    void RegisterRenderer([[maybe_unused]] sol::state& lua, View::Renderer* renderer)
     {
-	    
+	    auto renderer_type = lua.new_usertype<View::Renderer>("renderer");
     }
 
     void RegisterPhysics(sol::state& lua) {

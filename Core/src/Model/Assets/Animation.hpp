@@ -226,6 +226,7 @@ namespace Vakol::Model::Assets
 		}
 
 		[[nodiscard]] const std::vector<glm::mat4>& transforms() const { return m_transforms; }
+		[[nodiscard]] const void* data() const { return m_transforms.data(); }
 
 		void ResetAnimation() { current_time = 0.0f; }
 

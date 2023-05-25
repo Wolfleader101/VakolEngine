@@ -46,7 +46,7 @@ namespace Vakol::Controller
 
         ent.GetComponent<Tag>().tag = tag;
 
-        if (sname.length() != 0) ent.AddComponent<Script>(sname, lua, ent, *this);
+        if (!sname.empty()) ent.AddComponent<Script>(sname, lua, ent, *this);
 
         return ent;
     }

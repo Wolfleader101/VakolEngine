@@ -37,7 +37,7 @@ namespace Vakol::Controller
         return ret;
     }
 
-    std::shared_ptr<::Model> AssetLoader::GetModel(const std::string& file, const float scale, bool animated, bool backfaceCull) 
+    std::shared_ptr<::Model> AssetLoader::GetModel(const std::string& file, const float scale, const bool animated, const bool backfaceCull) 
     {
         std::shared_ptr<::Model> ret;
 
