@@ -334,8 +334,15 @@ namespace Vakol::Controller
 
             auto model = AssetLoader::GetModel(path, scale, animated, backfaceCull); 
 
-            if (model) ent->GetComponent<Drawable>().model_ptr = model;
-
+            if (model) 
+            {
+                Drawable& draw = ent->GetComponent<Drawable>();
+                draw.model_ptr = model;
+                draw.name = path;
+                draw.scale = scale;
+                draw.animated = animated;
+                draw.backfaceCull = backfaceCull;
+            }
             return model;
         });
 
@@ -502,6 +509,9 @@ namespace Vakol::Controller
         });
 
         scene_type.set_function("get_physics", [](const Scene* scene) -> ScenePhysics& { return *scene->scenePhysics; });
+
+        scene_type.set_function("serialize", &Scene::Serialize); // Give it folder assets/scenes. will create subfolder for scene
+        scene_type.set_function("deserialize", &Scene::Deserialize); //needs to be given folder assets/scenes/scene_name .ie assets/scenes/Test Scene
 
         camera_type.set_function("get_pitch", &Camera::GetPitch);
         camera_type.set_function("set_pitch", &Camera::SetPitch);
