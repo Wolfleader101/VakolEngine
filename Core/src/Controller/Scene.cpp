@@ -46,7 +46,7 @@ namespace Vakol::Controller
 
         ent.GetComponent<Tag>().tag = tag;
 
-        if (sname.length() != 0) ent.AddComponent<Script>(sname, lua, ent, *this);
+        if (!sname.empty()) ent.AddComponent<Script>(sname, lua, ent, *this);
 
         return ent;
     }
@@ -115,6 +115,9 @@ namespace Vakol::Controller
 
             json(cereal::make_nvp("Scene Name", name));
             json(cereal::make_nvp("Script Name", scriptName));
+            //json(cereal::make_nvp("Globals", sceneGlobals));
+
+            
         }
     }
 
@@ -122,7 +125,7 @@ namespace Vakol::Controller
         entityList.Deserialize(folder + "/EntityList.json");
 
         System::BindScene(*this);
-        // System::Drawable_Init();
+        System::Drawable_Init();
         System::Physics_Init();
 
         if (std::ifstream input(folder + "/Scene.json"); input.good()) 

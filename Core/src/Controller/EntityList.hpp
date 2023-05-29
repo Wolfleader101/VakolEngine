@@ -122,20 +122,49 @@ namespace Vakol::Controller {
         void privateDeserialize(const std::string& file) {
             std::ifstream inp(file);
 
-            if (inp.good()) {
-                m_Registry.clear();
-
+            if (inp.good()) 
+            {
                 Archive json(inp);
-
                 json(ActiveEntityList);  // fills vector again
 
-                entt::snapshot_loader snapLoad(m_Registry);
-                snapLoad.entities(json);
-                snapLoad.component<Args...>(json);
+                if(m_Registry.empty()) //if not initialized already
+                {
+                    entt::snapshot_loader snapLoad(m_Registry);
+                    snapLoad.entities(json);
+                    snapLoad.component<Args...>(json);
+                }
+                else //if initialized 
+                {
+                   
+                    entt::basic_continuous_loader<decltype(m_Registry)> continuousLoad(m_Registry);
+                    continuousLoad.entities(json);
+                    continuousLoad.component<Args...>(json);
+                    continuousLoad.shrink();  // Remove entities that no longer have counterparts.  
+                }
 
                 inp.close();
             }
         }
+
+        // template <typename Archive, typename... Args>
+        // void privateDeserialize(const std::string& file) {
+        //     std::ifstream inp(file);
+
+        //     if (inp.good()) {
+                
+        //         m_Registry.clear();
+
+        //         Archive json(inp);
+
+        //         json(ActiveEntityList);  // fills vector again
+
+        //         entt::snapshot_loader snapLoad(m_Registry);
+        //         snapLoad.entities(json);
+        //         snapLoad.component<Args...>(json);
+
+        //         inp.close();
+        //     }
+        // }
 
         friend class Entity;  // friend to allow the api for entities to be clean.
         friend class System;

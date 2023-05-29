@@ -1,7 +1,4 @@
 function init()
-    local SPAWN_AMOUNT = 5;
-    local matrices = vector_mat4(SPAWN_AMOUNT);
-
     local IDLE_STATE_DEFAULT = 0;
     local IDLE_STATE_SEARCH = 1;
 
@@ -23,10 +20,8 @@ function init()
 
     local SPRINT_STATE = 1;
 
-    local RUN_SPEED = 1.5;
-    local SPRINT_SPEED = 4.0;
-
-    local INSTANCED_MODEL = false;
+    local RUN_SPEED = 1.25;
+    local SPRINT_SPEED = 3.0;
 
     TIMER = 0.0;
     PAUSE_ANIMATION = false;
@@ -34,38 +29,17 @@ function init()
     
     entity:get_transform().pos = Vector3.new(2.7, 0, -12.0);
 
-    state.model = entity:add_model("assets/models/enemy.glb", 0.003, true) -- get model and add a drawable component
-    state.model:set_shader("coreAssets/shaders/animation.prog") -- set the shader on the model (automatically binds it)
-
-    if (INSTANCED_MODEL) then
-        for i = 1, SPAWN_AMOUNT do
-            local mdl_m = Matrix4x4.new(1.0);
-
-            mdl_m = translate(mdl_m, entity:get_transform().pos + Vector3.new(1.5 * i, 0.0, 0.0));
-
-            mdl_m = rotate(mdl_m, math.rad(entity:get_transform().rot.x), Vector3.new(1.0, 0.0, 0.0));
-            mdl_m = rotate(mdl_m, math.rad(entity:get_transform().rot.y), Vector3.new(0.0, 1.0, 0.0));
-            mdl_m = rotate(mdl_m, math.rad(entity:get_transform().rot.z), Vector3.new(0.0, 0.0, 1.0));
-
-            mdl_m = scale(mdl_m, entity:get_transform().scale);
-
-            matrices[i] = mdl_m;
-        end
-
-        instantiate_model(state.model, matrices, SPAWN_AMOUNT);
-    end
+    state.model = entity:add_model("assets/models/enemy.glb", 0.003, true, true) -- get model and add a drawable component
+    entity:set_shader("coreAssets/shaders/animation.prog") -- set the shader on the model (automatically binds it)
 
     state.model:set_animation_state(IDLE_STATE_SEARCH);
 
     local shader = state.model:get_shader(); -- get the shader from the model
 
-    --shader:set_vec3v("light.position", Vector3.new(2.0, 2.0, -4.0));
     shader:set_vec3v("light.direction", Vector3.new(math.rad(0.0), math.rad(0.0), math.rad(-90.0))); -- point light straight up (makes him look evil)
 
     shader:set_float("material.shininess", 32.0);
     shader:set_vec3v("tint", Vector3.new(0.2, 0.65, 0.9));
-
-    shader:set_bool("instanced", INSTANCED_MODEL);
 
     shader:set_int("material.diffuse_map", 0);
     shader:set_int("material.specular_map", 1);
@@ -79,10 +53,6 @@ function init()
 
         local diff = scene.globals.player.pos - entity:get_transform().pos;
         local player_dist = diff:magnitude();
-
-        if (not PAUSE_ANIMATION) then
-            state.model:update_animation(Time.delta_time);
-        end
 
         if (player_dist < VIEW_DISTANCE) then
             state.fsm:change_state("idle_player_spotted");
@@ -99,10 +69,6 @@ function init()
         local targetRotation = math.atan(direction.x, direction.z);  -- Compute target rotation (assuming Y-up coordinate system)
         targetRotation = targetRotation * (180 / math.pi);  -- Convert from radians to degrees
         entity:get_transform().rot.y = targetRotation;  -- Set entity's Y rotation to face the player (adjust this according to your coordinate system)
-
-        if (not PAUSE_ANIMATION) then
-            state.model:update_animation(Time.delta_time);
-        end
 
         if (wait(2.5)) then
             state.fsm:change_state("chase");
@@ -138,10 +104,6 @@ function init()
             SPRINT_STATE = 1;
         end
 
-        if (not PAUSE_ANIMATION) then
-            state.model:update_animation(Time.delta_time);
-        end
-
         if player_dist > VIEW_DISTANCE then
             state.fsm:change_state("idle_search")
         end
@@ -173,17 +135,12 @@ function init()
         local diff = scene.globals.player.pos - entity:get_transform().pos;
         local player_dist = diff:magnitude();
 
-        if (not PAUSE_ANIMATION) then
-            state.model:update_animation(Time.delta_time);
-        end
-
         if (player_dist > MAX_ATTACK_DISTANCE) then
             if (wait(state.model:get_animation_duration() * 0.15)) then
                 state.model:reset_current_animation();
                 state.fsm:change_state("chase");
                 TIMER = 0.0;
             end
-
         end
     end)
 
@@ -211,11 +168,11 @@ function update()
     local terr_scale = scene.globals.terrain.transform.scale;
     pos.y = (scene.globals.terrain.terr:get_height(pos.x / terr_scale.x, pos.z / terr_scale.z) * terr_scale.y) + 0.05;
 
-    if (Input:get_key_down(KEYS["KEY_9"])) then
+    if (Input:get_key_down(KEYS["KEY_1"])) then
         state.model:reset_current_animation();
     end
 
-    if (Input:get_key_down(KEYS["KEY_0"])) then
+    if (Input:get_key_down(KEYS["KEY_2"])) then
         PAUSE_ANIMATION = not PAUSE_ANIMATION;
     end
 end

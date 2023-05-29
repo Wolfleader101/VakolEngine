@@ -21,6 +21,7 @@ namespace Vakol::Controller {
         Scene(const std::string& name, const std::string& scriptName, LuaState& lua,
               const std::shared_ptr<Physics::ScenePhysics>& SP, bool active);
 
+
         void Init();
         /**
          * @brief the entity list of scene

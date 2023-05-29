@@ -70,7 +70,8 @@ namespace Vakol::View
 
         framebuffers.push_back(std::make_shared<FrameBuffer>(attachment, true));
 
-        skybox->Init();
+        if (isSkybox)
+			skybox->Init();
     }
 
     void GLRenderer::AddBuffer(const unsigned int type, const int size, const int binding, const void* data, const unsigned int usage)
@@ -88,13 +89,13 @@ namespace Vakol::View
         buffers.at(index)->SetSubData(offset, size, data);
     }
 
-    void GLRenderer::ClearColor(const glm::vec4& color)
+    void GLRenderer::ClearColor(const glm::vec4& color) const
     { glClearColor(color.r, color.g, color.b, color.a); }
 
-    void GLRenderer::ClearColor(const float r, const float g, const float b, const float a)
+    void GLRenderer::ClearColor(const float r, const float g, const float b, const float a) const
     { glClearColor(r, g, b, a); }
 
-    void GLRenderer::ClearBuffer(const unsigned int buffer_bit)
+    void GLRenderer::ClearBuffer(const unsigned int buffer_bit) const
     { glClear(buffer_bit); }
 
     void GLRenderer::Draw([[maybe_unused]] const Controller::Time& time, const Controller::Camera& camera, const Components::Transform& transform, const Components::Drawable& drawable) const 
@@ -102,6 +103,8 @@ namespace Vakol::View
         VK_ASSERT(drawable.model_ptr, "\n\nModel ptr is nullptr");
 
         const auto& model = drawable.model_ptr;
+
+        if (model->isAnimated()) model->UpdateAnimation(time.deltaTime);
 
         const auto& shader = model->c_shader();
         VK_ASSERT(&shader, "\n\nShader is nullptr");
@@ -135,7 +138,8 @@ namespace Vakol::View
 
         //shader->SetMat3("NORMAL_MATRIX", glm::mat3(transpose(inverse(model_matrix))));
 
-        if (model->isAnimated()) shader->SetMat4v("BONE_TRANSFORMS", model->numTransforms(), value_ptr(model->transforms()[0]));
+		if (model->isAnimated()) shader->SetMat4v("BONE_TRANSFORMS", model->numAnimationTransforms(), value_ptr(model->animation_transforms()[0]));
+            //model->SetBufferSubData(0, 0, model->numAnimationTransforms() * sizeof(glm::mat4), model->animation_data());
 
         for (int i = 0; i < model->nMeshes(); ++i) 
         {
@@ -156,7 +160,8 @@ namespace Vakol::View
         glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK); 
 
-        skybox->Draw(projection, view);
+        if (isSkybox)
+			skybox->Draw(projection, view);
     }
 
     void GLRenderer::Update(const int index) const 

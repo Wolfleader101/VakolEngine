@@ -185,9 +185,9 @@ namespace Vakol::Controller
 
     void RegisterAssetLoader(sol::state& lua)
 	{
-        lua.set_function("load_texture", [](const std::string& path) 
+        lua.set_function("load_texture", [](const std::string& path, const bool gamma, const bool flip) 
         {
-            return AssetLoader::GetTexture(path);  // no checks... just raw doggin it LOL
+            return AssetLoader::GetTexture(path, gamma, flip);  // no checks... just raw doggin it LOL
         });
 
         lua.set_function("load_model", [](const std::string& path, const float scale = 1.0f, const bool animated = false, const bool backfaceCull = true)
@@ -195,7 +195,7 @@ namespace Vakol::Controller
 			if (const auto model = AssetLoader::GetModel(path, scale, animated, backfaceCull); model == nullptr) return false;
 
             return true;
-         });
+        });
 
         lua.set_function("load_shader", [](const std::string& path) {
 	        if (const auto shader = AssetLoader::GetShader(path); shader == nullptr) return false;
@@ -252,26 +252,11 @@ namespace Vakol::Controller
         auto material_type = lua.new_usertype<Assets::Material>("material");
         auto shader_type = lua.new_usertype<Shader>("shader");
 
-        lua.set_function("create_raw_texture", [](std::string& path) 
-        {
-            auto texture = Assets::Texture(path);
-            texture.SetID(LoadRawTexture(texture.path));
-
-            return texture;
-        });
-
-        lua.set_function("create_texture", [](std::string& path, const bool gamma, const bool flip) 
-        {
-            auto&& texture = Assets::Texture(std::move(path));
-            texture.SetID(LoadTexture(texture.path, gamma, flip));
-
-            return std::move(texture);
-        });
-
         lua.set_function("instantiate_model", [](const std::shared_ptr<Assets::Model>& model, const std::vector<glm::mat4>& matrices, const int amount) 
 		{
-            // start_index is 7 for animations, otherwise its 3 for non-animated shit
-            CreateInstances(model->meshes(), matrices, amount, 3);
+            const auto start_index = model->isAnimated() ? 7 : 3;
+
+            CreateInstances(model->meshes(), matrices, amount, start_index);
         });
 
         entity_type.set_function("get_transform", &Entity::GetComponent<Transform>);
@@ -334,8 +319,15 @@ namespace Vakol::Controller
 
             auto model = AssetLoader::GetModel(path, scale, animated, backfaceCull); 
 
-            if (model) ent->GetComponent<Drawable>().model_ptr = model;
-
+            if (model) 
+            {
+                Drawable& draw = ent->GetComponent<Drawable>();
+                draw.model_ptr = model;
+                draw.name = path;
+                draw.scale = scale;
+                draw.animated = animated;
+                draw.backfaceCull = backfaceCull;
+            }
             return model;
         });
 
@@ -344,24 +336,77 @@ namespace Vakol::Controller
             if (ent->HasComponent<Drawable>()) return ent->GetComponent<Drawable>().model_ptr;
         });
 
+
+        entity_type.set_function("set_shader", [](const Entity* ent, const std::string& path)
+        {
+	        if (!ent->HasComponent<Drawable>())
+	        {
+		        VK_ERROR("Drawable Component is needed to set shader!");
+                return;
+	        }
+
+            const auto& model = ent->GetComponent<Drawable>().model_ptr;
+            const auto& shader = AssetLoader::GetShader(path);
+
+            model->set_shader(shader);
+        });
+
+        entity_type.set_function("add_texture", [](const Entity* ent, const int mesh_index, const std::string& path, const bool gamma, const bool flip)
+        {
+            if (!ent->HasComponent<Drawable>())
+            {
+	            VK_ERROR("Drawable component is needed to add texture to material!");
+                return;
+            }
+
+            const auto& model = ent->GetComponent<Drawable>().model_ptr;
+            model->mesh(mesh_index).GetMaterial()->AddTexture(*AssetLoader::GetTexture(path, gamma, flip));
+        });
+
+        entity_type.set_function("add_raw_texture", [](const Entity* ent, const int mesh_index, const std::string& path)
+        {
+	        if (!ent->HasComponent<Drawable>())
+            {
+	            VK_ERROR("Drawable component is needed to add texture to material!");
+                return;
+            }
+
+            const auto& model = ent->GetComponent<Drawable>().model_ptr;
+            model->mesh(mesh_index).GetMaterial()->AddTexture(*AssetLoader::GetTexture(path));
+        });
+
+        entity_type.set_function("add_shader_storage_buffer_data", [](const Entity* ent, const int size, const int binding, const std::vector<glm::mat4>& data)->void
+        {
+            if (!ent->HasComponent<Drawable>())
+            {
+	            VK_ERROR("Drawable component is needed to add shader buffer data!");
+                return;
+            }
+
+            const auto& model = ent->GetComponent<Drawable>().model_ptr;
+            model->AddBuffer(GL_SHADER_STORAGE_BUFFER, size, binding, data.data(), GL_STATIC_DRAW);
+        });
+
         model_type.set_function("set_animation_state", &Assets::Model::SetAnimationState);
         model_type.set_function("update_animation", &Assets::Model::UpdateAnimation);
 
         model_type.set_function("reset_current_animation", sol::resolve<void()>(&Assets::Model::ResetAnimation));
         model_type.set_function("reset_animation", sol::resolve<void(int)>(&Assets::Model::ResetAnimation));
 
+        model_type.set_function("get_anim_transforms", &Assets::Model::animation_transforms);
+        model_type.set_function("get_num_anim_transforms", &Assets::Model::numAnimationTransforms);
+
         model_type.set_function("get_animation_duration", &Assets::Model::animation_duration_s);
 
         model_type.set_function("get_mesh_count", &Assets::Model::nMeshes);
         model_type.set_function("get_mesh", &Assets::Model::mesh);
 
-        model_type.set_function("set_shader", &Assets::Model::set_shader);
         model_type.set_function("get_shader", &Assets::Model::shader);
 
         mesh_type.set_function("get_material", &Mesh::GetMaterial);
 
-        material_type.set_function("add_texture", &Assets::Material::AddTexture);
         material_type.set_function("get_texture", &Assets::Material::GetTexture);
+
         material_type.set_function("get_ambient_color", &Assets::Material::GetAmbientColor);
         material_type.set_function("get_diffuse_color", &Assets::Material::GetDiffuseColor);
 
@@ -442,7 +487,8 @@ namespace Vakol::Controller
         });
     }
 
-    void RegisterECS(sol::state& lua) {
+    void RegisterECS(sol::state& lua)
+	{
         auto transform_type = lua.new_usertype<Transform>("transform");
 
         transform_type["pos"] = &Transform::pos;
@@ -465,7 +511,8 @@ namespace Vakol::Controller
         fsm_type["update"] = &FSM::Update;
     }
 
-    void RegisterScene(sol::state& lua) {
+    void RegisterScene(sol::state& lua)
+	{
         auto scene_type = lua.new_usertype<Scene>("scene");
         auto camera_type = lua.new_usertype<Camera>("camera");
 
@@ -473,10 +520,10 @@ namespace Vakol::Controller
 
         scene_type.set_function("create_entity", &Scene::CreateEntity);
 
-        scene_type.set_function("set_active", [](Scene* scene, bool active)
-            {
-                scene->active = active;
-            });
+        scene_type.set_function("set_active", [](Scene* scene, const bool active)
+        {
+            scene->active = active;
+        });
 
         scene_type.set_function("get_camera", &Scene::GetCamera);
         scene_type.set_function("get_entity", &Scene::GetEntity);
@@ -503,6 +550,9 @@ namespace Vakol::Controller
 
         scene_type.set_function("get_physics", [](const Scene* scene) -> ScenePhysics& { return *scene->scenePhysics; });
 
+        scene_type.set_function("serialize", &Scene::Serialize); // Give it folder assets/scenes. will create subfolder for scene
+        scene_type.set_function("deserialize", &Scene::Deserialize); //needs to be given folder assets/scenes/scene_name .ie assets/scenes/Test Scene
+
         camera_type.set_function("get_pitch", &Camera::GetPitch);
         camera_type.set_function("set_pitch", &Camera::SetPitch);
 
@@ -512,8 +562,7 @@ namespace Vakol::Controller
 
     void RegisterGUIWindow(sol::state& lua, View::GUIWindow* gui)
 	{
-        auto gui_window_type =
-            lua.new_usertype<View::GUIWindow>("gui");  // Creates a new usertype of the type 'View::GUIWindow'
+        auto gui_window_type = lua.new_usertype<View::GUIWindow>("gui");  // Creates a new usertype of the type 'View::GUIWindow'
 
         lua["GUI"] = gui;
 
@@ -533,7 +582,7 @@ namespace Vakol::Controller
 
         gui_window_type.set_function("add_image", [](const View::GUIWindow* GUI, const std::string& path, const float width, const float height, const bool centerX, const bool centerY)
         {
-	        const auto& tex = AssetLoader::GetTexture(path);
+	        const auto& tex = AssetLoader::GetTexture(path, false, false);
             const unsigned int texID = tex->GetID();
 
 	        GUI->AddImage(texID, {width, height}, centerX, centerY);
@@ -548,9 +597,28 @@ namespace Vakol::Controller
         gui_window_type.set_function("end_window", &View::GUIWindow::EndWindowCreation);
     }
 
-    void RegisterRenderer([[maybe_unused]] sol::state& lua)
+    void RegisterRenderer(sol::state& lua, const std::shared_ptr<View::Renderer>& renderer)
     {
-	    
+        lua.set_function("toggle_wireframe", [&]
+        {
+        	renderer->ToggleWireframe();
+        });
+
+        lua.set_function("toggle_skybox", [&]
+        {
+	        renderer->ToggleSkybox();
+        });
+
+        lua.set_function("clear_color_v", [&](const glm::vec4& color)
+        {
+            renderer->ClearColor(color);
+        });
+
+        lua.set_function("clear_color", [&](const float r, const float g, const float b, const float a)
+        {
+            renderer->ClearColor(r, g, b, a);
+            renderer->ClearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        });
     }
 
     void RegisterPhysics(sol::state& lua) {

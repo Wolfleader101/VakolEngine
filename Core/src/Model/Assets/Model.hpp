@@ -27,15 +27,16 @@ namespace Vakol::Model::Assets
         Model(std::vector<Mesh>& meshes, std::vector<Animation>& animations)
             : m_meshes(std::move(meshes)), m_animations(std::move(animations)), m_animated(true) {}
 
-        void set_shader(const std::string& path)
+        void set_shader(const std::shared_ptr<Shader>& shader)
     	{
-            this->m_shader = std::make_shared<Shader>(path);
+            this->m_shader = shader;
             this->m_shader->Bind();
         }
 
         [[nodiscard]] bool isAnimated() const { return m_animated; }
 		[[nodiscard]] bool cullBackface() const { return m_cullBackface; }
-        [[nodiscard]] void SetCullBackface(bool cull) { m_cullBackface = cull; }
+
+    	void SetCullBackface(const bool cull) { m_cullBackface = cull; }
 
         std::shared_ptr<Shader>& shader() { return m_shader; }
         [[nodiscard]] const std::shared_ptr<Shader>& c_shader() const { return m_shader; }
@@ -62,7 +63,7 @@ namespace Vakol::Model::Assets
             }
         }
 
-        /// @brief x
+                /// @brief x
         /// @param type the type of buffer, GL_UNIFORM_BUFFER and GL_SHADER_STORAGE_BUFFER are the ones you're looking for
         /// @param size the size of the buffer (in bytes)
         /// @param binding the index at which 
@@ -89,12 +90,12 @@ namespace Vakol::Model::Assets
         }
 
         [[nodiscard]] int numAnimations() const { return static_cast<int>(m_animations.size()); }
-        [[nodiscard]] int numTransforms() const { return m_animations.at(m_animation_state).numTransforms(); }
+        [[nodiscard]] int numAnimationTransforms() const { return m_animations.at(m_animation_state).numTransforms(); }
+    	[[nodiscard]] const std::vector<glm::mat4>& animation_transforms() const { return m_animations.at(m_animation_state).transforms(); }
+        [[nodiscard]] const void* animation_data() const { return m_animations.at(m_animation_state).data(); }
 
         [[nodiscard]] float animation_duration_s() const { return m_animations.at(m_animation_state).duration_s(); }
         [[nodiscard]] float animation_duration_ms() const { return m_animations.at(m_animation_state).duration_ms(); }
-
-    	[[nodiscard]] const std::vector<glm::mat4>& transforms() const { return m_animations.at(m_animation_state).transforms(); }
 
         [[nodiscard]] const Mesh& mesh(const int index = 0) const { return m_meshes.at(index); }
 

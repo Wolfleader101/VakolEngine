@@ -32,6 +32,7 @@ function update()
 
         local game = get_scene("Test Scene");
         game:set_active(true);
+        toggle_wireframe();
     end
 
     if(Input:get_key_down(KEYS["KEY_ESC"])) then

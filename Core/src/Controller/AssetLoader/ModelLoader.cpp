@@ -2,6 +2,7 @@
 
 #include <Controller/AssetLoader/FileLoader.hpp>
 #include <Controller/AssetLoader/TextureLoader.hpp>
+#include <Controller/AssetLoader/AssetLoader.hpp>
 
 #include <stack>
 
@@ -247,18 +248,19 @@ namespace Vakol::Controller
             {
                 if (const auto embedded_texture = scene.GetEmbeddedTexture(imported_path.C_Str()))
                 {
+                    VK_TRACE(embedded_texture->mFilename.C_Str());
                     const auto size = embedded_texture->mWidth;
 
                     if (type == aiTextureType_AMBIENT || type == aiTextureType_DIFFUSE) // Only apply SRGB gamma correction to textures with more than 1 channel
-                        texture.SetID(LoadTexture(static_cast<int>(size), true, false, embedded_texture->pcData));
+                        texture = *AssetLoader::GetTexture(embedded_texture->mFilename.C_Str(), static_cast<int>(size), true, false, embedded_texture->pcData);
                     else
-						texture.SetID(LoadTexture(static_cast<int>(size), false, false, embedded_texture->pcData));
+						texture = *AssetLoader::GetTexture(embedded_texture->mFilename.C_Str(), static_cast<int>(size), false, false, embedded_texture->pcData);
                 }
                 else
                 {
                     texture.path = imported_path.C_Str();
 					auto final_path = IS_CORE_ASSET ? "assets/" + texture.path : "coreAssets/textures/" + texture.path;
-					texture.SetID(LoadTexture(final_path, false, false));
+					texture = *AssetLoader::GetTexture(final_path, false, false);
                 }
             }
 
@@ -375,9 +377,9 @@ namespace Vakol::Controller
 
                 // Find the node with a matching name in the 'node_names' vector
                 auto itr = std::find_if(node_names.cbegin(), node_names.cend(), [&bone_name](const aiString* node_name)
-                    {
+                {
                         return bone_name == *node_name;
-                    });
+                });
 
                 // Ensure that a matching node is found
                 VK_ASSERT(itr != node_names.end(), "\n\nNo node matching a bone.");

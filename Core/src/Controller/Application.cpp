@@ -55,9 +55,9 @@ namespace Vakol::Controller
         RegisterECS(lua.GetState());
         RegisterAssetLoader(lua.GetState());
         RegisterApplication(lua.GetState(), this);
+        RegisterRenderer(lua.GetState(), m_renderer);
         RegisterScene(lua.GetState());
         RegisterGUIWindow(lua.GetState(), &m_gui);  // Register GUI Window
-        RegisterRenderer(lua.GetState());
         RegisterPhysics(lua.GetState());
         RegisterOther(lua.GetState());
     }
