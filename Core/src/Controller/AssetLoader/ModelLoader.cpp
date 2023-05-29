@@ -251,10 +251,7 @@ namespace Vakol::Controller
                     VK_TRACE(embedded_texture->mFilename.C_Str());
                     const auto size = embedded_texture->mWidth;
 
-                    if (type == aiTextureType_AMBIENT || type == aiTextureType_DIFFUSE) // Only apply SRGB gamma correction to textures with more than 1 channel
-                        texture = *AssetLoader::GetTexture(embedded_texture->mFilename.C_Str(), static_cast<int>(size), true, false, embedded_texture->pcData);
-                    else
-						texture = *AssetLoader::GetTexture(embedded_texture->mFilename.C_Str(), static_cast<int>(size), false, false, embedded_texture->pcData);
+					texture = *AssetLoader::GetTexture(embedded_texture->mFilename.C_Str(), static_cast<int>(size), false, false, embedded_texture->pcData);
                 }
                 else
                 {
