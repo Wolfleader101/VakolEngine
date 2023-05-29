@@ -321,7 +321,7 @@ namespace Vakol::Controller
 
             if (model) 
             {
-                Drawable& draw = ent->GetComponent<Drawable>();
+	            auto& draw = ent->GetComponent<Drawable>();
                 draw.model_ptr = model;
                 draw.name = path;
                 draw.scale = scale;

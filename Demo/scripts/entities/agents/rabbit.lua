@@ -1,5 +1,5 @@
 function init()
-    entity:get_transform().pos = Vector3.new(0.0, 0.5, -2.0);
+    entity:get_transform().pos = Vector3.new(1.0, 0.5, -2.0);
 
 	state.model = entity:add_model("assets/models/rabbit.fbx", 0.005, true, true)
 	entity:set_shader("coreAssets/shaders/animation.prog")
@@ -21,5 +21,5 @@ function init()
 end
 
 function update()
-    --state.model:update_animation(Time.delta_time);
+    state.model:update_animation(Time.delta_time);
 end

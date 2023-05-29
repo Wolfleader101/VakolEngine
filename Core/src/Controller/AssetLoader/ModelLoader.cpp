@@ -10,6 +10,8 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 
+#include <iostream>
+
 #pragma warning(push)
 #pragma warning(disable:4201)
 #include <glm/gtc/quaternion.hpp>
@@ -75,6 +77,11 @@ namespace Vakol::Controller
             animated = false; // force animations off
         }
 
+        VK_TRACE("Model Path: {0}", path);
+        VK_TRACE("Animations Found: {0}", scene->mNumAnimations);
+
+        std::cout << std::endl;
+
         BoneMap bone_map;
 
         if (animated && scene->mNumAnimations > 0)
@@ -95,7 +102,7 @@ namespace Vakol::Controller
         {
             const auto& mesh = *scene.mMeshes[i];
 
-            VK_TRACE("Mesh {0} | Number of bones {1}", i, mesh.mNumBones);
+            VK_TRACE("Mesh - NAME: {0} | NUMBER OF BONES: {2}", mesh.mName.C_Str(), mesh.mNumBones);
 
             meshes.push_back(process_mesh(scene, mesh, bone_map));
         }
@@ -248,7 +255,6 @@ namespace Vakol::Controller
             {
                 if (const auto embedded_texture = scene.GetEmbeddedTexture(imported_path.C_Str()))
                 {
-                    VK_TRACE(embedded_texture->mFilename.C_Str());
                     const auto size = embedded_texture->mWidth;
 
 					texture = *AssetLoader::GetTexture(embedded_texture->mFilename.C_Str(), static_cast<int>(size), false, false, embedded_texture->pcData);

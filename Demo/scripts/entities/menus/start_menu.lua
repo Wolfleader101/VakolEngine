@@ -2,7 +2,7 @@
 function start_menu()
     GUI:start_window("Start Menu", 500.0, 500.0 , 960 - 250, 540 - 250); 
 
-    GUI:add_text("Welcome to Places Unkown!", true, true, 2.0);
+    GUI:add_text("Welcome to Places Unknown!", true, true, 2.0);
     
     GUI:add_text(" ", true, true, 2.0);
 

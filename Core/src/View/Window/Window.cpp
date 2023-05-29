@@ -57,9 +57,9 @@ void APIENTRY DebugOutput(const unsigned int source, const unsigned int type, co
 }
 
 namespace Vakol::View {
-    Window::Window(std::string title, int width, int height)
-        : m_window(nullptr), m_title(std::move(title)), m_width(width), m_height(height) {
-        VK_INFO("Creating window {0} ({1}, {2})", m_title, m_width, m_height);
+    Window::Window(std::string title, const int width, const int height) : m_window(nullptr), m_title(std::move(title)), m_width(width), m_height(height)
+	{
+        VK_INFO("Creating Window {0} ({1}, {2})", m_title, m_width, m_height);
 
         glfwInit();
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -82,12 +82,14 @@ namespace Vakol::View {
 
         std::cout << std::endl;
 
-        VK_INFO("OpenGL INFO:");
+        VK_INFO("OpenGL Info:");
         VK_INFO("Vendor: {0}", reinterpret_cast<const char*>(glGetString(GL_VENDOR)));
         VK_INFO("Renderer: {0}", reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
         VK_INFO("OpenGL Version: {0}", reinterpret_cast<const char*>(glGetString(GL_VERSION)));
 
         VK_ASSERT(GLVersion.major > 4 || (GLVersion.major == 4 && GLVersion.minor >= 5), "\n\nVakolEngine requires the latest version of OpenGL (4.6)!");
+
+    	std::cout << std::endl;
 
         // enable OpenGL debug context if context allows for debug context
         int flags; glGetIntegerv(GL_CONTEXT_FLAGS, &flags);

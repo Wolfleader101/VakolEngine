@@ -104,7 +104,7 @@ namespace Vakol::View
 
         const auto& model = drawable.model_ptr;
 
-        if (model->isAnimated()) model->UpdateAnimation(time.deltaTime);
+        //if (model->isAnimated()) model->UpdateAnimation(time.deltaTime);
 
         const auto& shader = model->c_shader();
         VK_ASSERT(&shader, "\n\nShader is nullptr");
