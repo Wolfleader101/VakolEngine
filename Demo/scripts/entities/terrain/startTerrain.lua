@@ -10,9 +10,7 @@ function init()
 
     shader:set_float("u_time", Time.curr_time);
     local trans = entity:get_transform();
-    trans.scale.x = 3;
-    trans.scale.z = 10;
-    trans.scale.y = 5;
+    trans.scale = Vector3.new(3, 5, 10);
 
     trans.pos.z = -1000;
 
@@ -33,5 +31,4 @@ function update()
     shader:set_float("u_time", Time.curr_time * 10);
     toggle_wireframe();
     
-
 end

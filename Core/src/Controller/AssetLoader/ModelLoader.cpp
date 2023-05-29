@@ -102,7 +102,7 @@ namespace Vakol::Controller
         {
             const auto& mesh = *scene.mMeshes[i];
 
-            VK_TRACE("Mesh - NAME: {0} | NUMBER OF BONES: {2}", mesh.mName.C_Str(), mesh.mNumBones);
+            //VK_TRACE("Mesh - NAME: {0} | NUMBER OF BONES: {2}", mesh.mName.C_Str(), mesh.mNumBones);
 
             meshes.push_back(process_mesh(scene, mesh, bone_map));
         }
