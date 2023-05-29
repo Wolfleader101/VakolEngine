@@ -2,7 +2,8 @@ function init()
     scene:create_entity("Camera Controller", "entities/player/cameraController.lua");
     scene:create_entity("terrain", "entities/terrain/physicsTerrain.lua");
     --scene:create_entity("animated model", "entities/test_animation.lua");
-    scene:create_entity("basic agent", "entities/agents/basic_agent.lua");
+    scene:create_entity("wolf", "entities/agents/wolf.lua");
+    scene:create_entity("rabbit", "entities/agents/rabbit.lua");
 end
 
 function update()

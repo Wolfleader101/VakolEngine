@@ -78,10 +78,9 @@ namespace Vakol::View {
         glfwMakeContextCurrent(m_window);
         glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-        if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress))) {
-            VK_CRITICAL("Failed to initialise GLAD");
-            return;
-        }
+        VK_ASSERT(gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)), "\n\nFailed to initialise GLAD");
+
+        std::cout << std::endl;
 
         VK_INFO("OpenGL INFO:");
         VK_INFO("Vendor: {0}", reinterpret_cast<const char*>(glGetString(GL_VENDOR)));
