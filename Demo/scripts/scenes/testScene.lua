@@ -38,6 +38,7 @@ function update()
 
         local menu = get_scene("Start Scene");
         menu:set_active(true);
+        toggle_wireframe();
     end
 
     if(Input:get_key_down(KEYS["KEY_5"])) then 
