@@ -109,10 +109,7 @@ namespace Vakol::View
         const auto& shader = model->c_shader();
         VK_ASSERT(&shader, "\n\nShader is nullptr");
 
-        if (!model->cullBackface())
-        {
-            glDisable(GL_CULL_FACE);
-        }
+        if (!model->cullBackface()) glDisable(GL_CULL_FACE);
 
         shader->Bind();
 
@@ -139,7 +136,6 @@ namespace Vakol::View
         //shader->SetMat3("NORMAL_MATRIX", glm::mat3(transpose(inverse(model_matrix))));
 
 		if (model->isAnimated()) shader->SetMat4v("BONE_TRANSFORMS", model->numAnimationTransforms(), value_ptr(model->animation_transforms()[0]));
-            //model->SetBufferSubData(0, 0, model->numAnimationTransforms() * sizeof(glm::mat4), model->animation_data());
 
         for (int i = 0; i < model->nMeshes(); ++i) 
         {
@@ -160,8 +156,7 @@ namespace Vakol::View
         glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK); 
 
-        if (isSkybox)
-			skybox->Draw(projection, view);
+        if (isSkybox) skybox->Draw(projection, view);
     }
 
     void GLRenderer::Update(const int index) const 
