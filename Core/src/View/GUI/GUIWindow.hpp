@@ -29,7 +29,12 @@ namespace Vakol::View {
          * @brief Creates a new frame for the window
          */
     	void CreateNewFrame() const;
-
+        /**
+         * @brief Changes the default font being used in Dear ImGui
+         *
+         * @param inputPath The path to the font file
+         */
+        void ChangeFontDefault(std::string inputPath) const;
         void EndFrame() const;
         /**
          * @brief Starts the creation of a GUI window
@@ -62,7 +67,7 @@ namespace Vakol::View {
          * @param inputBlue The blue value of the text
          * @param inputAlpha The alpha value of the text
          */
-        void AddText(const std::string& inputText, const bool centerX, const bool centerY, const float fontSize, const float inputRed, const float inputGreen, const float inputBlue, const float inputAlpha) const;
+        void AddText(const std::string& inputText, const bool centerX, const bool centerY, const float fontSize, const float inputRed, const float inputGreen, const float inputBlue, const float inputAlpha) const; 
 
         /**
          * \brief Adds an image to the UI Window
@@ -127,7 +132,8 @@ namespace Vakol::View {
          * @param maxValue the maximum value of the slider
          */
     	void AddVecFloatSlider(const std::string& sliderName, float sliderValue[], const int size, const float minValue, const float maxValue) const;
-
+        void WindowBackgroundStyle(const float inputRed, const float inputGreen, const float inputBlue, const float inputAlpha) const;
+        void WindowRoundingStyle(const float inputValue) const;
         /**
          * @brief Ends the creation of a GUI window
          */
@@ -138,7 +144,7 @@ namespace Vakol::View {
         ~GUIWindow();
 
     private:
-        ImGuiWindowFlags windowFlags;
+        std::vector<ImFont*> fonts;
 
         bool is_initialised = false;
 
