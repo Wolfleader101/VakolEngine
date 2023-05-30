@@ -33,7 +33,7 @@ function init()
         state.fsm = entities[i]:add_fsm();
     end
 
-    models[2]:set_animation_state(4);
+    models[2]:set_animation_state(2);
 end
 
 function update()

@@ -10,8 +10,5 @@ void main()
 {
     FragColor = texture(diffuse_map, TexCoords);
 
-    if (FragColor.a < alphaCutoff)
-    {
-        discard;
-    }
+    if (FragColor.a < alphaCutoff) discard;
 }
