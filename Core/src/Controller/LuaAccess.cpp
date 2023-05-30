@@ -387,11 +387,39 @@ namespace Vakol::Controller
             model->AddBuffer(GL_SHADER_STORAGE_BUFFER, size, binding, data.data(), GL_STATIC_DRAW);
         });
 
-        model_type.set_function("set_animation_state", &Assets::Model::SetAnimationState);
-        model_type.set_function("update_animation", &Assets::Model::UpdateAnimation);
+        entity_type.set_function("set_animation_state", [](const Entity* ent, const int animation_state)
+        {
+			if (!ent->HasComponent<Drawable>())
+            {
+	            VK_ERROR("Drawable component is needed to set animation state!");
+                return;
+            }
 
-        model_type.set_function("reset_current_animation", sol::resolve<void()>(&Assets::Model::ResetAnimation));
-        model_type.set_function("reset_animation", sol::resolve<void(int)>(&Assets::Model::ResetAnimation));
+        	auto& drawable = ent->GetComponent<Drawable>();
+
+	        if (const auto size = drawable.model_ptr->numAnimations(); animation_state < size && animation_state >= 0)
+                drawable.animation_state = animation_state;
+            else 
+            {
+                drawable.animation_state = std::max(0, size - 1);
+                drawable.animation_state = animation_state;
+            }
+
+            drawable.model_ptr->ResetAnimation(drawable.animation_state);
+        });
+
+        entity_type.set_function("toggle_animation", [](const Entity* ent)
+        {
+			if (!ent->HasComponent<Drawable>())
+	        {
+	            VK_ERROR("Drawable component is needed to toggle animation playback!");
+	            return;
+	        }
+
+            auto& drawable = ent->GetComponent<Drawable>();
+
+            drawable.paused_animation = !drawable.paused_animation;
+        });
 
         model_type.set_function("get_anim_transforms", &Assets::Model::animation_transforms);
         model_type.set_function("get_num_anim_transforms", &Assets::Model::numAnimationTransforms);

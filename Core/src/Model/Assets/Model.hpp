@@ -41,27 +41,14 @@ namespace Vakol::Model::Assets
         std::shared_ptr<Shader>& shader() { return m_shader; }
         [[nodiscard]] const std::shared_ptr<Shader>& c_shader() const { return m_shader; }
 
-        void UpdateAnimation(const float delta_time) { m_animations.at(m_animation_state).Update(delta_time); }
-
-    	void ResetAnimation() { m_animations.at(m_animation_state).ResetAnimation(); }
-
-    	void ResetAnimation(const int state)
+        void ResetAnimation(const int state)
     	{
         	VK_ASSERT(state < numAnimations() && state >= 0, "\n\nAnimation Index out of bounds!");
 
         	m_animations.at(state).ResetAnimation();
     	}
 
-        void SetAnimationState(int state)
-    	{
-	        if (const auto size = numAnimations(); state < size && state >= 0)
-                m_animation_state = state;
-            else 
-            {
-                state = std::max(0, size - 1);
-                m_animation_state = state;
-            }
-        }
+        void UpdateAnimation(const int state, const float delta_time) { m_animations.at(state).Update(delta_time); }
 
         /// @brief x
         /// @param type the type of buffer, GL_UNIFORM_BUFFER and GL_SHADER_STORAGE_BUFFER are the ones you're looking for
@@ -90,12 +77,12 @@ namespace Vakol::Model::Assets
         }
 
         [[nodiscard]] int numAnimations() const { return static_cast<int>(m_animations.size()); }
-        [[nodiscard]] int numAnimationTransforms() const { return m_animations.at(m_animation_state).numTransforms(); }
-    	[[nodiscard]] const std::vector<glm::mat4>& animation_transforms() const { return m_animations.at(m_animation_state).transforms(); }
-        [[nodiscard]] const void* animation_data() const { return m_animations.at(m_animation_state).data(); }
+        [[nodiscard]] int numAnimationTransforms(const int state) const { return m_animations.at(state).numTransforms(); }
+    	[[nodiscard]] const std::vector<glm::mat4>& animation_transforms(const int state) const { return m_animations.at(state).transforms(); }
+        [[nodiscard]] const void* animation_data(const int state) const { return m_animations.at(state).data(); }
 
-        [[nodiscard]] float animation_duration_s() const { return m_animations.at(m_animation_state).duration_s(); }
-        [[nodiscard]] float animation_duration_ms() const { return m_animations.at(m_animation_state).duration_ms(); }
+        [[nodiscard]] float animation_duration_s(const int state) const { return m_animations.at(state).duration_s(); }
+        [[nodiscard]] float animation_duration_ms(const int state) const { return m_animations.at(state).duration_ms(); }
 
         [[nodiscard]] const Mesh& mesh(const int index = 0) const { return m_meshes.at(index); }
 
@@ -110,8 +97,6 @@ namespace Vakol::Model::Assets
         std::shared_ptr<Shader> m_shader = nullptr;
 
         std::vector<std::shared_ptr<Buffer>> m_buffers;
-
-        int m_animation_state = 0;
 
         bool m_animated = false;
         bool m_cullBackface = true;

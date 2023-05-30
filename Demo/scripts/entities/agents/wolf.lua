@@ -3,7 +3,7 @@ function init()
     local entities = {};
     models = {};
 
-    for i = 1, 20 do
+    for i = 1, 5 do
         if (i == 1) then
             entities[i] = entity;
         else
@@ -33,9 +33,12 @@ function init()
         state.fsm = entities[i]:add_fsm();
     end
 
-    models[2]:set_animation_state(2);
+    entities[1]:set_animation_state(0);
+    entities[2]:set_animation_state(1);
+    entities[3]:set_animation_state(2);
+    entities[4]:set_animation_state(3);
+    entities[5]:set_animation_state(4);
 end
 
 function update()
-    models[1]:update_animation(Time.delta_time);
 end

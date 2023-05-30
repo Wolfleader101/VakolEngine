@@ -201,6 +201,8 @@ namespace Vakol::Model::Assets
 			VK_ASSERT(bone_count <= MAX_BONE_COUNT, "\n\nTOO MANY DAMN BONES!!");
 		}
 
+		void ResetAnimation() { current_time = 0.0f; }
+
 		void Update(const float delta_time)
 		{
 			current_time += ticks_per_second * delta_time; // Update the current time based on the ticks per second and delta time
@@ -228,8 +230,6 @@ namespace Vakol::Model::Assets
 		[[nodiscard]] const std::vector<glm::mat4>& transforms() const { return m_transforms; }
 		[[nodiscard]] const void* data() const { return m_transforms.data(); }
 
-		void ResetAnimation() { current_time = 0.0f; }
-
 		[[nodiscard]] const glm::mat4& nTransform(const int i) const { return m_transforms.at(i); }
 
 		[[nodiscard]] auto duration_s() const ->float { return duration * 0.001f; }
@@ -244,7 +244,6 @@ namespace Vakol::Model::Assets
 		std::vector<AnimNode> m_nodes;
 
 		[[maybe_unused]] unsigned int bone_count = 0;
-		[[maybe_unused]] int node_count = 0;
 
 		float current_time = 0.0f;
 		float duration = 0.0f;
