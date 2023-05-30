@@ -43,6 +43,9 @@ constexpr float LIGHT_QUADRATIC = 0.0075f;
 const float LIGHT_CUT_OFF = glm::cos(glm::radians(7.5f));
 const float LIGHT_OUTER_CUT_OFF = glm::cos(glm::radians(12.5f));
 
+glm::mat4 PROJECTION = glm::mat4(1.0f);
+glm::mat4 VIEW = glm::mat4(1.0f);
+
 namespace Vakol::View 
 {
     GLRenderer::GLRenderer(const std::shared_ptr<Window>& window) : Renderer(window) 
@@ -70,8 +73,7 @@ namespace Vakol::View
 
         framebuffers.push_back(std::make_shared<FrameBuffer>(attachment, true));
 
-        if (isSkybox)
-			skybox->Init();
+        if (isSkybox) skybox->Init();
     }
 
     void GLRenderer::AddBuffer(const unsigned int type, const int size, const int binding, const void* data, const unsigned int usage)
@@ -113,8 +115,8 @@ namespace Vakol::View
 
         shader->Bind();
 
-        const auto& projection = camera.GetMatrix(PROJECTION_MATRIX);
-        const auto& view = camera.GetMatrix(VIEW_MATRIX);
+        const auto& projection = PROJECTION = camera.GetMatrix(PROJECTION_MATRIX);
+        const auto& view = VIEW = camera.GetMatrix(VIEW_MATRIX);
 
         // at index 0, with an offset of 0 (since PV_MATRIX is the only element in the buffer), with a size of a 4x4 matrix, set PV_MATRIX
         SetBufferSubData(0, 0, sizeof(glm::mat4), value_ptr(projection));
@@ -132,6 +134,8 @@ namespace Vakol::View
         model_matrix = scale(model_matrix, transform.scale);
 
         SetBufferSubData(0, 3 * sizeof(glm::mat4), sizeof(glm::mat4), value_ptr(model_matrix));
+
+        shader->SetFloat("time", time.curTime);
 
         //shader->SetMat3("NORMAL_MATRIX", glm::mat3(transpose(inverse(model_matrix))));
 
@@ -152,11 +156,6 @@ namespace Vakol::View
         }
 
         shader->Unbind();
-
-        glEnable(GL_CULL_FACE);
-        glCullFace(GL_BACK); 
-
-        if (isSkybox) skybox->Draw(projection, view);
     }
 
     void GLRenderer::Update(const int index) const 
@@ -173,5 +172,13 @@ namespace Vakol::View
             else
                 framebuffers.at(index)->ClearBuffer(GL_COLOR_BUFFER_BIT);
         }
+    }
+
+    void GLRenderer::LateUpdate([[maybe_unused]] const int index) const
+    {
+	    glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK); 
+
+        if (isSkybox) skybox->Draw(PROJECTION, VIEW);
     }
 }

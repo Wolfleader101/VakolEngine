@@ -45,6 +45,7 @@ namespace Vakol::View
         void Draw([[maybe_unused]] const Controller::Time& time, const Controller::Camera& camera, const Model::Components::Transform& transform, const Model::Components::Drawable& drawable) const override;
 
         void Update(int index) const override;
+        void LateUpdate(int index) const override;
 
         void ToggleWireframe() override 
         {

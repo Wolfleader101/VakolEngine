@@ -132,6 +132,8 @@ namespace Vakol::Controller
                 scene.Update(m_time, m_renderer);
             }
 
+            m_renderer->LateUpdate();
+
             m_gui.Update();
             m_input.Update();
             m_window->OnUpdate();

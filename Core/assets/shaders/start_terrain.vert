@@ -12,9 +12,6 @@ layout (std140, binding = 1) uniform Matrices
     mat4 MODEL_MATRIX;
 };
 
-
-uniform float u_time; // Added this uniform variable
-
 void main()
 {   
     Height = ((aPos.y + 16) / 64.0) * 255.0;

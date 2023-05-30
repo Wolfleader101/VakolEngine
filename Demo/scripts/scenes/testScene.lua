@@ -5,6 +5,7 @@ function init()
     scene:create_entity("wolf", "entities/agents/wolf.lua");
     scene:create_entity("rabbit", "entities/agents/rabbit.lua");
     scene:create_entity("gangsta", "entities/agents/gangsta.lua");
+    scene:create_entity("renderer", "entities/test_rendering.lua");
 end
 
 function update()
@@ -33,11 +34,12 @@ function update()
     GUI:end_window();
 
     if(Input:get_key_down(KEYS["KEY_ESC"])) then
+        toggle_wireframe();
+        toggle_skybox();
         scene:set_active(false);
 
         local menu = get_scene("Start Scene");
         menu:set_active(true);
-        toggle_wireframe();
     end
 
     if(Input:get_key_down(KEYS["KEY_5"])) then 

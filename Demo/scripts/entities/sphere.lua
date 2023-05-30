@@ -1,9 +1,9 @@
 function init()
 
     --local ent = scene:create_entity("basicEntity.lua");
-    local model = entity:add_model("coreAssets/models/sphere.obj");
+    local model = entity:add_model("coreAssets/models/sphere.obj", 1.0, false, true);
 
-    model:set_shader("coreAssets/shaders/rainbow.prog");
+    entity:set_shader("coreAssets/shaders/rainbow.prog");
 
     local trans = entity:get_transform();
     
