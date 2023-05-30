@@ -56,10 +56,13 @@ namespace Vakol::View {
          * @param inputText The text to be set in the UI
          * @param centerX
          * @param centerY
-         * @param fontSize
+         * @param fontSize The size of the font
+         * @param inputRed The red value of the text
+         * @param inputGreen The green value of the text
+         * @param inputBlue The blue value of the text
+         * @param inputAlpha The alpha value of the text
          */
-    	void AddText(const std::string& inputText, bool centerX, bool centerY, float fontSize) const;
-
+        void AddText(const std::string& inputText, const bool centerX, const bool centerY, const float fontSize, const float inputRed, const float inputGreen, const float inputBlue, const float inputAlpha) const;
 
         /**
          * \brief Adds an image to the UI Window

@@ -22,6 +22,20 @@ namespace Vakol::View
 
         ImGui_ImplGlfw_InitForOpenGL(window->GetWindow(), true);  // Takes in the GLFW Window
         ImGui_ImplOpenGL3_Init("#version 460");                   // Sets the version of GLSL being used
+
+        ImGuiStyle& style = ImGui::GetStyle(); // Gets the current style of the ImGui window
+        style.Colors[ImGuiCol_WindowBg] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
+        style.Colors[ImGuiCol_Border] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
+        style.Colors[ImGuiCol_BorderShadow] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
+        style.Colors[ImGuiCol_FrameBg] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
+        style.Colors[ImGuiCol_FrameBgHovered] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
+        style.Colors[ImGuiCol_FrameBgActive] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
+        style.Colors[ImGuiCol_TitleBg] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f); 
+        style.Colors[ImGuiCol_TitleBgCollapsed] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
+        style.Colors[ImGuiCol_TitleBgActive] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
+        style.Colors[ImGuiCol_ResizeGrip] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
+        style.Colors[ImGuiCol_ResizeGripHovered] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
+        style.Colors[ImGuiCol_ResizeGripActive] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
     };
 
     void GUIWindow::CreateNewFrame() const
@@ -40,7 +54,7 @@ namespace Vakol::View
 
     void GUIWindow::StartWindowCreation(const std::string& windowName, const float width, const float height, const float x, float y) const
     {
-        ImGui::Begin(windowName.c_str(), nullptr, windowFlags);  // Begins the creation of the Window
+        ImGui::Begin(windowName.c_str(), nullptr, ImGuiWindowFlags_NoTitleBar);  // Begins the creation of the Window 
 
         ImGui::SetWindowPos({x, y}, ImGuiCond_Once);  // Sets the position of the window
 
@@ -56,7 +70,7 @@ namespace Vakol::View
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());  // Renders the UI to the screen
     }
 
-    void GUIWindow::AddText(const std::string& inputText, const bool centerX, const bool centerY, const float fontSize) const
+    void GUIWindow::AddText(const std::string& inputText, const bool centerX, const bool centerY, const float fontSize, const float inputRed, const float inputGreen, const float inputBlue, const float inputAlpha) const
     {
         if (centerX)
         {
@@ -86,7 +100,11 @@ namespace Vakol::View
 
         ImGui::SetWindowFontScale(fontSize);
 
+        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(inputRed, inputGreen, inputBlue, inputAlpha));
+
 	    ImGui::Text(inputText.c_str());
+
+        ImGui::PopStyleColor(); 
     }
 
     void GUIWindow::AddImage(const unsigned id, const ImVec2& imageSize, const bool centerX, const bool centerY) const
