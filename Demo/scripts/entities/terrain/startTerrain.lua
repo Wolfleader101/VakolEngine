@@ -28,7 +28,7 @@ function update()
     local model = terrain:get_model();
     local shader = model:get_shader();
 
-    shader:set_float("u_time", Time.curr_time * 10);
+    shader:set_float("u_time", Time.curr_time);
     toggle_wireframe();
     
 end
