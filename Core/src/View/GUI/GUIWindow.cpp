@@ -72,33 +72,33 @@ namespace Vakol::View
 
     void GUIWindow::AddText(const std::string& inputText, const bool centerX, const bool centerY, const float fontSize, const float inputRed, const float inputGreen, const float inputBlue, const float inputAlpha) const
     {
-        if (centerX)
+        ImGui::SetWindowFontScale(fontSize); // Sets the font size of the text
+        
+        if (centerX && centerY) 
+        {
+            const auto windowWidth = ImGui::GetWindowSize().x;
+            const auto textWidth = ImGui::CalcTextSize(inputText.c_str()).x;
+
+            const auto windowHeight = ImGui::GetWindowSize().y;
+            const auto textHeight = ImGui::CalcTextSize(inputText.c_str()).y;
+
+            ImGui::SetCursorPosX((windowWidth - textWidth) / 2);
+            ImGui::SetCursorPosY((windowHeight - textHeight) / 2);
+        }
+        else if (centerX)
         {
 	        const auto windowWidth = ImGui::GetWindowSize().x;
-			const auto textWidth   = ImGui::CalcTextSize(inputText.c_str()).x;
+			const auto textWidth   = ImGui::CalcTextSize(inputText.c_str()).x; 
 
-			ImGui::SetCursorPosX((windowWidth - textWidth) * 0.5f);
+			ImGui::SetCursorPosX((windowWidth - textWidth) / 2);
         }
         else if (centerY)
         {
 	        const auto windowHeight = ImGui::GetWindowSize().y;
             const auto textHeight = ImGui::CalcTextSize(inputText.c_str()).y;
 
-            ImGui::SetCursorPosY((windowHeight - textHeight) * 0.5f);
+            ImGui::SetCursorPosY((windowHeight - textHeight) / 2);
         }
-        else if (centerX && centerY)
-        {
-	        const auto windowWidth = ImGui::GetWindowSize().x;
-			const auto textWidth   = ImGui::CalcTextSize(inputText.c_str()).x;
-
-            const auto windowHeight = ImGui::GetWindowSize().y;
-            const auto textHeight = ImGui::CalcTextSize(inputText.c_str()).y;
-
-            ImGui::SetCursorPosX((windowWidth - textWidth) * 0.5f);
-            ImGui::SetCursorPosY((windowHeight - textHeight) * 0.5f);
-        }
-
-        ImGui::SetWindowFontScale(fontSize);
 
         ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(inputRed, inputGreen, inputBlue, inputAlpha));
 
