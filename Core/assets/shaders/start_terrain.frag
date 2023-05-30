@@ -8,7 +8,7 @@ uniform float time;
 
 void main()
 {
-    float r = sin(time); // Red.   Value between 0 and 1.
+    float r = (sin(time) * 0.5) + 0.5; // Red.   Value between 0 and 1.
     float g = (sin(time + 2.0944) * 0.5) + 0.5; // Green. Value between 0 and 1. Phase shifted by 2pi/3
     float b = (sin(time + 4.1888) * 0.5) + 0.5; // Blue.  Value between 0 and 1. Phase shifted by 4pi/3
 
