@@ -62,6 +62,7 @@ namespace Vakol::View
         // add a uniform buffer which size is that of a 4x4 matrix with a binding index of 1
         AddBuffer(GL_UNIFORM_BUFFER, 4 * sizeof(glm::mat4), 1, GL_STATIC_DRAW);
         AddBuffer(GL_UNIFORM_BUFFER, 5 * sizeof(float), 2, GL_STATIC_DRAW);
+        AddBuffer(GL_UNIFORM_BUFFER, 3 * sizeof(float), 3, GL_STATIC_DRAW);
 
     	SetBufferSubData(1, 0, sizeof(float), &LIGHT_CONSTANT);
         SetBufferSubData(1, 1 * sizeof(float), sizeof(float), &LIGHT_LINEAR);
@@ -69,9 +70,9 @@ namespace Vakol::View
         SetBufferSubData(1, 3 * sizeof(float), sizeof(float), &LIGHT_CUT_OFF);
         SetBufferSubData(1, 4 * sizeof(float), sizeof(float), &LIGHT_OUTER_CUT_OFF);
 
-        ATTACHMENT attachment{ {GL_COLOR_ATTACHMENT0, GL_RGB8, GL_RGB, 800, 600}, {GL_DEPTH_STENCIL_ATTACHMENT, GL_DEPTH24_STENCIL8} };
+        //ATTACHMENT attachment{ {GL_COLOR_ATTACHMENT0, GL_RGB8, GL_RGB, 800, 600}, {GL_DEPTH_STENCIL_ATTACHMENT, GL_DEPTH24_STENCIL8} };
 
-        framebuffers.push_back(std::make_shared<FrameBuffer>(attachment, true));
+        //framebuffers.push_back(std::make_shared<FrameBuffer>(attachment, true));
 
         if (isSkybox) skybox->Init();
     }
@@ -135,7 +136,9 @@ namespace Vakol::View
 
         SetBufferSubData(0, 3 * sizeof(glm::mat4), sizeof(glm::mat4), value_ptr(model_matrix));
 
-        shader->SetFloat("time", time.curTime);
+        SetBufferSubData(2, 0, sizeof(float), &time.curTime);
+        SetBufferSubData(2, 1 * sizeof(float), sizeof(float), &time.deltaTime);
+        SetBufferSubData(2, 2 * sizeof(float), sizeof(float), &time.prevTime);
 
         //shader->SetMat3("NORMAL_MATRIX", glm::mat3(transpose(inverse(model_matrix))));
 
@@ -158,20 +161,20 @@ namespace Vakol::View
         shader->Unbind();
     }
 
-    void GLRenderer::Update(const int index) const 
+    void GLRenderer::Update([[maybe_unused]] const int index) const 
     {
         ClearColor(VAKOL_CLASSIC);
         ClearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        if (index > -1)
-        {
-            framebuffers.at(index)->ClearColor(VAKOL_DARK);
+        //if (index > -1)
+        //{
+        //    framebuffers.at(index)->ClearColor(VAKOL_DARK);
 
-            if (framebuffers.at(index)->HasDepth())
-                framebuffers.at(index)->ClearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            else
-                framebuffers.at(index)->ClearBuffer(GL_COLOR_BUFFER_BIT);
-        }
+        //    if (framebuffers.at(index)->HasDepth())
+        //        framebuffers.at(index)->ClearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        //    else
+        //        framebuffers.at(index)->ClearBuffer(GL_COLOR_BUFFER_BIT);
+        //}
     }
 
     void GLRenderer::LateUpdate([[maybe_unused]] const int index) const

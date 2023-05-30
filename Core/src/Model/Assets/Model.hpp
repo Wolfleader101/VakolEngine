@@ -63,7 +63,7 @@ namespace Vakol::Model::Assets
             }
         }
 
-                /// @brief x
+        /// @brief x
         /// @param type the type of buffer, GL_UNIFORM_BUFFER and GL_SHADER_STORAGE_BUFFER are the ones you're looking for
         /// @param size the size of the buffer (in bytes)
         /// @param binding the index at which 
