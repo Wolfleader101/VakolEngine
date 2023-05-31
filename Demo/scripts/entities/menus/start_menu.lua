@@ -1,5 +1,5 @@
 WINDOWWIDTHMINIMUM = 325.0;
-WINDOWWIDTHMAXIMUM = 600.0;
+WINDOWWIDTHMAXIMUM = 400.0;
 
 function start_menu()
     GUI:start_window("Start Menu - Title", true, true, 600.0, 0.0 , 0, 350); 
