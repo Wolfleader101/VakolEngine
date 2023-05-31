@@ -8,7 +8,10 @@ function display_player_stats()
 
     GUI:start_window("Player Stats", false, false, 0.0, 0.0 , 25, 25); 
 
+    GUI:add_image("coreAssets/textures/icons/health/healthIcon_2048.png", 32, 32, false, false);
+    GUI:same_line();
     GUI:add_text("Health: " .. tostring(state.player_health), false, false, 2.0, 1.0, 1.0, 1.0, 1.0);
+
     GUI:add_text("Hunger: " .. tostring(state.player_hunger), false, false, 2.0, 1.0, 1.0, 1.0, 1.0);
     GUI:add_text("Thirst: " .. tostring(state.player_thirst), false, false, 2.0, 1.0, 1.0, 1.0, 1.0);
 

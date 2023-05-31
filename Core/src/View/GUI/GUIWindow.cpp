@@ -243,6 +243,11 @@ namespace Vakol::View
         }
     };
 
+    void GUIWindow::SameLine() const
+    {
+        ImGui::SameLine(); // Adds content to the same line
+    }
+
     void GUIWindow::WindowBackgroundStyle(const float inputRed, const float inputGreen, const float inputBlue, const float inputAlpha) const
     {
         ImGui::GetStyle().Colors[ImGuiCol_WindowBg] = ImVec4(inputRed, inputGreen, inputBlue, inputAlpha); // Sets the background colour of the window

@@ -142,6 +142,7 @@ namespace Vakol::View {
          * @param maxValue the maximum value of the slider
          */
     	void AddVecFloatSlider(const std::string& sliderName, float sliderValue[], const int size, const float minValue, const float maxValue) const;
+        void SameLine() const;
         void WindowBackgroundStyle(const float inputRed, const float inputGreen, const float inputBlue, const float inputAlpha) const;
         void WindowRoundingStyle(const float inputValue) const;
         /**
