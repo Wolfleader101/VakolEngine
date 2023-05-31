@@ -1,9 +1,8 @@
 
 function end_menu()
-    GUI:start_window("End Menu", 1000.0, 1000.0 , 960 - 500, 540 - 500); 
+    GUI:start_window("End Menu", true, true, 1000.0, 1000.0 , 0, 100); 
 
     GUI:add_text("Thanks for playing", true, false, 2.0, 1.0, 0.0, 0.0, 1.0);
-    GUI:add_text(" ", true, false, 2.0, 1.0, 1.0, 1.0, 1.0);
     GUI:add_text(" ", true, false, 2.0, 1.0, 1.0, 1.0, 1.0);
 
     GUI:add_text("---- Team Vakol ----", true, false, 2.0, 1.0, 1.0, 1.0, 1.0);

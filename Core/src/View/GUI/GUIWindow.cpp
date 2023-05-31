@@ -62,13 +62,49 @@ namespace Vakol::View
         ImGui::EndFrame();
     }
 
-    void GUIWindow::StartWindowCreation(const std::string& windowName, const float width, const float height, const float x, float y) const
+    float GUIWindow::DisplayWindowWidth() const
+	{
+        return(ImGui::GetIO().DisplaySize.x);
+	}
+
+    float GUIWindow::DisplayWindowHeight() const
+    {
+        return(ImGui::GetIO().DisplaySize.y);
+    }
+
+    void GUIWindow::StartWindowCreation(const std::string& windowName, bool centerX, bool centerY, const float width, const float height, const float xOffset, float yOffset) const
     {
         ImGui::Begin(windowName.c_str(), nullptr, ImGuiWindowFlags_NoTitleBar);  // Begins the creation of the Window 
 
-        ImGui::SetWindowPos({x, y}, ImGuiCond_Once);  // Sets the position of the window
+        // Only consider centering if width and height are not zero
+        if (width == 0)
+        {
+            centerX = false;
+        }
+        if (height == 0)
+        {
+            centerY = false;
+        }
 
-        ImGui::SetWindowSize({width, height}, ImGuiCond_Once);  // Sets the size of the window (Width, Height) in pixels
+        // Set position based on centering flags
+        if (centerX && centerY)
+        {
+            ImGui::SetWindowPos({ (DisplayWindowWidth() - width) / 2 + xOffset, (DisplayWindowHeight() - height) / 2 + yOffset });  // Sets the position of the window 
+        }
+        else if (centerX)
+        {
+            ImGui::SetWindowPos({ (DisplayWindowWidth() - width) / 2 + xOffset, yOffset });  // Sets the position of the window 
+        }
+        else if (centerY)
+        {
+            ImGui::SetWindowPos({ xOffset, (DisplayWindowHeight() - height) / 2 + yOffset });  // Sets the position of the window
+        }
+        else
+        {
+            ImGui::SetWindowPos({ xOffset, yOffset });  // Sets the position of the window
+        }
+
+        ImGui::SetWindowSize({ width, height }, ImGuiCond_Always);  // Sets the size of the window (Width, Height) in pixels
     };
 
     float GUIWindow::GetFramesPerSecond() const { return ImGui::GetIO().Framerate; };
