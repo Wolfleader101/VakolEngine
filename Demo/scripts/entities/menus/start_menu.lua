@@ -1,5 +1,5 @@
 function start_menu()
-    GUI:start_window("Start Menu - Title", 0.0, 0.0 , 960 - 250, 540 - 250); 
+    GUI:start_window("Start Menu - Title", true, true, 600.0, 0.0 , 0, 350); 
 
     GUI:add_text("PLACES UNKNOWN", true, false, 4.0, 1.0, 0.169, 0.169, 1.0);
 
@@ -8,7 +8,7 @@ function start_menu()
     GUI:change_background_colour(0.349, 0.388, 1.0, 0.9);
     GUI:change_background_rounding(20.0);
 
-    GUI:start_window("Start Menu - Options", 0.0, 0.0 , 960 - 170, 540 - 100); 
+    GUI:start_window("Start Menu - Options", true, true, 350.0, 0.0 , 0, 450); 
 
     GUI:add_text("---- MENU ----", true, false, 2.0, 1.0, 1.0, 1.0, 1.0);
 

@@ -37,15 +37,25 @@ namespace Vakol::View {
         void ChangeFontDefault(std::string inputPath) const;
         void EndFrame() const;
         /**
+		 * @brief Returns the width of the display window
+		 */
+        float DisplayWindowWidth() const;
+        /**
+         * @brief Returns the height of the display window
+         */
+        float DisplayWindowHeight() const;
+        /**
          * @brief Starts the creation of a GUI window
          *
          * @param windowName The name of the window (Will also be the title given to the window)
+         * @param centerX Whether the window should be centered on the x axis
+         * @param centerY Whether the window should be centered on the y axis
          * @param width The width of the window
          * @param height The height of the window
-         * @param x
-         * @param y
+         * @param xOffset The x position of the window will be offset by
+         * @param yOffset The y position of the window will be offset by
          */
-        void StartWindowCreation(const std::string& windowName, float width, float height, float x, float y) const;
+        void StartWindowCreation(const std::string& windowName, bool centerX, bool centerY, float width, float height, const float xOffset, float yOffset) const;
         /**
          * @brief Returns the FPS of the current window
          */

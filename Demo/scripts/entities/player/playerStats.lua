@@ -6,7 +6,7 @@ function display_player_stats()
     GUI:change_background_colour(0.349, 0.388, 1.0, 0.9);
     GUI:change_background_rounding(20.0);
 
-    GUI:start_window("Player Stats", 0.0, 0.0 , 25, 25); 
+    GUI:start_window("Player Stats", false, false, 0.0, 0.0 , 25, 25); 
 
     GUI:add_text("Health: " .. tostring(state.player_health), false, false, 2.0, 1.0, 1.0, 1.0, 1.0);
     GUI:add_text("Hunger: " .. tostring(state.player_hunger), false, false, 2.0, 1.0, 1.0, 1.0, 1.0);
