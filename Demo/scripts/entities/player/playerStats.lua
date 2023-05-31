@@ -12,7 +12,12 @@ function display_player_stats()
     GUI:same_line();
     GUI:add_text("Health: " .. tostring(state.player_health), false, false, 2.0, 1.0, 1.0, 1.0, 1.0);
 
+    GUI:add_image("coreAssets/textures/icons/hunger/hunger.png", 32, 32, false, false);
+    GUI:same_line();
     GUI:add_text("Hunger: " .. tostring(state.player_hunger), false, false, 2.0, 1.0, 1.0, 1.0, 1.0);
+
+    GUI:add_image("coreAssets/textures/icons/thirst/thirst.png", 32, 32, false, false);
+    GUI:same_line();
     GUI:add_text("Thirst: " .. tostring(state.player_thirst), false, false, 2.0, 1.0, 1.0, 1.0, 1.0);
 
     GUI:end_window();

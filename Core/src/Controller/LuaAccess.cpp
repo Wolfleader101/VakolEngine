@@ -567,7 +567,10 @@ namespace Vakol::Controller
         lua["GUI"] = gui;
 
         // REGISTERS C++ FUNCTIONS TO LUA
-        gui_window_type.set_function("start_window", &View::GUIWindow::StartWindowCreation);
+        gui_window_type.set_function("get_display_window_width", &View::GUIWindow::DisplayWindowWidth);
+        gui_window_type.set_function("get_display_window_height", &View::GUIWindow::DisplayWindowHeight);
+
+        gui_window_type.set_function("start_window", &View::GUIWindow::StartWindowCreation); 
 
         gui_window_type.set_function("update", &View::GUIWindow::Update);
 
