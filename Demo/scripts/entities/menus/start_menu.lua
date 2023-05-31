@@ -1,4 +1,5 @@
 WINDOWWIDTHMINIMUM = 325.0;
+WINDOWWIDTHMAXIMUM = 600.0;
 
 function start_menu()
     GUI:start_window("Start Menu - Title", true, true, 600.0, 0.0 , 0, 350); 
@@ -10,8 +11,14 @@ function start_menu()
     GUI:change_background_colour(0.349, 0.388, 1.0, 0.9);
     GUI:change_background_rounding(20.0);
 
-    local windowWidth = (GUI:get_display_window_width() / 3 > WINDOWWIDTHMINIMUM) and (GUI:get_display_window_width() / 3) or WINDOWWIDTHMINIMUM;
-    GUI:start_window("Start Menu - Options", true, true, windowWidth, 0.0 , 0, 450); 
+    local windowWidth = GUI:get_display_window_width() / 3;
+    if windowWidth < WINDOWWIDTHMINIMUM then
+        GUI:start_window("Start Menu - Options", true, true, WINDOWWIDTHMINIMUM, 0.0 , 0, 450); 
+    elseif windowWidth > WINDOWWIDTHMAXIMUM then
+        GUI:start_window("Start Menu - Options", true, true, WINDOWWIDTHMAXIMUM, 0.0 , 0, 450); 
+    else
+        GUI:start_window("Start Menu - Options", true, true, windowWidth, 0.0 , 0, 450); 
+    end
 
     GUI:add_text("---- MENU ----", true, false, 2.0, 1.0, 1.0, 1.0, 1.0);
 
