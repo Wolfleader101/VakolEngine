@@ -622,6 +622,9 @@ namespace Vakol::Controller
         gui_window_type.set_function("add_vector_integer_slider", &View::GUIWindow::AddVecIntSlider);
         gui_window_type.set_function("add_vector_float_slider", &View::GUIWindow::AddVecFloatSlider);
 
+        gui_window_type.set_function("change_background_colour", &View::GUIWindow::WindowBackgroundStyle); 
+        gui_window_type.set_function("change_background_rounding", &View::GUIWindow::WindowRoundingStyle); 
+
         gui_window_type.set_function("end_window", &View::GUIWindow::EndWindowCreation);
     }
 
