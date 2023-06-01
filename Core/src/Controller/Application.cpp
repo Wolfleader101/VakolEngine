@@ -25,7 +25,8 @@ namespace Vakol::Controller
 
         auto config = LoadConfig();
 
-        if (!config) {
+        if (!config) 
+        {
             VK_CRITICAL("CONFIG COULD NOT BE LOADED");
             return;
         }
@@ -34,7 +35,7 @@ namespace Vakol::Controller
 
         m_renderer = CreateRenderer(config.value().rendererType, m_window);
 
-        m_window->SetEventCallback(BIND_EVENT_FN(OnEvent));
+        m_window->SetEventCallback([this](auto&& PH1) { OnEvent(std::forward<decltype(PH1)>(PH1)); });
 
         m_gui.Init(m_window);
 
@@ -122,6 +123,8 @@ namespace Vakol::Controller
 
             m_renderer->Update();
 
+            //System::Animation_Update(m_time);
+
             //! update scenes lua
             for (auto& scene : scenes) 
             {
@@ -150,7 +153,7 @@ namespace Vakol::Controller
 
 	    const auto ref = std::make_shared<ScenePhysics>(PhysicsPool::CreatePhysicsWorld());
 
-        scenes.push_back(Scene(sceneName,scriptName, lua, ref, true));
+        scenes.emplace_back(sceneName,scriptName, lua, ref, true);
     }
 
     Scene& Application::GetScene(const std::string& sceneName)

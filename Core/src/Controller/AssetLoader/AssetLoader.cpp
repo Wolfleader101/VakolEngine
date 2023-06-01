@@ -12,7 +12,7 @@ namespace Vakol::Controller
     std::string AssetLoader::shader_path = "assets/shaders/";
 
     std::unordered_map<std::string, std::shared_ptr<Texture>> AssetLoader::m_TextureMap;
-    std::unordered_map<std::string, std::shared_ptr<::Model>> AssetLoader::m_ModelMap;
+	std::unordered_map<std::string, std::pair<std::shared_ptr<Model::Assets::Model>, std::shared_ptr<Animator>>> AssetLoader::m_ModelMap;
     std::unordered_map<std::string, std::shared_ptr<Model::Shader>> AssetLoader::m_ShaderMap; 
 
     std::shared_ptr<Texture> AssetLoader::GetTexture(const std::string& file, const int size, const bool gamma, const bool flip, const void* data)
@@ -80,25 +80,24 @@ namespace Vakol::Controller
         return ret;
     }
 
-    std::shared_ptr<::Model> AssetLoader::GetModel(const std::string& file, const float scale, const bool backfaceCull) 
+    std::pair<std::shared_ptr<::Model>, std::shared_ptr<Animator>> AssetLoader::GetModel(const std::string& file, const float scale, const bool backfaceCull) 
     {
-        std::shared_ptr<::Model> ret;
+        std::pair<std::shared_ptr<Model::Assets::Model>, std::shared_ptr<Animator>> ret;
 
-        if (const auto itr = m_ModelMap.find(file); itr == m_ModelMap.end()) {
-            ret = std::make_shared<::Model>(LoadModel(file, scale));
+        if (const auto itr = m_ModelMap.find(file); itr == m_ModelMap.end()) 
+        {
+	        if (auto [model, animator] = LoadModel(file, scale); animator.has_value() && animator)
+				ret = std::make_pair(std::make_shared<::Model>(model), std::make_shared<Animator>(animator.value()));
 
-            if (ret->meshes().empty())
-            {
-                VK_TRACE("no meshes found in model!");
-        		return nullptr;  // if model didn't load
-            }
+            if (ret.first->meshes().empty())
+                VK_ERROR("No meshes found in model!");
 
             m_ModelMap[file] = ret;
-        } else {
-            ret = m_ModelMap[file];
         }
+    	else
+            ret = m_ModelMap[file];
 
-        ret->SetCullBackface(backfaceCull); 
+        ret.first->SetCullBackface(backfaceCull); 
 
         return ret;
     }
@@ -122,4 +121,4 @@ namespace Vakol::Controller
         return ret;
     }
 
-}  // namespace Vakol::Controller
+}

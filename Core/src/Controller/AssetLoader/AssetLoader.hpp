@@ -7,6 +7,8 @@
 #include <memory>
 #include <unordered_map>
 
+#include <Controller/Animator.hpp>
+
 namespace Vakol::Controller
 {
     class AssetLoader
@@ -21,12 +23,12 @@ namespace Vakol::Controller
         static std::shared_ptr<Model::Assets::Texture> GetTexture(const std::string& file, bool gamma, bool flip); // regular textures
 		static std::shared_ptr<Model::Assets::Texture> GetTexture(const std::string& file); // raw textures
 
-        static std::shared_ptr<Model::Assets::Model> GetModel(const std::string& file, float scale, bool backfaceCull);
+        static std::pair<std::shared_ptr<Model::Assets::Model>, std::shared_ptr<Animator>> GetModel(const std::string& file, float scale, bool backfaceCull);
         static std::shared_ptr<Model::Shader> GetShader(const std::string& file);
 
     private:
         static std::unordered_map<std::string, std::shared_ptr<Model::Assets::Texture>> m_TextureMap;
-        static std::unordered_map<std::string, std::shared_ptr<Model::Assets::Model>> m_ModelMap;
+        static std::unordered_map<std::string, std::pair<std::shared_ptr<Model::Assets::Model>, std::shared_ptr<Animator>>> m_ModelMap;
         static std::unordered_map<std::string, std::shared_ptr<Model::Shader>> m_ShaderMap;
     };
 }  // namespace Vakol::Controller

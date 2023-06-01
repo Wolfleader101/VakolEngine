@@ -2,9 +2,12 @@
 
 #include <string>
 
-#include "Model/Assets/Model.hpp"
+#include <Controller/Animator.hpp>
+#include <Model/Assets/Model.hpp>
+
+#include <optional>
 
 namespace Vakol::Controller
 {
-	Model::Assets::Model LoadModel(const std::string& path, float scale);
+	std::pair<Model::Assets::Model, std::optional<Animator>> LoadModel(const std::string& path, float scale);
 }

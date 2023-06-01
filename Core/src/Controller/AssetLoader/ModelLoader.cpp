@@ -18,7 +18,6 @@
 #pragma warning(push)
 #pragma warning(disable:4201)
 #include <glm/gtc/quaternion.hpp>
-#include <glm/mat4x4.hpp>
 #pragma warning(pop)
 
 #include <Controller/Logger.hpp>
@@ -59,9 +58,9 @@ namespace Vakol::Controller
     auto process_mesh(const aiScene& scene, const aiMesh& mesh, BoneMap& bone_map)->Mesh;
     auto process_material(const aiScene& scene, const aiMaterial* material)->MaterialSpec;
 
-    bool IS_CORE_ASSET = false; // A poor hack at best
+    bool IS_CORE_ASSET = false;
 
-    ::Model LoadModel(const std::string& path, const float scale)
+    std::pair<::Model, std::optional<Animator>> LoadModel(const std::string& path, const float scale)
     {
         auto importer = Assimp::Importer{};
 
@@ -86,7 +85,9 @@ namespace Vakol::Controller
 
         BoneMap bone_map;
 
-        return { process_meshes(*scene, bone_map) };
+        if (std::optional<Animator> animator = scene->mNumAnimations > 0 ? std::make_optional<Animator>(extract_animations(*scene, bone_map)) : std::nullopt; animator.has_value()) return std::make_pair(process_meshes(*scene, bone_map), animator.value());
+
+        return std::make_pair(process_meshes(*scene, bone_map), std::nullopt);
     }
 
     // iteratively iterate through each node for meshes

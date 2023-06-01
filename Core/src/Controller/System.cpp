@@ -5,6 +5,7 @@
 #include <Controller/AssetLoader/AssetLoader.hpp>
 #include <Controller/Physics/PhysicsPool.hpp>
 #include <Controller/Scene.hpp>
+
 #include <Model/Components.hpp>
 
 #pragma warning(push)
@@ -32,13 +33,21 @@ namespace Vakol::Controller
         m_registry->view<Drawable>().each([&](auto& drawable) 
         { 
             if(drawable.model_ptr == nullptr)
-                drawable.model_ptr = AssetLoader::GetModel(drawable.name, drawable.scale, drawable.backfaceCull);
+                drawable.model_ptr = AssetLoader::GetModel(drawable.name, drawable.scale, drawable.backfaceCull).first;
         });
     }
 
     void System::Drawable_Update(const Time& time, const Camera& camera, const std::shared_ptr<View::Renderer>& renderer)
 	{
         m_registry->view<Transform, Drawable>().each([&](const auto& transform, const Drawable& drawable) { renderer->Draw(time, camera, transform, drawable); });
+    }
+
+    void System::Animation_Update(const Time& time)
+    {
+	    m_registry->view<Animator>().each([&](Animator& animator)
+	    {
+		    animator.Update(time.deltaTime);
+	    });
     }
 
     void System::Script_Update(LuaState& lua, EntityList& list, Scene* scene)

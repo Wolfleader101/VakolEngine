@@ -192,12 +192,13 @@ namespace Vakol::Controller
 
         lua.set_function("load_model", [](const std::string& path, const float scale = 1.0f, const bool backfaceCull = true)
         {
-			if (const auto model = AssetLoader::GetModel(path, scale, backfaceCull); model == nullptr) return false;
+			if (const auto [model, animator] = AssetLoader::GetModel(path, scale, backfaceCull); model == nullptr) return false;
 
             return true;
         });
 
-        lua.set_function("load_shader", [](const std::string& path) {
+        lua.set_function("load_shader", [](const std::string& path) 
+        {
 	        if (const auto shader = AssetLoader::GetShader(path); shader == nullptr) return false;
 
             return true;
@@ -317,14 +318,16 @@ namespace Vakol::Controller
 
             auto model = AssetLoader::GetModel(path, scale, backfaceCull); 
 
-            if (model) 
+            if (model.first) 
             {
 	            auto& draw = ent->GetComponent<Drawable>();
-                draw.model_ptr = model;
+                draw.model_ptr = model.first;
                 draw.name = path;
                 draw.scale = scale;
                 draw.backfaceCull = backfaceCull;
             }
+
+
             return model;
         });
 

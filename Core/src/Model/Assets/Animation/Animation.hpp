@@ -12,10 +12,7 @@ namespace Vakol::Model::Assets
 
 		Animation() = default;
 
-		Animation(const glm::mat4& root_inverse, std::vector<AnimationNode>&& nodes, const unsigned int bone_count, const float duration, const float tps) : global_inverse(root_inverse), m_transforms(MAX_BONE_COUNT, glm::mat4(1.0f)), m_nodes(std::move(nodes)), bone_count(bone_count), duration(duration), ticks_per_second(tps)
-		{
-			VK_ASSERT(bone_count <= MAX_BONE_COUNT, "\n\nTOO MANY BONES!!");
-		}
+		Animation(const glm::mat4& root_inverse, std::vector<AnimationNode>&& nodes, const unsigned int bone_count, const float duration, const float tps) : global_inverse(root_inverse), m_transforms(MAX_BONE_COUNT, glm::mat4(1.0f)), m_nodes(std::move(nodes)), bone_count(bone_count), duration(duration), ticks_per_second(tps) { VK_ASSERT(bone_count <= MAX_BONE_COUNT, "\n\nTOO MANY BONES!!"); }
 
 		void Update(const float delta_time)
 		{
@@ -42,7 +39,6 @@ namespace Vakol::Model::Assets
 		}
 
 		[[nodiscard]] const std::vector<glm::mat4>& transforms() const { return m_transforms; }
-		[[nodiscard]] const void* data() const { return m_transforms.data(); }
 
 		[[nodiscard]] const glm::mat4& nTransform(const int i) const { return m_transforms.at(i); }
 
