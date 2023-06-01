@@ -101,7 +101,7 @@ namespace Vakol::View
     void GLRenderer::ClearBuffer(const unsigned int buffer_bit) const
     { glClear(buffer_bit); }
 
-    void GLRenderer::Draw([[maybe_unused]] const Controller::Time& time, const Controller::Camera& camera, const Components::Transform& transform, const Components::Drawable& drawable) const 
+    void GLRenderer::Draw(const Controller::Time& time, const Controller::Camera& camera, const Components::Transform& transform, const Components::Drawable& drawable) const 
     {
         VK_ASSERT(drawable.model_ptr, "\n\nModel ptr is nullptr");
 

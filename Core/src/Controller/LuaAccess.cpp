@@ -408,18 +408,7 @@ namespace Vakol::Controller
             drawable.model_ptr->ResetAnimation(drawable.animation_state);
         });
 
-        entity_type.set_function("toggle_animation", [](const Entity* ent)
-        {
-			if (!ent->HasComponent<Drawable>())
-	        {
-	            VK_ERROR("Drawable component is needed to toggle animation playback!");
-	            return;
-	        }
-
-            auto& drawable = ent->GetComponent<Drawable>();
-
-            drawable.paused_animation = !drawable.paused_animation;
-        });
+        model_type.set_function("update_animation", &Assets::Model::UpdateAnimation);
 
         model_type.set_function("get_anim_transforms", &Assets::Model::animation_transforms);
         model_type.set_function("get_num_anim_transforms", &Assets::Model::numAnimationTransforms);

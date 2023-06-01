@@ -14,9 +14,15 @@
         },
         {
             "handle": 4
+        },
+        {
+            "handle": 5
+        },
+        {
+            "handle": 6
         }
     ],
-    "value0": 5,
+    "value0": 7,
     "value1": 0,
     "value2": 0,
     "value3": 1,
@@ -24,19 +30,9 @@
     "value5": 3,
     "value6": 4,
     "value7": 5,
-    "value8": 0,
-    "value9": {
-        "pos.x": 0.0,
-        "pos.y": 0.0,
-        "pos.z": 0.0,
-        "rot.x": 0.0,
-        "rot.y": 0.0,
-        "rot.z": 0.0,
-        "scale.x": 1.0,
-        "scale.y": 1.0,
-        "scale.z": 1.0
-    },
-    "value10": 1,
+    "value8": 6,
+    "value9": 7,
+    "value10": 0,
     "value11": {
         "pos.x": 0.0,
         "pos.y": 0.0,
@@ -48,11 +44,11 @@
         "scale.y": 1.0,
         "scale.z": 1.0
     },
-    "value12": 2,
+    "value12": 1,
     "value13": {
-        "pos.x": 2.700000047683716,
-        "pos.y": 8.932353019714356,
-        "pos.z": -12.0,
+        "pos.x": 0.0,
+        "pos.y": 0.0,
+        "pos.z": 0.0,
         "rot.x": 0.0,
         "rot.y": 0.0,
         "rot.z": 0.0,
@@ -60,11 +56,11 @@
         "scale.y": 1.0,
         "scale.z": 1.0
     },
-    "value14": 3,
+    "value14": 2,
     "value15": {
-        "pos.x": 0.0,
-        "pos.y": 0.0,
-        "pos.z": 0.0,
+        "pos.x": 1.0,
+        "pos.y": 0.7637255191802979,
+        "pos.z": -5.0,
         "rot.x": 0.0,
         "rot.y": 0.0,
         "rot.z": 0.0,
@@ -72,11 +68,11 @@
         "scale.y": 1.0,
         "scale.z": 1.0
     },
-    "value16": 4,
+    "value16": 3,
     "value17": {
-        "pos.x": 0.0,
-        "pos.y": 0.0,
-        "pos.z": 0.0,
+        "pos.x": 2.0,
+        "pos.y": 0.7598039507865906,
+        "pos.z": -5.0,
         "rot.x": 0.0,
         "rot.y": 0.0,
         "rot.z": 0.0,
@@ -84,85 +80,163 @@
         "scale.y": 1.0,
         "scale.z": 1.0
     },
-    "value18": 5,
-    "value19": 0,
-    "value20": {
+    "value18": 4,
+    "value19": {
+        "pos.x": 3.0,
+        "pos.y": 0.7558823823928833,
+        "pos.z": -5.0,
+        "rot.x": 0.0,
+        "rot.y": 0.0,
+        "rot.z": 0.0,
+        "scale.x": 1.0,
+        "scale.y": 1.0,
+        "scale.z": 1.0
+    },
+    "value20": 5,
+    "value21": {
+        "pos.x": 4.0,
+        "pos.y": 0.7480392456054688,
+        "pos.z": -5.0,
+        "rot.x": 0.0,
+        "rot.y": 0.0,
+        "rot.z": 0.0,
+        "scale.x": 1.0,
+        "scale.y": 1.0,
+        "scale.z": 1.0
+    },
+    "value22": 6,
+    "value23": {
+        "pos.x": 5.0,
+        "pos.y": 0.7323529720306397,
+        "pos.z": -5.0,
+        "rot.x": 0.0,
+        "rot.y": 0.0,
+        "rot.z": 0.0,
+        "scale.x": 1.0,
+        "scale.y": 1.0,
+        "scale.z": 1.0
+    },
+    "value24": 7,
+    "value25": 0,
+    "value26": {
         "tag": "Camera Controller"
     },
-    "value21": 1,
-    "value22": {
+    "value27": 1,
+    "value28": {
         "tag": "terrain"
     },
-    "value23": 2,
-    "value24": {
-        "tag": "Bob"
+    "value29": 2,
+    "value30": {
+        "tag": "wolf"
     },
-    "value25": 3,
-    "value26": {
-        "tag": "test renderer"
-    },
-    "value27": 4,
-    "value28": {
-        "tag": "Player Stats"
-    },
-    "value29": 0,
-    "value30": 5,
-    "value31": 0,
+    "value31": 3,
     "value32": {
-        "TagType": 0
+        "tag": "wolf_instance 2"
     },
-    "value33": 1,
+    "value33": 4,
     "value34": {
-        "TagType": 0
+        "tag": "wolf_instance 3"
     },
-    "value35": 2,
+    "value35": 5,
     "value36": {
-        "TagType": 0
+        "tag": "wolf_instance 4"
     },
-    "value37": 3,
+    "value37": 6,
     "value38": {
+        "tag": "wolf_instance 5"
+    },
+    "value39": 0,
+    "value40": 7,
+    "value41": 0,
+    "value42": {
         "TagType": 0
     },
-    "value39": 4,
-    "value40": {
+    "value43": 1,
+    "value44": {
         "TagType": 0
     },
-    "value41": 5,
-    "value42": 0,
-    "value43": {
+    "value45": 2,
+    "value46": {
+        "TagType": 0
+    },
+    "value47": 3,
+    "value48": {
+        "TagType": 0
+    },
+    "value49": 4,
+    "value50": {
+        "TagType": 0
+    },
+    "value51": 5,
+    "value52": {
+        "TagType": 0
+    },
+    "value53": 6,
+    "value54": {
+        "TagType": 0
+    },
+    "value55": 3,
+    "value56": 0,
+    "value57": {
         "ScriptName": "entities/player/cameraController.lua"
     },
-    "value44": 1,
-    "value45": {
+    "value58": 1,
+    "value59": {
         "ScriptName": "entities/terrain/physicsTerrain.lua"
     },
-    "value46": 2,
-    "value47": {
-        "ScriptName": "entities/agents/bob.lua"
+    "value60": 2,
+    "value61": {
+        "ScriptName": "entities/agents/wolf.lua"
     },
-    "value48": 3,
-    "value49": {
-        "ScriptName": "entities/test_rendering.lua"
-    },
-    "value50": 4,
-    "value51": {
-        "ScriptName": "entities/player/playerStats.lua"
-    },
-    "value52": 0,
-    "value53": 0,
-    "value54": 2,
-    "value55": 1,
-    "value56": {
+    "value62": 0,
+    "value63": 0,
+    "value64": 6,
+    "value65": 1,
+    "value66": {
         "Model": "",
         "Import Scale": 1.0,
         "Animated": false,
-        "Back Face Culling": true
+        "Back Face Culling": true,
+        "Animation State": 0
     },
-    "value57": 2,
-    "value58": {
-        "Model": "assets/models/enemy.glb",
-        "Import Scale": 0.003000000026077032,
+    "value67": 2,
+    "value68": {
+        "Model": "assets/models/wolfleader.fbx",
+        "Import Scale": 1.0,
         "Animated": true,
-        "Back Face Culling": true
+        "Back Face Culling": true,
+        "Animation State": 0
+    },
+    "value69": 3,
+    "value70": {
+        "Model": "assets/models/wolfleader.fbx",
+        "Import Scale": 1.0,
+        "Animated": true,
+        "Back Face Culling": true,
+        "Animation State": 1
+    },
+    "value71": 4,
+    "value72": {
+        "Model": "assets/models/wolfleader.fbx",
+        "Import Scale": 1.0,
+        "Animated": true,
+        "Back Face Culling": true,
+        "Animation State": 0
+    },
+    "value73": 5,
+    "value74": {
+        "Model": "assets/models/wolfleader.fbx",
+        "Import Scale": 1.0,
+        "Animated": true,
+        "Back Face Culling": true,
+        "Animation State": 0
+    },
+    "value75": 6,
+    "value76": {
+        "Model": "assets/models/wolfleader.fbx",
+        "Import Scale": 1.0,
+        "Animated": true,
+        "Back Face Culling": true,
+        "Animation State": 0
     }
 }

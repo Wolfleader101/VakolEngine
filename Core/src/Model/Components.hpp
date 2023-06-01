@@ -174,8 +174,6 @@ namespace Vakol::Model::Components {
         bool animated = false;
         bool backfaceCull = true;
         int animation_state = 0;
-        bool paused_animation = false;
-        float animation_time = 0.0f;
 
         std::shared_ptr<Assets::Model> model_ptr;
 
@@ -186,8 +184,6 @@ namespace Vakol::Model::Components {
             ar(cereal::make_nvp("Animated", animated));
             ar(cereal::make_nvp("Back Face Culling", backfaceCull));
             ar(cereal::make_nvp("Animation State", animation_state));
-            ar(cereal::make_nvp("Paused Animation", paused_animation));
-            ar(cereal::make_nvp("Animation Time", animation_time));
         }
     };
 
