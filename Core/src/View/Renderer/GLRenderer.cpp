@@ -109,7 +109,7 @@ namespace Vakol::View
 
         const auto animation_state = drawable.animation_state;
 
-        if (model->isAnimated()) model->UpdateAnimation(animation_state, time.deltaTime);
+        //if (model->isAnimated()) model->UpdateAnimation(animation_state, time.deltaTime);
 
         const auto& shader = model->c_shader();
         VK_ASSERT(&shader, "\n\nShader is nullptr");
@@ -117,14 +117,6 @@ namespace Vakol::View
         if (!model->cullBackface()) glDisable(GL_CULL_FACE);
 
         shader->Bind();
-
-        const auto& projection = PROJECTION = camera.GetMatrix(PROJECTION_MATRIX);
-        const auto& view = VIEW = camera.GetMatrix(VIEW_MATRIX);
-
-        // at index 0, with an offset of 0 (since PV_MATRIX is the only element in the buffer), with a size of a 4x4 matrix, set PV_MATRIX
-        SetBufferSubData(0, 0, sizeof(glm::mat4), value_ptr(projection));
-    	SetBufferSubData(0, sizeof(glm::mat4), sizeof(glm::mat4), value_ptr(view));
-        SetBufferSubData(0, 2 * sizeof(glm::mat4), sizeof(glm::mat4), value_ptr(projection * view));
 
         auto&& model_matrix = glm::mat4(1.0f); // start off with an identity matrix
 
@@ -137,12 +129,6 @@ namespace Vakol::View
         model_matrix = scale(model_matrix, transform.scale);
 
         SetBufferSubData(0, 3 * sizeof(glm::mat4), sizeof(glm::mat4), value_ptr(model_matrix));
-
-        SetBufferSubData(2, 0, sizeof(float), &time.curTime);
-        SetBufferSubData(2, 1 * sizeof(float), sizeof(float), &time.deltaTime);
-        SetBufferSubData(2, 2 * sizeof(float), sizeof(float), &time.prevTime);
-
-        //shader->SetMat3("NORMAL_MATRIX", glm::mat3(transpose(inverse(model_matrix))));
 
 		if (model->isAnimated()) shader->SetMat4v("BONE_TRANSFORMS", model->numAnimationTransforms(animation_state), value_ptr(model->animation_transforms(animation_state)[0]));
 
@@ -161,6 +147,21 @@ namespace Vakol::View
         }
 
         shader->Unbind();
+    }
+
+    void GLRenderer::UpdateData(const Controller::Time& time, const Controller::Camera& camera)
+    {
+	    PROJECTION = camera.GetMatrix(PROJECTION_MATRIX);
+        VIEW = camera.GetMatrix(VIEW_MATRIX);
+
+        // at index 0, with an offset of 0 (since PV_MATRIX is the only element in the buffer), with a size of a 4x4 matrix, set PV_MATRIX
+        SetBufferSubData(0, 0, sizeof(glm::mat4), glm::value_ptr(PROJECTION));
+    	SetBufferSubData(0, sizeof(glm::mat4), sizeof(glm::mat4), value_ptr(VIEW));
+        SetBufferSubData(0, 2 * sizeof(glm::mat4), sizeof(glm::mat4), value_ptr(PROJECTION * VIEW));
+
+        SetBufferSubData(2, 0, sizeof(float), &time.curTime);
+        SetBufferSubData(2, 1 * sizeof(float), sizeof(float), &time.deltaTime);
+        SetBufferSubData(2, 2 * sizeof(float), sizeof(float), &time.prevTime);
     }
 
     void GLRenderer::Update([[maybe_unused]] const int index) const 

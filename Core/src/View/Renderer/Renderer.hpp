@@ -10,7 +10,7 @@ namespace Vakol::Model::Components
 {
     struct Drawable;
     struct Transform;
-}  // namespace Vakol::Model::Components
+}
 
 namespace Vakol::View 
 {
@@ -21,6 +21,8 @@ namespace Vakol::View
         virtual ~Renderer() = default;
 
         virtual void Draw(const Controller::Time& time, const Controller::Camera& camera, const Model::Components::Transform& transform, const Model::Components::Drawable& drawable) const = 0;
+
+        virtual void UpdateData(const Controller::Time& time, const Controller::Camera& camera) = 0;
 
         virtual void Update(int index = -1) const = 0;
         virtual void LateUpdate(int index = -1) const = 0;

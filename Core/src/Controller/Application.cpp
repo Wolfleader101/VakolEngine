@@ -123,12 +123,16 @@ namespace Vakol::Controller
             m_renderer->Update();
 
             //! update scenes lua
-            for (auto& scene : scenes) {
+            for (auto& scene : scenes) 
+            {
                 if (!scene.active) continue;
 
                 if (!scene.initialized) scene.Init();
 
                 System::BindScene(scene);
+
+                m_renderer->UpdateData(m_time, scene.GetCamera());
+
                 scene.Update(m_time, m_renderer);
             }
 

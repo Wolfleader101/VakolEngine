@@ -34,13 +34,13 @@ function init()
     end
 
     --entities[1]:set_animation_state(0);
-    entities[2]:set_animation_state(1);
+    --entities[2]:set_animation_state(1);
     --entities[3]:set_animation_state(2);
     --entities[4]:set_animation_state(3);
     --entities[5]:set_animation_state(4);
 end
 
 function update()
-    -- models[1]:update_animation(0, Time.delta_time);
+    models[1]:update_animation(0, Time.delta_time);
     -- models[2]:update_animation(1, Time.delta_time);
 end
