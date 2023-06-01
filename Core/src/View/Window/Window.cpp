@@ -72,7 +72,7 @@ namespace Vakol::View {
 
         /* Create a windowed mode window and its OpenGL context */
         m_window = glfwCreateWindow(m_width, m_height, m_title.c_str(), nullptr, nullptr);
-    	VK_ASSERT(m_window, "\n\nFailed to create GLFW window!\nHere are some potential reasons why this has occured:\n1: You are Hong\n2: You are launching this application from a Remote Desktop Session.\n3: You are using an OSX Operating System.\n4: You haven't upgraded your graphics drivers in over a decade.");
+    	VK_ASSERT(m_window, "\n\nFailed to create GLFW window!\nHere are some potential reasons why this has occured:\n1: You are launching this application from a Remote Desktop Session.\n2: You are using an OSX Operating System.\n3: You haven't upgraded your graphics drivers to the latest version.");
 
         /* Make the window's context current */
         glfwMakeContextCurrent(m_window);

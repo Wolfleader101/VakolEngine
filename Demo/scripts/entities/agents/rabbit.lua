@@ -1,9 +1,7 @@
 function init()
     entity:get_transform().pos = Vector3.new(4.0, 0.60, -2.0);
-    entity:get_transform().rot = Vector3.new(0.0, -45.0, 0.0);
-    entity:get_transform().scale = Vector3.new(0.5, 0.75, 0.5);
 
-	state.model = entity:add_model("assets/models/cheems.glb", 0.25, true, true)
+	state.model = entity:add_model("assets/models/rabbit.fbx", 0.005, true, true)
 	entity:set_shader("coreAssets/shaders/animation.prog")
 
 	local shader = state.model:get_shader();
@@ -18,9 +16,8 @@ function init()
 
     state.fsm = entity:add_fsm();
 
-    state.model:set_animation_state(0);
+    entity:set_animation_state(0);
 end
 
 function update()
-    state.model:update_animation(Time.delta_time);
 end
