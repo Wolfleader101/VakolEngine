@@ -10,11 +10,15 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 
+#include <Model/Assets/Animation/Keyframe.hpp>
+#include <Model/Assets/Animation/Animation.hpp>
+
 #include <iostream>
 
 #pragma warning(push)
 #pragma warning(disable:4201)
 #include <glm/gtc/quaternion.hpp>
+#include <glm/mat4x4.hpp>
 #pragma warning(pop)
 
 #include <Controller/Logger.hpp>
@@ -57,7 +61,7 @@ namespace Vakol::Controller
 
     bool IS_CORE_ASSET = false; // A poor hack at best
 
-    ::Model LoadModel(const std::string& path, const float scale, bool animated)
+    ::Model LoadModel(const std::string& path, const float scale)
     {
         auto importer = Assimp::Importer{};
 
@@ -73,8 +77,6 @@ namespace Vakol::Controller
             VK_ERROR("ERROR::ASSIMP:: {0}", importer.GetErrorString());
 
             importer.ReadFile("coreAssets/models/error.obj", aiProcess_Triangulate);
-
-            animated = false; // force animations off
         }
 
         VK_TRACE("Model Path: {0}", path);
@@ -84,11 +86,6 @@ namespace Vakol::Controller
 
         BoneMap bone_map;
 
-        if (animated && scene->mNumAnimations > 0)
-        {
-            return { process_meshes(*scene, bone_map), extract_animations(*scene, bone_map) };
-        }
-        // else
         return { process_meshes(*scene, bone_map) };
     }
 
@@ -334,7 +331,7 @@ namespace Vakol::Controller
             const auto ticks_per_second = static_cast<float>(animation->mTicksPerSecond);
 
             // Containers for storing animation node data and node names
-            std::vector<AnimNode> nodes;
+            std::vector<AnimationNode> nodes;
             std::vector<const aiString*> node_names;
 
             // Struct for representing a node during depth-first search traversal
@@ -353,7 +350,7 @@ namespace Vakol::Controller
                 const auto [src, parent] = node_search.top();
                 node_search.pop();
 
-                AnimNode node;
+                AnimationNode node;
                 node.parent = parent;
                 node.node_transform = to_glm(src->mTransformation);
 

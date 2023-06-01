@@ -190,9 +190,9 @@ namespace Vakol::Controller
             return AssetLoader::GetTexture(path, gamma, flip);  // no checks... just raw doggin it LOL
         });
 
-        lua.set_function("load_model", [](const std::string& path, const float scale = 1.0f, const bool animated = false, const bool backfaceCull = true)
+        lua.set_function("load_model", [](const std::string& path, const float scale = 1.0f, const bool backfaceCull = true)
         {
-			if (const auto model = AssetLoader::GetModel(path, scale, animated, backfaceCull); model == nullptr) return false;
+			if (const auto model = AssetLoader::GetModel(path, scale, backfaceCull); model == nullptr) return false;
 
             return true;
         });
@@ -254,9 +254,7 @@ namespace Vakol::Controller
 
         lua.set_function("instantiate_model", [](const std::shared_ptr<Assets::Model>& model, const std::vector<glm::mat4>& matrices, const int amount) 
 		{
-            const auto start_index = model->isAnimated() ? 7 : 3;
-
-            CreateInstances(model->meshes(), matrices, amount, start_index);
+            CreateInstances(model->meshes(), matrices, amount, 3);
         });
 
         entity_type.set_function("get_transform", &Entity::GetComponent<Transform>);
@@ -313,11 +311,11 @@ namespace Vakol::Controller
             if (ent->HasComponent<Terrain>()) return ent->GetComponent<Terrain>();
         });
 
-        entity_type.set_function("add_model", [](Entity* ent, const std::string& path, const float scale = 1.0f, const bool animated = false, const bool backfaceCull = true)
+        entity_type.set_function("add_model", [](Entity* ent, const std::string& path, const float scale = 1.0f, const bool backfaceCull = true)
 		{
             if (!ent->HasComponent<Drawable>()) ent->AddComponent<Drawable>();
 
-            auto model = AssetLoader::GetModel(path, scale, animated, backfaceCull); 
+            auto model = AssetLoader::GetModel(path, scale, backfaceCull); 
 
             if (model) 
             {
@@ -325,7 +323,6 @@ namespace Vakol::Controller
                 draw.model_ptr = model;
                 draw.name = path;
                 draw.scale = scale;
-                draw.animated = animated;
                 draw.backfaceCull = backfaceCull;
             }
             return model;
@@ -374,46 +371,6 @@ namespace Vakol::Controller
             const auto& model = ent->GetComponent<Drawable>().model_ptr;
             model->mesh(mesh_index).GetMaterial()->AddTexture(*AssetLoader::GetTexture(path));
         });
-
-        entity_type.set_function("add_shader_storage_buffer_data", [](const Entity* ent, const int size, const int binding, const std::vector<glm::mat4>& data)->void
-        {
-            if (!ent->HasComponent<Drawable>())
-            {
-	            VK_ERROR("Drawable component is needed to add shader buffer data!");
-                return;
-            }
-
-            const auto& model = ent->GetComponent<Drawable>().model_ptr;
-            model->AddBuffer(GL_SHADER_STORAGE_BUFFER, size, binding, data.data(), GL_STATIC_DRAW);
-        });
-
-        entity_type.set_function("set_animation_state", [](const Entity* ent, const int animation_state)
-        {
-			if (!ent->HasComponent<Drawable>())
-            {
-	            VK_ERROR("Drawable component is needed to set animation state!");
-                return;
-            }
-
-        	auto& drawable = ent->GetComponent<Drawable>();
-
-	        if (const auto size = drawable.model_ptr->numAnimations(); animation_state < size && animation_state >= 0)
-                drawable.animation_state = animation_state;
-            else 
-            {
-                drawable.animation_state = std::max(0, size - 1);
-                drawable.animation_state = animation_state;
-            }
-
-            drawable.model_ptr->ResetAnimation(drawable.animation_state);
-        });
-
-        model_type.set_function("update_animation", &Assets::Model::UpdateAnimation);
-
-        model_type.set_function("get_anim_transforms", &Assets::Model::animation_transforms);
-        model_type.set_function("get_num_anim_transforms", &Assets::Model::numAnimationTransforms);
-
-        model_type.set_function("get_animation_duration", &Assets::Model::animation_duration_s);
 
         model_type.set_function("get_mesh_count", &Assets::Model::nMeshes);
         model_type.set_function("get_mesh", &Assets::Model::mesh);

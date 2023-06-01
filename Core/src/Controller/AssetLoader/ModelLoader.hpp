@@ -6,5 +6,5 @@
 
 namespace Vakol::Controller
 {
-	Model::Assets::Model LoadModel(const std::string& path, const float scale, bool animated);
+	Model::Assets::Model LoadModel(const std::string& path, float scale);
 }

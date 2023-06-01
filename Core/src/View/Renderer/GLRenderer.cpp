@@ -107,10 +107,6 @@ namespace Vakol::View
 
         const auto& model = drawable.model_ptr;
 
-        const auto animation_state = drawable.animation_state;
-
-        //if (model->isAnimated()) model->UpdateAnimation(animation_state, time.deltaTime);
-
         const auto& shader = model->c_shader();
         VK_ASSERT(&shader, "\n\nShader is nullptr");
 
@@ -129,9 +125,6 @@ namespace Vakol::View
         model_matrix = scale(model_matrix, transform.scale);
 
         shader->SetMat4("MODEL_MATRIX", model_matrix);
-    	//SetBufferSubData(0, 3 * sizeof(glm::mat4), sizeof(glm::mat4), value_ptr(model_matrix));
-
-		if (model->isAnimated()) shader->SetMat4v("BONE_TRANSFORMS", model->numAnimationTransforms(animation_state), value_ptr(model->animation_transforms(animation_state)[0]));
 
         for (int i = 0; i < model->nMeshes(); ++i) 
         {
