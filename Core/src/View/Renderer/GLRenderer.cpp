@@ -60,7 +60,7 @@ namespace Vakol::View
         // layout (std140, binding = 1) uniform <name>
         // std140 - memory layout, binding - index, uniform (typeof buffer)
         // add a uniform buffer which size is that of a 4x4 matrix with a binding index of 1
-        AddBuffer(GL_UNIFORM_BUFFER, 4 * sizeof(glm::mat4), 1, GL_STATIC_DRAW);
+        AddBuffer(GL_UNIFORM_BUFFER, 3 * sizeof(glm::mat4), 1, GL_STATIC_DRAW);
         AddBuffer(GL_UNIFORM_BUFFER, 5 * sizeof(float), 2, GL_STATIC_DRAW);
         AddBuffer(GL_UNIFORM_BUFFER, 3 * sizeof(float), 3, GL_STATIC_DRAW);
 
@@ -128,7 +128,8 @@ namespace Vakol::View
 
         model_matrix = scale(model_matrix, transform.scale);
 
-        SetBufferSubData(0, 3 * sizeof(glm::mat4), sizeof(glm::mat4), value_ptr(model_matrix));
+        shader->SetMat4("MODEL_MATRIX", model_matrix);
+    	//SetBufferSubData(0, 3 * sizeof(glm::mat4), sizeof(glm::mat4), value_ptr(model_matrix));
 
 		if (model->isAnimated()) shader->SetMat4v("BONE_TRANSFORMS", model->numAnimationTransforms(animation_state), value_ptr(model->animation_transforms(animation_state)[0]));
 
