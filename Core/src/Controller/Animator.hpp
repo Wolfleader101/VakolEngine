@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include <Model/Assets/Animation.hpp>
+#include <Model/Assets/Animation/Animation.hpp>
 
 namespace Vakol::Controller
 {

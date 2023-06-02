@@ -166,12 +166,14 @@ namespace Vakol::Model::Components
 	{
         Drawable() = default;
         explicit Drawable(std::string&& file);
-        Drawable(const std::string& file, const float scale, bool backfaceCull);
+        Drawable(const std::string& file, float scale, bool animated, bool backfaceCull);
 
         std::string name;  // for serialization
 
         float scale = 1.0f;
+        bool animated = false;
         bool backfaceCull = true;
+        int animation_state = 0;
 
         std::shared_ptr<Assets::Model> model_ptr;
 
@@ -179,7 +181,9 @@ namespace Vakol::Model::Components
         void serialize(Archive& ar) {
             ar(cereal::make_nvp("Model", name));
             ar(cereal::make_nvp("Import Scale", scale));
+            ar(cereal::make_nvp("Animated", animated));
             ar(cereal::make_nvp("Back Face Culling", backfaceCull));
+            ar(cereal::make_nvp("Animation State", animation_state));
         }
     };
 

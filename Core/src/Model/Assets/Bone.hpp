@@ -5,6 +5,8 @@
 
 #include <Controller/Logger.hpp>
 
+#include <glm/mat4x4.hpp>
+
 namespace Vakol::Model::Assets
 {
 	struct Bone

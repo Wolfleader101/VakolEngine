@@ -187,19 +187,21 @@ namespace Vakol::Controller
 	{
         lua.set_function("load_texture", [](const std::string& path, const bool gamma, const bool flip) 
         {
-            return AssetLoader::GetTexture(path, gamma, flip);  // no checks... just raw doggin it LOL
+            if (const auto texture = AssetLoader::GetTexture(path, gamma, flip); texture == nullptr) return false;
+
+            return true;
         });
 
-        lua.set_function("load_model", [](const std::string& path, const float scale = 1.0f, const bool backfaceCull = true)
+        lua.set_function("load_model", [](const std::string& path, const float scale = 1.0f, const bool animated = false, const bool backfaceCull = true)
         {
-			if (const auto [model, animator] = AssetLoader::GetModel(path, scale, animated, backfaceCull); model == nullptr) return false;
+			if (const auto& [model, animator] = AssetLoader::GetModel(path, scale, animated, backfaceCull); model == nullptr) return false;
 
             return true;
         });
 
         lua.set_function("load_shader", [](const std::string& path) 
         {
-	        if (const auto shader = AssetLoader::GetShader(path); shader == nullptr) return false;
+	        if (const auto& shader = AssetLoader::GetShader(path); shader == nullptr) return false;
 
             return true;
         });
@@ -312,16 +314,16 @@ namespace Vakol::Controller
             if (ent->HasComponent<Terrain>()) return ent->GetComponent<Terrain>();
         });
 
-        entity_type.set_function("add_model", [](Entity* ent, const std::string& path, const float scale = 1.0f, const bool backfaceCull = true)
+        entity_type.set_function("add_model", [](Entity* ent, const std::string& path, const float scale = 1.0f, const bool animated = false, const bool backfaceCull = true)
 		{
             if (!ent->HasComponent<Drawable>()) ent->AddComponent<Drawable>();
 
             auto [model, animator] = AssetLoader::GetModel(path, scale, animated, backfaceCull); 
 
-            if (model.first) 
+            if (model) 
             {
 	            auto& draw = ent->GetComponent<Drawable>();
-                draw.model_ptr = model.first;
+                draw.model_ptr = model;
                 draw.name = path;
                 draw.scale = scale;
                 draw.backfaceCull = backfaceCull;
