@@ -567,7 +567,10 @@ namespace Vakol::Controller
         lua["GUI"] = gui;
 
         // REGISTERS C++ FUNCTIONS TO LUA
-        gui_window_type.set_function("start_window", &View::GUIWindow::StartWindowCreation);
+        gui_window_type.set_function("get_display_window_width", &View::GUIWindow::DisplayWindowWidth);
+        gui_window_type.set_function("get_display_window_height", &View::GUIWindow::DisplayWindowHeight);
+
+        gui_window_type.set_function("start_window", &View::GUIWindow::StartWindowCreation); 
 
         gui_window_type.set_function("update", &View::GUIWindow::Update);
 
@@ -593,6 +596,11 @@ namespace Vakol::Controller
 
         gui_window_type.set_function("add_vector_integer_slider", &View::GUIWindow::AddVecIntSlider);
         gui_window_type.set_function("add_vector_float_slider", &View::GUIWindow::AddVecFloatSlider);
+
+        gui_window_type.set_function("same_line", &View::GUIWindow::SameLine); 
+
+        gui_window_type.set_function("change_background_colour", &View::GUIWindow::WindowBackgroundStyle); 
+        gui_window_type.set_function("change_background_rounding", &View::GUIWindow::WindowRoundingStyle); 
 
         gui_window_type.set_function("end_window", &View::GUIWindow::EndWindowCreation);
     }
