@@ -52,7 +52,7 @@ namespace Vakol::Model::Components {
     Drawable::Drawable(std::string&& file)
         : name(std::move(file))  // WOW! EFFICIENT!
     {
-        model_ptr = Controller::AssetLoader::GetModel(name, 1.0f, true).first;
+        model_ptr = Controller::AssetLoader::GetModel(name, 1.0f, false, true).first;
     }
 
     TagType::TagType(uint8_t type) : type(static_cast<ENTITY_TYPE>(type)){};

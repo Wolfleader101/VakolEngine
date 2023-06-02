@@ -192,7 +192,7 @@ namespace Vakol::Controller
 
         lua.set_function("load_model", [](const std::string& path, const float scale = 1.0f, const bool backfaceCull = true)
         {
-			if (const auto [model, animator] = AssetLoader::GetModel(path, scale, backfaceCull); model == nullptr) return false;
+			if (const auto [model, animator] = AssetLoader::GetModel(path, scale, animated, backfaceCull); model == nullptr) return false;
 
             return true;
         });
@@ -205,8 +205,8 @@ namespace Vakol::Controller
         });
     }
 
-    void RegisterApplication(sol::state& lua, Application* app) {
-
+    void RegisterApplication(sol::state& lua, Application* app)
+	{
         lua.set_function("app_run", &Application::SetRunning, app);
         lua.set_function("add_scene", &Application::AddScene, app);
         lua.set_function("get_scene", &Application::GetScene, app);
@@ -316,7 +316,7 @@ namespace Vakol::Controller
 		{
             if (!ent->HasComponent<Drawable>()) ent->AddComponent<Drawable>();
 
-            auto model = AssetLoader::GetModel(path, scale, backfaceCull); 
+            auto [model, animator] = AssetLoader::GetModel(path, scale, animated, backfaceCull); 
 
             if (model.first) 
             {
@@ -327,7 +327,6 @@ namespace Vakol::Controller
                 draw.backfaceCull = backfaceCull;
             }
 
-
             return model;
         });
 
@@ -335,7 +334,6 @@ namespace Vakol::Controller
         {
             if (ent->HasComponent<Drawable>()) return ent->GetComponent<Drawable>().model_ptr;
         });
-
 
         entity_type.set_function("set_shader", [](const Entity* ent, const std::string& path)
         {

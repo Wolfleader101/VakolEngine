@@ -12,7 +12,7 @@ namespace Vakol::Controller
     std::string AssetLoader::shader_path = "assets/shaders/";
 
     std::unordered_map<std::string, std::shared_ptr<Texture>> AssetLoader::m_TextureMap;
-	std::unordered_map<std::string, std::pair<std::shared_ptr<Model::Assets::Model>, std::shared_ptr<Animator>>> AssetLoader::m_ModelMap;
+    std::unordered_map<std::string, std::pair<std::shared_ptr<Model::Assets::Model>, std::shared_ptr<Animator>>> AssetLoader::m_ModelMap;
     std::unordered_map<std::string, std::shared_ptr<Model::Shader>> AssetLoader::m_ShaderMap; 
 
     std::shared_ptr<Texture> AssetLoader::GetTexture(const std::string& file, const int size, const bool gamma, const bool flip, const void* data)
@@ -80,21 +80,22 @@ namespace Vakol::Controller
         return ret;
     }
 
-    std::pair<std::shared_ptr<::Model>, std::shared_ptr<Animator>> AssetLoader::GetModel(const std::string& file, const float scale, const bool backfaceCull) 
+    std::pair<std::shared_ptr<::Model>, std::shared_ptr<Animator>> AssetLoader::GetModel(const std::string& file, const float scale, const bool animated, const bool backfaceCull) 
     {
-        std::pair<std::shared_ptr<Model::Assets::Model>, std::shared_ptr<Animator>> ret;
+        std::pair<std::shared_ptr<::Model>, std::shared_ptr<Animator>> ret;
 
         if (const auto itr = m_ModelMap.find(file); itr == m_ModelMap.end()) 
         {
-	        if (auto [model, animator] = LoadModel(file, scale); animator.has_value() && animator)
-				ret = std::make_pair(std::make_shared<::Model>(model), std::make_shared<Animator>(animator.value()));
+            auto&& [model, animator] = LoadModel(file, scale, animated);
+
+            ret.first = std::make_shared<::Model>(model);
+            ret.second = std::make_shared<Animator>(animator);
 
             if (ret.first->meshes().empty())
-                VK_ERROR("No meshes found in model!");
+                VK_ERROR("no meshes found in model!");
 
             m_ModelMap[file] = ret;
-        }
-    	else
+        } else
             ret = m_ModelMap[file];
 
         ret.first->SetCullBackface(backfaceCull); 
@@ -106,9 +107,8 @@ namespace Vakol::Controller
     {
         std::shared_ptr<Model::Shader> ret;
 
-        const auto itr = m_ShaderMap.find(file);
-
-        if (itr == m_ShaderMap.end()) {
+        if (const auto itr = m_ShaderMap.find(file); itr == m_ShaderMap.end()) 
+        {
             ret = std::make_shared<Model::Shader>(file);
 
             if (ret->GetID() == 0) return nullptr;  // if shader didn't load

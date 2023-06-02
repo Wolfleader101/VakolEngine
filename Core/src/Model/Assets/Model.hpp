@@ -15,8 +15,8 @@ namespace Vakol::Model::Assets
         Model(Mesh& mesh) { m_meshes.push_back(std::move(mesh)); }
         Model(Mesh&& mesh) { m_meshes.push_back(std::move(mesh)); }
 
-        Model(std::vector<Mesh>&& meshes) : m_meshes(std::move(meshes)) {}
         Model(std::vector<Mesh>& meshes) : m_meshes(std::move(meshes)) {}
+        Model(std::vector<Mesh>&& meshes) : m_meshes(std::move(meshes)) {}
 
         void set_shader(const std::shared_ptr<Shader>& shader)
     	{
@@ -42,6 +42,7 @@ namespace Vakol::Model::Assets
         std::vector<Mesh> m_meshes;
         std::shared_ptr<Shader> m_shader = nullptr;
 
+        bool m_animated = false;
         bool m_cullBackface = true;
     };
 

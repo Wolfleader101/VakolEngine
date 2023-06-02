@@ -107,6 +107,8 @@ namespace Vakol::View
 
         const auto& model = drawable.model_ptr;
 
+        const auto animation_state = drawable.animation_state;
+
         const auto& shader = model->c_shader();
         VK_ASSERT(&shader, "\n\nShader is nullptr");
 
@@ -125,6 +127,7 @@ namespace Vakol::View
         model_matrix = scale(model_matrix, transform.scale);
 
         shader->SetMat4("MODEL_MATRIX", model_matrix);
+    	//SetBufferSubData(0, 3 * sizeof(glm::mat4), sizeof(glm::mat4), value_ptr(model_matrix));
 
         for (int i = 0; i < model->nMeshes(); ++i) 
         {

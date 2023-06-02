@@ -60,7 +60,7 @@ namespace Vakol::Controller
 
     bool IS_CORE_ASSET = false;
 
-    std::pair<::Model, std::optional<Animator>> LoadModel(const std::string& path, const float scale)
+    std::pair<::Model, Animator> LoadModel(const std::string& path, const float scale, bool animated)
     {
         auto importer = Assimp::Importer{};
 
@@ -85,9 +85,14 @@ namespace Vakol::Controller
 
         BoneMap bone_map;
 
-        if (std::optional<Animator> animator = scene->mNumAnimations > 0 ? std::make_optional<Animator>(extract_animations(*scene, bone_map)) : std::nullopt; animator.has_value()) return std::make_pair(process_meshes(*scene, bone_map), animator.value());
+        auto meshes = process_meshes(*scene, bone_map);
 
-        return std::make_pair(process_meshes(*scene, bone_map), std::nullopt);
+        std::vector<Animation> animations{};
+
+    	if (animated && scene->mNumAnimations > 0)
+			animations = extract_animations(*scene, bone_map);
+
+        return std::make_pair(::Model(meshes), Animator(animations));
     }
 
     // iteratively iterate through each node for meshes
