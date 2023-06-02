@@ -1,24 +1,13 @@
-
-function moving_wait(seconds)
-    state.MOVING_TIMER = state.MOVING_TIMER + Time.delta_time
-
-
-    if (state.MOVING_TIMER >= seconds) then
-        state.MOVING_TIMER = 0
-        return true
-    end
-
-    return false
-end
-
-
 function init()
     scene.globals.player = {
         pos = Vector3.new(0.0, 0.0, 0.0),
         last_pos = Vector3.new(0.0, 0.0, 0.0),
+        is_sprinting = false,
+        is_god = false,
         player_health = 0,
         player_hunger = 0,
         player_thirst = 0,
+        last_damage_time = 0,
         increment_health = nil,
         decrement_health = nil,
         increment_hunger = nil,
@@ -29,11 +18,25 @@ function init()
 
     state.moving_value = 0.0;
     state.MOVING_TIMER = 0;
+    state.REGEN_TIMER = 0;
 
     state.drowning_time = 0;
+    state.is_drowning = false;
 
     scene:create_entity("First Person Camera Controller", "entities/player/firstpersonController.lua");
     scene:create_entity("Player Stats", "entities/player/playerStats.lua");
+end
+
+local function moving_wait(seconds)
+    state.MOVING_TIMER = state.MOVING_TIMER + Time.delta_time
+
+
+    if (state.MOVING_TIMER >= seconds) then
+        state.MOVING_TIMER = 0
+        return true
+    end
+
+    return false
 end
 
 local function update_drowning_time()
@@ -50,24 +53,76 @@ local function update_moving_value()
         if (state.moving_value >= 1.0) then
             state.moving_value = 1.0;
         else
-            state.moving_value = state.moving_value + (0.08 * Time.delta_time);
+            local move_inc = scene.globals.player.is_sprinting and 0.12 or 0.08;
+            state.moving_value = state.moving_value + (move_inc * Time.delta_time);
         end
     end
 end
+
+local function update_drowning()
+    if (scene.globals.player.pos.y <= 0.0 and state.drowning_time >= 2.5) then
+        state.is_drowning = true;
+        scene.globals.player.decrement_health(15 * Time.delta_time);
+    else
+        state.is_drowning = false;
+    end
+end
+
+local function update_regen()
+    if (scene.globals.player.player_health < 50 and not state.is_drowning and Time.curr_time - scene.globals.player.last_damage_time >= 3) then
+        local base_heal_amount = 1.25;
+        local hunger_heal_amount = scene.globals.player.player_hunger > 25 and 0.25 or 0.1;
+        print(hunger_heal_amount)
+        local thirst_heal_amount = scene.globals.player.player_thirst > 10 and 0.25 or 0.25;
+        local heal_amount = base_heal_amount + hunger_heal_amount + thirst_heal_amount;
+        scene.globals.player.increment_health(heal_amount * Time.delta_time);
+    end
+end
+
 function update()
     update_drowning_time()
     update_moving_value()
 
-   if (scene.globals.player.pos.y <= 0.0 and state.drowning_time >= 5) then
-        scene.globals.player.decrement_health(15 * Time.delta_time);
+    if (Input:get_key_down(KEYS["KEY_G"])) then
+        scene.globals.player.is_god = not scene.globals.player.is_god;
     end
 
-    if (moving_wait(7.5)) then
-        scene.globals.player.decrement_hunger(2 * state.moving_value + 0.25);
-        scene.globals.player.decrement_thirst(3.5 * state.moving_value + 0.5);
-        state.moving_value = 0;
+    if (Input:get_key(KEYS["KEY_T"])) then
+        scene.globals.player.increment_health(10 * Time.delta_time)
     end
     
+    if (Input:get_key(KEYS["KEY_Y"])) then
+        scene.globals.player.decrement_health(10 * Time.delta_time)
+    end
+    
+    if (Input:get_key(KEYS["KEY_U"])) then
+        scene.globals.player.increment_hunger(10 * Time.delta_time)
+    end
+    
+    if (Input:get_key(KEYS["KEY_I"])) then
+        scene.globals.player.decrement_hunger(10 * Time.delta_time)
+    end
+
+    if (Input:get_key(KEYS["KEY_O"])) then
+        scene.globals.player.increment_thirst(10 * Time.delta_time)
+    end
+    
+    if (Input:get_key(KEYS["KEY_P"])) then
+        scene.globals.player.decrement_thirst(10 * Time.delta_time)
+    end
+
+
+    update_drowning();
+
+    update_regen();
+
+    if (moving_wait(7.5)) then
+        -- scene.globals.player.decrement_hunger(2 * state.moving_value + 0.25);
+        -- scene.globals.player.decrement_thirst(3.5 * state.moving_value + 0.5);
+        state.moving_value = 0;
+    end
+
+        
 
     -- update the last position to the current position
     scene.globals.player.last_pos = scene.globals.player.pos;

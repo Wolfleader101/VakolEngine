@@ -52,11 +52,13 @@ end
 
 
 function decrement_health(input_amount)
+    if(scene.globals.player.is_god) then return end;
     if(scene.globals.player.player_health > 0) then 
         if((scene.globals.player.player_health - input_amount) < 0) then
             scene.globals.player.player_health = 0;
         else
             scene.globals.player.player_health = scene.globals.player.player_health - input_amount;
+            scene.globals.player.last_damage_time = Time.curr_time;
         end
     end
 end
@@ -72,6 +74,7 @@ function increment_hunger(input_amount)
 end
 
 function decrement_hunger(input_amount)
+    if(scene.globals.player.is_god) then return end;
     if (scene.globals.player.player_hunger > 0) then
         if ((scene.globals.player.player_hunger - input_amount) < 0) then
             scene.globals.player.player_hunger = 0;
@@ -92,6 +95,7 @@ function increment_thirst(input_amount)
 end
 
 function decrement_thirst(input_amount)
+    if(scene.globals.player.is_god) then return end;
     if(scene.globals.player.player_thirst > 0) then 
         if((scene.globals.player.player_thirst - input_amount) < 0) then
             scene.globals.player.player_thirst = 0;
