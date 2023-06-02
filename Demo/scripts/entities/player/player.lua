@@ -70,10 +70,9 @@ end
 
 local function update_regen()
     if (scene.globals.player.player_health < 50 and not state.is_drowning and Time.curr_time - scene.globals.player.last_damage_time >= 3) then
-        local base_heal_amount = 1.25;
-        local hunger_heal_amount = scene.globals.player.player_hunger > 25 and 0.25 or 0.1;
-        print(hunger_heal_amount)
-        local thirst_heal_amount = scene.globals.player.player_thirst > 10 and 0.25 or 0.25;
+        local base_heal_amount = 0.1;
+        local hunger_heal_amount = scene.globals.player.player_hunger > 25 and 0.85 or scene.globals.player.player_hunger > 10 and 0.25 or 0;
+        local thirst_heal_amount = scene.globals.player.player_thirst > 15 and 0.4 or scene.globals.player.player_thirst > 8 and 0.15 or 0;
         local heal_amount = base_heal_amount + hunger_heal_amount + thirst_heal_amount;
         scene.globals.player.increment_health(heal_amount * Time.delta_time);
     end
