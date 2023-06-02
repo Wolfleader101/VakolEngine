@@ -64,7 +64,7 @@ namespace Vakol::Controller
 
         System::Script_Update(lua, entityList, this);
 
-        System::Drawable_Update(time, cam, renderer);
+        System::Drawable_Update(time, renderer);
 
         cam.Update();
     }

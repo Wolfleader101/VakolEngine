@@ -1,6 +1,9 @@
 #include "LuaAccess.hpp"
 
+#pragma warning(push)
+#pragma warning(disable:4201)
 #include <glm/gtc/type_ptr.hpp>
+#pragma warning(pop)
 
 #include "AssetLoader/AssetLoader.hpp"
 #include "AssetLoader/TextureLoader.hpp"
@@ -318,7 +321,9 @@ namespace Vakol::Controller
 		{
             if (!ent->HasComponent<Drawable>()) ent->AddComponent<Drawable>();
 
-            auto [model, animator] = AssetLoader::GetModel(path, scale, animated, backfaceCull); 
+            auto instance = false;
+
+            auto [model, animator] = AssetLoader::GetModel(path, scale, animated, backfaceCull, instance); 
 
             if (model) 
             {
@@ -326,7 +331,17 @@ namespace Vakol::Controller
                 draw.model_ptr = model;
                 draw.name = path;
                 draw.scale = scale;
+                draw.animated = animated;
                 draw.backfaceCull = backfaceCull;
+                draw.instance = instance;
+            }
+
+            if (animator && animated)
+            {
+                if (!ent->HasComponent<Components::Animator>()) ent->AddComponent<Components::Animator>();
+
+                auto& [animator_ptr] = ent->GetComponent<Components::Animator>();
+                animator_ptr = animator;
             }
 
             return model;

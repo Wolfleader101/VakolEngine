@@ -16,6 +16,7 @@
 #include "Controller/Scene.hpp"
 #include "Entity.hpp"
 #include "Model/Assets/Model.hpp"
+#include "Controller/Animator.hpp"
 
 namespace Vakol::Model::Components
 {
@@ -65,6 +66,11 @@ namespace Vakol::Model::Components
                cereal::make_nvp("scale.x", scale.x), cereal::make_nvp("scale.y", scale.y),
                cereal::make_nvp("scale.z", scale.z));
         }
+    };
+
+    struct Animator
+    {
+	    std::shared_ptr<Controller::Animator> animator_ptr;
     };
 
     /**
@@ -173,6 +179,7 @@ namespace Vakol::Model::Components
         float scale = 1.0f;
         bool animated = false;
         bool backfaceCull = true;
+        bool instance = false;
         int animation_state = 0;
 
         std::shared_ptr<Assets::Model> model_ptr;

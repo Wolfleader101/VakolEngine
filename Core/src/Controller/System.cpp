@@ -37,17 +37,20 @@ namespace Vakol::Controller
         });
     }
 
-    void System::Drawable_Update(const Time& time, const Camera& camera, const std::shared_ptr<View::Renderer>& renderer)
+    void System::Drawable_Update(const Time& time, const std::shared_ptr<View::Renderer>& renderer)
 	{
-        m_registry->view<Transform, Drawable>().each([&](const auto& transform, const Drawable& drawable) { renderer->Draw(time, camera, transform, drawable); });
-    }
+        m_registry->view<Transform, Drawable>().each([&](const auto& transform, const Drawable& drawable)
+        {
+	        if (!drawable.animated) renderer->Draw(transform, drawable);
+        });
 
-    void System::Animation_Update(const Time& time)
-    {
-	    m_registry->view<Animator>().each([&](Animator& animator)
-	    {
-		    animator.Update(time.deltaTime);
-	    });
+        m_registry->view<Transform, Drawable, Components::Animator>().each([&](const auto& transform, const Drawable& drawable, const Components::Animator& animator)
+        {
+            if (!drawable.instance)
+        		animator.animator_ptr->Update(time.deltaTime);
+
+	        renderer->DrawAnimated(transform, drawable, animator);
+        });
     }
 
     void System::Script_Update(LuaState& lua, EntityList& list, Scene* scene)

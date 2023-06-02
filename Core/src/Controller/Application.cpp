@@ -123,8 +123,6 @@ namespace Vakol::Controller
 
             m_renderer->Update();
 
-            //System::Animation_Update(m_time);
-
             //! update scenes lua
             for (auto& scene : scenes) 
             {

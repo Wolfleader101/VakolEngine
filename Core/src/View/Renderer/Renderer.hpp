@@ -10,6 +10,7 @@ namespace Vakol::Model::Components
 {
     struct Drawable;
     struct Transform;
+    struct Animator;
 }
 
 namespace Vakol::View 
@@ -20,7 +21,8 @@ namespace Vakol::View
 	    explicit Renderer(const std::shared_ptr<Window>& window) : m_window(window) {}
         virtual ~Renderer() = default;
 
-        virtual void Draw(const Controller::Time& time, const Controller::Camera& camera, const Model::Components::Transform& transform, const Model::Components::Drawable& drawable) const = 0;
+        virtual void DrawAnimated(const Model::Components::Transform& transform, const Model::Components::Drawable& drawable, const Model::Components::Animator& _animator) const = 0;
+        virtual void Draw(const Model::Components::Transform& transform, const Model::Components::Drawable& drawable) const = 0;
 
         virtual void UpdateData(const Controller::Time& time, const Controller::Camera& camera) = 0;
 

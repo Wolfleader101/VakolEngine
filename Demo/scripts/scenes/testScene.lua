@@ -3,7 +3,7 @@ function init()
     scene:create_entity("terrain", "entities/terrain/physicsTerrain.lua");
     --scene:create_entity("animated model", "entities/test_animation.lua");
     --scene:create_entity("environment", "entities/instancing_new.lua");
-    --scene:create_entity("wolf", "entities/agents/wolf.lua");
+    scene:create_entity("wolf", "entities/agents/wolf.lua");
     --scene:create_entity("rabbit", "entities/agents/rabbit.lua");
     --scene:create_entity("gangsta", "entities/agents/gangsta.lua");
     scene:create_entity("Player Stats", "entities/player/playerStats.lua");

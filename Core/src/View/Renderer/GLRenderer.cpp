@@ -101,16 +101,17 @@ namespace Vakol::View
     void GLRenderer::ClearBuffer(const unsigned int buffer_bit) const
     { glClear(buffer_bit); }
 
-    void GLRenderer::Draw(const Controller::Time& time, const Controller::Camera& camera, const Components::Transform& transform, const Components::Drawable& drawable) const 
+    void GLRenderer::DrawAnimated(const Components::Transform& transform, const Components::Drawable& drawable, const Components::Animator& _animator) const
     {
-        VK_ASSERT(drawable.model_ptr, "\n\nModel ptr is nullptr");
+	    const auto& model = drawable.model_ptr;
+        VK_ASSERT(model, "\n\nModel ptr is nullptr");
 
-        const auto& model = drawable.model_ptr;
+        const auto& shader = model->c_shader();
+        VK_ASSERT(shader, "\n\nShader is nullptr");
 
         const auto animation_state = drawable.animation_state;
 
-        const auto& shader = model->c_shader();
-        VK_ASSERT(&shader, "\n\nShader is nullptr");
+        const auto& animator = _animator.animator_ptr;
 
         if (!model->cullBackface()) glDisable(GL_CULL_FACE);
 
@@ -127,7 +128,49 @@ namespace Vakol::View
         model_matrix = scale(model_matrix, transform.scale);
 
         shader->SetMat4("MODEL_MATRIX", model_matrix);
-    	//SetBufferSubData(0, 3 * sizeof(glm::mat4), sizeof(glm::mat4), value_ptr(model_matrix));
+
+        shader->SetMat4v("BONE_TRANSFORMS", animator->nTransforms(animation_state), value_ptr(animator->transform(animation_state)));
+
+        for (int i = 0; i < model->nMeshes(); ++i) 
+        {
+            const auto& mesh = model->mesh(i);
+            const auto& material = mesh.GetMaterial();
+
+            for (int j = 0; j < material->GetTextureCount(); ++j)
+            {
+                glActiveTexture(GL_TEXTURE0 + j);
+                glBindTexture(GL_TEXTURE_2D, material->GetTexture(j));
+            }
+
+            mesh.Draw();
+        }
+
+        shader->Unbind();
+    }
+
+    void GLRenderer::Draw(const Components::Transform& transform, const Components::Drawable& drawable) const 
+    {
+        const auto& model = drawable.model_ptr;
+        VK_ASSERT(model, "\n\nModel ptr is nullptr");
+
+        const auto& shader = model->c_shader();
+        VK_ASSERT(shader, "\n\nShader is nullptr");
+
+        if (!model->cullBackface()) glDisable(GL_CULL_FACE);
+
+        shader->Bind();
+
+        auto&& model_matrix = glm::mat4(1.0f); // start off with an identity matrix
+
+        model_matrix = translate(model_matrix, transform.pos);
+
+        model_matrix = rotate(model_matrix, glm::radians(transform.rot.x), glm::vec3(1.0f, 0.0f, 0.0f));
+        model_matrix = rotate(model_matrix, glm::radians(transform.rot.y), glm::vec3(0.0f, 1.0f, 0.0f));
+        model_matrix = rotate(model_matrix, glm::radians(transform.rot.z), glm::vec3(0.0f, 0.0f, 1.0f));
+
+        model_matrix = scale(model_matrix, transform.scale);
+
+        shader->SetMat4("MODEL_MATRIX", model_matrix);
 
         for (int i = 0; i < model->nMeshes(); ++i) 
         {

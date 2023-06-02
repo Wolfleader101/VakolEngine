@@ -80,7 +80,14 @@ namespace Vakol::Controller
         return ret;
     }
 
-    std::pair<std::shared_ptr<::Model>, std::shared_ptr<Animator>> AssetLoader::GetModel(const std::string& file, const float scale, const bool animated, const bool backfaceCull) 
+    std::pair<std::shared_ptr<Model::Assets::Model>, std::shared_ptr<Animator>> AssetLoader::GetModel(const std::string& file, const float scale, const bool animated, const bool backfaceCull)
+    {
+        bool instance;
+
+	    return AssetLoader::GetModel(file, scale, animated, backfaceCull, instance);
+    }
+
+    std::pair<std::shared_ptr<::Model>, std::shared_ptr<Animator>> AssetLoader::GetModel(const std::string& file, const float scale, const bool animated, const bool backfaceCull, bool& instance) 
     {
         std::pair<std::shared_ptr<::Model>, std::shared_ptr<Animator>> ret;
 
@@ -95,8 +102,15 @@ namespace Vakol::Controller
                 VK_ERROR("no meshes found in model!");
 
             m_ModelMap[file] = ret;
-        } else
+
+            instance = false;
+        }
+    	else
+        {
             ret = m_ModelMap[file];
+
+	        instance = true;
+        }
 
         ret.first->SetCullBackface(backfaceCull); 
 
