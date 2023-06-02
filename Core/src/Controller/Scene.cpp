@@ -1,7 +1,6 @@
 #include "Scene.hpp"
 
 #include <Controller/Camera.hpp>
-#include <Controller/Serialization/Serializable.hpp>
 #include <Model/Components.hpp>
 #include <Model/Entity.hpp>
 #include <cereal/archives/json.hpp>
