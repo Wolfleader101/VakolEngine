@@ -1,6 +1,7 @@
 #include "Components.hpp"
 
 #include <Controller/AssetLoader/AssetLoader.hpp>
+#include <Controller/Scene.hpp>
 
 namespace Vakol::Model::Components {
     rp3d::Vector3 to_rp3d(const glm::vec3& v) { return {v.x, v.y, v.z}; }

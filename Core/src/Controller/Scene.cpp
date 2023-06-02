@@ -17,7 +17,7 @@ namespace Vakol::Controller
 	      active(active),
 	      scenePhysics(SP),
 		  lua(lua),
-          scriptName(std::move(scriptName)),
+          scriptName(scriptName),
           name(name),
           cam(glm::vec3(0.0f, 0.0f, 2.0f)) {}
 
@@ -34,6 +34,8 @@ namespace Vakol::Controller
         initialized = true;
 
         System::BindScene(*this);
+
+        System::Unique_Search();
     }
 
     const std::string& Scene::getName() const { return name; }
@@ -73,10 +75,11 @@ namespace Vakol::Controller
 	{
         Entity ent;
 
-        entityList.m_Registry.view<Model::Components::Tag>().each([&](auto entity, auto& tagComponent) {
-            if (tagComponent.tag == tag) {
+        entityList.m_Registry.view<Tag>().each([&](auto entity, auto& tagComponent) 
+        {
+            if (tagComponent.tag == tag)
                 ent = entityList.GetEntity(static_cast<unsigned int>(entity));
-            }
+
         });
 
         return std::make_shared<Entity>(ent);

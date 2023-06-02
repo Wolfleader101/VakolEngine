@@ -20,7 +20,8 @@ namespace Vakol::Controller
 	    scenes.reserve(10);
     };
 
-    void Application::Init() {
+    void Application::Init() 
+    {
         RegisterLua();
 
         auto config = LoadConfig();

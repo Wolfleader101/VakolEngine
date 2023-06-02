@@ -15,6 +15,9 @@
 
 using namespace Components;
 
+static std::vector<int> s_duplicates;
+static int s_count = 0;
+
 namespace Vakol::Controller
 {
     entt::registry* System::m_registry = nullptr;
@@ -32,8 +35,20 @@ namespace Vakol::Controller
     {
         m_registry->view<Drawable>().each([&](auto& drawable) 
         { 
-            if(drawable.model_ptr == nullptr)
+            if (drawable.model_ptr == nullptr)
                 drawable.model_ptr = AssetLoader::GetModel(drawable.name, drawable.scale, drawable.animated, drawable.backfaceCull).first;
+        });
+    }
+
+    void System::Unique_Search()
+    {
+        m_registry->view<Drawable, Components::Animator>().each([&](const Drawable& drawable, Components::Animator& animator)
+        {
+            if (s_count == 1)
+                animator.unique = true;
+
+
+			s_count++;
         });
     }
 
@@ -46,8 +61,8 @@ namespace Vakol::Controller
 
         m_registry->view<Transform, Drawable, Components::Animator>().each([&](const auto& transform, const Drawable& drawable, const Components::Animator& animator)
         {
-            if (!drawable.instance)
-        		animator.animator_ptr->Update(time.deltaTime);
+            if (animator.unique)
+        		animator.animator_ptr->Update(drawable.animation_state, time.deltaTime);
 
 	        renderer->DrawAnimated(transform, drawable, animator);
         });

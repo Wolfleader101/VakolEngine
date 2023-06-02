@@ -340,8 +340,8 @@ namespace Vakol::Controller
             {
                 if (!ent->HasComponent<Components::Animator>()) ent->AddComponent<Components::Animator>();
 
-                auto& [animator_ptr] = ent->GetComponent<Components::Animator>();
-                animator_ptr = animator;
+                auto& [ptr, state, unique] = ent->GetComponent<Components::Animator>();
+                ptr = animator;
             }
 
             return model;
@@ -388,6 +388,25 @@ namespace Vakol::Controller
 
             const auto& model = ent->GetComponent<Drawable>().model_ptr;
             model->mesh(mesh_index).GetMaterial()->AddTexture(*AssetLoader::GetTexture(path));
+        });
+
+        entity_type.set_function("set_animation_state", [](const Entity* ent, int animation_state)
+        {
+			if (!ent->HasComponent<Components::Animator>())
+            {
+	            VK_ERROR("Animator component is needed to set animation state!");
+                return;
+            }
+
+        	auto& [animator_ptr, state, unique] = ent->GetComponent<Components::Animator>();
+
+	        if (const auto size = animator_ptr->nAnimations(); animation_state < size && animation_state >= 0)
+                state = animation_state;
+            else 
+            {
+                animation_state = std::max(0, size - 1);
+                state = animation_state;
+            }
         });
 
         model_type.set_function("get_mesh_count", &Assets::Model::nMeshes);
