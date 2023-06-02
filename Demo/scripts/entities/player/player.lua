@@ -36,37 +36,38 @@ function init()
     scene:create_entity("Player Stats", "entities/player/playerStats.lua");
 end
 
-function update()
-
+local function update_drowning_time()
     if (scene.globals.player.pos.y <= 0.0 and state.drowning_time < 5) then
         state.drowning_time = state.drowning_time + Time.delta_time;
-        print(state.drowning_time)
     elseif(scene.globals.player.pos.y > 0.0 and state.drowning_time > 0.0) then
         state.drowning_time = state.drowning_time - Time.delta_time * 2;
-        print_err(state.drowning_time)
     end
 
+end
 
-    if (scene.globals.player.pos.y <= 0.0 and state.drowning_time >= 5) then
-        scene.globals.player.decrement_health(10 * Time.delta_time);
-    end
-
-    if (moving_wait(10)) then
-        scene.globals.player.decrement_hunger(2 * state.moving_value + 0.5);
-        scene.globals.player.decrement_thirst(3.5 * state.moving_value + 1.0);
-
-        state.moving_value = 0;
-    end
-    
-    -- if the player's position has changed, they're moving
+local function update_moving_value()
     if (scene.globals.player.pos ~= scene.globals.player.last_pos) then
         if (state.moving_value >= 1.0) then
             state.moving_value = 1.0;
         else
-            state.moving_value = state.moving_value + (0.1 * Time.delta_time);
+            state.moving_value = state.moving_value + (0.08 * Time.delta_time);
         end
     end
+end
+function update()
+    update_drowning_time()
+    update_moving_value()
 
+   if (scene.globals.player.pos.y <= 0.0 and state.drowning_time >= 5) then
+        scene.globals.player.decrement_health(15 * Time.delta_time);
+    end
+
+    if (moving_wait(7.5)) then
+        scene.globals.player.decrement_hunger(2 * state.moving_value + 0.25);
+        scene.globals.player.decrement_thirst(3.5 * state.moving_value + 0.5);
+        state.moving_value = 0;
+    end
+    
 
     -- update the last position to the current position
     scene.globals.player.last_pos = scene.globals.player.pos;
