@@ -109,7 +109,7 @@ namespace Vakol::View
         const auto& shader = model->c_shader();
         VK_ASSERT(shader, "\n\nShader is nullptr");
 
-        const auto animation_state = drawable.animation_state;
+        const auto animation_state = _animator.animation_state;
 
         const auto& animator = _animator.animator_ptr;
 

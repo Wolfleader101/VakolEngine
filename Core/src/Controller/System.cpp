@@ -42,11 +42,10 @@ namespace Vakol::Controller
 
     void System::Unique_Search()
     {
-        m_registry->view<Drawable, Components::Animator>().each([&](const Drawable& drawable, Components::Animator& animator)
+        m_registry->view<Components::Animator>().each([&](Components::Animator& animator)
         {
-            if (s_count == 1)
+            if (s_count == 2)
                 animator.unique = true;
-
 
 			s_count++;
         });
@@ -62,7 +61,7 @@ namespace Vakol::Controller
         m_registry->view<Transform, Drawable, Components::Animator>().each([&](const auto& transform, const Drawable& drawable, const Components::Animator& animator)
         {
             if (animator.unique)
-        		animator.animator_ptr->Update(drawable.animation_state, time.deltaTime);
+        		animator.animator_ptr->Update(animator.animation_state, time.deltaTime);
 
 	        renderer->DrawAnimated(transform, drawable, animator);
         });
