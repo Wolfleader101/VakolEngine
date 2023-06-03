@@ -3,7 +3,7 @@ function init()
     local entities = {};
     models = {};
 
-    for i = 1, 5 do
+    for i = 1, 20 do
         if (i == 1) then
             entities[i] = entity;
         else
