@@ -72,6 +72,7 @@ namespace Vakol::Model::Components
 	    std::shared_ptr<Controller::Animator> animator_ptr = nullptr;
         int animation_state = 0;
         bool unique = false;
+        int ID = 0;
     };
 
     /**

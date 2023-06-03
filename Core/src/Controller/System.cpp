@@ -16,6 +16,10 @@
 using namespace Components;
 
 static std::vector<int> s_duplicates;
+static std::vector<int> s_uniques;
+
+static std::set<int> s_unique_set;
+
 static int s_count = 0;
 
 namespace Vakol::Controller
@@ -42,12 +46,38 @@ namespace Vakol::Controller
 
     void System::Unique_Search()
     {
+        s_duplicates.clear();
+        s_unique_set.clear();
+        s_uniques.clear();
+
+        m_registry->view<Components::Animator>().each([&](const Components::Animator& animator)
+        {
+            s_duplicates.push_back(animator.animation_state);
+        });
+
+        const auto size = static_cast<int>(s_duplicates.size());
+        s_count = size;
+
+    	m_registry->view<Components::Animator>().each([&](Components::Animator& animator)
+        {
+            animator.ID = s_count;
+            VK_TRACE("ID: {0} | STATE: {1}", animator.ID, animator.animation_state);
+            s_count--;
+        });
+
+        std::reverse(s_duplicates.begin(), s_duplicates.end());
+
+        for (int i = 0; i < size; ++i)
+            if (s_unique_set.insert(s_duplicates.at(i)).second)
+                s_uniques.push_back(i + 1);
+
         m_registry->view<Components::Animator>().each([&](Components::Animator& animator)
         {
-            if (s_count == 2)
-                animator.unique = true;
-
-			s_count++;
+            for (const auto ID : s_uniques)
+            {
+                if (animator.ID == ID)
+                    animator.unique = true;
+            }
         });
     }
 

@@ -340,7 +340,7 @@ namespace Vakol::Controller
             {
                 if (!ent->HasComponent<Components::Animator>()) ent->AddComponent<Components::Animator>();
 
-                auto& [ptr, state, unique] = ent->GetComponent<Components::Animator>();
+                auto& [ptr, state, unique, ID] = ent->GetComponent<Components::Animator>();
                 ptr = animator;
             }
 
@@ -398,7 +398,7 @@ namespace Vakol::Controller
                 return;
             }
 
-        	auto& [animator_ptr, state, unique] = ent->GetComponent<Components::Animator>();
+        	auto& [animator_ptr, state, unique, ID] = ent->GetComponent<Components::Animator>();
 
 	        if (const auto size = animator_ptr->nAnimations(); animation_state < size && animation_state >= 0)
                 state = animation_state;
