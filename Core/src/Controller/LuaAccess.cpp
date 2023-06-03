@@ -328,20 +328,23 @@ namespace Vakol::Controller
             if (model) 
             {
 	            auto& draw = ent->GetComponent<Drawable>();
+
                 draw.model_ptr = model;
                 draw.name = path;
                 draw.scale = scale;
                 draw.animated = animated;
                 draw.backfaceCull = backfaceCull;
                 draw.instance = instance;
-            }
 
-            if (animator && animated)
-            {
-                if (!ent->HasComponent<Components::Animator>()) ent->AddComponent<Components::Animator>();
+				if (animator && animated)
+	            {
+	                if (!ent->HasComponent<Components::Animator>()) ent->AddComponent<Components::Animator>();
 
-                auto& [ptr, state, unique, ID] = ent->GetComponent<Components::Animator>();
-                ptr = animator;
+	                auto& [ptr, state, unique, ID, model_name] = ent->GetComponent<Components::Animator>();
+
+	                ptr = animator;
+	                model_name = draw.name;
+	            }
             }
 
             return model;
@@ -398,7 +401,7 @@ namespace Vakol::Controller
                 return;
             }
 
-        	auto& [animator_ptr, state, unique, ID] = ent->GetComponent<Components::Animator>();
+        	auto& [animator_ptr, state, unique, ID, model_name] = ent->GetComponent<Components::Animator>();
 
 	        if (const auto size = animator_ptr->nAnimations(); animation_state < size && animation_state >= 0)
                 state = animation_state;

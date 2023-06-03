@@ -73,6 +73,7 @@ namespace Vakol::Model::Components
         int animation_state = 0;
         bool unique = false;
         int ID = 0;
+        std::string attached_model;
     };
 
     /**

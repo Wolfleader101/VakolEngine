@@ -15,10 +15,9 @@
 
 using namespace Components;
 
-static std::vector<int> s_duplicates;
-static std::vector<int> s_uniques;
-
-static std::set<int> s_unique_set;
+static std::vector<std::pair<std::string, int>> s_duplicates;
+static std::set<std::pair<std::string, int>> s_unique_set;
+static std::vector<std::pair<std::string, int>> s_uniques;
 
 static int s_count = 0;
 
@@ -46,13 +45,9 @@ namespace Vakol::Controller
 
     void System::Unique_Search()
     {
-        s_duplicates.clear();
-        s_unique_set.clear();
-        s_uniques.clear();
-
         m_registry->view<Components::Animator>().each([&](const Components::Animator& animator)
         {
-            s_duplicates.push_back(animator.animation_state);
+            s_duplicates.emplace_back(animator.attached_model, animator.animation_state);
         });
 
         const auto size = static_cast<int>(s_duplicates.size());
@@ -61,23 +56,19 @@ namespace Vakol::Controller
     	m_registry->view<Components::Animator>().each([&](Components::Animator& animator)
         {
             animator.ID = s_count;
-            VK_TRACE("ID: {0} | STATE: {1}", animator.ID, animator.animation_state);
             s_count--;
         });
 
         std::reverse(s_duplicates.begin(), s_duplicates.end());
 
         for (int i = 0; i < size; ++i)
-            if (s_unique_set.insert(s_duplicates.at(i)).second)
-                s_uniques.push_back(i + 1);
+	        if (s_unique_set.insert(s_duplicates.at(i)).second)
+                s_uniques.emplace_back(s_unique_set.begin()->first, i + 1);
 
-        m_registry->view<Components::Animator>().each([&](Components::Animator& animator)
+		m_registry->view<Components::Animator>().each([&](Components::Animator& animator)
         {
-            for (const auto ID : s_uniques)
-            {
-                if (animator.ID == ID)
-                    animator.unique = true;
-            }
+            for (const auto& [name, ID] : s_uniques)
+                if (ID == animator.ID) animator.unique = true;
         });
     }
 

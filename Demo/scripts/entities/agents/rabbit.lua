@@ -1,22 +1,42 @@
 function init()
-    entity:get_transform().pos = Vector3.new(4.0, 0.60, -2.0);
+    local shaders = {};
+    local entities = {};
+    models = {};
 
-	state.model = entity:add_model("assets/models/rabbit.fbx", 0.005, true, true)
-	entity:set_shader("coreAssets/shaders/animation.prog")
+    for i = 1, 5 do
+        if (i == 1) then
+            entities[i] = entity;
+        else
+            entities[i] = scene:create_entity("wolf_instance ".. i, "");
+        end
 
-	local shader = state.model:get_shader();
-	shader:set_vec3v("light.direction", Vector3.new(math.rad(0.0), math.rad(0.0), math.rad(-90.0)));
+        entities[i]:get_transform().pos = Vector3.new(1.0 * i, 0.0, -2.0);
 
-    shader:set_float("material.shininess", 32.0);
+        local pos = entities[i]:get_transform().pos;
+        
+        local terr_scale = scene.globals.terrain.transform.scale;
+        pos.y = (scene.globals.terrain.terr:get_height(pos.x / terr_scale.x, pos.z / terr_scale.z) * terr_scale.y);
 
-    shader:set_int("material.diffuse_map", 0);
-    shader:set_int("material.specular_map", 1);
-    shader:set_int("material.normal_map", 2);
-    shader:set_int("material.emission_map", 3);
+	    models[i] = entities[i]:add_model("assets/models/rabbit.fbx", 0.0075, true, true);
+	    entities[i]:set_shader("coreAssets/shaders/animation.prog");
 
-    state.fsm = entity:add_fsm();
+	    shaders[i] = models[i]:get_shader();
+	    shaders[i]:set_vec3v("light.direction", Vector3.new(math.rad(0.0), math.rad(0.0), math.rad(-90.0)));
 
-    entity:set_animation_state(0);
+        shaders[i]:set_float("material.shininess", 32.0);
+
+        shaders[i]:set_int("material.diffuse_map", 0);
+        shaders[i]:set_int("material.specular_map", 1);
+        shaders[i]:set_int("material.normal_map", 2);
+        shaders[i]:set_int("material.emission_map", 3);
+
+        state.fsm = entities[i]:add_fsm();
+    end
+
+    entities[1]:set_animation_state(0);
+    --entities[2]:set_animation_state(1);
+    --entities[3]:set_animation_state(1);
+    --entities[4]:set_animation_state(1);
 end
 
 function update()
