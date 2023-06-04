@@ -1,7 +1,3 @@
-HEALTHMAX = 100;
-HUNGERMAX = 75;
-THIRSTMAX = 50;
-
 function display_player_stats()
     GUI:change_background_colour(0.349, 0.388, 1.0, 0.9);
     GUI:change_background_rounding(20.0);
@@ -10,15 +6,15 @@ function display_player_stats()
 
     GUI:add_image("assets/textures/icons/health/healthIcon_2048.png", 32, 32, false, false);
     GUI:same_line();
-    GUI:add_text("Health: " .. tostring(state.player_health), false, false, 2.0, 1.0, 1.0, 1.0, 1.0);
+    GUI:add_text("Health: " .. string.format("%.f", scene.globals.player.health), false, false, 2.0, 1.0, 1.0, 1.0, 1.0);
 
     GUI:add_image("assets/textures/icons/hunger/hunger.png", 32, 32, false, false);
     GUI:same_line();
-    GUI:add_text("Hunger: " .. tostring(state.player_hunger), false, false, 2.0, 1.0, 1.0, 1.0, 1.0);
+    GUI:add_text("Hunger: " .. string.format("%.f", scene.globals.player.hunger), false, false, 2.0, 1.0, 1.0, 1.0, 1.0);
 
     GUI:add_image("assets/textures/icons/thirst/thirst.png", 32, 32, false, false);
     GUI:same_line();
-    GUI:add_text("Thirst: " .. tostring(state.player_thirst), false, false, 2.0, 1.0, 1.0, 1.0, 1.0);
+    GUI:add_text("Thirst: " .. string.format("%.f", scene.globals.player.thirst), false, false, 2.0, 1.0, 1.0, 1.0, 1.0);
 
     GUI:end_window();
 
@@ -27,70 +23,85 @@ function display_player_stats()
 end
 
 function init()
-    state.player_health = HEALTHMAX;
-    state.player_hunger = HUNGERMAX;
-    state.player_thirst = THIRSTMAX;
+    scene.globals.player.health = scene.globals.player.MAX_HEALTH;
+    scene.globals.player.hunger = scene.globals.player.MAX_HUNGER;
+    scene.globals.player.thirst = scene.globals.player.MAX_THIRST;
+
+    scene.globals.player.increment_health = increment_health;
+    scene.globals.player.decrement_health = decrement_health;
+    scene.globals.player.increment_hunger = increment_hunger;
+    scene.globals.player.decrement_hunger = decrement_hunger;
+    scene.globals.player.increment_thirst = increment_thirst;
+    scene.globals.player.decrement_thirst = decrement_thirst;
 end
 
-function decrement_health(input_amount)
-    if(state.player_health > 0) then 
-        if((state.player_health - input_amount) < 0) then
-            state.player_health = 0;
-        else
-            state.player_health = state.player_health - input_amount;
-        end
-    end
-end
 
 function increment_health(input_amount)
-    if(state.player_health >= 0 and state.player_health < HEALTHMAX) then 
-        if((state.player_health + input_amount) > HEALTHMAX) then
-            state.player_health = HEALTHMAX;
+    if(scene.globals.player.health >= 0 and scene.globals.player.health < scene.globals.player.MAX_HEALTH) then 
+        if((scene.globals.player.health + input_amount) > scene.globals.player.MAX_HEALTH) then
+            scene.globals.player.health = scene.globals.player.MAX_HEALTH;
         else
-            state.player_health = state.player_health + input_amount;
+            scene.globals.player.health = scene.globals.player.health + input_amount;
         end
     end
 end
 
-function decrement_hunger(input_amount)
-    if(state.player_hunger > 0) then 
-        if((state.player_hunger - input_amount) < 0) then
-            state.player_hunger = 0;
+
+function decrement_health(input_amount)
+    if(scene.globals.player.is_god) then return end;
+    if(scene.globals.player.health > 0) then 
+        if((scene.globals.player.health - input_amount) < 0) then
+            scene.globals.player.health = 0;
         else
-            state.player_hunger = state.player_hunger - input_amount;
+            scene.globals.player.health = scene.globals.player.health - input_amount;
+            scene.globals.player.last_damage_time = Time.curr_time;
         end
     end
 end
 
 function increment_hunger(input_amount)
-    if(state.player_hunger >= 0 and state.player_hunger < HUNGERMAX) then 
-        if((state.player_hunger + input_amount) > HUNGERMAX) then
-            state.player_hunger = HUNGERMAX;
+    if (scene.globals.player.hunger >= 0 and scene.globals.player.hunger < scene.globals.player.MAX_HUNGER) then
+        if ((scene.globals.player.hunger + input_amount) > scene.globals.player.MAX_HUNGER) then
+            scene.globals.player.hunger = scene.globals.player.MAX_HUNGER;
         else
-            state.player_hunger = state.player_hunger + input_amount;
+            scene.globals.player.hunger = scene.globals.player.hunger + input_amount;
         end
     end
 end
 
-function decrement_thirst(input_amount)
-    if(state.player_thirst > 0) then 
-        if((state.player_thirst - input_amount) < 0) then
-            state.player_thirst = 0;
+function decrement_hunger(input_amount)
+    if(scene.globals.player.is_god) then return end;
+    if (scene.globals.player.hunger > 0) then
+        if ((scene.globals.player.hunger - input_amount) < 0) then
+            scene.globals.player.hunger = 0;
         else
-            state.player_thirst = state.player_thirst - input_amount;
+            scene.globals.player.hunger = scene.globals.player.hunger - input_amount;
         end
     end
 end
 
 function increment_thirst(input_amount)
-    if(state.player_thirst >= 0 and state.player_thirst < THIRSTMAX) then 
-        if((state.player_thirst + input_amount) > THIRSTMAX) then
-            state.player_thirst = THIRSTMAX;
+    if(scene.globals.player.thirst >= 0 and scene.globals.player.thirst < scene.globals.player.MAX_THIRST) then 
+        if((scene.globals.player.thirst + input_amount) > scene.globals.player.MAX_THIRST) then
+            scene.globals.player.thirst = scene.globals.player.MAX_THIRST;
         else
-            state.player_thirst = state.player_thirst + input_amount;
+            scene.globals.player.thirst = scene.globals.player.thirst + input_amount;
         end
     end
 end
+
+function decrement_thirst(input_amount)
+    if(scene.globals.player.is_god) then return end;
+    if(scene.globals.player.thirst > 0) then 
+        if((scene.globals.player.thirst - input_amount) < 0) then
+            scene.globals.player.thirst = 0;
+        else
+            scene.globals.player.thirst = scene.globals.player.thirst - input_amount;
+        end
+    end
+end
+
+
 
 function update()
     display_player_stats();
