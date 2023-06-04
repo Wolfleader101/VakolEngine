@@ -43,6 +43,9 @@ constexpr float LIGHT_QUADRATIC = 0.0075f;
 const float LIGHT_CUT_OFF = glm::cos(glm::radians(7.5f));
 const float LIGHT_OUTER_CUT_OFF = glm::cos(glm::radians(12.5f));
 
+glm::mat4 PROJECTION = glm::mat4(1.0f);
+glm::mat4 VIEW = glm::mat4(1.0f);
+
 namespace Vakol::View 
 {
     GLRenderer::GLRenderer(const std::shared_ptr<Window>& window) : Renderer(window) 
@@ -57,8 +60,9 @@ namespace Vakol::View
         // layout (std140, binding = 1) uniform <name>
         // std140 - memory layout, binding - index, uniform (typeof buffer)
         // add a uniform buffer which size is that of a 4x4 matrix with a binding index of 1
-        AddBuffer(GL_UNIFORM_BUFFER, 4 * sizeof(glm::mat4), 1, GL_STATIC_DRAW);
+        AddBuffer(GL_UNIFORM_BUFFER, 3 * sizeof(glm::mat4), 1, GL_STATIC_DRAW);
         AddBuffer(GL_UNIFORM_BUFFER, 5 * sizeof(float), 2, GL_STATIC_DRAW);
+        AddBuffer(GL_UNIFORM_BUFFER, 3 * sizeof(float), 3, GL_STATIC_DRAW);
 
     	SetBufferSubData(1, 0, sizeof(float), &LIGHT_CONSTANT);
         SetBufferSubData(1, 1 * sizeof(float), sizeof(float), &LIGHT_LINEAR);
@@ -66,12 +70,11 @@ namespace Vakol::View
         SetBufferSubData(1, 3 * sizeof(float), sizeof(float), &LIGHT_CUT_OFF);
         SetBufferSubData(1, 4 * sizeof(float), sizeof(float), &LIGHT_OUTER_CUT_OFF);
 
-        ATTACHMENT attachment{ {GL_COLOR_ATTACHMENT0, GL_RGB8, GL_RGB, 800, 600}, {GL_DEPTH_STENCIL_ATTACHMENT, GL_DEPTH24_STENCIL8} };
+        //ATTACHMENT attachment{ {GL_COLOR_ATTACHMENT0, GL_RGB8, GL_RGB, 800, 600}, {GL_DEPTH_STENCIL_ATTACHMENT, GL_DEPTH24_STENCIL8} };
 
-        framebuffers.push_back(std::make_shared<FrameBuffer>(attachment, true));
+        //framebuffers.push_back(std::make_shared<FrameBuffer>(attachment, true));
 
-        if (isSkybox)
-			skybox->Init();
+        if (isSkybox) skybox->Init();
     }
 
     void GLRenderer::AddBuffer(const unsigned int type, const int size, const int binding, const void* data, const unsigned int usage)
@@ -98,31 +101,21 @@ namespace Vakol::View
     void GLRenderer::ClearBuffer(const unsigned int buffer_bit) const
     { glClear(buffer_bit); }
 
-    void GLRenderer::Draw([[maybe_unused]] const Controller::Time& time, const Controller::Camera& camera, const Components::Transform& transform, const Components::Drawable& drawable) const 
+    void GLRenderer::DrawAnimated(const Components::Transform& transform, const Components::Drawable& drawable, const Components::Animator& _animator) const
     {
-        VK_ASSERT(drawable.model_ptr, "\n\nModel ptr is nullptr");
-
-        const auto& model = drawable.model_ptr;
-
-        if (model->isAnimated()) model->UpdateAnimation(time.deltaTime);
+	    const auto& model = drawable.model_ptr;
+        VK_ASSERT(model, "\n\nModel ptr is nullptr");
 
         const auto& shader = model->c_shader();
-        VK_ASSERT(&shader, "\n\nShader is nullptr");
+        VK_ASSERT(shader, "\n\nShader is nullptr");
 
-        if (!model->cullBackface())
-        {
-            glDisable(GL_CULL_FACE);
-        }
+        const auto animation_state = _animator.animation_state;
+
+        const auto& animator = _animator.animator_ptr;
+
+        if (!model->cullBackface()) glDisable(GL_CULL_FACE);
 
         shader->Bind();
-
-        const auto& projection = camera.GetMatrix(PROJECTION_MATRIX);
-        const auto& view = camera.GetMatrix(VIEW_MATRIX);
-
-        // at index 0, with an offset of 0 (since PV_MATRIX is the only element in the buffer), with a size of a 4x4 matrix, set PV_MATRIX
-        SetBufferSubData(0, 0, sizeof(glm::mat4), value_ptr(projection));
-    	SetBufferSubData(0, sizeof(glm::mat4), sizeof(glm::mat4), value_ptr(view));
-        SetBufferSubData(0, 2 * sizeof(glm::mat4), sizeof(glm::mat4), value_ptr(projection * view));
 
         auto&& model_matrix = glm::mat4(1.0f); // start off with an identity matrix
 
@@ -134,12 +127,9 @@ namespace Vakol::View
 
         model_matrix = scale(model_matrix, transform.scale);
 
-        SetBufferSubData(0, 3 * sizeof(glm::mat4), sizeof(glm::mat4), value_ptr(model_matrix));
+        shader->SetMat4("MODEL_MATRIX", model_matrix);
 
-        //shader->SetMat3("NORMAL_MATRIX", glm::mat3(transpose(inverse(model_matrix))));
-
-		if (model->isAnimated()) shader->SetMat4v("BONE_TRANSFORMS", model->numAnimationTransforms(), value_ptr(model->animation_transforms()[0]));
-            //model->SetBufferSubData(0, 0, model->numAnimationTransforms() * sizeof(glm::mat4), model->animation_data());
+        shader->SetMat4v("BONE_TRANSFORMS", animator->nTransforms(animation_state), value_ptr(animator->transform(animation_state)));
 
         for (int i = 0; i < model->nMeshes(); ++i) 
         {
@@ -156,27 +146,85 @@ namespace Vakol::View
         }
 
         shader->Unbind();
-
-        glEnable(GL_CULL_FACE);
-        glCullFace(GL_BACK); 
-
-        if (isSkybox)
-			skybox->Draw(projection, view);
     }
 
-    void GLRenderer::Update(const int index) const 
+    void GLRenderer::Draw(const Components::Transform& transform, const Components::Drawable& drawable) const 
+    {
+        const auto& model = drawable.model_ptr;
+        VK_ASSERT(model, "\n\nModel ptr is nullptr");
+
+        const auto& shader = model->c_shader();
+        VK_ASSERT(shader, "\n\nShader is nullptr");
+
+        if (!model->cullBackface()) glDisable(GL_CULL_FACE);
+
+        shader->Bind();
+
+        auto&& model_matrix = glm::mat4(1.0f); // start off with an identity matrix
+
+        model_matrix = translate(model_matrix, transform.pos);
+
+        model_matrix = rotate(model_matrix, glm::radians(transform.rot.x), glm::vec3(1.0f, 0.0f, 0.0f));
+        model_matrix = rotate(model_matrix, glm::radians(transform.rot.y), glm::vec3(0.0f, 1.0f, 0.0f));
+        model_matrix = rotate(model_matrix, glm::radians(transform.rot.z), glm::vec3(0.0f, 0.0f, 1.0f));
+
+        model_matrix = scale(model_matrix, transform.scale);
+
+        shader->SetMat4("MODEL_MATRIX", model_matrix);
+
+        for (int i = 0; i < model->nMeshes(); ++i) 
+        {
+            const auto& mesh = model->mesh(i);
+            const auto& material = mesh.GetMaterial();
+
+            for (int j = 0; j < material->GetTextureCount(); ++j)
+            {
+                glActiveTexture(GL_TEXTURE0 + j);
+                glBindTexture(GL_TEXTURE_2D, material->GetTexture(j));
+            }
+
+            mesh.Draw();
+        }
+
+        shader->Unbind();
+    }
+
+    void GLRenderer::UpdateData(const Controller::Time& time, const Controller::Camera& camera)
+    {
+	    PROJECTION = camera.GetMatrix(PROJECTION_MATRIX);
+        VIEW = camera.GetMatrix(VIEW_MATRIX);
+
+        // at index 0, with an offset of 0 (since PV_MATRIX is the only element in the buffer), with a size of a 4x4 matrix, set PV_MATRIX
+        SetBufferSubData(0, 0, sizeof(glm::mat4), glm::value_ptr(PROJECTION));
+    	SetBufferSubData(0, sizeof(glm::mat4), sizeof(glm::mat4), value_ptr(VIEW));
+        SetBufferSubData(0, 2 * sizeof(glm::mat4), sizeof(glm::mat4), value_ptr(PROJECTION * VIEW));
+
+        SetBufferSubData(2, 0, sizeof(float), &time.curTime);
+        SetBufferSubData(2, 1 * sizeof(float), sizeof(float), &time.deltaTime);
+        SetBufferSubData(2, 2 * sizeof(float), sizeof(float), &time.prevTime);
+    }
+
+    void GLRenderer::Update([[maybe_unused]] const int index) const 
     {
         ClearColor(VAKOL_CLASSIC);
         ClearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        if (index > -1)
-        {
-            framebuffers.at(index)->ClearColor(VAKOL_DARK);
+        //if (index > -1)
+        //{
+        //    framebuffers.at(index)->ClearColor(VAKOL_DARK);
 
-            if (framebuffers.at(index)->HasDepth())
-                framebuffers.at(index)->ClearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            else
-                framebuffers.at(index)->ClearBuffer(GL_COLOR_BUFFER_BIT);
-        }
+        //    if (framebuffers.at(index)->HasDepth())
+        //        framebuffers.at(index)->ClearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        //    else
+        //        framebuffers.at(index)->ClearBuffer(GL_COLOR_BUFFER_BIT);
+        //}
+    }
+
+    void GLRenderer::LateUpdate([[maybe_unused]] const int index) const
+    {
+	    glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK); 
+
+        if (isSkybox) skybox->Draw(PROJECTION, VIEW);
     }
 }

@@ -8,10 +8,9 @@ out vec2 TexCoords;
 
 layout (std140, binding = 1) uniform Matrices
 {
-    uniform mat4 PROJECTION_MATRIX;
-    uniform mat4 VIEW_MATRIX;
-    uniform mat4 PV_MATRIX;
-    uniform mat4 MODEL_MATRIX;
+    mat4 PROJECTION_MATRIX;
+    mat4 VIEW_MATRIX;
+    mat4 PV_MATRIX;
 };
 
 void main()
