@@ -1,8 +1,7 @@
 function init()
     print("Initialising Camera");
 
-    state.speed = 1.5;
-    state.sprintSpeed = 3.25;
+
     state.flying = false;
 
     local camera = scene:get_camera();
@@ -27,10 +26,12 @@ function update()
         dir.x = 1;
     end
     if (Input:get_key(KEYS["KEY_LEFT_SHIFT"])) then
-        velocity = state.sprintSpeed * Time.delta_time;
+        scene.globals.player.is_sprinting = true;
     else
-        velocity = state.speed * Time.delta_time;
+        scene.globals.player.is_sprinting = false;
     end
+
+    velocity = scene.globals.player.curr_speed * Time.delta_time;
 
     if (Input:get_key_down(KEYS["KEY_Z"])) then
         state.flying = not state.flying

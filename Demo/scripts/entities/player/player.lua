@@ -1,12 +1,18 @@
 function init()
     scene.globals.player = {
+        MAX_HEALTH = 100,
+        MAX_HUNGER = 100,
+        MAX_THIRST = 100,
         pos = Vector3.new(0.0, 0.0, 0.0),
         last_pos = Vector3.new(0.0, 0.0, 0.0),
+        base_speed = 1.25,
+        sprint_speed = 2,
+        curr_speed = 0.0,
         is_sprinting = false,
         is_god = false,
-        player_health = 0,
-        player_hunger = 0,
-        player_thirst = 0,
+        health = 0,
+        hunger = 0,
+        thirst = 0,
         last_damage_time = 0,
         increment_health = nil,
         decrement_health = nil,
@@ -53,7 +59,7 @@ local function update_moving_value()
         if (state.moving_value >= 1.0) then
             state.moving_value = 1.0;
         else
-            local move_inc = scene.globals.player.is_sprinting and 0.12 or 0.08;
+            local move_inc = scene.globals.player.is_sprinting and 0.13 or 0.08;
             state.moving_value = state.moving_value + (move_inc * Time.delta_time);
         end
     end
@@ -69,14 +75,41 @@ local function update_drowning()
 end
 
 local function update_regen()
-    if (scene.globals.player.player_health < 50 and not state.is_drowning and Time.curr_time - scene.globals.player.last_damage_time >= 3) then
+    if (scene.globals.player.health < 50 and not state.is_drowning and Time.curr_time - scene.globals.player.last_damage_time >= 3) then
         local base_heal_amount = 0.1;
-        local hunger_heal_amount = scene.globals.player.player_hunger > 25 and 0.85 or scene.globals.player.player_hunger > 10 and 0.25 or 0;
-        local thirst_heal_amount = scene.globals.player.player_thirst > 15 and 0.4 or scene.globals.player.player_thirst > 8 and 0.15 or 0;
-        local heal_amount = base_heal_amount + hunger_heal_amount + thirst_heal_amount;
+        local player = scene.globals.player;
+        
+        local hunger_heal_increase = player.hunger / player.MAX_HUNGER;
+        local thirst_heal_increase = player.thirst / player.MAX_THIRST;
+
+        local heal_increase = (2/3) * hunger_heal_increase + (1/3) * thirst_heal_increase;
+
+        local heal_amount = base_heal_amount + heal_increase;
         scene.globals.player.increment_health(heal_amount * Time.delta_time);
     end
 end
+
+
+local function update_speed()       
+    local player = scene.globals.player;
+
+    local hunger_speed_reduction = (player.MAX_HUNGER - player.hunger) / player.MAX_HUNGER;
+    local thirst_speed_reduction = (player.MAX_THIRST - player.thirst) / player.MAX_THIRST;
+
+    local speed_reduction = (1 / 3) * hunger_speed_reduction + (2 / 3) * thirst_speed_reduction;
+    
+
+    local min_speed = 0.18;
+    
+    if(player.is_sprinting) then
+        local sprint_speed = player.sprint_speed * (1 - speed_reduction);
+        scene.globals.player.curr_speed = math.max(min_speed, sprint_speed);
+    else
+        local walk_speed = player.base_speed * (1 - speed_reduction);
+        scene.globals.player.curr_speed = math.max(min_speed, walk_speed);
+    end
+end
+
 
 function update()
     update_drowning_time()
@@ -115,11 +148,15 @@ function update()
 
     update_regen();
 
+    update_speed();
+
     if (moving_wait(7.5)) then
-        -- scene.globals.player.decrement_hunger(2 * state.moving_value + 0.25);
-        -- scene.globals.player.decrement_thirst(3.5 * state.moving_value + 0.5);
+        scene.globals.player.decrement_hunger(2 * state.moving_value + 0.25);
+        scene.globals.player.decrement_thirst(3.5 * state.moving_value + 0.5);
         state.moving_value = 0;
     end
+
+    
 
         
 
