@@ -26,12 +26,12 @@ function update()
         dir.x = 1;
     end
     if (Input:get_key(KEYS["KEY_LEFT_SHIFT"])) then
-        velocity = scene.globals.player.sprint_speed * Time.delta_time;
         scene.globals.player.is_sprinting = true;
     else
-        velocity = scene.globals.player.speed * Time.delta_time;
         scene.globals.player.is_sprinting = false;
     end
+
+    velocity = scene.globals.player.curr_speed * Time.delta_time;
 
     if (Input:get_key_down(KEYS["KEY_Z"])) then
         state.flying = not state.flying
