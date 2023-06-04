@@ -280,7 +280,9 @@ namespace Vakol::Controller
 
 	             model->mesh().SetNumTrisPerStrip(terrain.GetSize() / 1 * 2 - 2);
 
-	             ent->GetComponent<Drawable>().model_ptr = model;
+                 Drawable& drawable = ent->GetComponent<Drawable>();
+	             drawable.model_ptr = model;
+                 drawable.name = "Terrain";// ugly
 	         }
 
 	         return terrain;

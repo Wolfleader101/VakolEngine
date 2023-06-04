@@ -181,7 +181,7 @@
     "value63": 2,
     "value64": 1,
     "value65": {
-        "Model": "",
+        "Model": "Terrain",
         "Import Scale": 1.0,
         "Animated": false,
         "Back Face Culling": true
