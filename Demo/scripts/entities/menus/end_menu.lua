@@ -20,6 +20,7 @@ function init()
 end
 
 function update()
+    clear_color(0.00961, 0.0431, 0.0784, 0);
     end_menu();
 
     if(Input:get_key_down(KEYS["KEY_Q"])) then

@@ -527,6 +527,7 @@ namespace Vakol::Controller
 
         scene_type.set_function("get_camera", &Scene::GetCamera);
         scene_type.set_function("get_entity", &Scene::GetEntity);
+        
 
         camera_type.set_function("get_pos", &Camera::GetPos);
         camera_type.set_function("set_pos", &Camera::SetPos);
@@ -552,6 +553,7 @@ namespace Vakol::Controller
 
         scene_type.set_function("serialize", &Scene::Serialize); // Give it folder assets/scenes. will create subfolder for scene
         scene_type.set_function("deserialize", &Scene::Deserialize); //needs to be given folder assets/scenes/scene_name .ie assets/scenes/Test Scene
+        scene_type.set_function("get_name", &Scene::getName);
 
         camera_type.set_function("get_pitch", &Camera::GetPitch);
         camera_type.set_function("set_pitch", &Camera::SetPitch);

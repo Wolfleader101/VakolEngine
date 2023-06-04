@@ -8,6 +8,7 @@ function init()
     scene:create_entity("test renderer", "entities/test_rendering.lua");
 
     scene:create_entity("Player Stats", "entities/player/playerStats.lua");
+    scene:create_entity("Save", "entities/misc/serialization.lua");
 end
 
 function update()
