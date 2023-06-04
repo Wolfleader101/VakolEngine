@@ -117,7 +117,7 @@ namespace Vakol::Controller
             json(cereal::make_nvp("Script Name", scriptName));
             json(cereal::make_nvp("camera", cam));
 
-            json(cereal::make_nvp("Scene Globals", sceneGlobals));
+            //json(cereal::make_nvp("Scene Globals", sceneGlobals));
         }
     }
 
