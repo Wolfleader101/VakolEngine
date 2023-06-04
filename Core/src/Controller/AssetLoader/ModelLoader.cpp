@@ -10,6 +10,11 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 
+#include <Model/Assets/Animation/Keyframe.hpp>
+#include <Model/Assets/Animation/Animation.hpp>
+
+#include <iostream>
+
 #pragma warning(push)
 #pragma warning(disable:4201)
 #include <glm/gtc/quaternion.hpp>
@@ -53,9 +58,9 @@ namespace Vakol::Controller
     auto process_mesh(const aiScene& scene, const aiMesh& mesh, BoneMap& bone_map)->Mesh;
     auto process_material(const aiScene& scene, const aiMaterial* material)->MaterialSpec;
 
-    bool IS_CORE_ASSET = false; // A poor hack at best
+    bool IS_CORE_ASSET = false;
 
-    ::Model LoadModel(const std::string& path, const float scale, bool animated)
+    std::pair<::Model, Animator> LoadModel(const std::string& path, const float scale, bool animated)
     {
         auto importer = Assimp::Importer{};
 
@@ -71,18 +76,23 @@ namespace Vakol::Controller
             VK_ERROR("ERROR::ASSIMP:: {0}", importer.GetErrorString());
 
             importer.ReadFile("coreAssets/models/error.obj", aiProcess_Triangulate);
-
-            animated = false; // force animations off
         }
+
+        VK_TRACE("Model Path: {0}", path);
+        VK_TRACE("Animations Found: {0}", scene->mNumAnimations);
+
+        std::cout << std::endl;
 
         BoneMap bone_map;
 
-        if (animated && scene->mNumAnimations > 0)
-        {
-            return { process_meshes(*scene, bone_map), extract_animations(*scene, bone_map) };
-        }
-        // else
-        return { process_meshes(*scene, bone_map) };
+        auto meshes = process_meshes(*scene, bone_map);
+
+        std::vector<Animation> animations{};
+
+    	if (animated && scene->mNumAnimations > 0)
+			animations = extract_animations(*scene, bone_map);
+
+        return std::make_pair(::Model(meshes), Animator(animations));
     }
 
     // iteratively iterate through each node for meshes
@@ -95,7 +105,7 @@ namespace Vakol::Controller
         {
             const auto& mesh = *scene.mMeshes[i];
 
-            VK_TRACE("Mesh {0} | Number of bones {1}", i, mesh.mNumBones);
+            //VK_TRACE("Mesh - NAME: {0} | NUMBER OF BONES: {2}", mesh.mName.C_Str(), mesh.mNumBones);
 
             meshes.push_back(process_mesh(scene, mesh, bone_map));
         }
@@ -248,13 +258,9 @@ namespace Vakol::Controller
             {
                 if (const auto embedded_texture = scene.GetEmbeddedTexture(imported_path.C_Str()))
                 {
-                    VK_TRACE(embedded_texture->mFilename.C_Str());
                     const auto size = embedded_texture->mWidth;
 
-                    if (type == aiTextureType_AMBIENT || type == aiTextureType_DIFFUSE) // Only apply SRGB gamma correction to textures with more than 1 channel
-                        texture = *AssetLoader::GetTexture(embedded_texture->mFilename.C_Str(), static_cast<int>(size), true, false, embedded_texture->pcData);
-                    else
-						texture = *AssetLoader::GetTexture(embedded_texture->mFilename.C_Str(), static_cast<int>(size), false, false, embedded_texture->pcData);
+					texture = *AssetLoader::GetTexture(embedded_texture->mFilename.C_Str(), static_cast<int>(size), false, false, embedded_texture->pcData);
                 }
                 else
                 {
@@ -331,7 +337,7 @@ namespace Vakol::Controller
             const auto ticks_per_second = static_cast<float>(animation->mTicksPerSecond);
 
             // Containers for storing animation node data and node names
-            std::vector<AnimNode> nodes;
+            std::vector<AnimationNode> nodes;
             std::vector<const aiString*> node_names;
 
             // Struct for representing a node during depth-first search traversal
@@ -350,7 +356,7 @@ namespace Vakol::Controller
                 const auto [src, parent] = node_search.top();
                 node_search.pop();
 
-                AnimNode node;
+                AnimationNode node;
                 node.parent = parent;
                 node.node_transform = to_glm(src->mTransformation);
 

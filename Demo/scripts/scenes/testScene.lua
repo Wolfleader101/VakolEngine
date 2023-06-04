@@ -2,9 +2,9 @@ function init()
     scene:create_entity("Player", "entities/player/player.lua")
     scene:create_entity("terrain", "entities/terrain/physicsTerrain.lua");
     
-    scene:create_entity("Bob", "entities/agents/bob.lua");
+    --scene:create_entity("Bob", "entities/agents/bob.lua");
 
-    scene:create_entity("test renderer", "entities/test_rendering.lua");
+    scene:create_entity("Wolves", "entities/agents/wolf.lua");
 
 end
 
@@ -17,11 +17,12 @@ function update()
     --GUI:end_window();
 
     if(Input:get_key_down(KEYS["KEY_ESC"])) then
+        toggle_wireframe();
+        toggle_skybox();
         scene:set_active(false);
 
         local menu = get_scene("Start Scene");
         menu:set_active(true);
-        toggle_wireframe();
     end
 
     if(Input:get_key_down(KEYS["KEY_5"])) then 

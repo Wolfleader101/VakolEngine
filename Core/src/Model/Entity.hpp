@@ -67,7 +67,7 @@ namespace Vakol::Model {
          *
          */
         template <class T>
-        void RemoveComponent();
+        void RemoveComponent() const;
 
         /**
          * @brief Get the Component object
@@ -123,17 +123,17 @@ namespace Vakol::Model {
     };
 
     template <typename... Types>
-    inline bool Entity::HasComponent() const {
+    bool Entity::HasComponent() const {
         return m_EntityList->m_Registry.all_of<Types...>(m_entityHandle);
     }
 
     template <typename... Types>
-    inline bool Entity::HasAnyComponent() const {
+    bool Entity::HasAnyComponent() const {
         return m_EntityList->m_Registry.all_of<Types..>(m_entityHandle);
     }
 
     template <class T, typename... Args>
-    inline void Entity::AddComponent(Args&&... args) {
+    void Entity::AddComponent(Args&&... args) {
         if (this->HasComponent<T>())
             VK_ERROR(
                 "Entity.AddComponent<>(): Entity already has component... skipping");  // could make it that the new
@@ -143,17 +143,16 @@ namespace Vakol::Model {
     }
 
     template <class T>
-    inline void Entity::RemoveComponent() {
+    void Entity::RemoveComponent() const
+    {
         if (!this->HasComponent<T>())
-            VK_ERROR("Entity.RemoveComponent<>(): Entity does not have given component... skipping");  // error instead
-                                                                                                       // of critical as
-                                                                                                       // it wont crash
+            VK_ERROR("Entity.RemoveComponent<>(): Entity does not have given component... skipping");  // error instead of critical as it wont crash
         else
             m_EntityList->m_Registry.remove<T>(m_entityHandle);
     }
 
     template <class T>
-    inline T& Entity::GetComponent() const {
+    T& Entity::GetComponent() const {
         if (!this->HasComponent<T>()) {
             VK_CRITICAL("Entity does not have given component!");
             assert(0);  // asserting because I need to return a type.
@@ -162,4 +161,4 @@ namespace Vakol::Model {
         return m_EntityList->m_Registry.get<T>(m_entityHandle);
     }
 
-}  // namespace Vakol::Model
+}

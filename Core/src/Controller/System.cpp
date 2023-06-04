@@ -5,6 +5,7 @@
 #include <Controller/AssetLoader/AssetLoader.hpp>
 #include <Controller/Physics/PhysicsPool.hpp>
 #include <Controller/Scene.hpp>
+
 #include <Model/Components.hpp>
 
 #pragma warning(push)
@@ -13,6 +14,12 @@
 #pragma warning(pop)
 
 using namespace Components;
+
+static std::vector<std::pair<std::string, int>> s_duplicates;
+static std::set<std::pair<std::string, int>> s_unique_set;
+static std::vector<std::pair<std::string, int>> s_uniques;
+
+static int s_count = 0;
 
 namespace Vakol::Controller
 {
@@ -36,9 +43,49 @@ namespace Vakol::Controller
         });
     }
 
-    void System::Drawable_Update(const Time& time, const Camera& camera, const std::shared_ptr<View::Renderer>& renderer)
+    void System::Unique_Search()
+    {
+        m_registry->view<Components::Animator>().each([&](const Components::Animator& animator)
+        {
+            s_duplicates.emplace_back(animator.attached_model, animator.animation_state);
+        });
+
+        const auto size = static_cast<int>(s_duplicates.size());
+        s_count = size;
+
+    	m_registry->view<Components::Animator>().each([&](Components::Animator& animator)
+        {
+            animator.ID = s_count;
+            s_count--;
+        });
+
+        std::reverse(s_duplicates.begin(), s_duplicates.end());
+
+        for (int i = 0; i < size; ++i)
+	        if (s_unique_set.insert(s_duplicates.at(i)).second)
+                s_uniques.emplace_back(s_unique_set.begin()->first, i + 1);
+
+		m_registry->view<Components::Animator>().each([&](Components::Animator& animator)
+        {
+            for (const auto& [name, ID] : s_uniques)
+                if (ID == animator.ID) animator.unique = true;
+        });
+    }
+
+    void System::Drawable_Update(const Time& time, const std::shared_ptr<View::Renderer>& renderer)
 	{
-        m_registry->view<Transform, Drawable>().each([&](const auto& transform, const Drawable& drawable) { renderer->Draw(time, camera, transform, drawable); });
+        m_registry->view<Transform, Drawable>().each([&](const auto& transform, const Drawable& drawable)
+        {
+	        if (!drawable.animated) renderer->Draw(transform, drawable);
+        });
+
+        m_registry->view<Transform, Drawable, Components::Animator>().each([&](const auto& transform, const Drawable& drawable, const Components::Animator& animator)
+        {
+            if (animator.unique)
+        		animator.animator_ptr->Update(animator.animation_state, time.deltaTime);
+
+	        renderer->DrawAnimated(transform, drawable, animator);
+        });
     }
 
     void System::Script_Update(LuaState& lua, EntityList& list, Scene* scene)

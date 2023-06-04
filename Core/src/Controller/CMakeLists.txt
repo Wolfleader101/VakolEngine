@@ -10,6 +10,9 @@ src/Controller/Singleton.hpp
 src/Controller/Application.hpp
 src/Controller/Application.cpp
 
+src/Controller/Animator.hpp
+src/Controller/Animator.cpp
+
 src/Controller/LuaState.hpp
 src/Controller/LuaState.cpp
 
