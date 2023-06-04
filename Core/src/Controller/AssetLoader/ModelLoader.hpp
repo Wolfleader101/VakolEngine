@@ -3,8 +3,9 @@
 #include <string>
 
 #include "Model/Assets/Model.hpp"
+#include "Controller/Animator.hpp"
 
 namespace Vakol::Controller
 {
-	Model::Assets::Model LoadModel(const std::string& path, const float scale, bool animated);
+	std::pair<Model::Assets::Model, Animator> LoadModel(const std::string& path, float scale, bool animated);
 }

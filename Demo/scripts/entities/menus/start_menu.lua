@@ -1,23 +1,38 @@
+WINDOWWIDTHMINIMUM = 325.0;
+WINDOWWIDTHMAXIMUM = 400.0;
 
 function start_menu()
-    GUI:start_window("Start Menu", 500.0, 500.0 , 960 - 250, 540 - 250); 
+    GUI:start_window("Start Menu - Title", true, true, 600.0, 0.0 , 0, 350); 
 
-    GUI:add_text("Welcome to Places Unkown!", true, true, 2.0);
-    
-    GUI:add_text(" ", true, true, 2.0);
-
-    GUI:add_text("---- MENU ----", true, true, 2.0);
-
-    GUI:add_text("1 - Start/Continue Game", true, true, 2.0);
-    GUI:add_text("2 - Options", true, true, 2.0);
-
-    GUI:add_text(" ", true, true, 2.0);
-    GUI:add_text(" ", true, true, 2.0);
-
-    GUI:add_text("ESC - Exit", true, true, 2.0);
+    GUI:add_text("PLACES UNKNOWN", true, false, 4.0, 1.0, 0.169, 0.169, 1.0);
 
     GUI:end_window();
-    
+
+    GUI:change_background_colour(0.349, 0.388, 1.0, 0.9);
+    GUI:change_background_rounding(20.0);
+
+    local windowWidth = GUI:get_display_window_width() / 3;
+    if windowWidth < WINDOWWIDTHMINIMUM then
+        GUI:start_window("Start Menu - Options", true, true, WINDOWWIDTHMINIMUM, 0.0 , 0, 450); 
+    elseif windowWidth > WINDOWWIDTHMAXIMUM then
+        GUI:start_window("Start Menu - Options", true, true, WINDOWWIDTHMAXIMUM, 0.0 , 0, 450); 
+    else
+        GUI:start_window("Start Menu - Options", true, true, windowWidth, 0.0 , 0, 450); 
+    end
+
+    GUI:add_text("---- MENU ----", true, false, 2.0, 1.0, 1.0, 1.0, 1.0);
+
+    GUI:add_text("1 - Start/Continue Game", true, false, 2.0, 1.0, 1.0, 1.0, 1.0);
+    GUI:add_text("2 - Options", true, false, 2.0, 1.0, 1.0, 1.0, 1.0);
+
+    GUI:add_text(" ", true, false, 2.0, 1.0, 1.0, 1.0, 1.0);
+
+    GUI:add_text("ESC - Exit", true, false, 2.0, 1.0, 0.169, 0.169, 1.0);
+
+    GUI:end_window();
+
+    GUI:change_background_colour(0.0, 0.0, 0.0, 0.0);
+    GUI:change_background_rounding(0.0);
 end
 
 function init()
@@ -28,6 +43,7 @@ function update()
     start_menu();
     
     if (Input:get_key_down(KEYS["KEY_1"])) then
+        toggle_skybox();
         scene:set_active(false);
 
         local game = get_scene("Test Scene");
@@ -42,5 +58,3 @@ function update()
         endScreen:set_active(true);
     end
 end
-
-

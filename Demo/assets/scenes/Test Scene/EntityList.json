@@ -5,15 +5,27 @@
         },
         {
             "handle": 1
+        },
+        {
+            "handle": 2
+        },
+        {
+            "handle": 3
+        },
+        {
+            "handle": 4
         }
     ],
-    "value0": 2,
+    "value0": 5,
     "value1": 0,
     "value2": 0,
     "value3": 1,
     "value4": 2,
-    "value5": 0,
-    "value6": {
+    "value5": 3,
+    "value6": 4,
+    "value7": 5,
+    "value8": 0,
+    "value9": {
         "pos.x": 0.0,
         "pos.y": 0.0,
         "pos.z": 0.0,
@@ -24,54 +36,133 @@
         "scale.y": 1.0,
         "scale.z": 1.0
     },
-    "value7": 1,
-    "value8": {
-        "pos.x": 0.0,
-        "pos.y": 0.0,
-        "pos.z": 0.0,
-        "rot.x": 0.0,
-        "rot.y": 0.0,
-        "rot.z": 0.0,
-        "scale.x": 1.0,
-        "scale.y": 1.0,
-        "scale.z": 1.0
-    },
-    "value9": 2,
-    "value10": 0,
+    "value10": 1,
     "value11": {
+        "pos.x": 0.0,
+        "pos.y": 0.0,
+        "pos.z": 0.0,
+        "rot.x": 0.0,
+        "rot.y": 0.0,
+        "rot.z": 0.0,
+        "scale.x": 1.0,
+        "scale.y": 1.0,
+        "scale.z": 1.0
+    },
+    "value12": 2,
+    "value13": {
+        "pos.x": 2.700000047683716,
+        "pos.y": 8.932353019714356,
+        "pos.z": -12.0,
+        "rot.x": 0.0,
+        "rot.y": 0.0,
+        "rot.z": 0.0,
+        "scale.x": 1.0,
+        "scale.y": 1.0,
+        "scale.z": 1.0
+    },
+    "value14": 3,
+    "value15": {
+        "pos.x": 0.0,
+        "pos.y": 0.0,
+        "pos.z": 0.0,
+        "rot.x": 0.0,
+        "rot.y": 0.0,
+        "rot.z": 0.0,
+        "scale.x": 1.0,
+        "scale.y": 1.0,
+        "scale.z": 1.0
+    },
+    "value16": 4,
+    "value17": {
+        "pos.x": 0.0,
+        "pos.y": 0.0,
+        "pos.z": 0.0,
+        "rot.x": 0.0,
+        "rot.y": 0.0,
+        "rot.z": 0.0,
+        "scale.x": 1.0,
+        "scale.y": 1.0,
+        "scale.z": 1.0
+    },
+    "value18": 5,
+    "value19": 0,
+    "value20": {
         "tag": "Camera Controller"
     },
-    "value12": 1,
-    "value13": {
+    "value21": 1,
+    "value22": {
         "tag": "terrain"
     },
-    "value14": 0,
-    "value15": 2,
-    "value16": 0,
-    "value17": {
+    "value23": 2,
+    "value24": {
+        "tag": "Bob"
+    },
+    "value25": 3,
+    "value26": {
+        "tag": "test renderer"
+    },
+    "value27": 4,
+    "value28": {
+        "tag": "Player Stats"
+    },
+    "value29": 0,
+    "value30": 5,
+    "value31": 0,
+    "value32": {
         "TagType": 0
     },
-    "value18": 1,
-    "value19": {
+    "value33": 1,
+    "value34": {
         "TagType": 0
     },
-    "value20": 2,
-    "value21": 0,
-    "value22": {
+    "value35": 2,
+    "value36": {
+        "TagType": 0
+    },
+    "value37": 3,
+    "value38": {
+        "TagType": 0
+    },
+    "value39": 4,
+    "value40": {
+        "TagType": 0
+    },
+    "value41": 5,
+    "value42": 0,
+    "value43": {
         "ScriptName": "entities/player/cameraController.lua"
     },
-    "value23": 1,
-    "value24": {
+    "value44": 1,
+    "value45": {
         "ScriptName": "entities/terrain/physicsTerrain.lua"
     },
-    "value25": 0,
-    "value26": 0,
-    "value27": 1,
-    "value28": 1,
-    "value29": {
+    "value46": 2,
+    "value47": {
+        "ScriptName": "entities/agents/bob.lua"
+    },
+    "value48": 3,
+    "value49": {
+        "ScriptName": "entities/test_rendering.lua"
+    },
+    "value50": 4,
+    "value51": {
+        "ScriptName": "entities/player/playerStats.lua"
+    },
+    "value52": 0,
+    "value53": 0,
+    "value54": 2,
+    "value55": 1,
+    "value56": {
         "Model": "",
         "Import Scale": 1.0,
         "Animated": false,
+        "Back Face Culling": true
+    },
+    "value57": 2,
+    "value58": {
+        "Model": "assets/models/enemy.glb",
+        "Import Scale": 0.003000000026077032,
+        "Animated": true,
         "Back Face Culling": true
     }
 }

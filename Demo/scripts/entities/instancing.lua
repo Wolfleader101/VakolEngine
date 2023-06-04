@@ -1,19 +1,17 @@
 function init()
-    local TREEAMOUNT = 6000;
-    local ROCKAMOUNT = 2000;
+    local TREEAMOUNT = 100;
+    local ROCKAMOUNT = 250;
     local WATERLEVEL = 10.0;
 
     local treeMatrices = vector_mat4(TREEAMOUNT);
     local rockMatrices = vector_mat4(ROCKAMOUNT);
 
-    print_warn("LOOK AT LUA ACCESS INSTANCE FUNCTION FOR INSTANCING ANIMATED MODELS!!");
-
     local tree = entity:add_model("coreAssets/models/Imported/OpenGameArt/Yughues/pine/snow_pine_tree.obj", 0.1, false, false) -- get model and add a drawable component
-    tree:set_shader("coreAssets/shaders/instance.prog") -- set the shader on the model (automatically binds it)
+    entity:set_shader("coreAssets/shaders/instance.prog") -- set the shader on the model (automatically binds it)
 
     local rockEntity = scene:create_entity("rockEntity", "")
     local rockModel = rockEntity:add_model("coreAssets/models/Imported/OpenGameArt/mastahcez/stone.fbx", 75.0, false, true) -- get model and add a drawable component
-    rockModel:set_shader("coreAssets/shaders/instance.prog") -- set the shader on the model (automatically binds it)
+    rockEntity:set_shader("coreAssets/shaders/instance.prog") -- set the shader on the model (automatically binds it)
     
     local treeShader = tree:get_shader(); -- get the shader from the model
     local rockShader = rockModel:get_shader(); -- get the shader from the model

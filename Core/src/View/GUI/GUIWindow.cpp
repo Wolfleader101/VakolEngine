@@ -10,8 +10,16 @@ namespace Vakol::View
     GUIWindow::GUIWindow()
 	{
         IMGUI_CHECKVERSION();  // Checks the version of IMGUI
+    };
 
-        windowFlags = 0;
+    void GUIWindow::ChangeFontDefault(std::string inputPath) const
+    {
+        ImGuiIO& io = ImGui::GetIO(); 
+        ImFontConfig font_cfg; 
+        font_cfg.OversampleH = 8;
+        font_cfg.OversampleV = 8;
+
+        ImGui::GetIO().FontDefault = ImGui::GetIO().Fonts->AddFontFromFileTTF(inputPath.c_str(), 16.0f, &font_cfg);
     };
 
     void GUIWindow::Init(const std::shared_ptr<View::Window>& window) const
@@ -22,14 +30,30 @@ namespace Vakol::View
 
         ImGui_ImplGlfw_InitForOpenGL(window->GetWindow(), true);  // Takes in the GLFW Window
         ImGui_ImplOpenGL3_Init("#version 460");                   // Sets the version of GLSL being used
-    };
+
+        ImGuiStyle& style = ImGui::GetStyle(); // Gets the current style of the ImGui window
+        style.Colors[ImGuiCol_WindowBg] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
+        style.Colors[ImGuiCol_Border] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
+        style.Colors[ImGuiCol_BorderShadow] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
+        style.Colors[ImGuiCol_FrameBg] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
+        style.Colors[ImGuiCol_FrameBgHovered] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
+        style.Colors[ImGuiCol_FrameBgActive] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
+        style.Colors[ImGuiCol_TitleBg] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f); 
+        style.Colors[ImGuiCol_TitleBgCollapsed] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
+        style.Colors[ImGuiCol_TitleBgActive] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
+        style.Colors[ImGuiCol_ResizeGrip] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
+        style.Colors[ImGuiCol_ResizeGripHovered] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
+        style.Colors[ImGuiCol_ResizeGripActive] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
+
+        ChangeFontDefault("coreAssets/fonts/GidoleFont/Gidole-Regular.ttf");
+    }
 
     void GUIWindow::CreateNewFrame() const
     {
         ImGui_ImplOpenGL3_NewFrame();  // Sets up the new frame to be used within OpenGL
         ImGui_ImplGlfw_NewFrame();     // Sets up the new frame to be used within GLFW
         ImGui::NewFrame();             // Creates a new frame
-    };
+    }
 
     void GUIWindow::EndFrame() const
     {
@@ -38,13 +62,49 @@ namespace Vakol::View
         ImGui::EndFrame();
     }
 
-    void GUIWindow::StartWindowCreation(const std::string& windowName, const float width, const float height, const float x, float y) const
+    float GUIWindow::DisplayWindowWidth() const
+	{
+        return(ImGui::GetIO().DisplaySize.x);
+	}
+
+    float GUIWindow::DisplayWindowHeight() const
     {
-        ImGui::Begin(windowName.c_str(), nullptr, windowFlags);  // Begins the creation of the Window
+        return(ImGui::GetIO().DisplaySize.y);
+    }
 
-        ImGui::SetWindowPos({x, y}, ImGuiCond_Once);  // Sets the position of the window
+    void GUIWindow::StartWindowCreation(const std::string& windowName, bool centerX, bool centerY, const float width, const float height, const float xOffset, float yOffset) const
+    {
+        ImGui::Begin(windowName.c_str(), nullptr, ImGuiWindowFlags_NoTitleBar);  // Begins the creation of the Window 
 
-        ImGui::SetWindowSize({width, height}, ImGuiCond_Once);  // Sets the size of the window (Width, Height) in pixels
+        // Only consider centering if width and height are not zero
+        if (width == 0)
+        {
+            centerX = false;
+        }
+        if (height == 0)
+        {
+            centerY = false;
+        }
+
+        // Set position based on centering flags
+        if (centerX && centerY)
+        {
+            ImGui::SetWindowPos({ (DisplayWindowWidth() - width) / 2 + xOffset, (DisplayWindowHeight() - height) / 2 + yOffset });  // Sets the position of the window 
+        }
+        else if (centerX)
+        {
+            ImGui::SetWindowPos({ (DisplayWindowWidth() - width) / 2 + xOffset, yOffset });  // Sets the position of the window 
+        }
+        else if (centerY)
+        {
+            ImGui::SetWindowPos({ xOffset, (DisplayWindowHeight() - height) / 2 + yOffset });  // Sets the position of the window
+        }
+        else
+        {
+            ImGui::SetWindowPos({ xOffset, yOffset });  // Sets the position of the window
+        }
+
+        ImGui::SetWindowSize({ width, height }, ImGuiCond_Always);  // Sets the size of the window (Width, Height) in pixels
     };
 
     float GUIWindow::GetFramesPerSecond() const { return ImGui::GetIO().Framerate; };
@@ -56,42 +116,54 @@ namespace Vakol::View
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());  // Renders the UI to the screen
     }
 
-    void GUIWindow::AddText(const std::string& inputText, const bool centerX, const bool centerY, const float fontSize) const
+    void GUIWindow::AddText(const std::string& inputText, const bool centerX, const bool centerY, const float fontSize, const float inputRed, const float inputGreen, const float inputBlue, const float inputAlpha) const
     {
-        if (centerX)
+        ImGui::SetWindowFontScale(fontSize); // Sets the font size of the text
+        
+        if (centerX && centerY) 
+        {
+            const auto windowWidth = ImGui::GetWindowSize().x;
+            const auto textWidth = ImGui::CalcTextSize(inputText.c_str()).x;
+
+            const auto windowHeight = ImGui::GetWindowSize().y;
+            const auto textHeight = ImGui::CalcTextSize(inputText.c_str()).y;
+
+            ImGui::SetCursorPosX((windowWidth - textWidth) / 2);
+            ImGui::SetCursorPosY((windowHeight - textHeight) / 2);
+        }
+        else if (centerX)
         {
 	        const auto windowWidth = ImGui::GetWindowSize().x;
-			const auto textWidth   = ImGui::CalcTextSize(inputText.c_str()).x;
+			const auto textWidth   = ImGui::CalcTextSize(inputText.c_str()).x; 
 
-			ImGui::SetCursorPosX((windowWidth - textWidth) * 0.5f);
+			ImGui::SetCursorPosX((windowWidth - textWidth) / 2);
         }
         else if (centerY)
         {
 	        const auto windowHeight = ImGui::GetWindowSize().y;
             const auto textHeight = ImGui::CalcTextSize(inputText.c_str()).y;
 
-            ImGui::SetCursorPosY((windowHeight - textHeight) * 0.5f);
-        }
-        else if (centerX && centerY)
-        {
-	        const auto windowWidth = ImGui::GetWindowSize().x;
-			const auto textWidth   = ImGui::CalcTextSize(inputText.c_str()).x;
-
-            const auto windowHeight = ImGui::GetWindowSize().y;
-            const auto textHeight = ImGui::CalcTextSize(inputText.c_str()).y;
-
-            ImGui::SetCursorPosX((windowWidth - textWidth) * 0.5f);
-            ImGui::SetCursorPosY((windowHeight - textHeight) * 0.5f);
+            ImGui::SetCursorPosY((windowHeight - textHeight) / 2);
         }
 
-        ImGui::SetWindowFontScale(fontSize);
+        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(inputRed, inputGreen, inputBlue, inputAlpha));
 
 	    ImGui::Text(inputText.c_str());
+
+        ImGui::PopStyleColor(); 
     }
 
     void GUIWindow::AddImage(const unsigned id, const ImVec2& imageSize, const bool centerX, const bool centerY) const
     {
-        if (centerX)
+        if (centerX && centerY) 
+        {
+            const auto width = ImGui::GetWindowSize().x; 
+            const auto height = ImGui::GetWindowSize().y; 
+
+            ImGui::SetCursorPosX((width - imageSize.x) * 0.5f); 
+            ImGui::SetCursorPosY((height - imageSize.y) * 0.5f); 
+        }
+        else if (centerX)
         {
 			const auto width = ImGui::GetWindowSize().x;
 			ImGui::SetCursorPosX((width - imageSize.x) * 0.5f);
@@ -99,14 +171,6 @@ namespace Vakol::View
         else if (centerY)
         {
 	        const auto height = ImGui::GetWindowSize().y;
-            ImGui::SetCursorPosY((height - imageSize.y) * 0.5f);
-        }
-        else if (centerX && centerY)
-        {
-	        const auto width = ImGui::GetWindowSize().x;
-            const auto height = ImGui::GetWindowSize().y;
-
-			ImGui::SetCursorPosX((width - imageSize.x) * 0.5f);
             ImGui::SetCursorPosY((height - imageSize.y) * 0.5f);
         }
 
@@ -178,6 +242,21 @@ namespace Vakol::View
                 break;
         }
     };
+
+    void GUIWindow::SameLine() const
+    {
+        ImGui::SameLine(); // Adds content to the same line
+    }
+
+    void GUIWindow::WindowBackgroundStyle(const float inputRed, const float inputGreen, const float inputBlue, const float inputAlpha) const
+    {
+        ImGui::GetStyle().Colors[ImGuiCol_WindowBg] = ImVec4(inputRed, inputGreen, inputBlue, inputAlpha); // Sets the background colour of the window
+    }
+
+    void GUIWindow::WindowRoundingStyle(const float inputValue) const
+    {
+        ImGui::GetStyle().WindowRounding = inputValue;
+    }
 
     void GUIWindow::EndWindowCreation() const
     {

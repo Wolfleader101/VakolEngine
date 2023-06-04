@@ -3,15 +3,10 @@ out vec4 FragColor;
 
 in VS_OUT 
 {
-    vec4 FragCoords;
     vec2 TexCoords;
 } fs_in;
 
 in float Height;
-
-uniform float FOG_DENSITY = 0.1;
-uniform vec4 FOG_COLOR = vec4(1.0, 1.0, 1.0, 0.0);
-uniform bool enable_fog = false;
 
 uniform sampler2D light_map;
 
@@ -38,17 +33,6 @@ const float level_7 = 130.0;
 const float level_8 = 155.0;
 const float level_9 = 180.0;
 const float level_10 = 255.0;
-
-float calculate_fog(float fogCoords)
-{
-    float result = 0.0;
-
-    // result = exp(-density * fogCoords); // Equation 1
-
-    result = exp(-pow(FOG_DENSITY * fogCoords, 2.0)); // Equation 2
-
-    return 1.0 - clamp(result, 0.0, 1.0);
-}
 
 void main()
 {
@@ -134,12 +118,6 @@ void main()
         
         result = mix(color_9, color_10, factor);
     }
-	
-    if (enable_fog)
-    {
-        float fogCoords = abs(fs_in.FragCoords.z / fs_in.FragCoords.w);
-        FragColor = mix(result, FOG_COLOR, calculate_fog(fogCoords));
-    }
-    else
-        FragColor = result * lighting;
+
+    FragColor = result * lighting;
 }
