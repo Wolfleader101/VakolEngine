@@ -11,24 +11,28 @@
         },
         {
             "handle": 3
-        },
-        {
-            "handle": 4
-        },
-        {
-            "handle": 5
         }
     ],
-    "value0": 6,
+    "value0": 4,
     "value1": 0,
     "value2": 0,
     "value3": 1,
     "value4": 2,
     "value5": 3,
     "value6": 4,
-    "value7": 5,
-    "value8": 6,
-    "value9": 0,
+    "value7": 0,
+    "value8": {
+        "pos.x": 0.0,
+        "pos.y": 0.0,
+        "pos.z": 0.0,
+        "rot.x": 0.0,
+        "rot.y": 0.0,
+        "rot.z": 0.0,
+        "scale.x": 1.0,
+        "scale.y": 1.0,
+        "scale.z": 1.0
+    },
+    "value9": 1,
     "value10": {
         "pos.x": 0.0,
         "pos.y": 0.0,
@@ -40,7 +44,7 @@
         "scale.y": 1.0,
         "scale.z": 1.0
     },
-    "value11": 1,
+    "value11": 2,
     "value12": {
         "pos.x": 0.0,
         "pos.y": 0.0,
@@ -52,23 +56,11 @@
         "scale.y": 1.0,
         "scale.z": 1.0
     },
-    "value13": 2,
+    "value13": 3,
     "value14": {
-        "pos.x": 2.700000047683716,
-        "pos.y": 8.932353019714356,
-        "pos.z": -12.0,
-        "rot.x": 0.0,
-        "rot.y": 0.0,
-        "rot.z": 0.0,
-        "scale.x": 1.0,
-        "scale.y": 1.0,
-        "scale.z": 1.0
-    },
-    "value15": 3,
-    "value16": {
-        "pos.x": 0.0,
+        "pos.x": 1.0,
         "pos.y": 0.0,
-        "pos.z": 0.0,
+        "pos.z": -5.0,
         "rot.x": 0.0,
         "rot.y": 0.0,
         "rot.z": 0.0,
@@ -76,121 +68,60 @@
         "scale.y": 1.0,
         "scale.z": 1.0
     },
-    "value17": 4,
-    "value18": {
-        "pos.x": 0.0,
-        "pos.y": 0.0,
-        "pos.z": 0.0,
-        "rot.x": 0.0,
-        "rot.y": 0.0,
-        "rot.z": 0.0,
-        "scale.x": 1.0,
-        "scale.y": 1.0,
-        "scale.z": 1.0
+    "value15": 4,
+    "value16": 0,
+    "value17": {
+        "tag": "Player"
     },
-    "value19": 5,
-    "value20": {
-        "pos.x": 0.0,
-        "pos.y": 0.0,
-        "pos.z": 0.0,
-        "rot.x": 0.0,
-        "rot.y": 0.0,
-        "rot.z": 0.0,
-        "scale.x": 1.0,
-        "scale.y": 1.0,
-        "scale.z": 1.0
+    "value18": 1,
+    "value19": {
+        "tag": "First Person Camera Controller"
     },
-    "value21": 6,
-    "value22": 0,
-    "value23": {
-        "tag": "Camera Controller"
-    },
-    "value24": 1,
-    "value25": {
-        "tag": "terrain"
-    },
-    "value26": 2,
-    "value27": {
-        "tag": "Bob"
-    },
-    "value28": 3,
-    "value29": {
-        "tag": "test renderer"
-    },
-    "value30": 4,
-    "value31": {
+    "value20": 2,
+    "value21": {
         "tag": "Player Stats"
     },
-    "value32": 5,
+    "value22": 3,
+    "value23": {
+        "tag": "Wolves"
+    },
+    "value24": 0,
+    "value25": 4,
+    "value26": 0,
+    "value27": {
+        "TagType": 0
+    },
+    "value28": 1,
+    "value29": {
+        "TagType": 0
+    },
+    "value30": 2,
+    "value31": {
+        "TagType": 0
+    },
+    "value32": 3,
     "value33": {
-        "tag": "Save"
-    },
-    "value34": 0,
-    "value35": 6,
-    "value36": 0,
-    "value37": {
         "TagType": 0
     },
-    "value38": 1,
-    "value39": {
-        "TagType": 0
+    "value34": 4,
+    "value35": 0,
+    "value36": {
+        "ScriptName": "entities/player/player.lua"
     },
-    "value40": 2,
-    "value41": {
-        "TagType": 0
+    "value37": 1,
+    "value38": {
+        "ScriptName": "entities/player/firstpersonController.lua"
     },
-    "value42": 3,
-    "value43": {
-        "TagType": 0
-    },
-    "value44": 4,
-    "value45": {
-        "TagType": 0
-    },
-    "value46": 5,
-    "value47": {
-        "TagType": 0
-    },
-    "value48": 6,
-    "value49": 0,
-    "value50": {
-        "ScriptName": "entities/player/cameraController.lua"
-    },
-    "value51": 1,
-    "value52": {
-        "ScriptName": "entities/terrain/physicsTerrain.lua"
-    },
-    "value53": 2,
-    "value54": {
-        "ScriptName": "entities/agents/bob.lua"
-    },
-    "value55": 3,
-    "value56": {
-        "ScriptName": "entities/test_rendering.lua"
-    },
-    "value57": 4,
-    "value58": {
+    "value39": 2,
+    "value40": {
         "ScriptName": "entities/player/playerStats.lua"
     },
-    "value59": 5,
-    "value60": {
-        "ScriptName": "entities/misc/serialization.lua"
+    "value41": 3,
+    "value42": {
+        "ScriptName": "entities/agents/wolf.lua"
     },
-    "value61": 0,
-    "value62": 0,
-    "value63": 2,
-    "value64": 1,
-    "value65": {
-        "Model": "Terrain",
-        "Import Scale": 1.0,
-        "Animated": false,
-        "Back Face Culling": true
-    },
-    "value66": 2,
-    "value67": {
-        "Model": "assets/models/enemy.glb",
-        "Import Scale": 0.003000000026077032,
-        "Animated": true,
-        "Back Face Culling": true
-    }
+    "value43": 0,
+    "value44": 0,
+    "value45": 0,
+    "value46": 0
 }

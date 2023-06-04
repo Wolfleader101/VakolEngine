@@ -2,7 +2,7 @@ function init()
     scene:create_entity("Player", "entities/player/player.lua")
     scene:create_entity("terrain", "entities/terrain/physicsTerrain.lua");
     
-    --scene:create_entity("Bob", "entities/agents/bob.lua");
+    scene:create_entity("Bob", "entities/agents/bob.lua");
 
     scene:create_entity("Wolves", "entities/agents/wolf.lua");
 

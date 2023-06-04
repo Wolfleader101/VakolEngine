@@ -69,11 +69,21 @@ namespace Vakol::Model::Components
 
     struct Animator
     {
-	    std::shared_ptr<Controller::Animator> animator_ptr = nullptr;
+        std::shared_ptr<Controller::Animator> animator_ptr = nullptr;
         int animation_state = 0;
         bool unique = false;
         int ID = 0;
         std::string attached_model;
+
+        template<class Archive>
+        void serialize(Archive& ar) {
+                       ar(
+                           cereal::make_nvp("animation_state", animation_state), 
+                           cereal::make_nvp("unique", unique),
+                           cereal::make_nvp("ID", ID), 
+                           cereal::make_nvp("attached_model", attached_model)
+                       );
+        }
     };
 
     /**

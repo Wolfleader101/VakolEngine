@@ -39,7 +39,7 @@ namespace Vakol::Controller
         m_registry->view<Drawable>().each([&](auto& drawable) 
         { 
             if(drawable.model_ptr == nullptr && ! (drawable.name == "Terrain"))
-                drawable.model_ptr = AssetLoader::GetModel(drawable.name, drawable.scale, drawable.animated, drawable.backfaceCull);
+                drawable.model_ptr = AssetLoader::GetModel(drawable.name, drawable.scale, drawable.animated, drawable.backfaceCull).first;
         });
     }
 

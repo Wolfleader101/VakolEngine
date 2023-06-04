@@ -109,7 +109,9 @@ namespace Vakol::Controller
         entityList.Serialize(FinalFolder + "/EntityList.json");
 
         //-- Serialize Scene info
-        if (std::ofstream output(FinalFolder + "/Scene.json"); output.good()) 
+        std::ofstream output(FinalFolder + "/Scene.json");
+
+        if (output.good()) 
         {
             cereal::JSONOutputArchive json(output);
 
@@ -117,7 +119,7 @@ namespace Vakol::Controller
             json(cereal::make_nvp("Script Name", scriptName));
             json(cereal::make_nvp("camera", cam));
 
-            json(cereal::make_nvp("Scene Globals", sceneGlobals));
+            //json(cereal::make_nvp("Scene Globals", sceneGlobals));
         }
     }
 
