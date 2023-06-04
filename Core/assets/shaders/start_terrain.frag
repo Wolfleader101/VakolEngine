@@ -4,18 +4,12 @@ in float Height;
 
 out vec4 FragColor;
 
-layout (std140, binding = 3) uniform Time
-{
-    float curr_time;
-    float delta_time;
-    float prev_time;
-};
+uniform float u_time; // Added this uniform variable
 
 void main()
 {
-    float r = (sin(curr_time) * 0.5) + 0.5; // Red.   Value between 0 and 1.
-    float g = (sin(curr_time + 2.0944) * 0.5) + 0.5; // Green. Value between 0 and 1. Phase shifted by 2pi/3
-    float b = (sin(curr_time + 4.1888) * 0.5) + 0.5; // Blue.  Value between 0 and 1. Phase shifted by 4pi/3
-
-    FragColor = vec4(r, g, b, 1.0);
+    float red = sin(u_time * 0.1) * 0.4 + 0.5;
+    float green = sin(u_time * 0.2 + 3.14159 / 2.0) * 0.4 + 0.5;
+    float blue = sin(u_time * 0.3 + 3.14159) * 0.4 + 0.5;
+    FragColor = vec4(red, green, blue, 1.0);
 }

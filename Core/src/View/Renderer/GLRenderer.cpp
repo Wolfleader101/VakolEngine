@@ -5,15 +5,14 @@
 #include <Controller/Logger.hpp>
 
 #pragma warning(push)
-#pragma warning(disable:4201)
+#pragma warning(disable : 4201)
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #pragma warning(pop)
 
+#include <Model/Components.hpp>
 #include <memory>
 #include <vector>
-
-#include <Model/Components.hpp>
 
 /*
 Distance	Constant	Linear	Quadratic
@@ -46,10 +45,8 @@ const float LIGHT_OUTER_CUT_OFF = glm::cos(glm::radians(12.5f));
 glm::mat4 PROJECTION = glm::mat4(1.0f);
 glm::mat4 VIEW = glm::mat4(1.0f);
 
-namespace Vakol::View 
-{
-    GLRenderer::GLRenderer(const std::shared_ptr<Window>& window) : Renderer(window) 
-    {
+namespace Vakol::View {
+    GLRenderer::GLRenderer(const std::shared_ptr<Window>& window) : Renderer(window) {
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_CULL_FACE);
 
@@ -62,48 +59,45 @@ namespace Vakol::View
         // add a uniform buffer which size is that of a 4x4 matrix with a binding index of 1
         AddBuffer(GL_UNIFORM_BUFFER, 3 * sizeof(glm::mat4), 1, GL_STATIC_DRAW);
         AddBuffer(GL_UNIFORM_BUFFER, 5 * sizeof(float), 2, GL_STATIC_DRAW);
-        AddBuffer(GL_UNIFORM_BUFFER, 3 * sizeof(float), 3, GL_STATIC_DRAW);
 
-    	SetBufferSubData(1, 0, sizeof(float), &LIGHT_CONSTANT);
+        SetBufferSubData(1, 0, sizeof(float), &LIGHT_CONSTANT);
         SetBufferSubData(1, 1 * sizeof(float), sizeof(float), &LIGHT_LINEAR);
         SetBufferSubData(1, 2 * sizeof(float), sizeof(float), &LIGHT_QUADRATIC);
         SetBufferSubData(1, 3 * sizeof(float), sizeof(float), &LIGHT_CUT_OFF);
         SetBufferSubData(1, 4 * sizeof(float), sizeof(float), &LIGHT_OUTER_CUT_OFF);
 
-        //ATTACHMENT attachment{ {GL_COLOR_ATTACHMENT0, GL_RGB8, GL_RGB, 800, 600}, {GL_DEPTH_STENCIL_ATTACHMENT, GL_DEPTH24_STENCIL8} };
+        // ATTACHMENT attachment{ {GL_COLOR_ATTACHMENT0, GL_RGB8, GL_RGB, 800, 600}, {GL_DEPTH_STENCIL_ATTACHMENT,
+        // GL_DEPTH24_STENCIL8} };
 
-        //framebuffers.push_back(std::make_shared<FrameBuffer>(attachment, true));
+        // framebuffers.push_back(std::make_shared<FrameBuffer>(attachment, true));
 
         if (isSkybox) skybox->Init();
     }
 
-    void GLRenderer::AddBuffer(const unsigned int type, const int size, const int binding, const void* data, const unsigned int usage)
-    {
+    void GLRenderer::AddBuffer(const unsigned int type, const int size, const int binding, const void* data,
+                               const unsigned int usage) {
         buffers.push_back(std::make_shared<Buffer>(type, size, binding, data, usage));
     }
 
-    void GLRenderer::AddBuffer(const unsigned int type, const int size, const int binding, const unsigned int usage)
-    {
+    void GLRenderer::AddBuffer(const unsigned int type, const int size, const int binding, const unsigned int usage) {
         buffers.push_back(std::make_shared<Buffer>(type, size, binding, usage));
     }
 
-    void GLRenderer::SetBufferSubData(const int index, const int offset, const int size, const void* data) const
-    {
+    void GLRenderer::SetBufferSubData(const int index, const int offset, const int size, const void* data) const {
         buffers.at(index)->SetSubData(offset, size, data);
     }
 
-    void GLRenderer::ClearColor(const glm::vec4& color) const
-    { glClearColor(color.r, color.g, color.b, color.a); }
+    void GLRenderer::ClearColor(const glm::vec4& color) const { glClearColor(color.r, color.g, color.b, color.a); }
 
-    void GLRenderer::ClearColor(const float r, const float g, const float b, const float a) const
-    { glClearColor(r, g, b, a); }
+    void GLRenderer::ClearColor(const float r, const float g, const float b, const float a) const {
+        glClearColor(r, g, b, a);
+    }
 
-    void GLRenderer::ClearBuffer(const unsigned int buffer_bit) const
-    { glClear(buffer_bit); }
+    void GLRenderer::ClearBuffer(const unsigned int buffer_bit) const { glClear(buffer_bit); }
 
-    void GLRenderer::DrawAnimated(const Components::Transform& transform, const Components::Drawable& drawable, const Components::Animator& _animator) const
-    {
-	    const auto& model = drawable.model_ptr;
+    void GLRenderer::DrawAnimated(const Components::Transform& transform, const Components::Drawable& drawable,
+                                  const Components::Animator& _animator) const {
+        const auto& model = drawable.model_ptr;
         VK_ASSERT(model, "\n\nModel ptr is nullptr");
 
         const auto& shader = model->c_shader();
@@ -117,7 +111,7 @@ namespace Vakol::View
 
         shader->Bind();
 
-        auto&& model_matrix = glm::mat4(1.0f); // start off with an identity matrix
+        auto&& model_matrix = glm::mat4(1.0f);  // start off with an identity matrix
 
         model_matrix = translate(model_matrix, transform.pos);
 
@@ -129,15 +123,14 @@ namespace Vakol::View
 
         shader->SetMat4("MODEL_MATRIX", model_matrix);
 
-        shader->SetMat4v("BONE_TRANSFORMS", animator->nTransforms(animation_state), value_ptr(animator->transform(animation_state)));
+        shader->SetMat4v("BONE_TRANSFORMS", animator->nTransforms(animation_state),
+                         value_ptr(animator->transform(animation_state)));
 
-        for (int i = 0; i < model->nMeshes(); ++i) 
-        {
+        for (int i = 0; i < model->nMeshes(); ++i) {
             const auto& mesh = model->mesh(i);
             const auto& material = mesh.GetMaterial();
 
-            for (int j = 0; j < material->GetTextureCount(); ++j)
-            {
+            for (int j = 0; j < material->GetTextureCount(); ++j) {
                 glActiveTexture(GL_TEXTURE0 + j);
                 glBindTexture(GL_TEXTURE_2D, material->GetTexture(j));
             }
@@ -148,8 +141,7 @@ namespace Vakol::View
         shader->Unbind();
     }
 
-    void GLRenderer::Draw(const Components::Transform& transform, const Components::Drawable& drawable) const 
-    {
+    void GLRenderer::Draw(const Components::Transform& transform, const Components::Drawable& drawable) const {
         const auto& model = drawable.model_ptr;
         VK_ASSERT(model, "\n\nModel ptr is nullptr");
 
@@ -160,7 +152,7 @@ namespace Vakol::View
 
         shader->Bind();
 
-        auto&& model_matrix = glm::mat4(1.0f); // start off with an identity matrix
+        auto&& model_matrix = glm::mat4(1.0f);  // start off with an identity matrix
 
         model_matrix = translate(model_matrix, transform.pos);
 
@@ -172,13 +164,11 @@ namespace Vakol::View
 
         shader->SetMat4("MODEL_MATRIX", model_matrix);
 
-        for (int i = 0; i < model->nMeshes(); ++i) 
-        {
+        for (int i = 0; i < model->nMeshes(); ++i) {
             const auto& mesh = model->mesh(i);
             const auto& material = mesh.GetMaterial();
 
-            for (int j = 0; j < material->GetTextureCount(); ++j)
-            {
+            for (int j = 0; j < material->GetTextureCount(); ++j) {
                 glActiveTexture(GL_TEXTURE0 + j);
                 glBindTexture(GL_TEXTURE_2D, material->GetTexture(j));
             }
@@ -189,29 +179,24 @@ namespace Vakol::View
         shader->Unbind();
     }
 
-    void GLRenderer::UpdateData(const Controller::Time& time, const Controller::Camera& camera)
-    {
-	    PROJECTION = camera.GetMatrix(PROJECTION_MATRIX);
+    void GLRenderer::UpdateData(const Controller::Time& time, const Controller::Camera& camera) {
+        PROJECTION = camera.GetMatrix(PROJECTION_MATRIX);
         VIEW = camera.GetMatrix(VIEW_MATRIX);
 
-        // at index 0, with an offset of 0 (since PV_MATRIX is the only element in the buffer), with a size of a 4x4 matrix, set PV_MATRIX
+        // at index 0, with an offset of 0 (since PV_MATRIX is the only element in the buffer), with a size of a 4x4
+        // matrix, set PV_MATRIX
         SetBufferSubData(0, 0, sizeof(glm::mat4), glm::value_ptr(PROJECTION));
-    	SetBufferSubData(0, sizeof(glm::mat4), sizeof(glm::mat4), value_ptr(VIEW));
+        SetBufferSubData(0, sizeof(glm::mat4), sizeof(glm::mat4), value_ptr(VIEW));
         SetBufferSubData(0, 2 * sizeof(glm::mat4), sizeof(glm::mat4), value_ptr(PROJECTION * VIEW));
-
-        SetBufferSubData(2, 0, sizeof(float), &time.curTime);
-        SetBufferSubData(2, 1 * sizeof(float), sizeof(float), &time.deltaTime);
-        SetBufferSubData(2, 2 * sizeof(float), sizeof(float), &time.prevTime);
     }
 
-    void GLRenderer::Update([[maybe_unused]] const int index) const 
-    {
+    void GLRenderer::Update([[maybe_unused]] const int index) const {
         ClearColor(VAKOL_CLASSIC);
         ClearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        //if (index > -1)
+        // if (index > -1)
         //{
-        //    framebuffers.at(index)->ClearColor(VAKOL_DARK);
+        //     framebuffers.at(index)->ClearColor(VAKOL_DARK);
 
         //    if (framebuffers.at(index)->HasDepth())
         //        framebuffers.at(index)->ClearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -220,11 +205,10 @@ namespace Vakol::View
         //}
     }
 
-    void GLRenderer::LateUpdate([[maybe_unused]] const int index) const
-    {
-	    glEnable(GL_CULL_FACE);
-        glCullFace(GL_BACK); 
+    void GLRenderer::LateUpdate([[maybe_unused]] const int index) const {
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK);
 
         if (isSkybox) skybox->Draw(PROJECTION, VIEW);
     }
-}
+}  // namespace Vakol::View

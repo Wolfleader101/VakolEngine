@@ -17,7 +17,7 @@ function init()
         local terr_scale = scene.globals.terrain.transform.scale;
         pos.y = (scene.globals.terrain.terr:get_height(pos.x / terr_scale.x, pos.z / terr_scale.z) * terr_scale.y) + 0.35;
 
-	    models[i] = entities[i]:add_model("assets/models/wolfleader.fbx", 1.0, true, true);
+	    models[i] = entities[i]:add_model("assets/models/wolf.fbx", 1.0, true, true);
 	    entities[i]:set_shader("coreAssets/shaders/animation.prog");
 
 	    shaders[i] = models[i]:get_shader();
