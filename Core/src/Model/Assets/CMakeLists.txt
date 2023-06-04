@@ -1,6 +1,7 @@
 SET(ASSETS
 
-	src/Model/Assets/Animation.hpp
+	src/Model/Assets/Animation/Keyframe.hpp
+	src/Model/Assets/Animation/Animation.hpp
 
 	src/Model/Assets/Bone.hpp
 

@@ -43,6 +43,7 @@ function update()
     start_menu();
     
     if (Input:get_key_down(KEYS["KEY_1"])) then
+        toggle_skybox();
         scene:set_active(false);
 
         local game = get_scene("Test Scene");

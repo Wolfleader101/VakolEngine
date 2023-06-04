@@ -102,7 +102,6 @@ function decrement_thirst(input_amount)
 end
 
 
-
 function update()
     display_player_stats();
 end

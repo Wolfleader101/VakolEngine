@@ -57,35 +57,39 @@ void APIENTRY DebugOutput(const unsigned int source, const unsigned int type, co
 }
 
 namespace Vakol::View {
-    Window::Window(std::string title, int width, int height)
-        : m_window(nullptr), m_title(std::move(title)), m_width(width), m_height(height) {
-        VK_INFO("Creating window {0} ({1}, {2})", m_title, m_width, m_height);
+    Window::Window(std::string title, const int width, const int height) : m_window(nullptr), m_title(std::move(title)), m_width(width), m_height(height)
+	{
+        VK_INFO("Creating Window {0} ({1}, {2})", m_title, m_width, m_height);
 
         glfwInit();
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
         glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, false);
-        //glfwWindowHint(GLFW_SAMPLES, 4);
+        glfwWindowHint(GLFW_SAMPLES, 4);
 
         /* Initialize the library */
         if (!glfwInit()) return;
 
         /* Create a windowed mode window and its OpenGL context */
         m_window = glfwCreateWindow(m_width, m_height, m_title.c_str(), nullptr, nullptr);
-        if (!m_window) {
-            VK_CRITICAL("Failed to create GLFW window");
-            glfwTerminate();
-            return;
-        }
+    	VK_ASSERT(m_window, "\n\nFailed to create GLFW window!\nHere are some potential reasons why this has occured:\n1: You are launching this application from a Remote Desktop Session.\n2: You are using an OSX Operating System.\n3: You haven't upgraded your graphics drivers to the latest version.");
 
         /* Make the window's context current */
         glfwMakeContextCurrent(m_window);
         glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-        if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress))) {
-            VK_CRITICAL("Failed to initialise GLAD");
-            return;
-        }
+        VK_ASSERT(gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)), "\n\nFailed to initialise GLAD");
+
+        std::cout << std::endl;
+
+        VK_INFO("OpenGL Info:");
+        VK_INFO("Vendor: {0}", reinterpret_cast<const char*>(glGetString(GL_VENDOR)));
+        VK_INFO("Renderer: {0}", reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
+        VK_INFO("OpenGL Version: {0}", reinterpret_cast<const char*>(glGetString(GL_VERSION)));
+
+        VK_ASSERT(GLVersion.major > 4 || (GLVersion.major == 4 && GLVersion.minor >= 5), "\n\nVakolEngine requires the latest version of OpenGL (4.6)!");
+
+    	std::cout << std::endl;
 
         // enable OpenGL debug context if context allows for debug context
         int flags; glGetIntegerv(GL_CONTEXT_FLAGS, &flags);

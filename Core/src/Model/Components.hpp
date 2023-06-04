@@ -13,11 +13,12 @@
 #include <memory>
 #include <string>
 
-#include "Controller/Scene.hpp"
 #include "Entity.hpp"
 #include "Model/Assets/Model.hpp"
+#include "Controller/Animator.hpp"
 
-namespace Vakol::Model::Components {
+namespace Vakol::Model::Components
+{
     /**
      * @struct Transform
      *
@@ -66,7 +67,14 @@ namespace Vakol::Model::Components {
         }
     };
 
-    // using ModelType = VakolModel;
+    struct Animator
+    {
+	    std::shared_ptr<Controller::Animator> animator_ptr = nullptr;
+        int animation_state = 0;
+        bool unique = false;
+        int ID = 0;
+        std::string attached_model;
+    };
 
     /**
      * @struct Tag
@@ -163,15 +171,18 @@ namespace Vakol::Model::Components {
         Controller::LuaState& lua;
     };
 
-    struct Drawable {
+    struct Drawable
+	{
         Drawable() = default;
         explicit Drawable(std::string&& file);
-        Drawable(const std::string& file, const float scale, bool animated, bool backfaceCull);
+        Drawable(const std::string& file, float scale, bool animated, bool backfaceCull);
+
         std::string name;  // for serialization
 
         float scale = 1.0f;
         bool animated = false;
         bool backfaceCull = true;
+        bool instance = false;
 
         std::shared_ptr<Assets::Model> model_ptr;
 
