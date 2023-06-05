@@ -3,14 +3,14 @@ function init()
     local entities = {};
     models = {};
 
-    for i = 1, 20 do
+    for i = 1, 5 do
         if (i == 1) then
             entities[i] = entity;
         else
             entities[i] = scene:create_entity("wolf_instance ".. i, "");
         end
 
-        entities[i]:get_transform().pos = Vector3.new(1.0 * i, 0.0, -5.0);
+        entities[i]:get_transform().pos = Vector3.new(1.0 * i, 0.0, -8.0);
 
         local pos = entities[i]:get_transform().pos;
         
@@ -32,12 +32,6 @@ function init()
 
         state.fsm = entities[i]:add_fsm();
     end
-
-    entities[1]:set_animation_state(1);
-    entities[2]:set_animation_state(2);
-    -- entities[3]:set_animation_state(2);
-    -- entities[4]:set_animation_state(2);
-    -- entities[5]:set_animation_state(2);
 end
 
 function update()

@@ -3,21 +3,21 @@ function init()
     local entities = {};
     models = {};
 
-    for i = 1, 20 do
+    for i = 1, 5 do
         if (i == 1) then
             entities[i] = entity;
         else
             entities[i] = scene:create_entity("rabbit_instance ".. i, "");
         end
 
-        entities[i]:get_transform().pos = Vector3.new(1.0 * i, 0.0, -2.0);
+        entities[i]:get_transform().pos = Vector3.new(1.0 * i, 0.0, -6.0);
 
         local pos = entities[i]:get_transform().pos;
         
         local terr_scale = scene.globals.terrain.transform.scale;
         pos.y = (scene.globals.terrain.terr:get_height(pos.x / terr_scale.x, pos.z / terr_scale.z) * terr_scale.y) + 0.015;
 
-	    models[i] = entities[i]:add_model("assets/models/rabbit.fbx", 0.45, true, true);
+	    models[i] = entities[i]:add_model("assets/models/rabbit.fbx", 0.4, true, true);
 	    entities[i]:set_shader("coreAssets/shaders/animation.prog");
 
 	    shaders[i] = models[i]:get_shader();
@@ -33,7 +33,7 @@ function init()
         state.fsm = entities[i]:add_fsm();
     end
 
-    for i = 1, 20 do
+    for i = 1, 5 do
         entities[i]:set_animation_state(5);
     end
 end
