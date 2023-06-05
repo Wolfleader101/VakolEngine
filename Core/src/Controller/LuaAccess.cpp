@@ -413,17 +413,22 @@ namespace Vakol::Controller {
         material_type.set_function("get_ambient_color", &Assets::Material::GetAmbientColor);
         material_type.set_function("get_diffuse_color", &Assets::Material::GetDiffuseColor);
 
-        shader_type.set_function("set_bool", [](Shader* shader, std::string name, bool value) {
+        shader_type.set_function("set_bool", [](const Shader* shader, const std::string& name, const bool value) 
+        {
             shader->Bind();
             shader->SetBool(name.c_str(), value);
             shader->Unbind();
         });
-        shader_type.set_function("set_int", [](Shader* shader, std::string name, int value) {
+
+        shader_type.set_function("set_int", [](const Shader* shader, const std::string& name, const int value) 
+        {
             shader->Bind();
             shader->SetInt(name.c_str(), value);
             shader->Unbind();
         });
-        shader_type.set_function("set_float", [](Shader* shader, std::string name, float value) {
+
+        shader_type.set_function("set_float", [](const Shader* shader, const std::string& name, const float value) 
+        {
             shader->Bind();
             shader->SetFloat(name.c_str(), value);
             shader->Unbind();
