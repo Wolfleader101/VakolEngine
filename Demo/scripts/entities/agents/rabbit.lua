@@ -34,7 +34,7 @@ function init()
     end
 
     for i = 1, 20 do
-        entities[i]:set_animation_state(1);
+        entities[i]:set_animation_state(5);
     end
 end
 
