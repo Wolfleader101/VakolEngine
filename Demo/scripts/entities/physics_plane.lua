@@ -1,6 +1,6 @@
 function init()
     
-    local model = entity:add_model("coreAssets/models/cube.obj");
+    local model = entity:add_model("coreAssets/models/cube.obj", 1, false, true);
 
     local trans = entity:get_transform();
 
@@ -11,24 +11,24 @@ function init()
     trans.scale.z = 100;
 
     
-    model:set_shader("coreAssets/shaders/basic.prog");
+    entity:set_shader("coreAssets/shaders/basic.prog");
     
-    local r = entity:add_rigid();
+    -- local r = entity:add_rigid();
 
 
-    r.BodyType = BodyType.Static;
+    -- r.BodyType = BodyType.Static;
 
     
 
-    local collider = entity:add_collider();
+    -- local collider = entity:add_collider();
     
-    collider.Shape = Shape.Box;
+    -- collider.Shape = Shape.Box;
     
     
-    entity:physics_init(scene); 
-    --everything above works
+    -- entity:physics_init(scene); 
+    -- --everything above works
 
-    r:toggle_gravity();
+    -- r:toggle_gravity();
     
     
 end
