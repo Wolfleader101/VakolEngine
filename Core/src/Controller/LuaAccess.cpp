@@ -14,7 +14,8 @@
 #include "View/GUI/GUIWindow.hpp"
 
 namespace Vakol::Controller {
-    void RegisterMath(sol::state& lua) {
+    void RegisterMath(sol::state& lua)
+    {
         {
             sol::constructors<glm::vec2(), glm::vec2(float), glm::vec2(float, float)> ctor;  // allow for constructors
 
@@ -139,6 +140,12 @@ namespace Vakol::Controller {
             lua.set_function("inverse", [](const glm::mat4& matrix) { return inverse(matrix); });
 
             lua.set_function("transpose", [](const glm::mat4& matrix) { return transpose(matrix); });
+        }
+
+        {
+            sol::constructors<glm::quat(), glm::quat(glm::vec3), glm::quat(float, float, float, float)> ctor;
+
+            auto quat = lua.new_usertype<glm::quat>("Quaternion", ctor);
         }
     }
 
