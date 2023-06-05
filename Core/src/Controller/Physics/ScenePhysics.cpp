@@ -10,16 +10,14 @@
 
 namespace Vakol::Controller::Physics {
 
-    ScenePhysics::ScenePhysics(rp3d::PhysicsWorld* newWorld) : m_World(newWorld), m_Terrain(nullptr)
+    ScenePhysics::ScenePhysics(rp3d::PhysicsWorld* newWorld) : m_Terrain(nullptr), m_World(newWorld)
     {
         m_DebugRenderer = View::DebugRenderer(m_World);
     };
 
-    ScenePhysics::~ScenePhysics(){};
-
     void ScenePhysics::Init() { System::Physics_Init(); };
 
-    void ScenePhysics::Update(const Time& time, const Vakol::Controller::Camera& camera) {
+    void ScenePhysics::Update(const Time& time, const Camera& camera) {
         // Add the time difference in the accumulator
         m_accumulator += time.deltaTime;
 
@@ -37,7 +35,7 @@ namespace Vakol::Controller::Physics {
         float factor = m_accumulator / m_timestep;
 
         // call update on transforms
-        Vakol::Controller::System::Physics_UpdateTransforms(factor);
+        System::Physics_UpdateTransforms(factor);
 
         if(m_DebugRenderer.IsEnabled())
         {
@@ -52,8 +50,7 @@ namespace Vakol::Controller::Physics {
         m_DebugRenderer.Enable(enable);
     }
 
-    bool ScenePhysics::IsDebugEnabled()
-    {
+    bool ScenePhysics::IsDebugEnabled() const {
         return m_DebugRenderer.IsEnabled();
     }
 
@@ -64,9 +61,6 @@ namespace Vakol::Controller::Physics {
         // get the min and max from height data
          float minH = std::min_element(HeightData.begin(), HeightData.end())[0];
          float maxH = std::max_element(HeightData.begin(), HeightData.end())[0];
-
-        
-        
 
         
         rp3d::HeightFieldShape* height = PhysicsPool::m_Common.createHeightFieldShape(

@@ -399,7 +399,7 @@ namespace Vakol::Controller
                 // Retrieve the bone info based on the bone name
                 const Bone* info = bone_map.get(bone_name.C_Str());
 
-                VK_ASSERT(info, "\n\nSee Previous Error Message");
+                if (!info) continue;
 
                 auto& [bone, bone_transform, parent, node_transform] = nodes[index];
 

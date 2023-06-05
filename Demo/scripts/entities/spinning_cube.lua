@@ -1,7 +1,7 @@
 function init()
   
-    local model = entity:add_model("coreAssets/models/cube.obj", 1.0, false) -- get model and add a drawable component
-    model:set_shader("coreAssets/shaders/basic.prog") -- set the shader on the model (automatically binds it)
+    local model = entity:add_model("coreAssets/models/cube.obj", 1.0, false, true) -- get model and add a drawable component
+    entity:set_shader("coreAssets/shaders/basic.prog") -- set the shader on the model (automatically binds it)
     
     local shader = model:get_shader(); -- get the shader from the model
 

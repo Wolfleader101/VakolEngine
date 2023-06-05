@@ -11,3 +11,4 @@ game:set_active(false);
 local endScreen = get_scene("End Scene");
 endScreen:set_active(false);
 
+--add_scene("scenes/Quat.lua", "Quat Scene");
