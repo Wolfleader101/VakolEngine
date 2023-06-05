@@ -34,8 +34,8 @@ function init()
 
     --r:set_velocity(vel);
 
-    vel.x = 0.5;
-    --vel.y = 2;
+    --vel.x = 0.5;
+    vel.y = 0.5;
     --vel.z = 0.5;
 
     --trans.scale = Vector3.new(0.5, 0.5, 0.5);

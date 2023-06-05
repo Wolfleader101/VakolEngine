@@ -135,7 +135,6 @@ namespace Vakol::Controller
 
             trans.rot = glm::degrees(glm::eulerAngles(glmQuat));
 
-            VK_TRACE("{0}, {1}, {2}", trans.rot.x, trans.rot.y, trans.rot.z);
         });
     }
 
