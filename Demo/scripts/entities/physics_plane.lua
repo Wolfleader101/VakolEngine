@@ -1,5 +1,16 @@
 function init()
-    local model = entity:add_model("coreAssets/models/cube.obj", 1.0, false, true);
+    
+    local model = entity:add_model("coreAssets/models/cube.obj", 1, false, true);
+
+    local trans = entity:get_transform();
+
+    
+    
+    trans.pos.y = 0;
+    trans.scale.x = 1;
+    trans.scale.z = 1;
+
+    
     entity:set_shader("coreAssets/shaders/basic.prog");
     
     -- local r = entity:add_rigid();

@@ -23,6 +23,8 @@ function update()
     else
         velocity = speed * Time["delta_time"];
     end
+
+    
     local camera = scene:get_camera();
     local old_pos = camera:get_pos();
     local forward = camera:get_forward();
@@ -42,4 +44,9 @@ function update()
         pitch = -89.0;
     end
     camera:set_pitch(pitch);
+
+    if(Input:get_key(KEYS["KEY_SPACE"])) then
+        
+        print(new_pos.x .. " " .. new_pos.y .. " " .. new_pos.z);
+    end
 end
