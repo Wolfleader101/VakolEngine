@@ -453,7 +453,7 @@ namespace Vakol::Controller {
         shader_type.set_function("set_vec4",
                                  sol::resolve<void(const char*, float, float, float, float) const>(&Shader::SetVec4));
 
-        entity_type.set_function("physics_init", [](Entity* ent, Scene& scene) { 
+        entity_type.set_function("physics_init", [](const Entity* ent, Scene& scene) { 
             System::BindScene(scene);
             System::Physics_InitEntity(*ent);
         });
@@ -506,7 +506,7 @@ namespace Vakol::Controller {
         auto transform_type = lua.new_usertype<Transform>("transform");
 
         transform_type["pos"] = &Transform::pos;
-        transform_type["rot"] = &Transform::rot;
+        transform_type["rot"] = &Transform::eulerAngles;
         transform_type["scale"] = &Transform::scale;
 
         auto terrain_type = lua.new_usertype<Terrain>("terrain");

@@ -51,6 +51,8 @@ namespace Vakol::Model::Components
 
         glm::vec3 pos = glm::vec3(0.0f, 0.0f, 0.0f); /**< XYZ position */
 
+        glm::vec3 eulerAngles = glm::vec3(0.0f, 0.0f, 0.0f);
+
         glm::quat rot = glm::quat(1.0f, 0.0f, 0.0f, 0.0f); /**< WXYZ rotation */
 
         glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f); /**< XYZ scale */
@@ -60,7 +62,7 @@ namespace Vakol::Model::Components
             ar(cereal::make_nvp("pos.x", pos.x), cereal::make_nvp("pos.y", pos.y), cereal::make_nvp("pos.z", pos.z),
 
 
-               cereal::make_nvp("rot.w", rot.w), cereal::make_nvp("rot.x", rot.x), cereal::make_nvp("rot.y", rot.y), cereal::make_nvp("rot.z", rot.z),
+               cereal::make_nvp("rot.x", eulerAngles.x), cereal::make_nvp("rot.y", eulerAngles.y), cereal::make_nvp("rot.z", eulerAngles.z),
 
                cereal::make_nvp("scale.x", scale.x), cereal::make_nvp("scale.y", scale.y),
                cereal::make_nvp("scale.z", scale.z));

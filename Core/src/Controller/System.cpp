@@ -21,6 +21,7 @@ static std::vector<std::pair<std::string, int>> s_uniques;
 
 static int s_count = 0;
 
+glm::vec3 to_glm(const rp3d::Vector3& v) { return {v.x, v.y, v.z}; }
 glm::quat to_glm(const rp3d::Quaternion& q) { return {q.w, q.x, q.y, q.z}; }
 
 rp3d::Vector3 to_rp3d(const glm::vec3& v) { return {v.x, v.y, v.z}; }
@@ -129,17 +130,13 @@ namespace Vakol::Controller
 
             rigid.prevTransform = curr_transform;
 
-            auto& interPos = interpolatedTransform.getPosition();
-            trans.pos = glm::vec3(interPos.x, interPos.y, interPos.z);
-
-            auto& rp3dQuat = interpolatedTransform.getOrientation();
-
-            trans.rot = to_glm(rp3dQuat);
+            trans.pos = to_glm(interpolatedTransform.getPosition());
+            trans.rot = to_glm(interpolatedTransform.getOrientation());
         });
     }
 
     void System::Physics_SerializationPrep()
-	{
+    {
         m_registry->view<RigidBody, Transform>().each(  // can deduce that a collider can't exist without a rigidbody
             [&](RigidBody& rigid, const Transform& trans) {
                 if (rigid.RigidBodyPtr) {
@@ -152,16 +149,15 @@ namespace Vakol::Controller
 
                     rigid.Type = static_cast<RigidBody::BODY_TYPE>(rigid.RigidBodyPtr->getType());
 
-                    const rp3d::Vector3 pos(trans.pos.x, trans.pos.y, trans.pos.z);
-                    const rp3d::Quaternion quat =
-                        rp3d::Quaternion::fromEulerAngles(trans.rot.x, trans.rot.y, trans.rot.z);
+                    const auto pos = to_rp3d(trans.pos);
+                    const auto rot = to_rp3d(trans.rot);
 
-                    rigid.prevTransform = rp3d::Transform(pos, quat);
+                    rigid.prevTransform = rp3d::Transform(pos, rot);
                 }
             });
     }
 
-    void System::Physics_InitEntity(Entity& ent)
+    void System::Physics_InitEntity(const Entity& ent)
     {
         const auto& trans = ent.GetComponent<Transform>();
         auto& rigid = ent.GetComponent<RigidBody>();
@@ -176,7 +172,7 @@ namespace Vakol::Controller
 
         const auto pos = to_rp3d(trans.pos);
 
-        const auto rpTrans = rp3d::Transform(pos, to_rp3d(trans.rot));
+        const auto rpTrans = rp3d::Transform(pos, rp3d::Quaternion::fromEulerAngles(to_rp3d(radians(trans.eulerAngles))));
 
         rigid.owningWorld = m_SP;
 
