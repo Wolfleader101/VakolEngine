@@ -49,13 +49,13 @@ namespace Vakol::Model::Assets
 	// Interpolates the frames at the given time and returns the resulting transformation matrix
 	glm::mat4 interpolate_frames_at(const float time)
 	{
-		const auto translation = interpolate_position(time);
-		const auto rotation = interpolate_rotation(time);
-		const auto scale = interpolate_scaling(time);
+	    const auto translation = interpolate_position(time);
+	    const auto rotation = interpolate_rotation(time);
+	    const auto scale = interpolate_scaling(time);
 
-		prev_time = time;
+	    prev_time = time;
 
-		return translation * rotation * scale;
+	    return translation * rotation * scale;
 	}
 
     private:
@@ -63,9 +63,9 @@ namespace Vakol::Model::Assets
 	template <typename Key>
 	struct KeyTimeCompare
 	{
-		bool operator()(const Key& lhs, const Key& rhs) const noexcept { return lhs.timestamp < rhs.timestamp; }
-		bool operator()(const float time, const Key& rhs) const noexcept { return time < rhs.timestamp; }
-		bool operator()(const Key& lhs, const float time) const noexcept { return lhs.timestamp < time; }
+	    bool operator()(const Key& lhs, const Key& rhs) const noexcept { return lhs.timestamp < rhs.timestamp; }
+	    bool operator()(const float time, const Key& rhs) const noexcept { return time < rhs.timestamp; }
+	    bool operator()(const Key& lhs, const float time) const noexcept { return lhs.timestamp < time; }
 	};
 
 	// Returns the index of the frame in the vector that corresponds to the given time
