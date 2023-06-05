@@ -6,29 +6,29 @@ function init()
 
     
     
-    trans.pos.y = 0;
-    trans.scale.x = 1;
-    trans.scale.z = 1;
+    trans.pos.y = -20;
+    trans.scale.x = 100;
+    trans.scale.z = 100;
 
     
     entity:set_shader("coreAssets/shaders/basic.prog");
     
-    -- local r = entity:add_rigid();
+    local r = entity:add_rigid();
 
 
-    -- r.BodyType = BodyType.Static;
+    r.BodyType = BodyType.Static;
 
     
 
-    -- local collider = entity:add_collider();
+    local collider = entity:add_collider();
     
-    -- collider.Shape = Shape.Box;
+    collider.Shape = Shape.Box;
     
     
-    -- entity:physics_init(scene); 
-    -- --everything above works
+    entity:physics_init(scene); 
+    --everything above works
 
-    -- r:toggle_gravity();
+    --r:toggle_gravity();
     
     
 end

@@ -132,7 +132,10 @@ namespace Vakol::Controller
 
             const glm::quat glmQuat(rp3dQuat.w, rp3dQuat.x, rp3dQuat.y, rp3dQuat.z);
 
+
             trans.rot = glm::eulerAngles(glmQuat);
+
+            VK_TRACE("{0}, {1}, {2}", trans.rot.x, trans.rot.y, trans.rot.z);
         });
     }
 

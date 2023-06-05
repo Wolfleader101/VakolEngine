@@ -1,15 +1,17 @@
 function init()
 
     --local ent = scene:create_entity("basicEntity.lua");
-    local model = entity:add_model("coreAssets/models/cube.obj");
+    local model = entity:add_model("coreAssets/models/cube.obj", 1 , false, true);
 
-    model:set_shader("coreAssets/shaders/rainbow.prog");
+    entity:set_shader("coreAssets/shaders/basic.prog");
 
     local trans = entity:get_transform();
     
-    trans.scale.x = 5;
-    trans.scale.y = 5;
-    trans.scale.z = 5;
+    trans.scale.x = 1;
+    trans.scale.y = 1;
+    trans.scale.z = 1;
+
+    trans.pos.y = 10;
 
     
     
@@ -30,10 +32,10 @@ function init()
 
     --vel.x = 1;
 
-    r:set_velocity(vel);
+    --r:set_velocity(vel);
 
     vel.x = 0.5;
-    vel.y = 0.5;
+    --vel.y = 2;
     --vel.z = 0.5;
 
 

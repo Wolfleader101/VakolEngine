@@ -1,10 +1,11 @@
 function init()
-    scene:create_entity("plane", "entities/physics_plane.lua");
+    --scene:create_entity("plane", "entities/physics_plane.lua");
     
     scene:create_entity("Camera", "entities/DebugCam.lua");
     
-    scene:create_entity("cube", "entities/spinning_cube.lua");
+    scene:create_entity("cube", "entities/physics_example.lua");
     
+    scene:enable_debug(true);
 end
 
 

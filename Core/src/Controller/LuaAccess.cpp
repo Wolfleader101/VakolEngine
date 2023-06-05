@@ -447,7 +447,10 @@ namespace Vakol::Controller {
         shader_type.set_function("set_vec4",
                                  sol::resolve<void(const char*, float, float, float, float) const>(&Shader::SetVec4));
 
-        entity_type.set_function("physics_init", [](Entity* ent, Scene& scene) { System::BindScene(scene); });
+        entity_type.set_function("physics_init", [](Entity* ent, Scene& scene) { 
+            System::BindScene(scene);
+            System::Physics_InitEntity(*ent);
+        });
 
         entity_type.set_function("add_rigid", [](Entity* ent) -> RigidBody& {
             if (!ent->HasComponent<RigidBody>()) ent->AddComponent<RigidBody>();
@@ -561,8 +564,10 @@ namespace Vakol::Controller {
             System::Physics_AddTerrain(terrain);
         });
 
-        scene_type.set_function("get_physics",
-                                [](const Scene* scene) -> ScenePhysics& { return *scene->scenePhysics; });
+        scene_type.set_function("enable_debug", [](Scene* scene, const bool enable) {
+            
+            scene->scenePhysics->EnableDebug(enable);
+        });
 
         scene_type.set_function("serialize", &Scene::Serialize); // Give it folder assets/scenes. will create subfolder for scene
         scene_type.set_function("deserialize", &Scene::Deserialize); //needs to be given folder assets/scenes/scene_name .ie assets/scenes/Test Scene
@@ -573,6 +578,8 @@ namespace Vakol::Controller {
 
         camera_type.set_function("get_yaw", &Camera::GetYaw);
         camera_type.set_function("set_yaw", &Camera::SetYaw);
+
+
     }
 
     void RegisterGUIWindow(sol::state& lua, View::GUIWindow* gui) {
@@ -634,8 +641,8 @@ namespace Vakol::Controller {
         });
     }
 
-    void RegisterPhysics(sol::state& lua) {
-        auto scenePhysicType = lua.new_usertype<ScenePhysics>("scenePhysics");
+    void RegisterPhysics(sol::state& lua) 
+    {
 
         auto rp3dVec3 = lua.new_usertype<rp3d::Vector3>("phyVec3");  // need for collider
         rp3dVec3["x"] = &rp3d::Vector3::x;
@@ -704,7 +711,6 @@ namespace Vakol::Controller {
         colliderType.set_function(
             "set_bounds", [](Collider* collider, const Collider::Bounds& bounds) { collider->SetBounds(bounds); });
 
-        scenePhysicType.set_function("enable_debug", &ScenePhysics::EnableDebug);
     }
 
     std::vector<glm::mat4> create_mat4_vector(const int reserve) {
