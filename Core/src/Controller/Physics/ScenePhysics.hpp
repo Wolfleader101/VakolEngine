@@ -14,20 +14,21 @@ namespace Vakol::Controller::Physics
 {
     class PhysicsPool;
 
-    class ScenePhysics {
-       public:
+    class ScenePhysics
+    {
+    public:
         ScenePhysics() = delete;
-        ~ScenePhysics();
+        ~ScenePhysics() = default;
         void Init();
 
         void Update(const Vakol::Controller::Time& time, const Vakol::Controller::Camera& camera);
 
         void EnableDebug(bool enable);
-        bool IsDebugEnabled();
+        bool IsDebugEnabled() const;
 
         void AddTerrain(const Terrain& terrain);
 
-       private:
+    private:
         ScenePhysics(rp3d::PhysicsWorld* newWorld);
 
         rp3d::RigidBody* m_Terrain;
@@ -41,6 +42,5 @@ namespace Vakol::Controller::Physics
 
         friend class PhysicsPool;
         friend class System;
-        
     };
-}  // namespace Vakol::Controller::Physics
+}

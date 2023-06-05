@@ -5,8 +5,9 @@
 
 namespace Vakol::Model::Components {
     rp3d::Vector3 to_rp3d(const glm::vec3& v) { return {v.x, v.y, v.z}; }
+    rp3d::Quaternion to_rp3d(const glm::quat& q) { return {q.x, q.y, q.z, q.w}; }
 
-    Transform::Transform(const glm::vec3& pos, const glm::vec3& rot, const glm::vec3& scale)
+    Transform::Transform(const glm::vec3& pos, const glm::quat& rot, const glm::vec3& scale)
         : pos(pos), rot(rot), scale(scale){};
 
     Script::Script(std::string& name) : script_name(std::move(name)) {}
@@ -60,7 +61,8 @@ namespace Vakol::Model::Components {
 
     Tag::Tag(std::string& tag) : tag(std::move(tag)){};
 
-    void RigidBody::SetRigidData(const RigidData& data) {
+    void RigidBody::SetRigidData(const RigidData& data)
+    {
         Data = data;
 
         RigidBodyPtr->setMass(Data.mass);
@@ -115,10 +117,12 @@ namespace Vakol::Model::Components {
         return mat;
     }
 
-    rp3d::Vector3 transformVertex(const glm::mat4& matrix, const rp3d::Vector3& vertex) {
+    rp3d::Vector3 transformVertex(const glm::mat4& matrix, const rp3d::Vector3& vertex)
+    {
         glm::vec4 glmVertex(vertex.x, vertex.y, vertex.z, 1.0f);
         glmVertex = matrix * glmVertex;
-        return rp3d::Vector3(glmVertex.x, glmVertex.y, glmVertex.z);
+
+        return {glmVertex.x, glmVertex.y, glmVertex.z};
     }
 
     Collider::Bounds GetBounds(const Drawable& model, const Transform& transform) {
@@ -127,17 +131,20 @@ namespace Vakol::Model::Components {
         rp3d::Vector3& max = bounds.max;
         rp3d::Vector3& min = bounds.min;
 
-        glm::mat4 transformMat = to_rp3d_mat4(transform);
+        const glm::mat4 transformMat = to_rp3d_mat4(transform);
 
         auto& vertices = model.model_ptr->meshes().begin()->vertices();
 
         VK_ASSERT(vertices.size() >= 3, "\n\nInsufficient vertices data");
 
         const auto& position = vertices.begin()->position;
-        rp3d::Vector3 transformedPosition = transformVertex(transformMat, rp3d::Vector3(position.x, position.y, position.z));
+
+        const rp3d::Vector3 transformedPosition = transformVertex(transformMat, rp3d::Vector3(position.x, position.y, position.z));
+
         max = min = transformedPosition;
 
-        for (const auto& msh : model.model_ptr->c_meshes()) {
+        for (const auto& msh : model.model_ptr->c_meshes()) 
+        {
             vertices = msh.c_vertices();
 
             for (const auto& vertex : vertices) {

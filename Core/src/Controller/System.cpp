@@ -21,6 +21,11 @@ static std::vector<std::pair<std::string, int>> s_uniques;
 
 static int s_count = 0;
 
+glm::quat to_glm(const rp3d::Quaternion& q) { return {q.w, q.x, q.y, q.z}; }
+
+rp3d::Vector3 to_rp3d(const glm::vec3& v) { return {v.x, v.y, v.z}; }
+rp3d::Quaternion to_rp3d(const glm::quat& q) { return {q.x, q.y, q.z, q.w}; }
+
 namespace Vakol::Controller
 {
     entt::registry* System::m_registry = nullptr;
@@ -28,7 +33,7 @@ namespace Vakol::Controller
     EntityList* System::Entlist = nullptr;
 
     void System::BindScene(Scene& scene)
-	{
+    {
         m_registry = &scene.entityList.m_Registry;
         m_SP = scene.scenePhysics;
         Entlist = &scene.entityList;
@@ -62,10 +67,10 @@ namespace Vakol::Controller
         std::reverse(s_duplicates.begin(), s_duplicates.end());
 
         for (int i = 0; i < size; ++i)
-	        if (s_unique_set.insert(s_duplicates.at(i)).second)
+            if (s_unique_set.insert(s_duplicates.at(i)).second)
                 s_uniques.emplace_back(s_unique_set.begin()->first, i + 1);
 
-		m_registry->view<Components::Animator>().each([&](Components::Animator& animator)
+        m_registry->view<Components::Animator>().each([&](Components::Animator& animator)
         {
             for (const auto& [name, ID] : s_uniques)
                 if (ID == animator.ID) animator.unique = true;
@@ -73,18 +78,17 @@ namespace Vakol::Controller
     }
 
     void System::Drawable_Update(const Time& time, const std::shared_ptr<View::Renderer>& renderer)
-	{
+    {
         m_registry->view<Transform, Drawable>().each([&](const auto& transform, const Drawable& drawable)
         {
-	        if (!drawable.animated) renderer->Draw(transform, drawable);
+            if (!drawable.animated) renderer->Draw(transform, drawable);
         });
 
         m_registry->view<Transform, Drawable, Components::Animator>().each([&](const auto& transform, const Drawable& drawable, const Components::Animator& animator)
         {
-            if (animator.unique)
-        		animator.animator_ptr->Update(animator.animation_state, time.deltaTime);
+            if (animator.unique) animator.animator_ptr->Update(animator.animation_state, time.deltaTime);
 
-	        renderer->DrawAnimated(transform, drawable, animator);
+            renderer->DrawAnimated(transform, drawable, animator);
         });
     }
 
@@ -103,8 +107,8 @@ namespace Vakol::Controller
     }
 
     void System::Physics_Init()
-	{
-		const auto view = m_registry->view<RigidBody>();
+    {
+        const auto view = m_registry->view<RigidBody>();
 
         for (auto entity : view) 
         {
@@ -114,7 +118,7 @@ namespace Vakol::Controller
     }
 
     void System::Physics_UpdateTransforms(const float factor)
-	{
+    {
         m_registry->view<Transform, RigidBody>().each([&](auto& trans, auto& rigid) 
         {
             rp3d::Transform curr_transform = rigid.RigidBodyPtr->getTransform();
@@ -130,11 +134,7 @@ namespace Vakol::Controller
 
             auto& rp3dQuat = interpolatedTransform.getOrientation();
 
-            const glm::quat glmQuat(rp3dQuat.w, rp3dQuat.x, rp3dQuat.y, rp3dQuat.z);
-
-
-            trans.rot = glm::degrees(glm::eulerAngles(glmQuat));
-
+            trans.rot = to_glm(rp3dQuat);
         });
     }
 
@@ -161,8 +161,9 @@ namespace Vakol::Controller
             });
     }
 
-    void System::Physics_InitEntity(Entity& ent) {
-        auto& trans = ent.GetComponent<Transform>();
+    void System::Physics_InitEntity(Entity& ent)
+    {
+        const auto& trans = ent.GetComponent<Transform>();
         auto& rigid = ent.GetComponent<RigidBody>();
 
         if (rigid.initialized) return;
@@ -173,10 +174,9 @@ namespace Vakol::Controller
             return;
         }
 
-        const rp3d::Vector3 pos(trans.pos.x, trans.pos.y, trans.pos.z);
+        const auto pos = to_rp3d(trans.pos);
 
-        const auto rpTrans =
-            rp3d::Transform(pos, rp3d::Quaternion::fromEulerAngles({trans.rot.x, trans.rot.y, trans.rot.z}));
+        const auto rpTrans = rp3d::Transform(pos, to_rp3d(trans.rot));
 
         rigid.owningWorld = m_SP;
 

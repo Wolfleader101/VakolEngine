@@ -143,9 +143,14 @@ namespace Vakol::Controller {
         }
 
         {
-            sol::constructors<glm::quat(), glm::quat(glm::vec3), glm::quat(float, float, float, float)> ctor;
+            sol::constructors<glm::quat(), glm::quat(glm::vec3)> ctor;
 
             auto quat = lua.new_usertype<glm::quat>("Quaternion", ctor);
+
+            quat.set_function("Euler", [](const glm::quat& rot) 
+            {
+                return eulerAngles(rot);
+            });
         }
     }
 
@@ -251,7 +256,8 @@ namespace Vakol::Controller {
             Input::KEY::KEY_ESCAPE);
     }
 
-    void RegisterEntity(LuaState& state, sol::state& lua) {
+    void RegisterEntity(LuaState& state, sol::state& lua)
+    {
         auto entity_type = lua.new_usertype<Entity>("entity");
         auto model_type = lua.new_usertype<Assets::Model>("model");
         auto mesh_type = lua.new_usertype<Mesh>("mesh");

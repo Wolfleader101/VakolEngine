@@ -6,15 +6,14 @@ function init()
     entity:set_shader("coreAssets/shaders/basic.prog");
 
     local trans = entity:get_transform();
-    
-    trans.scale = Vector3.new(1,1,1);
 
-    trans.pos.y = 10;
-
+    local angle = Vector3.new(math.rad(0.0), math.rad(90.0), math.rad(0.0));
     
+    trans.pos = Vector3.new(0, 5, -4);
+    --trans.rot = Quaternion.new(angle);
+    trans.scale = Vector3.new(1, 1, 1);
     
     local r = entity:add_rigid();
-
 
     local collider = entity:add_collider();
 
@@ -23,24 +22,12 @@ function init()
     entity:get_bounds_from_model();
 
     entity:physics_init(scene); 
-
-   
+  
     r:toggle_gravity();
 
-
-    local vel = Vector3.new();
-
-    --vel.x = 1;
+    local vel = Vector3.new(1.0, 1.0, 1.0);
 
     --r:set_velocity(vel);
-
-    --vel.x = 0.5;
-    vel.y = 0.5;
-    --vel.z = 0.5;
-
-    --trans.scale = Vector3.new(0.5, 0.5, 0.5);
-
-
 
     r:set_angular_damp(0);
     

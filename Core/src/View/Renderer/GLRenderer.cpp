@@ -111,17 +111,13 @@ namespace Vakol::View {
 
         shader->Bind();
 
-        auto&& model_matrix = glm::mat4(1.0f);  // start off with an identity matrix
+        const auto translation_matrix = translate(glm::mat4(1.0f), transform.pos);
 
-        model_matrix = translate(model_matrix, transform.pos);
+        const auto rotation_matrix = mat4_cast(transform.rot);
 
-        model_matrix = rotate(model_matrix, glm::radians(transform.rot.x), glm::vec3(1.0f, 0.0f, 0.0f));
-        model_matrix = rotate(model_matrix, glm::radians(transform.rot.y), glm::vec3(0.0f, 1.0f, 0.0f));
-        model_matrix = rotate(model_matrix, glm::radians(transform.rot.z), glm::vec3(0.0f, 0.0f, 1.0f));
+        const auto scale_matrix = scale(glm::mat4(1.0f), transform.scale);
 
-        model_matrix = scale(model_matrix, transform.scale);
-
-        shader->SetMat4("MODEL_MATRIX", model_matrix);
+        shader->SetMat4("MODEL_MATRIX", translation_matrix * rotation_matrix * scale_matrix);
 
         shader->SetMat4v("BONE_TRANSFORMS", animator->nTransforms(animation_state),
                          value_ptr(animator->transform(animation_state)));
@@ -141,7 +137,8 @@ namespace Vakol::View {
         shader->Unbind();
     }
 
-    void GLRenderer::Draw(const Components::Transform& transform, const Components::Drawable& drawable) const {
+    void GLRenderer::Draw(const Components::Transform& transform, const Components::Drawable& drawable) const
+    {
         const auto& model = drawable.model_ptr;
         VK_ASSERT(model, "\n\nModel ptr is nullptr");
 
@@ -152,17 +149,13 @@ namespace Vakol::View {
 
         shader->Bind();
 
-        auto&& model_matrix = glm::mat4(1.0f);  // start off with an identity matrix
+        const auto translation_matrix = translate(glm::mat4(1.0f), transform.pos);
 
-        model_matrix = translate(model_matrix, transform.pos);
+        const auto rotation_matrix = mat4_cast(transform.rot);
 
-        model_matrix = rotate(model_matrix, glm::radians(transform.rot.x), glm::vec3(1.0f, 0.0f, 0.0f));
-        model_matrix = rotate(model_matrix, glm::radians(transform.rot.y), glm::vec3(0.0f, 1.0f, 0.0f));
-        model_matrix = rotate(model_matrix, glm::radians(transform.rot.z), glm::vec3(0.0f, 0.0f, 1.0f));
+        const auto scale_matrix = scale(glm::mat4(1.0f), transform.scale);
 
-        model_matrix = scale(model_matrix, transform.scale);
-
-        shader->SetMat4("MODEL_MATRIX", model_matrix);
+        shader->SetMat4("MODEL_MATRIX", translation_matrix * rotation_matrix * scale_matrix);
 
         for (int i = 0; i < model->nMeshes(); ++i) {
             const auto& mesh = model->mesh(i);
@@ -179,7 +172,8 @@ namespace Vakol::View {
         shader->Unbind();
     }
 
-    void GLRenderer::UpdateData(const Controller::Time& time, const Controller::Camera& camera) {
+    void GLRenderer::UpdateData(const Controller::Camera& camera)
+    {
         PROJECTION = camera.GetMatrix(PROJECTION_MATRIX);
         VIEW = camera.GetMatrix(VIEW_MATRIX);
 
@@ -211,4 +205,4 @@ namespace Vakol::View {
 
         if (isSkybox) skybox->Draw(PROJECTION, VIEW);
     }
-}  // namespace Vakol::View
+}

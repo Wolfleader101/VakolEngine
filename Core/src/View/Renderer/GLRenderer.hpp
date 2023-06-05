@@ -45,7 +45,7 @@ namespace Vakol::View
         void DrawAnimated(const Model::Components::Transform& transform, const Model::Components::Drawable& drawable, const Model::Components::Animator& _animator) const override;
         void Draw(const Model::Components::Transform& transform, const Model::Components::Drawable& drawable) const override;
 
-        void UpdateData(const Controller::Time& time, const Controller::Camera& camera) override;
+        void UpdateData(const Controller::Camera& camera) override;
 
         void Update(int index) const override;
         void LateUpdate(int index) const override;
