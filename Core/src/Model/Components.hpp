@@ -299,5 +299,5 @@ namespace Vakol::Model::Components
         }
     };
 
-    Collider::Bounds GetBounds(const Drawable& model);
+    Collider::Bounds GetBounds(const Drawable& model, const Transform& transform);
 }  // namespace Vakol::Model::Components

@@ -105,26 +105,43 @@ namespace Vakol::Model::Components {
     void Collider::SetBounds(const Bounds& data) { bounds = data; }
 
     // THIS HAS BEEN MODIFIED BY ME (CALEB)
-    Collider::Bounds GetBounds(const Drawable& model) {
+   glm::mat4 to_rp3d_mat4(const Transform& transform) {
+        glm::mat4 mat(1.0f);
+        mat = glm::translate(mat, transform.pos);
+        mat = glm::scale(mat, transform.scale);
+        mat = glm::rotate(mat, transform.rot.x, glm::vec3(1.0f, 0.0f, 0.0f));
+        mat = glm::rotate(mat, transform.rot.y, glm::vec3(0.0f, 1.0f, 0.0f));
+        mat = glm::rotate(mat, transform.rot.z, glm::vec3(0.0f, 0.0f, 1.0f));
+        return mat;
+    }
+
+    rp3d::Vector3 transformVertex(const glm::mat4& matrix, const rp3d::Vector3& vertex) {
+        glm::vec4 glmVertex(vertex.x, vertex.y, vertex.z, 1.0f);
+        glmVertex = matrix * glmVertex;
+        return rp3d::Vector3(glmVertex.x, glmVertex.y, glmVertex.z);
+    }
+
+    Collider::Bounds GetBounds(const Drawable& model, const Transform& transform) {
         Collider::Bounds bounds;
 
         rp3d::Vector3& max = bounds.max;
         rp3d::Vector3& min = bounds.min;
 
-        // Assuming each vertex is represented by 3 floats (x, y, z).
+        glm::mat4 transformMat = to_rp3d_mat4(transform);
+
         auto& vertices = model.model_ptr->meshes().begin()->vertices();
 
         VK_ASSERT(vertices.size() >= 3, "\n\nInsufficient vertices data");
 
         const auto& position = vertices.begin()->position;
-        max = min = rp3d::Vector3(position.x, position.y, position.z);
+        rp3d::Vector3 transformedPosition = transformVertex(transformMat, rp3d::Vector3(position.x, position.y, position.z));
+        max = min = transformedPosition;
 
         for (const auto& msh : model.model_ptr->c_meshes()) {
             vertices = msh.c_vertices();
 
             for (const auto& vertex : vertices) {
-                const auto temp = to_rp3d(vertex.position);
-
+                const auto temp = transformVertex(transformMat, to_rp3d(vertex.position));
                 max = rp3d::Vector3::max(max, temp);
                 min = rp3d::Vector3::min(min, temp);
             }

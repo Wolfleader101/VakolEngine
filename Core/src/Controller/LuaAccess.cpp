@@ -483,20 +483,7 @@ namespace Vakol::Controller {
 
                 auto& collider = ent->GetComponent<Collider>();
 
-                collider.bounds = GetBounds(model);
-            } else {
-                VK_CRITICAL("drawable and collider must be present to get bounds from");
-                assert(0);
-            }
-        });
-
-        entity_type.set_function("get_bounds_from_model", [](const Entity* ent) -> void {
-            if (ent->HasComponent<Drawable, Collider>()) {
-                const auto& model = ent->GetComponent<Drawable>();
-
-                auto& collider = ent->GetComponent<Collider>();
-
-                collider.bounds = GetBounds(model);
+                collider.bounds = GetBounds(model, ent->GetComponent<Transform>());
             } else {
                 VK_CRITICAL("drawable and collider must be present to get bounds from");
                 assert(0);

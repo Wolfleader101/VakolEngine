@@ -7,9 +7,7 @@ function init()
 
     local trans = entity:get_transform();
     
-    trans.scale.x = 1;
-    trans.scale.y = 1;
-    trans.scale.z = 1;
+    trans.scale = Vector3.new(1,1,1);
 
     trans.pos.y = 10;
 
@@ -21,6 +19,8 @@ function init()
     local collider = entity:add_collider();
 
     collider.Shape = Shape.Box;
+
+    entity:get_bounds_from_model();
 
     entity:physics_init(scene); 
 
@@ -37,6 +37,8 @@ function init()
     vel.x = 0.5;
     --vel.y = 2;
     --vel.z = 0.5;
+
+    --trans.scale = Vector3.new(0.5, 0.5, 0.5);
 
 
 
