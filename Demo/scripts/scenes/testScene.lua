@@ -4,7 +4,7 @@ function init()
     
     --scene:create_entity("Bob", "entities/agents/bob.lua");
 
-    scene:create_entity("rabbit", 'entities/agents/rabbit.lua');
+    scene:create_entity("Rabbits", 'entities/agents/rabbit.lua');
     scene:create_entity("Wolves", "entities/agents/wolf.lua");
 
 end

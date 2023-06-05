@@ -15,7 +15,7 @@ function init()
         local pos = entities[i]:get_transform().pos;
         
         local terr_scale = scene.globals.terrain.transform.scale;
-        pos.y = (scene.globals.terrain.terr:get_height(pos.x / terr_scale.x, pos.z / terr_scale.z) * terr_scale.y);
+        pos.y = (scene.globals.terrain.terr:get_height(pos.x / terr_scale.x, pos.z / terr_scale.z) * terr_scale.y) + 0.015;
 
 	    models[i] = entities[i]:add_model("assets/models/rabbit.fbx", 0.45, true, true);
 	    entities[i]:set_shader("coreAssets/shaders/animation.prog");
@@ -31,6 +31,10 @@ function init()
         shaders[i]:set_int("material.emission_map", 3);
 
         state.fsm = entities[i]:add_fsm();
+    end
+
+    for i = 1, 20 do
+        entities[i]:set_animation_state(1);
     end
 end
 

@@ -400,7 +400,6 @@ namespace Vakol::Controller
                 const Bone* info = bone_map.get(bone_name.C_Str());
 
                 if (!info) continue;
-                //VK_ASSERT(info, "\n\nSee Previous Error Message");
 
                 auto& [bone, bone_transform, parent, node_transform] = nodes[index];
 
