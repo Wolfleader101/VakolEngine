@@ -7,7 +7,7 @@ function init()
         if (i == 1) then
             entities[i] = entity;
         else
-            entities[i] = scene:create_entity("wolf_instance ".. i, "");
+            entities[i] = scene:create_entity("rabbit_instance ".. i, "");
         end
 
         entities[i]:get_transform().pos = Vector3.new(1.0 * i, 0.0, -2.0);
@@ -17,7 +17,7 @@ function init()
         local terr_scale = scene.globals.terrain.transform.scale;
         pos.y = (scene.globals.terrain.terr:get_height(pos.x / terr_scale.x, pos.z / terr_scale.z) * terr_scale.y);
 
-	    models[i] = entities[i]:add_model("assets/models/rabbit.fbx", 0.0075, true, true);
+	    models[i] = entities[i]:add_model("assets/models/rabbit.fbx", 0.45, true, true);
 	    entities[i]:set_shader("coreAssets/shaders/animation.prog");
 
 	    shaders[i] = models[i]:get_shader();
