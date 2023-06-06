@@ -46,7 +46,12 @@ namespace Vakol::Controller {
         });
     }
 
-    void System::Unique_Search() {
+    void System::Unique_Search() 
+    {
+        s_duplicates.clear();
+        s_unique_set.clear();
+        s_uniques.clear();
+
         m_registry->view<Components::Animator>().each([&](const Components::Animator& animator) {
             s_duplicates.emplace_back(animator.attached_model, animator.animation_state);
         });
@@ -79,6 +84,8 @@ namespace Vakol::Controller {
 
             if (!drawable.animated) renderer->Draw(transform, drawable);
         });
+
+        Unique_Search();
 
         m_registry->view<Transform, Drawable, Components::Animator>().each(
             [&](const auto& transform, const Drawable& drawable, const Components::Animator& animator) {

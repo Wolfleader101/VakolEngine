@@ -6,7 +6,8 @@ function init()
     -- scene:create_entity("Rabbit", "entities/agents/rabbit.lua");
 
     local rabbits = {};
-    for i = 1,2 do
+    
+    for i = 1, 5 do
         rabbits[i] = scene:create_entity("Rabbit" .. i, "entities/agents/rabbit.lua");
         rabbits[i]:get_transform().pos = Vector3.new(10.0 * i, 0.0, -2.0);
     end

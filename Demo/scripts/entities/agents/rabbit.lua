@@ -38,7 +38,7 @@ function init()
     state.fsm = entity:add_fsm();
 
     state.fsm:add_state("eating", function()
-        print_warn("eating " .. entity:get_tag())
+        --print_warn("eating " .. entity:get_tag())
         entity:set_animation_state(state.ANIMATIONS.EAT);
         if(state.fsm_wait(math.random(5,7))) then
             state.fsm:change_state("roaming")
@@ -47,7 +47,7 @@ function init()
     end)
 
     state.fsm:add_state("looking", function()
-        print_err("looking " .. entity:get_tag());
+        --print_err("looking " .. entity:get_tag());
         entity:set_animation_state(state.ANIMATIONS.IDLE);
 
         if(state.fsm_wait(math.random(5,7))) then
@@ -62,7 +62,7 @@ function init()
     end)
 
     state.fsm:add_state("roaming", function()
-        print("roaming " .. entity:get_tag());
+        --print("roaming " .. entity:get_tag());
         if (state.fsm_wait(math.random(5, 7))) then
             local rand = math.random();
             if (rand < 0.4) then
@@ -92,7 +92,7 @@ function init()
     end)
 
     state.fsm:add_state("running_away", function()
-        print_info("running_away" .. entity:get_tag())
+        --print_info("running_away" .. entity:get_tag())
         entity:set_animation_state(state.ANIMATIONS.RUN);
 
         local diff = scene.globals.player.pos - entity:get_transform().pos;
@@ -129,7 +129,7 @@ function init()
     -- Set the initial state
     state.fsm:change_state("roaming")
 
-    print_err(entity:get_tag() .. " is ready")
+    --print_err(entity:get_tag() .. " is ready")
 
     local function dir_wait(seconds)
         state.DIR_TIMER = state.DIR_TIMER + Time.delta_time;
