@@ -14,6 +14,7 @@ namespace Vakol::Controller
     std::unordered_map<std::string, std::shared_ptr<Texture>> AssetLoader::m_TextureMap;
     std::unordered_map<std::string, std::pair<std::shared_ptr<Model::Assets::Model>, std::shared_ptr<Animator>>> AssetLoader::m_ModelMap;
     std::unordered_map<std::string, std::shared_ptr<Model::Shader>> AssetLoader::m_ShaderMap; 
+    std::unordered_map<std::string, std::shared_ptr<Terrain>> AssetLoader::m_TerrainMap;
 
     std::shared_ptr<Texture> AssetLoader::GetTexture(const std::string& file, const int size, const bool gamma, const bool flip, const void* data)
     {
@@ -135,4 +136,29 @@ namespace Vakol::Controller
         return ret;
     }
 
+    std::shared_ptr<Terrain> AssetLoader::GetTerrain(const std::string& name, const std::string& heightmap, float min, float max)
+    {
+        std::shared_ptr<Terrain> ret;
+
+        if (const auto itr = m_TerrainMap.find(name); itr == m_TerrainMap.end()) 
+        {
+            ret = std::make_shared<Terrain>(LoadHeightMapTerrain(std::string(heightmap), min, max));
+
+            if (!ret->GetSize()) return nullptr;  // if terrain didn't load
+
+            m_TerrainMap[name] = ret;
+
+        } else {
+            ret = m_TerrainMap[name];
+        }
+        return ret;
+    }
+
+    std::shared_ptr<Terrain> AssetLoader::GetTerrain(const std::string& name)
+    {
+        if(const auto itr = m_TerrainMap.find(name); itr != m_TerrainMap.end())
+            return itr->second;
+        else
+            return nullptr;
+    }
 }

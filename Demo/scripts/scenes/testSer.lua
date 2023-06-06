@@ -10,5 +10,7 @@ end
 
 function update()
 
-    
+    if(Input:get_key_down(KEYS["KEY_ESC"])) then
+        app_run(false);
+    end
 end

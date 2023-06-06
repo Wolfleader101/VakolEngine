@@ -310,4 +310,21 @@ namespace Vakol::Model::Components
     };
 
     Collider::Bounds GetBounds(const Drawable& model);
+
+    struct Terrain
+    {
+        std::shared_ptr<Terrain> terrain_ptr;
+
+        std::string name;
+        std::string path;
+        float min, max;
+
+        template <class Archive>
+        void serialize(Archive& ar) {
+            ar(cereal::make_nvp("Name", name));
+            ar(cereal::make_nvp("Path", path));
+            ar(cereal::make_nvp("Min", min));
+            ar(cereal::make_nvp("Max", max));
+        }
+    };
 }  // namespace Vakol::Model::Components
