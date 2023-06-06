@@ -313,7 +313,7 @@ namespace Vakol::Model::Components
 
     struct Terrain
     {
-        std::shared_ptr<Terrain> terrain_ptr;
+        std::shared_ptr<Controller::Terrain> terrain_ptr;
 
         std::string name;
         std::string path;

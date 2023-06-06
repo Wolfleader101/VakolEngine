@@ -260,18 +260,22 @@ namespace Vakol::Controller {
         entity_type.set_function("create_height_map_terrain",
                                  [](Entity* ent, Scene& scene, std::string&& path, const float min, const float max) {
                                      if (!ent->HasComponent<Drawable>()) ent->AddComponent<Drawable>();
-
                                      if (ent->HasComponent<Components::Terrain>()) ent->RemoveComponent<Components::Terrain>();
-                                     std::shared_ptr<Terrain> terrain(AssetLoader::GetTerrain(scene->getName()));
 
-                                     if(terrain == nullptr)
-                                     {
-                                        terrain = AssetLoader::GetTerrain(scene->getName(), path, min, max);
-                                     }
+                                     ent->AddComponent<Components::Terrain>();
 
-                                     ent->AddComponent<Terrain>(LoadHeightMapTerrain(std::move(path), min, max));
 
-                                     auto& terrain = ent->GetComponent<Terrain>();
+                                     std::shared_ptr<Terrain> terrain = AssetLoader::GetTerrain(scene.getName());
+
+                                     if(terrain == nullptr) terrain = AssetLoader::GetTerrain(scene.getName(), path, min, max);
+
+                                     auto& terrain_comp = ent->GetComponent<Components::Terrain>();
+
+                                     terrain_comp.terrain_ptr = terrain;
+                                     terrain_comp.min = min;
+                                     terrain_comp.max = max;
+                                     terrain_comp.path = std::move(path);
+
 
                                      if (const auto& model = terrain->GetModel()) {
                                          model->mesh().SetDrawMode(DRAW_MODE::STRIPS);
@@ -288,30 +292,30 @@ namespace Vakol::Controller {
                                      return terrain;
                                  });
 
-        entity_type.set_function("create_clod_terrain",
-                                 [](Entity* ent, std::string&& path, const float min, const float max) {
-                                     if (!ent->HasComponent<Drawable>()) ent->AddComponent<Drawable>();
+        // entity_type.set_function("create_clod_terrain",
+        //                          [](Entity* ent, std::string&& path, const float min, const float max) {
+        //                              if (!ent->HasComponent<Drawable>()) ent->AddComponent<Drawable>();
 
-                                     if (ent->HasComponent<Terrain>()) ent->RemoveComponent<Terrain>();
+        //                              if (ent->HasComponent<Terrain>()) ent->RemoveComponent<Terrain>();
 
-                                     ent->AddComponent<Terrain>(LoadCLODTerrain(std::move(path), min, max));
+        //                              ent->AddComponent<Terrain>(LoadCLODTerrain(std::move(path), min, max));
 
-                                     auto& terrain = ent->GetComponent<Terrain>();
+        //                              auto& terrain = ent->GetComponent<Terrain>();
 
-                                     if (const auto& model = terrain.GetModel()) {
-                                         model->mesh().SetDrawMode(DRAW_MODE::PATCHES);
-                                         model->mesh().SetDrawType(DRAW_TYPE::ARRAYS);
+        //                              if (const auto& model = terrain.GetModel()) {
+        //                                  model->mesh().SetDrawMode(DRAW_MODE::PATCHES);
+        //                                  model->mesh().SetDrawType(DRAW_TYPE::ARRAYS);
 
-                                         model->mesh().SetDrawModeInfo(400);  // num patches
+        //                                  model->mesh().SetDrawModeInfo(400);  // num patches
 
-                                         ent->GetComponent<Drawable>().model_ptr = model;
-                                     }
+        //                                  ent->GetComponent<Drawable>().model_ptr = model;
+        //                              }
 
-                                     return terrain;
-                                 });
+        //                              return terrain;
+        //                          });
 
         entity_type.set_function("get_terrain", [](const Entity* ent) {
-            if (ent->HasComponent<Terrain>()) return ent->GetComponent<Terrain>();
+            if (ent->HasComponent<Components::Terrain>()) return ent->GetComponent<Components::Terrain>().terrain_ptr;
         });
 
         entity_type.set_function("add_model", [](Entity* ent, const std::string& path, const float scale = 1.0f,
@@ -542,16 +546,16 @@ namespace Vakol::Controller {
         camera_type.set_function("get_right", &Camera::GetRight);
 
         scene_type.set_function("add_terrain_physics", [](Scene* scene, const Entity ent) {
-            if (!ent.HasComponent<Terrain>()) {
+            if (!ent.HasComponent<Components::Terrain>()) {
                 VK_WARN("Entity does not have a terrain component. Can't add physics");
                 return;
             }
 
-            const auto& terrain = ent.GetComponent<Terrain>();
+            const auto& terrain = ent.GetComponent<Components::Terrain>();
 
             System::BindScene(*scene);
 
-            System::Physics_AddTerrain(terrain);
+            System::Physics_AddTerrain(*terrain.terrain_ptr);
         });
 
         scene_type.set_function("get_physics",
