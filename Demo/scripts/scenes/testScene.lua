@@ -4,9 +4,13 @@ function init()
 
     scene:create_entity("serialization", "entities/misc/serialization.lua");
     
-    scene:create_entity("Bob", "entities/agents/bob.lua");
+    -- scene:create_entity("Bob", "entities/agents/bob.lua");
+    scene:create_entity("Rabbit", "entities/agents/rabbit.lua");
 
-    scene:create_entity("Wolves", "entities/agents/wolf.lua");
+    -- scene:create_entity("Bears", "entities/agents/bear.lua")
+    -- scene:create_entity("Rabbits", "entities/agents/rabbit.lua");
+    -- scene:create_entity("Deers", "entities/agents/deer.lua");
+    -- scene:create_entity("Wolves", "entities/agents/wolf.lua");
 
 end
 

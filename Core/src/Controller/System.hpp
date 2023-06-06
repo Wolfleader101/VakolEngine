@@ -34,7 +34,7 @@ namespace Vakol::Controller
 
         static void Script_Update(LuaState& lua, EntityList& list, Scene* scene);
 
-        static void Physics_InitEntity(Entity& ent);
+        static void Physics_InitEntity(const Entity& ent);
 
         static void Physics_Init();
         static void Physics_UpdateTransforms(float factor);
