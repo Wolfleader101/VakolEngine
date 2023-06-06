@@ -3,6 +3,10 @@
 #include <glm/mat4x4.hpp>
 #include <glm/vec3.hpp>
 
+#include "Math.hpp"
+
+#include <cereal/archives/json.hpp>
+
 constexpr unsigned char PROJECTION_MATRIX = 0x0;
 constexpr unsigned char VIEW_MATRIX = 0x1;
 
@@ -32,6 +36,25 @@ namespace Vakol::Controller
 
         void SetPitch(const float _pitch) { pitch = _pitch; }
         void SetYaw(const float _yaw) { yaw = _yaw; }
+
+
+        template <class Archive>
+        void serialize(Archive& ar) {
+            ar( cereal::make_nvp("position", position),
+                cereal::make_nvp("forward", forward),
+                cereal::make_nvp("up", up),
+                cereal::make_nvp("right", right),
+                cereal::make_nvp("pitch", pitch),
+                cereal::make_nvp("yaw", yaw),
+                cereal::make_nvp("fov", fov),
+                cereal::make_nvp("aspect", aspect),
+                cereal::make_nvp("near", near),
+                cereal::make_nvp("far", far),
+                cereal::make_nvp("projection", PROJECTION),
+                cereal::make_nvp("view", VIEW),
+                cereal::make_nvp("forwardDir", forwardDir),
+                cereal::make_nvp("rightDir", rightDir));
+        }
 
     private:
         float pitch = 0.0f;

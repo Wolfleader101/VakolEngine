@@ -133,7 +133,7 @@ namespace Vakol::Controller
 
                 System::BindScene(scene);
 
-                m_renderer->UpdateData(m_time, scene.GetCamera());
+                m_renderer->UpdateData(scene.GetCamera());
 
                 scene.Update(m_time, m_renderer);
             }

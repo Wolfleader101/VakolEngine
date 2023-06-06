@@ -21,6 +21,12 @@ static std::vector<std::pair<std::string, int>> s_uniques;
 
 static int s_count = 0;
 
+glm::vec3 to_glm(const rp3d::Vector3& v) { return {v.x, v.y, v.z}; }
+glm::quat to_glm(const rp3d::Quaternion& q) { return {q.w, q.x, q.y, q.z}; }
+
+rp3d::Vector3 to_rp3d(const glm::vec3& v) { return {v.x, v.y, v.z}; }
+rp3d::Quaternion to_rp3d(const glm::quat& q) { return {q.x, q.y, q.z, q.w}; }
+
 namespace Vakol::Controller
 {
     entt::registry* System::m_registry = nullptr;
@@ -28,7 +34,7 @@ namespace Vakol::Controller
     EntityList* System::Entlist = nullptr;
 
     void System::BindScene(Scene& scene)
-	{
+    {
         m_registry = &scene.entityList.m_Registry;
         m_SP = scene.scenePhysics;
         Entlist = &scene.entityList;
@@ -38,7 +44,7 @@ namespace Vakol::Controller
     {
         m_registry->view<Drawable>().each([&](auto& drawable) 
         { 
-            if (drawable.model_ptr == nullptr)
+            if(drawable.model_ptr == nullptr && ! (drawable.name == "Terrain"))
                 drawable.model_ptr = AssetLoader::GetModel(drawable.name, drawable.scale, drawable.animated, drawable.backfaceCull).first;
         });
     }
@@ -62,10 +68,10 @@ namespace Vakol::Controller
         std::reverse(s_duplicates.begin(), s_duplicates.end());
 
         for (int i = 0; i < size; ++i)
-	        if (s_unique_set.insert(s_duplicates.at(i)).second)
+            if (s_unique_set.insert(s_duplicates.at(i)).second)
                 s_uniques.emplace_back(s_unique_set.begin()->first, i + 1);
 
-		m_registry->view<Components::Animator>().each([&](Components::Animator& animator)
+        m_registry->view<Components::Animator>().each([&](Components::Animator& animator)
         {
             for (const auto& [name, ID] : s_uniques)
                 if (ID == animator.ID) animator.unique = true;
@@ -73,18 +79,17 @@ namespace Vakol::Controller
     }
 
     void System::Drawable_Update(const Time& time, const std::shared_ptr<View::Renderer>& renderer)
-	{
+    {
         m_registry->view<Transform, Drawable>().each([&](const auto& transform, const Drawable& drawable)
         {
-	        if (!drawable.animated) renderer->Draw(transform, drawable);
+            if (!drawable.animated) renderer->Draw(transform, drawable);
         });
 
         m_registry->view<Transform, Drawable, Components::Animator>().each([&](const auto& transform, const Drawable& drawable, const Components::Animator& animator)
         {
-            if (animator.unique)
-        		animator.animator_ptr->Update(animator.animation_state, time.deltaTime);
+            if (animator.unique) animator.animator_ptr->Update(animator.animation_state, time.deltaTime);
 
-	        renderer->DrawAnimated(transform, drawable, animator);
+            renderer->DrawAnimated(transform, drawable, animator);
         });
     }
 
@@ -103,8 +108,8 @@ namespace Vakol::Controller
     }
 
     void System::Physics_Init()
-	{
-		const auto view = m_registry->view<RigidBody>();
+    {
+        const auto view = m_registry->view<RigidBody>();
 
         for (auto entity : view) 
         {
@@ -114,7 +119,7 @@ namespace Vakol::Controller
     }
 
     void System::Physics_UpdateTransforms(const float factor)
-	{
+    {
         m_registry->view<Transform, RigidBody>().each([&](auto& trans, auto& rigid) 
         {
             rp3d::Transform curr_transform = rigid.RigidBodyPtr->getTransform();
@@ -125,19 +130,13 @@ namespace Vakol::Controller
 
             rigid.prevTransform = curr_transform;
 
-            auto& interPos = interpolatedTransform.getPosition();
-            trans.pos = glm::vec3(interPos.x, interPos.y, interPos.z);
-
-            auto& rp3dQuat = interpolatedTransform.getOrientation();
-
-            const glm::quat glmQuat(rp3dQuat.w, rp3dQuat.x, rp3dQuat.y, rp3dQuat.z);
-
-            trans.rot = glm::eulerAngles(glmQuat);
+            trans.pos = to_glm(interpolatedTransform.getPosition());
+            trans.rot = to_glm(interpolatedTransform.getOrientation());
         });
     }
 
     void System::Physics_SerializationPrep()
-	{
+    {
         m_registry->view<RigidBody, Transform>().each(  // can deduce that a collider can't exist without a rigidbody
             [&](RigidBody& rigid, const Transform& trans) {
                 if (rigid.RigidBodyPtr) {
@@ -150,17 +149,17 @@ namespace Vakol::Controller
 
                     rigid.Type = static_cast<RigidBody::BODY_TYPE>(rigid.RigidBodyPtr->getType());
 
-                    const rp3d::Vector3 pos(trans.pos.x, trans.pos.y, trans.pos.z);
-                    const rp3d::Quaternion quat =
-                        rp3d::Quaternion::fromEulerAngles(trans.rot.x, trans.rot.y, trans.rot.z);
+                    const auto pos = to_rp3d(trans.pos);
+                    const auto rot = to_rp3d(trans.rot);
 
-                    rigid.prevTransform = rp3d::Transform(pos, quat);
+                    rigid.prevTransform = rp3d::Transform(pos, rot);
                 }
             });
     }
 
-    void System::Physics_InitEntity(Entity& ent) {
-        auto& trans = ent.GetComponent<Transform>();
+    void System::Physics_InitEntity(const Entity& ent)
+    {
+        const auto& trans = ent.GetComponent<Transform>();
         auto& rigid = ent.GetComponent<RigidBody>();
 
         if (rigid.initialized) return;
@@ -171,10 +170,9 @@ namespace Vakol::Controller
             return;
         }
 
-        const rp3d::Vector3 pos(trans.pos.x, trans.pos.y, trans.pos.z);
+        const auto pos = to_rp3d(trans.pos);
 
-        const auto rpTrans =
-            rp3d::Transform(pos, rp3d::Quaternion::fromEulerAngles({trans.rot.x, trans.rot.y, trans.rot.z}));
+        const auto rpTrans = rp3d::Transform(pos, rp3d::Quaternion::fromEulerAngles(to_rp3d(radians(trans.eulerAngles))));
 
         rigid.owningWorld = m_SP;
 

@@ -47,20 +47,22 @@ namespace Vakol::Model::Components
          * @param rot rotation
          * @param scale
          */
-        Transform(const glm::vec3& pos, const glm::vec3& rot, const glm::vec3& scale);
+        Transform(const glm::vec3& pos, const glm::quat& rot, const glm::vec3& scale);
 
-        glm::vec3 pos = glm::vec3(0, 0, 0); /**< XYZ position */
+        glm::vec3 pos = glm::vec3(0.0f, 0.0f, 0.0f); /**< XYZ position */
 
-        glm::vec3 rot = glm::vec3(0, 0, 0); /**< XYZ rotation */
+        glm::vec3 eulerAngles = glm::vec3(0.0f, 0.0f, 0.0f);
 
-        glm::vec3 scale = glm::vec3(1, 1, 1); /**< XYZ scale */
+        glm::quat rot = glm::quat(1.0f, 0.0f, 0.0f, 0.0f); /**< WXYZ rotation */
+
+        glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f); /**< XYZ scale */
 
         template <class Archive>
         void serialize(Archive& ar) {
             ar(cereal::make_nvp("pos.x", pos.x), cereal::make_nvp("pos.y", pos.y), cereal::make_nvp("pos.z", pos.z),
 
-               //    cereal::make_nvp("rot.w", rot.w),
-               cereal::make_nvp("rot.x", rot.x), cereal::make_nvp("rot.y", rot.y), cereal::make_nvp("rot.z", rot.z),
+
+               cereal::make_nvp("rot.x", eulerAngles.x), cereal::make_nvp("rot.y", eulerAngles.y), cereal::make_nvp("rot.z", eulerAngles.z),
 
                cereal::make_nvp("scale.x", scale.x), cereal::make_nvp("scale.y", scale.y),
                cereal::make_nvp("scale.z", scale.z));
@@ -69,7 +71,7 @@ namespace Vakol::Model::Components
 
     struct Animator
     {
-	    std::shared_ptr<Controller::Animator> animator_ptr = nullptr;
+        std::shared_ptr<Controller::Animator> animator_ptr = nullptr;
         int animation_state = 0;
         bool unique = false;
         int ID = 0;
@@ -172,7 +174,7 @@ namespace Vakol::Model::Components
     };
 
     struct Drawable
-	{
+    {
         Drawable() = default;
         explicit Drawable(std::string&& file);
         Drawable(const std::string& file, float scale, bool animated, bool backfaceCull);
@@ -197,8 +199,10 @@ namespace Vakol::Model::Components
 
     using namespace Vakol::Controller::Physics;
 
-    struct RigidBody {
-        enum BODY_TYPE {
+    struct RigidBody
+    {
+        enum BODY_TYPE
+        {
             STATIC = rp3d::BodyType::STATIC,
             KINEMATIC = rp3d::BodyType::KINEMATIC,
             DYNAMIC = rp3d::BodyType::DYNAMIC
@@ -207,7 +211,9 @@ namespace Vakol::Model::Components
         RigidBody() = default;
 
         bool initialized = false;
-        struct RigidData {
+
+        struct RigidData
+        {
             float mass = 3;                        /**< Mass of object*/
             bool grav = true;                      /**< If gravity is enabled on the object*/
             float LDamp = 0;                       /**< Linear Dampening*/
@@ -227,7 +233,7 @@ namespace Vakol::Model::Components
         // rigid body
         std::shared_ptr<ScenePhysics> owningWorld = nullptr;
         rp3d::RigidBody* RigidBodyPtr = nullptr;
-        BODY_TYPE Type = BODY_TYPE::DYNAMIC;  // default
+        BODY_TYPE Type = DYNAMIC;  // default
         RigidData Data;
 
         rp3d::Transform prevTransform;
@@ -250,7 +256,8 @@ namespace Vakol::Model::Components
         }
     };
 
-    struct Collider {
+    struct Collider
+    {
         enum ShapeName { BOX, SPHERE, CAPSULE, TRIANGLE_MESH };
 
         struct Bounds {
@@ -299,5 +306,5 @@ namespace Vakol::Model::Components
         }
     };
 
-    Collider::Bounds GetBounds(const Drawable& model);
+    Collider::Bounds GetBounds(const Drawable& model, const Transform& transform);
 }  // namespace Vakol::Model::Components

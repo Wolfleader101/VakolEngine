@@ -1,7 +1,6 @@
 #include "Scene.hpp"
 
 #include <Controller/Camera.hpp>
-#include <Controller/Serialization/Serializable.hpp>
 #include <Model/Components.hpp>
 #include <Model/Entity.hpp>
 #include <cereal/archives/json.hpp>
@@ -109,8 +108,6 @@ namespace Vakol::Controller
         const std::string FinalFolder = folder + "/" + name;
         entityList.Serialize(FinalFolder + "/EntityList.json");
 
-        // json.Serialize camera...
-
         //-- Serialize Scene info
         if (std::ofstream output(FinalFolder + "/Scene.json"); output.good()) 
         {
@@ -118,9 +115,9 @@ namespace Vakol::Controller
 
             json(cereal::make_nvp("Scene Name", name));
             json(cereal::make_nvp("Script Name", scriptName));
-            //json(cereal::make_nvp("Globals", sceneGlobals));
+            json(cereal::make_nvp("camera", cam));
 
-            
+            //json(cereal::make_nvp("Scene Globals", sceneGlobals));
         }
     }
 
@@ -136,6 +133,7 @@ namespace Vakol::Controller
             cereal::JSONInputArchive json(input);
             json(name);
             json(scriptName);
+            json(cam);
         }
     }
 
