@@ -11,7 +11,8 @@ function init()
     state.speed = 0.5;
     state.sprint_speed = 3;
     state.dir = Vector3.new(0);
-    random_dir();
+    state.dir.x = math.random(-1, 1);
+    state.dir.z = math.random(-1, 1);
 
     state.WAIT_TIMER = 0.0;
     state.DIR_TIMER = 0.0;
@@ -78,7 +79,8 @@ function init()
 
 
         if (dir_wait(math.random(4,6))) then
-            random_dir();
+            state.dir.x = math.random(-1, 1);
+            state.dir.z = math.random(-1, 1);
         end
         
         local velocity = state.speed * Time.delta_time;
@@ -96,20 +98,19 @@ function init()
         local player_dist = diff:magnitude();
 
         if(not state.SPOTTED or dir_wait(4)) then
-            -- Generate a random direction vector
-            local randomDir = Vector3.new(math.random() - 0.5, 0, math.random() - 0.5)
-            randomDir:normalize()
+            local rand_dir = Vector3.new(math.random() - 0.5, 0, math.random() - 0.5)
+            rand_dir:normalize()
 
             -- Check if the random direction is pointing towards the player
-            local dotProduct = randomDir:dot(diff:normalize())
+            local dotProduct = rand_dir:dot(diff:normalize())
                 while dotProduct > 0.5 do
-                    randomDir = Vector3.new(math.random() - 0.5, 0, math.random() - 0.5)
-                    randomDir:normalize()
-                    dotProduct = randomDir:dot(diff:normalize())
+                    rand_dir = Vector3.new(math.random() - 0.5, 0, math.random() - 0.5)
+                    rand_dir:normalize()
+                    dotProduct = rand_dir:dot(diff:normalize())
                 end
             
             -- Update the state direction
-            state.dir = randomDir
+            state.dir = rand_dir
             state.SPOTTED = true;
         end
 
@@ -128,11 +129,6 @@ function init()
     state.fsm:change_state("roaming")
 
     print_err("Rabbity is ready")
-end
-
-function random_dir()
-    state.dir.x = math.random(-1, 1);
-    state.dir.z = math.random(-1, 1);
 end
 
 function dir_wait(seconds)
