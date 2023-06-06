@@ -258,26 +258,31 @@ namespace Vakol::Controller {
         entity_type.set_function("get_transform", &Entity::GetComponent<Transform>);
 
         entity_type.set_function("create_height_map_terrain",
-                                 [](Entity* ent, std::string&& path, const float min, const float max) {
+                                 [](Entity* ent, Scene& scene, std::string&& path, const float min, const float max) {
                                      if (!ent->HasComponent<Drawable>()) ent->AddComponent<Drawable>();
 
-                                     if (ent->HasComponent<Terrain>()) ent->RemoveComponent<Terrain>();
+                                     if (ent->HasComponent<Components::Terrain>()) ent->RemoveComponent<Components::Terrain>();
+                                     std::shared_ptr<Terrain> terrain(AssetLoader::GetTerrain(scene->getName()));
+
+                                     if(terrain == nullptr)
+                                     {
+                                        terrain = AssetLoader::GetTerrain(scene->getName(), path, min, max);
+                                     }
 
                                      ent->AddComponent<Terrain>(LoadHeightMapTerrain(std::move(path), min, max));
 
                                      auto& terrain = ent->GetComponent<Terrain>();
 
-                                     if (const auto& model = terrain.GetModel()) {
+                                     if (const auto& model = terrain->GetModel()) {
                                          model->mesh().SetDrawMode(DRAW_MODE::STRIPS);
                                          model->mesh().SetDrawType(DRAW_TYPE::ELEMENTS);
 
-                                         model->mesh().SetDrawModeInfo((terrain.GetSize() - 1) / 1);  // num strips
+                                         model->mesh().SetDrawModeInfo((terrain->GetSize() - 1) / 1);  // num strips
 
-                                         model->mesh().SetNumTrisPerStrip(terrain.GetSize() / 1 * 2 - 2);
+                                         model->mesh().SetNumTrisPerStrip(terrain->GetSize() / 1 * 2 - 2);
 
                                         Drawable& drawable = ent->GetComponent<Drawable>();
                                         drawable.model_ptr = model;
-                                        drawable.name = "Terrain";// ugly
                                     }
 
                                      return terrain;
