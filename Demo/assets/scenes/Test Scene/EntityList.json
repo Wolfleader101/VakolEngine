@@ -54,9 +54,9 @@
     },
     "value13": 2,
     "value14": {
-        "pos.x": 2.700000047683716,
-        "pos.y": 8.932353019714356,
-        "pos.z": -12.0,
+        "pos.x": 0.0,
+        "pos.y": 0.0,
+        "pos.z": 0.0,
         "rot.x": 0.0,
         "rot.y": 0.0,
         "rot.z": 0.0,
@@ -90,11 +90,11 @@
     },
     "value19": 5,
     "value20": {
-        "pos.x": 0.0,
-        "pos.y": 0.0,
-        "pos.z": 0.0,
+        "pos.x": 11.993111610412598,
+        "pos.y": 4.208090782165527,
+        "pos.z": 10.0,
         "rot.x": 0.0,
-        "rot.y": 0.0,
+        "rot.y": 90.0,
         "rot.z": 0.0,
         "scale.x": 1.0,
         "scale.y": 1.0,
@@ -103,27 +103,27 @@
     "value21": 6,
     "value22": 0,
     "value23": {
-        "tag": "Camera Controller"
+        "tag": "Player"
     },
     "value24": 1,
     "value25": {
-        "tag": "terrain"
+        "tag": "First Person Camera Controller"
     },
     "value26": 2,
     "value27": {
-        "tag": "Bob"
+        "tag": "Player Stats"
     },
     "value28": 3,
     "value29": {
-        "tag": "test renderer"
+        "tag": "terrain"
     },
     "value30": 4,
     "value31": {
-        "tag": "Player Stats"
+        "tag": "serialization"
     },
     "value32": 5,
     "value33": {
-        "tag": "Save"
+        "tag": "Rabbit"
     },
     "value34": 0,
     "value35": 6,
@@ -154,43 +154,59 @@
     "value48": 6,
     "value49": 0,
     "value50": {
-        "ScriptName": "entities/player/cameraController.lua"
+        "ScriptName": "entities/player/player.lua"
     },
     "value51": 1,
     "value52": {
-        "ScriptName": "entities/terrain/physicsTerrain.lua"
+        "ScriptName": "entities/player/firstpersonController.lua"
     },
     "value53": 2,
     "value54": {
-        "ScriptName": "entities/agents/bob.lua"
+        "ScriptName": "entities/player/playerStats.lua"
     },
     "value55": 3,
     "value56": {
-        "ScriptName": "entities/test_rendering.lua"
+        "ScriptName": "entities/terrain/physicsTerrain.lua"
     },
     "value57": 4,
     "value58": {
-        "ScriptName": "entities/player/playerStats.lua"
+        "ScriptName": "entities/misc/serialization.lua"
     },
     "value59": 5,
     "value60": {
-        "ScriptName": "entities/misc/serialization.lua"
+        "ScriptName": "entities/agents/rabbit.lua"
     },
     "value61": 0,
     "value62": 0,
     "value63": 2,
-    "value64": 1,
+    "value64": 3,
     "value65": {
-        "Model": "Terrain",
+        "Model": "",
         "Import Scale": 1.0,
         "Animated": false,
         "Back Face Culling": true
     },
-    "value66": 2,
+    "value66": 5,
     "value67": {
-        "Model": "assets/models/enemy.glb",
-        "Import Scale": 0.003000000026077032,
+        "Model": "assets/models/agents/rabbit.fbx",
+        "Import Scale": 0.25,
         "Animated": true,
         "Back Face Culling": true
+    },
+    "value68": 1,
+    "value69": 5,
+    "value70": {
+        "animation_state": 5,
+        "unique": true,
+        "ID": 1,
+        "attached_model": "assets/models/agents/rabbit.fbx"
+    },
+    "value71": 1,
+    "value72": 3,
+    "value73": {
+        "Name": "Test Scene",
+        "Path": "coreAssets/textures/Heightmaps/height128.raw",
+        "Min": 0.0,
+        "Max": 30.0
     }
 }

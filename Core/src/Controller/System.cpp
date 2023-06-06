@@ -42,11 +42,30 @@ namespace Vakol::Controller
 
     void System::Drawable_Init()
     {
+        Terrain_Init();
         m_registry->view<Drawable>().each([&](auto& drawable) 
         { 
-            if(drawable.model_ptr == nullptr && ! (drawable.name == "Terrain"))
+            if(drawable.model_ptr == nullptr)
                 drawable.model_ptr = AssetLoader::GetModel(drawable.name, drawable.scale, drawable.animated, drawable.backfaceCull).first;
+
         });
+    }
+
+    void System::Terrain_Init()
+    {
+        m_registry->view<Drawable, Components::Terrain>().each([&](auto& drawable, auto& terrainComp) 
+        {
+            std::shared_ptr<Terrain> terrain = AssetLoader::GetTerrain(terrainComp.name);
+
+            if(!terrain)
+            {
+                terrain = AssetLoader::GetTerrain(terrainComp.name, terrainComp.path, terrainComp.min, terrainComp.max);
+            }
+
+            drawable.model_ptr = terrain->GetModel();
+            terrainComp.terrain_ptr = terrain;
+        });
+        
     }
 
     void System::Unique_Search()
@@ -120,7 +139,7 @@ namespace Vakol::Controller
 
     void System::Physics_UpdateTransforms(const float factor)
     {
-        m_registry->view<Transform, RigidBody>().each([&](auto& trans, auto& rigid) 
+        m_registry->group<Transform, RigidBody>().each([&](auto& trans, auto& rigid) 
         {
             rp3d::Transform curr_transform = rigid.RigidBodyPtr->getTransform();
 
@@ -137,7 +156,7 @@ namespace Vakol::Controller
 
     void System::Physics_SerializationPrep()
     {
-        m_registry->view<RigidBody, Transform>().each(  // can deduce that a collider can't exist without a rigidbody
+        m_registry->group<RigidBody, Transform>().each(  // can deduce that a collider can't exist without a rigidbody
             [&](RigidBody& rigid, const Transform& trans) {
                 if (rigid.RigidBodyPtr) {
                     rigid.Data.mass = rigid.RigidBodyPtr->getMass();
@@ -237,5 +256,10 @@ namespace Vakol::Controller
     };
 
     void System::Physics_AddTerrain(const Terrain& ter) { m_SP->AddTerrain(ter); }
+
+    // void System::Script_Init()
+    // {
+        
+    // }
 
 }  // namespace Vakol::Controller

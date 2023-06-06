@@ -76,6 +76,16 @@ namespace Vakol::Model::Components
         bool unique = false;
         int ID = 0;
         std::string attached_model;
+
+        template<class Archive>
+        void serialize(Archive& ar) {
+                       ar(
+                           cereal::make_nvp("animation_state", animation_state), 
+                           cereal::make_nvp("unique", unique),
+                           cereal::make_nvp("ID", ID), 
+                           cereal::make_nvp("attached_model", attached_model)
+                       );
+        }
     };
 
     /**
@@ -157,6 +167,7 @@ namespace Vakol::Model::Components
      */
     struct FSM
 	{
+        FSM() = default;
 		explicit FSM(Controller::LuaState& lua);
 
         void AddState(const std::string& stateName, const sol::function& callback);
@@ -167,10 +178,19 @@ namespace Vakol::Model::Components
 
         void Update();
 
+        template <class Archive>
+        void serialize(Archive& ar) 
+        {
+            ar(cereal::make_nvp("Current State", currentState));
+        }
+
+
     private:
         std::string currentState;
         sol::table states;
         Controller::LuaState& lua;
+
+
     };
 
     struct Drawable
@@ -307,4 +327,21 @@ namespace Vakol::Model::Components
     };
 
     Collider::Bounds GetBounds(const Drawable& model, const Transform& transform);
+
+    struct Terrain
+    {
+        std::shared_ptr<Controller::Terrain> terrain_ptr;
+
+        std::string name;
+        std::string path;
+        float min, max;
+
+        template <class Archive>
+        void serialize(Archive& ar) {
+            ar(cereal::make_nvp("Name", name));
+            ar(cereal::make_nvp("Path", path));
+            ar(cereal::make_nvp("Min", min));
+            ar(cereal::make_nvp("Max", max));
+        }
+    };
 }  // namespace Vakol::Model::Components

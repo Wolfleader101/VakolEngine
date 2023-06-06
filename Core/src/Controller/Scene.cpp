@@ -109,7 +109,9 @@ namespace Vakol::Controller
         entityList.Serialize(FinalFolder + "/EntityList.json");
 
         //-- Serialize Scene info
-        if (std::ofstream output(FinalFolder + "/Scene.json"); output.good()) 
+        std::ofstream output(FinalFolder + "/Scene.json");
+
+        if (output.good()) 
         {
             cereal::JSONOutputArchive json(output);
 
