@@ -185,7 +185,6 @@ function atan2(y, x)
     return angle;
 end
 
-
 function update()
     state.fsm:update()
 
