@@ -14,8 +14,7 @@
 #include "View/GUI/GUIWindow.hpp"
 
 namespace Vakol::Controller {
-    void RegisterMath(sol::state& lua)
-    {
+    void RegisterMath(sol::state& lua) {
         {
             sol::constructors<glm::vec2(), glm::vec2(float), glm::vec2(float, float)> ctor;  // allow for constructors
 
@@ -148,10 +147,7 @@ namespace Vakol::Controller {
 
             auto quat = lua.new_usertype<glm::quat>("Quaternion", ctor);
 
-            quat.set_function("Euler", [](const glm::quat& rot) 
-            {
-                return eulerAngles(rot);
-            });
+            quat.set_function("Euler", [](const glm::quat& rot) { return eulerAngles(rot); });
         }
     }
 
@@ -257,8 +253,7 @@ namespace Vakol::Controller {
             Input::KEY::KEY_ESCAPE);
     }
 
-    void RegisterEntity(LuaState& state, sol::state& lua)
-    {
+    void RegisterEntity(LuaState& state, sol::state& lua) {
         auto entity_type = lua.new_usertype<Entity>("entity");
         auto model_type = lua.new_usertype<Assets::Model>("model");
         auto mesh_type = lua.new_usertype<Mesh>("mesh");
@@ -269,6 +264,7 @@ namespace Vakol::Controller {
                          [](const std::shared_ptr<Assets::Model>& model, const std::vector<glm::mat4>& matrices,
                             const int amount) { CreateInstances(model->meshes(), matrices, amount, 3); });
 
+        entity_type.set_function("get_tag", [](Entity* ent) { return ent->GetComponent<Tag>().tag; });
         entity_type.set_function("get_transform", &Entity::GetComponent<Transform>);
 
         entity_type.set_function("create_height_map_terrain",
@@ -289,10 +285,10 @@ namespace Vakol::Controller {
 
                                          model->mesh().SetNumTrisPerStrip(terrain.GetSize() / 1 * 2 - 2);
 
-                                        Drawable& drawable = ent->GetComponent<Drawable>();
-                                        drawable.model_ptr = model;
-                                        drawable.name = "Terrain";// ugly
-                                    }
+                                         Drawable& drawable = ent->GetComponent<Drawable>();
+                                         drawable.model_ptr = model;
+                                         drawable.name = "Terrain";  // ugly
+                                     }
 
                                      return terrain;
                                  });
@@ -420,22 +416,19 @@ namespace Vakol::Controller {
         material_type.set_function("get_ambient_color", &Assets::Material::GetAmbientColor);
         material_type.set_function("get_diffuse_color", &Assets::Material::GetDiffuseColor);
 
-        shader_type.set_function("set_bool", [](const Shader* shader, const std::string& name, const bool value) 
-        {
+        shader_type.set_function("set_bool", [](const Shader* shader, const std::string& name, const bool value) {
             shader->Bind();
             shader->SetBool(name.c_str(), value);
             shader->Unbind();
         });
 
-        shader_type.set_function("set_int", [](const Shader* shader, const std::string& name, const int value) 
-        {
+        shader_type.set_function("set_int", [](const Shader* shader, const std::string& name, const int value) {
             shader->Bind();
             shader->SetInt(name.c_str(), value);
             shader->Unbind();
         });
 
-        shader_type.set_function("set_float", [](const Shader* shader, const std::string& name, const float value) 
-        {
+        shader_type.set_function("set_float", [](const Shader* shader, const std::string& name, const float value) {
             shader->Bind();
             shader->SetFloat(name.c_str(), value);
             shader->Unbind();
@@ -454,7 +447,7 @@ namespace Vakol::Controller {
         shader_type.set_function("set_vec4",
                                  sol::resolve<void(const char*, float, float, float, float) const>(&Shader::SetVec4));
 
-        entity_type.set_function("physics_init", [](const Entity* ent, Scene& scene) { 
+        entity_type.set_function("physics_init", [](const Entity* ent, Scene& scene) {
             System::BindScene(scene);
             System::Physics_InitEntity(*ent);
         });
@@ -538,7 +531,6 @@ namespace Vakol::Controller {
 
         scene_type.set_function("get_camera", &Scene::GetCamera);
         scene_type.set_function("get_entity", &Scene::GetEntity);
-        
 
         camera_type.set_function("get_pos", &Camera::GetPos);
         camera_type.set_function("set_pos", &Camera::SetPos);
@@ -558,13 +550,14 @@ namespace Vakol::Controller {
             System::Physics_AddTerrain(terrain);
         });
 
-        scene_type.set_function("enable_debug", [](Scene* scene, const bool enable) {
-            
-            scene->scenePhysics->EnableDebug(enable);
-        });
+        scene_type.set_function("enable_debug",
+                                [](Scene* scene, const bool enable) { scene->scenePhysics->EnableDebug(enable); });
 
-        scene_type.set_function("serialize", &Scene::Serialize); // Give it folder assets/scenes. will create subfolder for scene
-        scene_type.set_function("deserialize", &Scene::Deserialize); //needs to be given folder assets/scenes/scene_name .ie assets/scenes/Test Scene
+        scene_type.set_function("serialize",
+                                &Scene::Serialize);  // Give it folder assets/scenes. will create subfolder for scene
+        scene_type.set_function(
+            "deserialize",
+            &Scene::Deserialize);  // needs to be given folder assets/scenes/scene_name .ie assets/scenes/Test Scene
         scene_type.set_function("get_name", &Scene::getName);
 
         camera_type.set_function("get_pitch", &Camera::GetPitch);
@@ -572,8 +565,6 @@ namespace Vakol::Controller {
 
         camera_type.set_function("get_yaw", &Camera::GetYaw);
         camera_type.set_function("set_yaw", &Camera::SetYaw);
-
-
     }
 
     void RegisterGUIWindow(sol::state& lua, View::GUIWindow* gui) {
@@ -635,9 +626,7 @@ namespace Vakol::Controller {
         });
     }
 
-    void RegisterPhysics(sol::state& lua) 
-    {
-
+    void RegisterPhysics(sol::state& lua) {
         auto rp3dVec3 = lua.new_usertype<rp3d::Vector3>("phyVec3");  // need for collider
         rp3dVec3["x"] = &rp3d::Vector3::x;
         rp3dVec3["y"] = &rp3d::Vector3::y;
@@ -704,7 +693,6 @@ namespace Vakol::Controller {
 
         colliderType.set_function(
             "set_bounds", [](Collider* collider, const Collider::Bounds& bounds) { collider->SetBounds(bounds); });
-
     }
 
     std::vector<glm::mat4> create_mat4_vector(const int reserve) {

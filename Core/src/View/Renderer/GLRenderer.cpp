@@ -137,8 +137,7 @@ namespace Vakol::View {
         shader->Unbind();
     }
 
-    void GLRenderer::Draw(const Components::Transform& transform, const Components::Drawable& drawable) const
-    {
+    void GLRenderer::Draw(const Components::Transform& transform, const Components::Drawable& drawable) const {
         const auto& model = drawable.model_ptr;
         VK_ASSERT(model, "\n\nModel ptr is nullptr");
 
@@ -172,8 +171,7 @@ namespace Vakol::View {
         shader->Unbind();
     }
 
-    void GLRenderer::UpdateData(const Controller::Camera& camera)
-    {
+    void GLRenderer::UpdateData(const Controller::Camera& camera) {
         PROJECTION = camera.GetMatrix(PROJECTION_MATRIX);
         VIEW = camera.GetMatrix(VIEW_MATRIX);
 
@@ -205,4 +203,4 @@ namespace Vakol::View {
 
         if (isSkybox) skybox->Draw(PROJECTION, VIEW);
     }
-}
+}  // namespace Vakol::View
