@@ -42,7 +42,7 @@ namespace Vakol::View
 
     	void ClearBuffer(unsigned int buffer_bit) const override;
 
-        void DrawAnimated(const Model::Components::Transform& transform, const Model::Components::Drawable& drawable, const Model::Components::Animator& _animator) const override;
+        void DrawAnimated(const Model::Components::Transform& transform, const Model::Components::Drawable& drawable, const Model::Assets::Animation& animation) const override;
         void Draw(const Model::Components::Transform& transform, const Model::Components::Drawable& drawable) const override;
 
         void UpdateData(const Controller::Camera& camera) override;

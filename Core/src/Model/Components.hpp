@@ -71,11 +71,22 @@ namespace Vakol::Model::Components
 
     struct Animator
     {
-        std::shared_ptr<Controller::Animator> animator_ptr = nullptr;
-        int animation_state = 0;
-        bool unique = false;
-        int ID = 0;
         std::string attached_model;
+
+        void Update(const int state, const float delta_time) { animator_ptr->Update(state, delta_time); }
+        void Update(const float delta_time) { animator_ptr->Update(delta_time); }
+
+        [[nodiscard]] const Model::Assets::Animation& const animation(const int state) const { return animator_ptr->get(state); } 
+
+        void set(const std::shared_ptr<Controller::Animator>& animator) { animator_ptr = animator; }
+        void set(const Controller::Animator& animator) { animator_ptr = std::make_shared<Controller::Animator>(animator); }
+    private:
+        std::shared_ptr<Controller::Animator> animator_ptr = nullptr;
+    };
+
+    struct Animation
+    {
+        int state = 0;
     };
 
     /**

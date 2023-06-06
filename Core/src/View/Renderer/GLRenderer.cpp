@@ -95,17 +95,13 @@ namespace Vakol::View {
 
     void GLRenderer::ClearBuffer(const unsigned int buffer_bit) const { glClear(buffer_bit); }
 
-    void GLRenderer::DrawAnimated(const Components::Transform& transform, const Components::Drawable& drawable,
-                                  const Components::Animator& _animator) const {
+    void GLRenderer::DrawAnimated(const Components::Transform& transform, const Components::Drawable& drawable, const Assets::Animation& animation) const 
+    {
         const auto& model = drawable.model_ptr;
         VK_ASSERT(model, "\n\nModel ptr is nullptr");
 
         const auto& shader = model->c_shader();
         VK_ASSERT(shader, "\n\nShader is nullptr");
-
-        const auto animation_state = _animator.animation_state;
-
-        const auto& animator = _animator.animator_ptr;
 
         if (!model->cullBackface()) glDisable(GL_CULL_FACE);
 
@@ -119,8 +115,7 @@ namespace Vakol::View {
 
         shader->SetMat4("MODEL_MATRIX", translation_matrix * rotation_matrix * scale_matrix);
 
-        shader->SetMat4v("BONE_TRANSFORMS", animator->nTransforms(animation_state),
-                         value_ptr(animator->transform(animation_state)));
+        shader->SetMat4v("BONE_TRANSFORMS", animation.numTransforms(), value_ptr(animation.transform()));
 
         for (int i = 0; i < model->nMeshes(); ++i) {
             const auto& mesh = model->mesh(i);

@@ -327,7 +327,8 @@ namespace Vakol::Controller {
 
             auto [model, animator] = AssetLoader::GetModel(path, scale, animated, backfaceCull, instance);
 
-            if (model) {
+            if (model) 
+            {
                 auto& draw = ent->GetComponent<Drawable>();
 
                 draw.model_ptr = model;
@@ -337,13 +338,19 @@ namespace Vakol::Controller {
                 draw.backfaceCull = backfaceCull;
                 draw.instance = instance;
 
-                if (animator && animated) {
-                    if (!ent->HasComponent<Components::Animator>()) ent->AddComponent<Components::Animator>();
+                if (animator && animated) 
+                {
+                    if (!ent->HasComponent<Components::Animation>()) ent->AddComponent<Components::Animation>();
+                    
+                    if (!instance)
+                    {   
+                        if (!ent->HasComponent<Components::Animator>()) ent->AddComponent<Components::Animator>();
 
-                    auto& [ptr, state, unique, ID, model_name] = ent->GetComponent<Components::Animator>();
+                        auto& _animator = ent->GetComponent<Components::Animator>();
 
-                    ptr = animator;
-                    model_name = draw.name;
+                        _animator.attached_model = draw.name;
+                        _animator.set(animator);
+                    }
                 }
             }
 
@@ -388,20 +395,17 @@ namespace Vakol::Controller {
                                      model->mesh(mesh_index).GetMaterial()->AddTexture(*AssetLoader::GetTexture(path));
                                  });
 
-        entity_type.set_function("set_animation_state", [](const Entity* ent, int animation_state) {
-            if (!ent->HasComponent<Components::Animator>()) {
-                VK_ERROR("Animator component is needed to set animation state!");
+        entity_type.set_function("set_animation_state", [](const Entity* ent, int animation_state) 
+        {
+            if (!ent->HasComponent<Components::Animation>()) 
+            {
+                VK_ERROR("Animation component is needed to set it's animation state!");
                 return;
             }
 
-            auto& [animator_ptr, state, unique, ID, model_name] = ent->GetComponent<Components::Animator>();
+            auto& animation = ent->GetComponent<Components::Animation>();
 
-            if (const auto size = animator_ptr->nAnimations(); animation_state < size && animation_state >= 0)
-                state = animation_state;
-            else {
-                animation_state = std::max(0, size - 1);
-                state = animation_state;
-            }
+            animation.state = animation_state;
         });
 
         model_type.set_function("get_mesh_count", &Assets::Model::nMeshes);

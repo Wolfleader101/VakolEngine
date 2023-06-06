@@ -12,13 +12,9 @@
 #include <glm/gtc/quaternion.hpp>
 #pragma warning(pop)
 
+static std::set<int> s_unique;
+
 using namespace Components;
-
-static std::vector<std::pair<std::string, int>> s_duplicates;
-static std::set<std::pair<std::string, int>> s_unique_set;
-static std::vector<std::pair<std::string, int>> s_uniques;
-
-static int s_count = 0;
 
 glm::vec3 to_glm(const rp3d::Vector3& v) { return {v.x, v.y, v.z}; }
 glm::quat to_glm(const rp3d::Quaternion& q) { return {q.w, q.x, q.y, q.z}; }
@@ -26,7 +22,8 @@ glm::quat to_glm(const rp3d::Quaternion& q) { return {q.w, q.x, q.y, q.z}; }
 rp3d::Vector3 to_rp3d(const glm::vec3& v) { return {v.x, v.y, v.z}; }
 rp3d::Quaternion to_rp3d(const glm::quat& q) { return {q.x, q.y, q.z, q.w}; }
 
-namespace Vakol::Controller {
+namespace Vakol::Controller 
+{
     entt::registry* System::m_registry = nullptr;
     std::shared_ptr<ScenePhysics> System::m_SP = nullptr;
     EntityList* System::Entlist = nullptr;
@@ -48,36 +45,12 @@ namespace Vakol::Controller {
 
     void System::Unique_Search() 
     {
-        s_duplicates.clear();
-        s_unique_set.clear();
-        s_uniques.clear();
-
-        m_registry->view<Components::Animator>().each([&](const Components::Animator& animator) {
-            s_duplicates.emplace_back(animator.attached_model, animator.animation_state);
-        });
-
-        const auto size = static_cast<int>(s_duplicates.size());
-        s_count = size;
-
-        m_registry->view<Components::Animator>().each([&](Components::Animator& animator) {
-            animator.ID = s_count;
-            s_count--;
-        });
-
-        std::reverse(s_duplicates.begin(), s_duplicates.end());
-
-        for (int i = 0; i < size; ++i)
-            if (s_unique_set.insert(s_duplicates.at(i)).second)
-                s_uniques.emplace_back(s_unique_set.begin()->first, i + 1);
-
-        m_registry->view<Components::Animator>().each([&](Components::Animator& animator) {
-            for (const auto& [name, ID] : s_uniques)
-                if (ID == animator.ID) animator.unique = true;
-        });
     }
 
-    void System::Drawable_Update(const Time& time, const std::shared_ptr<View::Renderer>& renderer) {
-        m_registry->view<Transform, Drawable>().each([&](auto& transform, const Drawable& drawable) {
+    void System::Drawable_Update(const Time& time, const std::shared_ptr<View::Renderer>& renderer)
+    {
+        m_registry->view<Transform, Drawable>().each([&](auto& transform, const Drawable& drawable) 
+        {
             auto euler_rads = glm::radians(transform.eulerAngles);
 
             transform.rot = glm::quat(euler_rads);
@@ -85,14 +58,39 @@ namespace Vakol::Controller {
             if (!drawable.animated) renderer->Draw(transform, drawable);
         });
 
-        Unique_Search();
+        auto animation_view = m_registry->view<Transform, Drawable, Components::Animation>();
 
-        m_registry->view<Transform, Drawable, Components::Animator>().each(
-            [&](const auto& transform, const Drawable& drawable, const Components::Animator& animator) {
-                if (animator.unique) animator.animator_ptr->Update(animator.animation_state, time.deltaTime);
+        m_registry->view<Components::Animator>().each([&](Components::Animator& animator)
+        {
+            for (const auto state : s_unique)
+                animator.Update(state, time.deltaTime);
 
-                renderer->DrawAnimated(transform, drawable, animator);
-            });
+            for (auto _entity : animation_view)
+            {
+                const auto& transform = animation_view.get<Transform>(_entity);
+                const auto& drawable = animation_view.get<Drawable>(_entity);
+                const auto& animation = animation_view.get<Components::Animation>(_entity);
+
+                if (s_unique.insert(animation.state).second) continue;
+
+                renderer->DrawAnimated(transform, drawable, animator.animation(animation.state));
+            }         
+        });
+
+        // This works fine, just non-performant (I WANT SPEEEED)
+        // 
+        //m_registry->view<Components::Animator>().each([&](Components::Animator& animator)
+        //{
+        //    for (const auto state : s_unique)
+        //        animator.Update(state, time.deltaTime);
+
+        //    m_registry->view<Transform, Drawable, Components::Animation>().each([&](const auto& transform, const Drawable& drawable, const Components::Animation& _animation) 
+        //    {
+        //        if (!s_unique.insert(_animation.state).second) continue;
+
+        //        renderer->DrawAnimated(transform, drawable, animator.animation(_animation.state));
+        //    });
+        //});
     }
 
     void System::Script_Update(LuaState& lua, EntityList& list, Scene* scene) {
