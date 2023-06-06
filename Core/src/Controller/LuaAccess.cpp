@@ -76,6 +76,7 @@ namespace Vakol::Controller {
 
             vec3.set_function("magnitude", [](const glm::vec3& v) -> float { return glm::length(v); });
             vec3.set_function("normalize", [](const glm::vec3& v) -> glm::vec3 { return glm::normalize(v); });
+            vec3.set_function("dot", [](const glm::vec3& u, const glm::vec3& v) -> float { return glm::dot(u, v); });
         }
 
         {
