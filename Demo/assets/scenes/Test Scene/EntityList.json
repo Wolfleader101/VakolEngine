@@ -11,28 +11,24 @@
         },
         {
             "handle": 3
+        },
+        {
+            "handle": 4
+        },
+        {
+            "handle": 5
         }
     ],
-    "value0": 4,
+    "value0": 6,
     "value1": 0,
     "value2": 0,
     "value3": 1,
     "value4": 2,
     "value5": 3,
     "value6": 4,
-    "value7": 0,
-    "value8": {
-        "pos.x": 0.0,
-        "pos.y": 0.0,
-        "pos.z": 0.0,
-        "rot.x": 0.0,
-        "rot.y": 0.0,
-        "rot.z": 0.0,
-        "scale.x": 1.0,
-        "scale.y": 1.0,
-        "scale.z": 1.0
-    },
-    "value9": 1,
+    "value7": 5,
+    "value8": 6,
+    "value9": 0,
     "value10": {
         "pos.x": 0.0,
         "pos.y": 0.0,
@@ -44,7 +40,7 @@
         "scale.y": 1.0,
         "scale.z": 1.0
     },
-    "value11": 2,
+    "value11": 1,
     "value12": {
         "pos.x": 0.0,
         "pos.y": 0.0,
@@ -56,11 +52,11 @@
         "scale.y": 1.0,
         "scale.z": 1.0
     },
-    "value13": 3,
+    "value13": 2,
     "value14": {
-        "pos.x": 1.0,
+        "pos.x": 0.0,
         "pos.y": 0.0,
-        "pos.z": -5.0,
+        "pos.z": 0.0,
         "rot.x": 0.0,
         "rot.y": 0.0,
         "rot.z": 0.0,
@@ -68,60 +64,149 @@
         "scale.y": 1.0,
         "scale.z": 1.0
     },
-    "value15": 4,
-    "value16": 0,
-    "value17": {
+    "value15": 3,
+    "value16": {
+        "pos.x": 0.0,
+        "pos.y": 0.0,
+        "pos.z": 0.0,
+        "rot.x": 0.0,
+        "rot.y": 0.0,
+        "rot.z": 0.0,
+        "scale.x": 1.0,
+        "scale.y": 1.0,
+        "scale.z": 1.0
+    },
+    "value17": 4,
+    "value18": {
+        "pos.x": 0.0,
+        "pos.y": 0.0,
+        "pos.z": 0.0,
+        "rot.x": 0.0,
+        "rot.y": 0.0,
+        "rot.z": 0.0,
+        "scale.x": 1.0,
+        "scale.y": 1.0,
+        "scale.z": 1.0
+    },
+    "value19": 5,
+    "value20": {
+        "pos.x": 12.166658401489258,
+        "pos.y": 4.918118000030518,
+        "pos.z": 7.9827046394348148,
+        "rot.x": 0.0,
+        "rot.y": 90.0,
+        "rot.z": 0.0,
+        "scale.x": 1.0,
+        "scale.y": 1.0,
+        "scale.z": 1.0
+    },
+    "value21": 6,
+    "value22": 0,
+    "value23": {
         "tag": "Player"
     },
-    "value18": 1,
-    "value19": {
+    "value24": 1,
+    "value25": {
         "tag": "First Person Camera Controller"
     },
-    "value20": 2,
-    "value21": {
+    "value26": 2,
+    "value27": {
         "tag": "Player Stats"
     },
-    "value22": 3,
-    "value23": {
-        "tag": "Wolves"
-    },
-    "value24": 0,
-    "value25": 4,
-    "value26": 0,
-    "value27": {
-        "TagType": 0
-    },
-    "value28": 1,
+    "value28": 3,
     "value29": {
-        "TagType": 0
+        "tag": "terrain"
     },
-    "value30": 2,
+    "value30": 4,
     "value31": {
-        "TagType": 0
+        "tag": "serialization"
     },
-    "value32": 3,
+    "value32": 5,
     "value33": {
+        "tag": "Rabbit"
+    },
+    "value34": 0,
+    "value35": 6,
+    "value36": 0,
+    "value37": {
         "TagType": 0
     },
-    "value34": 4,
-    "value35": 0,
-    "value36": {
+    "value38": 1,
+    "value39": {
+        "TagType": 0
+    },
+    "value40": 2,
+    "value41": {
+        "TagType": 0
+    },
+    "value42": 3,
+    "value43": {
+        "TagType": 0
+    },
+    "value44": 4,
+    "value45": {
+        "TagType": 0
+    },
+    "value46": 5,
+    "value47": {
+        "TagType": 0
+    },
+    "value48": 6,
+    "value49": 0,
+    "value50": {
         "ScriptName": "entities/player/player.lua"
     },
-    "value37": 1,
-    "value38": {
+    "value51": 1,
+    "value52": {
         "ScriptName": "entities/player/firstpersonController.lua"
     },
-    "value39": 2,
-    "value40": {
+    "value53": 2,
+    "value54": {
         "ScriptName": "entities/player/playerStats.lua"
     },
-    "value41": 3,
-    "value42": {
-        "ScriptName": "entities/agents/wolf.lua"
+    "value55": 3,
+    "value56": {
+        "ScriptName": "entities/terrain/physicsTerrain.lua"
     },
-    "value43": 0,
-    "value44": 0,
-    "value45": 0,
-    "value46": 0
+    "value57": 4,
+    "value58": {
+        "ScriptName": "entities/misc/serialization.lua"
+    },
+    "value59": 5,
+    "value60": {
+        "ScriptName": "entities/agents/rabbit.lua"
+    },
+    "value61": 0,
+    "value62": 0,
+    "value63": 2,
+    "value64": 3,
+    "value65": {
+        "Model": "",
+        "Import Scale": 1.0,
+        "Animated": false,
+        "Back Face Culling": true
+    },
+    "value66": 5,
+    "value67": {
+        "Model": "assets/models/agents/rabbit.fbx",
+        "Import Scale": 0.25,
+        "Animated": true,
+        "Back Face Culling": true
+    },
+    "value68": 1,
+    "value69": 5,
+    "value70": {
+        "animation_state": 5,
+        "unique": true,
+        "ID": 1,
+        "attached_model": "assets/models/agents/rabbit.fbx"
+    },
+    "value71": 1,
+    "value72": 3,
+    "value73": {
+        "Name": "Test Scene",
+        "Path": "coreAssets/textures/Heightmaps/height128.raw",
+        "Min": 0.0,
+        "Max": 30.0
+    }
 }
