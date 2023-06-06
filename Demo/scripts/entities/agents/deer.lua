@@ -7,8 +7,8 @@ function init()
         WALK = 5
     }
 
-    state.speed = 1.0;
-    state.sprint_speed = 5.0;
+    state.speed = 0.3;
+    state.sprint_speed = 4.0;
     state.dir = Vector3.new(0);
     state.dir.x = math.random(-1, 1);
     state.dir.z = math.random(-1, 1);
