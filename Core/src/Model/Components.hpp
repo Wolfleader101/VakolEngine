@@ -152,7 +152,7 @@ namespace Vakol::Model::Components
         Script() = default;
         explicit Script(std::string& name);
 
-        Script(const std::string& script, Controller::LuaState& lua, Entity& entity, Controller::Scene& scene);
+        Script(const std::string& script, std::shared_ptr<Controller::LuaState> lua, Entity& entity, Controller::Scene& scene);
 
         template <class Archive>
         void serialize(Archive& ar) {
@@ -168,7 +168,7 @@ namespace Vakol::Model::Components
     struct FSM
 	{
         FSM() = default;
-		explicit FSM(Controller::LuaState& lua);
+		FSM(std::shared_ptr<Controller::LuaState> lua);
 
         void AddState(const std::string& stateName, const sol::function& callback);
 
@@ -188,7 +188,7 @@ namespace Vakol::Model::Components
     private:
         std::string currentState;
         sol::table states;
-        Controller::LuaState& lua;
+        std::shared_ptr<Controller::LuaState>  lua;
 
 
     };

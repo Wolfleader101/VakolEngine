@@ -257,7 +257,7 @@ namespace Vakol::Controller {
             Input::KEY::KEY_ESCAPE);
     }
 
-    void RegisterEntity(LuaState& state, sol::state& lua)
+    void RegisterEntity(std::shared_ptr<LuaState>& state, sol::state& lua)
     {
         auto entity_type = lua.new_usertype<Entity>("entity");
         auto model_type = lua.new_usertype<Assets::Model>("model");
@@ -508,7 +508,8 @@ namespace Vakol::Controller {
             }
         });
 
-        entity_type.set_function("add_fsm", [&](Entity* ent) -> FSM& {
+        entity_type.set_function("add_fsm", [&state](Entity* ent) -> FSM& {
+            
             if (!ent->HasComponent<FSM>()) ent->AddComponent<FSM>(state);
             return ent->GetComponent<FSM>();
         });

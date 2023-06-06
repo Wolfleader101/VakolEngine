@@ -130,7 +130,7 @@ namespace Vakol::Controller {
          * @brief holds the lua state
          *
          */
-        LuaState lua;
+        std::shared_ptr<LuaState> lua;
 
         std::vector<Scene> scenes;
 

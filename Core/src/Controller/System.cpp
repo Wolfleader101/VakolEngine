@@ -112,17 +112,17 @@ namespace Vakol::Controller
         });
     }
 
-    void System::Script_Update(LuaState& lua, EntityList& list, Scene* scene)
+    void System::Script_Update(std::shared_ptr<LuaState> lua, EntityList& list, Scene* scene)
 	{
         m_registry->view<Script>().each([&](auto entity_id, auto& script) 
         {
-            lua.RunFile("scripts/" + script.script_name);
+            lua->RunFile("scripts/" + script.script_name);
 
-            lua.GetState()["scene"] = scene;
-            lua.GetState()["entity"] = list.GetEntity(static_cast<unsigned int>(entity_id));
-            lua.GetState()["state"] = script.state;
+            lua->GetState()["scene"] = scene;
+            lua->GetState()["entity"] = list.GetEntity(static_cast<unsigned int>(entity_id));
+            lua->GetState()["state"] = script.state;
 
-            lua.RunFunction("update");
+            lua->RunFunction("update");
         });
     }
 
