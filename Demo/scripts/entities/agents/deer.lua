@@ -8,7 +8,7 @@ function init()
     }
 
     state.speed = 1.0;
-    state.sprint_speed = 6;
+    state.sprint_speed = 5.0;
     state.dir = Vector3.new(0);
     state.dir.x = math.random(-1, 1);
     state.dir.z = math.random(-1, 1);
@@ -82,11 +82,9 @@ function init()
             state.dir.z = math.random(-1, 1);
 
             -- Update rotation after direction update
-            local targetRotation = atan2(state.dir.x, state.dir.z)  -- swapped x and z
+            local targetRotation = atan2(state.dir.x, state.dir.z)
             targetRotation = to_degrees(targetRotation)
             entity:get_transform().rot.y = targetRotation
-
-            print("Target Rotation: " .. targetRotation);
         end
         
         local velocity = state.speed * Time.delta_time;
@@ -123,8 +121,6 @@ function init()
             local targetRotation = atan2(state.dir.x, state.dir.z)
             targetRotation = to_degrees(targetRotation)
             entity:get_transform().rot.y = targetRotation
-
-            print("Target Rotation: " .. targetRotation);
         end
 
         local velocity = state.sprint_speed * Time.delta_time;
@@ -196,6 +192,10 @@ function update()
     local pos = entity:get_transform().pos;
     local terr_scale = scene.globals.terrain.transform.scale;
     pos.y = (scene.globals.terrain.terr:get_height(pos.x / terr_scale.x, pos.z / terr_scale.z) * terr_scale.y) + 0.03;
+
+    local targetRotation = atan2(state.dir.x, state.dir.z)
+    targetRotation = to_degrees(targetRotation)
+    entity:get_transform().rot.y = targetRotation
 
     local diff = scene.globals.player.pos - pos;
     local player_dist = diff:magnitude();
