@@ -35,13 +35,14 @@ namespace Vakol::Controller
         static void Script_Update(LuaState& lua, EntityList& list, Scene* scene);
 
         static void Physics_InitEntity(const Entity& ent);
-
         static void Physics_Init();
         static void Physics_UpdateTransforms(float factor);
         static void Physics_SerializationPrep();
         static void Physics_AddTerrain(const Terrain& ter); 
 
         static void Terrain_Init();
+
+        static void FSM_Init();
 
     private:
         static std::shared_ptr<ScenePhysics> m_SP;

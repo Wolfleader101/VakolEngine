@@ -139,7 +139,7 @@ namespace Vakol::Controller
 
     void System::Physics_UpdateTransforms(const float factor)
     {
-        m_registry->view<Transform, RigidBody>().each([&](auto& trans, auto& rigid) 
+        m_registry->group<Transform, RigidBody>().each([&](auto& trans, auto& rigid) 
         {
             rp3d::Transform curr_transform = rigid.RigidBodyPtr->getTransform();
 
@@ -156,7 +156,7 @@ namespace Vakol::Controller
 
     void System::Physics_SerializationPrep()
     {
-        m_registry->view<RigidBody, Transform>().each(  // can deduce that a collider can't exist without a rigidbody
+        m_registry->group<RigidBody, Transform>().each(  // can deduce that a collider can't exist without a rigidbody
             [&](RigidBody& rigid, const Transform& trans) {
                 if (rigid.RigidBodyPtr) {
                     rigid.Data.mass = rigid.RigidBodyPtr->getMass();
@@ -256,5 +256,10 @@ namespace Vakol::Controller
     };
 
     void System::Physics_AddTerrain(const Terrain& ter) { m_SP->AddTerrain(ter); }
+
+    // void System::Script_Init()
+    // {
+        
+    // }
 
 }  // namespace Vakol::Controller

@@ -167,6 +167,7 @@ namespace Vakol::Model::Components
      */
     struct FSM
 	{
+        FSM() = default;
 		explicit FSM(Controller::LuaState& lua);
 
         void AddState(const std::string& stateName, const sol::function& callback);
@@ -177,10 +178,19 @@ namespace Vakol::Model::Components
 
         void Update();
 
+        template <class Archive>
+        void serialize(Archive& ar) 
+        {
+            ar(cereal::make_nvp("Current State", currentState));
+        }
+
+
     private:
         std::string currentState;
         sol::table states;
         Controller::LuaState& lua;
+
+
     };
 
     struct Drawable
