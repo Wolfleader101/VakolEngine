@@ -80,8 +80,12 @@ namespace Vakol::Controller
 
     void System::Drawable_Update(const Time& time, const std::shared_ptr<View::Renderer>& renderer)
     {
-        m_registry->view<Transform, Drawable>().each([&](const auto& transform, const Drawable& drawable)
+        m_registry->view<Transform, Drawable>().each([&](auto& transform, const Drawable& drawable)
         {
+            auto euler_rads = glm::radians(transform.eulerAngles); 
+
+            transform.rot = glm::quat(euler_rads); 
+                
             if (!drawable.animated) renderer->Draw(transform, drawable);
         });
 
