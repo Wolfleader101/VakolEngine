@@ -18,6 +18,7 @@ namespace Vakol::Controller
     {
 	    Logger::Init();
 	    scenes.reserve(10);
+        lua = std::make_shared<LuaState>();
     };
 
     void Application::Init() 
@@ -42,34 +43,34 @@ namespace Vakol::Controller
 
         VK_INFO("Calling main.lua...");
 
-        lua.RunFile("scripts/main.lua");
+        lua->RunFile("scripts/main.lua");
 
-        const sol::function lua_main = lua.GetState()["main"];
+        const sol::function lua_main = lua->GetState()["main"];
 
         m_running = true;
     }
 
     void Application::RegisterLua()
 	{
-        RegisterLogger(lua.GetState());
-        RegisterMath(lua.GetState());
-        RegisterEntity(lua, lua.GetState());
-        RegisterECS(lua.GetState());
-        RegisterAssetLoader(lua.GetState());
-        RegisterApplication(lua.GetState(), this);
-        RegisterRenderer(lua.GetState(), m_renderer);
-        RegisterScene(lua.GetState());
-        RegisterGUIWindow(lua.GetState(), &m_gui);  // Register GUI Window
-        RegisterPhysics(lua.GetState());
-        RegisterOther(lua.GetState());
+        RegisterLogger(lua->GetState());
+        RegisterMath(lua->GetState());
+        RegisterEntity(lua, lua->GetState());
+        RegisterECS(lua->GetState());
+        RegisterAssetLoader(lua->GetState());
+        RegisterApplication(lua->GetState(), this);
+        RegisterRenderer(lua->GetState(), m_renderer);
+        RegisterScene(lua->GetState());
+        RegisterGUIWindow(lua->GetState(), &m_gui);  // Register GUI Window
+        RegisterPhysics(lua->GetState());
+        RegisterOther(lua->GetState());
     }
 
     std::optional<Model::GameConfig> Application::LoadConfig() {
         VK_INFO("Loading game_config.lua...");
 
-        lua.RunFile("scripts/game_config.lua");
+        lua->RunFile("scripts/game_config.lua");
 
-        sol::table config = lua.GetState()["game_config"];
+        sol::table config = lua->GetState()["game_config"];
 
         sol::optional<std::string> name = config["name"];
         if (!name) {

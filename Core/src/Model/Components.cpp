@@ -12,22 +12,22 @@ namespace Vakol::Model::Components {
 
     Script::Script(std::string& name) : script_name(std::move(name)) {}
 
-    Script::Script(const std::string& script, Controller::LuaState& lua, Entity& entity, Controller::Scene& scene) : script_name(script)
+    Script::Script(const std::string& script, std::shared_ptr<Controller::LuaState> lua, Entity& entity, Controller::Scene& scene) : script_name(script)
 	{
-        lua.GetState()["scene"] = std::ref(scene);
-        lua.GetState()["entity"] = entity;
+        lua->GetState()["scene"] = std::ref(scene);
+        lua->GetState()["entity"] = entity;
 
-        state = lua.GetState().create_table();
-        lua.GetState()["state"] = state;
+        state = lua->GetState().create_table();
+        lua->GetState()["state"] = state;
 
-        lua.RunFile("scripts/" + script);
+        lua->RunFile("scripts/" + script);
 
-        lua.RunFunction("init");
+        lua->RunFunction("init");
     };
 
-    FSM::FSM(Controller::LuaState& lua) : lua(lua) {
+    FSM::FSM(std::shared_ptr<Controller::LuaState>  lua) : lua(lua) {
         // Create a new table in the Lua state for the states
-        states = lua.GetState().create_table();
+        states = lua->GetState().create_table();
     }
 
     void FSM::AddState(const std::string& stateName, const sol::function& callback) {
@@ -48,7 +48,7 @@ namespace Vakol::Model::Components {
     void FSM::Update() {
         // Call the callback for the current state
         const sol::function callback = states[currentState];
-        lua.RunFunction(callback);
+        lua->RunFunction(callback);
     }
 
     Drawable::Drawable(std::string&& file)
