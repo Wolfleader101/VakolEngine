@@ -82,12 +82,12 @@ namespace Vakol::Controller {
 
     void EntityList::Serialize(const std::string& file) const {
         privateSerialize<cereal::JSONOutputArchive, Transform, Tag, ENTITY_TYPE, TagType, Script, RigidBody, Collider,
-                         Drawable, Components::Animator>(file);
+                         Drawable, Components::Animator, Components::Terrain>(file);
     }
 
     void EntityList::Deserialize(const std::string& file) {
         privateDeserialize<cereal::JSONInputArchive, Transform, Tag, ENTITY_TYPE, TagType, Script, RigidBody, Collider,
-                           Drawable, Components::Animator>(file);
+                           Drawable, Components::Animator, Components::Terrain>(file);
     }
 
 }  // namespace Vakol::Controller

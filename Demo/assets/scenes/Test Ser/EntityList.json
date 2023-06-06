@@ -97,10 +97,18 @@
     "value36": 1,
     "value37": 1,
     "value38": {
-        "Model": "Terrain",
+        "Model": "",
         "Import Scale": 1.0,
         "Animated": false,
         "Back Face Culling": true
     },
-    "value39": 0
+    "value39": 0,
+    "value40": 1,
+    "value41": 1,
+    "value42": {
+        "Name": "Test Ser",
+        "Path": "coreAssets/textures/Heightmaps/height128.raw",
+        "Min": -10.0,
+        "Max": 50.0
+    }
 }

@@ -263,11 +263,12 @@ namespace Vakol::Controller {
                                      if (ent->HasComponent<Components::Terrain>()) ent->RemoveComponent<Components::Terrain>();
 
                                      ent->AddComponent<Components::Terrain>();
+                                     
+                                     const auto& name = scene.getName();
 
+                                     std::shared_ptr<Terrain> terrain = AssetLoader::GetTerrain(name);
 
-                                     std::shared_ptr<Terrain> terrain = AssetLoader::GetTerrain(scene.getName());
-
-                                     if(terrain == nullptr) terrain = AssetLoader::GetTerrain(scene.getName(), path, min, max);
+                                     if(terrain == nullptr) terrain = AssetLoader::GetTerrain(name, path, min, max);
 
                                      auto& terrain_comp = ent->GetComponent<Components::Terrain>();
 
@@ -275,6 +276,7 @@ namespace Vakol::Controller {
                                      terrain_comp.min = min;
                                      terrain_comp.max = max;
                                      terrain_comp.path = std::move(path);
+                                     terrain_comp.name = name;
 
 
                                      if (const auto& model = terrain->GetModel()) {
