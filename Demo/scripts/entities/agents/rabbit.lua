@@ -10,14 +10,17 @@ function init()
 
     state.speed = 0.5;
     state.sprint_speed = 3;
-    state.dir = Vector3.new(0);
-    state.dir.x = math.random(-1, 1);
-    state.dir.z = math.random(-1, 1);
+    state.dir = Vector3.new(math.random() * 2 - 1, 0, math.random() * 2 - 1);
+    while state.dir:magnitude() == 0 do
+        state.dir.x = math.random() * 2 - 1
+        state.dir.z = math.random() * 2 - 1
+    end
+    state.dir:normalize();
 
     state.WAIT_TIMER = 0.0;
     state.DIR_TIMER = 0.0;
 
-    state.VIEW_DISTANCE = 7.5;
+    state.VIEW_DISTANCE = 5;
     state.SPOTTED = false;
 
     state.model = entity:add_model("assets/models/agents/rabbit.fbx", 0.25, true, true);
@@ -38,7 +41,6 @@ function init()
     state.fsm = entity:add_fsm();
 
     state.fsm:add_state("eating", function()
-        --print_warn("eating " .. entity:get_tag())
         entity:set_animation_state(state.ANIMATIONS.EAT);
         if(state.fsm_wait(math.random(5,7))) then
             state.fsm:change_state("roaming")
@@ -47,7 +49,6 @@ function init()
     end)
 
     state.fsm:add_state("looking", function()
-        --print_err("looking " .. entity:get_tag());
         entity:set_animation_state(state.ANIMATIONS.IDLE);
 
         if(state.fsm_wait(math.random(5,7))) then
@@ -62,37 +63,44 @@ function init()
     end)
 
     state.fsm:add_state("roaming", function()
-        --print("roaming " .. entity:get_tag());
-        if (state.fsm_wait(math.random(5, 7))) then
-            local rand = math.random();
-            if (rand < 0.4) then
-                state.fsm:change_state("looking")
-            elseif (rand < 0.8) then
-                state.fsm:change_state("eating")
-            end
+    local stateChange = false
+    if (state.fsm_wait(math.random(5, 7))) then
+        local rand = math.random();
+        if (rand < 0.4) then
+            state.fsm:change_state("looking")
+            stateChange = true
+        elseif (rand < 0.8) then
+            state.fsm:change_state("eating")
+            stateChange = true
         end
+    end
 
-        if(state.SPOTTED) then
-            state.SPOTTED = false;
-        end
-        
+    if(state.SPOTTED) then
+        state.SPOTTED = false;
+    end
+
+    if not stateChange then
         entity:set_animation_state(state.ANIMATIONS.WALK);
+    end
 
-
-        if (state.dir_wait(math.random(4,6))) then
-            state.dir.x = math.random(-1, 1);
-            state.dir.z = math.random(-1, 1);
+    if (state.dir_wait(math.random(4,6))) then
+        state.dir.x = math.random() * 2 - 1
+        state.dir.z = math.random() * 2 - 1
+        while state.dir:magnitude() == 0 do
+            state.dir.x = math.random() * 2 - 1
+            state.dir.z = math.random() * 2 - 1
         end
-        
-        local velocity = state.speed * Time.delta_time;
+        state.dir:normalize()
+    end
 
-        local pos = entity:get_transform().pos;
-        pos.x = pos.x + (state.dir.x * velocity);
-        pos.z = pos.z + (state.dir.z * velocity);
-    end)
+    local velocity = state.speed * Time.delta_time;
+
+    local pos = entity:get_transform().pos;
+    pos.x = pos.x + (state.dir.x * velocity);
+    pos.z = pos.z + (state.dir.z * velocity);
+end)
 
     state.fsm:add_state("running_away", function()
-        --print_info("running_away" .. entity:get_tag())
         entity:set_animation_state(state.ANIMATIONS.RUN);
 
         local diff = scene.globals.player.pos - entity:get_transform().pos;
@@ -121,7 +129,7 @@ function init()
         pos.x = pos.x + (state.dir.x * velocity);
         pos.z = pos.z + (state.dir.z * velocity);
 
-        if (player_dist >= state.VIEW_DISTANCE + 1.5 and state.fsm_wait(math.random(2,4))) then
+        if (player_dist >= state.VIEW_DISTANCE + 1.5) then
             state.fsm:change_state("roaming")
         end
     end)
@@ -129,7 +137,6 @@ function init()
     -- Set the initial state
     state.fsm:change_state("roaming")
 
-    --print_err(entity:get_tag() .. " is ready")
 
     local function dir_wait(seconds)
         state.DIR_TIMER = state.DIR_TIMER + Time.delta_time;
