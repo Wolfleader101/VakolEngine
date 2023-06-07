@@ -39,7 +39,6 @@ function init()
     state.fsm = entity:add_fsm();
 
     state.fsm:add_state("eating", function()
-        print("EATING");
         entity:set_animation_state(state.ANIMATIONS.EAT);
         if(fsm_wait(math.random(5,7))) then
             state.fsm:change_state("roaming")
@@ -47,7 +46,6 @@ function init()
     end)
 
     state.fsm:add_state("idle", function()
-        print("IDLE");
         entity:set_animation_state(state.ANIMATIONS.IDLE);
         if(fsm_wait(math.random(5,7))) then
             local rand = math.random();
@@ -60,7 +58,6 @@ function init()
     end)
 
     state.fsm:add_state("roaming", function()
-        print("ROAMING");
         if (fsm_wait(math.random(5, 7))) then
             local rand = math.random();
             if (rand < 0.4) then
@@ -95,7 +92,6 @@ function init()
     end)
 
     state.fsm:add_state("running_away", function()
-        print("RUNNING")
         entity:set_animation_state(state.ANIMATIONS.RUN);
 
         local diff = scene.globals.player.pos - entity:get_transform().pos;
@@ -161,29 +157,6 @@ function fsm_wait(seconds)
     return false;
 end
 
-function to_degrees(angle)
-    return ((angle * (180 / math.pi)) + 360) % 360;
-end
-
-function atan2(y, x)
-    local angle;
-
-    if x > 0 then
-        angle = math.atan(y / x);
-    elseif y >= 0 and x < 0 then
-        angle = math.atan(y / x) + math.pi;
-    elseif y < 0 and x < 0 then
-        angle = math.atan(y / x) - math.pi;
-    elseif y > 0 and x == 0 then
-        angle = math.pi / 2;
-    elseif y < 0 and x == 0 then
-        angle = -math.pi / 2;
-    else
-        angle = 0;
-    end
-
-    return angle;
-end
 
 function update()
     state.fsm:update()
@@ -192,8 +165,8 @@ function update()
     local terr_scale = scene.globals.terrain.transform.scale;
     pos.y = (scene.globals.terrain.terr:get_height(pos.x / terr_scale.x, pos.z / terr_scale.z) * terr_scale.y) + 0.03;
 
-    local targetRotation = atan2(state.dir.x, state.dir.z)
-    targetRotation = to_degrees(targetRotation)
+    local targetRotation = math.atan(state.dir.x, state.dir.z)
+    targetRotation = targetRotation * (180 / math.pi)
     entity:get_transform().rot.y = targetRotation
 
     local diff = scene.globals.player.pos - pos;
