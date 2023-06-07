@@ -1,10 +1,6 @@
 function init()
 
-    local IDLE_STATE = 0;
-    local WALK_STATE = 1;
-    local RUN_STATE = 2;
-    
-    entity:get_transform().pos = Vector3.new(0.0, 0.0, 5.0);
+    entity:get_transform().pos = Vector3.new(0.0, 0.0, -5.0);
 
     local pos = entity:get_transform().pos;
     local terr_scale = scene.globals.terrain.transform.scale;
@@ -12,10 +8,8 @@ function init()
 
     entity:get_transform().rot = Vector3.new(0.0, 0.0, 0.0);
 
-    state.model = entity:add_model("assets/models/enemy.glb", 0.003, true, true) -- get model and add a drawable component
+    state.model = entity:add_model("assets/models/test.fbx", 1.0, true, true) -- get model and add a drawable component
     entity:set_shader("coreAssets/shaders/animation.prog") -- set the shader on the model (automatically binds it)
-
-    state.model:set_animation_state(WALK_STATE);
 
     local shader = state.model:get_shader(); -- get the shader from the model
 

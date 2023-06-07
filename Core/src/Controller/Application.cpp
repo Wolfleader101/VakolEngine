@@ -176,6 +176,8 @@ namespace Vakol::Controller
         dispatcher.Dispatch<KeyReleasedEvent>(BIND_EVENT_FN(OnKeyReleased));
         dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT_FN(OnWindowResize));
         dispatcher.Dispatch<MouseMovedEvent>(BIND_EVENT_FN(OnMouseMoved));
+        dispatcher.Dispatch<MouseButtonPressedEvent>(BIND_EVENT_FN(OnMouseButtonPressed));
+        dispatcher.Dispatch<MouseButtonReleasedEvent>(BIND_EVENT_FN(OnMouseButtonReleased));
 
         //! lua on event
 
@@ -191,7 +193,8 @@ namespace Vakol::Controller
         // if its handled then u can break
     }
 
-    bool Application::OnWindowClose([[maybe_unused]] WindowCloseEvent& ev) {
+    bool Application::OnWindowClose([[maybe_unused]] WindowCloseEvent& ev) 
+    {
         m_running = false;
         return true;
     }
@@ -205,21 +208,39 @@ namespace Vakol::Controller
 
     bool Application::OnKeyPressed(KeyPressedEvent& kev) {
         
-    	if (kev.GetKeyCode() == GLFW_KEY_K) {
+    	if (kev.GetKeyCode() == GLFW_KEY_K)
             m_renderer->ToggleWireframe();
-        }
 
         m_input.OnKeyPressed(kev);
 
         return true;
     }
 
-    bool Application::OnKeyReleased(KeyReleasedEvent& kev) {
+    bool Application::OnKeyReleased(KeyReleasedEvent& kev) 
+    {
         m_input.OnKeyReleased(kev);
+
         return true;
     }
-    bool Application::OnMouseMoved(MouseMovedEvent& ev) {
+
+    bool Application::OnMouseMoved(MouseMovedEvent& ev) 
+    {
         m_input.OnMouseMoved(ev);
+
+        return true;
+    }
+
+    bool Application::OnMouseButtonPressed(MouseButtonPressedEvent& mev)
+    {
+        m_input.OnMouseButtonPressed(mev);
+
+        return true;
+    }
+
+    bool Application::OnMouseButtonReleased(MouseButtonReleasedEvent& mev)
+    {
+        m_input.OnMouseButtonReleased(mev);
+
         return true;
     }
 
