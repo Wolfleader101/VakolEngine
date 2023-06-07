@@ -33,8 +33,6 @@ namespace Vakol::Controller
         initialized = true;
 
         System::BindScene(*this);
-
-        System::Unique_Search();
     }
 
     const std::string& Scene::getName() const { return name; }
