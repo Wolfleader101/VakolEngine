@@ -6,6 +6,7 @@
 #include <memory>
 #include <vector>
 
+#include "Logger.hpp"
 #include "Controller/LuaState.hpp"
 
 namespace Vakol::Model {
@@ -156,6 +157,7 @@ namespace Vakol::Controller {
             if (inp.good()) {
                 
 
+                m_Registry.view<Components::GUID>().each([&](auto& guid) { VK_TRACE("{0}", guid.id.str()); }); //for testing
 
                 m_Registry.clear();
                 ActiveEntityList.clear();

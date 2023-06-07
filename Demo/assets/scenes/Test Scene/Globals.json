@@ -2,35 +2,14 @@
     "globals": {
         "value0": [
             {
-                "key": "curr_speed",
-                "value": {
-                    "index": 1,
-                    "data": 1.25
-                }
-            },
-            {
-                "key": "sprint_speed",
-                "value": {
-                    "index": 1,
-                    "data": 2.0
-                }
-            },
-            {
-                "key": "MAX_HUNGER",
+                "key": "thirst",
                 "value": {
                     "index": 1,
                     "data": 100.0
                 }
             },
             {
-                "key": "is_god",
-                "value": {
-                    "index": 3,
-                    "data": false
-                }
-            },
-            {
-                "key": "MAX_HEALTH",
+                "key": "MAX_HUNGER",
                 "value": {
                     "index": 1,
                     "data": 100.0
@@ -44,7 +23,21 @@
                 }
             },
             {
-                "key": "hunger",
+                "key": "MAX_HEALTH",
+                "value": {
+                    "index": 1,
+                    "data": 100.0
+                }
+            },
+            {
+                "key": "is_god",
+                "value": {
+                    "index": 3,
+                    "data": false
+                }
+            },
+            {
+                "key": "health",
                 "value": {
                     "index": 1,
                     "data": 100.0
@@ -58,10 +51,17 @@
                 }
             },
             {
-                "key": "thirst",
+                "key": "is_sprinting",
+                "value": {
+                    "index": 3,
+                    "data": false
+                }
+            },
+            {
+                "key": "curr_speed",
                 "value": {
                     "index": 1,
-                    "data": 100.0
+                    "data": 1.25
                 }
             },
             {
@@ -72,14 +72,14 @@
                 }
             },
             {
-                "key": "is_sprinting",
+                "key": "sprint_speed",
                 "value": {
-                    "index": 3,
-                    "data": false
+                    "index": 1,
+                    "data": 2.0
                 }
             },
             {
-                "key": "health",
+                "key": "hunger",
                 "value": {
                     "index": 1,
                     "data": 100.0
