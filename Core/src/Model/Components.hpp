@@ -16,6 +16,7 @@
 #include "Entity.hpp"
 #include "Model/Assets/Model.hpp"
 #include "Controller/Animator.hpp"
+#include "Controller/SolSerialize.hpp"
 
 namespace Vakol::Model::Components
 {
@@ -75,7 +76,7 @@ namespace Vakol::Model::Components
         void Update(const int state, const float delta_time) { animator_ptr->Update(state, delta_time); }
         void Update(const float delta_time) { animator_ptr->Update(delta_time); }
 
-        const Model::Assets::Animation& const animation(const int state) const { return animator_ptr->get(state); } 
+        const Model::Assets::Animation& animation(const int state) const { return animator_ptr->get(state); } 
 
         void set(const std::shared_ptr<Controller::Animator>& animator) { animator_ptr = animator; }
         void set(const Controller::Animator& animator) { animator_ptr = std::make_shared<Controller::Animator>(animator); }
@@ -167,9 +168,25 @@ namespace Vakol::Model::Components
         Script(const std::string& script, std::shared_ptr<Controller::LuaState> lua, Entity& entity, Controller::Scene& scene);
 
         template <class Archive>
-        void serialize(Archive& ar) {
+        void save(Archive& ar) const {
             ar(cereal::make_nvp("ScriptName", script_name));
-            //ar(cereal::make_nvp("State Table",state));
+
+            Controller::SolTableData data;
+
+            Controller::ConvertSolToMap(state, data);
+
+            ar(data);
+
+        }
+
+        template <class Archive>
+        void load(Archive& ar) {
+            ar(cereal::make_nvp("ScriptName", script_name));
+            
+            Controller::SolTableData data;
+            ar(data);
+
+            Controller::ConvertMapToSol(data, state);
         }
     };
 
