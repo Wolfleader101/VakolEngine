@@ -72,7 +72,6 @@ namespace Vakol::Model::Components
     struct Animator
     {
         std::string attached_model;
-
         void Update(const int state, const float delta_time) { animator_ptr->Update(state, delta_time); }
         void Update(const float delta_time) { animator_ptr->Update(delta_time); }
 
@@ -80,6 +79,12 @@ namespace Vakol::Model::Components
 
         void set(const std::shared_ptr<Controller::Animator>& animator) { animator_ptr = animator; }
         void set(const Controller::Animator& animator) { animator_ptr = std::make_shared<Controller::Animator>(animator); }
+        
+      template<class Archive>
+        void serialize(Archive& ar) {
+                       ar(
+                          cereal::make_nvp("attached_model", attached_model)
+                       );
     private:
         std::shared_ptr<Controller::Animator> animator_ptr = nullptr;
     };
@@ -87,6 +92,12 @@ namespace Vakol::Model::Components
     struct Animation
     {
         int state = 0;
+        template<class Archive>
+        void serialize(Archive& ar) {
+                       ar(
+                           cereal::make_nvp("state", state), 
+                       );
+        }
     };
 
     /**
@@ -153,7 +164,7 @@ namespace Vakol::Model::Components
         Script() = default;
         explicit Script(std::string& name);
 
-        Script(const std::string& script, Controller::LuaState& lua, Entity& entity, Controller::Scene& scene);
+        Script(const std::string& script, std::shared_ptr<Controller::LuaState> lua, Entity& entity, Controller::Scene& scene);
 
         template <class Archive>
         void serialize(Archive& ar) {
@@ -168,7 +179,8 @@ namespace Vakol::Model::Components
      */
     struct FSM
 	{
-		explicit FSM(Controller::LuaState& lua);
+        FSM() = default;
+		FSM(std::shared_ptr<Controller::LuaState> lua);
 
         void AddState(const std::string& stateName, const sol::function& callback);
 
@@ -178,10 +190,19 @@ namespace Vakol::Model::Components
 
         void Update();
 
+        template <class Archive>
+        void serialize(Archive& ar) 
+        {
+            ar(cereal::make_nvp("Current State", currentState));
+        }
+
+
     private:
         std::string currentState;
         sol::table states;
-        Controller::LuaState& lua;
+        std::shared_ptr<Controller::LuaState>  lua;
+
+
     };
 
     struct Drawable
@@ -318,4 +339,21 @@ namespace Vakol::Model::Components
     };
 
     Collider::Bounds GetBounds(const Drawable& model, const Transform& transform);
+
+    struct Terrain
+    {
+        std::shared_ptr<Controller::Terrain> terrain_ptr;
+
+        std::string name;
+        std::string path;
+        float min, max;
+
+        template <class Archive>
+        void serialize(Archive& ar) {
+            ar(cereal::make_nvp("Name", name));
+            ar(cereal::make_nvp("Path", path));
+            ar(cereal::make_nvp("Min", min));
+            ar(cereal::make_nvp("Max", max));
+        }
+    };
 }  // namespace Vakol::Model::Components

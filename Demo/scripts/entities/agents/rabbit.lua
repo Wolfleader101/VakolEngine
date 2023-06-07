@@ -38,8 +38,9 @@ function init()
     shader:set_int("material.normal_map", 2);
     shader:set_int("material.emission_map", 3);
 
+    print("here");
     state.fsm = entity:add_fsm();
-
+    print("yeet");
     state.fsm:add_state("eating", function()
         entity:set_animation_state(state.ANIMATIONS.EAT);
         if(state.fsm_wait(math.random(5,7))) then

@@ -11,7 +11,7 @@
 
 namespace Vakol::Controller
 {
-    Scene::Scene(const std::string& name, const std::string& scriptName, LuaState& lua, const std::shared_ptr<ScenePhysics>& SP, const bool active)
+    Scene::Scene(const std::string& name, const std::string& scriptName, std::shared_ptr<LuaState> lua, const std::shared_ptr<ScenePhysics>& SP, const bool active)
         :
 	      active(active),
 	      scenePhysics(SP),
@@ -22,13 +22,13 @@ namespace Vakol::Controller
 
     void Scene::Init()
 	{
-        lua.RunFile("scripts/" + scriptName);
+        lua->RunFile("scripts/" + scriptName);
 
-        sceneGlobals = lua.GetState().create_named_table(name);
+        sceneGlobals = lua->GetState().create_named_table(name);
 
-        lua.GetState()["scene"] = this;
+        lua->GetState()["scene"] = this;
 
-        lua.RunFunction("init");
+        lua->RunFunction("init");
 
         initialized = true;
 
@@ -54,10 +54,10 @@ namespace Vakol::Controller
 
     void Scene::Update(const Time& time, const std::shared_ptr<View::Renderer>& renderer)
 	{
-        lua.RunFile("scripts/" + scriptName);
+        lua->RunFile("scripts/" + scriptName);
 
-        lua.GetState()["scene"] = this;
-        lua.RunFunction("update");
+        lua->GetState()["scene"] = this;
+        lua->RunFunction("update");
 
         scenePhysics->Update(time, cam);
 
@@ -107,7 +107,9 @@ namespace Vakol::Controller
         entityList.Serialize(FinalFolder + "/EntityList.json");
 
         //-- Serialize Scene info
-        if (std::ofstream output(FinalFolder + "/Scene.json"); output.good()) 
+        std::ofstream output(FinalFolder + "/Scene.json");
+
+        if (output.good()) 
         {
             cereal::JSONOutputArchive json(output);
 
