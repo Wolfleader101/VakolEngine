@@ -22,7 +22,8 @@ namespace Vakol::Controller
 
 		[[nodiscard]] int nAnimations() const { return static_cast<int>(m_animations.size()); }
 
-		[[nodiscard]] const Model::Assets::Animation& get(const int state) const { return m_animations.at(state); }
+		[[nodiscard]] const Model::Assets::Animation& c_get(const int state) const { return m_animations.at(state); }
+		[[nodiscard]] Model::Assets::Animation get(const int state) const { return m_animations.at(state); }
 	private:
 		std::vector<Model::Assets::Animation> m_animations;
 	};

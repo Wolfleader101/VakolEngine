@@ -44,6 +44,8 @@ namespace Vakol::Model::Assets
 	    [[nodiscard]] auto duration_s() const ->float { return duration * 0.001f; }
 	    [[nodiscard]] auto duration_ms() const ->float { return duration; }
 
+		[[nodiscard]] auto reset_animation() -> void { current_time = 0.0f; }
+
 	    [[nodiscard]] auto numNodes() const -> int { return static_cast<int>(m_nodes.size()); }
 	    [[nodiscard]] auto numTransforms() const -> int { return static_cast<int>(m_transforms.size()); }
 

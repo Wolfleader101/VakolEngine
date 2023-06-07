@@ -23,6 +23,8 @@ function init()
     shader:set_int("material.specular_map", 1);
     shader:set_int("material.normal_map", 2);
     shader:set_int("material.emission_map", 3);
+
+    TIMER = 0.0;
 end
 
 function update()
@@ -59,8 +61,18 @@ function update()
         state.flying = not state.flying
     end
 
-    if (Input:get_mouse_down(KEYS["MOUSE_0"])) then
+    if (Input:get_mouse(KEYS["MOUSE_0"]) and wait(entity:get_animation_duration(1))) then
         entity:set_animation_state(1);
+    elseif Input:get_mouse_up(KEYS["MOUSE_0"]) then
+        entity:set_animation_state(0)
+        entity:reset_animation(1);
+        reset_timer();
+    elseif not moving then
+        entity:set_animation_state(0)
+    elseif moving and not scene.globals.player.is_sprinting then
+        entity:set_animation_state(11)
+    elseif moving and scene.globals.player.is_sprinting then
+        entity:set_animation_state(12)
     end
 
     local camera = scene:get_camera();
@@ -79,13 +91,13 @@ function update()
         new_pos.y = (scene.globals.terrain.terr:get_height(new_pos.x / terr_scale.x, new_pos.z / terr_scale.z) * terr_scale.y) + 0.5;
     end
 
-    entity:get_transform().pos = Vector3.new(new_pos.x, new_pos.y - 0.60, new_pos.z - 0.25);
+    entity:get_transform().pos = Vector3.new(new_pos.x, new_pos.y - 0.70, new_pos.z);
 
     camera:set_pos(new_pos.x, new_pos.y, new_pos.z);
     scene.globals.player.pos = new_pos;
 
     local targetRotation = math.atan(forward.x, forward.z)
-    entity:get_transform().rot.y = math.deg(targetRotation);
+    entity:get_transform().rot.y = math.deg(targetRotation)
 
     local delta_mouse_pos = Input:get_delta_mouse_pos();
     camera:set_yaw(camera:get_yaw() + delta_mouse_pos.x * 0.05);
@@ -98,4 +110,18 @@ function update()
     end
 
     camera:set_pitch(pitch);
+end
+
+function wait(seconds)
+    TIMER = TIMER + Time.delta_time;
+
+    if (TIMER >= seconds) then
+        return true;
+    end
+
+    return false;
+end
+
+function reset_timer()
+    TIMER = 0.0;
 end

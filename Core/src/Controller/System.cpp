@@ -87,7 +87,7 @@ namespace Vakol::Controller
         {
             s_unique_set.insert(animation.state);
 
-            renderer->DrawAnimated(transform, drawable, s_animator_map.at(animation.attached_model).animation(animation.state));
+            renderer->DrawAnimated(transform, drawable, s_animator_map.at(animation.attached_model).c_animation(animation.state));
         });
     }
 

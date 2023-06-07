@@ -82,7 +82,7 @@ function update()
         new_pos.z - forwardFlat.z * state.cameraDistance.z
     )
 
-     local terrainHeight = scene.globals.terrain.terr:get_height(cameraPos.x / terr_scale.x, cameraPos.z / terr_scale.z) * terr_scale.y
+    local terrainHeight = scene.globals.terrain.terr:get_height(cameraPos.x / terr_scale.x, cameraPos.z / terr_scale.z) * terr_scale.y
     if cameraPos.y < terrainHeight then
         cameraPos.y = terrainHeight + 1.25
     end

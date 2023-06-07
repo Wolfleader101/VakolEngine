@@ -13,7 +13,11 @@
 #include "System.hpp"
 #include "View/GUI/GUIWindow.hpp"
 
-namespace Vakol::Controller {
+
+namespace Vakol::Controller 
+{
+    static std::unordered_map<std::string, Components::Animator> s_animator_map;
+
     void RegisterMath(sol::state& lua) {
         {
             sol::constructors<glm::vec2(), glm::vec2(float), glm::vec2(float, float)> ctor;  // allow for constructors
@@ -367,6 +371,8 @@ namespace Vakol::Controller {
 
                         _animator.attached_model = draw.name;
                         _animator.set(animator);
+
+                        s_animator_map[_animator.attached_model] = _animator;
                     }
 
                     auto& animation = ent->GetComponent<Components::Animation>();
@@ -426,6 +432,43 @@ namespace Vakol::Controller {
             auto& animation = ent->GetComponent<Components::Animation>();
 
             animation.state = animation_state;
+        });
+
+        entity_type.set_function("get_animation_state", [](const Entity* ent) 
+        {
+            if (!ent->HasComponent<Components::Animation>()) 
+            {
+                VK_ERROR("Animation component is needed to get it's animation state!");
+                return -1;
+            }
+
+            return ent->GetComponent<Components::Animation>().state;
+        });
+
+        entity_type.set_function("get_animation_duration", [](const Entity* ent, const int state)
+        {
+            if (!ent->HasComponent<Components::Animation>())
+            {
+                VK_ERROR("Animation component is needed to get it's animation state!");
+                return -1.0f;
+            }
+
+            const auto& animation = ent->GetComponent<Components::Animation>();
+
+            return s_animator_map.at(animation.attached_model).c_animation(state).duration_s();
+        });
+
+        entity_type.set_function("reset_animation", [](const Entity* ent, const int state)
+        {
+            if (!ent->HasComponent<Components::Animation>())
+            {
+                VK_ERROR("Animation component is needed to reset it!");
+                return;
+            }
+
+            auto& animation = ent->GetComponent<Components::Animation>();
+
+            s_animator_map.at(animation.attached_model).animation(state).reset_animation();
         });
 
         model_type.set_function("get_mesh_count", &Assets::Model::nMeshes);
