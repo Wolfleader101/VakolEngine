@@ -10,7 +10,7 @@ function init()
 
     -- scene:create_entity("Rabbit", "entities/agents/rabbit.lua");
 
-    scene:create_entity("Skeleton", "entities/agents/skeleton.lua");
+    scene:create_entity("Skeleton", "entities/agents/monster.lua");
 
     -- scene:create_entity("Rabbit Test", "entities/agents/rabbit_test.lua");
 
