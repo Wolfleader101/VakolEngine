@@ -12,9 +12,11 @@
 #include <glm/gtc/quaternion.hpp>
 #pragma warning(pop)
 
-static std::set<int> s_unique;
 
 using namespace Components;
+
+static std::unordered_map<std::string, Components::Animator> s_animator_map;
+static std::set<int> s_unique_set;
 
 glm::vec3 to_glm(const rp3d::Vector3& v) { return {v.x, v.y, v.z}; }
 glm::quat to_glm(const rp3d::Quaternion& q) { return {q.w, q.x, q.y, q.z}; }
@@ -62,10 +64,6 @@ namespace Vakol::Controller
         
     }
 
-    void System::Unique_Search() 
-    {
-    }
-
     void System::Drawable_Update(const Time& time, const std::shared_ptr<View::Renderer>& renderer)
     {
         m_registry->view<Transform, Drawable>().each([&](auto& transform, const Drawable& drawable) 
@@ -77,39 +75,20 @@ namespace Vakol::Controller
             if (!drawable.animated) renderer->Draw(transform, drawable);
         });
 
-        auto animation_view = m_registry->view<Transform, Drawable, Components::Animation>();
-
-        m_registry->view<Components::Animator>().each([&](Components::Animator& animator)
+        m_registry->view<Components::Animator>().each([&](const Components::Animator& animator)
         {
-            for (const auto state : s_unique)
-                animator.Update(state, time.deltaTime);
-
-            for (auto _entity : animation_view)
-            {
-                const auto& transform = animation_view.get<Transform>(_entity);
-                const auto& drawable = animation_view.get<Drawable>(_entity);
-                const auto& animation = animation_view.get<Components::Animation>(_entity);
-
-                if (s_unique.insert(animation.state).second) continue;
-
-                renderer->DrawAnimated(transform, drawable, animator.animation(animation.state));
-            }         
+            s_animator_map[animator.attached_model] = animator;
+            
+            for (const auto state : s_unique_set)
+                s_animator_map.at(animator.attached_model).Update(state, time.deltaTime);
         });
 
-        // This works fine, just non-performant (I WANT SPEEEED)
-        // 
-        //m_registry->view<Components::Animator>().each([&](Components::Animator& animator)
-        //{
-        //    for (const auto state : s_unique)
-        //        animator.Update(state, time.deltaTime);
+        m_registry->view<Transform, Drawable, Components::Animation>().each([&](const auto& transform, const Drawable& drawable, const Components::Animation& animation)
+        {
+            s_unique_set.insert(animation.state);
 
-        //    m_registry->view<Transform, Drawable, Components::Animation>().each([&](const auto& transform, const Drawable& drawable, const Components::Animation& _animation) 
-        //    {
-        //        if (!s_unique.insert(_animation.state).second) continue;
-
-        //        renderer->DrawAnimated(transform, drawable, animator.animation(_animation.state));
-        //    });
-        //});
+            renderer->DrawAnimated(transform, drawable, s_animator_map.at(animation.attached_model).animation(animation.state));
+        });
     }
 
     void System::Script_Update(std::shared_ptr<LuaState> lua, EntityList& list, Scene* scene)
