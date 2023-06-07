@@ -94,8 +94,7 @@ function update()
     camera:set_pos(new_pos.x, new_pos.y, new_pos.z);
     scene.globals.player.pos = new_pos;
 
-    local targetRotation = math.atan(forward.x, forward.z)
-    entity:get_transform().rot.y = math.deg(targetRotation)
+    entity:get_transform().rot.y = math.deg(math.atan(forward.x, forward.z));
 
     local delta_mouse_pos = Input:get_delta_mouse_pos();
     camera:set_yaw(camera:get_yaw() + delta_mouse_pos.x * 0.05);
