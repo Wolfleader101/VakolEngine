@@ -380,12 +380,26 @@ namespace Vakol::Model::Components
         GUID() = default;
 
         void GenNewGUID();
+
+        bool operator==(const GUID& other) const;
+        bool operator!=(const GUID& other) const;
+        bool operator<(const GUID& other) const;
         
         xg::Guid id;
 
         template <class Archive>
-        void serialize(Archive& ar) {
-            ar(cereal::make_nvp("GUID", id));
+        void save(Archive& ar) const {
+            std::string id_str = id.str();
+            ar(cereal::make_nvp("guid", id_str));
+        }
+
+        template <class Archive>
+        void load(Archive& ar) 
+        {
+            std::string id_str;
+            ar(cereal::make_nvp("guid", id_str));
+            id = xg::Guid(id_str);
         }
     };
+
 }  // namespace Vakol::Model::Components

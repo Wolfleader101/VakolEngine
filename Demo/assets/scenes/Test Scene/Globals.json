@@ -2,10 +2,10 @@
     "globals": {
         "value0": [
             {
-                "key": "sprint_speed",
+                "key": "last_damage_time",
                 "value": {
                     "index": 1,
-                    "data": 2.0
+                    "data": 0.0
                 }
             },
             {
@@ -13,6 +13,13 @@
                 "value": {
                     "index": 1,
                     "data": 100.0
+                }
+            },
+            {
+                "key": "sprint_speed",
+                "value": {
+                    "index": 1,
+                    "data": 2.0
                 }
             },
             {
@@ -30,35 +37,7 @@
                 }
             },
             {
-                "key": "last_damage_time",
-                "value": {
-                    "index": 1,
-                    "data": 0.0
-                }
-            },
-            {
-                "key": "hunger",
-                "value": {
-                    "index": 1,
-                    "data": 100.0
-                }
-            },
-            {
-                "key": "is_sprinting",
-                "value": {
-                    "index": 3,
-                    "data": false
-                }
-            },
-            {
-                "key": "MAX_THIRST",
-                "value": {
-                    "index": 1,
-                    "data": 100.0
-                }
-            },
-            {
-                "key": "health",
+                "key": "MAX_HEALTH",
                 "value": {
                     "index": 1,
                     "data": 100.0
@@ -72,6 +51,27 @@
                 }
             },
             {
+                "key": "is_sprinting",
+                "value": {
+                    "index": 3,
+                    "data": false
+                }
+            },
+            {
+                "key": "hunger",
+                "value": {
+                    "index": 1,
+                    "data": 100.0
+                }
+            },
+            {
+                "key": "health",
+                "value": {
+                    "index": 1,
+                    "data": 100.0
+                }
+            },
+            {
                 "key": "is_god",
                 "value": {
                     "index": 3,
@@ -79,7 +79,7 @@
                 }
             },
             {
-                "key": "MAX_HEALTH",
+                "key": "MAX_THIRST",
                 "value": {
                     "index": 1,
                     "data": 100.0
