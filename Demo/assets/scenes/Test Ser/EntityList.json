@@ -1,0 +1,114 @@
+{
+    "ActiveEntityList": [
+        {
+            "handle": 0
+        },
+        {
+            "handle": 1
+        },
+        {
+            "handle": 2
+        }
+    ],
+    "value0": 3,
+    "value1": 0,
+    "value2": 0,
+    "value3": 1,
+    "value4": 2,
+    "value5": 3,
+    "value6": 0,
+    "value7": {
+        "pos.x": 0.0,
+        "pos.y": 0.0,
+        "pos.z": 0.0,
+        "rot.x": 0.0,
+        "rot.y": 0.0,
+        "rot.z": 0.0,
+        "scale.x": 1.0,
+        "scale.y": 1.0,
+        "scale.z": 1.0
+    },
+    "value8": 1,
+    "value9": {
+        "pos.x": 0.0,
+        "pos.y": 0.0,
+        "pos.z": -1000.0,
+        "rot.x": 0.0,
+        "rot.y": 0.0,
+        "rot.z": 0.0,
+        "scale.x": 3.0,
+        "scale.y": 5.0,
+        "scale.z": 10.0
+    },
+    "value10": 2,
+    "value11": {
+        "pos.x": 0.0,
+        "pos.y": 0.0,
+        "pos.z": 0.0,
+        "rot.x": 0.0,
+        "rot.y": 0.0,
+        "rot.z": 0.0,
+        "scale.x": 1.0,
+        "scale.y": 1.0,
+        "scale.z": 1.0
+    },
+    "value12": 3,
+    "value13": 0,
+    "value14": {
+        "tag": "Serialize"
+    },
+    "value15": 1,
+    "value16": {
+        "tag": "Start Terrain"
+    },
+    "value17": 2,
+    "value18": {
+        "tag": "Fly Camera"
+    },
+    "value19": 0,
+    "value20": 3,
+    "value21": 0,
+    "value22": {
+        "TagType": 0
+    },
+    "value23": 1,
+    "value24": {
+        "TagType": 0
+    },
+    "value25": 2,
+    "value26": {
+        "TagType": 0
+    },
+    "value27": 3,
+    "value28": 0,
+    "value29": {
+        "ScriptName": "entities/misc/serialization.lua"
+    },
+    "value30": 1,
+    "value31": {
+        "ScriptName": "entities/terrain/startTerrain.lua"
+    },
+    "value32": 2,
+    "value33": {
+        "ScriptName": "entities/FlyCam.lua"
+    },
+    "value34": 0,
+    "value35": 0,
+    "value36": 1,
+    "value37": 1,
+    "value38": {
+        "Model": "",
+        "Import Scale": 1.0,
+        "Animated": false,
+        "Back Face Culling": true
+    },
+    "value39": 0,
+    "value40": 1,
+    "value41": 1,
+    "value42": {
+        "Name": "Test Ser",
+        "Path": "coreAssets/textures/Heightmaps/height128.raw",
+        "Min": -10.0,
+        "Max": 50.0
+    }
+}
