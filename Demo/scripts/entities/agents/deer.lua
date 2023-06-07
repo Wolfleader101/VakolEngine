@@ -9,9 +9,12 @@ function init()
 
     state.speed = 0.3;
     state.sprint_speed = 4.0;
-    state.dir = Vector3.new(0);
-    state.dir.x = math.random(-1, 1);
-    state.dir.z = math.random(-1, 1);
+    state.dir = Vector3.new(math.random() * 2 - 1, 0, math.random() * 2 - 1);
+    while state.dir:magnitude() == 0 do
+        state.dir.x = math.random() * 2 - 1
+        state.dir.z = math.random() * 2 - 1
+    end
+    state.dir:normalize();
 
     state.WAIT_TIMER = 0.0;
     state.DIR_TIMER = 0.0;
@@ -58,12 +61,15 @@ function init()
     end)
 
     state.fsm:add_state("roaming", function()
+        local stateChange = false
         if (fsm_wait(math.random(5, 7))) then
             local rand = math.random();
             if (rand < 0.4) then
                 state.fsm:change_state("idle")
+                stateChange = true
             elseif (rand < 0.8) then
                 state.fsm:change_state("eating")
+                stateChange = true
             end
         end
 
@@ -71,17 +77,18 @@ function init()
             state.SPOTTED = false;
         end
         
-        entity:set_animation_state(state.ANIMATIONS.WALK);
+        if not stateChange then
+            entity:set_animation_state(state.ANIMATIONS.WALK);
+        end
 
-
-        if (dir_wait(math.random(4,6))) then
-            state.dir.x = math.random(-1, 1);
-            state.dir.z = math.random(-1, 1);
-
-            -- Update rotation after direction update
-            local targetRotation = atan2(state.dir.x, state.dir.z)
-            targetRotation = to_degrees(targetRotation)
-            entity:get_transform().rot.y = targetRotation
+        if (state.dir_wait(math.random(4,6))) then
+            state.dir.x = math.random() * 2 - 1
+            state.dir.z = math.random() * 2 - 1
+            while state.dir:magnitude() == 0 do
+                state.dir.x = math.random() * 2 - 1
+                state.dir.z = math.random() * 2 - 1
+            end
+            state.dir:normalize()
         end
         
         local velocity = state.speed * Time.delta_time;
@@ -112,11 +119,6 @@ function init()
             -- Update the state direction
             state.dir = rand_dir
             state.SPOTTED = true;
-
-            -- Update rotation after direction update
-            local targetRotation = atan2(state.dir.x, state.dir.z)
-            targetRotation = to_degrees(targetRotation)
-            entity:get_transform().rot.y = targetRotation
         end
 
         local velocity = state.sprint_speed * Time.delta_time;
@@ -125,7 +127,7 @@ function init()
         pos.x = pos.x + (state.dir.x * velocity);
         pos.z = pos.z + (state.dir.z * velocity);
 
-        if (player_dist >= state.VIEW_DISTANCE + 1.5 and fsm_wait(math.random(2,4))) then
+        if (player_dist >= state.VIEW_DISTANCE + 1.5) then
             state.fsm:change_state("roaming")
         end
     end)
@@ -159,16 +161,7 @@ end
 
 
 function update()
-    state.fsm:update()
-
     local pos = entity:get_transform().pos;
-    local terr_scale = scene.globals.terrain.transform.scale;
-    pos.y = (scene.globals.terrain.terr:get_height(pos.x / terr_scale.x, pos.z / terr_scale.z) * terr_scale.y) + 0.03;
-
-    local targetRotation = math.atan(state.dir.x, state.dir.z)
-    targetRotation = targetRotation * (180 / math.pi)
-    entity:get_transform().rot.y = targetRotation
-
     local diff = scene.globals.player.pos - pos;
     local player_dist = diff:magnitude();
 
@@ -180,4 +173,12 @@ function update()
             state.fsm:change_state("running_away");
         end
     end
+    state.fsm:update()
+
+    local terr_scale = scene.globals.terrain.transform.scale;
+    pos.y = (scene.globals.terrain.terr:get_height(pos.x / terr_scale.x, pos.z / terr_scale.z) * terr_scale.y) + 0.03;
+
+    local targetRotation = math.atan(state.dir.x, state.dir.z)
+    targetRotation = targetRotation * (180 / math.pi)
+    entity:get_transform().rot.y = targetRotation
 end
