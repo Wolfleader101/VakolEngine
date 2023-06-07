@@ -7,7 +7,7 @@ function init()
         WALK = 11
     }
 
-    state.enemyAttackDistance = 1.0;
+    state.enemyAttackAnimDistance = 1.0;
     state.giveUpDistance = 10.0;
     state.speed = 0.3;
     state.sprint_speed = 1.7;
@@ -44,10 +44,12 @@ function init()
     state.fsm = entity:add_fsm();
 
     state.fsm:add_state("attack", function()
+        trigger_nearby_monsters(entity, 2.0);
+    
         entity:set_animation_state(state.ANIMATIONS.ATTACK);
 
         if(fsm_wait(2)) then  -- The attack animation lasts for 2 seconds
-            if player_distance() > state.enemyAttackDistance then  -- If player moves more than 2 units away, start chasing again
+            if player_distance() > state.enemyAttackAnimDistance then  -- If player moves more than state.enemyAttackAnimDistance units away, start chasing again
                 state.fsm:change_state("running_towards");
             end
         end
@@ -102,7 +104,7 @@ function init()
         entity:get_transform().rot.y = targetRotation
 
         -- Added logic to attack the player when close
-        if player_distance() < state.enemyAttackDistance then  -- If player is less than 2 units away, start attacking
+        if player_distance() < state.enemyAttackAnimDistance then  -- If player is less than 2 units away, start attacking
             state.fsm:change_state("attack");
         end
     end)
@@ -125,7 +127,7 @@ function init()
         entity:get_transform().rot.y = targetRotation
 
         -- If player is close enough, switch to attack state
-        if player_distance() < state.enemyAttackDistance then
+        if player_distance() < state.enemyAttackAnimDistance then
             state.fsm:change_state("attack");
         elseif player_distance() > state.giveUpDistance then  -- stop chasing if the player is 20 units away
             state.fsm:change_state("roaming");
@@ -135,6 +137,19 @@ function init()
     state.fsm:change_state("roaming")
 
     print_err("Skeleton is ready")
+end
+
+function trigger_nearby_monsters(origin_monster, trigger_distance)
+    local origin_pos = origin_monster:get_transform().pos
+
+    for i, monster in ipairs(scene.globals.monsters) do
+        if monster ~= origin_monster and monster.state.fsm:get_state() ~= "attack" then
+            local diff = origin_pos - monster:get_transform().pos
+            if diff:magnitude() <= trigger_distance then
+                monster.state.fsm:change_state("attack")
+            end
+        end
+    end
 end
 
 function player_distance()  -- Added a new function to calculate distance to the player
@@ -168,7 +183,7 @@ function update()
     local diff = scene.globals.player.pos - pos;
     local player_dist = diff:magnitude();
 
-    if (player_dist < state.VIEW_DISTANCE) and (player_dist >= state.enemyAttackDistance) then  -- added check here
+    if (player_dist < state.VIEW_DISTANCE) and (player_dist >= state.enemyAttackAnimDistance) then  -- added check here
         local diff_normal = diff:normalize();
         local dot = diff_normal:dot(state.dir)
 
