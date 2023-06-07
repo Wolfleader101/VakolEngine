@@ -44,7 +44,7 @@ function init()
     state.fsm = entity:add_fsm();
 
     state.fsm:add_state("attack", function()
-        trigger_nearby_monsters(entity, 2.0);
+        trigger_nearby_monsters(entity, 10.0);
     
         entity:set_animation_state(state.ANIMATIONS.ATTACK);
 
@@ -143,10 +143,11 @@ function trigger_nearby_monsters(origin_monster, trigger_distance)
     local origin_pos = origin_monster:get_transform().pos
 
     for i, monster in ipairs(scene.globals.monsters) do
-        if monster ~= origin_monster and monster.state.fsm:get_state() ~= "attack" then
+        if monster ~= origin_monster and monster:get_fsm():get_state() ~= "attack" then
             local diff = origin_pos - monster:get_transform().pos
             if diff:magnitude() <= trigger_distance then
-                monster.state.fsm:change_state("attack")
+                monster:get_fsm():change_state("attack")
+                print("Monster " .. i .. " has been alerted and is now in attack state.")
             end
         end
     end
