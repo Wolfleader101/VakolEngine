@@ -61,12 +61,10 @@ function update()
         state.flying = not state.flying
     end
 
-    if (Input:get_mouse(KEYS["MOUSE_0"]) and wait(entity:get_animation_duration(1))) then
+    if (Input:get_mouse(KEYS["MOUSE_0"])) then
         entity:set_animation_state(1);
     elseif Input:get_mouse_up(KEYS["MOUSE_0"]) then
         entity:set_animation_state(0)
-        entity:reset_animation(1);
-        reset_timer();
     elseif not moving then
         entity:set_animation_state(0)
     elseif moving and not scene.globals.player.is_sprinting then
