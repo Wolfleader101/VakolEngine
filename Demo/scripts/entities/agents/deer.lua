@@ -81,7 +81,7 @@ function init()
             entity:set_animation_state(state.ANIMATIONS.WALK);
         end
 
-        if (state.dir_wait(math.random(4,6))) then
+        if (dir_wait(math.random(4,6))) then
             state.dir.x = math.random() * 2 - 1
             state.dir.z = math.random() * 2 - 1
             while state.dir:magnitude() == 0 do
