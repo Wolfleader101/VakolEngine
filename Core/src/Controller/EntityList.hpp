@@ -6,6 +6,8 @@
 #include <memory>
 #include <vector>
 
+#include "Controller/LuaState.hpp"
+
 namespace Vakol::Model {
 
     class Entity;  // pre declared to prevent recursive include
@@ -16,6 +18,7 @@ using namespace Vakol::Model;
 namespace Vakol::Controller {
 
     class System;
+    class Scene;
 
     /**
      * @class EntityList
@@ -88,7 +91,7 @@ namespace Vakol::Controller {
         void Update(double d_t);
 
         void Serialize(const std::string& file) const;
-        void Deserialize(const std::string& file);
+        void Deserialize(const std::string& file, std::shared_ptr<LuaState> lua, Scene* scene);
 
        private:
         /**
@@ -147,21 +150,55 @@ namespace Vakol::Controller {
         // }
 
         template <typename Archive, typename... Args>
-        void privateDeserialize(const std::string& file) {
+        void privateDeserialize(const std::string& file, std::shared_ptr<LuaState> lua, Scene* scene) {
             std::ifstream inp(file);
 
             if (inp.good()) {
                 
+
+
                 m_Registry.clear();
+                ActiveEntityList.clear();
 
                 Archive json(inp);
-
                 json(ActiveEntityList);  // fills vector again
-
+                
+                
                 entt::snapshot_loader snapLoad(m_Registry);
                 snapLoad.entities(json);
                 snapLoad.component<Args...>(json);
 
+
+                System::Script_Init(lua, *this, scene);
+
+                inp.seekg(0, inp.beg); //reset file pointer to start of file
+
+                entt::registry tempReg;
+                entt::snapshot_loader tempSnap(tempReg);
+                tempSnap.entities(json);
+                tempSnap.component<Args...>(json);
+
+                //do n^2 view here
+                
+                m_Registry.group<Components::Script, Components::Transform, Components::GUID, Components::Tag>().each(
+                    [&](auto& script, auto& trans, auto& guid, auto& tag)
+                    {
+                            tempReg.group<Components::Script, Components::Transform, Components::GUID, Components::Tag>().each(
+                            [&](auto& scriptTemp, auto& transTemp, auto& guidTemp, auto& tagTemp)
+                            {
+                                if(guid == guidTemp)
+                                {
+
+                                    script.state = scriptTemp.state;
+
+                                    trans = transTemp;
+
+                                    tag = tagTemp;
+                                }
+                            });
+                    });
+
+                
                 inp.close();
             }
         }

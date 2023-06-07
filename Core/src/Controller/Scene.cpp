@@ -146,10 +146,9 @@ namespace Vakol::Controller
             ConvertMapToSol(globals, sceneGlobals);
         }
         
-        entityList.Deserialize(folder + "/EntityList.json");
+        entityList.Deserialize(folder + "/EntityList.json", lua, this);
 
         System::BindScene(*this);
-        System::Drawable_Init();
         System::Physics_Init();
 
         std::ifstream input(folder + "/Scene.json");

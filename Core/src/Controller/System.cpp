@@ -112,6 +112,19 @@ namespace Vakol::Controller
         //});
     }
 
+
+    void System::Script_Init(std::shared_ptr<LuaState> lua, EntityList& list, Scene* scene)
+    {
+        m_registry->view<Script>().each([&](auto entity_id, auto& script) 
+        {
+            lua->RunFile("scripts/" + script.script_name);
+
+            lua->GetState()["scene"] = scene;
+            lua->GetState()["entity"] = list.GetEntity(static_cast<unsigned int>(entity_id));
+            lua->GetState()["state"] = script.state;
+            lua->RunFunction("init");
+        });
+    }
     void System::Script_Update(std::shared_ptr<LuaState> lua, EntityList& list, Scene* scene)
 	{
         m_registry->view<Script>().each([&](auto entity_id, auto& script) 
@@ -255,9 +268,6 @@ namespace Vakol::Controller
 
     void System::Physics_AddTerrain(const Terrain& ter) { m_SP->AddTerrain(ter); }
 
-    // void System::Script_Init()
-    // {
-        
-    // }
+    
 
 }  // namespace Vakol::Controller
