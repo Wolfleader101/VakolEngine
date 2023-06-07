@@ -72,6 +72,7 @@ namespace Vakol::Model::Components
     struct Animator
     {
         std::string attached_model;
+
         void Update(const int state, const float delta_time) { animator_ptr->Update(state, delta_time); }
         void Update(const float delta_time) { animator_ptr->Update(delta_time); }
 
@@ -81,9 +82,9 @@ namespace Vakol::Model::Components
         void set(const Controller::Animator& animator) { animator_ptr = std::make_shared<Controller::Animator>(animator); }
 
         template <class Archive>
-        void serialize(Archive& ar) {
+        void serialize(Archive& ar) 
+        {
             ar(cereal::make_nvp("attached_model", attached_model));
-            //ar(cereal::make_nvp("State Table",state));
         }
     private:
         std::shared_ptr<Controller::Animator> animator_ptr = nullptr;
@@ -92,11 +93,13 @@ namespace Vakol::Model::Components
     struct Animation
     {
         int state = 0;
+        std::string attached_model;
 
         template <class Archive>
-        void serialize(Archive& ar) {
+        void serialize(Archive& ar) 
+        {
             ar(cereal::make_nvp("state", state));
-            //ar(cereal::make_nvp("State Table",state));
+            ar(cereal::make_nvp("attached_model", attached_model));
         }
     };
 

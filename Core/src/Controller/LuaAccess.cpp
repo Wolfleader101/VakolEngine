@@ -364,6 +364,9 @@ namespace Vakol::Controller {
                         _animator.attached_model = draw.name;
                         _animator.set(animator);
                     }
+
+                    auto& animation = ent->GetComponent<Components::Animation>();
+                    animation.attached_model = draw.name;
                 }
             }
 
