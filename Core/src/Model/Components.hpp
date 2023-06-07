@@ -2,6 +2,7 @@
 
 #include <reactphysics3d/reactphysics3d.h>
 
+#include <crossguid/guid.hpp>
 #include <Controller/LuaState.hpp>
 #include <Controller/Physics/ScenePhysics.hpp>
 
@@ -371,6 +372,20 @@ namespace Vakol::Model::Components
             ar(cereal::make_nvp("Path", path));
             ar(cereal::make_nvp("Min", min));
             ar(cereal::make_nvp("Max", max));
+        }
+    };
+
+    struct GUID
+    {
+        GUID() = default;
+
+        void GenNewGUID();
+        
+        xg::Guid id;
+
+        template <class Archive>
+        void serialize(Archive& ar) {
+            ar(cereal::make_nvp("GUID", id));
         }
     };
 }  // namespace Vakol::Model::Components

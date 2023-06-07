@@ -161,4 +161,11 @@ namespace Vakol::Model::Components {
 
         return bounds;
     }
+
+    void GUID::GenNewGUID()
+    {
+        id = xg::newGuid();
+    }
+
+
 }  // namespace Vakol::Model::Components
