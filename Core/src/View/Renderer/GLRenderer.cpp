@@ -95,49 +95,7 @@ namespace Vakol::View {
 
     void GLRenderer::ClearBuffer(const unsigned int buffer_bit) const { glClear(buffer_bit); }
 
-    void GLRenderer::DrawAnimated(const Components::Transform& transform, const Components::Drawable& drawable,
-                                  const Components::Animator& _animator) const {
-        const auto& model = drawable.model_ptr;
-        VK_ASSERT(model, "\n\nModel ptr is nullptr");
-
-        const auto& shader = model->c_shader();
-        VK_ASSERT(shader, "\n\nShader is nullptr");
-
-        const auto animation_state = _animator.animation_state;
-
-        const auto& animator = _animator.animator_ptr;
-
-        if (!model->cullBackface()) glDisable(GL_CULL_FACE);
-
-        shader->Bind();
-
-        const auto translation_matrix = translate(glm::mat4(1.0f), transform.pos);
-
-        const auto rotation_matrix = mat4_cast(transform.rot);
-
-        const auto scale_matrix = scale(glm::mat4(1.0f), transform.scale);
-
-        shader->SetMat4("MODEL_MATRIX", translation_matrix * rotation_matrix * scale_matrix);
-
-        shader->SetMat4v("BONE_TRANSFORMS", animator->nTransforms(animation_state),
-                         value_ptr(animator->transform(animation_state)));
-
-        for (int i = 0; i < model->nMeshes(); ++i) {
-            const auto& mesh = model->mesh(i);
-            const auto& material = mesh.GetMaterial();
-
-            for (int j = 0; j < material->GetTextureCount(); ++j) {
-                glActiveTexture(GL_TEXTURE0 + j);
-                glBindTexture(GL_TEXTURE_2D, material->GetTexture(j));
-            }
-
-            mesh.Draw();
-        }
-
-        shader->Unbind();
-    }
-
-    void GLRenderer::Draw(const Components::Transform& transform, const Components::Drawable& drawable) const
+    void GLRenderer::DrawAnimated(const Components::Transform& transform, const Components::Drawable& drawable, const Assets::Animation& animation) const 
     {
         const auto& model = drawable.model_ptr;
         VK_ASSERT(model, "\n\nModel ptr is nullptr");
@@ -157,6 +115,8 @@ namespace Vakol::View {
 
         shader->SetMat4("MODEL_MATRIX", translation_matrix * rotation_matrix * scale_matrix);
 
+        shader->SetMat4v("BONE_TRANSFORMS", animation.numTransforms(), value_ptr(animation.transform()));
+
         for (int i = 0; i < model->nMeshes(); ++i) {
             const auto& mesh = model->mesh(i);
             const auto& material = mesh.GetMaterial();
@@ -172,8 +132,41 @@ namespace Vakol::View {
         shader->Unbind();
     }
 
-    void GLRenderer::UpdateData(const Controller::Camera& camera)
-    {
+    void GLRenderer::Draw(const Components::Transform& transform, const Components::Drawable& drawable) const {
+        const auto& model = drawable.model_ptr;
+        VK_ASSERT(model, "\n\nModel ptr is nullptr");
+
+        const auto& shader = model->c_shader();
+        VK_ASSERT(shader, "\n\nShader is nullptr");
+
+        if (!model->cullBackface()) glDisable(GL_CULL_FACE);
+
+        shader->Bind();
+
+        const auto translation_matrix = translate(glm::mat4(1.0f), transform.pos);
+
+        const auto rotation_matrix = mat4_cast(transform.rot);
+
+        const auto scale_matrix = scale(glm::mat4(1.0f), transform.scale);
+
+        shader->SetMat4("MODEL_MATRIX", translation_matrix * rotation_matrix * scale_matrix);
+
+        for (int i = 0; i < model->nMeshes(); ++i) {
+            const auto& mesh = model->mesh(i);
+            const auto& material = mesh.GetMaterial();
+
+            for (int j = 0; j < material->GetTextureCount(); ++j) {
+                glActiveTexture(GL_TEXTURE0 + j);
+                glBindTexture(GL_TEXTURE_2D, material->GetTexture(j));
+            }
+
+            mesh.Draw();
+        }
+
+        shader->Unbind();
+    }
+
+    void GLRenderer::UpdateData(const Controller::Camera& camera) {
         PROJECTION = camera.GetMatrix(PROJECTION_MATRIX);
         VIEW = camera.GetMatrix(VIEW_MATRIX);
 
@@ -205,4 +198,4 @@ namespace Vakol::View {
 
         if (isSkybox) skybox->Draw(PROJECTION, VIEW);
     }
-}
+}  // namespace Vakol::View

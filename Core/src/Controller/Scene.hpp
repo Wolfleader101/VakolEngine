@@ -18,7 +18,7 @@ namespace Vakol::Controller {
          * @brief Construct a new Scene object
          *
          */
-        Scene(const std::string& name, const std::string& scriptName, LuaState& lua,
+        Scene(const std::string& name, const std::string& scriptName, std::shared_ptr<LuaState> lua,
               const std::shared_ptr<Physics::ScenePhysics>& SP, bool active);
 
 
@@ -49,7 +49,7 @@ namespace Vakol::Controller {
         sol::table sceneGlobals;
 
     private:
-        LuaState& lua;
+        std::shared_ptr<LuaState> lua;
         std::string scriptName;
         std::string name;
         Camera cam;

@@ -10,17 +10,18 @@ function init()
 
     state.speed = 0.5;
     state.sprint_speed = 3;
-    state.dir = Vector3.new(0);
-    state.dir.x = math.random(-1, 1);
-    state.dir.z = math.random(-1, 1);
+    state.dir = Vector3.new(math.random() * 2 - 1, 0, math.random() * 2 - 1);
+    while state.dir:magnitude() == 0 do
+        state.dir.x = math.random() * 2 - 1
+        state.dir.z = math.random() * 2 - 1
+    end
+    state.dir:normalize();
 
     state.WAIT_TIMER = 0.0;
     state.DIR_TIMER = 0.0;
 
-    state.VIEW_DISTANCE = 7.5;
+    state.VIEW_DISTANCE = 5;
     state.SPOTTED = false;
-
-    entity:get_transform().pos = Vector3.new(10, 0, 10);
 
     state.model = entity:add_model("assets/models/agents/rabbit.fbx", 0.25, true, true);
     entity:set_shader("coreAssets/shaders/animation.prog");
@@ -37,11 +38,12 @@ function init()
     shader:set_int("material.normal_map", 2);
     shader:set_int("material.emission_map", 3);
 
+    print("here");
     state.fsm = entity:add_fsm();
-
+    print("yeet");
     state.fsm:add_state("eating", function()
         entity:set_animation_state(state.ANIMATIONS.EAT);
-        if(fsm_wait(math.random(5,7))) then
+        if(state.fsm_wait(math.random(5,7))) then
             state.fsm:change_state("roaming")
         end
 
@@ -50,7 +52,7 @@ function init()
     state.fsm:add_state("looking", function()
         entity:set_animation_state(state.ANIMATIONS.IDLE);
 
-        if(fsm_wait(math.random(5,7))) then
+        if(state.fsm_wait(math.random(5,7))) then
             local rand = math.random();
             if (rand < 0.6) then
                 state.fsm:change_state("roaming")
@@ -62,42 +64,50 @@ function init()
     end)
 
     state.fsm:add_state("roaming", function()
-        if (fsm_wait(math.random(5, 7))) then
-            local rand = math.random();
-            if (rand < 0.4) then
-                state.fsm:change_state("looking")
-            elseif (rand < 0.8) then
-                state.fsm:change_state("eating")
-            end
+    local stateChange = false
+    if (state.fsm_wait(math.random(5, 7))) then
+        local rand = math.random();
+        if (rand < 0.4) then
+            state.fsm:change_state("looking")
+            stateChange = true
+        elseif (rand < 0.8) then
+            state.fsm:change_state("eating")
+            stateChange = true
         end
+    end
 
-        if(state.SPOTTED) then
-            state.SPOTTED = false;
-        end
-        
+    if(state.SPOTTED) then
+        state.SPOTTED = false;
+    end
+
+    if not stateChange then
         entity:set_animation_state(state.ANIMATIONS.WALK);
+    end
 
-
-        if (dir_wait(math.random(4,6))) then
-            state.dir.x = math.random(-1, 1);
-            state.dir.z = math.random(-1, 1);
+    if (state.dir_wait(math.random(4,6))) then
+        state.dir.x = math.random() * 2 - 1
+        state.dir.z = math.random() * 2 - 1
+        while state.dir:magnitude() == 0 do
+            state.dir.x = math.random() * 2 - 1
+            state.dir.z = math.random() * 2 - 1
         end
-        
-        local velocity = state.speed * Time.delta_time;
+        state.dir:normalize()
+    end
 
-        local pos = entity:get_transform().pos;
-        pos.x = pos.x + (state.dir.x * velocity);
-        pos.z = pos.z + (state.dir.z * velocity);
-    end)
+    local velocity = state.speed * Time.delta_time;
+
+    local pos = entity:get_transform().pos;
+    pos.x = pos.x + (state.dir.x * velocity);
+    pos.z = pos.z + (state.dir.z * velocity);
+end)
 
     state.fsm:add_state("running_away", function()
-        print("RUNNING")
         entity:set_animation_state(state.ANIMATIONS.RUN);
 
         local diff = scene.globals.player.pos - entity:get_transform().pos;
         local player_dist = diff:magnitude();
 
-        if(not state.SPOTTED or dir_wait(4)) then
+        if(not state.SPOTTED or state.dir_wait(4)) then
             local rand_dir = Vector3.new(math.random() - 0.5, 0, math.random() - 0.5)
             rand_dir:normalize()
 
@@ -120,7 +130,7 @@ function init()
         pos.x = pos.x + (state.dir.x * velocity);
         pos.z = pos.z + (state.dir.z * velocity);
 
-        if (player_dist >= state.VIEW_DISTANCE + 1.5 and fsm_wait(math.random(2,4))) then
+        if (player_dist >= state.VIEW_DISTANCE + 1.5) then
             state.fsm:change_state("roaming")
         end
     end)
@@ -128,41 +138,36 @@ function init()
     -- Set the initial state
     state.fsm:change_state("roaming")
 
-    print_err("Rabbity is ready")
-end
 
-function dir_wait(seconds)
-    state.DIR_TIMER = state.DIR_TIMER + Time.delta_time;
+    local function dir_wait(seconds)
+        state.DIR_TIMER = state.DIR_TIMER + Time.delta_time;
 
-    if (state.DIR_TIMER >= seconds) then
-        state.DIR_TIMER = 0
-        return true;
+        if (state.DIR_TIMER >= seconds) then
+            state.DIR_TIMER = 0
+            return true;
+        end
+
+        return false;
     end
 
-    return false;
-end
+    local function fsm_wait(seconds)
+        state.WAIT_TIMER = state.WAIT_TIMER + Time.delta_time;
 
-function fsm_wait(seconds)
-    state.WAIT_TIMER = state.WAIT_TIMER + Time.delta_time;
+        if (state.WAIT_TIMER >= seconds) then
+            state.WAIT_TIMER = 0
+            return true;
+        end
 
-    if (state.WAIT_TIMER  >= seconds) then
-        state.WAIT_TIMER = 0
-        return true;
+        return false;
     end
 
-    return false;
+    state.dir_wait = dir_wait;
+    state.fsm_wait = fsm_wait;
+
 end
 
 function update()
-    state.fsm:update()
     local pos = entity:get_transform().pos;
-    local terr_scale = scene.globals.terrain.transform.scale;
-    pos.y = (scene.globals.terrain.terr:get_height(pos.x / terr_scale.x, pos.z / terr_scale.z) * terr_scale.y) + 0.03;
-
-    local targetRotation = math.atan(state.dir.x, state.dir.z)
-    targetRotation = targetRotation * (180 / math.pi)
-    entity:get_transform().rot.y = targetRotation
-
     local diff = scene.globals.player.pos - pos;
     local player_dist = diff:magnitude();
 
@@ -174,4 +179,12 @@ function update()
             state.fsm:change_state("running_away");
         end
     end
+    state.fsm:update()
+
+    local terr_scale = scene.globals.terrain.transform.scale;
+    pos.y = (scene.globals.terrain.terr:get_height(pos.x / terr_scale.x, pos.z / terr_scale.z) * terr_scale.y) + 0.03;
+
+    local targetRotation = math.atan(state.dir.x, state.dir.z)
+    targetRotation = targetRotation * (180 / math.pi)
+    entity:get_transform().rot.y = targetRotation
 end

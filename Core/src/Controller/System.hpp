@@ -32,14 +32,17 @@ namespace Vakol::Controller
         static void Drawable_Init();
         static void Drawable_Update(const Time& time, const std::shared_ptr<View::Renderer>& renderer);
 
-        static void Script_Update(LuaState& lua, EntityList& list, Scene* scene);
+        static void Script_Update(std::shared_ptr<LuaState> lua, EntityList& list, Scene* scene);
 
         static void Physics_InitEntity(const Entity& ent);
-
         static void Physics_Init();
         static void Physics_UpdateTransforms(float factor);
         static void Physics_SerializationPrep();
         static void Physics_AddTerrain(const Terrain& ter); 
+
+        static void Terrain_Init();
+
+        static void FSM_Init();
 
     private:
         static std::shared_ptr<ScenePhysics> m_SP;
