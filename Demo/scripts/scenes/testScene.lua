@@ -12,11 +12,18 @@ function init()
 
     -- scene:create_entity("Monster", "entities/agents/monster.lua");
 
-    scene.globals.monsters = {};
+    -- scene.globals.monsters = {};
+    
+    -- for i = 1, 5 do
+        -- scene.globals.monsters[i] = scene:create_entity("Monster" .. i, "entities/agents/monster.lua");
+        -- scene.globals.monsters[i]:get_transform().pos = Vector3.new(5.0 * i, 0.0, -2.0);
+    -- end
+
+    scene.globals.bears = {};
     
     for i = 1, 5 do
-        scene.globals.monsters[i] = scene:create_entity("Monster" .. i, "entities/agents/monster.lua");
-        scene.globals.monsters[i]:get_transform().pos = Vector3.new(5.0 * i, 0.0, -2.0);
+        scene.globals.bears[i] = scene:create_entity("Bear" .. i, "entities/agents/bear.lua");
+        scene.globals.bears[i]:get_transform().pos = Vector3.new(5.0 * i, 0.0, -2.0);
     end
 
     -- scene:create_entity("Rabbit Test", "entities/agents/rabbit_test.lua");
