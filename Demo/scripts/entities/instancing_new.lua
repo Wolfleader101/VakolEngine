@@ -12,7 +12,7 @@ function init()
 	local shaders = {};
 
 	entities[1] = entity;
-	models[1] = entities[1]:add_model("coreAssets/models/Imported/OpenGameArt/Yughues/pine/snow_pine_tree.obj", 0.1, false);
+	models[1] = entities[1]:add_model("assets/models/Imported/OpenGameArt/Yughues/pine/snow_pine_tree.obj", 0.1, false);
 	entities[1]:set_shader("coreAssets/shaders/instance.prog");
 
 	shaders[1] = models[1]:get_shader();
@@ -42,7 +42,7 @@ function init()
 	--instantiate_model(models[1], m_trees, n_trees);
 
 	entities[2] = scene:create_entity("rock", "");
-	models[2] = entities[2]:add_model("coreAssets/models/Imported/OpenGameArt/mastahcez/stone.fbx", 75.0, true);
+	models[2] = entities[2]:add_model("assets/models/Imported/OpenGameArt/mastahcez/stone.fbx", 75.0, true);
 	entities[2]:set_shader("coreAssets/shaders/instance.prog");
 
 	shaders[2] = models[2]:get_shader();
