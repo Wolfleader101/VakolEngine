@@ -13,6 +13,7 @@ namespace Vakol::Controller
 
     std::unordered_map<std::string, std::shared_ptr<Texture>> AssetLoader::m_TextureMap;
     std::unordered_map<std::string, std::pair<std::shared_ptr<Model::Assets::Model>, std::shared_ptr<Animator>>> AssetLoader::m_ModelMap;
+    std::unordered_map<std::string, std::shared_ptr<Animator>> AssetLoader::m_AnimatorMap;
     std::unordered_map<std::string, std::shared_ptr<Model::Shader>> AssetLoader::m_ShaderMap; 
     std::unordered_map<std::string, std::shared_ptr<Terrain>> AssetLoader::m_TerrainMap;
 
@@ -81,6 +82,25 @@ namespace Vakol::Controller
         return ret;
     }
 
+    std::shared_ptr<Animator> AssetLoader::GetAnimator(const std::string& file)
+    {
+        std::shared_ptr<Animator> ret = nullptr;
+
+        if (const auto itr = m_AnimatorMap.find(file); itr == m_AnimatorMap.end())
+        {
+            VK_WARN("No Animator attached to the model {0}", file);
+        }
+        else
+            ret = m_AnimatorMap[file];
+
+        return ret;
+    }
+
+    Model::Assets::Animation AssetLoader::GetAnimation(const std::string& attached_model, const int state)
+    {
+        return GetAnimator(attached_model)->get(state);
+    }
+
     std::pair<std::shared_ptr<Model::Assets::Model>, std::shared_ptr<Animator>> AssetLoader::GetModel(const std::string& file, const float scale, const bool animated, const bool backfaceCull)
     {
         bool instance;
@@ -98,6 +118,8 @@ namespace Vakol::Controller
 
             ret.first = std::make_shared<::Model>(model);
             ret.second = std::make_shared<Animator>(animator);
+
+            m_AnimatorMap[file] = ret.second;
 
             if (ret.first->meshes().empty())
                 VK_ERROR("no meshes found in model!");

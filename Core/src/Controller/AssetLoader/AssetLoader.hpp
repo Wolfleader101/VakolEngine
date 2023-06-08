@@ -27,6 +27,9 @@ namespace Vakol::Controller
         static std::shared_ptr<Model::Assets::Texture> GetTexture(const std::string& file, bool gamma, bool flip); // regular textures
 		static std::shared_ptr<Model::Assets::Texture> GetTexture(const std::string& file); // raw textures
 
+        static Model::Assets::Animation GetAnimation(const std::string& file, const int state);
+        static std::shared_ptr<Animator> GetAnimator(const std::string& file);
+
         static std::pair<std::shared_ptr<Model::Assets::Model>, std::shared_ptr<Animator>> GetModel(const std::string& file, float scale, bool animated, bool backfaceCull, bool& instance);
         static std::pair<std::shared_ptr<Model::Assets::Model>, std::shared_ptr<Animator>> GetModel(const std::string& file, float scale, bool animated, bool backfaceCull);
 
@@ -38,6 +41,7 @@ namespace Vakol::Controller
     private:
         static std::unordered_map<std::string, std::shared_ptr<Model::Assets::Texture>> m_TextureMap;
         static std::unordered_map<std::string, std::pair<std::shared_ptr<Model::Assets::Model>, std::shared_ptr<Animator>>> m_ModelMap;
+        static std::unordered_map<std::string, std::shared_ptr<Animator>> m_AnimatorMap;
         static std::unordered_map<std::string, std::shared_ptr<Model::Shader>> m_ShaderMap;
         static std::unordered_map<std::string, std::shared_ptr<Terrain>> m_TerrainMap;
     };

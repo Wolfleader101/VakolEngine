@@ -16,9 +16,8 @@
 
 namespace Vakol::Controller 
 {
-    std::unordered_map<std::string, Components::Animator> s_animator_map;
-
-    void RegisterMath(sol::state& lua) {
+    void RegisterMath(sol::state& lua) 
+    {
         {
             sol::constructors<glm::vec2(), glm::vec2(float), glm::vec2(float, float)> ctor;  // allow for constructors
 
@@ -357,18 +356,18 @@ namespace Vakol::Controller
                 draw.backfaceCull = backfaceCull;
                 draw.instance = instance;
 
-                if (animator && animated) {
+                if (animator && animated) 
+                {
                     if (!ent->HasComponent<Components::Animation>()) ent->AddComponent<Components::Animation>();
 
-                    if (!instance) {
+                    if (!instance) 
+                    {
                         if (!ent->HasComponent<Components::Animator>()) ent->AddComponent<Components::Animator>();
 
                         auto& _animator = ent->GetComponent<Components::Animator>();
 
                         _animator.attached_model = draw.name;
                         _animator.set(animator);
-
-                        s_animator_map[_animator.attached_model] = _animator;
                     }
 
                     auto& animation = ent->GetComponent<Components::Animation>();
@@ -440,7 +439,7 @@ namespace Vakol::Controller
 
             const auto& animation = ent->GetComponent<Components::Animation>();
 
-            return s_animator_map.at(animation.attached_model).c_animation(animation_state).duration_s();
+            return AssetLoader::GetAnimation(animation.attached_model, animation.state).duration_s();
         });
 
         entity_type.set_function("reset_animation", [](const Entity* ent, const int animation_state) 
@@ -453,7 +452,7 @@ namespace Vakol::Controller
 
             const auto& animation = ent->GetComponent<Components::Animation>();
 
-            s_animator_map.at(animation.attached_model).animation(animation_state).reset_animation();
+            return AssetLoader::GetAnimation(animation.attached_model, animation_state).reset_animation();
         });
 
         model_type.set_function("get_mesh_count", &Assets::Model::nMeshes);
