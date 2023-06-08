@@ -16,7 +16,7 @@ namespace Vakol::Controller
 		{ 
 			if (state > nAnimations()) return;
 
-			m_animations.at(state).Update(delta_time); 
+			m_animations.at(state).Update(delta_time);
 		}
 		
 		void Update(const float delta_time) 

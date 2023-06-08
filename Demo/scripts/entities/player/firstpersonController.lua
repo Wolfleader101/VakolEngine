@@ -26,6 +26,11 @@ function init()
 
     TIMER = 0.0;
     attacking = false;
+    canAttack = true;
+
+    random_state = 1;
+
+    once = false;
 end
 
 function update()
@@ -62,21 +67,37 @@ function update()
         state.flying = not state.flying
     end
 
-    if (Input:get_mouse_down(KEYS["MOUSE_0"]) and not attacking) then
-        local random_state = math.random(1, 5);
-        entity:play_animation(random_state, false);
+    if (Input:get_mouse_down(KEYS["MOUSE_0"]) and canAttack) then
+        random_state = math.random(1, 5);
+
+        while (random_state == 2 or random_state == 3) do
+            random_state = math.random(1, 5);
+        end
+
+        entity:play_animation(random_state);
+        entity:reset_animation(random_state);
+
         attacking = true;
-    elseif (not attacking and not moving) then
-        entity:play_animation(0, true);
+
+        reset_timer();
+
+        canAttack = false;
+
+    elseif (not moving and not attacking) then
+        entity:play_animation(0);
+    end
+
+    if (not canAttack and wait(1.5)) then
+        canAttack = true;
     end
 
     if (moving and not scene.globals.player.is_sprinting) then
-        entity:play_animation(11, true);
+        entity:play_animation(11);
     elseif (moving and scene.globals.player.is_sprinting) then
-        entity:play_animation(12, true);
+        entity:play_animation(12);
     end
 
-    if (moving and attacking) then
+    if (attacking and moving) then
         attacking = false;
     end
 
@@ -118,8 +139,6 @@ end
 
 function wait(seconds)
     TIMER = TIMER + Time.delta_time;
-
-    print(TIMER);
 
     if (TIMER >= seconds) then
         return true;

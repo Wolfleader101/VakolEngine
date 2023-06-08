@@ -16,8 +16,7 @@
 using namespace Components;
 
 static std::unordered_map<std::string, Components::Animator> s_animator_map;
-//static std::unordered_map<int, Components::Animation> s_animation_map;
-static std::set<int> s_unique_set;
+static std::set<int> s_animation_set;
 
 glm::vec3 to_glm(const rp3d::Vector3& v) { return {v.x, v.y, v.z}; }
 glm::quat to_glm(const rp3d::Quaternion& q) { return {q.w, q.x, q.y, q.z}; }
@@ -44,7 +43,6 @@ namespace Vakol::Controller
         { 
             if(drawable.model_ptr == nullptr)
                 drawable.model_ptr = AssetLoader::GetModel(drawable.name, drawable.scale, drawable.animated, drawable.backfaceCull).first;
-
         });
     }
 
@@ -80,16 +78,13 @@ namespace Vakol::Controller
         {
             s_animator_map[animator.attached_model] = animator;
             
-            for (const auto state : s_unique_set)
+            for (const auto state : s_animation_set)
                 s_animator_map.at(animator.attached_model).Update(state, time.deltaTime);
         });
 
         m_registry->view<Transform, Drawable, Components::Animation>().each([&](const auto& transform, const Drawable& drawable, const Components::Animation& animation)
         {
-            //VK_TRACE("ATTACHED MODEL: {0} | STATE: {1} | LOOPING: {2}", animation.attached_model, animation.state, animation.looping);
-
-            s_unique_set.insert(animation.state);
-            //s_animation_map[animation.attached_model] = animation;
+            s_animation_set.emplace(animation.state);
 
             renderer->DrawAnimated(transform, drawable, s_animator_map.at(animation.attached_model).c_animation(animation.state));
         });
