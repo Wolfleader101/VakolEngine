@@ -72,12 +72,6 @@ namespace Vakol::Controller {
         }
 
         VK_TRACE("Model Path: {0}", path);
-
-        for (unsigned int i = 0; i < scene->mNumAnimations; ++i)
-        {
-            VK_TRACE("ANIMATION | NAME: {0} | STATE: {1}", scene->mAnimations[i]->mName.C_Str(), i);
-        }
-
         VK_TRACE("Animations Found: {0}", scene->mNumAnimations);
 
         for (unsigned int i = 0; i < scene->mNumAnimations; ++i)
@@ -377,7 +371,6 @@ namespace Vakol::Controller {
 
                 // Retrieve the bone info based on the bone name
                 const Bone* info = bone_map.get(bone_name.C_Str());
-                if (info == nullptr) continue;
 
                 if (!info) continue;
 

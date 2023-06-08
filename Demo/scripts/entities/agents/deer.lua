@@ -42,14 +42,14 @@ function init()
     state.fsm = entity:add_fsm();
 
     state.fsm:add_state("eating", function()
-        entity:set_animation_state(state.ANIMATIONS.EAT);
+        entity:play_animation(state.ANIMATIONS.EAT);
         if(fsm_wait(math.random(5,7))) then
             state.fsm:change_state("roaming")
         end
     end)
 
     state.fsm:add_state("idle", function()
-        entity:set_animation_state(state.ANIMATIONS.IDLE);
+        entity:play_animation(state.ANIMATIONS.IDLE);
         if(fsm_wait(math.random(5,7))) then
             local rand = math.random();
             if (rand < 0.6) then
@@ -78,7 +78,7 @@ function init()
         end
         
         if not stateChange then
-            entity:set_animation_state(state.ANIMATIONS.WALK);
+            entity:play_animation(state.ANIMATIONS.WALK);
         end
 
         if (dir_wait(math.random(4,6))) then
@@ -99,7 +99,7 @@ function init()
     end)
 
     state.fsm:add_state("running_away", function()
-        entity:set_animation_state(state.ANIMATIONS.RUN);
+        entity:play_animation(state.ANIMATIONS.RUN);
 
         local diff = scene.globals.player.pos - entity:get_transform().pos;
         local player_dist = diff:magnitude();
@@ -134,7 +134,7 @@ function init()
 
     state.fsm:change_state("roaming")
 
-    print_err("Deer is ready")
+    --print_err("Deer is ready")
 end
 
 function dir_wait(seconds)

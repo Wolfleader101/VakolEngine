@@ -73,7 +73,6 @@ void main()
     vec3 normal = normalize(fs_in.normal);
 
     color = texture(material.diffuse_map, fs_in.uv);
-    vec3 normal = normalize(fs_in.normal);
     //vec3 normal = normalize(fs_in.TBN * vec3(0.1));
 
     //vec3 normal = texture(material.normal_map, fs_in.uv).rgb;
