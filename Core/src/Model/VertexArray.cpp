@@ -36,6 +36,7 @@ namespace Vakol::Model {
             VK_CRITICAL("Convert() - Unknown Vertex size.");
             return {};
         }
+
         std::vector<Vertex> output;
 
         output.reserve(arr_size / elements);
@@ -90,7 +91,7 @@ namespace Vakol::Model {
 
         if (size != sizeof(Vertex)) size = sizeof(Vertex);
 
-        if (n_vertices == 0) {
+        if (n_vertices <= 0) {
             VK_CRITICAL("VertexArray::VertexArray - Cannot create empty vertex array.");
             return;
         }
@@ -118,7 +119,7 @@ namespace Vakol::Model {
             return;
         }
 
-        if (this->VBO == 0) this->Bind();
+        this->Bind();
 
         glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
         glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(n_vertices * sizeof(Vertex)), this->vertices.data(),
@@ -176,6 +177,7 @@ namespace Vakol::Model {
 
         if (total_elements != 0) {
             VK_CRITICAL("VertexArray::VertexArray - Reserved Vertex data was not fully allocated.");
+            return;
         }
 
         glPatchParameteri(GL_PATCH_VERTICES, NUM_PATCH_PTS);
