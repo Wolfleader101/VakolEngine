@@ -38,7 +38,7 @@ function init()
     shader:set_int("layer_9", 9);
     shader:set_int("layer_10", 10);
 
-    scene:add_terrain_physics(entity);
+    -- scene:add_terrain_physics(entity);
 
     scene.globals.terrain = {transform = entity:get_transform(), terr = entity:get_terrain()};
 end
