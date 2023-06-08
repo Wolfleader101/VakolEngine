@@ -27,7 +27,7 @@ function start_menu()
 
     GUI:add_text(" ", true, false, 2.0, 1.0, 1.0, 1.0, 1.0);
 
-    GUI:add_text("ESC - Exit", true, false, 2.0, 1.0, 0.169, 0.169, 1.0);
+    GUI:add_text("ESC - Exit", true, false, 2.0, 1.0, 1.0, 1.0, 1.0);
 
     GUI:end_window();
 
@@ -48,6 +48,15 @@ function update()
 
         local game = get_scene("Test Scene");
         game:set_active(true);
+        toggle_wireframe();
+    end
+
+    if (Input:get_key_down(KEYS["KEY_2"])) then
+        toggle_skybox();
+        scene:set_active(false);
+
+        local options = get_scene("Options Scene");
+        options:set_active(true);
         toggle_wireframe();
     end
 

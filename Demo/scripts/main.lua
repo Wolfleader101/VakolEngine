@@ -1,5 +1,6 @@
-
 add_scene("scenes/start_scene.lua", "Start Scene");
+
+add_scene("scenes/options_scene.lua", "Options Scene")
 
 add_scene("scenes/testScene.lua", "Test Scene");
 
