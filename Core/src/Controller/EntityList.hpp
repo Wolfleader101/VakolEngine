@@ -128,6 +128,7 @@ namespace Vakol::Controller {
 
             if (inp.good()) 
             {
+                m_Registry.clear();
                 Archive json(inp);
                 json(ActiveEntityList);  // fills vector again
 

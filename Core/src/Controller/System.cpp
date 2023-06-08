@@ -22,8 +22,7 @@ glm::quat to_glm(const rp3d::Quaternion& q) { return {q.w, q.x, q.y, q.z}; }
 rp3d::Vector3 to_rp3d(const glm::vec3& v) { return {v.x, v.y, v.z}; }
 rp3d::Quaternion to_rp3d(const glm::quat& q) { return {q.x, q.y, q.z, q.w}; }
 
-namespace Vakol::Controller 
-{
+namespace Vakol::Controller {
     entt::registry* System::m_registry = nullptr;
     std::shared_ptr<ScenePhysics> System::m_SP = nullptr;
     EntityList* System::Entlist = nullptr;
@@ -34,42 +33,41 @@ namespace Vakol::Controller
         Entlist = &scene.entityList;
     }
 
-    void System::Drawable_Init()
-    {
+    void System::Drawable_Init() {
         Terrain_Init();
-        m_registry->view<Drawable>().each([&](auto& drawable) 
-        { 
-            if(drawable.model_ptr == nullptr)
-                drawable.model_ptr = AssetLoader::GetModel(drawable.name, drawable.scale, drawable.animated, drawable.backfaceCull).first;
+        m_registry->view<Drawable>().each([&](auto& drawable) {
+            if (drawable.model_ptr == nullptr)
+                drawable.model_ptr =
+                    AssetLoader::GetModel(drawable.name, drawable.scale, drawable.animated, drawable.backfaceCull)
+                        .first;
+        });
 
+        m_registry->view<Drawable, Components::Animator>().each([&](auto& drawable, auto& animator) {
+            if (!animator.animator_ptr) {
+                animator.animator_ptr =
+                    AssetLoader::GetModel(drawable.name, drawable.scale, drawable.animated, drawable.backfaceCull)
+                        .second;
+            }
         });
     }
 
-    void System::Terrain_Init()
-    {
-        m_registry->view<Drawable, Components::Terrain>().each([&](auto& drawable, auto& terrainComp) 
-        {
+    void System::Terrain_Init() {
+        m_registry->view<Drawable, Components::Terrain>().each([&](auto& drawable, auto& terrainComp) {
             std::shared_ptr<Terrain> terrain = AssetLoader::GetTerrain(terrainComp.name);
 
-            if(!terrain)
-            {
+            if (!terrain) {
                 terrain = AssetLoader::GetTerrain(terrainComp.name, terrainComp.path, terrainComp.min, terrainComp.max);
             }
 
             drawable.model_ptr = terrain->GetModel();
             terrainComp.terrain_ptr = terrain;
         });
-        
     }
 
-    void System::Unique_Search() 
-    {
-    }
+    void System::Unique_Search() {}
 
-    void System::Drawable_Update(const Time& time, const std::shared_ptr<View::Renderer>& renderer)
-    {
-        m_registry->view<Transform, Drawable>().each([&](auto& transform, const Drawable& drawable) 
-        {
+    void System::Drawable_Update(const Time& time, const std::shared_ptr<View::Renderer>& renderer) {
+        m_registry->view<Transform, Drawable>().each([&](auto& transform, const Drawable& drawable) {
             auto euler_rads = glm::radians(transform.eulerAngles);
 
             transform.rot = glm::quat(euler_rads);
@@ -79,13 +77,10 @@ namespace Vakol::Controller
 
         auto animation_view = m_registry->view<Transform, Drawable, Components::Animation>();
 
-        m_registry->view<Components::Animator>().each([&](Components::Animator& animator)
-        {
-            for (const auto state : s_unique)
-                animator.Update(state, time.deltaTime);
+        m_registry->view<Components::Animator>().each([&](Components::Animator& animator) {
+            for (const auto state : s_unique) animator.Update(state, time.deltaTime);
 
-            for (auto _entity : animation_view)
-            {
+            for (auto _entity : animation_view) {
                 const auto& transform = animation_view.get<Transform>(_entity);
                 const auto& drawable = animation_view.get<Drawable>(_entity);
                 const auto& animation = animation_view.get<Components::Animation>(_entity);
@@ -93,17 +88,18 @@ namespace Vakol::Controller
                 if (s_unique.insert(animation.state).second) continue;
 
                 renderer->DrawAnimated(transform, drawable, animator.animation(animation.state));
-            }         
+            }
         });
 
         // This works fine, just non-performant (I WANT SPEEEED)
-        // 
-        //m_registry->view<Components::Animator>().each([&](Components::Animator& animator)
+        //
+        // m_registry->view<Components::Animator>().each([&](Components::Animator& animator)
         //{
         //    for (const auto state : s_unique)
         //        animator.Update(state, time.deltaTime);
 
-        //    m_registry->view<Transform, Drawable, Components::Animation>().each([&](const auto& transform, const Drawable& drawable, const Components::Animation& _animation) 
+        //    m_registry->view<Transform, Drawable, Components::Animation>().each([&](const auto& transform, const
+        //    Drawable& drawable, const Components::Animation& _animation)
         //    {
         //        if (!s_unique.insert(_animation.state).second) continue;
 
@@ -112,11 +108,8 @@ namespace Vakol::Controller
         //});
     }
 
-
-    void System::Script_Init(std::shared_ptr<LuaState> lua, EntityList& list, Scene* scene)
-    {
-        m_registry->view<Script>().each([&](auto entity_id, auto& script) 
-        {
+    void System::Script_Init(std::shared_ptr<LuaState> lua, EntityList& list, Scene* scene) {
+        m_registry->view<Script>().each([&](auto entity_id, auto& script) {
             lua->RunFile("scripts/" + script.script_name);
 
             lua->GetState()["scene"] = scene;
@@ -125,17 +118,14 @@ namespace Vakol::Controller
             script.state = lua->GetState().create_table();
             lua->RunFunction("init");
 
-            if(!script.data.data.size())
-            {
+            if (!script.data.data.size()) {
                 Controller::ConvertMapToSol(script.data, script.state);
             }
         });
     }
 
-    void System::Script_Update(std::shared_ptr<LuaState> lua, EntityList& list, Scene* scene)
-	{
-        m_registry->view<Script>().each([&](auto entity_id, auto& script) 
-        {
+    void System::Script_Update(std::shared_ptr<LuaState> lua, EntityList& list, Scene* scene) {
+        m_registry->view<Script>().each([&](auto entity_id, auto& script) {
             lua->RunFile("scripts/" + script.script_name);
 
             lua->GetState()["scene"] = scene;
@@ -146,10 +136,15 @@ namespace Vakol::Controller
         });
     }
 
-    void System::Script_Deserialize(std::shared_ptr<LuaState> lua, EntityList& list, Scene* scene)
-    {
-        m_registry->view<Script>().each([&](auto entity_id, auto& script) 
-        {
+    void System::Script_Deserialize(std::shared_ptr<LuaState> lua, EntityList& list, Scene* scene) {
+
+        m_registry->view<FSM>().each([&](auto& fsm) {
+            fsm.states = lua->GetState().create_table();
+
+            Controller::ConvertMapToSol(fsm.data, fsm.states);
+        });
+
+        m_registry->view<Script>().each([&](auto entity_id, auto& script) {
             lua->RunFile("scripts/" + script.script_name);
 
             lua->GetState()["scene"] = scene;
@@ -157,12 +152,12 @@ namespace Vakol::Controller
 
             script.state = lua->GetState().create_table();
             Controller::ConvertMapToSol(script.data, script.state);
-            
 
-            auto optFunc = lua->GetState()["deserialize"];
-            if(optFunc.valid())
-                lua->RunFunction("deserialize");
+            sol::function func = lua->GetState()["deserialize"];
+            if (func.valid()) lua->RunFunction("deserialize");
         });
+
+        
     }
 
     void System::Physics_Init() {
@@ -174,10 +169,8 @@ namespace Vakol::Controller
         }
     }
 
-    void System::Physics_UpdateTransforms(const float factor)
-    {
-        m_registry->group<Transform, RigidBody>().each([&](auto& trans, auto& rigid) 
-        {
+    void System::Physics_UpdateTransforms(const float factor) {
+        m_registry->group<Transform, RigidBody>().each([&](auto& trans, auto& rigid) {
             rp3d::Transform curr_transform = rigid.RigidBodyPtr->getTransform();
 
             // Compute the interpolated transform of the rigid body
@@ -191,8 +184,7 @@ namespace Vakol::Controller
         });
     }
 
-    void System::Physics_SerializationPrep()
-    {
+    void System::Physics_SerializationPrep() {
         m_registry->group<RigidBody, Transform>().each(  // can deduce that a collider can't exist without a rigidbody
             [&](RigidBody& rigid, const Transform& trans) {
                 if (rigid.RigidBodyPtr) {
@@ -293,7 +285,5 @@ namespace Vakol::Controller
     };
 
     void System::Physics_AddTerrain(const Terrain& ter) { m_SP->AddTerrain(ter); }
-
-    
 
 }  // namespace Vakol::Controller

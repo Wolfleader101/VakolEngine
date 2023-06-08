@@ -187,3 +187,41 @@ function update()
     targetRotation = targetRotation * (180 / math.pi)
     entity:get_transform().rot.y = targetRotation
 end
+
+function deserialize()
+    state.fsm = entity:get_fsm();
+
+    state.fsm:add_state("eating", function()
+        entity:set_animation_state(state.ANIMATIONS.EAT);
+        if state.fsm_wait(math.random(5, 7)) then
+            state.fsm:change_state("roaming")
+        end
+    end)
+
+    state.fsm:add_state("looking", function()
+        entity:set_animation_state(state.ANIMATIONS.IDLE);
+
+        if state.fsm_wait(math.random(5, 7)) then
+            local rand = math.random();
+            if rand < 0.6 then
+                state.fsm:change_state("roaming")
+            else
+                state.fsm:change_state("eating")
+            end
+        end
+    end)
+    
+    state.fsm:add_state("roaming", function()
+        local stateChange = false
+        if state.fsm_wait(math.random(5, 7)) then
+            local rand = math.random();
+            if rand < 0.4 then
+                state.fsm:change_state("looking")
+                stateChange = true
+            elseif rand < 0.8 then
+                state.fsm:change_state("eating")
+                stateChange = true
+            end
+        end
+    end)
+end

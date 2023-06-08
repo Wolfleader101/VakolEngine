@@ -46,3 +46,7 @@ end
 function update()
     
 end
+
+function deserialize()
+
+end

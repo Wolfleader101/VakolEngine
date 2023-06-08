@@ -90,14 +90,35 @@
     "value26": 3,
     "value27": 0,
     "value28": {
-        "guid": "ed0d449d-2cc6-4ae8-9074-3575c68145b9"
+        "guid": "4ada6618-06f8-4816-9e8a-2957f1d55786"
     },
     "value29": 1,
     "value30": {
-        "guid": "5ade1bed-3d67-40b7-9e95-c75b2d46e1ff"
+        "guid": "afc39c5b-27be-4f53-bbfc-830ea0fb76b7"
     },
     "value31": 2,
     "value32": {
-        "guid": "96363d3e-203a-4ee1-a134-cc797bf833e7"
+        "guid": "719ed113-6c8a-4ad3-bc29-81264d8ba9fa"
+    },
+    "value33": 1,
+    "value34": 1,
+    "value35": {
+        "Model": "",
+        "Import Scale": 1.0,
+        "Animated": false,
+        "Back Face Culling": true
+    },
+    "value36": 0,
+    "value37": 0,
+    "value38": 0,
+    "value39": 0,
+    "value40": 0,
+    "value41": 1,
+    "value42": 1,
+    "value43": {
+        "Name": "Test Ser",
+        "Path": "coreAssets/textures/Heightmaps/height128.raw",
+        "Min": -10.0,
+        "Max": 50.0
     }
 }

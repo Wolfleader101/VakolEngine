@@ -267,6 +267,7 @@ namespace Vakol::Controller {
 
         entity_type.set_function("get_tag", [](Entity* ent) { return ent->GetComponent<Tag>().tag; });
         entity_type.set_function("get_transform", &Entity::GetComponent<Transform>);
+        entity_type.set_function("get_fsm", &Entity::GetComponent<FSM>);
 
         entity_type.set_function("create_height_map_terrain",
                                  [](Entity* ent, Scene& scene, std::string&& path, const float min, const float max) {
@@ -512,6 +513,8 @@ namespace Vakol::Controller {
             if (!ent->HasComponent<FSM>()) ent->AddComponent<FSM>(state);
             return ent->GetComponent<FSM>();
         });
+
+
     }
 
     void RegisterECS(sol::state& lua) {
