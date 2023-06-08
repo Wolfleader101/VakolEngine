@@ -162,6 +162,7 @@ namespace Vakol::Model::Components
     struct Script {
         std::string script_name;
         sol::table state;
+        Controller::SolTableData data;
 
         Script() = default;
         explicit Script(std::string& name);
@@ -169,14 +170,16 @@ namespace Vakol::Model::Components
         Script(const std::string& script, std::shared_ptr<Controller::LuaState> lua, Entity& entity, Controller::Scene& scene);
 
         template <class Archive>
-        void save(Archive& ar) const {
+        void save(Archive& ar) const 
+        {
+
+            
             ar(cereal::make_nvp("ScriptName", script_name));
 
-            Controller::SolTableData data;
+            Controller::SolTableData temp;
+            Controller::ConvertSolToMap(state, temp);
 
-            Controller::ConvertSolToMap(state, data);
-
-            ar(data);
+            ar(temp);
 
         }
 
@@ -184,10 +187,10 @@ namespace Vakol::Model::Components
         void load(Archive& ar) {
             ar(cereal::make_nvp("ScriptName", script_name));
             
-            Controller::SolTableData data;
+            data.data.clear();
             ar(data);
 
-            Controller::ConvertMapToSol(data, state);
+            
         }
     };
 

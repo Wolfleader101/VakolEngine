@@ -121,8 +121,14 @@ namespace Vakol::Controller
 
             lua->GetState()["scene"] = scene;
             lua->GetState()["entity"] = list.GetEntity(static_cast<unsigned int>(entity_id));
-            lua->GetState()["state"] = script.state;
+
+            script.state = lua->GetState().create_table();
             lua->RunFunction("init");
+
+            if(!script.data.data.size())
+            {
+                Controller::ConvertMapToSol(script.data, script.state);
+            }
         });
     }
     void System::Script_Update(std::shared_ptr<LuaState> lua, EntityList& list, Scene* scene)
