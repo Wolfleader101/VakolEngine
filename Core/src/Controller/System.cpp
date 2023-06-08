@@ -12,7 +12,6 @@
 #include <glm/gtc/quaternion.hpp>
 #pragma warning(pop)
 
-
 using namespace Components;
 
 static std::unordered_map<std::string, Components::Animator> s_animator_map;
@@ -24,8 +23,7 @@ glm::quat to_glm(const rp3d::Quaternion& q) { return {q.w, q.x, q.y, q.z}; }
 rp3d::Vector3 to_rp3d(const glm::vec3& v) { return {v.x, v.y, v.z}; }
 rp3d::Quaternion to_rp3d(const glm::quat& q) { return {q.x, q.y, q.z, q.w}; }
 
-namespace Vakol::Controller 
-{
+namespace Vakol::Controller {
     entt::registry* System::m_registry = nullptr;
     std::shared_ptr<ScenePhysics> System::m_SP = nullptr;
     EntityList* System::Entlist = nullptr;
@@ -36,38 +34,31 @@ namespace Vakol::Controller
         Entlist = &scene.entityList;
     }
 
-    void System::Drawable_Init()
-    {
+    void System::Drawable_Init() {
         Terrain_Init();
-        m_registry->view<Drawable>().each([&](auto& drawable) 
-        { 
-            if(drawable.model_ptr == nullptr)
-                drawable.model_ptr = AssetLoader::GetModel(drawable.name, drawable.scale, drawable.animated, drawable.backfaceCull).first;
-
+        m_registry->view<Drawable>().each([&](auto& drawable) {
+            if (drawable.model_ptr == nullptr)
+                drawable.model_ptr =
+                    AssetLoader::GetModel(drawable.name, drawable.scale, drawable.animated, drawable.backfaceCull)
+                        .first;
         });
     }
 
-    void System::Terrain_Init()
-    {
-        m_registry->view<Drawable, Components::Terrain>().each([&](auto& drawable, auto& terrainComp) 
-        {
+    void System::Terrain_Init() {
+        m_registry->view<Drawable, Components::Terrain>().each([&](auto& drawable, auto& terrainComp) {
             std::shared_ptr<Terrain> terrain = AssetLoader::GetTerrain(terrainComp.name);
 
-            if(!terrain)
-            {
+            if (!terrain) {
                 terrain = AssetLoader::GetTerrain(terrainComp.name, terrainComp.path, terrainComp.min, terrainComp.max);
             }
 
             drawable.model_ptr = terrain->GetModel();
             terrainComp.terrain_ptr = terrain;
         });
-        
     }
 
-    void System::Drawable_Update(const Time& time, const std::shared_ptr<View::Renderer>& renderer)
-    {
-        m_registry->view<Transform, Drawable>().each([&](auto& transform, const Drawable& drawable) 
-        {
+    void System::Drawable_Update(const Time& time, const std::shared_ptr<View::Renderer>& renderer) {
+        m_registry->view<Transform, Drawable>().each([&](auto& transform, const Drawable& drawable) {
             auto euler_rads = glm::radians(transform.eulerAngles);
 
             transform.rot = glm::quat(euler_rads);
@@ -75,26 +66,24 @@ namespace Vakol::Controller
             if (!drawable.animated) renderer->Draw(transform, drawable);
         });
 
-        m_registry->view<Components::Animator>().each([&](const Components::Animator& animator)
-        {
+        m_registry->view<Components::Animator>().each([&](const Components::Animator& animator) {
             s_animator_map[animator.attached_model] = animator;
-            
+
             for (const auto state : s_unique_set)
                 s_animator_map.at(animator.attached_model).Update(state, time.deltaTime);
         });
 
-        m_registry->view<Transform, Drawable, Components::Animation>().each([&](const auto& transform, const Drawable& drawable, const Components::Animation& animation)
-        {
-            s_unique_set.insert(animation.state);
+        m_registry->view<Transform, Drawable, Components::Animation>().each(
+            [&](const auto& transform, const Drawable& drawable, const Components::Animation& animation) {
+                s_unique_set.insert(animation.state);
 
-            renderer->DrawAnimated(transform, drawable, s_animator_map.at(animation.attached_model).animation(animation.state));
-        });
+                renderer->DrawAnimated(transform, drawable,
+                                       s_animator_map.at(animation.attached_model).animation(animation.state));
+            });
     }
 
-    void System::Script_Update(std::shared_ptr<LuaState> lua, EntityList& list, Scene* scene)
-	{
-        m_registry->view<Script>().each([&](auto entity_id, auto& script) 
-        {
+    void System::Script_Update(std::shared_ptr<LuaState> lua, EntityList& list, Scene* scene) {
+        m_registry->view<Script>().each([&](auto entity_id, auto& script) {
             lua->RunFile("scripts/" + script.script_name);
 
             lua->GetState()["scene"] = scene;
@@ -114,11 +103,20 @@ namespace Vakol::Controller
         }
     }
 
-    void System::Physics_UpdateTransforms(const float factor)
-    {
-        m_registry->group<Transform, RigidBody>().each([&](auto& trans, auto& rigid) 
-        {
+    void System::Physics_UpdateTransforms(const float factor) {
+        m_registry->group<Transform, RigidBody>().each([&](Transform& trans, RigidBody& rigid) {
+            if (rigid.Type == RigidBody::BODY_TYPE::STATIC) return;
+
             rp3d::Transform curr_transform = rigid.RigidBodyPtr->getTransform();
+
+            if (rigid.use_transform && !rigid.is_colliding) {
+                const auto pos = to_rp3d(trans.pos);
+                const auto rot = to_rp3d(trans.rot);
+
+                rp3d::Transform newTrans(pos, rot);
+                rigid.RigidBodyPtr->setTransform(newTrans);
+                curr_transform = newTrans;
+            }
 
             // Compute the interpolated transform of the rigid body
             const rp3d::Transform interpolatedTransform =
@@ -128,11 +126,12 @@ namespace Vakol::Controller
 
             trans.pos = to_glm(interpolatedTransform.getPosition());
             trans.rot = to_glm(interpolatedTransform.getOrientation());
+
+            rigid.is_colliding = false;
         });
     }
 
-    void System::Physics_SerializationPrep()
-    {
+    void System::Physics_SerializationPrep() {
         m_registry->group<RigidBody, Transform>().each(  // can deduce that a collider can't exist without a rigidbody
             [&](RigidBody& rigid, const Transform& trans) {
                 if (rigid.RigidBodyPtr) {
@@ -229,6 +228,8 @@ namespace Vakol::Controller
             col.OwningBody = &rigid;
         }
 
+        rigid.RigidBodyPtr->setUserData(static_cast<void*>(&rigid));
+
         rigid.initialized = true;
     };
 
@@ -236,7 +237,7 @@ namespace Vakol::Controller
 
     // void System::Script_Init()
     // {
-        
+
     // }
 
 }  // namespace Vakol::Controller

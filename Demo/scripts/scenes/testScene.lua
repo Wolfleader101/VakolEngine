@@ -4,6 +4,7 @@ function init()
 
     scene:create_entity("serialization", "entities/misc/serialization.lua");
     
+    scene:enable_debug(true);
 
     local rabbits = {};
     local birds  = {};
@@ -15,15 +16,17 @@ function init()
         scene.globals.bears[i]:get_transform().pos = Vector3.new(5.0 * i, 0.0, -2.0);
     end
 
+    scene:create_entity("Test", "entities/physics_example.lua")
+
     -- for i = 1, 5 do
     --     scene.globals.monsters[i] = scene:create_entity("Monster" .. i, "entities/agents/monster.lua");
     --     scene.globals.monsters[i]:get_transform().pos = Vector3.new(5.0 * i, 0.0, -2.0);
     -- end
 
-    for i= 1,5 do
-        birds[i] = scene:create_entity("Bird" .. i, "entities/agents/bird.lua");
-        birds[i]:get_transform().pos = Vector3.new(5.0 * i, 0.0, 2.0);
-    end
+    -- for i= 1,5 do
+    --     birds[i] = scene:create_entity("Bird" .. i, "entities/agents/bird.lua");
+    --     birds[i]:get_transform().pos = Vector3.new(5.0 * i, 0.0, 2.0);
+    -- end
 
 --     for i = 1, 5 do
 --         rabbits[i] = scene:create_entity("Rabbit" .. i, "entities/agents/rabbit.lua");
