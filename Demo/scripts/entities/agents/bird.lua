@@ -1,8 +1,6 @@
 function init()
     state.ANIMATIONS = {
-        STATIC = 0,
-        FLY = 1,
-        STAND = 2,
+        FLY = 0,
     }
 
     state.dir = Vector3.new(math.random() * 2 - 1, 0, math.random() * 2 - 1);
@@ -12,15 +10,15 @@ function init()
     end
     state.dir:normalize();
 
-    state.speed = 2;
+    state.speed = 2.5;
 
-    state.flyHeight = 10; -- the height of the bird's flying path above the terrain
+    state.flyHeight = 2; -- the height of the bird's flying path above the terrain
     state.flyAmplitude = 2; -- the amplitude of the bird's up and down movement
     state.flyTimer = 0;
 
     state.DIR_TIMER = 0.0;
 
-    state.model = entity:add_model("assets/models/agents/rabbit.fbx", 0.25, true, true);
+    state.model = entity:add_model("assets/models/agents/bird.glb", 0.005, true, true);
     entity:set_shader("coreAssets/shaders/animation.prog");
 
     local shader = state.model:get_shader();
@@ -37,7 +35,8 @@ function init()
 
 
     entity:set_animation_state(state.ANIMATIONS.FLY);
-    print_err("Owl is ready")
+    print_err("Bird is ready")
+    entity:get_transform().rot.x = -90;
 end
 
 function dir_wait(seconds)
