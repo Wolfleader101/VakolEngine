@@ -3,8 +3,6 @@ function init()
     scene:create_entity("terrain", "entities/terrain/physicsTerrain.lua");
 
     scene:create_entity("serialization", "entities/misc/serialization.lua");
-    
-    scene:enable_debug(true);
 
     local rabbits = {};
     local birds  = {};

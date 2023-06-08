@@ -104,6 +104,9 @@ namespace Vakol::Controller {
         bool OnKeyReleased(KeyReleasedEvent& kev);
         bool OnMouseMoved(MouseMovedEvent& ev);
 
+        bool OnMouseButtonPressed(MouseButtonPressedEvent& mev);
+        bool OnMouseButtonReleased(MouseButtonReleasedEvent& mev);
+
         /**
          * @brief load the game config
          *
@@ -143,5 +146,5 @@ namespace Vakol::Controller {
 
         Input m_input;
 
-    };  // namespace Vakol::Controller
-}  // namespace Vakol::Controller
+    };
+}

@@ -14,8 +14,8 @@ namespace Vakol::Model::Assets
 
 	    Animation(const glm::mat4& root_inverse, std::vector<AnimationNode>&& nodes, const unsigned int bone_count, const float duration, const float tps) : global_inverse(root_inverse), m_transforms(MAX_BONE_COUNT, glm::mat4(1.0f)), m_nodes(std::move(nodes)), bone_count(bone_count), duration(duration), ticks_per_second(tps) { VK_ASSERT(bone_count <= MAX_BONE_COUNT, "\n\nTOO MANY BONES!!"); }
 
-	    void Update(const float delta_time)
-	    {
+		void Update(const float delta_time)
+		{
 			current_time += ticks_per_second * delta_time; // Update the current time based on the ticks per second and delta time
 			current_time = fmod(current_time, duration); // Wrap the current time within the duration of the animation
 
@@ -36,13 +36,18 @@ namespace Vakol::Model::Assets
 
 				m_transforms[bone_index] = global_inverse * bone_transform * bone->offset; // Compute the final bone transform matrix and store it in m_transforms
 			}
-	    }
+		}
 
 	    [[nodiscard]] const std::vector<glm::mat4>& transforms() const { return m_transforms; }
 	    [[nodiscard]] const glm::mat4& transform() const { return m_transforms.at(0); }
 
 	    [[nodiscard]] auto duration_s() const ->float { return duration * 0.001f; }
 	    [[nodiscard]] auto duration_ms() const ->float { return duration; }
+
+		[[nodiscard]] auto get_current_time_ms() const ->float { return current_time; }
+		[[nodiscard]] auto get_current_time_s() const ->float { return current_time * 0.001f; }
+
+		auto reset_animation() -> void { current_time = 0.0f; }
 
 	    [[nodiscard]] auto numNodes() const -> int { return static_cast<int>(m_nodes.size()); }
 	    [[nodiscard]] auto numTransforms() const -> int { return static_cast<int>(m_transforms.size()); }

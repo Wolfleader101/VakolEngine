@@ -60,7 +60,7 @@ function init()
     state.fsm = entity:add_fsm();
 
     state.fsm:add_state("eating", function()
-        entity:set_animation_state(state.ANIMATIONS.EAT);
+        entity:play_animation(state.ANIMATIONS.EAT);
         if(fsm_wait(math.random(5,7))) then
             state.fsm:change_state("roaming")
         end
@@ -69,7 +69,7 @@ function init()
     state.fsm:add_state("attack", function()
         trigger_nearby_bears(entity, 12.0);
     
-        entity:set_animation_state(state.ANIMATIONS.ATTACK);
+        entity:play_animation(state.ANIMATIONS.ATTACK);
 
         if(fsm_wait(2)) then
             if player_distance() > state.enemyAttackAnimDistance then
@@ -79,7 +79,7 @@ function init()
     end)
 
     state.fsm:add_state("idle", function()
-        entity:set_animation_state(state.ANIMATIONS.IDLE);
+        entity:play_animation(state.ANIMATIONS.IDLE);
         if(fsm_wait(math.random(5,7))) then
             local rand = math.random();
             if (rand < 0.6) then
@@ -108,7 +108,7 @@ function init()
         end
         
         if not stateChange then
-            entity:set_animation_state(state.ANIMATIONS.WALK);
+            entity:play_animation(state.ANIMATIONS.WALK);
         end
 
         if (dir_wait(math.random(4,6))) then
@@ -137,7 +137,7 @@ function init()
     end)
 
     state.fsm:add_state("running_towards", function()
-        entity:set_animation_state(state.ANIMATIONS.RUN);
+        entity:play_animation(state.ANIMATIONS.RUN);
 
         local diff = scene.globals.player.pos - entity:get_transform().pos;
         state.dir = diff:normalize();
@@ -160,7 +160,7 @@ function init()
     end)
 
     state.fsm:add_state("alerted", function()
-        entity:set_animation_state(state.ANIMATIONS.RUN);
+        entity:play_animation(state.ANIMATIONS.RUN);
 
         local diff = scene.globals.player.pos - entity:get_transform().pos;
         state.dir = diff:normalize();
@@ -182,7 +182,7 @@ function init()
 
     state.fsm:change_state("roaming")
 
-    print_err("Bear is ready")
+    --print_err("Bear is ready")
 end
 
 function trigger_nearby_bears(origin_bear, trigger_distance)

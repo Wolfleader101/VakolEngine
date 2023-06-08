@@ -73,6 +73,12 @@ void main()
     vec3 normal = normalize(fs_in.normal);
 
     color = texture(material.diffuse_map, fs_in.uv);
+    //vec3 normal = normalize(fs_in.TBN * vec3(0.1));
+
+    //vec3 normal = texture(material.normal_map, fs_in.uv).rgb;
+    
+    //normal = normal * 2.0 - 1.0; // range between [0, 1]
+    //normal = normalize(fs_in.TBN * normal);
 
     if (color.r <= 0.0 && color.b <= 0.0 && color.b <= 0.0)
         color = vec4(tint, 1.0);

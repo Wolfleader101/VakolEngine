@@ -33,9 +33,9 @@ function init()
     shader:set_int("material.normal_map", 2);
     shader:set_int("material.emission_map", 3);
 
+    entity:play_animation(state.ANIMATIONS.FLY);
 
-    entity:set_animation_state(state.ANIMATIONS.FLY);
-    print_err("Bird is ready")
+    --print_err("Bird is ready")
     entity:get_transform().rot.x = -90;
 end
 

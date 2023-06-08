@@ -13,7 +13,11 @@
 #include "System.hpp"
 #include "View/GUI/GUIWindow.hpp"
 
-namespace Vakol::Controller {
+
+namespace Vakol::Controller 
+{
+    std::unordered_map<std::string, Components::Animator> s_animator_map;
+
     void RegisterMath(sol::state& lua) {
         {
             sol::constructors<glm::vec2(), glm::vec2(float), glm::vec2(float, float)> ctor;  // allow for constructors
@@ -230,12 +234,16 @@ namespace Vakol::Controller {
         input_type.set_function("get_key", &Input::GetKey);
         input_type.set_function("get_key_down", &Input::GetKeyDown);
         input_type.set_function("get_key_up", &Input::GetKeyUp);
+        input_type.set_function("get_mouse", &Input::GetMouseButton);
+        input_type.set_function("get_mouse_down", &Input::GetMouseButtonDown);
+        input_type.set_function("get_mouse_up", &Input::GetMouseButtonUp);
         input_type.set_function("get_mouse_pos", &Input::GetMousePos);
         input_type.set_function("get_delta_mouse_pos", &Input::GetDeltaMousePos);
 
         lua["Input"] = &app->GetInput();
 
         lua["KEYS"] = lua.create_table_with(
+            "MOUSE_0", Input::KEY::KEY_MOUSE_0, "MOUSE_1", Input::KEY::KEY_MOUSE_1, 
             "KEY_SPACE", Input::KEY::KEY_SPACE, "KEY_APOSTROPHE", Input::KEY::KEY_APOSTROPHE, "KEY_COMMA",
             Input::KEY::KEY_COMMA, "KEY_MINUS", Input::KEY::KEY_MINUS, "KEY_PERIOD", Input::KEY::KEY_PERIOD,
             "KEY_SLASH", Input::KEY::KEY_SLASH, "KEY_0", Input::KEY::KEY_0, "KEY_1", Input::KEY::KEY_1, "KEY_2",
@@ -359,6 +367,8 @@ namespace Vakol::Controller {
 
                         _animator.attached_model = draw.name;
                         _animator.set(animator);
+
+                        s_animator_map[_animator.attached_model] = _animator;
                     }
 
                     auto& animation = ent->GetComponent<Components::Animation>();
@@ -407,8 +417,10 @@ namespace Vakol::Controller {
                                      model->mesh(mesh_index).GetMaterial()->AddTexture(*AssetLoader::GetTexture(path));
                                  });
 
-        entity_type.set_function("set_animation_state", [](const Entity* ent, int animation_state) {
-            if (!ent->HasComponent<Components::Animation>()) {
+        entity_type.set_function("play_animation", [](const Entity* ent, const int animation_state) 
+        {
+            if (!ent->HasComponent<Components::Animation>()) 
+            {
                 VK_ERROR("Animation component is needed to set it's animation state!");
                 return;
             }
@@ -416,6 +428,32 @@ namespace Vakol::Controller {
             auto& animation = ent->GetComponent<Components::Animation>();
 
             animation.state = animation_state;
+        });
+
+        entity_type.set_function("get_animation_duration", [](const Entity* ent, const int animation_state) 
+        {
+            if (!ent->HasComponent<Components::Animation>()) 
+            {
+                VK_ERROR("Animation component is needed to get it's duration!");
+                return -1.0f;
+            }
+
+            const auto& animation = ent->GetComponent<Components::Animation>();
+
+            return s_animator_map.at(animation.attached_model).c_animation(animation_state).duration_s();
+        });
+
+        entity_type.set_function("reset_animation", [](const Entity* ent, const int animation_state) 
+        {
+            if (!ent->HasComponent<Components::Animation>()) 
+            {
+                VK_ERROR("Animation component is needed to reset it!");
+                return;
+            }
+
+            const auto& animation = ent->GetComponent<Components::Animation>();
+
+            s_animator_map.at(animation.attached_model).animation(animation_state).reset_animation();
         });
 
         model_type.set_function("get_mesh_count", &Assets::Model::nMeshes);
