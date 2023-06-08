@@ -70,16 +70,7 @@ vec4 BlinnPhong(const vec3 normal, const vec4 color)
 void main()
 {
     vec4 color = vec4(vec3(0.0), 1.0);
-    //vec3 normal = texture(material.normal_map, fs_in.uv).rgb;
     vec3 normal = normalize(fs_in.normal);
-    
-//    if (normal.rgb == vec3(0.0))
-//        normal = normalize(fs_in.normal);
-//    else
-//    {
-//        normal = normal * 2.0 - 1.0; // range between [0, 1]
-//        normal = normalize(fs_in.TBN * normal);
-//    }
 
     color = texture(material.diffuse_map, fs_in.uv);
 
@@ -94,4 +85,6 @@ void main()
     color = pow(color, vec4(vec3(1.0 / 2.2), 1.0));
 
     FragColor = color;
+
+    if (FragColor.a < 0.75) discard;
 }
