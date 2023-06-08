@@ -25,12 +25,8 @@ function init()
     shader:set_int("material.emission_map", 3);
 
     TIMER = 0.0;
-    attacking = false;
-    canAttack = true;
-
-    random_state = 1;
-
-    once = false;
+    state.attacking = false;
+    state.canAttack = true;
 end
 
 function update()
@@ -67,28 +63,22 @@ function update()
         state.flying = not state.flying
     end
 
-    if (Input:get_mouse_down(KEYS["MOUSE_0"]) and canAttack) then
-        random_state = math.random(1, 5);
+    if (Input:get_mouse_down(KEYS["MOUSE_0"]) and state.canAttack) then
+        entity:play_animation(4);
+        entity:reset_animation(4);
 
-        while (random_state == 2 or random_state == 3) do
-            random_state = math.random(1, 5);
-        end
-
-        entity:play_animation(random_state);
-        entity:reset_animation(random_state);
-
-        attacking = true;
+        state.attacking = true;
 
         reset_timer();
 
-        canAttack = false;
+        state.canAttack = false;
 
-    elseif (not moving and not attacking) then
+    elseif (not moving and not state.attacking) then
         entity:play_animation(0);
     end
 
-    if (not canAttack and wait(1.5)) then
-        canAttack = true;
+    if (not state.canAttack and wait(1.5)) then
+        state.canAttack = true;
     end
 
     if (moving and not scene.globals.player.is_sprinting) then
@@ -97,8 +87,8 @@ function update()
         entity:play_animation(12);
     end
 
-    if (attacking and moving) then
-        attacking = false;
+    if (state.attacking and moving) then
+        state.attacking = false;
     end
 
     local camera = scene:get_camera();
