@@ -134,6 +134,29 @@ function init()
         end
     end)
 
+    state.fsm:add_state("alerted", function()
+        entity:set_animation_state(state.ANIMATIONS.RUN);
+
+        -- Now, we want to run towards the player
+        local diff = scene.globals.player.pos - entity:get_transform().pos;
+        state.dir = diff:normalize();  -- Update direction to run towards player
+
+        local velocity = state.sprint_speed * Time.delta_time;
+        local pos = entity:get_transform().pos;
+        pos.x = pos.x + (state.dir.x * velocity);
+        pos.z = pos.z + (state.dir.z * velocity);
+        entity:get_transform().pos = pos; -- Add this line
+
+        local targetRotation = math.atan(state.dir.x, state.dir.z)
+        targetRotation = targetRotation * (180 / math.pi)
+        entity:get_transform().rot.y = targetRotation
+
+        -- If player is close enough, switch to attack state
+        if player_distance() < state.enemyAttackAnimDistance then
+            state.fsm:change_state("attack");
+        end
+    end)
+
     state.fsm:change_state("roaming")
 
     print_err("Skeleton is ready")
@@ -146,8 +169,8 @@ function trigger_nearby_monsters(origin_monster, trigger_distance)
         if monster ~= origin_monster and monster:get_fsm():get_state() ~= "attack" then
             local diff = origin_pos - monster:get_transform().pos
             if diff:magnitude() <= trigger_distance then
-                monster:get_fsm():change_state("attack")
-                print("Monster " .. i .. " has been alerted and is now in attack state.")
+                monster:get_fsm():change_state("alerted")
+                print("Monster " .. i .. " has been alerted and is now in alerted state.")
             end
         end
     end
