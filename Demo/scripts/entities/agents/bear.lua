@@ -42,6 +42,17 @@ function init()
     shader:set_int("material.normal_map", 2);
     shader:set_int("material.emission_map", 3);
 
+
+    local rb = entity:add_rigid();
+
+    rb.use_transform = true;
+
+    local collider = entity:add_collider();
+
+    collider.Shape = Shape.Box;
+
+    entity:physics_init(scene); 
+
     state.fsm = entity:add_fsm();
 
     state.fsm:add_state("eating", function()
@@ -178,7 +189,6 @@ function trigger_nearby_bears(origin_bear, trigger_distance)
             local diff = origin_pos - bear:get_transform().pos
             if diff:magnitude() <= trigger_distance then
                 bear:get_fsm():change_state("alerted")
-                print("Bear " .. i .. " has been alerted and is now in alerted state.")
             end
         end
     end

@@ -5,18 +5,15 @@
 #include <Controller/Camera.hpp>
 #include <Controller/Terrain.hpp>
 #include <Controller/Time.hpp>
-
 #include <View/Renderer/DebugRenderer.hpp>
 
 class System;
 
-namespace Vakol::Controller::Physics
-{
+namespace Vakol::Controller::Physics {
     class PhysicsPool;
 
-    class ScenePhysics
-    {
-    public:
+    class ScenePhysics {
+       public:
         ScenePhysics() = delete;
         ~ScenePhysics() = default;
         void Init();
@@ -28,11 +25,17 @@ namespace Vakol::Controller::Physics
 
         void AddTerrain(const Terrain& terrain);
 
-    private:
+       private:
         ScenePhysics(rp3d::PhysicsWorld* newWorld);
+
+        class MyCollisionCallback : public rp3d::EventListener {
+           public:
+            virtual void onContact(const rp3d::CollisionCallback::CallbackData& callbackData) override;
+        };
 
         rp3d::RigidBody* m_Terrain;
         rp3d::PhysicsWorld* m_World;
+        MyCollisionCallback m_callback;
 
         float m_timestep = 1.0f / 60.0f;
 
@@ -43,4 +46,4 @@ namespace Vakol::Controller::Physics
         friend class PhysicsPool;
         friend class System;
     };
-}
+}  // namespace Vakol::Controller::Physics
