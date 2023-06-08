@@ -50,6 +50,10 @@ function init()
     local collider = entity:add_collider();
 
     collider.Shape = Shape.Box;
+    collider.bounds.extents.x = 0.25;
+    collider.bounds.extents.y = 0.5;
+    collider.bounds.extents.z = 0.25;
+
 
     entity:physics_init(scene); 
 
@@ -238,5 +242,4 @@ function update()
     local terr_scale = scene.globals.terrain.transform.scale;
     pos.y = (scene.globals.terrain.terr:get_height(pos.x / terr_scale.x, pos.z / terr_scale.z) * terr_scale.y) + 0.03;
 
-    entity:get_transform().pos = pos;
 end

@@ -109,7 +109,7 @@ namespace Vakol::Controller {
 
             rp3d::Transform curr_transform = rigid.RigidBodyPtr->getTransform();
 
-            if (rigid.use_transform) {
+            if (rigid.use_transform && !rigid.is_colliding) {
                 const auto pos = to_rp3d(trans.pos);
                 const auto rot = to_rp3d(trans.rot);
 
@@ -228,7 +228,7 @@ namespace Vakol::Controller {
             col.OwningBody = &rigid;
         }
 
-        // rigid.RigidBodyPtr->setUserData(static_cast<void*>(&rigid));
+        rigid.RigidBodyPtr->setUserData(static_cast<void*>(&rigid));
 
         rigid.initialized = true;
     };

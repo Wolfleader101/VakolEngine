@@ -675,6 +675,7 @@ namespace Vakol::Controller {
 
         ColliderBoundsType["min"] = &Collider::Bounds::min;
         ColliderBoundsType["max"] = &Collider::Bounds::max;
+        ColliderBoundsType["size"] = &Collider::Bounds::size;
         ColliderBoundsType["center"] = &Collider::Bounds::center;
         ColliderBoundsType["extents"] = &Collider::Bounds::extents;
         ColliderBoundsType["radius"] = &Collider::Bounds::radius;

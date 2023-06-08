@@ -25,17 +25,17 @@ namespace Vakol::Controller::Physics {
 
         void AddTerrain(const Terrain& terrain);
 
-       private:
-        ScenePhysics(rp3d::PhysicsWorld* newWorld);
-
         class MyCollisionCallback : public rp3d::EventListener {
            public:
             virtual void onContact(const rp3d::CollisionCallback::CallbackData& callbackData) override;
         };
 
+       private:
+        ScenePhysics(rp3d::PhysicsWorld* newWorld);
+
         rp3d::RigidBody* m_Terrain;
         rp3d::PhysicsWorld* m_World;
-        MyCollisionCallback m_callback;
+        static MyCollisionCallback m_callback;
 
         float m_timestep = 1.0f / 60.0f;
 

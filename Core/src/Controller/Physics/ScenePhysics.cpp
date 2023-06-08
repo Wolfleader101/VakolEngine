@@ -10,17 +10,15 @@
 
 namespace Vakol::Controller::Physics {
 
-    ScenePhysics::ScenePhysics(rp3d::PhysicsWorld* newWorld) : m_Terrain(nullptr), m_World(newWorld), m_callback() {
+    ScenePhysics::MyCollisionCallback ScenePhysics::m_callback;
+
+    ScenePhysics::ScenePhysics(rp3d::PhysicsWorld* newWorld) : m_Terrain(nullptr), m_World(newWorld) {
         m_DebugRenderer = View::DebugRenderer(m_World);
 
         m_World->setEventListener(&m_callback);
     };
 
-    void ScenePhysics::Init() {
-        System::Physics_Init();
-
-        m_World->setEventListener(&m_callback);
-    };
+    void ScenePhysics::Init() { System::Physics_Init(); };
 
     void ScenePhysics::Update(const Time& time, const Camera& camera) {
         // Add the time difference in the accumulator
@@ -77,16 +75,15 @@ namespace Vakol::Controller::Physics {
             // Get the contact pair
             const ContactPair& contactPair = callbackData.getContactPair(i);
 
-            VK_ERROR("TEST");
-            // // Get the bodies involved in the contact
-            // rp3d::RigidBody* body1 = static_cast<rp3d::RigidBody*>(contactPair.getBody1());
-            // rp3d::RigidBody* body2 = static_cast<rp3d::RigidBody*>(contactPair.getBody2());
+            // Get the bodies involved in the contact
+            rp3d::RigidBody* body1 = static_cast<rp3d::RigidBody*>(contactPair.getBody1());
+            rp3d::RigidBody* body2 = static_cast<rp3d::RigidBody*>(contactPair.getBody2());
 
-            // // Get the entities associated with the bodies
-            // Components::RigidBody* rb1 = static_cast<Components::RigidBody*>(body1->getUserData());
-            // Components::RigidBody* rb2 = static_cast<Components::RigidBody*>(body2->getUserData());
-            // rb1->is_colliding = true;
-            // rb2->is_colliding = true;
+            // Get the entities associated with the bodies
+            Components::RigidBody* rb1 = static_cast<Components::RigidBody*>(body1->getUserData());
+            Components::RigidBody* rb2 = static_cast<Components::RigidBody*>(body2->getUserData());
+            if (rb1 != nullptr) rb1->is_colliding = true;
+            if (rb2 != nullptr) rb2->is_colliding = true;
         }
     }
 }  // namespace Vakol::Controller::Physics
