@@ -6,24 +6,32 @@ function init()
     
     -- scene:create_entity("Bob", "entities/agents/bob.lua");
     -- scene:create_entity("Rabbit", "entities/agents/rabbit.lua");
-    scene:create_entity("Deer", "entities/agents/deer.lua");
+    -- scene:create_entity("Deer", "entities/agents/deer.lua");
 
-    --scene:create_entity("Rabbit", "entities/agents/rabbit.lua");
+    -- scene:create_entity("Rabbit", "entities/agents/rabbit.lua");
 
-    --scene:create_entity("Rabbit Test", "entities/agents/rabbit_test.lua");
+    -- scene:create_entity("Monster", "entities/agents/monster.lua");
 
-    local rabbits = {};
+    scene.globals.monsters = {};
     
     for i = 1, 5 do
-        rabbits[i] = scene:create_entity("Rabbit" .. i, "entities/agents/rabbit.lua");
-        rabbits[i]:get_transform().pos = Vector3.new(5.0 * i, 0.0, -2.0);
+        scene.globals.monsters[i] = scene:create_entity("Monster" .. i, "entities/agents/monster.lua");
+        scene.globals.monsters[i]:get_transform().pos = Vector3.new(5.0 * i, 0.0, -2.0);
     end
+
+    -- scene:create_entity("Rabbit Test", "entities/agents/rabbit_test.lua");
+
+    -- local rabbits = {};
+    
+    -- for i = 1, 5 do
+        -- rabbits[i] = scene:create_entity("Rabbit" .. i, "entities/agents/rabbit.lua");
+        -- rabbits[i]:get_transform().pos = Vector3.new(5.0 * i, 0.0, -2.0);
+    -- end
 
     -- scene:create_entity("Bears", "entities/agents/bear.lua")
     -- scene:create_entity("Rabbits", "entities/agents/rabbit.lua");
     -- scene:create_entity("Deers", "entities/agents/deer.lua");
     -- scene:create_entity("Wolves", "entities/agents/wolf.lua");
-
 end
 
 function update()
