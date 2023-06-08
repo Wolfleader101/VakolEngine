@@ -2,21 +2,21 @@ function init()
     print("Initialising Terrain");
   
     --local terrain = entity:create_height_map_terrain("coreAssets/textures/Heightmaps/terrain2.raw", 0, 60); -- size
-    local terrain = entity:create_clod_terrain("coreAssets/textures/Heightmaps/terrain2.raw", 0, 60);
+    local terrain = entity:create_clod_terrain("assets/textures/Heightmaps/terrain2.raw", 0, 60);
 
-    local heightmap = create_raw_texture("coreAssets/textures/Heightmaps/terrain2.raw");
-    local lightmap = create_raw_texture("coreAssets/textures/lightmap.raw");
+    local heightmap = create_raw_texture("assets/textures/Heightmaps/terrain2.raw");
+    local lightmap = create_raw_texture("assets/textures/lightmap.raw");
     
-    local layer_1 = create_texture("coreAssets/textures/Terrain/dirt_0.jpg", false, false);
-    local layer_2 = create_texture("coreAssets/textures/Terrain/dirt_3.jpg", false, false);
-    local layer_3 = create_texture("coreAssets/textures/Terrain/dirt_cracked.jpg", false, false);
-    local layer_4 = create_texture("coreAssets/textures/Terrain/patch_grass_1.jpg", false, false);
-    local layer_5 = create_texture("coreAssets/textures/Terrain/grass_0.png", false, false);
-    local layer_6 = create_texture("coreAssets/textures/Terrain/grass_rock.jpg", false, false);
-    local layer_7 = create_texture("coreAssets/textures/Terrain/rocks_0.jpg", false, false);
-    local layer_8 = create_texture("coreAssets/textures/Terrain/snow_cracks.jpg", false, false);
-    local layer_9 = create_texture("coreAssets/textures/Terrain/snow_0.jpg", false, false);
-    local layer_10 = create_texture("coreAssets/textures/Terrain/snow.png", false, false);
+    local layer_1 = create_texture("assets/textures/Terrain/dirt_0.jpg", false, false);
+    local layer_2 = create_texture("assets/textures/Terrain/dirt_3.jpg", false, false);
+    local layer_3 = create_texture("assets/textures/Terrain/dirt_cracked.jpg", false, false);
+    local layer_4 = create_texture("assets/textures/Terrain/patch_grass_1.jpg", false, false);
+    local layer_5 = create_texture("assets/textures/Terrain/grass_0.png", false, false);
+    local layer_6 = create_texture("assets/textures/Terrain/grass_rock.jpg", false, false);
+    local layer_7 = create_texture("assets/textures/Terrain/rocks_0.jpg", false, false);
+    local layer_8 = create_texture("assets/textures/Terrain/snow_cracks.jpg", false, false);
+    local layer_9 = create_texture("assets/textures/Terrain/snow_0.jpg", false, false);
+    local layer_10 = create_texture("assets/textures/Terrain/snow.png", false, false);
 
     local model = terrain:get_model();
     local mesh = model:get_mesh(0);

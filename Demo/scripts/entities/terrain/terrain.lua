@@ -1,15 +1,15 @@
 function init()
     print("Initialising Terrain");
-    local terrain = entity:create_height_map_terrain("coreAssets/textures/Heightmaps/terrain_2048.raw", 0, 30);
+    local terrain = entity:create_height_map_terrain("assets/textures/Heightmaps/terrain_2048.raw", 0, 30);
 
-    local lightmap = create_raw_texture("coreAssets/textures/lightmap.raw");
+    local lightmap = create_raw_texture("assets/textures/lightmap.raw");
     
-    local layer_1 = create_texture("coreAssets/textures/extras/clover.png", false, false);
-    local layer_2 = create_texture("coreAssets/textures/extras/grass.png", false, false);
-    local layer_3 = create_texture("coreAssets/textures/extras/grass_dark.png", false, false);
-    local layer_4 = create_texture("coreAssets/textures/extras/cliff_rock.jpg", false, false);
-    local layer_5 = create_texture("coreAssets/textures/extras/rocks.jpg", false, false);
-    local layer_6 = create_texture("coreAssets/textures/extras/snow.png", false, false);
+    local layer_1 = create_texture("assets/textures/extras/clover.png", false, false);
+    local layer_2 = create_texture("assets/textures/extras/grass.png", false, false);
+    local layer_3 = create_texture("assets/textures/extras/grass_dark.png", false, false);
+    local layer_4 = create_texture("assets/textures/extras/cliff_rock.jpg", false, false);
+    local layer_5 = create_texture("assets/textures/extras/rocks.jpg", false, false);
+    local layer_6 = create_texture("assets/textures/extras/snow.png", false, false);
 
     local model = terrain:get_model();
     local mesh = model:get_mesh(0);

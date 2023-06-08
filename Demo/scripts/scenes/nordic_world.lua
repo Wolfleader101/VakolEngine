@@ -5,6 +5,8 @@ function init()
 
     scene:create_entity("serialization", "entities/misc/serialization.lua");
 
+    scene:create_entity("static_props", "entities/instancing_new.lua");
+
     -- local rabbits = {};
     -- local birds  = {};
     -- scene.globals.monsters = {};    
@@ -32,13 +34,6 @@ function init()
 end
 
 function update()
-    --GUI:start_window("FPS Window", 240.0, 240.0, 10.0, 10.0);
-
-    --local fps = GUI:get_fps()
-    --GUI:add_text("GAME FPS: " .. Time.fps, false, false, 1.0, 1.0, 1.0, 1.0, 1.0);
-
-    --GUI:end_window();
-
     if(Input:get_key_down(KEYS["KEY_ESC"])) then
         toggle_wireframe();
         toggle_skybox();

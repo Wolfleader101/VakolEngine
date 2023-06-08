@@ -1,6 +1,6 @@
 function init()
     --local terrain = entity:add_noisemap_terrain(1024, 30, 2, 0.5, 2.0) -- size, scale, octaves, persistence, lacunarity
-    local terrain = entity:add_clod_terrain("coreAssets/textures/HeightMaps/height128.raw"); -- size
+    local terrain = entity:add_clod_terrain("assets/textures/HeightMaps/height128.raw"); -- size
     scene:add_terrain_physics(entity);
 
     entity:get_transform().scale.x = 1;
@@ -12,18 +12,18 @@ function init()
 
     local material = mesh:get_material();
     
-    local height_map = raw_texture("coreAssets/textures/HeightMaps/height128.raw");
+    local height_map = raw_texture("assets/textures/HeightMaps/height128.raw");
     --local height_map = noise_texture(terrain_size, 100, 2, 0.5, 2.0); -- size, scale (smaller = more spikes), octaves (number of loops / detail), persistence (roughness), lacunarity (size of gaps)
 
-    local water_layer_1 = texture("coreAssets/textures/Water/water_0.bmp", false, false);
-    local water_layer_2 = texture("coreAssets/textures/Water/water_5.bmp", false, false);
+    local water_layer_1 = texture("assets/textures/Water/water_0.bmp", false, false);
+    local water_layer_2 = texture("assets/textures/Water/water_5.bmp", false, false);
 
-    local layer_1 = texture("coreAssets/textures/extras/clover.png", false, false);
-    local layer_2 = texture("coreAssets/textures/extras/grass.png", false, false);
-    local layer_3 = texture("coreAssets/textures/extras/grass_dark.png", false, false);
-    local layer_4 = texture("coreAssets/textures/extras/rocks_2.jpg", false, false);
-    local layer_5 = texture("coreAssets/textures/extras/rocks.jpg", false, false);
-    local layer_6 = texture("coreAssets/textures/extras/snow.png", false, false);
+    local layer_1 = texture("assets/textures/extras/clover.png", false, false);
+    local layer_2 = texture("assets/textures/extras/grass.png", false, false);
+    local layer_3 = texture("assets/textures/extras/grass_dark.png", false, false);
+    local layer_4 = texture("assets/textures/extras/rocks_2.jpg", false, false);
+    local layer_5 = texture("assets/textures/extras/rocks.jpg", false, false);
+    local layer_6 = texture("assets/textures/extras/snow.png", false, false);
 
     material:add_texture(height_map);
 
@@ -37,7 +37,7 @@ function init()
     material:add_texture(layer_6);
 
     -- model:set_shader("coreAssets/shaders/basic.prog");
-    model:set_shader("coreAssets/shaders/clod_terrain.prog") -- set the shader on the model (automatically binds the shader)
+    model:set_shader("assets/shaders/clod_terrain.prog") -- set the shader on the model (automatically binds the shader)
     local shader = model:get_shader();                       -- get the shader from the model
 
     shader:set_int("height_map", 0);

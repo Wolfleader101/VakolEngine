@@ -3,7 +3,7 @@ function init()
     entity:get_transform().pos = Vector3.new(0, 10, 5);
     entity:get_transform().rot = Vector3.new(15, -90, 0);
     
-    local model = entity:add_model("coreAssets/models/kiki.obj", 0.5, false) -- get model and add a drawable component
+    local model = entity:add_model("assets/models/kiki.obj", 0.5, false) -- get model and add a drawable component
     
     model:set_shader("coreAssets/shaders/kiki.prog") -- set the shader on the model (automatically binds it)
 

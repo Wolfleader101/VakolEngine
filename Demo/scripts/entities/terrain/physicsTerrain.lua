@@ -1,13 +1,13 @@
 function init()
     print("Initialising Terrain");
   
-    local terrain = entity:create_height_map_terrain(scene, "coreAssets/textures/Heightmaps/terrain_2048.raw", -5, 35); -- size
+    local terrain = entity:create_height_map_terrain(scene, "assets/textures/Heightmaps/terrain_2048.raw", 0, 60); -- size
 
     local model = terrain:get_model();
     local mesh = model:get_mesh(0);
     local material = mesh:get_material();
 
-    entity:add_raw_texture(0, "coreAssets/textures/lightmap.raw");
+    entity:add_raw_texture(0, "assets/textures/lightmap.raw");
 
     entity:add_texture(0, "assets/textures/terrain/TEX_128_DirtWithRocks.jpg", false, false);
     entity:add_texture(0, "assets/textures/terrain/TEX_128_DirtNoRocks.jpg", false, false);

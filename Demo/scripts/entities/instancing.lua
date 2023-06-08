@@ -6,11 +6,11 @@ function init()
     local treeMatrices = vector_mat4(TREEAMOUNT);
     local rockMatrices = vector_mat4(ROCKAMOUNT);
 
-    local tree = entity:add_model("coreAssets/models/Imported/OpenGameArt/Yughues/pine/snow_pine_tree.obj", 0.1, false, false) -- get model and add a drawable component
+    local tree = entity:add_model("assets/models/Imported/OpenGameArt/Yughues/pine/snow_pine_tree.obj", 0.1, false, false) -- get model and add a drawable component
     entity:set_shader("coreAssets/shaders/instance.prog") -- set the shader on the model (automatically binds it)
 
     local rockEntity = scene:create_entity("rockEntity", "")
-    local rockModel = rockEntity:add_model("coreAssets/models/Imported/OpenGameArt/mastahcez/stone.fbx", 75.0, false, true) -- get model and add a drawable component
+    local rockModel = rockEntity:add_model("assets/models/Imported/OpenGameArt/mastahcez/stone.fbx", 75.0, false, true) -- get model and add a drawable component
     rockEntity:set_shader("coreAssets/shaders/instance.prog") -- set the shader on the model (automatically binds it)
     
     local treeShader = tree:get_shader(); -- get the shader from the model

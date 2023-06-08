@@ -1,7 +1,7 @@
 function init()
 
     --local ent = scene:create_entity("basicEntity.lua");
-    local model = entity:add_model("coreAssets/models/cube.obj", 1 , false, true);
+    local model = entity:add_model("assets/models/cube.obj", 1 , false, true);
 
     entity:set_shader("coreAssets/shaders/basic.prog");
 

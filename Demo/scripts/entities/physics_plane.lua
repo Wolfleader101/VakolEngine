@@ -1,6 +1,6 @@
 function init()
     
-    local model = entity:add_model("coreAssets/models/cube.obj", 1, false, true);
+    local model = entity:add_model("assets/models/cube.obj", 1, false, true);
 
     local trans = entity:get_transform();
 
