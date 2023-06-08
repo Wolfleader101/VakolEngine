@@ -17,6 +17,7 @@ namespace Vakol::Model::Assets
 	    void Update(const float delta_time)
 	    {
 			current_time += ticks_per_second * delta_time; // Update the current time based on the ticks per second and delta time
+
 			current_time = fmod(current_time, duration); // Wrap the current time within the duration of the animation
 
 			for (int i = 0, count = numNodes(); i < count; ++i)
@@ -44,7 +45,10 @@ namespace Vakol::Model::Assets
 	    [[nodiscard]] auto duration_s() const ->float { return duration * 0.001f; }
 	    [[nodiscard]] auto duration_ms() const ->float { return duration; }
 
-		[[nodiscard]] auto reset_animation() -> void { current_time = 0.0f; }
+		[[nodiscard]] auto get_current_time() const ->float { return current_time; }
+
+		auto set_looping(const bool _looping) -> void { looping = _looping; }
+		auto reset_animation() -> void { current_time = 0.0f; }
 
 	    [[nodiscard]] auto numNodes() const -> int { return static_cast<int>(m_nodes.size()); }
 	    [[nodiscard]] auto numTransforms() const -> int { return static_cast<int>(m_transforms.size()); }
@@ -59,5 +63,7 @@ namespace Vakol::Model::Assets
 	    float current_time = 0.0f;
 	    float duration = 0.0f;
 	    float ticks_per_second = 0.0f;
+
+		bool looping = true;
     };
 }

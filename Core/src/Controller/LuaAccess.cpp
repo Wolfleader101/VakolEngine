@@ -458,6 +458,32 @@ namespace Vakol::Controller
             return s_animator_map.at(animation.attached_model).c_animation(state).duration_s();
         });
 
+        entity_type.set_function("get_animation_time", [](const Entity* ent, const int state)
+        {
+            if (!ent->HasComponent<Components::Animation>())
+            {
+                VK_ERROR("Animation component is needed to get it's current time!");
+                return -1.0f;
+            }
+
+            const auto& animation = ent->GetComponent<Components::Animation>();
+
+            return s_animator_map.at(animation.attached_model).c_animation(state).get_current_time();
+        });
+
+        entity_type.set_function("set_animation_looping", [](const Entity* ent, const int state, const bool looping)
+        {
+            if (!ent->HasComponent<Components::Animation>())
+            {
+                VK_ERROR("Animation component is needed to set animation looping!");
+                return;
+            }
+
+            auto& animation = ent->GetComponent<Components::Animation>();
+
+            s_animator_map.at(animation.attached_model).animation(state).set_looping(looping);
+        });
+
         entity_type.set_function("reset_animation", [](const Entity* ent, const int state)
         {
             if (!ent->HasComponent<Components::Animation>())

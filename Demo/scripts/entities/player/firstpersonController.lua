@@ -25,6 +25,9 @@ function init()
     shader:set_int("material.emission_map", 3);
 
     TIMER = 0.0;
+    attacking = false;
+
+    entity:set_animation_looping(1, false);
 end
 
 function update()
@@ -61,16 +64,24 @@ function update()
         state.flying = not state.flying
     end
 
-    if (Input:get_mouse(KEYS["MOUSE_0"])) then
-        entity:set_animation_state(1);
-    elseif Input:get_mouse_up(KEYS["MOUSE_0"]) then
-        entity:set_animation_state(0)
-    elseif not moving then
-        entity:set_animation_state(0)
-    elseif moving and not scene.globals.player.is_sprinting then
-        entity:set_animation_state(11)
-    elseif moving and scene.globals.player.is_sprinting then
-        entity:set_animation_state(12)
+    if (Input:get_mouse_down(KEYS["MOUSE_0"]) and not attacking) then
+        local random_state = math.random(1, 5);
+        entity:reset_animation(random_state);
+        entity:set_animation_state(random_state);
+        print(random_state);
+        attacking = true;
+    elseif (not attacking and not moving) then
+        entity:set_animation_state(0);
+    end
+
+    if (moving and not scene.globals.player.is_sprinting) then
+        entity:set_animation_state(11);
+    elseif (moving and scene.globals.player.is_sprinting) then
+        entity:set_animation_state(12);
+    end
+
+    if (moving and attacking) then
+        attacking = false;
     end
 
     local camera = scene:get_camera();
@@ -111,6 +122,8 @@ end
 
 function wait(seconds)
     TIMER = TIMER + Time.delta_time;
+
+    print(TIMER);
 
     if (TIMER >= seconds) then
         return true;
