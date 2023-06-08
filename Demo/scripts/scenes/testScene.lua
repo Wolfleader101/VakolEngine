@@ -13,12 +13,17 @@ function init()
     --scene:create_entity("Rabbit Test", "entities/agents/rabbit_test.lua");
 
     local rabbits = {};
+    local owls = {};
     
     for i = 1, 5 do
         rabbits[i] = scene:create_entity("Rabbit" .. i, "entities/agents/rabbit.lua");
         rabbits[i]:get_transform().pos = Vector3.new(5.0 * i, 0.0, -2.0);
     end
 
+    for i= 1,5 do
+        owls[i] = scene:create_entity("Owl" .. i, "entities/agents/owl.lua");
+        owls[i]:get_transform().pos = Vector3.new(5.0 * i, 0.0, 2.0);
+    end
     -- scene:create_entity("Bears", "entities/agents/bear.lua")
     -- scene:create_entity("Rabbits", "entities/agents/rabbit.lua");
     -- scene:create_entity("Deers", "entities/agents/deer.lua");
