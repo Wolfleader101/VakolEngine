@@ -1,15 +1,11 @@
 #pragma once
 
 #include <Controller/Logger.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include <optional>
 #include <vector>
 
-#pragma warning(push)
-#pragma warning(disable : 4201)
-#include <glm/gtc/matrix_transform.hpp>
-
 #include "glm/gtc/quaternion.hpp"
-#pragma warning(pop)
 
 namespace Vakol::Model::Assets {
     struct KeyPosition {
