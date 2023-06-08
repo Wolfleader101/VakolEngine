@@ -61,14 +61,18 @@ namespace Vakol::Controller {
         IS_CORE_ASSET = path.find("coreAssets/");
 
         static_cast<void>(importer.SetPropertyFloat(AI_CONFIG_GLOBAL_SCALE_FACTOR_KEY, scale));
-        VK_ASSERT(FileExists(path), "File could not be found!");
 
-        const auto* scene = importer.ReadFile(path.c_str(), ASSIMP_LOADER_OPTIONS);
+        if (!FileExists(path)) {
+            VK_CRITICAL("File could not be found!");
+        }
+
+        auto* scene = importer.ReadFile(path.c_str(), ASSIMP_LOADER_OPTIONS);
 
         if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
-            VK_ERROR("ERROR::ASSIMP:: {0}", importer.GetErrorString());
+            VK_CRITICAL("ASSIMP:: {0}", importer.GetErrorString());
 
-            importer.ReadFile("coreAssets/models/error.obj", aiProcess_Triangulate);
+            scene = importer.ReadFile("coreAssets/models/error.obj", aiProcess_Triangulate);
+            VK_CRITICAL("Using Default ERROR model");
         }
 
         VK_TRACE("Model Path: {0}", path);
@@ -159,8 +163,10 @@ namespace Vakol::Controller {
 
             if (mesh.HasTextureCoords(0)) {
                 vertex.uv = to_glm(mesh.mTextureCoords[0][i]);
-                vertex.tangent = to_glm(mesh.mTangents[i]);
-                vertex.bitangent = to_glm(mesh.mBitangents[i]);
+                if (mesh.HasTangentsAndBitangents()) {
+                    vertex.tangent = to_glm(mesh.mTangents[i]);
+                    vertex.bitangent = to_glm(mesh.mBitangents[i]);
+                }
             }
 
             std::fill(std::begin(vertex.bone_ids), std::end(vertex.bone_ids), -1);

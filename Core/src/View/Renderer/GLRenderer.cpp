@@ -95,13 +95,20 @@ namespace Vakol::View {
 
     void GLRenderer::ClearBuffer(const unsigned int buffer_bit) const { glClear(buffer_bit); }
 
-    void GLRenderer::DrawAnimated(const Components::Transform& transform, const Components::Drawable& drawable, const Assets::Animation& animation) const 
-    {
+    void GLRenderer::DrawAnimated(const Components::Transform& transform, const Components::Drawable& drawable,
+                                  const Assets::Animation& animation) const {
         const auto& model = drawable.model_ptr;
-        VK_ASSERT(model, "\n\nModel ptr is nullptr");
+        if (model == nullptr) {
+            VK_CRITICAL("Model {0} is null", drawable.name);
+            return;
+        }
 
         const auto& shader = model->c_shader();
-        VK_ASSERT(shader, "\n\nShader is nullptr");
+
+        if (shader == nullptr) {
+            VK_CRITICAL("Shader for {0} is null", drawable.name);
+            return;
+        }
 
         if (!model->cullBackface()) glDisable(GL_CULL_FACE);
 
@@ -134,10 +141,18 @@ namespace Vakol::View {
 
     void GLRenderer::Draw(const Components::Transform& transform, const Components::Drawable& drawable) const {
         const auto& model = drawable.model_ptr;
-        VK_ASSERT(model, "\n\nModel ptr is nullptr");
+
+        if (model == nullptr) {
+            VK_CRITICAL("Model {0} is null", drawable.name);
+            return;
+        }
 
         const auto& shader = model->c_shader();
-        VK_ASSERT(shader, "\n\nShader is nullptr");
+
+        if (shader == nullptr) {
+            VK_CRITICAL("Shader for {0} is null", drawable.name);
+            return;
+        }
 
         if (!model->cullBackface()) glDisable(GL_CULL_FACE);
 
