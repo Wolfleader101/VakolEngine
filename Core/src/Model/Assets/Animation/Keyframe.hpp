@@ -67,7 +67,7 @@ namespace Vakol::Model::Assets {
                                  unsigned int end_offset) {
             if (frames.size() < 2) {
                 VK_CRITICAL("KeyFrame::GetFrameIndex() - There must be at least 2 animation frames");
-                return;
+                return -1;
             }
 
             // Find the iterator pointing to the first element with a timestamp not less than the target time
@@ -78,7 +78,7 @@ namespace Vakol::Model::Assets {
 
             if (itr == frames.cend()) {
                 VK_CRITICAL("KeyFrame::GetFrameIndex() - Invalid Iterator!");
-                return;
+                return -1;
             }
             const auto index =
                 static_cast<int>(std::distance(frames.cbegin(), itr)) - 1;  // Calculate the index of the frame
@@ -86,19 +86,19 @@ namespace Vakol::Model::Assets {
             // Ensure that the index is not negative
             if (index < 0) {
                 VK_CRITICAL("KeyFrame::GetFrameIndex() - Index must not be negative!");
-                return;
+                return -1;
             }
             // Ensure that the index is within the valid range of frames
             if (index >= static_cast<int>(frames.size()) - 1) {
                 VK_CRITICAL("KeyFrame::GetFrameIndex() - Index must be within a valid range of animation frames!");
-                return;
+                return -1;
             }
 
             // Ensure that the frame at the index has a timestamp less than or equal to the target time
             if (frames.at(index).timestamp > time) {
                 VK_CRITICAL(
                     "KeyFrame::GetFrameIndex() - Frame must have a timestamp less than or equal to the target time!");
-                return;
+                return -1;
             }
 
             // Ensure that the frame at the next index has a timestamp greater than or equal to the target time
@@ -106,7 +106,7 @@ namespace Vakol::Model::Assets {
                 VK_CRITICAL(
                     "KeyFrame::GetFrameIndex() - The next frame must have a timestamp greater than or equal to the "
                     "target time!");
-                return;
+                return -1;
             }
 
             return index;
