@@ -215,7 +215,10 @@ namespace Vakol::Controller {
 
             const aiBone* const bone = mesh.mBones[i];
 
-            VK_ASSERT(bone, "Bone is nullptr");
+            if (bone == nullptr) {
+                VK_CRITICAL("extract_bones - Bone {0} is null", bone_name.C_Str());
+                continue;
+            }
 
             const aiVertexWeight* const weights = bone->mWeights;
 
@@ -223,10 +226,10 @@ namespace Vakol::Controller {
                 const auto vertex_id = weights[j].mVertexId;
                 const auto bone_weight = weights[j].mWeight;
 
-                VK_ASSERT(vertex_id <= static_cast<unsigned int>(vertices.size()),
-                          "id must not be greater than number of vertices!");
-                VK_ASSERT(vertex_id <= static_cast<unsigned int>(vertices.size()),
-                          "\n\nVertex ID must not be greater than the number of vertices!");
+                if (vertex_id > static_cast<unsigned int>(vertices.size())) {
+                    VK_CRITICAL("extract_bones - Vertex ID must not be greater than the number of vertices!");
+                    continue;
+                }
 
                 add_bone_weight_to_vertex(vertices[vertex_id], bone_index, bone_weight);
             }
@@ -341,7 +344,10 @@ namespace Vakol::Controller {
                 node.node_transform = to_glm(src->mTransformation);
 
                 // Ensure that the parent index is within the valid range
-                VK_ASSERT(node.parent < static_cast<int>(nodes.size()), "Parent index out of valid range");
+                if (node.parent >= static_cast<int>(nodes.size())) {
+                    VK_CRITICAL("extract_animations - Parent index out of valid range");
+                    continue;
+                }
 
                 // Store the current node and its name
                 nodes.push_back(node);
@@ -367,7 +373,10 @@ namespace Vakol::Controller {
                                         [&bone_name](const aiString* node_name) { return bone_name == *node_name; });
 
                 // Ensure that a matching node is found
-                VK_ASSERT(itr != node_names.end(), "\n\nNo node matching a bone.");
+                if (itr == node_names.end()) {
+                    VK_CRITICAL("extract_animations - No node matching a bone.");
+                    continue;
+                }
 
                 // Calculate the index of the node in the 'nodes' vector
                 const auto index = static_cast<int>(std::distance(node_names.cbegin(), itr));
@@ -382,7 +391,10 @@ namespace Vakol::Controller {
 
                 auto& [bone, bone_transform, parent, node_transform] = nodes[index];
 
-                VK_ASSERT(!bone.has_value(), "\n\nTwo or more bones matching same node.");
+                if (bone.has_value()) {
+                    VK_CRITICAL("extract_animations - Two or more bones matching same node.");
+                    continue;
+                }
 
                 bone.emplace(extract_keyframes(*channel, *info));
             }
