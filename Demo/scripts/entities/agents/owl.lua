@@ -20,7 +20,7 @@ function init()
 
     state.DIR_TIMER = 0.0;
 
-    state.model = entity:add_model("assets/models/agents/raven.fbx", 0.25, true, true);
+    state.model = entity:add_model("assets/models/agents/rabbit.fbx", 0.25, true, true);
     entity:set_shader("coreAssets/shaders/animation.prog");
 
     local shader = state.model:get_shader();
@@ -73,7 +73,7 @@ function update()
     pos.z = pos.z + (state.dir.z * velocity);
 
     state.flyTimer = state.flyTimer + Time.delta_time;
-    local flyOffset = state.flyAmplitude * math.sin(state.flyTimer);
+    local flyOffset = state.flyAmplitude * math.sin(state.flyTimer * 0.5);
     local terrainHeight = scene.globals.terrain.terr:get_height(pos.x / terr_scale.x, pos.z / terr_scale.z) * terr_scale.y;
     pos.y = terrainHeight + state.flyHeight + flyOffset;
 
