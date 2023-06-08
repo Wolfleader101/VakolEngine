@@ -81,11 +81,11 @@ namespace Vakol::Controller {
 
 
     void EntityList::Serialize(const std::string& file) const {
-        privateSerialize<cereal::JSONOutputArchive, Transform, Tag, Script, GUID>(file);
+        privateSerialize<cereal::JSONOutputArchive, Transform, Tag, Script, GUID, Drawable, Animator, Animation, Tag, FSM, RigidBody, Collider, Terrain>(file);
     }
 
-    void EntityList::Deserialize(const std::string& file, std::shared_ptr<LuaState> lua, Scene* scene) {
-        privateDeserialize<cereal::JSONInputArchive, Transform, Tag, Script, GUID>(file, lua, scene);
+    void EntityList::Deserialize(const std::string& file) {
+        privateDeserialize<cereal::JSONInputArchive, Transform, Tag, Script, GUID, Drawable, Animator, Animation, Tag, FSM, RigidBody, Collider, Terrain>(file);
     }
 
 }  // namespace Vakol::Controller

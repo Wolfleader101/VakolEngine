@@ -46,6 +46,9 @@ namespace Vakol::Controller
 
         ent.GetComponent<Tag>().tag = tag;
 
+        if(!ent.GetComponent<GUID>().id.isValid())
+            ent.GetComponent<GUID>().GenNewGUID();
+
         if (!sname.empty()) ent.AddComponent<Script>(sname, lua, ent, *this);
 
         return ent;
@@ -146,7 +149,7 @@ namespace Vakol::Controller
             ConvertMapToSol(globals, sceneGlobals);
         }
         
-        entityList.Deserialize(folder + "/EntityList.json", lua, this);
+        entityList.Deserialize(folder + "/EntityList.json");
 
         System::BindScene(*this);
         System::Physics_Init();

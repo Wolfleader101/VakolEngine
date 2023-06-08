@@ -83,10 +83,13 @@ namespace Vakol::Model::Components
         void set(const Controller::Animator& animator) { animator_ptr = std::make_shared<Controller::Animator>(animator); }
 
         template <class Archive>
-        void serialize(Archive& ar) {
+        void save (Archive& ar) const 
+        {
             ar(cereal::make_nvp("attached_model", attached_model));
             //ar(cereal::make_nvp("State Table",state));
         }
+
+        template clas
     private:
         std::shared_ptr<Controller::Animator> animator_ptr = nullptr;
     };
@@ -190,7 +193,6 @@ namespace Vakol::Model::Components
             data.data.clear();
             ar(data);
 
-            
         }
     };
 
@@ -323,7 +325,8 @@ namespace Vakol::Model::Components
             float radius = 0.5f * extents.length(); /**< Radius*/
 
             template <class Archive>
-            void serialize(Archive& ar) {
+            void serialize(Archive& ar) 
+            {
                 ar(cereal::make_nvp("min.x", min.x), cereal::make_nvp("min.y", min.y),
                    cereal::make_nvp("min.z", min.z));
                 ar(cereal::make_nvp("max.x", max.x), cereal::make_nvp("max.y", max.y),

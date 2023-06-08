@@ -10,10 +10,6 @@ namespace Vakol::Model {
 
         this->AddComponent<Components::GUID>();
 
-        auto& guid = this->GetComponent<Components::GUID>();
-        guid.GenNewGUID();
-        // setting this as default then it can be altered later
-
         this->AddComponent<Components::Transform>();  // every entity has a transform. Can change easily
     }
 

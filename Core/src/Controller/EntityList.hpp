@@ -92,7 +92,7 @@ namespace Vakol::Controller {
         void Update(double d_t);
 
         void Serialize(const std::string& file) const;
-        void Deserialize(const std::string& file, std::shared_ptr<LuaState> lua, Scene* scene);
+        void Deserialize(const std::string& file);
 
        private:
         /**
@@ -122,88 +122,82 @@ namespace Vakol::Controller {
             }
         }
 
-        // template <typename Archive, typename... Args>
-        // void privateDeserialize(const std::string& file) {
-        //     std::ifstream inp(file);
-
-        //     if (inp.good()) 
-        //     {
-        //         Archive json(inp);
-        //         json(ActiveEntityList);  // fills vector again
-
-        //         if(m_Registry.empty()) //if not initialized already
-        //         {
-        //             entt::snapshot_loader snapLoad(m_Registry);
-        //             snapLoad.entities(json);
-        //             snapLoad.component<Args...>(json);
-        //         }
-        //         else //if initialized 
-        //         {
-                   
-        //             entt::basic_continuous_loader<decltype(m_Registry)> continuousLoad(m_Registry);
-        //             continuousLoad.entities(json);
-        //             continuousLoad.component<Args...>(json);
-        //             continuousLoad.shrink();  // Remove entities that no longer have counterparts.  
-        //         }
-
-        //         inp.close();
-        //     }
-        // }
-
         template <typename Archive, typename... Args>
-        void privateDeserialize(const std::string& file, std::shared_ptr<LuaState> lua, Scene* scene) {
+        void privateDeserialize(const std::string& file) {
             std::ifstream inp(file);
 
-            if (inp.good()) {
-                
-
-                m_Registry.view<Components::GUID>().each([&](auto& guid) { VK_TRACE("{0}", guid.id.str()); }); //for testing
-
-                m_Registry.clear();
-                ActiveEntityList.clear();
-
+            if (inp.good()) 
+            {
                 Archive json(inp);
                 json(ActiveEntityList);  // fills vector again
-                
+
                 
                 entt::snapshot_loader snapLoad(m_Registry);
                 snapLoad.entities(json);
                 snapLoad.component<Args...>(json);
 
-
-                System::Script_Init(lua, *this, scene);
-
-                inp.seekg(0, inp.beg); //reset file pointer to start of file
-
-                entt::registry tempReg;
-                entt::snapshot_loader tempSnap(tempReg);
-                tempSnap.entities(json);
-                tempSnap.component<Args...>(json);
-
-                //do n^2 view here
-                
-                m_Registry.group<Components::Script, Components::Transform, Components::GUID, Components::Tag>().each(
-                    [&](auto& script, auto& trans, auto& guid, auto& tag)
-                    {
-                            tempReg.group<Components::Script, Components::Transform, Components::GUID, Components::Tag>().each(
-                            [&](auto& scriptTemp, auto& transTemp, auto& guidTemp, auto& tagTemp)
-                            {
-                                if(guid == guidTemp)
-                                {
-
-                                    script.state = scriptTemp.state;
-
-                                    trans = transTemp;
-
-                                    tag = tagTemp;
-                                }
-                            });
-                    });
-
-                
                 inp.close();
             }
         }
+
+        // template <typename Archive, typename... Args>
+        // void privateDeserialize(const std::string& file, std::shared_ptr<LuaState> lua, Scene* scene) {
+        //     std::ifstream inp(file);
+
+        //     if (inp.good()) {
+                
+
+        //         m_Registry.clear();
+        //         ActiveEntityList.clear();
+
+        //         Archive json(inp);
+        //         json(ActiveEntityList);  // fills vector again
+                
+                
+        //         entt::snapshot_loader snapLoad(m_Registry);
+        //         snapLoad.entities(json);
+        //         snapLoad.component<Args...>(json);
+
+
+
+        //         System::Script_Init(lua, *this, scene);
+
+        //         //inp.close();
+
+
+        //         inp.seekg(0, inp.beg); //reset file pointer to start of file
+
+        //         entt::registry tempReg;
+        //         entt::snapshot_loader tempSnap(tempReg);
+        //         tempSnap.entities(json);
+        //         tempSnap.component<Args...>(json);
+
+        //         //do n^2 view here
+                
+        //         m_Registry.group<Components::Script, Components::Transform, Components::GUID, Components::Tag>().each(
+        //             [&](auto& script, auto& trans, auto& guid, auto& tag)
+        //             {
+        //                     tempReg.group<Components::Script, Components::Transform, Components::GUID, Components::Tag>().each(
+        //                     [&](auto& scriptTemp, auto& transTemp, auto& guidTemp, auto& tagTemp)
+        //                     {
+        //                         if(guid == guidTemp)
+        //                         {
+        //                             Controller::ConvertMapToSol(scriptTemp.data, script.state); //convert map to sol state (lua
+        //                             script.state = scriptTemp.state;
+
+        //                             trans = transTemp;
+
+        //                             tag = tagTemp;
+        //                         }
+        //                     });
+        //             });
+
+                
+        //         inp.close();
+        //     }
+
+        //     
+        // }
 
         friend class Entity;  // friend to allow the api for entities to be clean.
         friend class System;

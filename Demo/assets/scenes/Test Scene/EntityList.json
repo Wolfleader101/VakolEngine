@@ -126,11 +126,11 @@
     },
     "value28": 5,
     "value29": {
-        "pos.x": 4.4749250411987309,
-        "pos.y": 11.679875373840332,
-        "pos.z": -2.7863941192626955,
+        "pos.x": 4.453147888183594,
+        "pos.y": 11.691474914550782,
+        "pos.z": -2.7534384727478029,
         "rot.x": 0.0,
-        "rot.y": -146.26901245117188,
+        "rot.y": -144.02748107910157,
         "rot.z": 0.0,
         "scale.x": 1.0,
         "scale.y": 1.0,
@@ -138,11 +138,11 @@
     },
     "value30": 6,
     "value31": {
-        "pos.x": 8.777127265930176,
-        "pos.y": 9.405511856079102,
-        "pos.z": -2.4910151958465578,
+        "pos.x": 9.355093002319336,
+        "pos.y": 9.023218154907227,
+        "pos.z": -2.3906190395355226,
         "rot.x": 0.0,
-        "rot.y": -111.87672424316406,
+        "rot.y": -121.20320892333985,
         "rot.z": 0.0,
         "scale.x": 1.0,
         "scale.y": 1.0,
@@ -150,11 +150,11 @@
     },
     "value32": 7,
     "value33": {
-        "pos.x": 13.693774223327637,
-        "pos.y": 6.503970623016357,
-        "pos.z": -1.9994796514511109,
+        "pos.x": 15.160666465759278,
+        "pos.y": 6.270153522491455,
+        "pos.z": -2.0902163982391359,
         "rot.x": 0.0,
-        "rot.y": -89.97718048095703,
+        "rot.y": 119.31497192382813,
         "rot.z": 0.0,
         "scale.x": 1.0,
         "scale.y": 1.0,
@@ -162,11 +162,11 @@
     },
     "value34": 8,
     "value35": {
-        "pos.x": 20.215566635131837,
-        "pos.y": 6.238940715789795,
-        "pos.z": -1.6396633386611939,
+        "pos.x": 19.972150802612306,
+        "pos.y": 6.730648994445801,
+        "pos.z": -2.609633207321167,
         "rot.x": 0.0,
-        "rot.y": 30.890148162841798,
+        "rot.y": -177.38467407226563,
         "rot.z": 0.0,
         "scale.x": 1.0,
         "scale.y": 1.0,
@@ -174,11 +174,11 @@
     },
     "value36": 9,
     "value37": {
-        "pos.x": 23.902070999145509,
-        "pos.y": 5.8867597579956059,
-        "pos.z": -0.6741703748703003,
+        "pos.x": 25.4321231842041,
+        "pos.y": 7.081509113311768,
+        "pos.z": -1.443405270576477,
         "rot.x": 0.0,
-        "rot.y": -39.62809371948242,
+        "rot.y": 37.82439041137695,
         "rot.z": 0.0,
         "scale.x": 1.0,
         "scale.y": 1.0,
@@ -186,11 +186,11 @@
     },
     "value38": 10,
     "value39": {
-        "pos.x": 28.89137077331543,
-        "pos.y": 9.202543258666993,
-        "pos.z": -3.272404432296753,
+        "pos.x": 29.251983642578126,
+        "pos.y": 8.336640357971192,
+        "pos.z": -1.3012398481369019,
         "rot.x": 0.0,
-        "rot.y": -138.93487548828126,
+        "rot.y": -46.94976806640625,
         "rot.z": 0.0,
         "scale.x": 1.0,
         "scale.y": 1.0,
@@ -198,11 +198,11 @@
     },
     "value40": 11,
     "value41": {
-        "pos.x": 34.277732849121097,
-        "pos.y": 7.373020172119141,
-        "pos.z": -1.0081154108047486,
+        "pos.x": 34.56803894042969,
+        "pos.y": 7.461208820343018,
+        "pos.z": -1.5429939031600953,
         "rot.x": 0.0,
-        "rot.y": -36.06026077270508,
+        "rot.y": -43.38577651977539,
         "rot.z": 0.0,
         "scale.x": 1.0,
         "scale.y": 1.0,
@@ -210,11 +210,11 @@
     },
     "value42": 12,
     "value43": {
-        "pos.x": 41.20466613769531,
-        "pos.y": 5.929832935333252,
-        "pos.z": -2.048064947128296,
+        "pos.x": 39.61415100097656,
+        "pos.y": 6.271353721618652,
+        "pos.z": -2.6808347702026369,
         "rot.x": 0.0,
-        "rot.y": 92.28480529785156,
+        "rot.y": -150.45828247070313,
         "rot.z": 0.0,
         "scale.x": 1.0,
         "scale.y": 1.0,
@@ -222,11 +222,11 @@
     },
     "value44": 13,
     "value45": {
-        "pos.x": 45.72304153442383,
-        "pos.y": 5.119901657104492,
-        "pos.z": -1.280626893043518,
+        "pos.x": 44.49251174926758,
+        "pos.y": 5.027675151824951,
+        "pos.z": -1.1945066452026368,
         "rot.x": 0.0,
-        "rot.y": 45.145450592041019,
+        "rot.y": -32.21205139160156,
         "rot.z": 0.0,
         "scale.x": 1.0,
         "scale.y": 1.0,
@@ -234,11 +234,11 @@
     },
     "value46": 14,
     "value47": {
-        "pos.x": 51.162200927734378,
-        "pos.y": 3.609001874923706,
-        "pos.z": -1.7189844846725464,
+        "pos.x": 50.603050231933597,
+        "pos.y": 3.6319262981414797,
+        "pos.z": -1.4813814163208008,
         "rot.x": 0.0,
-        "rot.y": 76.40704345703125,
+        "rot.y": 49.304595947265628,
         "rot.z": 0.0,
         "scale.x": 1.0,
         "scale.y": 1.0,
@@ -312,6 +312,27 @@
         "value0": {
             "value0": [
                 {
+                    "key": "moving_value",
+                    "value": {
+                        "index": 1,
+                        "data": 0.131221204996109
+                    }
+                },
+                {
+                    "key": "MOVING_TIMER",
+                    "value": {
+                        "index": 1,
+                        "data": 1.6402649879455567
+                    }
+                },
+                {
+                    "key": "drowning_time",
+                    "value": {
+                        "index": 1,
+                        "data": 0.0
+                    }
+                },
+                {
                     "key": "is_drowning",
                     "value": {
                         "index": 3,
@@ -323,27 +344,6 @@
                     "value": {
                         "index": 1,
                         "data": 0.0
-                    }
-                },
-                {
-                    "key": "drowning_time",
-                    "value": {
-                        "index": 1,
-                        "data": 0.0
-                    }
-                },
-                {
-                    "key": "MOVING_TIMER",
-                    "value": {
-                        "index": 1,
-                        "data": 2.739093780517578
-                    }
-                },
-                {
-                    "key": "moving_value",
-                    "value": {
-                        "index": 1,
-                        "data": 0.08562034368515015
                     }
                 }
             ]
@@ -398,13 +398,6 @@
                     }
                 },
                 {
-                    "key": "SPOTTED",
-                    "value": {
-                        "index": 3,
-                        "data": false
-                    }
-                },
-                {
                     "key": "VIEW_DISTANCE",
                     "value": {
                         "index": 1,
@@ -412,10 +405,10 @@
                     }
                 },
                 {
-                    "key": "EAT",
+                    "key": "WAIT_TIMER",
                     "value": {
                         "index": 1,
-                        "data": 1.0
+                        "data": 1.6488313674926758
                     }
                 },
                 {
@@ -423,13 +416,6 @@
                     "value": {
                         "index": 1,
                         "data": 5.0
-                    }
-                },
-                {
-                    "key": "DIE",
-                    "value": {
-                        "index": 1,
-                        "data": 0.0
                     }
                 },
                 {
@@ -447,24 +433,24 @@
                     }
                 },
                 {
-                    "key": "DIR_TIMER",
+                    "key": "EAT",
                     "value": {
                         "index": 1,
-                        "data": 2.7476906776428224
+                        "data": 1.0
                     }
                 },
                 {
-                    "key": "WAIT_TIMER",
+                    "key": "DIE",
                     "value": {
                         "index": 1,
-                        "data": 2.7476906776428224
+                        "data": 0.0
                     }
                 },
                 {
-                    "key": "sprint_speed",
+                    "key": "SPOTTED",
                     "value": {
-                        "index": 1,
-                        "data": 3.0
+                        "index": 3,
+                        "data": false
                     }
                 },
                 {
@@ -472,6 +458,20 @@
                     "value": {
                         "index": 1,
                         "data": 0.5
+                    }
+                },
+                {
+                    "key": "DIR_TIMER",
+                    "value": {
+                        "index": 1,
+                        "data": 1.6488313674926758
+                    }
+                },
+                {
+                    "key": "sprint_speed",
+                    "value": {
+                        "index": 1,
+                        "data": 3.0
                     }
                 }
             ]
@@ -490,13 +490,6 @@
                     }
                 },
                 {
-                    "key": "SPOTTED",
-                    "value": {
-                        "index": 3,
-                        "data": false
-                    }
-                },
-                {
                     "key": "VIEW_DISTANCE",
                     "value": {
                         "index": 1,
@@ -504,10 +497,10 @@
                     }
                 },
                 {
-                    "key": "EAT",
+                    "key": "WAIT_TIMER",
                     "value": {
                         "index": 1,
-                        "data": 1.0
+                        "data": 1.6488313674926758
                     }
                 },
                 {
@@ -515,13 +508,6 @@
                     "value": {
                         "index": 1,
                         "data": 5.0
-                    }
-                },
-                {
-                    "key": "DIE",
-                    "value": {
-                        "index": 1,
-                        "data": 0.0
                     }
                 },
                 {
@@ -539,24 +525,24 @@
                     }
                 },
                 {
-                    "key": "DIR_TIMER",
+                    "key": "EAT",
                     "value": {
                         "index": 1,
-                        "data": 2.7476906776428224
+                        "data": 1.0
                     }
                 },
                 {
-                    "key": "WAIT_TIMER",
+                    "key": "DIE",
                     "value": {
                         "index": 1,
-                        "data": 2.7476906776428224
+                        "data": 0.0
                     }
                 },
                 {
-                    "key": "sprint_speed",
+                    "key": "SPOTTED",
                     "value": {
-                        "index": 1,
-                        "data": 3.0
+                        "index": 3,
+                        "data": false
                     }
                 },
                 {
@@ -564,6 +550,20 @@
                     "value": {
                         "index": 1,
                         "data": 0.5
+                    }
+                },
+                {
+                    "key": "DIR_TIMER",
+                    "value": {
+                        "index": 1,
+                        "data": 1.6488313674926758
+                    }
+                },
+                {
+                    "key": "sprint_speed",
+                    "value": {
+                        "index": 1,
+                        "data": 3.0
                     }
                 }
             ]
@@ -582,13 +582,6 @@
                     }
                 },
                 {
-                    "key": "SPOTTED",
-                    "value": {
-                        "index": 3,
-                        "data": false
-                    }
-                },
-                {
                     "key": "VIEW_DISTANCE",
                     "value": {
                         "index": 1,
@@ -596,10 +589,10 @@
                     }
                 },
                 {
-                    "key": "EAT",
+                    "key": "WAIT_TIMER",
                     "value": {
                         "index": 1,
-                        "data": 1.0
+                        "data": 1.6488313674926758
                     }
                 },
                 {
@@ -607,13 +600,6 @@
                     "value": {
                         "index": 1,
                         "data": 5.0
-                    }
-                },
-                {
-                    "key": "DIE",
-                    "value": {
-                        "index": 1,
-                        "data": 0.0
                     }
                 },
                 {
@@ -631,24 +617,24 @@
                     }
                 },
                 {
-                    "key": "DIR_TIMER",
+                    "key": "EAT",
                     "value": {
                         "index": 1,
-                        "data": 2.7476906776428224
+                        "data": 1.0
                     }
                 },
                 {
-                    "key": "WAIT_TIMER",
+                    "key": "DIE",
                     "value": {
                         "index": 1,
-                        "data": 2.7476906776428224
+                        "data": 0.0
                     }
                 },
                 {
-                    "key": "sprint_speed",
+                    "key": "SPOTTED",
                     "value": {
-                        "index": 1,
-                        "data": 3.0
+                        "index": 3,
+                        "data": false
                     }
                 },
                 {
@@ -656,6 +642,20 @@
                     "value": {
                         "index": 1,
                         "data": 0.5
+                    }
+                },
+                {
+                    "key": "DIR_TIMER",
+                    "value": {
+                        "index": 1,
+                        "data": 1.6488313674926758
+                    }
+                },
+                {
+                    "key": "sprint_speed",
+                    "value": {
+                        "index": 1,
+                        "data": 3.0
                     }
                 }
             ]
@@ -674,13 +674,6 @@
                     }
                 },
                 {
-                    "key": "SPOTTED",
-                    "value": {
-                        "index": 3,
-                        "data": false
-                    }
-                },
-                {
                     "key": "VIEW_DISTANCE",
                     "value": {
                         "index": 1,
@@ -688,10 +681,10 @@
                     }
                 },
                 {
-                    "key": "EAT",
+                    "key": "WAIT_TIMER",
                     "value": {
                         "index": 1,
-                        "data": 1.0
+                        "data": 1.6488313674926758
                     }
                 },
                 {
@@ -699,13 +692,6 @@
                     "value": {
                         "index": 1,
                         "data": 5.0
-                    }
-                },
-                {
-                    "key": "DIE",
-                    "value": {
-                        "index": 1,
-                        "data": 0.0
                     }
                 },
                 {
@@ -723,24 +709,24 @@
                     }
                 },
                 {
-                    "key": "DIR_TIMER",
+                    "key": "EAT",
                     "value": {
                         "index": 1,
-                        "data": 2.7476906776428224
+                        "data": 1.0
                     }
                 },
                 {
-                    "key": "WAIT_TIMER",
+                    "key": "DIE",
                     "value": {
                         "index": 1,
-                        "data": 2.7476906776428224
+                        "data": 0.0
                     }
                 },
                 {
-                    "key": "sprint_speed",
+                    "key": "SPOTTED",
                     "value": {
-                        "index": 1,
-                        "data": 3.0
+                        "index": 3,
+                        "data": false
                     }
                 },
                 {
@@ -748,6 +734,20 @@
                     "value": {
                         "index": 1,
                         "data": 0.5
+                    }
+                },
+                {
+                    "key": "DIR_TIMER",
+                    "value": {
+                        "index": 1,
+                        "data": 1.6488313674926758
+                    }
+                },
+                {
+                    "key": "sprint_speed",
+                    "value": {
+                        "index": 1,
+                        "data": 3.0
                     }
                 }
             ]
@@ -766,13 +766,6 @@
                     }
                 },
                 {
-                    "key": "SPOTTED",
-                    "value": {
-                        "index": 3,
-                        "data": false
-                    }
-                },
-                {
                     "key": "VIEW_DISTANCE",
                     "value": {
                         "index": 1,
@@ -780,10 +773,10 @@
                     }
                 },
                 {
-                    "key": "EAT",
+                    "key": "WAIT_TIMER",
                     "value": {
                         "index": 1,
-                        "data": 1.0
+                        "data": 1.6488313674926758
                     }
                 },
                 {
@@ -791,13 +784,6 @@
                     "value": {
                         "index": 1,
                         "data": 5.0
-                    }
-                },
-                {
-                    "key": "DIE",
-                    "value": {
-                        "index": 1,
-                        "data": 0.0
                     }
                 },
                 {
@@ -815,24 +801,24 @@
                     }
                 },
                 {
-                    "key": "DIR_TIMER",
+                    "key": "EAT",
                     "value": {
                         "index": 1,
-                        "data": 2.7476906776428224
+                        "data": 1.0
                     }
                 },
                 {
-                    "key": "WAIT_TIMER",
+                    "key": "DIE",
                     "value": {
                         "index": 1,
-                        "data": 2.7476906776428224
+                        "data": 0.0
                     }
                 },
                 {
-                    "key": "sprint_speed",
+                    "key": "SPOTTED",
                     "value": {
-                        "index": 1,
-                        "data": 3.0
+                        "index": 3,
+                        "data": false
                     }
                 },
                 {
@@ -840,6 +826,20 @@
                     "value": {
                         "index": 1,
                         "data": 0.5
+                    }
+                },
+                {
+                    "key": "DIR_TIMER",
+                    "value": {
+                        "index": 1,
+                        "data": 1.6488313674926758
+                    }
+                },
+                {
+                    "key": "sprint_speed",
+                    "value": {
+                        "index": 1,
+                        "data": 3.0
                     }
                 }
             ]
@@ -858,13 +858,6 @@
                     }
                 },
                 {
-                    "key": "SPOTTED",
-                    "value": {
-                        "index": 3,
-                        "data": false
-                    }
-                },
-                {
                     "key": "VIEW_DISTANCE",
                     "value": {
                         "index": 1,
@@ -872,10 +865,10 @@
                     }
                 },
                 {
-                    "key": "EAT",
+                    "key": "WAIT_TIMER",
                     "value": {
                         "index": 1,
-                        "data": 1.0
+                        "data": 1.6488313674926758
                     }
                 },
                 {
@@ -883,13 +876,6 @@
                     "value": {
                         "index": 1,
                         "data": 5.0
-                    }
-                },
-                {
-                    "key": "DIE",
-                    "value": {
-                        "index": 1,
-                        "data": 0.0
                     }
                 },
                 {
@@ -907,24 +893,24 @@
                     }
                 },
                 {
-                    "key": "DIR_TIMER",
+                    "key": "EAT",
                     "value": {
                         "index": 1,
-                        "data": 2.7476906776428224
+                        "data": 1.0
                     }
                 },
                 {
-                    "key": "WAIT_TIMER",
+                    "key": "DIE",
                     "value": {
                         "index": 1,
-                        "data": 2.7476906776428224
+                        "data": 0.0
                     }
                 },
                 {
-                    "key": "sprint_speed",
+                    "key": "SPOTTED",
                     "value": {
-                        "index": 1,
-                        "data": 3.0
+                        "index": 3,
+                        "data": false
                     }
                 },
                 {
@@ -932,6 +918,20 @@
                     "value": {
                         "index": 1,
                         "data": 0.5
+                    }
+                },
+                {
+                    "key": "DIR_TIMER",
+                    "value": {
+                        "index": 1,
+                        "data": 1.6488313674926758
+                    }
+                },
+                {
+                    "key": "sprint_speed",
+                    "value": {
+                        "index": 1,
+                        "data": 3.0
                     }
                 }
             ]
@@ -950,13 +950,6 @@
                     }
                 },
                 {
-                    "key": "SPOTTED",
-                    "value": {
-                        "index": 3,
-                        "data": false
-                    }
-                },
-                {
                     "key": "VIEW_DISTANCE",
                     "value": {
                         "index": 1,
@@ -964,10 +957,10 @@
                     }
                 },
                 {
-                    "key": "EAT",
+                    "key": "WAIT_TIMER",
                     "value": {
                         "index": 1,
-                        "data": 1.0
+                        "data": 1.6488313674926758
                     }
                 },
                 {
@@ -975,13 +968,6 @@
                     "value": {
                         "index": 1,
                         "data": 5.0
-                    }
-                },
-                {
-                    "key": "DIE",
-                    "value": {
-                        "index": 1,
-                        "data": 0.0
                     }
                 },
                 {
@@ -999,24 +985,24 @@
                     }
                 },
                 {
-                    "key": "DIR_TIMER",
+                    "key": "EAT",
                     "value": {
                         "index": 1,
-                        "data": 2.7476906776428224
+                        "data": 1.0
                     }
                 },
                 {
-                    "key": "WAIT_TIMER",
+                    "key": "DIE",
                     "value": {
                         "index": 1,
-                        "data": 2.7476906776428224
+                        "data": 0.0
                     }
                 },
                 {
-                    "key": "sprint_speed",
+                    "key": "SPOTTED",
                     "value": {
-                        "index": 1,
-                        "data": 3.0
+                        "index": 3,
+                        "data": false
                     }
                 },
                 {
@@ -1024,6 +1010,20 @@
                     "value": {
                         "index": 1,
                         "data": 0.5
+                    }
+                },
+                {
+                    "key": "DIR_TIMER",
+                    "value": {
+                        "index": 1,
+                        "data": 1.6488313674926758
+                    }
+                },
+                {
+                    "key": "sprint_speed",
+                    "value": {
+                        "index": 1,
+                        "data": 3.0
                     }
                 }
             ]
@@ -1042,13 +1042,6 @@
                     }
                 },
                 {
-                    "key": "SPOTTED",
-                    "value": {
-                        "index": 3,
-                        "data": false
-                    }
-                },
-                {
                     "key": "VIEW_DISTANCE",
                     "value": {
                         "index": 1,
@@ -1056,10 +1049,10 @@
                     }
                 },
                 {
-                    "key": "EAT",
+                    "key": "WAIT_TIMER",
                     "value": {
                         "index": 1,
-                        "data": 1.0
+                        "data": 1.6488313674926758
                     }
                 },
                 {
@@ -1067,13 +1060,6 @@
                     "value": {
                         "index": 1,
                         "data": 5.0
-                    }
-                },
-                {
-                    "key": "DIE",
-                    "value": {
-                        "index": 1,
-                        "data": 0.0
                     }
                 },
                 {
@@ -1091,24 +1077,24 @@
                     }
                 },
                 {
-                    "key": "DIR_TIMER",
+                    "key": "EAT",
                     "value": {
                         "index": 1,
-                        "data": 2.7476906776428224
+                        "data": 1.0
                     }
                 },
                 {
-                    "key": "WAIT_TIMER",
+                    "key": "DIE",
                     "value": {
                         "index": 1,
-                        "data": 2.7476906776428224
+                        "data": 0.0
                     }
                 },
                 {
-                    "key": "sprint_speed",
+                    "key": "SPOTTED",
                     "value": {
-                        "index": 1,
-                        "data": 3.0
+                        "index": 3,
+                        "data": false
                     }
                 },
                 {
@@ -1116,6 +1102,20 @@
                     "value": {
                         "index": 1,
                         "data": 0.5
+                    }
+                },
+                {
+                    "key": "DIR_TIMER",
+                    "value": {
+                        "index": 1,
+                        "data": 1.6488313674926758
+                    }
+                },
+                {
+                    "key": "sprint_speed",
+                    "value": {
+                        "index": 1,
+                        "data": 3.0
                     }
                 }
             ]
@@ -1134,13 +1134,6 @@
                     }
                 },
                 {
-                    "key": "SPOTTED",
-                    "value": {
-                        "index": 3,
-                        "data": false
-                    }
-                },
-                {
                     "key": "VIEW_DISTANCE",
                     "value": {
                         "index": 1,
@@ -1148,10 +1141,10 @@
                     }
                 },
                 {
-                    "key": "EAT",
+                    "key": "WAIT_TIMER",
                     "value": {
                         "index": 1,
-                        "data": 1.0
+                        "data": 1.6488313674926758
                     }
                 },
                 {
@@ -1159,13 +1152,6 @@
                     "value": {
                         "index": 1,
                         "data": 5.0
-                    }
-                },
-                {
-                    "key": "DIE",
-                    "value": {
-                        "index": 1,
-                        "data": 0.0
                     }
                 },
                 {
@@ -1183,24 +1169,24 @@
                     }
                 },
                 {
-                    "key": "DIR_TIMER",
+                    "key": "EAT",
                     "value": {
                         "index": 1,
-                        "data": 2.7476906776428224
+                        "data": 1.0
                     }
                 },
                 {
-                    "key": "WAIT_TIMER",
+                    "key": "DIE",
                     "value": {
                         "index": 1,
-                        "data": 2.7476906776428224
+                        "data": 0.0
                     }
                 },
                 {
-                    "key": "sprint_speed",
+                    "key": "SPOTTED",
                     "value": {
-                        "index": 1,
-                        "data": 3.0
+                        "index": 3,
+                        "data": false
                     }
                 },
                 {
@@ -1208,6 +1194,20 @@
                     "value": {
                         "index": 1,
                         "data": 0.5
+                    }
+                },
+                {
+                    "key": "DIR_TIMER",
+                    "value": {
+                        "index": 1,
+                        "data": 1.6488313674926758
+                    }
+                },
+                {
+                    "key": "sprint_speed",
+                    "value": {
+                        "index": 1,
+                        "data": 3.0
                     }
                 }
             ]
@@ -1226,13 +1226,6 @@
                     }
                 },
                 {
-                    "key": "SPOTTED",
-                    "value": {
-                        "index": 3,
-                        "data": false
-                    }
-                },
-                {
                     "key": "VIEW_DISTANCE",
                     "value": {
                         "index": 1,
@@ -1240,10 +1233,10 @@
                     }
                 },
                 {
-                    "key": "EAT",
+                    "key": "WAIT_TIMER",
                     "value": {
                         "index": 1,
-                        "data": 1.0
+                        "data": 1.6488313674926758
                     }
                 },
                 {
@@ -1251,13 +1244,6 @@
                     "value": {
                         "index": 1,
                         "data": 5.0
-                    }
-                },
-                {
-                    "key": "DIE",
-                    "value": {
-                        "index": 1,
-                        "data": 0.0
                     }
                 },
                 {
@@ -1275,24 +1261,24 @@
                     }
                 },
                 {
-                    "key": "DIR_TIMER",
+                    "key": "EAT",
                     "value": {
                         "index": 1,
-                        "data": 2.7476906776428224
+                        "data": 1.0
                     }
                 },
                 {
-                    "key": "WAIT_TIMER",
+                    "key": "DIE",
                     "value": {
                         "index": 1,
-                        "data": 2.7476906776428224
+                        "data": 0.0
                     }
                 },
                 {
-                    "key": "sprint_speed",
+                    "key": "SPOTTED",
                     "value": {
-                        "index": 1,
-                        "data": 3.0
+                        "index": 3,
+                        "data": false
                     }
                 },
                 {
@@ -1301,6 +1287,20 @@
                         "index": 1,
                         "data": 0.5
                     }
+                },
+                {
+                    "key": "DIR_TIMER",
+                    "value": {
+                        "index": 1,
+                        "data": 1.6488313674926758
+                    }
+                },
+                {
+                    "key": "sprint_speed",
+                    "value": {
+                        "index": 1,
+                        "data": 3.0
+                    }
                 }
             ]
         }
@@ -1308,62 +1308,62 @@
     "value110": 15,
     "value111": 0,
     "value112": {
-        "guid": "fa27dbc3-bb5f-4f5a-8fd9-c4c2bbaba4ef"
+        "guid": "dafc57ef-39e4-4673-8278-071f5623d4c0"
     },
     "value113": 1,
     "value114": {
-        "guid": "4f42ad3c-df77-437f-bcf5-feab2bbc0aec"
+        "guid": "7f170cc0-40c3-4ad2-b1c3-e5b69f1255e7"
     },
     "value115": 2,
     "value116": {
-        "guid": "55ee2f40-c45f-474d-b966-c83ea92ab5ce"
+        "guid": "ba55d674-3bba-41de-ad40-af6eb5be85a9"
     },
     "value117": 3,
     "value118": {
-        "guid": "c0c5fb01-59f6-4bca-8cac-cc03418e24f6"
+        "guid": "2e26283a-b227-40ae-b654-caebc971b225"
     },
     "value119": 4,
     "value120": {
-        "guid": "f991e911-d5d1-48fe-a47f-b68c1dfb9c9b"
+        "guid": "0e314b08-a4f6-42ae-8b6e-6c0791355243"
     },
     "value121": 5,
     "value122": {
-        "guid": "65420ab7-0415-494d-958b-0d59e141eb7e"
+        "guid": "ecbe0326-6bc7-4713-9617-d14fccd4c82d"
     },
     "value123": 6,
     "value124": {
-        "guid": "252c067d-c187-4b39-be95-013d686dd694"
+        "guid": "f02327ef-df78-44d5-8931-2d674f108cdd"
     },
     "value125": 7,
     "value126": {
-        "guid": "711a021a-6817-4269-bed4-9f3773687307"
+        "guid": "e77a4cbc-5fef-4515-b550-c342d0c32b9e"
     },
     "value127": 8,
     "value128": {
-        "guid": "a39ba2cd-8671-4976-9a55-b2e548b8a24d"
+        "guid": "163adefd-04bf-43ef-b0ea-5cedde1d731f"
     },
     "value129": 9,
     "value130": {
-        "guid": "2ce6370d-17f4-4118-b123-9adbb156fdcf"
+        "guid": "9bff080a-48bc-4a67-a6d3-9a29ba56c41c"
     },
     "value131": 10,
     "value132": {
-        "guid": "363ab7b8-06e8-41ca-aa98-0b9ca3cdde66"
+        "guid": "4281aeed-3c69-4cd6-84bc-4eb250425831"
     },
     "value133": 11,
     "value134": {
-        "guid": "cb2f8459-d1e3-4575-8676-df30eae5ff6f"
+        "guid": "35274535-173e-46c3-9167-feb8e475857a"
     },
     "value135": 12,
     "value136": {
-        "guid": "e981bd30-3d01-480b-9807-76b352195fc5"
+        "guid": "9bd583d2-d194-4309-befb-7263bfc14066"
     },
     "value137": 13,
     "value138": {
-        "guid": "60f9e8fe-3c47-4386-8eba-f93af4539e86"
+        "guid": "06e80cc9-02ce-4a27-b5d4-a68e584273e2"
     },
     "value139": 14,
     "value140": {
-        "guid": "86026a93-7eca-4f81-a0d5-1c0d9274e7a4"
+        "guid": "27613294-5975-4b77-8689-384fcd82d66e"
     }
 }

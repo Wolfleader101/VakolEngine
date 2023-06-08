@@ -131,6 +131,7 @@ namespace Vakol::Controller
             }
         });
     }
+
     void System::Script_Update(std::shared_ptr<LuaState> lua, EntityList& list, Scene* scene)
 	{
         m_registry->view<Script>().each([&](auto entity_id, auto& script) 
@@ -142,6 +143,25 @@ namespace Vakol::Controller
             lua->GetState()["state"] = script.state;
 
             lua->RunFunction("update");
+        });
+    }
+
+    void System::Script_Deserialize(std::shared_ptr<LuaState> lua, EntityList& list, Scene* scene)
+    {
+        m_registry->view<Script>().each([&](auto entity_id, auto& script) 
+        {
+            lua->RunFile("scripts/" + script.script_name);
+
+            lua->GetState()["scene"] = scene;
+            lua->GetState()["entity"] = list.GetEntity(static_cast<unsigned int>(entity_id));
+
+            script.state = lua->GetState().create_table();
+            Controller::ConvertMapToSol(script.data, script.state);
+            
+
+            auto optFunc = lua->GetState()["deserialize"];
+            if(optFunc.valid())
+                lua->RunFunction("deserialize");
         });
     }
 
