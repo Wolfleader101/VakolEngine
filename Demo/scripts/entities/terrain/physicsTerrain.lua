@@ -1,7 +1,7 @@
 function init()
     print("Initialising Terrain");
   
-    local terrain = entity:create_height_map_terrain(scene, "coreAssets/textures/Heightmaps/height128.raw", 0, 1); -- size
+    local terrain = entity:create_height_map_terrain(scene, "coreAssets/textures/Heightmaps/terrain_2048.raw", -5, 35); -- size
 
     local model = terrain:get_model();
     local mesh = model:get_mesh(0);
@@ -9,21 +9,18 @@ function init()
 
     entity:add_raw_texture(0, "coreAssets/textures/lightmap.raw");
 
-    entity:add_texture(0, "coreAssets/textures/Terrain/dirt_0.jpg", false, false);
-    entity:add_texture(0, "coreAssets/textures/Terrain/dirt_3.jpg", false, false);
-    entity:add_texture(0, "coreAssets/textures/Terrain/dirt_cracked.jpg", false, false);
-    entity:add_texture(0, "coreAssets/textures/Terrain/patch_grass_1.jpg", false, false);
-    entity:add_texture(0, "coreAssets/textures/Terrain/grass_0.png", false, false);
-    entity:add_texture(0, "coreAssets/textures/Terrain/grass_rock.jpg", false, false);
-    entity:add_texture(0, "coreAssets/textures/Terrain/rocks_0.jpg", false, false);
-    entity:add_texture(0, "coreAssets/textures/Terrain/snow_cracks.jpg", false, false);
-    entity:add_texture(0, "coreAssets/textures/Terrain/snow_0.jpg", false, false);
-    entity:add_texture(0, "coreAssets/textures/Terrain/snow.png", false, false);
+    entity:add_texture(0, "assets/textures/terrain/TEX_128_DirtWithRocks.jpg", false, false);
+    entity:add_texture(0, "assets/textures/terrain/TEX_128_DirtNoRocks.jpg", false, false);
+    entity:add_texture(0, "assets/textures/terrain/TEX_128_Grass.jpg", false, false);
+    entity:add_texture(0, "assets/textures/terrain/TEX_128_SnowNoRocks.jpg", false, false);
+    entity:add_texture(0, "assets/textures/terrain/TEX_128_SnowWithRocks.jpg", false, false);
+
+    entity:add_texture(0, "assets/textures/noise/TEX_1024_Noise.jpg", false, false);
 
     entity:set_shader("coreAssets/shaders/basic_terrain.prog");
     local shader = model:get_shader();
 
-    shader:set_vec2v("uv_scale", Vector2.new(10));
+    shader:set_vec2v("uv_scale", Vector2.new(20));
 
     shader:set_int("light_map", 0);
 
@@ -32,11 +29,8 @@ function init()
     shader:set_int("layer_3", 3);
     shader:set_int("layer_4", 4);
     shader:set_int("layer_5", 5);
-    shader:set_int("layer_6", 6);
-    shader:set_int("layer_7", 7);
-    shader:set_int("layer_8", 8);
-    shader:set_int("layer_9", 9);
-    shader:set_int("layer_10", 10);
+
+    shader:set_int("noise", 6);
 
     scene:add_terrain_physics(entity);
 
