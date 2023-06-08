@@ -1,21 +1,14 @@
 #pragma once
 
-#include <string>
-
 #include <Controller/AssetLoader/ShaderLoader.hpp>
-
-#pragma warning(push)
-#pragma warning(disable:4201)
 #include <glm/glm.hpp>
-#pragma warning(pop)
+#include <string>
 
 using Vakol::Controller::LoadShader;
 
-namespace Vakol::Model 
-{
-    class Shader 
-    {
-    public:
+namespace Vakol::Model {
+    class Shader {
+       public:
         Shader() = default;
         explicit Shader(const std::string& path) : m_ID(LoadShader(path)) {}
 
@@ -26,7 +19,7 @@ namespace Vakol::Model
 
         [[nodiscard]] unsigned int GetID() const { return m_ID; }
 
-    public:
+       public:
         void SetBool(const char* name, bool value) const;
 
         void SetInt(const char* name, int value) const;
@@ -39,14 +32,14 @@ namespace Vakol::Model
         void SetVec3(const char* name, const glm::vec3& value) const;
         void SetVec3(const char* name, float x, float y, float z) const;
 
-        void SetVec4(const char* name, const glm::vec4& value) const ;
+        void SetVec4(const char* name, const glm::vec4& value) const;
         void SetVec4(const char* name, float x, float y, float z, float w) const;
 
         void SetMat3(const char* name, const glm::mat3& value) const;
         void SetMat4(const char* name, const glm::mat4& value) const;
         void SetMat4v(const char* name, int count, const void* data) const;
 
-    private:
+       private:
         unsigned int m_ID = 0;
     };
-}
+}  // namespace Vakol::Model

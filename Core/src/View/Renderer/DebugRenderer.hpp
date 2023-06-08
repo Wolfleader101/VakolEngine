@@ -1,31 +1,23 @@
 #pragma once
 
-#pragma warning(push)
-#pragma warning(disable:4201)
-#include <glm/vec3.hpp>
-#pragma warning(pop)
-
 #include <reactphysics3d/reactphysics3d.h>
 
+#include <glm/vec3.hpp>
 #include <memory>
 #include <vector>
 
 #include "Model/Shader.hpp"
-
 #include "View/Renderer/Renderer.hpp"
 
-namespace Vakol::Controller::Physics
-{
+namespace Vakol::Controller::Physics {
     class ScenePhysics;
 }
 
-namespace Vakol::View
-{
+namespace Vakol::View {
     using Shader = Model::Shader;
 
-    class DebugRenderer
-    {
-    public:
+    class DebugRenderer {
+       public:
         void SetShader(const std::shared_ptr<Shader>& shader);
 
         void Enable(bool enable);
@@ -34,14 +26,14 @@ namespace Vakol::View
         void Update();
         void Draw(const Controller::Camera& camera) const;
 
-    private:
+       private:
         DebugRenderer() = default;
         explicit DebugRenderer(rp3d::PhysicsWorld* WorldPtr);
 
         struct PhysicsDebugVertex {
             glm::vec3 xyz;
-            glm::vec3 color;   
-	    };
+            glm::vec3 color;
+        };
 
         void EnableWorldDebug();
         void DisableWorldDebug();
@@ -61,5 +53,4 @@ namespace Vakol::View
 
         friend class Controller::Physics::ScenePhysics;
     };
-}
-
+}  // namespace Vakol::View

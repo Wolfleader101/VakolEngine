@@ -3,14 +3,9 @@
 #include <glad/glad.h>
 
 #include <Controller/Logger.hpp>
-
-#pragma warning(push)
-#pragma warning(disable : 4201)
+#include <Model/Components.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#pragma warning(pop)
-
-#include <Model/Components.hpp>
 #include <memory>
 #include <vector>
 

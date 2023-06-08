@@ -5,10 +5,7 @@
 #include <Controller/LuaState.hpp>
 #include <Controller/Physics/ScenePhysics.hpp>
 
-#pragma warning(push)
-#pragma warning(disable : 4201)
 #include <glm/glm.hpp>
-#pragma warning(pop)
 
 #include <memory>
 #include <string>

@@ -6,18 +6,13 @@
 #include <Controller/AssetLoader/AssetLoader.hpp>
 #include <Controller/AssetLoader/FileLoader.hpp>
 #include <Controller/AssetLoader/TextureLoader.hpp>
+#include <Controller/Logger.hpp>
 #include <Model/Assets/Animation/Animation.hpp>
 #include <Model/Assets/Animation/Keyframe.hpp>
 #include <assimp/Importer.hpp>
+#include <glm/gtc/quaternion.hpp>
 #include <iostream>
 #include <stack>
-
-#pragma warning(push)
-#pragma warning(disable : 4201)
-#include <glm/gtc/quaternion.hpp>
-#pragma warning(pop)
-
-#include <Controller/Logger.hpp>
 
 using Vakol::Model::Vertex;
 
