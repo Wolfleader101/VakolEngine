@@ -147,6 +147,8 @@ namespace Vakol::Controller
             json(globals);
 
             ConvertMapToSol(globals, sceneGlobals);
+
+            VK_TRACE("{0}", sceneGlobals["player"]["health"].get<float>());
         }
         
         entityList.Deserialize(folder + "/EntityList.json");

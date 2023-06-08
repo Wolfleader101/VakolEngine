@@ -190,6 +190,14 @@ end
 
 function deserialize()
     state.fsm = entity:get_fsm();
+    state.model = 
+    
+    state.dir = Vector3.new(math.random() * 2 - 1, 0, math.random() * 2 - 1);
+    while state.dir:magnitude() == 0 do
+        state.dir.x = math.random() * 2 - 1
+        state.dir.z = math.random() * 2 - 1
+    end
+    state.dir:normalize();
 
     state.fsm:add_state("eating", function()
         entity:set_animation_state(state.ANIMATIONS.EAT);
@@ -222,6 +230,40 @@ function deserialize()
                 state.fsm:change_state("eating")
                 stateChange = true
             end
+        end
+    end)
+
+    state.fsm:add_state("running_away", function()
+        entity:set_animation_state(state.ANIMATIONS.RUN);
+
+        local diff = scene.globals.player.pos - entity:get_transform().pos;
+        local player_dist = diff:magnitude();
+
+        if(not state.SPOTTED or state.dir_wait(4)) then
+            local rand_dir = Vector3.new(math.random() - 0.5, 0, math.random() - 0.5)
+            rand_dir:normalize()
+
+            -- Check if the random direction is pointing towards the player
+            local dotProduct = rand_dir:dot(diff:normalize())
+                while dotProduct > 0.5 do
+                    rand_dir = Vector3.new(math.random() - 0.5, 0, math.random() - 0.5)
+                    rand_dir:normalize()
+                    dotProduct = rand_dir:dot(diff:normalize())
+                end
+            
+            -- Update the state direction
+            state.dir = rand_dir
+            state.SPOTTED = true;
+        end
+
+        local velocity = state.sprint_speed * Time.delta_time;
+
+        local pos = entity:get_transform().pos;
+        pos.x = pos.x + (state.dir.x * velocity);
+        pos.z = pos.z + (state.dir.z * velocity);
+
+        if (player_dist >= state.VIEW_DISTANCE + 1.5) then
+            state.fsm:change_state("roaming")
         end
     end)
 end
