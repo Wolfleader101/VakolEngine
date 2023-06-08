@@ -159,7 +159,7 @@ function init()
 
     state.fsm:change_state("roaming")
 
-    print_err("Skeleton is ready")
+    print_err("Monster is ready")
 end
 
 function trigger_nearby_monsters(origin_monster, trigger_distance)
