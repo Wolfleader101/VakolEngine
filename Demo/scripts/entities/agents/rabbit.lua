@@ -40,7 +40,7 @@ function init()
 
     state.fsm = entity:add_fsm();
     state.fsm:add_state("eating", function()
-        entity:set_animation_state(state.ANIMATIONS.EAT);
+        entity:play_animation(state.ANIMATIONS.EAT, true);
         if(state.fsm_wait(math.random(5,7))) then
             state.fsm:change_state("roaming")
         end
@@ -48,7 +48,7 @@ function init()
     end)
 
     state.fsm:add_state("looking", function()
-        entity:set_animation_state(state.ANIMATIONS.IDLE);
+        entity:play_animation(state.ANIMATIONS.IDLE, true);
 
         if(state.fsm_wait(math.random(5,7))) then
             local rand = math.random();
@@ -79,7 +79,7 @@ function init()
     end
 
     if not stateChange then
-        entity:set_animation_state(state.ANIMATIONS.WALK);
+        entity:play_animation(state.ANIMATIONS.WALK, true);
     end
 
     if (state.dir_wait(math.random(4,6))) then
@@ -100,7 +100,7 @@ function init()
 end)
 
     state.fsm:add_state("running_away", function()
-        entity:set_animation_state(state.ANIMATIONS.RUN);
+        entity:play_animation(state.ANIMATIONS.RUN, true);
 
         local diff = scene.globals.player.pos - entity:get_transform().pos;
         local player_dist = diff:magnitude();

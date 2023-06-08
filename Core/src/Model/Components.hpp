@@ -95,12 +95,14 @@ namespace Vakol::Model::Components
     {
         int state = 0;
         std::string attached_model;
+        bool looping = true;
 
         template <class Archive>
         void serialize(Archive& ar) 
         {
             ar(cereal::make_nvp("state", state));
             ar(cereal::make_nvp("attached_model", attached_model));
+            ar(cereal::make_nvp("looping", looping));
         }
     };
 

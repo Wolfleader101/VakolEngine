@@ -16,6 +16,7 @@
 using namespace Components;
 
 static std::unordered_map<std::string, Components::Animator> s_animator_map;
+//static std::unordered_map<int, Components::Animation> s_animation_map;
 static std::set<int> s_unique_set;
 
 glm::vec3 to_glm(const rp3d::Vector3& v) { return {v.x, v.y, v.z}; }
@@ -85,7 +86,10 @@ namespace Vakol::Controller
 
         m_registry->view<Transform, Drawable, Components::Animation>().each([&](const auto& transform, const Drawable& drawable, const Components::Animation& animation)
         {
+            //VK_TRACE("ATTACHED MODEL: {0} | STATE: {1} | LOOPING: {2}", animation.attached_model, animation.state, animation.looping);
+
             s_unique_set.insert(animation.state);
+            //s_animation_map[animation.attached_model] = animation;
 
             renderer->DrawAnimated(transform, drawable, s_animator_map.at(animation.attached_model).c_animation(animation.state));
         });

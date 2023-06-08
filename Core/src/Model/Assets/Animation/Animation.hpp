@@ -45,9 +45,9 @@ namespace Vakol::Model::Assets
 	    [[nodiscard]] auto duration_s() const ->float { return duration * 0.001f; }
 	    [[nodiscard]] auto duration_ms() const ->float { return duration; }
 
-		[[nodiscard]] auto get_current_time() const ->float { return current_time; }
+		[[nodiscard]] auto get_current_time_ms() const ->float { return current_time; }
+		[[nodiscard]] auto get_current_time_s() const ->float { return current_time * 0.001f; }
 
-		auto set_looping(const bool _looping) -> void { looping = _looping; }
 		auto reset_animation() -> void { current_time = 0.0f; }
 
 	    [[nodiscard]] auto numNodes() const -> int { return static_cast<int>(m_nodes.size()); }
@@ -63,7 +63,5 @@ namespace Vakol::Model::Assets
 	    float current_time = 0.0f;
 	    float duration = 0.0f;
 	    float ticks_per_second = 0.0f;
-
-		bool looping = true;
     };
 }

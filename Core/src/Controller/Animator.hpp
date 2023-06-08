@@ -12,7 +12,12 @@ namespace Vakol::Controller
 		Animator() = default;
 		explicit Animator(std::vector<Model::Assets::Animation>& animations) : m_animations(std::move(animations)) {}
 
-		void Update(const int state, const float delta_time) { m_animations.at(state).Update(delta_time); }
+		void Update(const int state, const float delta_time) 
+		{ 
+			if (state > nAnimations()) return;
+
+			m_animations.at(state).Update(delta_time); 
+		}
 		
 		void Update(const float delta_time) 
 		{

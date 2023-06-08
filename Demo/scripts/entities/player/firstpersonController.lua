@@ -26,8 +26,6 @@ function init()
 
     TIMER = 0.0;
     attacking = false;
-
-    entity:set_animation_looping(1, false);
 end
 
 function update()
@@ -66,18 +64,16 @@ function update()
 
     if (Input:get_mouse_down(KEYS["MOUSE_0"]) and not attacking) then
         local random_state = math.random(1, 5);
-        entity:reset_animation(random_state);
-        entity:set_animation_state(random_state);
-        print(random_state);
+        entity:play_animation(random_state, false);
         attacking = true;
     elseif (not attacking and not moving) then
-        entity:set_animation_state(0);
+        entity:play_animation(0, true);
     end
 
     if (moving and not scene.globals.player.is_sprinting) then
-        entity:set_animation_state(11);
+        entity:play_animation(11, true);
     elseif (moving and scene.globals.player.is_sprinting) then
-        entity:set_animation_state(12);
+        entity:play_animation(12, true);
     end
 
     if (moving and attacking) then
