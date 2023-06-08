@@ -7,10 +7,7 @@
 #include <Controller/Scene.hpp>
 #include <Model/Components.hpp>
 
-#pragma warning(push)
-#pragma warning(disable : 4201)
 #include <glm/gtc/quaternion.hpp>
-#pragma warning(pop)
 
 using namespace Components;
 
