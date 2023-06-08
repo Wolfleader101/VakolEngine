@@ -7,11 +7,13 @@
 #include <cereal/types/common.hpp>  // For basic types like int, float, and bool
 #include <sol/sol.hpp>
 
+#include "Controller/Math.hpp"
+
 namespace Vakol::Controller
 {
 
     struct SolTableData {
-        std::unordered_map<std::string, std::variant<std::string, float, int, bool>> data;
+        std::unordered_map<std::string, std::variant<std::string, float, int, bool, glm::vec3>> data;
 
         template<class Archive>
         void serialize(Archive& archive) {

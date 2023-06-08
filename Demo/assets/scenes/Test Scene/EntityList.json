@@ -110,11 +110,11 @@
     },
     "value25": 4,
     "value26": {
-        "pos.x": 4.399218559265137,
-        "pos.y": 11.460808753967286,
-        "pos.z": -1.0285881757736207,
+        "pos.x": 7.067032337188721,
+        "pos.y": 9.792620658874512,
+        "pos.z": -1.187599539756775,
         "rot.x": 0.0,
-        "rot.y": -31.73505973815918,
+        "rot.y": 51.42802429199219,
         "rot.z": 0.0,
         "scale.x": 1.0,
         "scale.y": 1.0,
@@ -122,11 +122,11 @@
     },
     "value27": 5,
     "value28": {
-        "pos.x": 8.435861587524414,
-        "pos.y": 9.842485427856446,
-        "pos.z": -3.033318519592285,
+        "pos.x": 8.470161437988282,
+        "pos.y": 8.698838233947754,
+        "pos.z": -0.30193477869033816,
         "rot.x": 0.0,
-        "rot.y": -123.45003509521485,
+        "rot.y": 8.838277816772461,
         "rot.z": 0.0,
         "scale.x": 1.0,
         "scale.y": 1.0,
@@ -134,11 +134,11 @@
     },
     "value29": 6,
     "value30": {
-        "pos.x": 16.476463317871095,
-        "pos.y": 6.201550483703613,
-        "pos.z": -1.7991613149642945,
+        "pos.x": 15.70328140258789,
+        "pos.y": 6.241034030914307,
+        "pos.z": -2.0489661693573,
         "rot.x": 0.0,
-        "rot.y": 82.2538070678711,
+        "rot.y": -45.128639221191409,
         "rot.z": 0.0,
         "scale.x": 1.0,
         "scale.y": 1.0,
@@ -146,11 +146,11 @@
     },
     "value31": 7,
     "value32": {
-        "pos.x": 19.077699661254884,
-        "pos.y": 5.818386554718018,
-        "pos.z": -0.5929895639419556,
+        "pos.x": 21.14174461364746,
+        "pos.y": 6.114329814910889,
+        "pos.z": -1.3502492904663087,
         "rot.x": 0.0,
-        "rot.y": -33.24510192871094,
+        "rot.y": -1.3960481882095338,
         "rot.z": 0.0,
         "scale.x": 1.0,
         "scale.y": 1.0,
@@ -158,11 +158,11 @@
     },
     "value33": 8,
     "value34": {
-        "pos.x": 26.460702896118165,
-        "pos.y": 7.946424961090088,
-        "pos.z": -2.2085788249969484,
+        "pos.x": 24.03594207763672,
+        "pos.y": 5.943350791931152,
+        "pos.z": -0.6116756796836853,
         "rot.x": 0.0,
-        "rot.y": 98.12657165527344,
+        "rot.y": -142.51602172851563,
         "rot.z": 0.0,
         "scale.x": 1.0,
         "scale.y": 1.0,
@@ -170,11 +170,11 @@
     },
     "value35": 9,
     "value36": {
-        "pos.x": 28.870182037353517,
-        "pos.y": 9.096026420593262,
-        "pos.z": -3.1203835010528566,
+        "pos.x": 30.26897621154785,
+        "pos.y": 8.132462501525879,
+        "pos.z": -0.16809259355068208,
         "rot.x": 0.0,
-        "rot.y": -134.75955200195313,
+        "rot.y": -80.40381622314453,
         "rot.z": 0.0,
         "scale.x": 1.0,
         "scale.y": 1.0,
@@ -182,11 +182,11 @@
     },
     "value37": 10,
     "value38": {
-        "pos.x": 36.1937370300293,
-        "pos.y": 6.770726680755615,
-        "pos.z": -0.8364259004592896,
+        "pos.x": 34.01991653442383,
+        "pos.y": 8.330695152282715,
+        "pos.z": -3.1467134952545168,
         "rot.x": 0.0,
-        "rot.y": 45.73284912109375,
+        "rot.y": 139.15631103515626,
         "rot.z": 0.0,
         "scale.x": 1.0,
         "scale.y": 1.0,
@@ -194,11 +194,11 @@
     },
     "value39": 11,
     "value40": {
-        "pos.x": 39.104610443115237,
-        "pos.y": 6.653981685638428,
-        "pos.z": -3.6361522674560549,
+        "pos.x": 39.53403854370117,
+        "pos.y": 5.7820000648498539,
+        "pos.z": -0.4131467044353485,
         "rot.x": 0.0,
-        "rot.y": -151.30950927734376,
+        "rot.y": 35.56562805175781,
         "rot.z": 0.0,
         "scale.x": 1.0,
         "scale.y": 1.0,
@@ -206,11 +206,11 @@
     },
     "value41": 12,
     "value42": {
-        "pos.x": 46.57587432861328,
-        "pos.y": 4.851903438568115,
-        "pos.z": -0.6873530745506287,
+        "pos.x": 43.0208625793457,
+        "pos.y": 6.019308090209961,
+        "pos.z": -3.2105929851531984,
         "rot.x": 0.0,
-        "rot.y": 50.206607818603519,
+        "rot.y": -154.7408905029297,
         "rot.z": 0.0,
         "scale.x": 1.0,
         "scale.y": 1.0,
@@ -218,11 +218,11 @@
     },
     "value43": 13,
     "value44": {
-        "pos.x": 50.246891021728519,
-        "pos.y": 4.842710018157959,
-        "pos.z": -3.6105072498321535,
+        "pos.x": 48.68273162841797,
+        "pos.y": 4.034735202789307,
+        "pos.z": -0.8138317465782166,
         "rot.x": 0.0,
-        "rot.y": 171.28500366210938,
+        "rot.y": 119.28723907470703,
         "rot.z": 0.0,
         "scale.x": 1.0,
         "scale.y": 1.0,
@@ -306,24 +306,24 @@
                     }
                 },
                 {
-                    "key": "drowning_time",
-                    "value": {
-                        "index": 1,
-                        "data": 0.0
-                    }
-                },
-                {
                     "key": "moving_value",
                     "value": {
                         "index": 1,
-                        "data": 0.0005688476376235485
+                        "data": 0.17233774065971375
                     }
                 },
                 {
                     "key": "MOVING_TIMER",
                     "value": {
                         "index": 1,
-                        "data": 3.315460205078125
+                        "data": 5.8910417556762699
+                    }
+                },
+                {
+                    "key": "drowning_time",
+                    "value": {
+                        "index": 1,
+                        "data": 0.0
                     }
                 }
             ]
@@ -364,10 +364,49 @@
         "value0": {
             "value0": [
                 {
-                    "key": "WALK",
+                    "key": "sprint_speed",
+                    "value": {
+                        "index": 1,
+                        "data": 3.0
+                    }
+                },
+                {
+                    "key": "RUN",
+                    "value": {
+                        "index": 1,
+                        "data": 3.0
+                    }
+                },
+                {
+                    "key": "VIEW_DISTANCE",
                     "value": {
                         "index": 1,
                         "data": 5.0
+                    }
+                },
+                {
+                    "key": "SPOTTED",
+                    "value": {
+                        "index": 3,
+                        "data": false
+                    }
+                },
+                {
+                    "key": "WAIT_TIMER",
+                    "value": {
+                        "index": 1,
+                        "data": 0.8871431350708008
+                    }
+                },
+                {
+                    "key": "dir",
+                    "value": {
+                        "index": 4,
+                        "data": {
+                            "value0": 0.8905162215232849,
+                            "value1": 0.0,
+                            "value2": 0.7101768851280212
+                        }
                     }
                 },
                 {
@@ -381,42 +420,14 @@
                     "key": "DIR_TIMER",
                     "value": {
                         "index": 1,
-                        "data": 3.315460205078125
+                        "data": 0.9864425659179688
                     }
                 },
                 {
-                    "key": "RUN",
+                    "key": "WALK",
                     "value": {
                         "index": 1,
-                        "data": 3.0
-                    }
-                },
-                {
-                    "key": "WAIT_TIMER",
-                    "value": {
-                        "index": 1,
-                        "data": 3.315460205078125
-                    }
-                },
-                {
-                    "key": "DIE",
-                    "value": {
-                        "index": 1,
-                        "data": 0.0
-                    }
-                },
-                {
-                    "key": "sprint_speed",
-                    "value": {
-                        "index": 1,
-                        "data": 3.0
-                    }
-                },
-                {
-                    "key": "EAT",
-                    "value": {
-                        "index": 1,
-                        "data": 1.0
+                        "data": 5.0
                     }
                 },
                 {
@@ -427,24 +438,24 @@
                     }
                 },
                 {
+                    "key": "DIE",
+                    "value": {
+                        "index": 1,
+                        "data": 0.0
+                    }
+                },
+                {
+                    "key": "EAT",
+                    "value": {
+                        "index": 1,
+                        "data": 1.0
+                    }
+                },
+                {
                     "key": "IDLE",
                     "value": {
                         "index": 1,
                         "data": 2.0
-                    }
-                },
-                {
-                    "key": "SPOTTED",
-                    "value": {
-                        "index": 3,
-                        "data": false
-                    }
-                },
-                {
-                    "key": "VIEW_DISTANCE",
-                    "value": {
-                        "index": 1,
-                        "data": 5.0
                     }
                 }
             ]
@@ -456,10 +467,49 @@
         "value0": {
             "value0": [
                 {
-                    "key": "WALK",
+                    "key": "sprint_speed",
+                    "value": {
+                        "index": 1,
+                        "data": 3.0
+                    }
+                },
+                {
+                    "key": "RUN",
+                    "value": {
+                        "index": 1,
+                        "data": 3.0
+                    }
+                },
+                {
+                    "key": "VIEW_DISTANCE",
                     "value": {
                         "index": 1,
                         "data": 5.0
+                    }
+                },
+                {
+                    "key": "SPOTTED",
+                    "value": {
+                        "index": 3,
+                        "data": false
+                    }
+                },
+                {
+                    "key": "WAIT_TIMER",
+                    "value": {
+                        "index": 1,
+                        "data": 0.8661704063415527
+                    }
+                },
+                {
+                    "key": "dir",
+                    "value": {
+                        "index": 4,
+                        "data": {
+                            "value0": 0.155201718211174,
+                            "value1": 0.0,
+                            "value2": 0.9981309771537781
+                        }
                     }
                 },
                 {
@@ -473,42 +523,14 @@
                     "key": "DIR_TIMER",
                     "value": {
                         "index": 1,
-                        "data": 3.315460205078125
+                        "data": 1.8126626014709473
                     }
                 },
                 {
-                    "key": "RUN",
+                    "key": "WALK",
                     "value": {
                         "index": 1,
-                        "data": 3.0
-                    }
-                },
-                {
-                    "key": "WAIT_TIMER",
-                    "value": {
-                        "index": 1,
-                        "data": 3.315460205078125
-                    }
-                },
-                {
-                    "key": "DIE",
-                    "value": {
-                        "index": 1,
-                        "data": 0.0
-                    }
-                },
-                {
-                    "key": "sprint_speed",
-                    "value": {
-                        "index": 1,
-                        "data": 3.0
-                    }
-                },
-                {
-                    "key": "EAT",
-                    "value": {
-                        "index": 1,
-                        "data": 1.0
+                        "data": 5.0
                     }
                 },
                 {
@@ -519,24 +541,24 @@
                     }
                 },
                 {
+                    "key": "DIE",
+                    "value": {
+                        "index": 1,
+                        "data": 0.0
+                    }
+                },
+                {
+                    "key": "EAT",
+                    "value": {
+                        "index": 1,
+                        "data": 1.0
+                    }
+                },
+                {
                     "key": "IDLE",
                     "value": {
                         "index": 1,
                         "data": 2.0
-                    }
-                },
-                {
-                    "key": "SPOTTED",
-                    "value": {
-                        "index": 3,
-                        "data": false
-                    }
-                },
-                {
-                    "key": "VIEW_DISTANCE",
-                    "value": {
-                        "index": 1,
-                        "data": 5.0
                     }
                 }
             ]
@@ -548,10 +570,49 @@
         "value0": {
             "value0": [
                 {
-                    "key": "WALK",
+                    "key": "sprint_speed",
+                    "value": {
+                        "index": 1,
+                        "data": 3.0
+                    }
+                },
+                {
+                    "key": "RUN",
+                    "value": {
+                        "index": 1,
+                        "data": 3.0
+                    }
+                },
+                {
+                    "key": "VIEW_DISTANCE",
                     "value": {
                         "index": 1,
                         "data": 5.0
+                    }
+                },
+                {
+                    "key": "SPOTTED",
+                    "value": {
+                        "index": 3,
+                        "data": false
+                    }
+                },
+                {
+                    "key": "WAIT_TIMER",
+                    "value": {
+                        "index": 1,
+                        "data": 0.8871431350708008
+                    }
+                },
+                {
+                    "key": "dir",
+                    "value": {
+                        "index": 4,
+                        "data": {
+                            "value0": -0.8833953142166138,
+                            "value1": 0.0,
+                            "value2": 0.8794374465942383
+                        }
                     }
                 },
                 {
@@ -565,42 +626,14 @@
                     "key": "DIR_TIMER",
                     "value": {
                         "index": 1,
-                        "data": 3.315460205078125
+                        "data": 0.9864425659179688
                     }
                 },
                 {
-                    "key": "RUN",
+                    "key": "WALK",
                     "value": {
                         "index": 1,
-                        "data": 3.0
-                    }
-                },
-                {
-                    "key": "WAIT_TIMER",
-                    "value": {
-                        "index": 1,
-                        "data": 3.315460205078125
-                    }
-                },
-                {
-                    "key": "DIE",
-                    "value": {
-                        "index": 1,
-                        "data": 0.0
-                    }
-                },
-                {
-                    "key": "sprint_speed",
-                    "value": {
-                        "index": 1,
-                        "data": 3.0
-                    }
-                },
-                {
-                    "key": "EAT",
-                    "value": {
-                        "index": 1,
-                        "data": 1.0
+                        "data": 5.0
                     }
                 },
                 {
@@ -611,24 +644,24 @@
                     }
                 },
                 {
+                    "key": "DIE",
+                    "value": {
+                        "index": 1,
+                        "data": 0.0
+                    }
+                },
+                {
+                    "key": "EAT",
+                    "value": {
+                        "index": 1,
+                        "data": 1.0
+                    }
+                },
+                {
                     "key": "IDLE",
                     "value": {
                         "index": 1,
                         "data": 2.0
-                    }
-                },
-                {
-                    "key": "SPOTTED",
-                    "value": {
-                        "index": 3,
-                        "data": false
-                    }
-                },
-                {
-                    "key": "VIEW_DISTANCE",
-                    "value": {
-                        "index": 1,
-                        "data": 5.0
                     }
                 }
             ]
@@ -640,10 +673,49 @@
         "value0": {
             "value0": [
                 {
-                    "key": "WALK",
+                    "key": "sprint_speed",
+                    "value": {
+                        "index": 1,
+                        "data": 3.0
+                    }
+                },
+                {
+                    "key": "RUN",
+                    "value": {
+                        "index": 1,
+                        "data": 3.0
+                    }
+                },
+                {
+                    "key": "VIEW_DISTANCE",
                     "value": {
                         "index": 1,
                         "data": 5.0
+                    }
+                },
+                {
+                    "key": "SPOTTED",
+                    "value": {
+                        "index": 3,
+                        "data": false
+                    }
+                },
+                {
+                    "key": "WAIT_TIMER",
+                    "value": {
+                        "index": 1,
+                        "data": 0.8447465896606445
+                    }
+                },
+                {
+                    "key": "dir",
+                    "value": {
+                        "index": 4,
+                        "data": {
+                            "value0": -0.01816040463745594,
+                            "value1": 0.0,
+                            "value2": 0.7451810240745544
+                        }
                     }
                 },
                 {
@@ -657,42 +729,14 @@
                     "key": "DIR_TIMER",
                     "value": {
                         "index": 1,
-                        "data": 3.315460205078125
+                        "data": 0.9263100624084473
                     }
                 },
                 {
-                    "key": "RUN",
+                    "key": "WALK",
                     "value": {
                         "index": 1,
-                        "data": 3.0
-                    }
-                },
-                {
-                    "key": "WAIT_TIMER",
-                    "value": {
-                        "index": 1,
-                        "data": 3.315460205078125
-                    }
-                },
-                {
-                    "key": "DIE",
-                    "value": {
-                        "index": 1,
-                        "data": 0.0
-                    }
-                },
-                {
-                    "key": "sprint_speed",
-                    "value": {
-                        "index": 1,
-                        "data": 3.0
-                    }
-                },
-                {
-                    "key": "EAT",
-                    "value": {
-                        "index": 1,
-                        "data": 1.0
+                        "data": 5.0
                     }
                 },
                 {
@@ -703,24 +747,24 @@
                     }
                 },
                 {
+                    "key": "DIE",
+                    "value": {
+                        "index": 1,
+                        "data": 0.0
+                    }
+                },
+                {
+                    "key": "EAT",
+                    "value": {
+                        "index": 1,
+                        "data": 1.0
+                    }
+                },
+                {
                     "key": "IDLE",
                     "value": {
                         "index": 1,
                         "data": 2.0
-                    }
-                },
-                {
-                    "key": "SPOTTED",
-                    "value": {
-                        "index": 3,
-                        "data": false
-                    }
-                },
-                {
-                    "key": "VIEW_DISTANCE",
-                    "value": {
-                        "index": 1,
-                        "data": 5.0
                     }
                 }
             ]
@@ -732,10 +776,49 @@
         "value0": {
             "value0": [
                 {
-                    "key": "WALK",
+                    "key": "sprint_speed",
+                    "value": {
+                        "index": 1,
+                        "data": 3.0
+                    }
+                },
+                {
+                    "key": "RUN",
+                    "value": {
+                        "index": 1,
+                        "data": 3.0
+                    }
+                },
+                {
+                    "key": "VIEW_DISTANCE",
                     "value": {
                         "index": 1,
                         "data": 5.0
+                    }
+                },
+                {
+                    "key": "SPOTTED",
+                    "value": {
+                        "index": 3,
+                        "data": false
+                    }
+                },
+                {
+                    "key": "WAIT_TIMER",
+                    "value": {
+                        "index": 1,
+                        "data": 0.8763728141784668
+                    }
+                },
+                {
+                    "key": "dir",
+                    "value": {
+                        "index": 4,
+                        "data": {
+                            "value0": -0.36859023571014407,
+                            "value1": 0.0,
+                            "value2": -0.480634480714798
+                        }
                     }
                 },
                 {
@@ -749,42 +832,14 @@
                     "key": "DIR_TIMER",
                     "value": {
                         "index": 1,
-                        "data": 3.315460205078125
+                        "data": 1.8735857009887696
                     }
                 },
                 {
-                    "key": "RUN",
+                    "key": "WALK",
                     "value": {
                         "index": 1,
-                        "data": 3.0
-                    }
-                },
-                {
-                    "key": "WAIT_TIMER",
-                    "value": {
-                        "index": 1,
-                        "data": 3.315460205078125
-                    }
-                },
-                {
-                    "key": "DIE",
-                    "value": {
-                        "index": 1,
-                        "data": 0.0
-                    }
-                },
-                {
-                    "key": "sprint_speed",
-                    "value": {
-                        "index": 1,
-                        "data": 3.0
-                    }
-                },
-                {
-                    "key": "EAT",
-                    "value": {
-                        "index": 1,
-                        "data": 1.0
+                        "data": 5.0
                     }
                 },
                 {
@@ -795,24 +850,24 @@
                     }
                 },
                 {
+                    "key": "DIE",
+                    "value": {
+                        "index": 1,
+                        "data": 0.0
+                    }
+                },
+                {
+                    "key": "EAT",
+                    "value": {
+                        "index": 1,
+                        "data": 1.0
+                    }
+                },
+                {
                     "key": "IDLE",
                     "value": {
                         "index": 1,
                         "data": 2.0
-                    }
-                },
-                {
-                    "key": "SPOTTED",
-                    "value": {
-                        "index": 3,
-                        "data": false
-                    }
-                },
-                {
-                    "key": "VIEW_DISTANCE",
-                    "value": {
-                        "index": 1,
-                        "data": 5.0
                     }
                 }
             ]
@@ -824,10 +879,49 @@
         "value0": {
             "value0": [
                 {
-                    "key": "WALK",
+                    "key": "sprint_speed",
+                    "value": {
+                        "index": 1,
+                        "data": 3.0
+                    }
+                },
+                {
+                    "key": "RUN",
+                    "value": {
+                        "index": 1,
+                        "data": 3.0
+                    }
+                },
+                {
+                    "key": "VIEW_DISTANCE",
                     "value": {
                         "index": 1,
                         "data": 5.0
+                    }
+                },
+                {
+                    "key": "SPOTTED",
+                    "value": {
+                        "index": 3,
+                        "data": false
+                    }
+                },
+                {
+                    "key": "WAIT_TIMER",
+                    "value": {
+                        "index": 1,
+                        "data": 0.8871431350708008
+                    }
+                },
+                {
+                    "key": "dir",
+                    "value": {
+                        "index": 4,
+                        "data": {
+                            "value0": -0.7923712134361267,
+                            "value1": 0.0,
+                            "value2": 0.13396526873111726
+                        }
                     }
                 },
                 {
@@ -841,42 +935,14 @@
                     "key": "DIR_TIMER",
                     "value": {
                         "index": 1,
-                        "data": 3.315460205078125
+                        "data": 0.9255194664001465
                     }
                 },
                 {
-                    "key": "RUN",
+                    "key": "WALK",
                     "value": {
                         "index": 1,
-                        "data": 3.0
-                    }
-                },
-                {
-                    "key": "WAIT_TIMER",
-                    "value": {
-                        "index": 1,
-                        "data": 3.315460205078125
-                    }
-                },
-                {
-                    "key": "DIE",
-                    "value": {
-                        "index": 1,
-                        "data": 0.0
-                    }
-                },
-                {
-                    "key": "sprint_speed",
-                    "value": {
-                        "index": 1,
-                        "data": 3.0
-                    }
-                },
-                {
-                    "key": "EAT",
-                    "value": {
-                        "index": 1,
-                        "data": 1.0
+                        "data": 5.0
                     }
                 },
                 {
@@ -887,24 +953,24 @@
                     }
                 },
                 {
+                    "key": "DIE",
+                    "value": {
+                        "index": 1,
+                        "data": 0.0
+                    }
+                },
+                {
+                    "key": "EAT",
+                    "value": {
+                        "index": 1,
+                        "data": 1.0
+                    }
+                },
+                {
                     "key": "IDLE",
                     "value": {
                         "index": 1,
                         "data": 2.0
-                    }
-                },
-                {
-                    "key": "SPOTTED",
-                    "value": {
-                        "index": 3,
-                        "data": false
-                    }
-                },
-                {
-                    "key": "VIEW_DISTANCE",
-                    "value": {
-                        "index": 1,
-                        "data": 5.0
                     }
                 }
             ]
@@ -916,10 +982,49 @@
         "value0": {
             "value0": [
                 {
-                    "key": "WALK",
+                    "key": "sprint_speed",
+                    "value": {
+                        "index": 1,
+                        "data": 3.0
+                    }
+                },
+                {
+                    "key": "RUN",
+                    "value": {
+                        "index": 1,
+                        "data": 3.0
+                    }
+                },
+                {
+                    "key": "VIEW_DISTANCE",
                     "value": {
                         "index": 1,
                         "data": 5.0
+                    }
+                },
+                {
+                    "key": "SPOTTED",
+                    "value": {
+                        "index": 3,
+                        "data": false
+                    }
+                },
+                {
+                    "key": "WAIT_TIMER",
+                    "value": {
+                        "index": 1,
+                        "data": 0.8763728141784668
+                    }
+                },
+                {
+                    "key": "dir",
+                    "value": {
+                        "index": 4,
+                        "data": {
+                            "value0": 0.7513636946678162,
+                            "value1": 0.0,
+                            "value2": -0.8691226840019226
+                        }
                     }
                 },
                 {
@@ -933,42 +1038,14 @@
                     "key": "DIR_TIMER",
                     "value": {
                         "index": 1,
-                        "data": 3.315460205078125
+                        "data": 1.0073628425598145
                     }
                 },
                 {
-                    "key": "RUN",
+                    "key": "WALK",
                     "value": {
                         "index": 1,
-                        "data": 3.0
-                    }
-                },
-                {
-                    "key": "WAIT_TIMER",
-                    "value": {
-                        "index": 1,
-                        "data": 3.315460205078125
-                    }
-                },
-                {
-                    "key": "DIE",
-                    "value": {
-                        "index": 1,
-                        "data": 0.0
-                    }
-                },
-                {
-                    "key": "sprint_speed",
-                    "value": {
-                        "index": 1,
-                        "data": 3.0
-                    }
-                },
-                {
-                    "key": "EAT",
-                    "value": {
-                        "index": 1,
-                        "data": 1.0
+                        "data": 5.0
                     }
                 },
                 {
@@ -979,24 +1056,24 @@
                     }
                 },
                 {
+                    "key": "DIE",
+                    "value": {
+                        "index": 1,
+                        "data": 0.0
+                    }
+                },
+                {
+                    "key": "EAT",
+                    "value": {
+                        "index": 1,
+                        "data": 1.0
+                    }
+                },
+                {
                     "key": "IDLE",
                     "value": {
                         "index": 1,
                         "data": 2.0
-                    }
-                },
-                {
-                    "key": "SPOTTED",
-                    "value": {
-                        "index": 3,
-                        "data": false
-                    }
-                },
-                {
-                    "key": "VIEW_DISTANCE",
-                    "value": {
-                        "index": 1,
-                        "data": 5.0
                     }
                 }
             ]
@@ -1008,10 +1085,49 @@
         "value0": {
             "value0": [
                 {
-                    "key": "WALK",
+                    "key": "sprint_speed",
+                    "value": {
+                        "index": 1,
+                        "data": 3.0
+                    }
+                },
+                {
+                    "key": "RUN",
+                    "value": {
+                        "index": 1,
+                        "data": 3.0
+                    }
+                },
+                {
+                    "key": "VIEW_DISTANCE",
                     "value": {
                         "index": 1,
                         "data": 5.0
+                    }
+                },
+                {
+                    "key": "SPOTTED",
+                    "value": {
+                        "index": 3,
+                        "data": false
+                    }
+                },
+                {
+                    "key": "WAIT_TIMER",
+                    "value": {
+                        "index": 1,
+                        "data": 0.8871431350708008
+                    }
+                },
+                {
+                    "key": "dir",
+                    "value": {
+                        "index": 4,
+                        "data": {
+                            "value0": 0.48508745431900027,
+                            "value1": 0.0,
+                            "value2": 0.6784224510192871
+                        }
                     }
                 },
                 {
@@ -1025,42 +1141,14 @@
                     "key": "DIR_TIMER",
                     "value": {
                         "index": 1,
-                        "data": 3.315460205078125
+                        "data": 0.9255194664001465
                     }
                 },
                 {
-                    "key": "RUN",
+                    "key": "WALK",
                     "value": {
                         "index": 1,
-                        "data": 3.0
-                    }
-                },
-                {
-                    "key": "WAIT_TIMER",
-                    "value": {
-                        "index": 1,
-                        "data": 3.315460205078125
-                    }
-                },
-                {
-                    "key": "DIE",
-                    "value": {
-                        "index": 1,
-                        "data": 0.0
-                    }
-                },
-                {
-                    "key": "sprint_speed",
-                    "value": {
-                        "index": 1,
-                        "data": 3.0
-                    }
-                },
-                {
-                    "key": "EAT",
-                    "value": {
-                        "index": 1,
-                        "data": 1.0
+                        "data": 5.0
                     }
                 },
                 {
@@ -1071,24 +1159,24 @@
                     }
                 },
                 {
+                    "key": "DIE",
+                    "value": {
+                        "index": 1,
+                        "data": 0.0
+                    }
+                },
+                {
+                    "key": "EAT",
+                    "value": {
+                        "index": 1,
+                        "data": 1.0
+                    }
+                },
+                {
                     "key": "IDLE",
                     "value": {
                         "index": 1,
                         "data": 2.0
-                    }
-                },
-                {
-                    "key": "SPOTTED",
-                    "value": {
-                        "index": 3,
-                        "data": false
-                    }
-                },
-                {
-                    "key": "VIEW_DISTANCE",
-                    "value": {
-                        "index": 1,
-                        "data": 5.0
                     }
                 }
             ]
@@ -1100,10 +1188,49 @@
         "value0": {
             "value0": [
                 {
-                    "key": "WALK",
+                    "key": "sprint_speed",
+                    "value": {
+                        "index": 1,
+                        "data": 3.0
+                    }
+                },
+                {
+                    "key": "RUN",
+                    "value": {
+                        "index": 1,
+                        "data": 3.0
+                    }
+                },
+                {
+                    "key": "VIEW_DISTANCE",
                     "value": {
                         "index": 1,
                         "data": 5.0
+                    }
+                },
+                {
+                    "key": "SPOTTED",
+                    "value": {
+                        "index": 3,
+                        "data": false
+                    }
+                },
+                {
+                    "key": "WAIT_TIMER",
+                    "value": {
+                        "index": 1,
+                        "data": 0.8763728141784668
+                    }
+                },
+                {
+                    "key": "dir",
+                    "value": {
+                        "index": 4,
+                        "data": {
+                            "value0": -0.39134177565574648,
+                            "value1": 0.0,
+                            "value2": -0.8294212818145752
+                        }
                     }
                 },
                 {
@@ -1117,42 +1244,14 @@
                     "key": "DIR_TIMER",
                     "value": {
                         "index": 1,
-                        "data": 3.315460205078125
+                        "data": 0.9465270042419434
                     }
                 },
                 {
-                    "key": "RUN",
+                    "key": "WALK",
                     "value": {
                         "index": 1,
-                        "data": 3.0
-                    }
-                },
-                {
-                    "key": "WAIT_TIMER",
-                    "value": {
-                        "index": 1,
-                        "data": 3.315460205078125
-                    }
-                },
-                {
-                    "key": "DIE",
-                    "value": {
-                        "index": 1,
-                        "data": 0.0
-                    }
-                },
-                {
-                    "key": "sprint_speed",
-                    "value": {
-                        "index": 1,
-                        "data": 3.0
-                    }
-                },
-                {
-                    "key": "EAT",
-                    "value": {
-                        "index": 1,
-                        "data": 1.0
+                        "data": 5.0
                     }
                 },
                 {
@@ -1163,24 +1262,24 @@
                     }
                 },
                 {
+                    "key": "DIE",
+                    "value": {
+                        "index": 1,
+                        "data": 0.0
+                    }
+                },
+                {
+                    "key": "EAT",
+                    "value": {
+                        "index": 1,
+                        "data": 1.0
+                    }
+                },
+                {
                     "key": "IDLE",
                     "value": {
                         "index": 1,
                         "data": 2.0
-                    }
-                },
-                {
-                    "key": "SPOTTED",
-                    "value": {
-                        "index": 3,
-                        "data": false
-                    }
-                },
-                {
-                    "key": "VIEW_DISTANCE",
-                    "value": {
-                        "index": 1,
-                        "data": 5.0
                     }
                 }
             ]
@@ -1192,10 +1291,49 @@
         "value0": {
             "value0": [
                 {
-                    "key": "WALK",
+                    "key": "sprint_speed",
+                    "value": {
+                        "index": 1,
+                        "data": 3.0
+                    }
+                },
+                {
+                    "key": "RUN",
+                    "value": {
+                        "index": 1,
+                        "data": 3.0
+                    }
+                },
+                {
+                    "key": "VIEW_DISTANCE",
                     "value": {
                         "index": 1,
                         "data": 5.0
+                    }
+                },
+                {
+                    "key": "SPOTTED",
+                    "value": {
+                        "index": 3,
+                        "data": false
+                    }
+                },
+                {
+                    "key": "WAIT_TIMER",
+                    "value": {
+                        "index": 1,
+                        "data": 0.8763728141784668
+                    }
+                },
+                {
+                    "key": "dir",
+                    "value": {
+                        "index": 4,
+                        "data": {
+                            "value0": 0.7179750800132752,
+                            "value1": 0.0,
+                            "value2": -0.4026985466480255
+                        }
                     }
                 },
                 {
@@ -1209,42 +1347,14 @@
                     "key": "DIR_TIMER",
                     "value": {
                         "index": 1,
-                        "data": 3.315460205078125
+                        "data": 0.9972128868103027
                     }
                 },
                 {
-                    "key": "RUN",
+                    "key": "WALK",
                     "value": {
                         "index": 1,
-                        "data": 3.0
-                    }
-                },
-                {
-                    "key": "WAIT_TIMER",
-                    "value": {
-                        "index": 1,
-                        "data": 3.315460205078125
-                    }
-                },
-                {
-                    "key": "DIE",
-                    "value": {
-                        "index": 1,
-                        "data": 0.0
-                    }
-                },
-                {
-                    "key": "sprint_speed",
-                    "value": {
-                        "index": 1,
-                        "data": 3.0
-                    }
-                },
-                {
-                    "key": "EAT",
-                    "value": {
-                        "index": 1,
-                        "data": 1.0
+                        "data": 5.0
                     }
                 },
                 {
@@ -1255,24 +1365,24 @@
                     }
                 },
                 {
+                    "key": "DIE",
+                    "value": {
+                        "index": 1,
+                        "data": 0.0
+                    }
+                },
+                {
+                    "key": "EAT",
+                    "value": {
+                        "index": 1,
+                        "data": 1.0
+                    }
+                },
+                {
                     "key": "IDLE",
                     "value": {
                         "index": 1,
                         "data": 2.0
-                    }
-                },
-                {
-                    "key": "SPOTTED",
-                    "value": {
-                        "index": 3,
-                        "data": false
-                    }
-                },
-                {
-                    "key": "VIEW_DISTANCE",
-                    "value": {
-                        "index": 1,
-                        "data": 5.0
                     }
                 }
             ]
@@ -1281,59 +1391,59 @@
     "value103": 14,
     "value104": 0,
     "value105": {
-        "guid": "9d000b8d-5b75-4412-b806-3d53359e02cc"
+        "guid": "037ac46f-6ca3-4b1b-b232-95245b9e833e"
     },
     "value106": 1,
     "value107": {
-        "guid": "09bdd98a-7d05-4a9a-a1fa-f9f524fe457b"
+        "guid": "99e7ae91-0dc4-4167-aed5-616ffe5fbf3b"
     },
     "value108": 2,
     "value109": {
-        "guid": "2280e087-55aa-4480-a4ad-ecfdc4762e24"
+        "guid": "d88110f5-a580-43d9-907d-74c9f3a91133"
     },
     "value110": 3,
     "value111": {
-        "guid": "369e4d2e-3a21-4dfb-aa2d-3fbd4d26775a"
+        "guid": "d3e0769a-0866-481f-91ad-7e512c95f523"
     },
     "value112": 4,
     "value113": {
-        "guid": "013b452c-1462-42a9-a90d-85a2196fb1f3"
+        "guid": "3d9dc0c1-0e1c-43a6-9137-d2e0303d642b"
     },
     "value114": 5,
     "value115": {
-        "guid": "133fc8cb-4821-46dd-af38-20d2bf12a0f9"
+        "guid": "8a601e89-e0d6-47bf-af88-be8479f4e1af"
     },
     "value116": 6,
     "value117": {
-        "guid": "470c47af-af4f-41d7-ac90-e315626b95d5"
+        "guid": "e9c7783b-efe9-456c-8a63-26848781eb22"
     },
     "value118": 7,
     "value119": {
-        "guid": "333ad3ea-01af-4d29-a24e-c21e410b08ba"
+        "guid": "d30ddf91-78c6-4e9d-8ace-61c8120b1d76"
     },
     "value120": 8,
     "value121": {
-        "guid": "f12d7889-3943-49f5-8246-2cabac7adaf5"
+        "guid": "cdad576f-07bd-4fc4-89e4-29a9561b0f0b"
     },
     "value122": 9,
     "value123": {
-        "guid": "08b9c5a9-512d-49af-a8af-1c39c89de92a"
+        "guid": "d4a90ef7-6ade-4715-a8f4-9958b0cfe056"
     },
     "value124": 10,
     "value125": {
-        "guid": "27da915b-97d6-496c-bfef-210fa607bde1"
+        "guid": "eecd9aea-b5c1-4a75-ada6-21ff854eb3c3"
     },
     "value126": 11,
     "value127": {
-        "guid": "78c9a4e2-33c0-49c2-bd60-0c19799e2380"
+        "guid": "85a8ba36-4525-4455-a030-076dd74ff36b"
     },
     "value128": 12,
     "value129": {
-        "guid": "7a4cdcf1-086f-4dbb-b4db-fcb67bbae03f"
+        "guid": "5adf2c0d-f56d-45e3-a59e-a960ffdd7a69"
     },
     "value130": 13,
     "value131": {
-        "guid": "152ade6a-497a-4941-a31f-edbabea2ba08"
+        "guid": "3b25a9f5-789f-406a-b7a0-5db5b68a497d"
     },
     "value132": 11,
     "value133": 3,
@@ -1421,7 +1531,7 @@
     "value158": 10,
     "value159": 4,
     "value160": {
-        "state": 5
+        "state": 1
     },
     "value161": 5,
     "value162": {
@@ -1429,11 +1539,11 @@
     },
     "value163": 6,
     "value164": {
-        "state": 5
+        "state": 2
     },
     "value165": 7,
     "value166": {
-        "state": 5
+        "state": 1
     },
     "value167": 8,
     "value168": {
@@ -1441,28 +1551,28 @@
     },
     "value169": 9,
     "value170": {
-        "state": 5
+        "state": 1
     },
     "value171": 10,
     "value172": {
-        "state": 5
+        "state": 1
     },
     "value173": 11,
     "value174": {
-        "state": 5
+        "state": 1
     },
     "value175": 12,
     "value176": {
-        "state": 5
+        "state": 1
     },
     "value177": 13,
     "value178": {
-        "state": 5
+        "state": 2
     },
     "value179": 10,
     "value180": 4,
     "value181": {
-        "Current State": "roaming",
+        "Current State": "eating",
         "value0": {
             "value0": []
         }
@@ -1476,14 +1586,14 @@
     },
     "value184": 6,
     "value185": {
-        "Current State": "roaming",
+        "Current State": "looking",
         "value0": {
             "value0": []
         }
     },
     "value186": 7,
     "value187": {
-        "Current State": "roaming",
+        "Current State": "eating",
         "value0": {
             "value0": []
         }
@@ -1497,35 +1607,35 @@
     },
     "value190": 9,
     "value191": {
-        "Current State": "roaming",
+        "Current State": "eating",
         "value0": {
             "value0": []
         }
     },
     "value192": 10,
     "value193": {
-        "Current State": "roaming",
+        "Current State": "eating",
         "value0": {
             "value0": []
         }
     },
     "value194": 11,
     "value195": {
-        "Current State": "roaming",
+        "Current State": "eating",
         "value0": {
             "value0": []
         }
     },
     "value196": 12,
     "value197": {
-        "Current State": "roaming",
+        "Current State": "eating",
         "value0": {
             "value0": []
         }
     },
     "value198": 13,
     "value199": {
-        "Current State": "roaming",
+        "Current State": "looking",
         "value0": {
             "value0": []
         }
