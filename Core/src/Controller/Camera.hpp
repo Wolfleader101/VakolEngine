@@ -60,10 +60,10 @@ namespace Vakol::Controller
         float pitch = 0.0f;
         float yaw = -90.0f;
 
-        float fov = 45.0f;
+        float fov = 60.0f;
         float aspect = 1.3f;
         float near = 0.01f;
-        float far = 500.0f;
+        float far = 1000.0f;
 
         glm::mat4 PROJECTION = glm::mat4(1.0f);
         glm::mat4 VIEW = glm::mat4(1.0f);

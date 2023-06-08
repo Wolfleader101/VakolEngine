@@ -12,28 +12,20 @@ function init()
     trans.scale.z = 1;
 
     trans.pos.y = 30;
-
-    
     
     local r = entity:add_rigid();
 
     local rData = rigidData.new();
 
-    
-
     --rData.angular_lock = phyVec3.new(0, 0, 0);
-
 
     local collider = entity:add_collider();
 
     entity:get_bounds_from_model();
 
     collider.Shape = Shape.Sphere;
-    
-    
 
     entity:physics_init(scene); 
-    
 
     -- print("bruh");
    

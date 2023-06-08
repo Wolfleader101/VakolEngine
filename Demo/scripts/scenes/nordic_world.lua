@@ -1,4 +1,6 @@
 function init()
+    scene.globals.waterlevel = 1.0;
+
     scene:create_entity("Player", "entities/player/player.lua")
 
     scene:create_entity("terrain", "entities/terrain/physicsTerrain.lua");

@@ -1,9 +1,8 @@
 function init()
-	local WATER_LEVEL = 1.0;
 	local MAX_ATTEMPTS = 50;
 
-	local n_trees = 3000;
-	local n_rocks = 4000;
+	local n_trees = 5000;
+	local n_rocks = 6000;
 
 	local attempts = 0;
 
@@ -28,7 +27,7 @@ function init()
 
 		attempts = 0;
 
-		while(pos_v.y < WATER_LEVEL) do
+		while(pos_v.y < scene.globals.waterlevel) do
 			if attempts > MAX_ATTEMPTS then
 				break;
 			end
@@ -69,7 +68,7 @@ function init()
 
 		attempts = 0;
 
-		while(pos_v.y < WATER_LEVEL)
+		while(pos_v.y < scene.globals.waterlevel)
         do
 			if attempts > MAX_ATTEMPTS then
 				break;

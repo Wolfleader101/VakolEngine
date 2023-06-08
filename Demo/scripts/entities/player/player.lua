@@ -36,7 +36,6 @@ end
 local function moving_wait(seconds)
     state.MOVING_TIMER = state.MOVING_TIMER + Time.delta_time
 
-
     if (state.MOVING_TIMER >= seconds) then
         state.MOVING_TIMER = 0
         return true
@@ -89,15 +88,13 @@ local function update_regen()
     end
 end
 
-
 local function update_speed()       
     local player = scene.globals.player;
 
     local hunger_speed_reduction = (player.MAX_HUNGER - player.hunger) / player.MAX_HUNGER;
     local thirst_speed_reduction = (player.MAX_THIRST - player.thirst) / player.MAX_THIRST;
 
-    local speed_reduction = (1 / 3) * hunger_speed_reduction + (2 / 3) * thirst_speed_reduction;
-    
+    local speed_reduction = (1 / 3) * hunger_speed_reduction + (2 / 3) * thirst_speed_reduction; 
 
     local min_speed = 0.18;
     
@@ -109,7 +106,6 @@ local function update_speed()
         scene.globals.player.curr_speed = math.max(min_speed, walk_speed);
     end
 end
-
 
 function update()
     update_drowning_time()
@@ -143,7 +139,6 @@ function update()
         scene.globals.player.decrement_thirst(10 * Time.delta_time)
     end
 
-
     update_drowning();
 
     update_regen();
@@ -155,10 +150,6 @@ function update()
         scene.globals.player.decrement_thirst(3.5 * state.moving_value + 0.5);
         state.moving_value = 0;
     end
-
-    
-
-        
 
     -- update the last position to the current position
     scene.globals.player.last_pos = scene.globals.player.pos;
