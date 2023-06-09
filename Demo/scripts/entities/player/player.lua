@@ -6,7 +6,7 @@ function init()
         pos = Vector3.new(0.0, 0.0, 0.0),
         last_pos = Vector3.new(0.0, 0.0, 0.0),
         base_speed = 1.25,
-        sprint_speed = 100,
+        sprint_speed = 3,
         curr_speed = 0.0,
         is_sprinting = false,
         is_god = false,
