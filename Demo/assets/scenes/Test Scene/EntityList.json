@@ -17,9 +17,33 @@
         },
         {
             "handle": 5
+        },
+        {
+            "handle": 6
+        },
+        {
+            "handle": 7
+        },
+        {
+            "handle": 8
+        },
+        {
+            "handle": 9
+        },
+        {
+            "handle": 10
+        },
+        {
+            "handle": 11
+        },
+        {
+            "handle": 12
+        },
+        {
+            "handle": 13
         }
     ],
-    "value0": 6,
+    "value0": 14,
     "value1": 0,
     "value2": 0,
     "value3": 1,
@@ -28,55 +52,15 @@
     "value6": 4,
     "value7": 5,
     "value8": 6,
-    "value9": 0,
-    "value10": {
-        "pos.x": 0.0,
-        "pos.y": 0.0,
-        "pos.z": 0.0,
-        "rot.x": 0.0,
-        "rot.y": 0.0,
-        "rot.z": 0.0,
-        "scale.x": 1.0,
-        "scale.y": 1.0,
-        "scale.z": 1.0
-    },
-    "value11": 1,
-    "value12": {
-        "pos.x": 0.0,
-        "pos.y": 0.0,
-        "pos.z": 0.0,
-        "rot.x": 0.0,
-        "rot.y": 0.0,
-        "rot.z": 0.0,
-        "scale.x": 1.0,
-        "scale.y": 1.0,
-        "scale.z": 1.0
-    },
-    "value13": 2,
-    "value14": {
-        "pos.x": 0.0,
-        "pos.y": 0.0,
-        "pos.z": 0.0,
-        "rot.x": 0.0,
-        "rot.y": 0.0,
-        "rot.z": 0.0,
-        "scale.x": 1.0,
-        "scale.y": 1.0,
-        "scale.z": 1.0
-    },
-    "value15": 3,
-    "value16": {
-        "pos.x": 0.0,
-        "pos.y": 0.0,
-        "pos.z": 0.0,
-        "rot.x": 0.0,
-        "rot.y": 0.0,
-        "rot.z": 0.0,
-        "scale.x": 1.0,
-        "scale.y": 1.0,
-        "scale.z": 1.0
-    },
-    "value17": 4,
+    "value9": 7,
+    "value10": 8,
+    "value11": 9,
+    "value12": 10,
+    "value13": 11,
+    "value14": 12,
+    "value15": 13,
+    "value16": 14,
+    "value17": 0,
     "value18": {
         "pos.x": 0.0,
         "pos.y": 0.0,
@@ -88,122 +72,1608 @@
         "scale.y": 1.0,
         "scale.z": 1.0
     },
-    "value19": 5,
+    "value19": 1,
     "value20": {
-        "pos.x": 11.993111610412598,
-        "pos.y": 4.208090782165527,
-        "pos.z": 10.0,
+        "pos.x": 0.0,
+        "pos.y": 0.0,
+        "pos.z": 0.0,
         "rot.x": 0.0,
-        "rot.y": 90.0,
+        "rot.y": 0.0,
         "rot.z": 0.0,
         "scale.x": 1.0,
         "scale.y": 1.0,
         "scale.z": 1.0
     },
-    "value21": 6,
-    "value22": 0,
-    "value23": {
+    "value21": 2,
+    "value22": {
+        "pos.x": 0.0,
+        "pos.y": 0.0,
+        "pos.z": 0.0,
+        "rot.x": 0.0,
+        "rot.y": 0.0,
+        "rot.z": 0.0,
+        "scale.x": 1.0,
+        "scale.y": 1.0,
+        "scale.z": 1.0
+    },
+    "value23": 3,
+    "value24": {
+        "pos.x": 0.0,
+        "pos.y": 0.0,
+        "pos.z": 0.0,
+        "rot.x": 0.0,
+        "rot.y": 0.0,
+        "rot.z": 0.0,
+        "scale.x": 1.0,
+        "scale.y": 1.0,
+        "scale.z": 1.0
+    },
+    "value25": 4,
+    "value26": {
+        "pos.x": -0.17908158898353578,
+        "pos.y": 13.322304725646973,
+        "pos.z": -3.181764602661133,
+        "rot.x": 0.0,
+        "rot.y": -47.16170120239258,
+        "rot.z": 0.0,
+        "scale.x": 1.0,
+        "scale.y": 1.0,
+        "scale.z": 1.0
+    },
+    "value27": 5,
+    "value28": {
+        "pos.x": 17.23733139038086,
+        "pos.y": 10.690650939941407,
+        "pos.z": -9.275848388671875,
+        "rot.x": 0.0,
+        "rot.y": 125.22871398925781,
+        "rot.z": 0.0,
+        "scale.x": 1.0,
+        "scale.y": 1.0,
+        "scale.z": 1.0
+    },
+    "value29": 6,
+    "value30": {
+        "pos.x": 14.134135246276856,
+        "pos.y": 5.7165913581848148,
+        "pos.z": 0.5918378829956055,
+        "rot.x": 0.0,
+        "rot.y": -125.0079345703125,
+        "rot.z": 0.0,
+        "scale.x": 1.0,
+        "scale.y": 1.0,
+        "scale.z": 1.0
+    },
+    "value31": 7,
+    "value32": {
+        "pos.x": 20.434785842895509,
+        "pos.y": 5.0926194190979,
+        "pos.z": 2.0583016872406008,
+        "rot.x": 0.0,
+        "rot.y": -31.505434036254884,
+        "rot.z": 0.0,
+        "scale.x": 1.0,
+        "scale.y": 1.0,
+        "scale.z": 1.0
+    },
+    "value33": 8,
+    "value34": {
+        "pos.x": 24.086488723754884,
+        "pos.y": 6.632955551147461,
+        "pos.z": -1.8654474020004273,
+        "rot.x": 0.0,
+        "rot.y": 104.03436279296875,
+        "rot.z": 0.0,
+        "scale.x": 1.0,
+        "scale.y": 1.0,
+        "scale.z": 1.0
+    },
+    "value35": 9,
+    "value36": {
+        "pos.x": 32.895198822021487,
+        "pos.y": 8.514369010925293,
+        "pos.z": -2.6687357425689699,
+        "rot.x": 0.0,
+        "rot.y": 57.10085678100586,
+        "rot.z": 0.0,
+        "scale.x": 1.0,
+        "scale.y": 1.0,
+        "scale.z": 1.0
+    },
+    "value37": 10,
+    "value38": {
+        "pos.x": 29.115455627441408,
+        "pos.y": 8.055482864379883,
+        "pos.z": -0.6101729869842529,
+        "rot.x": 0.0,
+        "rot.y": -101.04602813720703,
+        "rot.z": 0.0,
+        "scale.x": 1.0,
+        "scale.y": 1.0,
+        "scale.z": 1.0
+    },
+    "value39": 11,
+    "value40": {
+        "pos.x": 39.21733856201172,
+        "pos.y": 6.867145538330078,
+        "pos.z": -4.174187660217285,
+        "rot.x": 0.0,
+        "rot.y": 83.26944732666016,
+        "rot.z": 0.0,
+        "scale.x": 1.0,
+        "scale.y": 1.0,
+        "scale.z": 1.0
+    },
+    "value41": 12,
+    "value42": {
+        "pos.x": 42.504520416259769,
+        "pos.y": 4.9507317543029789,
+        "pos.z": -0.22417420148849488,
+        "rot.x": 0.0,
+        "rot.y": 179.21983337402345,
+        "rot.z": 0.0,
+        "scale.x": 1.0,
+        "scale.y": 1.0,
+        "scale.z": 1.0
+    },
+    "value43": 13,
+    "value44": {
+        "pos.x": 55.472904205322269,
+        "pos.y": 4.346583843231201,
+        "pos.z": -3.4481101036071779,
+        "rot.x": 0.0,
+        "rot.y": 119.42218780517578,
+        "rot.z": 0.0,
+        "scale.x": 1.0,
+        "scale.y": 1.0,
+        "scale.z": 1.0
+    },
+    "value45": 14,
+    "value46": 0,
+    "value47": {
         "tag": "Player"
     },
-    "value24": 1,
-    "value25": {
+    "value48": 1,
+    "value49": {
         "tag": "First Person Camera Controller"
     },
-    "value26": 2,
-    "value27": {
+    "value50": 2,
+    "value51": {
         "tag": "Player Stats"
     },
-    "value28": 3,
-    "value29": {
+    "value52": 3,
+    "value53": {
         "tag": "terrain"
     },
-    "value30": 4,
-    "value31": {
-        "tag": "serialization"
+    "value54": 4,
+    "value55": {
+        "tag": "Rabbit1"
     },
-    "value32": 5,
-    "value33": {
-        "tag": "Rabbit"
+    "value56": 5,
+    "value57": {
+        "tag": "Rabbit2"
     },
-    "value34": 0,
-    "value35": 6,
-    "value36": 0,
-    "value37": {
-        "TagType": 0
+    "value58": 6,
+    "value59": {
+        "tag": "Rabbit3"
     },
-    "value38": 1,
-    "value39": {
-        "TagType": 0
+    "value60": 7,
+    "value61": {
+        "tag": "Rabbit4"
     },
-    "value40": 2,
-    "value41": {
-        "TagType": 0
+    "value62": 8,
+    "value63": {
+        "tag": "Rabbit5"
     },
-    "value42": 3,
-    "value43": {
-        "TagType": 0
-    },
-    "value44": 4,
-    "value45": {
-        "TagType": 0
-    },
-    "value46": 5,
-    "value47": {
-        "TagType": 0
-    },
-    "value48": 6,
-    "value49": 0,
-    "value50": {
-        "ScriptName": "entities/player/player.lua"
-    },
-    "value51": 1,
-    "value52": {
-        "ScriptName": "entities/player/firstpersonController.lua"
-    },
-    "value53": 2,
-    "value54": {
-        "ScriptName": "entities/player/playerStats.lua"
-    },
-    "value55": 3,
-    "value56": {
-        "ScriptName": "entities/terrain/physicsTerrain.lua"
-    },
-    "value57": 4,
-    "value58": {
-        "ScriptName": "entities/misc/serialization.lua"
-    },
-    "value59": 5,
-    "value60": {
-        "ScriptName": "entities/agents/rabbit.lua"
-    },
-    "value61": 0,
-    "value62": 0,
-    "value63": 2,
-    "value64": 3,
+    "value64": 9,
     "value65": {
+        "tag": "Rabbit6"
+    },
+    "value66": 10,
+    "value67": {
+        "tag": "Rabbit7"
+    },
+    "value68": 11,
+    "value69": {
+        "tag": "Rabbit8"
+    },
+    "value70": 12,
+    "value71": {
+        "tag": "Rabbit9"
+    },
+    "value72": 13,
+    "value73": {
+        "tag": "Rabbit10"
+    },
+    "value74": 14,
+    "value75": 0,
+    "value76": {
+        "ScriptName": "entities/player/player.lua",
+        "value0": {
+            "value0": [
+                {
+                    "key": "is_drowning",
+                    "value": {
+                        "index": 4,
+                        "data": false
+                    }
+                },
+                {
+                    "key": "REGEN_TIMER",
+                    "value": {
+                        "index": 3,
+                        "data": 0
+                    }
+                },
+                {
+                    "key": "MOVING_TIMER",
+                    "value": {
+                        "index": 2,
+                        "data": 2.4662322998046877
+                    }
+                },
+                {
+                    "key": "moving_value",
+                    "value": {
+                        "index": 2,
+                        "data": 0.3206101953983307
+                    }
+                },
+                {
+                    "key": "drowning_time",
+                    "value": {
+                        "index": 3,
+                        "data": 0
+                    }
+                }
+            ]
+        }
+    },
+    "value77": 1,
+    "value78": {
+        "ScriptName": "entities/player/firstpersonController.lua",
+        "value0": {
+            "value0": [
+                {
+                    "key": "flying",
+                    "value": {
+                        "index": 4,
+                        "data": false
+                    }
+                }
+            ]
+        }
+    },
+    "value79": 2,
+    "value80": {
+        "ScriptName": "entities/player/playerStats.lua",
+        "value0": {
+            "value0": []
+        }
+    },
+    "value81": 3,
+    "value82": {
+        "ScriptName": "entities/terrain/physicsTerrain.lua",
+        "value0": {
+            "value0": []
+        }
+    },
+    "value83": 4,
+    "value84": {
+        "ScriptName": "entities/agents/rabbit.lua",
+        "value0": {
+            "value0": [
+                {
+                    "key": "dir",
+                    "value": {
+                        "index": 5,
+                        "data": {
+                            "value0": -0.9178977012634277,
+                            "value1": 0.0,
+                            "value2": 0.851123034954071
+                        }
+                    }
+                },
+                {
+                    "key": "VIEW_DISTANCE",
+                    "value": {
+                        "index": 3,
+                        "data": 5
+                    }
+                },
+                {
+                    "key": "WAIT_TIMER",
+                    "value": {
+                        "index": 2,
+                        "data": 4.20843505859375
+                    }
+                },
+                {
+                    "key": "SPOTTED",
+                    "value": {
+                        "index": 4,
+                        "data": false
+                    }
+                },
+                {
+                    "key": "ANIMATIONS",
+                    "value": {
+                        "index": 0,
+                        "data": {
+                            "value0": [
+                                {
+                                    "key": "EAT",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 1
+                                    }
+                                },
+                                {
+                                    "key": "STATIC",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 4
+                                    }
+                                },
+                                {
+                                    "key": "IDLE",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 2
+                                    }
+                                },
+                                {
+                                    "key": "WALK",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 5
+                                    }
+                                },
+                                {
+                                    "key": "RUN",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 3
+                                    }
+                                },
+                                {
+                                    "key": "DIE",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 0
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "key": "sprint_speed",
+                    "value": {
+                        "index": 3,
+                        "data": 3
+                    }
+                },
+                {
+                    "key": "speed",
+                    "value": {
+                        "index": 2,
+                        "data": 0.5
+                    }
+                },
+                {
+                    "key": "DIR_TIMER",
+                    "value": {
+                        "index": 2,
+                        "data": 0.69586181640625
+                    }
+                }
+            ]
+        }
+    },
+    "value85": 5,
+    "value86": {
+        "ScriptName": "entities/agents/rabbit.lua",
+        "value0": {
+            "value0": [
+                {
+                    "key": "dir",
+                    "value": {
+                        "index": 5,
+                        "data": {
+                            "value0": 0.8395180702209473,
+                            "value1": 0.0,
+                            "value2": -0.59284508228302
+                        }
+                    }
+                },
+                {
+                    "key": "VIEW_DISTANCE",
+                    "value": {
+                        "index": 3,
+                        "data": 5
+                    }
+                },
+                {
+                    "key": "WAIT_TIMER",
+                    "value": {
+                        "index": 2,
+                        "data": 1.2866287231445313
+                    }
+                },
+                {
+                    "key": "SPOTTED",
+                    "value": {
+                        "index": 4,
+                        "data": false
+                    }
+                },
+                {
+                    "key": "ANIMATIONS",
+                    "value": {
+                        "index": 0,
+                        "data": {
+                            "value0": [
+                                {
+                                    "key": "EAT",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 1
+                                    }
+                                },
+                                {
+                                    "key": "STATIC",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 4
+                                    }
+                                },
+                                {
+                                    "key": "IDLE",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 2
+                                    }
+                                },
+                                {
+                                    "key": "WALK",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 5
+                                    }
+                                },
+                                {
+                                    "key": "RUN",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 3
+                                    }
+                                },
+                                {
+                                    "key": "DIE",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 0
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "key": "sprint_speed",
+                    "value": {
+                        "index": 3,
+                        "data": 3
+                    }
+                },
+                {
+                    "key": "speed",
+                    "value": {
+                        "index": 2,
+                        "data": 0.5
+                    }
+                },
+                {
+                    "key": "DIR_TIMER",
+                    "value": {
+                        "index": 2,
+                        "data": 3.8335342407226564
+                    }
+                }
+            ]
+        }
+    },
+    "value87": 6,
+    "value88": {
+        "ScriptName": "entities/agents/rabbit.lua",
+        "value0": {
+            "value0": [
+                {
+                    "key": "dir",
+                    "value": {
+                        "index": 5,
+                        "data": {
+                            "value0": -0.9004776477813721,
+                            "value1": 0.0,
+                            "value2": -0.6307070255279541
+                        }
+                    }
+                },
+                {
+                    "key": "VIEW_DISTANCE",
+                    "value": {
+                        "index": 3,
+                        "data": 5
+                    }
+                },
+                {
+                    "key": "WAIT_TIMER",
+                    "value": {
+                        "index": 2,
+                        "data": 4.6071014404296879
+                    }
+                },
+                {
+                    "key": "SPOTTED",
+                    "value": {
+                        "index": 4,
+                        "data": false
+                    }
+                },
+                {
+                    "key": "ANIMATIONS",
+                    "value": {
+                        "index": 0,
+                        "data": {
+                            "value0": [
+                                {
+                                    "key": "EAT",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 1
+                                    }
+                                },
+                                {
+                                    "key": "STATIC",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 4
+                                    }
+                                },
+                                {
+                                    "key": "IDLE",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 2
+                                    }
+                                },
+                                {
+                                    "key": "WALK",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 5
+                                    }
+                                },
+                                {
+                                    "key": "RUN",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 3
+                                    }
+                                },
+                                {
+                                    "key": "DIE",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 0
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "key": "sprint_speed",
+                    "value": {
+                        "index": 3,
+                        "data": 3
+                    }
+                },
+                {
+                    "key": "speed",
+                    "value": {
+                        "index": 2,
+                        "data": 0.5
+                    }
+                },
+                {
+                    "key": "DIR_TIMER",
+                    "value": {
+                        "index": 2,
+                        "data": 2.1762237548828127
+                    }
+                }
+            ]
+        }
+    },
+    "value89": 7,
+    "value90": {
+        "ScriptName": "entities/agents/rabbit.lua",
+        "value0": {
+            "value0": [
+                {
+                    "key": "dir",
+                    "value": {
+                        "index": 5,
+                        "data": {
+                            "value0": -0.5109992027282715,
+                            "value1": 0.0,
+                            "value2": 0.8336974382400513
+                        }
+                    }
+                },
+                {
+                    "key": "VIEW_DISTANCE",
+                    "value": {
+                        "index": 3,
+                        "data": 5
+                    }
+                },
+                {
+                    "key": "WAIT_TIMER",
+                    "value": {
+                        "index": 2,
+                        "data": 2.3967514038085939
+                    }
+                },
+                {
+                    "key": "SPOTTED",
+                    "value": {
+                        "index": 4,
+                        "data": false
+                    }
+                },
+                {
+                    "key": "ANIMATIONS",
+                    "value": {
+                        "index": 0,
+                        "data": {
+                            "value0": [
+                                {
+                                    "key": "EAT",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 1
+                                    }
+                                },
+                                {
+                                    "key": "STATIC",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 4
+                                    }
+                                },
+                                {
+                                    "key": "IDLE",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 2
+                                    }
+                                },
+                                {
+                                    "key": "WALK",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 5
+                                    }
+                                },
+                                {
+                                    "key": "RUN",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 3
+                                    }
+                                },
+                                {
+                                    "key": "DIE",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 0
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "key": "sprint_speed",
+                    "value": {
+                        "index": 3,
+                        "data": 3
+                    }
+                },
+                {
+                    "key": "speed",
+                    "value": {
+                        "index": 2,
+                        "data": 0.5
+                    }
+                },
+                {
+                    "key": "DIR_TIMER",
+                    "value": {
+                        "index": 2,
+                        "data": 3.442474365234375
+                    }
+                }
+            ]
+        }
+    },
+    "value91": 8,
+    "value92": {
+        "ScriptName": "entities/agents/rabbit.lua",
+        "value0": {
+            "value0": [
+                {
+                    "key": "dir",
+                    "value": {
+                        "index": 5,
+                        "data": {
+                            "value0": 0.6974049806594849,
+                            "value1": 0.0,
+                            "value2": -0.17432691156864167
+                        }
+                    }
+                },
+                {
+                    "key": "VIEW_DISTANCE",
+                    "value": {
+                        "index": 3,
+                        "data": 5
+                    }
+                },
+                {
+                    "key": "WAIT_TIMER",
+                    "value": {
+                        "index": 2,
+                        "data": 2.4227447509765627
+                    }
+                },
+                {
+                    "key": "SPOTTED",
+                    "value": {
+                        "index": 4,
+                        "data": false
+                    }
+                },
+                {
+                    "key": "ANIMATIONS",
+                    "value": {
+                        "index": 0,
+                        "data": {
+                            "value0": [
+                                {
+                                    "key": "EAT",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 1
+                                    }
+                                },
+                                {
+                                    "key": "STATIC",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 4
+                                    }
+                                },
+                                {
+                                    "key": "IDLE",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 2
+                                    }
+                                },
+                                {
+                                    "key": "WALK",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 5
+                                    }
+                                },
+                                {
+                                    "key": "RUN",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 3
+                                    }
+                                },
+                                {
+                                    "key": "DIE",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 0
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "key": "sprint_speed",
+                    "value": {
+                        "index": 3,
+                        "data": 3
+                    }
+                },
+                {
+                    "key": "speed",
+                    "value": {
+                        "index": 2,
+                        "data": 0.5
+                    }
+                },
+                {
+                    "key": "DIR_TIMER",
+                    "value": {
+                        "index": 2,
+                        "data": 1.000091552734375
+                    }
+                }
+            ]
+        }
+    },
+    "value93": 9,
+    "value94": {
+        "ScriptName": "entities/agents/rabbit.lua",
+        "value0": {
+            "value0": [
+                {
+                    "key": "dir",
+                    "value": {
+                        "index": 5,
+                        "data": {
+                            "value0": 0.9379622340202332,
+                            "value1": 0.0,
+                            "value2": 0.6067751049995422
+                        }
+                    }
+                },
+                {
+                    "key": "VIEW_DISTANCE",
+                    "value": {
+                        "index": 3,
+                        "data": 5
+                    }
+                },
+                {
+                    "key": "WAIT_TIMER",
+                    "value": {
+                        "index": 2,
+                        "data": 2.4350357055664064
+                    }
+                },
+                {
+                    "key": "SPOTTED",
+                    "value": {
+                        "index": 4,
+                        "data": false
+                    }
+                },
+                {
+                    "key": "ANIMATIONS",
+                    "value": {
+                        "index": 0,
+                        "data": {
+                            "value0": [
+                                {
+                                    "key": "EAT",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 1
+                                    }
+                                },
+                                {
+                                    "key": "STATIC",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 4
+                                    }
+                                },
+                                {
+                                    "key": "IDLE",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 2
+                                    }
+                                },
+                                {
+                                    "key": "WALK",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 5
+                                    }
+                                },
+                                {
+                                    "key": "RUN",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 3
+                                    }
+                                },
+                                {
+                                    "key": "DIE",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 0
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "key": "sprint_speed",
+                    "value": {
+                        "index": 3,
+                        "data": 3
+                    }
+                },
+                {
+                    "key": "speed",
+                    "value": {
+                        "index": 2,
+                        "data": 0.5
+                    }
+                },
+                {
+                    "key": "DIR_TIMER",
+                    "value": {
+                        "index": 2,
+                        "data": 0.5427932739257813
+                    }
+                }
+            ]
+        }
+    },
+    "value95": 10,
+    "value96": {
+        "ScriptName": "entities/agents/rabbit.lua",
+        "value0": {
+            "value0": [
+                {
+                    "key": "dir",
+                    "value": {
+                        "index": 5,
+                        "data": {
+                            "value0": -0.774242103099823,
+                            "value1": 0.0,
+                            "value2": -0.15114298462867738
+                        }
+                    }
+                },
+                {
+                    "key": "VIEW_DISTANCE",
+                    "value": {
+                        "index": 3,
+                        "data": 5
+                    }
+                },
+                {
+                    "key": "WAIT_TIMER",
+                    "value": {
+                        "index": 2,
+                        "data": 2.40350341796875
+                    }
+                },
+                {
+                    "key": "SPOTTED",
+                    "value": {
+                        "index": 4,
+                        "data": false
+                    }
+                },
+                {
+                    "key": "ANIMATIONS",
+                    "value": {
+                        "index": 0,
+                        "data": {
+                            "value0": [
+                                {
+                                    "key": "EAT",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 1
+                                    }
+                                },
+                                {
+                                    "key": "STATIC",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 4
+                                    }
+                                },
+                                {
+                                    "key": "IDLE",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 2
+                                    }
+                                },
+                                {
+                                    "key": "WALK",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 5
+                                    }
+                                },
+                                {
+                                    "key": "RUN",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 3
+                                    }
+                                },
+                                {
+                                    "key": "DIE",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 0
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "key": "sprint_speed",
+                    "value": {
+                        "index": 3,
+                        "data": 3
+                    }
+                },
+                {
+                    "key": "speed",
+                    "value": {
+                        "index": 2,
+                        "data": 0.5
+                    }
+                },
+                {
+                    "key": "DIR_TIMER",
+                    "value": {
+                        "index": 2,
+                        "data": 2.586456298828125
+                    }
+                }
+            ]
+        }
+    },
+    "value97": 11,
+    "value98": {
+        "ScriptName": "entities/agents/rabbit.lua",
+        "value0": {
+            "value0": [
+                {
+                    "key": "dir",
+                    "value": {
+                        "index": 5,
+                        "data": {
+                            "value0": 0.744871199131012,
+                            "value1": 0.0,
+                            "value2": 0.08790500462055206
+                        }
+                    }
+                },
+                {
+                    "key": "VIEW_DISTANCE",
+                    "value": {
+                        "index": 3,
+                        "data": 5
+                    }
+                },
+                {
+                    "key": "WAIT_TIMER",
+                    "value": {
+                        "index": 2,
+                        "data": 2.4098281860351564
+                    }
+                },
+                {
+                    "key": "SPOTTED",
+                    "value": {
+                        "index": 4,
+                        "data": false
+                    }
+                },
+                {
+                    "key": "ANIMATIONS",
+                    "value": {
+                        "index": 0,
+                        "data": {
+                            "value0": [
+                                {
+                                    "key": "EAT",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 1
+                                    }
+                                },
+                                {
+                                    "key": "STATIC",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 4
+                                    }
+                                },
+                                {
+                                    "key": "IDLE",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 2
+                                    }
+                                },
+                                {
+                                    "key": "WALK",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 5
+                                    }
+                                },
+                                {
+                                    "key": "RUN",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 3
+                                    }
+                                },
+                                {
+                                    "key": "DIE",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 0
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "key": "sprint_speed",
+                    "value": {
+                        "index": 3,
+                        "data": 3
+                    }
+                },
+                {
+                    "key": "speed",
+                    "value": {
+                        "index": 2,
+                        "data": 0.5
+                    }
+                },
+                {
+                    "key": "DIR_TIMER",
+                    "value": {
+                        "index": 2,
+                        "data": 3.4783477783203127
+                    }
+                }
+            ]
+        }
+    },
+    "value99": 12,
+    "value100": {
+        "ScriptName": "entities/agents/rabbit.lua",
+        "value0": {
+            "value0": [
+                {
+                    "key": "dir",
+                    "value": {
+                        "index": 5,
+                        "data": {
+                            "value0": 0.009217588230967522,
+                            "value1": 0.0,
+                            "value2": -0.6769047975540161
+                        }
+                    }
+                },
+                {
+                    "key": "VIEW_DISTANCE",
+                    "value": {
+                        "index": 3,
+                        "data": 5
+                    }
+                },
+                {
+                    "key": "WAIT_TIMER",
+                    "value": {
+                        "index": 2,
+                        "data": 2.349761962890625
+                    }
+                },
+                {
+                    "key": "SPOTTED",
+                    "value": {
+                        "index": 4,
+                        "data": false
+                    }
+                },
+                {
+                    "key": "ANIMATIONS",
+                    "value": {
+                        "index": 0,
+                        "data": {
+                            "value0": [
+                                {
+                                    "key": "EAT",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 1
+                                    }
+                                },
+                                {
+                                    "key": "STATIC",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 4
+                                    }
+                                },
+                                {
+                                    "key": "IDLE",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 2
+                                    }
+                                },
+                                {
+                                    "key": "WALK",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 5
+                                    }
+                                },
+                                {
+                                    "key": "RUN",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 3
+                                    }
+                                },
+                                {
+                                    "key": "DIE",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 0
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "key": "sprint_speed",
+                    "value": {
+                        "index": 3,
+                        "data": 3
+                    }
+                },
+                {
+                    "key": "speed",
+                    "value": {
+                        "index": 2,
+                        "data": 0.5
+                    }
+                },
+                {
+                    "key": "DIR_TIMER",
+                    "value": {
+                        "index": 2,
+                        "data": 1.7925033569335938
+                    }
+                }
+            ]
+        }
+    },
+    "value101": 13,
+    "value102": {
+        "ScriptName": "entities/agents/rabbit.lua",
+        "value0": {
+            "value0": [
+                {
+                    "key": "dir",
+                    "value": {
+                        "index": 5,
+                        "data": {
+                            "value0": 0.998883843421936,
+                            "value1": 0.0,
+                            "value2": -0.5633518695831299
+                        }
+                    }
+                },
+                {
+                    "key": "VIEW_DISTANCE",
+                    "value": {
+                        "index": 3,
+                        "data": 5
+                    }
+                },
+                {
+                    "key": "WAIT_TIMER",
+                    "value": {
+                        "index": 2,
+                        "data": 2.3440628051757814
+                    }
+                },
+                {
+                    "key": "SPOTTED",
+                    "value": {
+                        "index": 4,
+                        "data": false
+                    }
+                },
+                {
+                    "key": "ANIMATIONS",
+                    "value": {
+                        "index": 0,
+                        "data": {
+                            "value0": [
+                                {
+                                    "key": "EAT",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 1
+                                    }
+                                },
+                                {
+                                    "key": "STATIC",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 4
+                                    }
+                                },
+                                {
+                                    "key": "IDLE",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 2
+                                    }
+                                },
+                                {
+                                    "key": "WALK",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 5
+                                    }
+                                },
+                                {
+                                    "key": "RUN",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 3
+                                    }
+                                },
+                                {
+                                    "key": "DIE",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 0
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "key": "sprint_speed",
+                    "value": {
+                        "index": 3,
+                        "data": 3
+                    }
+                },
+                {
+                    "key": "speed",
+                    "value": {
+                        "index": 2,
+                        "data": 0.5
+                    }
+                },
+                {
+                    "key": "DIR_TIMER",
+                    "value": {
+                        "index": 2,
+                        "data": 1.806182861328125
+                    }
+                }
+            ]
+        }
+    },
+    "value103": 14,
+    "value104": 0,
+    "value105": {
+        "guid": "c2285de5-4dbe-4969-85df-e8877d089b55"
+    },
+    "value106": 1,
+    "value107": {
+        "guid": "db46f3d0-9697-4dec-8e88-11b033fcad6f"
+    },
+    "value108": 2,
+    "value109": {
+        "guid": "c1c43e19-6e4d-4690-b326-ca47f4694d94"
+    },
+    "value110": 3,
+    "value111": {
+        "guid": "dbd8e84d-7479-4306-b6d2-309cbb4581b6"
+    },
+    "value112": 4,
+    "value113": {
+        "guid": "969cdae0-26ee-419b-a677-e18343e19015"
+    },
+    "value114": 5,
+    "value115": {
+        "guid": "b23267bc-a523-4e51-aa46-116ee449c92b"
+    },
+    "value116": 6,
+    "value117": {
+        "guid": "16007d76-f1dd-4c9f-beb0-f88404b5ea2c"
+    },
+    "value118": 7,
+    "value119": {
+        "guid": "3f3ba54c-b4ca-48fe-9178-11bbf4daaa8f"
+    },
+    "value120": 8,
+    "value121": {
+        "guid": "3d723838-faf6-44bd-a2c2-ef6d4da00509"
+    },
+    "value122": 9,
+    "value123": {
+        "guid": "4951a521-747a-4f7f-a31b-148ce72f3276"
+    },
+    "value124": 10,
+    "value125": {
+        "guid": "4666ade9-3ca7-4ab8-aa0d-425f67d131de"
+    },
+    "value126": 11,
+    "value127": {
+        "guid": "b6ded802-53c2-4327-884a-77f01c6d1f44"
+    },
+    "value128": 12,
+    "value129": {
+        "guid": "c875f9cc-6a87-45e3-b084-a583d157d4d6"
+    },
+    "value130": 13,
+    "value131": {
+        "guid": "833dbfab-0f63-450d-b3e6-5aad2c82c1a4"
+    },
+    "value132": 11,
+    "value133": 3,
+    "value134": {
         "Model": "",
         "Import Scale": 1.0,
         "Animated": false,
         "Back Face Culling": true
     },
-    "value66": 5,
-    "value67": {
+    "value135": 4,
+    "value136": {
         "Model": "assets/models/agents/rabbit.fbx",
         "Import Scale": 0.25,
         "Animated": true,
         "Back Face Culling": true
     },
-    "value68": 1,
-    "value69": 5,
-    "value70": {
-        "animation_state": 5,
-        "unique": true,
-        "ID": 1,
+    "value137": 5,
+    "value138": {
+        "Model": "assets/models/agents/rabbit.fbx",
+        "Import Scale": 0.25,
+        "Animated": true,
+        "Back Face Culling": true
+    },
+    "value139": 6,
+    "value140": {
+        "Model": "assets/models/agents/rabbit.fbx",
+        "Import Scale": 0.25,
+        "Animated": true,
+        "Back Face Culling": true
+    },
+    "value141": 7,
+    "value142": {
+        "Model": "assets/models/agents/rabbit.fbx",
+        "Import Scale": 0.25,
+        "Animated": true,
+        "Back Face Culling": true
+    },
+    "value143": 8,
+    "value144": {
+        "Model": "assets/models/agents/rabbit.fbx",
+        "Import Scale": 0.25,
+        "Animated": true,
+        "Back Face Culling": true
+    },
+    "value145": 9,
+    "value146": {
+        "Model": "assets/models/agents/rabbit.fbx",
+        "Import Scale": 0.25,
+        "Animated": true,
+        "Back Face Culling": true
+    },
+    "value147": 10,
+    "value148": {
+        "Model": "assets/models/agents/rabbit.fbx",
+        "Import Scale": 0.25,
+        "Animated": true,
+        "Back Face Culling": true
+    },
+    "value149": 11,
+    "value150": {
+        "Model": "assets/models/agents/rabbit.fbx",
+        "Import Scale": 0.25,
+        "Animated": true,
+        "Back Face Culling": true
+    },
+    "value151": 12,
+    "value152": {
+        "Model": "assets/models/agents/rabbit.fbx",
+        "Import Scale": 0.25,
+        "Animated": true,
+        "Back Face Culling": true
+    },
+    "value153": 13,
+    "value154": {
+        "Model": "assets/models/agents/rabbit.fbx",
+        "Import Scale": 0.25,
+        "Animated": true,
+        "Back Face Culling": true
+    },
+    "value155": 1,
+    "value156": 4,
+    "value157": {
         "attached_model": "assets/models/agents/rabbit.fbx"
     },
-    "value71": 1,
-    "value72": 3,
-    "value73": {
+    "value158": 10,
+    "value159": 4,
+    "value160": {
+        "state": 5
+    },
+    "value161": 5,
+    "value162": {
+        "state": 5
+    },
+    "value163": 6,
+    "value164": {
+        "state": 5
+    },
+    "value165": 7,
+    "value166": {
+        "state": 2
+    },
+    "value167": 8,
+    "value168": {
+        "state": 5
+    },
+    "value169": 9,
+    "value170": {
+        "state": 5
+    },
+    "value171": 10,
+    "value172": {
+        "state": 2
+    },
+    "value173": 11,
+    "value174": {
+        "state": 1
+    },
+    "value175": 12,
+    "value176": {
+        "state": 5
+    },
+    "value177": 13,
+    "value178": {
+        "state": 5
+    },
+    "value179": 0,
+    "value180": 0,
+    "value181": 1,
+    "value182": 3,
+    "value183": {
         "Name": "Test Scene",
         "Path": "coreAssets/textures/Heightmaps/height128.raw",
         "Min": 0.0,

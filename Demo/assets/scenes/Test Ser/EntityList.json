@@ -65,47 +65,57 @@
     "value18": {
         "tag": "Fly Camera"
     },
-    "value19": 0,
-    "value20": 3,
-    "value21": 0,
-    "value22": {
-        "TagType": 0
+    "value19": 3,
+    "value20": 0,
+    "value21": {
+        "ScriptName": "entities/misc/serialization.lua",
+        "value0": {
+            "value0": []
+        }
     },
-    "value23": 1,
-    "value24": {
-        "TagType": 0
+    "value22": 1,
+    "value23": {
+        "ScriptName": "entities/terrain/startTerrain.lua",
+        "value0": {
+            "value0": []
+        }
     },
-    "value25": 2,
-    "value26": {
-        "TagType": 0
+    "value24": 2,
+    "value25": {
+        "ScriptName": "entities/FlyCam.lua",
+        "value0": {
+            "value0": []
+        }
     },
-    "value27": 3,
-    "value28": 0,
-    "value29": {
-        "ScriptName": "entities/misc/serialization.lua"
+    "value26": 3,
+    "value27": 0,
+    "value28": {
+        "guid": "4ada6618-06f8-4816-9e8a-2957f1d55786"
     },
-    "value30": 1,
-    "value31": {
-        "ScriptName": "entities/terrain/startTerrain.lua"
+    "value29": 1,
+    "value30": {
+        "guid": "afc39c5b-27be-4f53-bbfc-830ea0fb76b7"
     },
-    "value32": 2,
-    "value33": {
-        "ScriptName": "entities/FlyCam.lua"
+    "value31": 2,
+    "value32": {
+        "guid": "719ed113-6c8a-4ad3-bc29-81264d8ba9fa"
     },
-    "value34": 0,
-    "value35": 0,
-    "value36": 1,
-    "value37": 1,
-    "value38": {
+    "value33": 1,
+    "value34": 1,
+    "value35": {
         "Model": "",
         "Import Scale": 1.0,
         "Animated": false,
         "Back Face Culling": true
     },
+    "value36": 0,
+    "value37": 0,
+    "value38": 0,
     "value39": 0,
-    "value40": 1,
+    "value40": 0,
     "value41": 1,
-    "value42": {
+    "value42": 1,
+    "value43": {
         "Name": "Test Ser",
         "Path": "coreAssets/textures/Heightmaps/height128.raw",
         "Min": -10.0,

@@ -5,11 +5,10 @@
 namespace Vakol::Model {
 
     Entity::Entity(entt::entity handle, Controller::EntityList* EM) : m_entityHandle(handle), m_EntityList(EM) {
-        this->AddComponent<Components::TagType>();
-        this->GetComponent<Components::TagType>().type = Components::ENTITY_TYPE::UNKNOWN;
 
         this->AddComponent<Components::Tag>();
-        // setting this as default then it can be altered later
+
+        this->AddComponent<Components::GUID>();
 
         this->AddComponent<Components::Transform>();  // every entity has a transform. Can change easily
     }

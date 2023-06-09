@@ -44,6 +44,10 @@ src/Controller/Input.cpp
 src/Controller/Terrain.hpp
 src/Controller/Terrain.cpp
 
+src/Controller/SolSerialize.hpp
+src/Controller/SolSerialize.cpp
+
+
 ${PHYSICS}
 ${EVENTS}
 ${ASSETLOADER}

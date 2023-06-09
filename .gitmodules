@@ -26,3 +26,6 @@
 [submodule "Core/lib/cereal"]
 	path = Core/lib/cereal
 	url = https://github.com/USCiLab/cereal.git
+[submodule "Core/lib/crossguid"]
+	path = Core/lib/crossguid
+	url = https://github.com/graeme-hill/crossguid.git

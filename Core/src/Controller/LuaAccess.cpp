@@ -419,7 +419,7 @@ namespace Vakol::Controller {
 
             auto& animation = ent->GetComponent<Components::Animation>();
 
-            animation.state = animation_state;
+            animation.state = static_cast<int>(animation_state);
         });
 
         entity_type.set_function("get_animation_duration", [](const Entity* ent, const int animation_state) {

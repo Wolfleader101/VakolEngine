@@ -163,4 +163,27 @@ namespace Vakol::Model::Components {
 
         return bounds;
     }
+
+    void GUID::GenNewGUID()
+    {
+        id = xg::newGuid();
+    }
+
+
+    bool GUID::operator==(const GUID& other) const
+    {
+        return id == other.id;
+    }
+
+    bool GUID::operator!=(const GUID& other) const
+    {
+        return id != other.id;
+    }
+
+    bool GUID::operator<(const GUID& other) const
+    {
+        return id < other.id;
+    }
+
+
 }  // namespace Vakol::Model::Components
