@@ -6,7 +6,6 @@
 #include <Controller/Physics/PhysicsPool.hpp>
 #include <Controller/Scene.hpp>
 #include <Model/Components.hpp>
-
 #include <glm/gtc/quaternion.hpp>
 
 using namespace Components;
@@ -40,7 +39,7 @@ namespace Vakol::Controller {
                         .first;
         });
 
-        m_registry->view<Drawable, Components::Animator>().each([&](auto& drawable, auto& animator) {
+        m_registry->group<Drawable, Components::Animator>().each([&](auto& drawable, auto& animator) {
             if (!animator.animator_ptr) {
                 animator.animator_ptr =
                     AssetLoader::GetModel(drawable.name, drawable.scale, drawable.animated, drawable.backfaceCull)
@@ -73,17 +72,18 @@ namespace Vakol::Controller {
 
         m_registry->view<Components::Animator>().each([&](const Components::Animator& animator) {
             s_animator_map[animator.attached_model] = animator;
-            
+
             for (const auto state : s_animation_set)
                 s_animator_map.at(animator.attached_model).Update(state, time.deltaTime);
         });
 
-        m_registry->view<Transform, Drawable, Components::Animation>().each([&](const auto& transform, const Drawable& drawable, const Components::Animation& animation)
-        {
-            s_animation_set.emplace(animation.state);
+        m_registry->view<Transform, Drawable, Components::Animation>().each(
+            [&](const auto& transform, const Drawable& drawable, const Components::Animation& animation) {
+                s_animation_set.emplace(animation.state);
 
-            renderer->DrawAnimated(transform, drawable, s_animator_map.at(animation.attached_model).c_animation(animation.state));
-        });
+                renderer->DrawAnimated(transform, drawable,
+                                       s_animator_map.at(animation.attached_model).c_animation(animation.state));
+            });
     }
 
     void System::Script_Update(std::shared_ptr<LuaState> lua, EntityList& list, Scene* scene) {
