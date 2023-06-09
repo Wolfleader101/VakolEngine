@@ -41,52 +41,16 @@ namespace Vakol::Controller {
          * @return std::shared_ptr<Model::Assets::Texture> A shared pointer to the loaded texture.
          */
         static std::shared_ptr<Model::Assets::Texture> GetTexture(const std::string& file, int size, bool gamma,
-                                                                  bool flip, const void* data);
+                                                                  bool flip, const void* data);  // embedded textures
+        static std::shared_ptr<Model::Assets::Texture> GetTexture(const std::string& file, bool gamma,
+                                                                  bool flip);                // regular textures
+        static std::shared_ptr<Model::Assets::Texture> GetTexture(const std::string& file);  // raw textures
+      
+        static Model::Assets::Animation GetAnimation(const std::string& file, const int state);
+        static std::shared_ptr<Animator> GetAnimator(const std::string& file);
 
-        /**
-         * @brief Get a regular texture.
-         *
-         * @param file The file path of the texture.
-         * @param gamma Flag indicating whether gamma correction should be applied.
-         * @param flip Flag indicating whether the texture should be flipped vertically.
-         * @return std::shared_ptr<Model::Assets::Texture> A shared pointer to the loaded texture.
-         */
-        static std::shared_ptr<Model::Assets::Texture> GetTexture(const std::string& file, bool gamma, bool flip);
-
-        /**
-         * @brief Get a raw texture.
-         *
-         * @param file The file path of the texture.
-         * @return std::shared_ptr<Model::Assets::Texture> A shared pointer to the loaded texture.
-         */
-        static std::shared_ptr<Model::Assets::Texture> GetTexture(const std::string& file);
-
-        /**
-         * @brief Get a model with additional parameters.
-         *
-         * @param file The file path of the model.
-         * @param scale The scale factor for the model.
-         * @param animated Flag indicating whether the model is animated.
-         * @param backfaceCull Flag indicating whether backface culling should be applied.
-         * @param instance Reference to a boolean variable indicating whether the model is an instance.
-         * @return std::pair<std::shared_ptr<Model::Assets::Model>, std::shared_ptr<Animator>> A pair of shared pointers
-         * to the loaded model and animator.
-         */
-        static std::pair<std::shared_ptr<Model::Assets::Model>, std::shared_ptr<Animator>> GetModel(
-            const std::string& file, float scale, bool animated, bool backfaceCull, bool& instance);
-
-        /**
-         * @brief Get a model with specified parameters.
-         *
-         * @param file The file path of the model.
-         * @param scale The scale factor for the model.
-         * @param animated Flag indicating whether the model is animated.
-         * @param backfaceCull Flag indicating whether backface culling should be applied.
-         * @return std::pair<std::shared_ptr<Model::Assets::Model>, std::shared_ptr<Animator>> A pair of shared pointers
-         * to the loaded model and animator.
-         */
-        static std::pair<std::shared_ptr<Model::Assets::Model>, std::shared_ptr<Animator>> GetModel(
-            const std::string& file, float scale, bool animated, bool backfaceCull);
+        static std::pair<std::shared_ptr<Model::Assets::Model>, std::shared_ptr<Animator>> GetModel(const std::string& file, float scale, bool animated, bool backfaceCull, bool& instance);
+        static std::pair<std::shared_ptr<Model::Assets::Model>, std::shared_ptr<Animator>> GetModel(const std::string& file, float scale, bool animated, bool backfaceCull);
 
         /**
          * @brief Get a shader.
@@ -121,17 +85,8 @@ namespace Vakol::Controller {
          * @brief Map storing loaded textures.
          */
         static std::unordered_map<std::string, std::shared_ptr<Model::Assets::Texture>> m_TextureMap;
-
-        /**
-         * @brief Map storing loaded models and animators.
-         */
-        static std::unordered_map<std::string,
-                                  std::pair<std::shared_ptr<Model::Assets::Model>, std::shared_ptr<Animator>>>
-            m_ModelMap;
-
-        /**
-         * @brief Map storing loaded shaders.
-         */
+        static std::unordered_map<std::string, std::pair<std::shared_ptr<Model::Assets::Model>, std::shared_ptr<Animator>>> m_ModelMap;
+        static std::unordered_map<std::string, std::shared_ptr<Animator>> m_AnimatorMap;
         static std::unordered_map<std::string, std::shared_ptr<Model::Shader>> m_ShaderMap;
 
         /**

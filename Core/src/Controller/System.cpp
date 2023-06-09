@@ -10,8 +10,7 @@
 
 using namespace Components;
 
-static std::unordered_map<std::string, Components::Animator> s_animator_map;
-static std::set<int> s_animation_set;
+static std::set<std::pair<std::string, int>> s_animation_set;
 
 glm::vec3 to_glm(const rp3d::Vector3& v) { return {v.x, v.y, v.z}; }
 glm::quat to_glm(const rp3d::Quaternion& q) { return {q.w, q.x, q.y, q.z}; }
@@ -67,22 +66,23 @@ namespace Vakol::Controller {
 
             transform.rot = glm::quat(euler_rads);
 
+            if (!drawable.active) return;
+
             if (!drawable.animated) renderer->Draw(transform, drawable);
         });
 
-        m_registry->view<Components::Animator>().each([&](const Components::Animator& animator) {
-            s_animator_map[animator.attached_model] = animator;
-
-            for (const auto state : s_animation_set)
-                s_animator_map.at(animator.attached_model).Update(state, time.deltaTime);
-        });
+        for (const auto& [model, state] : s_animation_set)
+            AssetLoader::GetAnimator(model)->Update(state, time.deltaTime);
 
         m_registry->view<Transform, Drawable, Components::Animation>().each(
-            [&](const auto& transform, const Drawable& drawable, const Components::Animation& animation) {
-                s_animation_set.emplace(animation.state);
+            [&](const auto& transform, const Drawable& drawable, const Components::Animation& _animation) {
+                if (!drawable.active) return;
 
-                renderer->DrawAnimated(transform, drawable,
-                                       s_animator_map.at(animation.attached_model).c_animation(animation.state));
+                s_animation_set.emplace(std::make_pair(_animation.attached_model, _animation.state));
+
+                const auto& animation = AssetLoader::GetAnimation(_animation.attached_model, _animation.state);
+
+                renderer->DrawAnimated(transform, drawable, animation);
             });
     }
 

@@ -5,9 +5,7 @@
 #include <Controller/LuaState.hpp>
 #include <Controller/Physics/ScenePhysics.hpp>
 #include <crossguid/guid.hpp>
-
 #include <glm/glm.hpp>
-
 #include <memory>
 #include <string>
 
@@ -84,6 +82,9 @@ namespace Vakol::Model::Components {
      * \param delta_time The elapsed time since the last update.
      */
     void Update(const float delta_time) { animator_ptr->Update(delta_time); }
+
+
+    [[nodiscard]] int nAnimations() const { return animator_ptr->nAnimations(); }
 
     /**
      * \brief Retrieves a constant reference to the animation for the specified state.
@@ -281,7 +282,7 @@ namespace Vakol::Model::Components {
          * @param stateName The name of the new state.
          * @param callback The function to be executed when this state is active.
          */
-        void AddState(const std::string& stateName, const sol::function& callback);
+        void AddState(const std::string& stateName, sol::protected_function& callback);
 
         /**
          * @brief Changes the current state of the FSM.
@@ -362,6 +363,7 @@ namespace Vakol::Model::Components {
         bool animated = false;     ///< Boolean indicating if the entity is animated.
         bool backfaceCull = true;  ///< Boolean indicating if backface culling is enabled.
         bool instance = false;     ///< Boolean indicating if the entity is an instance.
+        bool active = true;         ///< Boolean indicating if the entity is active.
 
         std::shared_ptr<Assets::Model> model_ptr;  ///< Shared pointer to the model of the entity.
 

@@ -159,7 +159,7 @@ function init()
 
     state.fsm:change_state("roaming")
 
-    print_err("Monster is ready")
+    --print_err("Monster is ready")
 end
 
 function trigger_nearby_monsters(origin_monster, trigger_distance)
@@ -170,7 +170,7 @@ function trigger_nearby_monsters(origin_monster, trigger_distance)
             local diff = origin_pos - monster:get_transform().pos
             if diff:magnitude() <= trigger_distance then
                 monster:get_fsm():change_state("alerted")
-                print("Monster " .. i .. " has been alerted and is now in alerted state.")
+                --print("Monster " .. i .. " has been alerted and is now in alerted state.")
             end
         end
     end
@@ -206,6 +206,13 @@ function update()
     local pos = entity:get_transform().pos;
     local diff = scene.globals.player.pos - pos;
     local player_dist = diff:magnitude();
+
+    if (player_dist > 50) then
+        entity:active_model(false);
+        return;
+    else
+        entity:active_model(true);
+    end
 
     if (player_dist < state.VIEW_DISTANCE) and (player_dist >= state.enemyAttackAnimDistance) then  -- added check here
         local diff_normal = diff:normalize();
