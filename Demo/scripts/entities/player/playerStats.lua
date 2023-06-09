@@ -108,3 +108,12 @@ end
 function update()
     display_player_stats();
 end
+
+function deserialize()
+    scene.globals.player.increment_health = increment_health;
+    scene.globals.player.decrement_health = decrement_health;
+    scene.globals.player.increment_hunger = increment_hunger;
+    scene.globals.player.decrement_hunger = decrement_hunger;
+    scene.globals.player.increment_thirst = increment_thirst;
+    scene.globals.player.decrement_thirst = decrement_thirst;
+end

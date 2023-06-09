@@ -12,7 +12,12 @@ namespace Vakol::Controller
 		Animator() = default;
 		explicit Animator(std::vector<Model::Assets::Animation>& animations) : m_animations(std::move(animations)) {}
 
-		void Update(const int state, const float delta_time) { m_animations.at(state).Update(delta_time); }
+		void Update(const int state, const float delta_time) 
+		{ 
+			if (state > nAnimations()) return;
+
+			m_animations.at(state).Update(delta_time);
+		}
 		
 		void Update(const float delta_time) 
 		{
@@ -22,7 +27,8 @@ namespace Vakol::Controller
 
 		[[nodiscard]] int nAnimations() const { return static_cast<int>(m_animations.size()); }
 
-		[[nodiscard]] const Model::Assets::Animation& get(const int state) const { return m_animations.at(state); }
+		[[nodiscard]] const Model::Assets::Animation& c_get(const int state) const { return m_animations.at(state); }
+		[[nodiscard]] Model::Assets::Animation get(const int state) const { return m_animations.at(state); }
 	private:
 		std::vector<Model::Assets::Animation> m_animations;
 	};

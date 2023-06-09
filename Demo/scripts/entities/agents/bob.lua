@@ -29,7 +29,7 @@ function init()
     
     entity:get_transform().pos = Vector3.new(2.7, 0, -12.0);
 
-    state.model = entity:add_model("assets/models/enemy.glb", 0.003, true, true) -- get model and add a drawable component
+    state.model = entity:add_model("assets/models/agents/bob.glb", 0.003, true, true) -- get model and add a drawable component
     entity:set_shader("coreAssets/shaders/animation.prog") -- set the shader on the model (automatically binds it)
 
     state.model:set_animation_state(IDLE_STATE_SEARCH);

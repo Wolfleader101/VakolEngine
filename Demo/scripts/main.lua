@@ -1,12 +1,10 @@
---add_scene("scenes/logo_scene.lua", "Logo Scene");
-
 add_scene("scenes/start_scene.lua", "Start Scene");
 
 add_scene("scenes/options_scene.lua", "Options Scene")
 
 add_scene("scenes/controls_scene.lua", "Controls Scene");
 
-add_scene("scenes/testScene.lua", "Test Scene");
+add_scene("scenes/nordic_world.lua", "Nordic World");
 
 add_scene("scenes/end_scene.lua", "End Scene");
 
@@ -18,11 +16,8 @@ options:set_active(false);
 local controls = get_scene("Controls Scene");
 controls:set_active(false);
 
-local game = get_scene("Test Scene");
+local game = get_scene("Nordic World");
 game:set_active(false);
 
 local endScreen = get_scene("End Scene");
 endScreen:set_active(false);
-
---add_scene("scenes/testSer.lua", "Test Ser");
-

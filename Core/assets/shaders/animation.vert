@@ -6,7 +6,6 @@ layout (location = 3) in vec3  aTangent;
 layout (location = 4) in vec3  aBitangent;
 layout (location = 5) in ivec4 aBoneIDs;
 layout (location = 6) in vec4  aBoneWeights;
-layout (location = 7) in mat4  aInstanceMatrix;
 
 out VS_OUT
 {
@@ -21,14 +20,11 @@ layout (std140, binding = 1) uniform Matrices
     mat4 PROJECTION_MATRIX;
     mat4 VIEW_MATRIX;
     mat4 PV_MATRIX;
-    //mat4 MODEL_MATRIX;
 };
 
 uniform mat4 MODEL_MATRIX;
 
 uniform mat4 BONE_TRANSFORMS[100];
-
-uniform bool instanced = false;
 
 void main()
 {  
@@ -52,8 +48,5 @@ void main()
     vs_out.TBN = mat3(T, B, N);
     vs_out.normal = N;
 
-    if (instanced)
-        gl_Position = PV_MATRIX * aInstanceMatrix * BONE_MATRIX * vec4(aPos, 1.0);
-    else
-        gl_Position = PV_MATRIX * MODEL_MATRIX * BONE_MATRIX * vec4(aPos, 1.0);
+    gl_Position = PV_MATRIX * MODEL_MATRIX * BONE_MATRIX * vec4(aPos, 1.0);
 }

@@ -48,6 +48,8 @@ namespace Vakol::Controller {
 
         sol::table sceneGlobals;
 
+        
+
     private:
         std::shared_ptr<LuaState> lua;
         std::string scriptName;

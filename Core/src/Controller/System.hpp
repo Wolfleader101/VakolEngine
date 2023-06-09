@@ -30,7 +30,9 @@ namespace Vakol::Controller
         static void Drawable_Init();
         static void Drawable_Update(const Time& time, const std::shared_ptr<View::Renderer>& renderer);
 
+        static void Script_Init(std::shared_ptr<LuaState> lua, EntityList& list, Scene* scene);
         static void Script_Update(std::shared_ptr<LuaState> lua, EntityList& list, Scene* scene);
+        static void Script_Deserialize(std::shared_ptr<LuaState> lua, EntityList& list, Scene* scene);
 
         static void Physics_InitEntity(const Entity& ent);
         static void Physics_Init();

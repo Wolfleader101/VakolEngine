@@ -45,7 +45,7 @@ namespace Vakol::Model::Assets
 	    // Find the bone in the map based on the name
 	    const auto itr = name_to_info.find(name);
 
-	    if (itr == name_to_info.end()) VK_CRITICAL("Unable to find bone with name: {0}", name);
+	    if (itr == name_to_info.end()) VK_WARN("Unable to find bone with name: {0}", name);
 
 	    // Return the BoneInfo pointer if the bone is found, otherwise return nullptr
 	    return itr != name_to_info.end() ? &itr->second : nullptr;

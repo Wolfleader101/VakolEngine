@@ -12,8 +12,9 @@ namespace Vakol::Model::Components {
 
     Script::Script(std::string& name) : script_name(std::move(name)) {}
 
-    Script::Script(const std::string& script, std::shared_ptr<Controller::LuaState> lua, Entity& entity, Controller::Scene& scene) : script_name(script)
-	{
+    Script::Script(const std::string& script, std::shared_ptr<Controller::LuaState> lua, Entity& entity,
+                   Controller::Scene& scene)
+        : script_name(script) {
         lua->GetState()["scene"] = std::ref(scene);
         lua->GetState()["entity"] = entity;
 
@@ -25,12 +26,12 @@ namespace Vakol::Model::Components {
         lua->RunFunction("init");
     };
 
-    FSM::FSM(std::shared_ptr<Controller::LuaState>  lua) : lua(lua) {
+    FSM::FSM(std::shared_ptr<Controller::LuaState> lua) : lua(lua) {
         // Create a new table in the Lua state for the states
         states = lua->GetState().create_table();
     }
 
-    void FSM::AddState(const std::string& stateName, const sol::function& callback) {
+    void FSM::AddState(std::string& stateName, sol::protected_function& callback) {
         // Add a new state to the states table
         states[stateName] = callback;
     }
@@ -61,8 +62,7 @@ namespace Vakol::Model::Components {
 
     Tag::Tag(std::string& tag) : tag(std::move(tag)){};
 
-    void RigidBody::SetRigidData(const RigidData& data)
-    {
+    void RigidBody::SetRigidData(const RigidData& data) {
         Data = data;
 
         RigidBodyPtr->setMass(Data.mass);
@@ -107,7 +107,7 @@ namespace Vakol::Model::Components {
     void Collider::SetBounds(const Bounds& data) { bounds = data; }
 
     // THIS HAS BEEN MODIFIED BY ME (CALEB)
-   glm::mat4 to_rp3d_mat4(const Transform& transform) {
+    glm::mat4 to_rp3d_mat4(const Transform& transform) {
         glm::mat4 mat(1.0f);
         mat = glm::translate(mat, transform.pos);
         mat = glm::scale(mat, transform.scale);
@@ -117,8 +117,7 @@ namespace Vakol::Model::Components {
         return mat;
     }
 
-    rp3d::Vector3 transformVertex(const glm::mat4& matrix, const rp3d::Vector3& vertex)
-    {
+    rp3d::Vector3 transformVertex(const glm::mat4& matrix, const rp3d::Vector3& vertex) {
         glm::vec4 glmVertex(vertex.x, vertex.y, vertex.z, 1.0f);
         glmVertex = matrix * glmVertex;
 
@@ -135,16 +134,19 @@ namespace Vakol::Model::Components {
 
         auto& vertices = model.model_ptr->meshes().begin()->vertices();
 
-        VK_ASSERT(vertices.size() >= 3, "\n\nInsufficient vertices data");
+        if (vertices.size() < 3) {
+            VK_CRITICAL("Collider::Bounds::GetBounds() - Insufficient vertices data");
+            return bounds;
+        }
 
         const auto& position = vertices.begin()->position;
 
-        const rp3d::Vector3 transformedPosition = transformVertex(transformMat, rp3d::Vector3(position.x, position.y, position.z));
+        const rp3d::Vector3 transformedPosition =
+            transformVertex(transformMat, rp3d::Vector3(position.x, position.y, position.z));
 
         max = min = transformedPosition;
 
-        for (const auto& msh : model.model_ptr->c_meshes()) 
-        {
+        for (const auto& msh : model.model_ptr->c_meshes()) {
             vertices = msh.c_vertices();
 
             for (const auto& vertex : vertices) {
@@ -161,4 +163,13 @@ namespace Vakol::Model::Components {
 
         return bounds;
     }
+
+    void GUID::GenNewGUID() { id = xg::newGuid(); }
+
+    bool GUID::operator==(const GUID& other) const { return id == other.id; }
+
+    bool GUID::operator!=(const GUID& other) const { return id != other.id; }
+
+    bool GUID::operator<(const GUID& other) const { return id < other.id; }
+
 }  // namespace Vakol::Model::Components
