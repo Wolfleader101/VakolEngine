@@ -14,6 +14,7 @@ namespace Vakol::Controller
 {
     void RegisterMath(sol::state& lua) 
     {
+        {
             sol::constructors<glm::vec2(), glm::vec2(float), glm::vec2(float, float)> ctor;  // allow for constructors
 
             auto div_overload = sol::overload([](const glm::vec2& v, const float k) -> glm::vec2 { return v / k; },
