@@ -13,6 +13,7 @@ function init()
         health = 0,
         hunger = 0,
         thirst = 0,
+        died = false,
         last_damage_time = 0,
         increment_health = nil,
         decrement_health = nil,
@@ -108,6 +109,14 @@ local function update_speed()
 end
 
 function update()
+    if (scene.globals.player.health <= 0.99) then
+        scene.globals.player.died = true;
+        scene:set_active(false);
+
+        local endScreen = get_scene("End Scene");
+        endScreen:set_active(true);
+    end
+
     update_drowning_time()
     update_moving_value()
 

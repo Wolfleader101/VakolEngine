@@ -10,7 +10,7 @@ function init()
     state.enemyAttackAnimDistance = 1.0;
     state.giveUpDistance = 10.0;
     state.speed = 0.3;
-    state.sprint_speed = 1.7;
+    state.sprint_speed = 1.35;
     state.dir = Vector3.new(math.random() * 2 - 1, 0, math.random() * 2 - 1);
     while state.dir:magnitude() == 0 do
         state.dir.x = math.random() * 2 - 1
@@ -20,6 +20,7 @@ function init()
 
     state.WAIT_TIMER = 0.0;
     state.DIR_TIMER = 0.0;
+    state.ATTACK_TIMER = 0.0;
 
     state.VIEW_DISTANCE = 10.0; -- increased view distance for a deer
     state.SPOTTED = false;
@@ -62,6 +63,10 @@ function init()
     
         entity:play_animation(state.ANIMATIONS.ATTACK);
         entity:get_rigid():set_velocity(Vector3.new(0,0,0));
+
+        if (attack_wait(1.5)) then
+            PLAYER.decrement_health((10 * OPTIONS.ATTACK_DAMAGE_DEALT_TO_PLAYER_MULTIPLIER));
+        end
 
         if(fsm_wait(2)) then  -- The attack animation lasts for 2 seconds
             if player_distance() > state.enemyAttackAnimDistance then  -- If player moves more than state.enemyAttackAnimDistance units away, start chasing again
@@ -129,8 +134,8 @@ function init()
         -- Now, we want to run towards the player
         local diff = scene.globals.player.pos - entity:get_transform().pos;
         state.dir = diff:normalize();  -- Update direction to run towards player
-
-        local velocity = state.speed * Time.delta_time;
+      
+        local velocity = (state.sprint_speed * OPTIONS.SPRINT_SPEED_MULTIPLIER) * Time.delta_time;
         local move = state.dir * velocity * 100;
         entity:get_rigid():set_velocity(move);
 
@@ -153,7 +158,7 @@ function init()
         local diff = scene.globals.player.pos - entity:get_transform().pos;
         state.dir = diff:normalize();  -- Update direction to run towards player
 
-        local velocity = state.speed * Time.delta_time;
+        local velocity = (state.sprint_speed * OPTIONS.SPRINT_SPEED_MULTIPLIER) * Time.delta_time;
         local move = state.dir * velocity * 100;
         entity:get_rigid():set_velocity(move);
 
@@ -190,6 +195,17 @@ function player_distance()  -- Added a new function to calculate distance to the
     return (scene.globals.player.pos - entity:get_transform().pos):magnitude();
 end
 
+function attack_wait(seconds)
+    state.ATTACK_TIMER = state.ATTACK_TIMER + Time.delta_time;
+
+    if (state.ATTACK_TIMER >= seconds) then
+        state.ATTACK_TIMER = 0;
+        return true;
+    end
+
+    return false;
+end
+
 function dir_wait(seconds)
     state.DIR_TIMER = state.DIR_TIMER + Time.delta_time;
 
@@ -213,6 +229,9 @@ function fsm_wait(seconds)
 end
 
 function update()
+    PLAYER = scene.globals.player;
+    OPTIONS = get_scene("Options Scene").globals.options;
+
     local pos = entity:get_transform().pos;
     local diff = scene.globals.player.pos - pos;
     local player_dist = diff:magnitude();

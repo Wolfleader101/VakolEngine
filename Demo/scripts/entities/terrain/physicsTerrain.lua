@@ -2,6 +2,7 @@ function init()
     print("Initialising Terrain");
   
     local terrain = entity:create_height_map_terrain(scene, "assets/textures/Heightmaps/terrain_2048.raw", 0, 60); -- size
+    --local terrain = entity:create_height_map_terrain(scene, "assets/textures/Heightmaps/height128.raw", 0, 1); -- size
 
     local model = terrain:get_model();
     local mesh = model:get_mesh(0);

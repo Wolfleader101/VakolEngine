@@ -129,13 +129,21 @@ namespace Vakol::View {
             else
                 glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         }
-
-        /**
-         * @brief Toggle skybox on and off
-         */
+      
         void ToggleSkybox() override { isSkybox = !isSkybox; }
 
-       private:
+        void SetWireframe(const bool wireframe) override 
+        {
+            isWireframe = wireframe;
+
+            if (isWireframe)
+                glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+            else
+                glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        }
+
+        void SetSkybox(const bool skybox) override  { isSkybox = skybox; }
+    private:
         std::vector<std::shared_ptr<Buffer>> buffers;            ///< Vector of shared pointers to Buffer objects
         std::vector<std::shared_ptr<FrameBuffer>> framebuffers;  ///< Vector of shared pointers to FrameBuffer objects
         std::shared_ptr<Skybox> skybox = std::make_shared<Skybox>();  ///< Shared pointer to a Skybox object
