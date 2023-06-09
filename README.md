@@ -1,4 +1,4 @@
-# VakolEngine
+![LOGO_VakolEngine_White_NoStroke_CROPPED](https://github.com/Wolfleader101/VakolEngine/assets/26544407/41af4a46-e00c-4049-9e91-d9ebf1bf4249)
 
 ## Cloning
 1. git clone https://github.com/Wolfleader101/VakolEngine
