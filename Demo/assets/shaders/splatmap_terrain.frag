@@ -47,10 +47,10 @@ void main()
 
     vec4 water = water_tint + (water_tex_1 * water_scale_1) + (water_tex_2 * water_scale_2);
 
-    vec4 color_1 = texture(layer_1, fs_in.TexCoords * (uv_scale * 4)) * texture(noise, fs_in.TexCoords * (uv_scale));
-    vec4 color_2 = texture(layer_2, fs_in.TexCoords * (uv_scale * 4)) * texture(noise, fs_in.TexCoords * (uv_scale));
+    vec4 color_1 = texture(layer_1, fs_in.TexCoords * (uv_scale * 2)) * texture(noise, fs_in.TexCoords * (uv_scale));
+    vec4 color_2 = texture(layer_2, fs_in.TexCoords * (uv_scale * 2)) * texture(noise, fs_in.TexCoords * (uv_scale));
     vec4 color_3 = texture(layer_3, fs_in.TexCoords * (uv_scale * 2.5)) * texture(noise, fs_in.TexCoords * (uv_scale));
-    vec4 color_4 = texture(layer_4, fs_in.TexCoords * (uv_scale * 7.5)) * texture(noise, fs_in.TexCoords * (uv_scale));
+    vec4 color_4 = texture(layer_4, fs_in.TexCoords * (uv_scale * 5)) * texture(noise, fs_in.TexCoords * (uv_scale));
 
     vec4 splat_weights = texture(splat_map, fs_in.TexCoords);
     vec4 color = splat_weights.r * color_1 +
