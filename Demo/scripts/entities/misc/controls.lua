@@ -18,16 +18,16 @@ function display_controls()
 end
 
 function init()
-
+    set_wireframe(true);
+    set_skybox(false);
 end
 
 function update()
 	display_controls();
 
     if(Input:get_key_down(KEYS["KEY_ESC"])) then
-        toggle_wireframe();
-        toggle_skybox();
         scene:set_active(false);
+        set_wireframe(false);
 
         local menu = get_scene("Start Scene");
         menu:set_active(true);

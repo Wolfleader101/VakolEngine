@@ -121,6 +121,9 @@ function init()
         IN_OPTIONS_MENU = false,
     }
 
+    set_wireframe(true);
+    set_skybox(false);
+
     set_active_mouse(true);
 end
 
@@ -129,7 +132,8 @@ function update()
 
     if(Input:get_key_down(KEYS["KEY_ESC"])) then
         scene:set_active(false);
-
+        set_wireframe(false);
+        set_skybox(false);
         local menu = get_scene("Start Scene");
         menu:set_active(true);
         set_active_mouse(false);

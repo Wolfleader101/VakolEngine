@@ -14,8 +14,6 @@ function init()
     trans.pos.z = -1000;
 
     scene.globals.terrain = {transform = entity:get_transform(), terr = entity:get_terrain()};
-
-    entity:set_backface_culling(false);
 end
 
 function update()
