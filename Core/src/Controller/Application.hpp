@@ -71,15 +71,46 @@ namespace Vakol::Controller {
          */
         int GetHeight() const { return m_window->GetHeight(); }
 
+        /**
+         * @brief Add a scene with a script name and an optional scene name.
+         *
+         * @param scriptName The script name of the scene.
+         * @param scene_name The name of the scene (optional).
+         */
         void AddScene(const std::string& scriptName, const std::string& scene_name = "");
+
+        /**
+         * @brief Get a scene by its name.
+         *
+         * @param sceneName The name of the scene.
+         * @return Scene& A reference to the scene.
+         */
         Scene& GetScene(const std::string& sceneName);
 
+        /**
+         * @brief Set the running state of the game.
+         *
+         * @param run Flag indicating whether the game is running.
+         */
         void SetRunning(const bool run) { m_running = run; }
 
+        /**
+         * @brief Get the time information.
+         *
+         * @return const Time& The time information.
+         */
         const Time& GetTime() const { return m_time; }
 
+        /**
+         * @brief Get the input information.
+         *
+         * @return const Input& The input information.
+         */
         const Input& GetInput() const { return m_input; }
 
+        /**
+         * @brief Register Lua scripting.
+         */
         void RegisterLua();
 
     private:
@@ -92,6 +123,12 @@ namespace Vakol::Controller {
          */
         bool OnWindowClose(WindowCloseEvent& ev);
 
+        /**
+         * @brief Handle the window resize event.
+         *
+         * @param ev The WindowResizeEvent.
+         * @return bool True if the event was handled, false otherwise.
+         */
         bool OnWindowResize(const WindowResizeEvent& ev) const;
 
         /**
@@ -101,10 +138,36 @@ namespace Vakol::Controller {
          */
         bool Application::OnKeyPressed(KeyPressedEvent& kev);
 
+        /**
+         * @brief Handle the key released event.
+         *
+         * @param kev The KeyReleasedEvent.
+         * @return bool True if the event was handled, false otherwise.
+         */
         bool OnKeyReleased(KeyReleasedEvent& kev);
+
+        /**
+         * @brief Handle the mouse moved event.
+         *
+         * @param ev The MouseMovedEvent.
+         * @return bool True if the event was handled, false otherwise.
+         */
         bool OnMouseMoved(MouseMovedEvent& ev);
 
+        /**
+         * @brief Handle the mouse button pressed event.
+         *
+         * @param mev The MouseButtonPressedEvent.
+         * @return bool True if the event was handled, false otherwise.
+         */
         bool OnMouseButtonPressed(MouseButtonPressedEvent& mev);
+
+        /**
+         * @brief Handle the mouse button released event.
+         *
+         * @param mev The MouseButtonReleasedEvent.
+         * @return bool True if the event was handled, false otherwise.
+         */
         bool OnMouseButtonReleased(MouseButtonReleasedEvent& mev);
 
         /**
@@ -135,6 +198,10 @@ namespace Vakol::Controller {
          */
         std::shared_ptr<LuaState> lua;
 
+
+        /**
+         * @brief holds the scenes
+         */
         std::vector<Scene> scenes;
 
         /**
@@ -142,8 +209,14 @@ namespace Vakol::Controller {
          */
         bool m_running = true;
 
+        /**
+         * @brief the gui window
+         */
         View::GUIWindow m_gui;
 
+        /**
+         * @brief the input data of the engine
+         */
         Input m_input;
 
     };

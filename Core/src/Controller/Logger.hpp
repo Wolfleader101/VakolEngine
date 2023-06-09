@@ -21,10 +21,39 @@ namespace Vakol::Controller {
          */
         static std::shared_ptr<spdlog::logger>& GetLogger();
 
+        /**
+         * @brief Print a trace message from a script.
+         *
+         * @param args The message to print.
+         */
         static void ScriptPrintTrace(std::string args);
+
+        /**
+         * @brief Print an info message from a script.
+         *
+         * @param args The message to print.
+         */
         static void ScriptPrintInfo(std::string args);
+
+        /**
+         * @brief Print a warning message from a script.
+         *
+         * @param args The message to print.
+         */
         static void ScriptPrintWarn(std::string args);
+
+        /**
+         * @brief Print an error message from a script.
+         *
+         * @param args The message to print.
+         */
         static void ScriptPrintError(std::string args);
+
+        /**
+         * @brief Print a critical message from a script.
+         *
+         * @param args The message to print.
+         */
         static void ScriptPrintCrit(std::string args);
 
        private:

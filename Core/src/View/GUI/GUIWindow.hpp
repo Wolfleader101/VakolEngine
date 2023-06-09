@@ -35,6 +35,9 @@ namespace Vakol::View {
          * @param inputPath The path to the font file
          */
         void ChangeFontDefault(std::string inputPath) const;
+        /**
+         * @brief Ends the current frame
+         */
         void EndFrame() const;
         /**
 		 * @brief Returns the width of the display window
@@ -142,8 +145,26 @@ namespace Vakol::View {
          * @param maxValue the maximum value of the slider
          */
     	void AddVecFloatSlider(const std::string& sliderName, float sliderValue[], const int size, const float minValue, const float maxValue) const;
-        void SameLine() const;
+        /**
+         * @brief Adds a new line in the same window
+         */
+        void SameLine() const; 
+
+        /**
+         * @brief Sets the background style of the window
+         *
+         * @param inputRed The red value of the background color
+         * @param inputGreen The green value of the background color
+         * @param inputBlue The blue value of the background color
+         * @param inputAlpha The alpha value of the background color
+         */
         void WindowBackgroundStyle(const float inputRed, const float inputGreen, const float inputBlue, const float inputAlpha) const;
+
+        /**
+         * @brief Sets the rounding style of the window
+         *
+         * @param inputValue The value of the rounding style
+         */
         void WindowRoundingStyle(const float inputValue) const;
         /**
          * @brief Ends the creation of a GUI window
@@ -155,10 +176,8 @@ namespace Vakol::View {
         ~GUIWindow();
 
     private:
-        std::vector<ImFont*> fonts;
-
-        bool is_initialised = false;
-
-        std::string scriptName;
+        std::vector<ImFont*> fonts;  /**< Fonts used in the GUI window */
+        bool is_initialised = false; /**< Flag indicating whether the GUI window is initialized */
+        std::string scriptName;      /**< Name of the script */
     };
 }  // namespace Vakol::View
