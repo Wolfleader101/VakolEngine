@@ -23,9 +23,9 @@ function init()
 
     scene:create_entity("terrain", "entities/terrain/physicsTerrain.lua");
 
-    scene:create_entity("serialization", "entities/misc/serialization.lua");
+    --scene:create_entity("serialization", "entities/misc/serialization.lua");
 
-    scene:create_entity("static_props", "entities/instancing_new.lua");
+    --scene:create_entity("static_props", "entities/instancing_new.lua");
 
     local rabbits          = {};
     local birds            = {};
@@ -33,10 +33,10 @@ function init()
     scene.globals.monsters = {};
     scene.globals.bears    = {};
 
-    for i = 1, 10 do
-        scene.globals.bears[i] = scene:create_entity("Bear" .. i, "entities/agents/bear.lua");
-        scene.globals.bears[i]:get_transform().pos = random_pos();
-    end
+    -- for i = 1, 10 do
+    --     scene.globals.bears[i] = scene:create_entity("Bear" .. i, "entities/agents/bear.lua");
+    --     scene.globals.bears[i]:get_transform().pos = random_pos();
+    -- end
 
     for i = 1, 10 do
         scene.globals.monsters[i] = scene:create_entity("Monster" .. i, "entities/agents/monster.lua");
@@ -70,15 +70,16 @@ function update()
         local menu = get_scene("Start Scene");
         menu:set_active(true);
     end
-    
 
     if(Input:get_key_down(KEYS["KEY_5"])) then
         scene:serialize("assets/scenes");
         print("Checkpoint saved!");
     end
-
     if(Input:get_key_down(KEYS["KEY_6"])) then
         scene:deserialize("assets/scenes/".. scene:get_name());
-        print("Checkpoint loaded!")
+        print("Checkpoint loaded!");
     end
+    
+
 end
+

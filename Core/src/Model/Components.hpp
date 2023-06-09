@@ -282,7 +282,7 @@ namespace Vakol::Model::Components {
          * @param stateName The name of the new state.
          * @param callback The function to be executed when this state is active.
          */
-        void AddState(const std::string& stateName, sol::protected_function& callback);
+        void AddState(const std::string& stateName, sol::function& callback);
 
         /**
          * @brief Changes the current state of the FSM.

@@ -1,44 +1,26 @@
-function init()
-    state.ANIMATIONS = {
-        DIE = 0,
-        EAT = 1,
-        IDLE = 2,
-        RUN = 3,
-        WALK = 5
-    }
+local function dir_wait(seconds)
+    state.DIR_TIMER = state.DIR_TIMER + Time.delta_time;
 
-    state.speed = 0.3;
-    state.sprint_speed = 4.0;
-    state.dir = Vector3.new(math.random() * 2 - 1, 0, math.random() * 2 - 1);
-    while state.dir:magnitude() == 0 do
-        state.dir.x = math.random() * 2 - 1
-        state.dir.z = math.random() * 2 - 1
+    if (state.DIR_TIMER >= seconds) then
+        state.DIR_TIMER = 0
+        return true;
     end
-    state.dir:normalize();
 
-    state.WAIT_TIMER = 0.0;
-    state.DIR_TIMER = 0.0;
+    return false;
+end
 
-    state.VIEW_DISTANCE = 10.0; -- increased view distance for a deer
-    state.SPOTTED = false;
+local function fsm_wait(seconds)
+    state.WAIT_TIMER = state.WAIT_TIMER + Time.delta_time;
 
-    entity:get_transform().pos = Vector3.new(10, 0, 10);
+    if (state.WAIT_TIMER  >= seconds) then
+        state.WAIT_TIMER = 0
+        return true;
+    end
 
-    state.model = entity:add_model("assets/models/agents/Deer_0.fbx", 0.25, true, true);
-    entity:set_shader("coreAssets/shaders/animation.prog");
+    return false;
+end
 
-    local shader = state.model:get_shader();
-
-    shader:set_vec3v("light.direction", Vector3.new(math.rad(0.0), math.rad(0.0), math.rad(-90.0)));
-
-    shader:set_float("material.shininess", 32.0);
-    shader:set_vec3v("tint", Vector3.new(0.2, 0.65, 0.9));
-
-    shader:set_int("material.diffuse_map", 0);
-    shader:set_int("material.specular_map", 1);
-    shader:set_int("material.normal_map", 2);
-    shader:set_int("material.emission_map", 3);
-
+local function setup_fsm()
     state.fsm = entity:add_fsm();
 
     state.fsm:add_state("eating", function()
@@ -132,32 +114,57 @@ function init()
         end
     end)
 
-    state.fsm:change_state("roaming")
-
-    --print_err("Deer is ready")
+    state.fsm:change_state("roaming");
 end
 
-function dir_wait(seconds)
-    state.DIR_TIMER = state.DIR_TIMER + Time.delta_time;
+function init()
+    state.ANIMATIONS = {
+        DIE = 0,
+        EAT = 1,
+        IDLE = 2,
+        RUN = 3,
+        WALK = 5
+    }
 
-    if (state.DIR_TIMER >= seconds) then
-        state.DIR_TIMER = 0
-        return true;
+    state.speed = 0.3;
+    state.sprint_speed = 4.0;
+    state.dir = Vector3.new(math.random() * 2 - 1, 0, math.random() * 2 - 1);
+    while state.dir:magnitude() == 0 do
+        state.dir.x = math.random() * 2 - 1
+        state.dir.z = math.random() * 2 - 1
     end
+    state.dir:normalize();
 
-    return false;
+    state.WAIT_TIMER = 0.0;
+    state.DIR_TIMER = 0.0;
+
+    state.VIEW_DISTANCE = 10.0; -- increased view distance for a deer
+    state.SPOTTED = false;
+
+    entity:get_transform().pos = Vector3.new(10, 0, 10);
+
+    state.model = entity:add_model("assets/models/agents/Deer_0.fbx", 0.25, true, true);
+    entity:set_shader("coreAssets/shaders/animation.prog");
+
+    local shader = state.model:get_shader();
+
+    shader:set_vec3v("light.direction", Vector3.new(math.rad(0.0), math.rad(0.0), math.rad(-90.0)));
+
+    shader:set_float("material.shininess", 32.0);
+    shader:set_vec3v("tint", Vector3.new(0.2, 0.65, 0.9));
+
+    shader:set_int("material.diffuse_map", 0);
+    shader:set_int("material.specular_map", 1);
+    shader:set_int("material.normal_map", 2);
+    shader:set_int("material.emission_map", 3);
+
+    setup_fsm();
+
+    
+
 end
 
-function fsm_wait(seconds)
-    state.WAIT_TIMER = state.WAIT_TIMER + Time.delta_time;
 
-    if (state.WAIT_TIMER  >= seconds) then
-        state.WAIT_TIMER = 0
-        return true;
-    end
-
-    return false;
-end
 
 
 function update()
@@ -188,4 +195,10 @@ function update()
     local targetRotation = math.atan(state.dir.x, state.dir.z)
     targetRotation = targetRotation * (180 / math.pi)
     entity:get_transform().rot.y = targetRotation
+end
+
+
+
+function deserialize()
+    setup_fsm();
 end

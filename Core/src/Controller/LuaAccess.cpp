@@ -411,7 +411,7 @@ namespace Vakol::Controller {
                                      model->mesh(mesh_index).GetMaterial()->AddTexture(*AssetLoader::GetTexture(path));
                                  });
 
-        entity_type.set_function("play_animation", [](const Entity* ent, const int animation_state) {
+        entity_type.set_function("play_animation", [](const Entity* ent, const float animation_state) {
             if (!ent->HasComponent<Components::Animation>()) {
                 VK_ERROR("Animation component is needed to set it's animation state!");
                 return;
@@ -555,7 +555,7 @@ namespace Vakol::Controller {
         auto fsm_type = lua.new_usertype<FSM>("FSM");
         fsm_type.set_function("get_state", &FSM::GetState);
         fsm_type.set_function("change_state", &FSM::ChangeState);
-        fsm_type.set_function("add_state", [](FSM& self, std::string& stateName, sol::protected_function& callback) {
+        fsm_type.set_function("add_state", [](FSM& self, std::string& stateName, sol::function& callback) {
             return self.AddState(stateName, callback);
         });
         fsm_type.set_function("update", &FSM::Update);
