@@ -59,7 +59,6 @@ function init()
     end
 
     phys_debug = false;
-
 end
 
 
