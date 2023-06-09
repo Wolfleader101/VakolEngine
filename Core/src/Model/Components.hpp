@@ -5,9 +5,7 @@
 #include <Controller/LuaState.hpp>
 #include <Controller/Physics/ScenePhysics.hpp>
 #include <crossguid/guid.hpp>
-
 #include <glm/glm.hpp>
-
 #include <memory>
 #include <string>
 
@@ -72,7 +70,7 @@ namespace Vakol::Model::Components {
         void Update(const int state, const float delta_time) { animator_ptr->Update(state, delta_time); }
         void Update(const float delta_time) { animator_ptr->Update(delta_time); }
 
-        const Model::Assets::Animation& c_animation(const int state) const { return animator_ptr->c_get(state); } 
+        const Model::Assets::Animation& c_animation(const int state) const { return animator_ptr->c_get(state); }
         Model::Assets::Animation animation(const int state) const { return animator_ptr->get(state); }
 
         void set(const std::shared_ptr<Controller::Animator>& animator) { animator_ptr = animator; }
@@ -194,7 +192,7 @@ namespace Vakol::Model::Components {
         FSM() = default;
         FSM(std::shared_ptr<Controller::LuaState> lua);
 
-        void AddState(const std::string& stateName, const sol::function& callback);
+        void AddState(std::string& stateName, sol::protected_function& callback);
 
         void ChangeState(const std::string& stateName);
 
@@ -218,7 +216,6 @@ namespace Vakol::Model::Components {
 
             data.data.clear();
             ar(data);
-        
         }
 
         std::string currentState;
