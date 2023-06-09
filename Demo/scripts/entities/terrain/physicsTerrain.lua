@@ -9,9 +9,8 @@ function init()
 
     entity:add_raw_texture(0, "assets/textures/lightmap.raw");
 
-    entity:add_texture(0, "assets/textures/terrain/TEX_128_DirtWithRocks.jpg", false, false);
-    entity:add_texture(0, "assets/textures/terrain/TEX_128_DirtNoRocks.jpg", false, false);
     entity:add_texture(0, "assets/textures/terrain/TEX_128_Grass.jpg", false, false);
+    entity:add_texture(0, "assets/textures/terrain/TEX_128_DirtNoRocks.jpg", false, false);
     entity:add_texture(0, "assets/textures/terrain/TEX_128_SnowNoRocks.jpg", false, false);
     entity:add_texture(0, "assets/textures/terrain/TEX_128_SnowWithRocks.jpg", false, false);
 
@@ -20,7 +19,9 @@ function init()
     entity:add_texture(0, "assets/textures/Water/water_1.jpg", false, false);
     entity:add_texture(0, "assets/textures/Water/water_4.png", false, false);
 
-    entity:set_shader("coreAssets/shaders/basic_terrain.prog");
+    entity:add_texture(0, "assets/textures/splatmaps/splatmap_1.jpg", false, false);
+
+    entity:set_shader("assets/shaders/splatmap_terrain.prog");
     shader = model:get_shader();
 
     shader:set_vec2v("uv_scale", Vector2.new(20));
@@ -31,12 +32,13 @@ function init()
     shader:set_int("layer_2", 2);
     shader:set_int("layer_3", 3);
     shader:set_int("layer_4", 4);
-    shader:set_int("layer_5", 5);
 
-    shader:set_int("noise", 6);
+    shader:set_int("noise", 5);
 
-    shader:set_int("water_layer_1", 7);
-    shader:set_int("water_layer_2", 8);
+    shader:set_int("water_layer_1", 6);
+    shader:set_int("water_layer_2", 7);
+
+    shader:set_int("splat_map", 8);
 
     -- scene:add_terrain_physics(entity);
 

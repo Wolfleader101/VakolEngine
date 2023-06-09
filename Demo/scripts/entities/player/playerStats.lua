@@ -16,9 +16,6 @@ function display_player_stats()
     GUI:same_line();
     GUI:add_text("Thirst: " .. string.format("%.f", scene.globals.player.thirst), false, false, 2.0, 1.0, 1.0, 1.0, 1.0);
 
-    local fps = GUI:get_fps()
-    GUI:add_text("GAME FPS: " .. Time.fps, false, false, 1.0, 1.0, 1.0, 1.0, 1.0);
-
     GUI:end_window();
 
     GUI:change_background_colour(0.0, 0.0, 0.0, 0.0);
