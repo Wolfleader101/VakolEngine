@@ -82,8 +82,17 @@ namespace Vakol::Controller::Physics {
             // Get the entities associated with the bodies
             Components::RigidBody* rb1 = static_cast<Components::RigidBody*>(body1->getUserData());
             Components::RigidBody* rb2 = static_cast<Components::RigidBody*>(body2->getUserData());
-            if (rb1 != nullptr) rb1->is_colliding = true;
-            if (rb2 != nullptr) rb2->is_colliding = true;
+
+            switch (contactPair.getEventType()) {
+                case ContactPair::EventType::ContactStart:
+                    if (rb1 != nullptr) rb1->is_colliding = true;
+                    if (rb2 != nullptr) rb2->is_colliding = true;
+                    break;
+                case ContactPair::EventType::ContactExit:
+                    if (rb1 != nullptr) rb1->is_colliding = false;
+                    if (rb2 != nullptr) rb2->is_colliding = false;
+                    break;
+            }
         }
     }
 }  // namespace Vakol::Controller::Physics

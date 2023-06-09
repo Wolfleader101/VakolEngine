@@ -92,6 +92,10 @@ namespace Vakol::Model::Components {
         RigidBodyPtr->setAngularVelocity(rp3d::Vector3(vel.x, vel.y, vel.z));
     }
 
+    void RigidBody::ApplyForce(const glm::vec3& force) const {
+        RigidBodyPtr->applyWorldForceAtCenterOfMass(rp3d::Vector3(force.x, force.y, force.z));
+    }
+
     void RigidBody::SetAngularDamp(const float damp) const { RigidBodyPtr->setAngularDamping(damp); }
 
     void RigidBody::SetLinearDamp(const float damp) const { RigidBodyPtr->setLinearDamping(damp); }

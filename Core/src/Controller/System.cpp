@@ -60,10 +60,8 @@ namespace Vakol::Controller {
         });
     }
 
-    void System::Drawable_Update(const Time& time, const std::shared_ptr<View::Renderer>& renderer) 
-    {
-        m_registry->view<Transform, Drawable>().each([&](auto& transform, const Drawable& drawable) 
-        {
+    void System::Drawable_Update(const Time& time, const std::shared_ptr<View::Renderer>& renderer) {
+        m_registry->view<Transform, Drawable>().each([&](auto& transform, const Drawable& drawable) {
             auto euler_rads = glm::radians(transform.eulerAngles);
 
             transform.rot = glm::quat(euler_rads);
@@ -74,14 +72,14 @@ namespace Vakol::Controller {
         for (const auto& [model, state] : s_animation_set)
             AssetLoader::GetAnimator(model)->Update(state, time.deltaTime);
 
-        m_registry->view<Transform, Drawable, Components::Animation>().each([&](const auto& transform, const Drawable& drawable, const Components::Animation& _animation)
-        {
-            s_animation_set.emplace(std::make_pair(_animation.attached_model, _animation.state));
+        m_registry->view<Transform, Drawable, Components::Animation>().each(
+            [&](const auto& transform, const Drawable& drawable, const Components::Animation& _animation) {
+                s_animation_set.emplace(std::make_pair(_animation.attached_model, _animation.state));
 
-            const auto& animation = AssetLoader::GetAnimation(_animation.attached_model, _animation.state);
+                const auto& animation = AssetLoader::GetAnimation(_animation.attached_model, _animation.state);
 
-            renderer->DrawAnimated(transform, drawable, animation);
-        });
+                renderer->DrawAnimated(transform, drawable, animation);
+            });
     }
 
     void System::Script_Update(std::shared_ptr<LuaState> lua, EntityList& list, Scene* scene) {
@@ -127,25 +125,29 @@ namespace Vakol::Controller {
 
             rp3d::Transform curr_transform = rigid.RigidBodyPtr->getTransform();
 
-            if (rigid.use_transform && !rigid.is_colliding) {
+            // If use_transform is enabled and there was no collision in the last frame
+            if (rigid.use_transform && !rigid.was_colliding) {
                 const auto pos = to_rp3d(trans.pos);
                 const auto rot = to_rp3d(trans.rot);
 
-                rp3d::Transform newTrans(pos, rot);
-                rigid.RigidBodyPtr->setTransform(newTrans);
-                curr_transform = newTrans;
+                float x = curr_transform.getPosition().x;
+                float z = curr_transform.getPosition().z;
+
+                curr_transform.setPosition(rp3d::Vector3(x, pos.y, z));
+                rigid.RigidBodyPtr->setTransform(curr_transform);
             }
 
             // Compute the interpolated transform of the rigid body
             const rp3d::Transform interpolatedTransform =
                 rp3d::Transform::interpolateTransforms(rigid.prevTransform, curr_transform, factor);
 
+            // Store the current collision state for the next frame
+            rigid.was_colliding = rigid.is_colliding;
+
             rigid.prevTransform = curr_transform;
 
             trans.pos = to_glm(interpolatedTransform.getPosition());
             trans.rot = to_glm(interpolatedTransform.getOrientation());
-
-            rigid.is_colliding = false;
         });
     }
 

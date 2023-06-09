@@ -10,14 +10,14 @@ function init()
     scene:create_entity("static_props", "entities/instancing_new.lua");
 
     local rabbits = {};
-    local birds  = {};
+    local birds            = {};
+    local deers = {};
     scene.globals.monsters = {};    
     scene.globals.bears = {};
     
     for i = 1, 5 do
         scene.globals.bears[i] = scene:create_entity("Bear" .. i, "entities/agents/bear.lua");
-        scene.globals.bears[i]:get_transform().pos = Vector3.new(5.0 * i, 0.0, -2.0);
-        scene.globals.bears[i]:add_rigid();
+        scene.globals.bears[i]:get_transform().pos = Vector3.new(2.0 * i, 0.0, -2.0);
     end
   
     for i = 1, 5 do
@@ -27,12 +27,17 @@ function init()
 
     for i= 1,5 do
          birds[i] = scene:create_entity("Bird" .. i, "entities/agents/bird.lua");
-         birds[i]:get_transform().pos = Vector3.new(5.0 * i, 0.0, 2.0);
+         birds[i]:get_transform().pos = Vector3.new(10.0 * i, 0.0, 2.0);
     end
 
     for i = 1, 5 do
         rabbits[i] = scene:create_entity("Rabbit" .. i, "entities/agents/rabbit.lua");
-        rabbits[i]:get_transform().pos = Vector3.new(5.0 * i, 0.0, -2.0);
+        rabbits[i]:get_transform().pos = Vector3.new(4.0 * i, 0.0, -2.0);
+    end
+
+    for i = 1,5 do
+        deers[i] = scene:create_entity("Deer" .. i, "entities/agents/deer.lua");
+        deers[i]:get_transform().pos = Vector3.new(5.0 * i, 0.0, -2.0);
     end
     
     phys_debug = false;

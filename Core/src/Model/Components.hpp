@@ -69,7 +69,7 @@ namespace Vakol::Model::Components {
 
         void Update(const int state, const float delta_time) { animator_ptr->Update(state, delta_time); }
         void Update(const float delta_time) { animator_ptr->Update(delta_time); }
-      
+
         [[nodiscard]] int nAnimations() const { return animator_ptr->nAnimations(); }
 
         void set(const std::shared_ptr<Controller::Animator>& animator) { animator_ptr = animator; }
@@ -86,8 +86,7 @@ namespace Vakol::Model::Components {
         std::shared_ptr<Controller::Animator> animator_ptr = nullptr;
     };
 
-    struct Animation 
-    {
+    struct Animation {
         int state = 0;
         std::string attached_model;
 
@@ -260,7 +259,9 @@ namespace Vakol::Model::Components {
 
         bool initialized = false;
         bool use_transform = false;
+        // bool use_y_pos = false;
         bool is_colliding = false;
+        bool was_colliding = false;
 
         struct RigidData {
             float mass = 3;                        /**< Mass of object*/
@@ -278,6 +279,7 @@ namespace Vakol::Model::Components {
         void SetAngularVelocity(const glm::vec3& vel) const;
         void SetLinearDamp(float damp) const;
         void SetAngularDamp(float damp) const;
+        void ApplyForce(const glm::vec3& force) const;
 
         // rigid body
         std::shared_ptr<ScenePhysics> owningWorld = nullptr;
