@@ -41,19 +41,19 @@ function init()
     shader:set_int("material.normal_map", 2);
     shader:set_int("material.emission_map", 3);
 
-    local rb = entity:add_rigid();
+    -- local rb = entity:add_rigid();
 
-    rb.use_transform = true;
+    -- rb.use_transform = true;
 
-    local collider = entity:add_collider();
+    -- local collider = entity:add_collider();
 
-    collider.Shape = Shape.Box;
-    collider.bounds.extents.x = 0.1;
-    collider.bounds.extents.y = 0.5;
-    collider.bounds.extents.z = 0.1;
+    -- collider.Shape = Shape.Box;
+    -- collider.bounds.extents.x = 0.1;
+    -- collider.bounds.extents.y = 0.5;
+    -- collider.bounds.extents.z = 0.1;
 
 
-    entity:physics_init(scene); 
+    -- entity:physics_init(scene); 
 
     state.fsm = entity:add_fsm();
 
