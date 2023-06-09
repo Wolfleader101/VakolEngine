@@ -5,8 +5,8 @@ function init()
         MAX_THIRST = 100,
         pos = Vector3.new(0.0, 0.0, 0.0),
         last_pos = Vector3.new(0.0, 0.0, 0.0),
-        base_speed = 1.25,
-        sprint_speed = 3,
+        base_speed = 2.5,
+        sprint_speed = 6,
         curr_speed = 0.0,
         is_sprinting = false,
         is_god = false,
@@ -46,9 +46,9 @@ local function moving_wait(seconds)
 end
 
 local function update_drowning_time()
-    if (scene.globals.player.pos.y <= 0.0 and state.drowning_time < 5) then
+    if (scene.globals.player.pos.y <= -9.75 and state.drowning_time < 5) then
         state.drowning_time = state.drowning_time + Time.delta_time;
-    elseif(scene.globals.player.pos.y > 0.0 and state.drowning_time > 0.0) then
+    elseif(scene.globals.player.pos.y > -9.75 and state.drowning_time > 0.0) then
         state.drowning_time = state.drowning_time - Time.delta_time * 2;
     end
 
@@ -66,7 +66,7 @@ local function update_moving_value()
 end
 
 local function update_drowning()
-    if (scene.globals.player.pos.y <= 0.0 and state.drowning_time >= 2.5) then
+    if (scene.globals.player.pos.y <= -9.75 and state.drowning_time >= 5) then
         state.is_drowning = true;
         scene.globals.player.decrement_health(15 * Time.delta_time);
     else

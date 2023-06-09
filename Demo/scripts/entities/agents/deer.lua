@@ -39,10 +39,25 @@ function init()
     shader:set_int("material.normal_map", 2);
     shader:set_int("material.emission_map", 3);
 
+        local rb = entity:add_rigid();
+
+    rb.use_transform = true;
+
+    local collider = entity:add_collider();
+
+    collider.Shape = Shape.Box;
+    collider.bounds.extents.x = 0.1;
+    collider.bounds.extents.y = 0.5;
+    collider.bounds.extents.z = 0.2;
+
+
+    entity:physics_init(scene); 
+
     state.fsm = entity:add_fsm();
 
     state.fsm:add_state("eating", function()
         entity:play_animation(state.ANIMATIONS.EAT);
+        entity:get_rigid():set_velocity(Vector3.new(0,0,0));
         if(fsm_wait(math.random(5,7))) then
             state.fsm:change_state("roaming")
         end
@@ -50,6 +65,7 @@ function init()
 
     state.fsm:add_state("idle", function()
         entity:play_animation(state.ANIMATIONS.IDLE);
+        entity:get_rigid():set_velocity(Vector3.new(0,0,0));
         if(fsm_wait(math.random(5,7))) then
             local rand = math.random();
             if (rand < 0.6) then
@@ -92,10 +108,8 @@ function init()
         end
         
         local velocity = state.speed * Time.delta_time;
-
-        local pos = entity:get_transform().pos;
-        pos.x = pos.x + (state.dir.x * velocity);
-        pos.z = pos.z + (state.dir.z * velocity);
+        local move = state.dir * velocity * 100;
+        entity:get_rigid():set_velocity(move);
     end)
 
     state.fsm:add_state("running_away", function()
@@ -121,11 +135,9 @@ function init()
             state.SPOTTED = true;
         end
 
-        local velocity = state.sprint_speed * Time.delta_time;
-
-        local pos = entity:get_transform().pos;
-        pos.x = pos.x + (state.dir.x * velocity);
-        pos.z = pos.z + (state.dir.z * velocity);
+        local velocity = state.speed * Time.delta_time;
+        local move = state.dir * velocity * 100;
+        entity:get_rigid():set_velocity(move);
 
         if (player_dist >= state.VIEW_DISTANCE + 1.5) then
             state.fsm:change_state("roaming")
@@ -133,8 +145,6 @@ function init()
     end)
 
     state.fsm:change_state("roaming")
-
-    --print_err("Deer is ready")
 end
 
 function dir_wait(seconds)
@@ -164,6 +174,13 @@ function update()
     local pos = entity:get_transform().pos;
     local diff = scene.globals.player.pos - pos;
     local player_dist = diff:magnitude();
+
+    if (player_dist > 50) then
+        entity:active_model(false);
+        return;
+    else
+        entity:active_model(true);
+    end
 
     if (player_dist < state.VIEW_DISTANCE) then
         local diff_normal = diff:normalize();

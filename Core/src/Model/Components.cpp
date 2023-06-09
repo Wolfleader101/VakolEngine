@@ -31,7 +31,7 @@ namespace Vakol::Model::Components {
         states = lua->GetState().create_table();
     }
 
-    void FSM::AddState(std::string& stateName, sol::protected_function& callback) {
+    void FSM::AddState(const std::string& stateName, sol::protected_function& callback) {
         // Add a new state to the states table
         states[stateName] = callback;
     }
@@ -90,6 +90,10 @@ namespace Vakol::Model::Components {
 
     void RigidBody::SetAngularVelocity(const glm::vec3& vel) const {
         RigidBodyPtr->setAngularVelocity(rp3d::Vector3(vel.x, vel.y, vel.z));
+    }
+
+    void RigidBody::ApplyForce(const glm::vec3& force) const {
+        RigidBodyPtr->applyWorldForceAtCenterOfMass(rp3d::Vector3(force.x, force.y, force.z));
     }
 
     void RigidBody::SetAngularDamp(const float damp) const { RigidBodyPtr->setAngularDamping(damp); }

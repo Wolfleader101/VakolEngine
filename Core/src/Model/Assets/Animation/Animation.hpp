@@ -4,12 +4,27 @@
 #include <Model/Assets/Bone.hpp>
 
 namespace Vakol::Model::Assets {
+    /**
+     * @brief Class representing an animation.
+     */
     class Animation {
        public:
-        static constexpr auto MAX_BONE_COUNT = 100;
+        static constexpr auto MAX_BONE_COUNT = 100; /**< Maximum number of bones in the animation. */
 
+        /**
+         * @brief Default constructor for Animation.
+         */
         Animation() = default;
 
+        /**
+         * @brief Constructs an Animation object with the given parameters.
+         *
+         * @param root_inverse The root inverse transformation matrix.
+         * @param nodes The animation nodes.
+         * @param bone_count The number of bones.
+         * @param duration The duration of the animation.
+         * @param tps The ticks per second of the animation.
+         */
         Animation(const glm::mat4& root_inverse, std::vector<AnimationNode>&& nodes, const unsigned int bone_count,
                   const float duration, const float tps)
             : global_inverse(root_inverse),
@@ -23,6 +38,12 @@ namespace Vakol::Model::Assets {
             }
         }
 
+
+        /**
+         * @brief Updates the animation state based on the delta time.
+         *
+         * @param delta_time The time elapsed since the last update.
+         */
         void Update(const float delta_time) {
             current_time +=
                 ticks_per_second * delta_time;  // Update the current time based on the ticks per second and delta time
@@ -61,18 +82,65 @@ namespace Vakol::Model::Assets {
             }
         }
 
+         /**
+         * @brief Get the bone transforms.
+         *
+         * @return The vector of bone transforms.
+         */
         [[nodiscard]] const std::vector<glm::mat4>& transforms() const { return m_transforms; }
+
+        /**
+         * @brief Get the transform of the animation.
+         *
+         * @return The transform matrix.
+         */
         [[nodiscard]] const glm::mat4& transform() const { return m_transforms.at(0); }
 
+        /**
+         * @brief Get the duration of the animation in seconds.
+         *
+         * @return The duration in seconds.
+         */
         [[nodiscard]] auto duration_s() const -> float { return duration * 0.001f; }
+
+        /**
+         * @brief Get the duration of the animation in milliseconds.
+         *
+         * @return The duration in milliseconds.
+         */
         [[nodiscard]] auto duration_ms() const -> float { return duration; }
 
+        /**
+         * @brief Get the current time of the animation in milliseconds.
+         *
+         * @return The current time in milliseconds.
+         */
         [[nodiscard]] auto get_current_time_ms() const -> float { return current_time; }
+
+        /**
+         * @brief Get the current time of the animation in seconds.
+         *
+         * @return The current time in seconds.
+         */
         [[nodiscard]] auto get_current_time_s() const -> float { return current_time * 0.001f; }
 
+        /**
+         * @brief Reset the animation to the beginning.
+         */
         auto reset_animation() -> void { current_time = 0.0f; }
 
+        /**
+         * @brief Get the number of animation nodes.
+         *
+         * @return The number of animation nodes.
+         */
         [[nodiscard]] auto numNodes() const -> int { return static_cast<int>(m_nodes.size()); }
+
+        /**
+         * @brief Get the number of bone transforms.
+         *
+         * @return The number of bone transforms.
+         */
         [[nodiscard]] auto numTransforms() const -> int { return static_cast<int>(m_transforms.size()); }
 
        private:
