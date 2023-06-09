@@ -22,7 +22,7 @@ function init()
 	for i = 1, n_trees do
 		local mdl_m = Matrix4x4.new(1.0);
 
-		local scl_v = Vector3.new(1.0);
+		local scl_v = Vector3.new(math.random(20, 30) / 100);
 		local pos_v = Vector3.new(0.0);
 
 		attempts = 0;
