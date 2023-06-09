@@ -42,7 +42,7 @@ function init()
 
     -- scene:add_terrain_physics(entity);
 
-    scene.globals.terrain = {transform = entity:get_transform(), terr = entity:get_terrain()};
+    scene.globals.terrain = { transform = entity:get_transform(), terr = entity:get_terrain() };
 
     local planeEntity = scene:create_entity("planeEntity", "")
     local planeModel = planeEntity:add_model("coreAssets/models/plane.obj", scene.globals.terrain.terr:get_size(), false, true) -- get model and add a drawable component

@@ -677,6 +677,7 @@ namespace Vakol::Controller {
         auto rigidType = lua.new_usertype<RigidBody>("rigidBody");
 
         rigidType["use_transform"] = &RigidBody::use_transform;
+        rigidType["is_colliding"] = &RigidBody::is_colliding;
 
         lua["BodyType"] =
             lua.create_table_with("Static", RigidBody::BODY_TYPE::STATIC, "Kinematic", RigidBody::BODY_TYPE::KINEMATIC,
@@ -732,6 +733,9 @@ namespace Vakol::Controller {
 
         rigidType.set_function("set_angular_damp",
                                [](const RigidBody* rigid, const float damp) { rigid->SetAngularDamp(damp); });
+
+        rigidType.set_function("apply_force",
+                               [](RigidBody* rigid, const glm::vec3& force) { rigid->ApplyForce(force); });
 
         colliderType["bounds"] = &Collider::bounds;
 

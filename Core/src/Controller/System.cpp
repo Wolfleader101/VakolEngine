@@ -129,25 +129,29 @@ namespace Vakol::Controller {
 
             rp3d::Transform curr_transform = rigid.RigidBodyPtr->getTransform();
 
-            if (rigid.use_transform && !rigid.is_colliding) {
+            // If use_transform is enabled and there was no collision in the last frame
+            if (rigid.use_transform && !rigid.was_colliding) {
                 const auto pos = to_rp3d(trans.pos);
                 const auto rot = to_rp3d(trans.rot);
 
-                rp3d::Transform newTrans(pos, rot);
-                rigid.RigidBodyPtr->setTransform(newTrans);
-                curr_transform = newTrans;
+                float x = curr_transform.getPosition().x;
+                float z = curr_transform.getPosition().z;
+
+                curr_transform.setPosition(rp3d::Vector3(x, pos.y, z));
+                rigid.RigidBodyPtr->setTransform(curr_transform);
             }
 
             // Compute the interpolated transform of the rigid body
             const rp3d::Transform interpolatedTransform =
                 rp3d::Transform::interpolateTransforms(rigid.prevTransform, curr_transform, factor);
 
+            // Store the current collision state for the next frame
+            rigid.was_colliding = rigid.is_colliding;
+
             rigid.prevTransform = curr_transform;
 
             trans.pos = to_glm(interpolatedTransform.getPosition());
             trans.rot = to_glm(interpolatedTransform.getOrientation());
-
-            rigid.is_colliding = false;
         });
     }
 

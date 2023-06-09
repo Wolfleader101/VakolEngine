@@ -23,40 +23,42 @@ function init()
 
     scene:create_entity("terrain", "entities/terrain/physicsTerrain.lua");
 
-    --scene:create_entity("serialization", "entities/misc/serialization.lua");
+    scene:create_entity("serialization", "entities/misc/serialization.lua");
 
-    --scene:create_entity("static_props", "entities/instancing_new.lua");
+    scene:create_entity("static_props", "entities/instancing_new.lua");
 
-    --local rabbits          = {};
-    --local birds            = {};
-    --local deers            = {};
-    --scene.globals.monsters = {};
-    --scene.globals.bears    = {};
+    local rabbits          = {};
+    local birds            = {};
+    local deers            = {};
+    scene.globals.monsters = {};
+    scene.globals.bears    = {};
 
-    --for i = 1, 10 do
-    --    scene.globals.bears[i] = scene:create_entity("Bear" .. i, "entities/agents/bear.lua");
-    --    scene.globals.bears[i]:get_transform().pos = random_pos();
-    --end
+    for i = 1, 10 do
+        scene.globals.bears[i] = scene:create_entity("Bear" .. i, "entities/agents/bear.lua");
+        scene.globals.bears[i]:get_transform().pos = random_pos();
+    end
 
-    --for i = 1, 10 do
-    --    scene.globals.monsters[i] = scene:create_entity("Monster" .. i, "entities/agents/monster.lua");
-    --    scene.globals.monsters[i]:get_transform().pos = random_pos();
-    --end
+    for i = 1, 10 do
+        scene.globals.monsters[i] = scene:create_entity("Monster" .. i, "entities/agents/monster.lua");
+        scene.globals.monsters[i]:get_transform().pos = random_pos();
+    end
 
-    --for i = 1,10 do
-    --    birds[i] = scene:create_entity("Bird" .. i, "entities/agents/bird.lua");
-    --    birds[i]:get_transform().pos = random_pos();
-    --end
+    for i = 1,10 do
+        birds[i] = scene:create_entity("Bird" .. i, "entities/agents/bird.lua");
+        birds[i]:get_transform().pos = random_pos();
+    end
 
-    --for i = 1, 10 do
-    --    rabbits[i] = scene:create_entity("Rabbit" .. i, "entities/agents/rabbit.lua");
-    --    rabbits[i]:get_transform().pos = random_pos();
-    --end
+    for i = 1, 10 do
+        rabbits[i] = scene:create_entity("Rabbit" .. i, "entities/agents/rabbit.lua");
+        rabbits[i]:get_transform().pos = random_pos();
+    end
 
-    --for i = 1, 5 do
-    --    deers[i] = scene:create_entity("Deer" .. i, "entities/agents/deer.lua");
-    --    deers[i]:get_transform().pos = random_pos();
-    --end
+    for i = 1, 5 do
+        deers[i] = scene:create_entity("Deer" .. i, "entities/agents/deer.lua");
+        deers[i]:get_transform().pos = random_pos();
+    end
+
+    phys_debug = false;
 end
 
 
@@ -71,6 +73,10 @@ function update()
         menu:set_active(true);
     end
     
+    if (Input:get_key_down(KEYS["KEY_N"])) then
+        phys_debug = not phys_debug;
+        scene:enable_debug(phys_debug);
+    end
 
     if(Input:get_key_down(KEYS["KEY_5"])) then
         scene:serialize("assets/scenes");
