@@ -71,7 +71,7 @@ function init()
     
         entity:play_animation(state.ANIMATIONS.ATTACK);
 
-        PLAYER.health = PLAYER.health - (10 * Time.delta_time);
+        PLAYER.decrement_health((10 * OPTIONS.ATTACK_DAMAGE_DEALT_TO_PLAYER_MULTIPLIER) * Time.delta_time);
 
         if(fsm_wait(2)) then
             if player_distance() > state.enemyAttackAnimDistance then
@@ -226,7 +226,7 @@ end
 
 function update()
     PLAYER = get_scene("Nordic World").globals.player;
-    OPTIONS = get_scene("Options Scene");
+    OPTIONS = get_scene("Options Scene").globals.options;
 
     local pos = entity:get_transform().pos;
     local diff = scene.globals.player.pos - pos;

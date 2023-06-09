@@ -19,16 +19,15 @@ function init()
 end
 
 function update()
-    set_wireframe(true);
+    toggle_wireframe();
     clear_color(0.00961, 0.0431, 0.0784, 0);
-
 
     local terrain = entity:get_terrain();
     local model = terrain:get_model();
     local shader = model:get_shader();
 
     shader:set_float("u_time", Time.curr_time * 2);
-    set_wireframe(false);
+    toggle_wireframe();
 end
 
 function deserialize()

@@ -41,10 +41,10 @@ end
 
 function increment_health(input_amount)
     if(scene.globals.player.health >= 0 and scene.globals.player.health < scene.globals.player.MAX_HEALTH) then 
-        if((scene.globals.player.health + input_amount) > scene.globals.player.MAX_HEALTH) then
+        if((scene.globals.player.health + (input_amount * LEVEL.HEALTH_REGEN_RATE_MULTIPLIER)) > scene.globals.player.MAX_HEALTH) then
             scene.globals.player.health = scene.globals.player.MAX_HEALTH;
         else
-            scene.globals.player.health = scene.globals.player.health + input_amount;
+            scene.globals.player.health = scene.globals.player.health + (input_amount * LEVEL.HEALTH_REGEN_RATE_MULTIPLIER);
         end
     end
 end
@@ -64,10 +64,10 @@ end
 
 function increment_hunger(input_amount)
     if (scene.globals.player.hunger >= 0 and scene.globals.player.hunger < scene.globals.player.MAX_HUNGER) then
-        if ((scene.globals.player.hunger + input_amount) > scene.globals.player.MAX_HUNGER) then
+        if (scene.globals.player.hunger + (input_amount * LEVEL.HUNGER_REGEN_RATE_MULTIPLIER) > scene.globals.player.MAX_HUNGER) then
             scene.globals.player.hunger = scene.globals.player.MAX_HUNGER;
         else
-            scene.globals.player.hunger = scene.globals.player.hunger + input_amount;
+            scene.globals.player.hunger = scene.globals.player.hunger + (input_amount * LEVEL.HUNGER_REGEN_RATE_MULTIPLIER);
         end
     end
 end
@@ -84,11 +84,11 @@ function decrement_hunger(input_amount)
 end
 
 function increment_thirst(input_amount)
-    if(scene.globals.player.thirst >= 0 and scene.globals.player.thirst < scene.globals.player.MAX_THIRST) then 
-        if((scene.globals.player.thirst + input_amount) > scene.globals.player.MAX_THIRST) then
+    if (scene.globals.player.thirst >= 0 and scene.globals.player.thirst < scene.globals.player.MAX_THIRST) then 
+        if (scene.globals.player.thirst + (input_amount * LEVEL.THIRST_REGEN_RATE_MULTIPLIER) > scene.globals.player.MAX_THIRST) then
             scene.globals.player.thirst = scene.globals.player.MAX_THIRST;
         else
-            scene.globals.player.thirst = scene.globals.player.thirst + input_amount;
+            scene.globals.player.thirst = scene.globals.player.thirst + (input_amount * LEVEL.THIRST_REGEN_RATE_MULTIPLIER);
         end
     end
 end

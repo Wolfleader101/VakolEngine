@@ -12,8 +12,10 @@ function set_easy()
 
     scene.globals.options.DROWNING_SPEED_MULTIPLIER = 1.0;
     scene.globals.options.ATTACK_DAMAGE_GIVEN_MULTIPLIER = 1.0;
-    scene.globals.options.ATTACK_DAMAGE_DEALT_MULTIPLIER = 1.0;
-    scene.globals.options.HEALTH_REGEN_RATE_MULTIPLIER = 1.0;
+    scene.globals.options.ATTACK_DAMAGE_DEALT_TO_PLAYER_MULTIPLIER = 1.0;
+    scene.globals.options.HEALTH_REGEN_RATE_MULTIPLIER = 1.25;
+    scene.globals.options.HUNGER_REGEN_RATE_MULTIPLIER = 1.25;
+    scene.globals.options.THIRST_REGEN_RATE_MULTIPLIER = 1.25;
     scene.globals.options.HUNGER_DECREASE_RATE_MULTIPLIER = 1.0;
     scene.globals.options.THIRST_DECREASE_RATE_MULTIPLIER = 1.0;
 end
@@ -23,8 +25,10 @@ function set_medium()
 
     scene.globals.options.DROWNING_SPEED_MULTIPLIER = 1.5;
     scene.globals.options.ATTACK_DAMAGE_GIVEN_MULTIPLIER = 0.75;
-    scene.globals.options.ATTACK_DAMAGE_DEALT_MULTIPLIER = 1.5;
-    scene.globals.options.HEALTH_REGEN_RATE_MULTIPLIER = 0.75;
+    scene.globals.options.ATTACK_DAMAGE_DEALT_TO_PLAYER_MULTIPLIER = 1.5;
+    scene.globals.options.HEALTH_REGEN_RATE_MULTIPLIER = 1.15;
+    scene.globals.options.HUNGER_REGEN_RATE_MULTIPLIER = 1.15;
+    scene.globals.options.THIRST_REGEN_RATE_MULTIPLIER = 1.15;
     scene.globals.options.HUNGER_DECREASE_RATE_MULTIPLIER = 1.25;
     scene.globals.options.THIRST_DECREASE_RATE_MULTIPLIER = 1.25;
 end
@@ -34,8 +38,10 @@ function set_hard()
 
     scene.globals.options.DROWNING_SPEED_MULTIPLIER = 2.0;
     scene.globals.options.ATTACK_DAMAGE_GIVEN_MULTIPLIER = 0.65;
-    scene.globals.options.ATTACK_DAMAGE_DEALT_MULTIPLIER = 2.0;
-    scene.globals.options.HEALTH_REGEN_RATE_MULTIPLIER = 0.65;
+    scene.globals.options.ATTACK_DAMAGE_DEALT_TO_PLAYER_MULTIPLIER = 2.0;
+    scene.globals.options.HEALTH_REGEN_RATE_MULTIPLIER = 1.05;
+    scene.globals.options.HUNGER_REGEN_RATE_MULTIPLIER = 1.05;
+    scene.globals.options.THIRST_REGEN_RATE_MULTIPLIER = 1.05;
     scene.globals.options.HUNGER_DECREASE_RATE_MULTIPLIER = 1.5;
     scene.globals.options.THIRST_DECREASE_RATE_MULTIPLIER = 1.5;
 end
@@ -106,26 +112,23 @@ function init()
         DIFFICULTY = EASY,
         DROWNING_SPEED_MULTIPLIER = 1.0,
         ATTACK_DAMAGE_GIVEN_MULTIPLIER = 1.0,
-        ATTACK_DAMAGE_DEALT_MULTIPLIER = 1.0,
+        ATTACK_DAMAGE_DEALT_TO_PLAYER_MULTIPLIER = 1.0,
         HEALTH_REGEN_RATE_MULTIPLIER = 1.0,
+        HUNGER_REGEN_RATE_MULTIPLIER = 1.0,
+        THIRST_REGEN_RATE_MULTIPLIER = 1.0,
         HUNGER_DECREASE_RATE_MULTIPLIER = 1.0,
         THIRST_DECREASE_RATE_MULTIPLIER = 1.0,
         IN_OPTIONS_MENU = false,
     }
 
     set_active_mouse(true);
-
-    set_wireframe(false);
-    set_skybox(false);
 end
 
 function update()
     options_menu();
 
     if(Input:get_key_down(KEYS["KEY_ESC"])) then
-        set_wireframe(false);
         scene:set_active(false);
-        set_wireframe(true);
 
         local menu = get_scene("Start Scene");
         menu:set_active(true);

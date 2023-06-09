@@ -60,6 +60,8 @@ namespace Vakol::View
                 glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         }
 
+        void ToggleSkybox() override { isSkybox = !isSkybox; }
+
         void SetWireframe(const bool wireframe) override 
         {
             isWireframe = wireframe;

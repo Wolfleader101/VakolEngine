@@ -46,24 +46,27 @@ function update()
     start_menu();
     
     if (Input:get_key_down(KEYS["KEY_1"])) then
+        toggle_skybox();
         scene:set_active(false);
 
         local game = get_scene("Nordic World");
         game:set_active(true);
-        set_skybox(true);
+        toggle_wireframe();
     end
 
     if (Input:get_key_down(KEYS["KEY_2"])) then
+        toggle_skybox();
         scene:set_active(false);
-
+        toggle_wireframe();
         local options_scene = get_scene("Options Scene");
         options_scene:set_active(true);
         options_scene.globals.options.OPENED_OPTIONS_MENU = true;
     end
 
     if (Input:get_key_down(KEYS["KEY_3"])) then
+        toggle_skybox();
         scene:set_active(false);
-
+        toggle_wireframe();
         local controls = get_scene("Controls Scene");
         controls:set_active(true);
     end

@@ -667,6 +667,10 @@ namespace Vakol::Controller
 
     void RegisterRenderer(sol::state& lua, const std::shared_ptr<View::Renderer>& renderer) 
     {
+        lua.set_function("toggle_wireframe", [&]{renderer->ToggleWireframe();});
+
+        lua.set_function("toggle_skybox", [&]{renderer->ToggleSkybox();});
+
         lua.set_function("set_wireframe", [&](const bool wireframe) { renderer->SetWireframe(wireframe); });
 
         lua.set_function("set_skybox", [&](const bool skybox) { renderer->SetSkybox(skybox); });

@@ -25,6 +25,8 @@ function update()
 	display_controls();
 
     if(Input:get_key_down(KEYS["KEY_ESC"])) then
+        toggle_wireframe();
+        toggle_skybox();
         scene:set_active(false);
 
         local menu = get_scene("Start Scene");

@@ -7,8 +7,6 @@ function init()
 
     scene:create_entity("serialization", "entities/misc/serialization.lua");
 
-    set_wireframe(false);
-
     --scene:create_entity("static_props", "entities/instancing_new.lua");
 
     --local rabbits = {};
@@ -39,11 +37,10 @@ end
 
 function update()
     if(Input:get_key_down(KEYS["KEY_ESC"])) then
+        toggle_wireframe();
+        toggle_skybox();
 
         scene:set_active(false);
-
-        set_wireframe(true);
-        set_skybox(false);
 
         local menu = get_scene("Start Scene");
         menu:set_active(true);
