@@ -118,7 +118,7 @@ function init()
         local diff = scene.globals.player.pos - entity:get_transform().pos;
         state.dir = diff:normalize();  -- Update direction to run towards player
 
-        local velocity = state.sprint_speed * Time.delta_time;
+        local velocity = (state.sprint_speed * OPTIONS.SPRINT_SPEED_MULTIPLIER) * Time.delta_time;
         local pos = entity:get_transform().pos;
         pos.x = pos.x + (state.dir.x * velocity);
         pos.z = pos.z + (state.dir.z * velocity);
