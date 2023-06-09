@@ -41,12 +41,27 @@ function init()
     shader:set_int("material.normal_map", 2);
     shader:set_int("material.emission_map", 3);
 
+    local rb = entity:add_rigid();
+
+    rb.use_transform = true;
+
+    local collider = entity:add_collider();
+
+    collider.Shape = Shape.Box;
+    collider.bounds.extents.x = 0.1;
+    collider.bounds.extents.y = 0.5;
+    collider.bounds.extents.z = 0.1;
+
+
+    entity:physics_init(scene); 
+
     state.fsm = entity:add_fsm();
 
     state.fsm:add_state("attack", function()
         trigger_nearby_monsters(entity, 10.0);
     
         entity:play_animation(state.ANIMATIONS.ATTACK);
+        entity:get_rigid():set_velocity(Vector3.new(0,0,0));
 
         if(fsm_wait(2)) then  -- The attack animation lasts for 2 seconds
             if player_distance() > state.enemyAttackAnimDistance then  -- If player moves more than state.enemyAttackAnimDistance units away, start chasing again
@@ -57,6 +72,7 @@ function init()
 
     state.fsm:add_state("idle", function()
         entity:play_animation(state.ANIMATIONS.IDLE);
+        entity:get_rigid():set_velocity(Vector3.new(0,0,0));
         if(fsm_wait(math.random(5,7))) then
             local rand = math.random();
             if (rand < 0.6) then
@@ -94,10 +110,8 @@ function init()
         end
         
         local velocity = state.speed * Time.delta_time;
-        local pos = entity:get_transform().pos;
-        pos.x = pos.x + (state.dir.x * velocity);
-        pos.z = pos.z + (state.dir.z * velocity);
-        entity:get_transform().pos = pos; -- Add this line
+        local move = state.dir * velocity * 100;
+        entity:get_rigid():set_velocity(move);
 
         local targetRotation = math.atan(state.dir.x, state.dir.z)
         targetRotation = targetRotation * (180 / math.pi)
@@ -116,11 +130,9 @@ function init()
         local diff = scene.globals.player.pos - entity:get_transform().pos;
         state.dir = diff:normalize();  -- Update direction to run towards player
 
-        local velocity = state.sprint_speed * Time.delta_time;
-        local pos = entity:get_transform().pos;
-        pos.x = pos.x + (state.dir.x * velocity);
-        pos.z = pos.z + (state.dir.z * velocity);
-        entity:get_transform().pos = pos; -- Add this line
+        local velocity = state.speed * Time.delta_time;
+        local move = state.dir * velocity * 100;
+        entity:get_rigid():set_velocity(move);
 
         local targetRotation = math.atan(state.dir.x, state.dir.z)
         targetRotation = targetRotation * (180 / math.pi)
@@ -141,11 +153,9 @@ function init()
         local diff = scene.globals.player.pos - entity:get_transform().pos;
         state.dir = diff:normalize();  -- Update direction to run towards player
 
-        local velocity = state.sprint_speed * Time.delta_time;
-        local pos = entity:get_transform().pos;
-        pos.x = pos.x + (state.dir.x * velocity);
-        pos.z = pos.z + (state.dir.z * velocity);
-        entity:get_transform().pos = pos; -- Add this line
+        local velocity = state.speed * Time.delta_time;
+        local move = state.dir * velocity * 100;
+        entity:get_rigid():set_velocity(move);
 
         local targetRotation = math.atan(state.dir.x, state.dir.z)
         targetRotation = targetRotation * (180 / math.pi)

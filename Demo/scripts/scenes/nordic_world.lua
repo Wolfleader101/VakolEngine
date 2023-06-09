@@ -57,6 +57,9 @@ function init()
         deers[i] = scene:create_entity("Deer" .. i, "entities/agents/deer.lua");
         deers[i]:get_transform().pos = random_pos();
     end
+
+    phys_debug = false;
+
 end
 
 
@@ -71,6 +74,10 @@ function update()
         menu:set_active(true);
     end
     
+    if (Input:get_key_down(KEYS["KEY_N"])) then
+        phys_debug = not phys_debug;
+        scene:enable_debug(phys_debug);
+    end
 
     if(Input:get_key_down(KEYS["KEY_5"])) then
         scene:serialize("assets/scenes");
