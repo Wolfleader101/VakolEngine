@@ -48,7 +48,7 @@ function init()
     
         entity:play_animation(state.ANIMATIONS.ATTACK);
 
-        PLAYER.decrement_health((10 * OPTIONS.ATTACK_DAMAGE_DEALT_TO_PLAYER_MULTIPLIER) * Time.delta_time);
+        PLAYER.decrement_health((12.5 * OPTIONS.ATTACK_DAMAGE_DEALT_TO_PLAYER_MULTIPLIER) * Time.delta_time);
 
         if(fsm_wait(2)) then  -- The attack animation lasts for 2 seconds
             if player_distance() > state.enemyAttackAnimDistance then  -- If player moves more than state.enemyAttackAnimDistance units away, start chasing again
@@ -143,7 +143,7 @@ function init()
         local diff = scene.globals.player.pos - entity:get_transform().pos;
         state.dir = diff:normalize();  -- Update direction to run towards player
 
-        local velocity = state.sprint_speed * Time.delta_time;
+        local velocity = (state.sprint_speed * OPTIONS.SPRINT_SPEED_MULTIPLIER) * Time.delta_time;
         local pos = entity:get_transform().pos;
         pos.x = pos.x + (state.dir.x * velocity);
         pos.z = pos.z + (state.dir.z * velocity);

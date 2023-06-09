@@ -10,7 +10,7 @@ function init()
 
     state.enemyAttackAnimDistance = 1.2;
     state.giveUpDistance = 8.0;
-    state.speed = 0.4;
+    state.speed = 0.7;
     state.sprint_speed = 1.6;
     state.dir = Vector3.new(math.random() * 2 - 1, 0, math.random() * 2 - 1);
     while state.dir:magnitude() == 0 do
@@ -167,7 +167,7 @@ function init()
         local diff = scene.globals.player.pos - entity:get_transform().pos;
         state.dir = diff:normalize();
 
-        local velocity = state.sprint_speed * Time.delta_time;
+        local velocity = (state.sprint_speed * OPTIONS.SPRINT_SPEED_MULTIPLIER) * Time.delta_time;
         local pos = entity:get_transform().pos;
         pos.x = pos.x + (state.dir.x * velocity);
         pos.z = pos.z + (state.dir.z * velocity);

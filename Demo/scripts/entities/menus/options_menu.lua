@@ -18,6 +18,7 @@ function set_easy()
     scene.globals.options.THIRST_REGEN_RATE_MULTIPLIER = 1.25;
     scene.globals.options.HUNGER_DECREASE_RATE_MULTIPLIER = 1.0;
     scene.globals.options.THIRST_DECREASE_RATE_MULTIPLIER = 1.0;
+    scene.globals.options.SPRINT_SPEED_MULTIPLIER = 1.0;
 end
 
 function set_medium()
@@ -31,6 +32,7 @@ function set_medium()
     scene.globals.options.THIRST_REGEN_RATE_MULTIPLIER = 1.15;
     scene.globals.options.HUNGER_DECREASE_RATE_MULTIPLIER = 1.25;
     scene.globals.options.THIRST_DECREASE_RATE_MULTIPLIER = 1.25;
+    scene.globals.options.SPRINT_SPEED_MULTIPLIER = 1.25;
 end
 
 function set_hard()
@@ -44,6 +46,7 @@ function set_hard()
     scene.globals.options.THIRST_REGEN_RATE_MULTIPLIER = 1.05;
     scene.globals.options.HUNGER_DECREASE_RATE_MULTIPLIER = 1.5;
     scene.globals.options.THIRST_DECREASE_RATE_MULTIPLIER = 1.5;
+    scene.globals.options.SPRINT_SPEED_MULTIPLIER = 1.5;
 end
 
 function get_difficulty()
@@ -118,6 +121,7 @@ function init()
         THIRST_REGEN_RATE_MULTIPLIER = 1.0,
         HUNGER_DECREASE_RATE_MULTIPLIER = 1.0,
         THIRST_DECREASE_RATE_MULTIPLIER = 1.0,
+        SPRINT_SPEED_MULTIPLIER = 1.0,
         IN_OPTIONS_MENU = false,
     }
 
