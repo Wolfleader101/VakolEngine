@@ -159,13 +159,7 @@ function init()
     shader:set_int("material.emission_map", 3);
 
     setup_fsm();
-
-    
-
 end
-
-
-
 
 function update()
     local pos = entity:get_transform().pos;

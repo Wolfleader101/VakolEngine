@@ -13,6 +13,21 @@ local function dir_wait(seconds)
     return false;
 end
 
+local function trigger_nearby_monsters(origin_monster, trigger_distance)
+    local origin_pos = origin_monster:get_transform().pos
+
+    for i, monster in ipairs(scene.globals.monsters) do
+        if monster ~= origin_monster and monster:get_fsm():get_state() ~= "attack" then
+            local diff = origin_pos - monster:get_transform().pos
+            if diff:magnitude() <= trigger_distance then
+                monster:get_fsm():change_state("alerted")
+                --print("Monster " .. i .. " has been alerted and is now in alerted state.")
+            end
+        end
+    end
+end
+
+
 local function fsm_wait(seconds)
     state.WAIT_TIMER = state.WAIT_TIMER + Time.delta_time;
 
@@ -140,6 +155,8 @@ local function setup_fsm()
             state.fsm:change_state("attack");
         end
     end)
+    
+    state.fsm:change_state("roaming");
 end
 
 function init()
@@ -186,25 +203,7 @@ function init()
     shader:set_int("material.emission_map", 3);
 
     setup_fsm();
-    state.fsm:change_state("roaming")
-
-    --print_err("Monster is ready")
 end
-
-local function trigger_nearby_monsters(origin_monster, trigger_distance)
-    local origin_pos = origin_monster:get_transform().pos
-
-    for i, monster in ipairs(scene.globals.monsters) do
-        if monster ~= origin_monster and monster:get_fsm():get_state() ~= "attack" then
-            local diff = origin_pos - monster:get_transform().pos
-            if diff:magnitude() <= trigger_distance then
-                monster:get_fsm():change_state("alerted")
-                --print("Monster " .. i .. " has been alerted and is now in alerted state.")
-            end
-        end
-    end
-end
-
 
 
 function update()

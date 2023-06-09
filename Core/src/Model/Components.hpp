@@ -68,67 +68,64 @@ namespace Vakol::Model::Components {
      * @brief Animator component
      */
     struct Animator {
-    std::string attached_model; /**< The attached model name. */
+        std::string attached_model; /**< The attached model name. */
 
-    /**
-     * \brief Updates the animator with the specified state and delta time.
-     * \param state The state of the animator.
-     * \param delta_time The elapsed time since the last update.
-     */
-    void Update(const int state, const float delta_time) { animator_ptr->Update(state, delta_time); }
+        /**
+         * \brief Updates the animator with the specified state and delta time.
+         * \param state The state of the animator.
+         * \param delta_time The elapsed time since the last update.
+         */
+        void Update(const int state, const float delta_time) { animator_ptr->Update(state, delta_time); }
 
-    /**
-     * \brief Updates the animator with the specified delta time.
-     * \param delta_time The elapsed time since the last update.
-     */
-    void Update(const float delta_time) { animator_ptr->Update(delta_time); }
+        /**
+         * \brief Updates the animator with the specified delta time.
+         * \param delta_time The elapsed time since the last update.
+         */
+        void Update(const float delta_time) { animator_ptr->Update(delta_time); }
 
+        [[nodiscard]] int nAnimations() const { return animator_ptr->nAnimations(); }
 
-    [[nodiscard]] int nAnimations() const { return animator_ptr->nAnimations(); }
+        /**
+         * \brief Retrieves a constant reference to the animation for the specified state.
+         * \param state The state of the animation.
+         * \return A constant reference to the animation.
+         */
+        const Model::Assets::Animation& c_animation(const int state) const { return animator_ptr->c_get(state); }
 
-    /**
-     * \brief Retrieves a constant reference to the animation for the specified state.
-     * \param state The state of the animation.
-     * \return A constant reference to the animation.
-     */
-    const Model::Assets::Animation& c_animation(const int state) const { return animator_ptr->c_get(state); }
+        /**
+         * \brief Retrieves a copy of the animation for the specified state.
+         * \param state The state of the animation.
+         * \return A copy of the animation.
+         */
+        Model::Assets::Animation animation(const int state) const { return animator_ptr->get(state); }
 
-    /**
-     * \brief Retrieves a copy of the animation for the specified state.
-     * \param state The state of the animation.
-     * \return A copy of the animation.
-     */
-    Model::Assets::Animation animation(const int state) const { return animator_ptr->get(state); }
+        /**
+         * \brief Sets the animator using a shared pointer.
+         * \param animator The shared pointer to the animator.
+         */
+        void set(const std::shared_ptr<Controller::Animator>& animator) { animator_ptr = animator; }
 
-    /**
-     * \brief Sets the animator using a shared pointer.
-     * \param animator The shared pointer to the animator.
-     */
-    void set(const std::shared_ptr<Controller::Animator>& animator) { animator_ptr = animator; }
+        /**
+         * \brief Sets the animator using a non-const reference.
+         * \param animator The animator object.
+         */
+        void set(const Controller::Animator& animator) {
+            animator_ptr = std::make_shared<Controller::Animator>(animator);
+        }
 
-    /**
-     * \brief Sets the animator using a non-const reference.
-     * \param animator The animator object.
-     */
-    void set(const Controller::Animator& animator) {
-        animator_ptr = std::make_shared<Controller::Animator>(animator);
-    }
+        /**
+         * \brief Serializes the Animator object.
+         * \tparam Archive The archive type.
+         * \param ar The archive.
+         */
+        template <class Archive>
+        void serialize(Archive& ar) {
+            ar(cereal::make_nvp("attached_model", attached_model));
+            // ar(cereal::make_nvp("State Table",state));
+        }
 
-    /**
-     * \brief Serializes the Animator object.
-     * \tparam Archive The archive type.
-     * \param ar The archive.
-     */
-    template <class Archive>
-    void serialize(Archive& ar) {
-        ar(cereal::make_nvp("attached_model", attached_model));
-        // ar(cereal::make_nvp("State Table",state));
-    }
-
-    std::shared_ptr<Controller::Animator> animator_ptr = nullptr; /**< The pointer to the animator object. */
-};
-
-
+        std::shared_ptr<Controller::Animator> animator_ptr = nullptr; /**< The pointer to the animator object. */
+    };
 
     /**
      * @struct Animation
@@ -260,7 +257,6 @@ namespace Vakol::Model::Components {
             ar(data);
         }
     };
-    
 
     /**
      * @brief Struct representing a finite state machine that can be controlled in lua.
@@ -282,7 +278,7 @@ namespace Vakol::Model::Components {
          * @param stateName The name of the new state.
          * @param callback The function to be executed when this state is active.
          */
-        void AddState(const std::string& stateName, sol::function& callback);
+        void AddState(const std::string& stateName, sol::protected_function& callback);
 
         /**
          * @brief Changes the current state of the FSM.
@@ -363,7 +359,7 @@ namespace Vakol::Model::Components {
         bool animated = false;     ///< Boolean indicating if the entity is animated.
         bool backfaceCull = true;  ///< Boolean indicating if backface culling is enabled.
         bool instance = false;     ///< Boolean indicating if the entity is an instance.
-        bool active = true;         ///< Boolean indicating if the entity is active.
+        bool active = true;        ///< Boolean indicating if the entity is active.
 
         std::shared_ptr<Assets::Model> model_ptr;  ///< Shared pointer to the model of the entity.
 
@@ -460,7 +456,7 @@ namespace Vakol::Model::Components {
          * @param ar Archive to serialize the data to.
          */
         template <class Archive>
-        void serialize(Archive& ar){
+        void serialize(Archive& ar) {
             ar(cereal::make_nvp("Mass", Data.mass));
             ar(cereal::make_nvp("Gravity", Data.grav));
             ar(cereal::make_nvp("Linear Dampening", Data.LDamp));
@@ -537,7 +533,7 @@ namespace Vakol::Model::Components {
         ShapeName ShapeName = BOX;              ///< The name of the shape of the collider. Default is BOX.
         bool DrawableBounds = false;            ///< Boolean indicating if the bounds are drawable.
 
-        Bounds bounds; ///< The bounds of the collider.
+        Bounds bounds;  ///< The bounds of the collider.
 
         /**
          * @brief Sets the bounds for the collider.
@@ -564,8 +560,6 @@ namespace Vakol::Model::Components {
      * @return Bounds of the collider.
      */
     Collider::Bounds GetBounds(const Drawable& model, const Transform& transform);
-
-
 
     /**
      * @brief Struct representing a Terrain.
