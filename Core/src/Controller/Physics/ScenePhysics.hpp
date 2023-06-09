@@ -82,13 +82,13 @@ namespace Vakol::Controller::Physics {
         rp3d::PhysicsWorld* m_World;
         static MyCollisionCallback m_callback;
 
-        float m_timestep = 1.0f / 30.0f;
+        float m_timestep = 1.0f / 60.0f;
 
         float m_accumulator = 0.0f;
 
         /**
          * @brief Debug renderer for physics.
-         *         
+         *
          */
         View::DebugRenderer m_DebugRenderer;
 
