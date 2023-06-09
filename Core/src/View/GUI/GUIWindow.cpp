@@ -177,14 +177,40 @@ namespace Vakol::View
         ImGui::Image(reinterpret_cast<void*>(static_cast<intptr_t>(id)), imageSize);
     }
 
-    void GUIWindow::AddButton(const std::string& buttonName, float width, float height, const std::function<void()>& inputFunction) const
+    void GUIWindow::AddButton(const std::string& buttonName, const bool centerX, const bool centerY, float width, float height, const std::function<void()>& inputFunction) const
     {
-        if (ImGui::Button(buttonName.c_str(), {width, height})) {
-            inputFunction();  // Runs the given input function
+        if (centerX && centerY) 
+        {
+            const auto windowWidth = ImGui::GetWindowSize().x;
+            const auto textWidth = ImGui::CalcTextSize(buttonName.c_str()).x;
+
+            const auto windowHeight = ImGui::GetWindowSize().y;
+            const auto textHeight = ImGui::CalcTextSize(buttonName.c_str()).y;
+
+            ImGui::SetCursorPosX((windowWidth - textWidth) / 2);
+            ImGui::SetCursorPosY((windowHeight - textHeight) / 2);
         }
+        else if (centerX)
+        {
+	        const auto windowWidth = ImGui::GetWindowSize().x;
+			const auto textWidth   = ImGui::CalcTextSize(buttonName.c_str()).x; 
+
+			ImGui::SetCursorPosX((windowWidth - textWidth) / 2);
+        }
+        else if (centerY)
+        {
+	        const auto windowHeight = ImGui::GetWindowSize().y;
+            const auto textHeight = ImGui::CalcTextSize(buttonName.c_str()).y;
+
+            ImGui::SetCursorPosY((windowHeight - textHeight) / 2);
+        }
+
+        if (ImGui::Button(buttonName.c_str(), {width, height})) 
+            inputFunction();  // Runs the given input function
     };
 
-    void GUIWindow::AddCheckbox(const std::string& checkboxName, bool* checkBoxValue) {
+    void GUIWindow::AddCheckbox(const std::string& checkboxName, bool* checkBoxValue) 
+    {
         ImGui::Checkbox(checkboxName.c_str(), checkBoxValue);
     };
 

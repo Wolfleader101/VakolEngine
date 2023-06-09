@@ -191,6 +191,14 @@ namespace Vakol::Controller
         // if its handled then u can break
     }
 
+    void Application::SetActiveMouse(const bool active)     
+    { 
+        if (active)
+            glfwSetInputMode(m_window->GetWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        else
+            glfwSetInputMode(m_window->GetWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    }
+
     bool Application::OnWindowClose([[maybe_unused]] WindowCloseEvent& ev) {
         m_running = false;
         return true;

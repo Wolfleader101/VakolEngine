@@ -2,7 +2,7 @@ WINDOWWIDTHMINIMUM = 325.0;
 WINDOWWIDTHMAXIMUM = 400.0;
 
 function start_menu()
-    GUI:start_window("Start Menu - Title", true, true, 600.0, 0.0 , 0, 350); 
+    GUI:start_window("Start Menu - Title", true, true, 700, 0.0 , 0, 350); 
 
     GUI:add_text("PLACES UNKNOWN", true, false, 4.0, 1.0, 0.169, 0.169, 1.0);
 
@@ -46,8 +46,8 @@ function update()
         toggle_skybox();
         scene:set_active(false);
 
-        local game = get_scene("Test Scene");
-        game:set_active(true);
+        local loading = get_scene("Loading Scene");
+        loading:set_active(true);
         toggle_wireframe();
     end
 

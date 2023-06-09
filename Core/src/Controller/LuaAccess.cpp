@@ -218,6 +218,8 @@ namespace Vakol::Controller {
         lua.set_function("add_scene", &Application::AddScene, app);
         lua.set_function("get_scene", &Application::GetScene, app);
 
+        lua.set_function("set_active_mouse", &Application::SetActiveMouse, app);
+
         auto time_type = lua.new_usertype<Time>("Time");
         time_type["delta_time"] = &Time::deltaTime;
         time_type["curr_time"] = &Time::curTime;
@@ -635,7 +637,8 @@ namespace Vakol::Controller {
         gui_window_type.set_function("end_window", &View::GUIWindow::EndWindowCreation);
     }
 
-    void RegisterRenderer(sol::state& lua, const std::shared_ptr<View::Renderer>& renderer) {
+    void RegisterRenderer(sol::state& lua, const std::shared_ptr<View::Renderer>& renderer) 
+    {
         lua.set_function("toggle_wireframe", [&] { renderer->ToggleWireframe(); });
 
         lua.set_function("toggle_skybox", [&] { renderer->ToggleSkybox(); });

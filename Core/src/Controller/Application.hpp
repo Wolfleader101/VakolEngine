@@ -80,6 +80,8 @@ namespace Vakol::Controller {
 
         const Input& GetInput() const { return m_input; }
 
+        void SetActiveMouse(bool active);
+
         void RegisterLua();
 
     private:
