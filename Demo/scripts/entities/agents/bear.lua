@@ -181,8 +181,6 @@ function init()
     end)
 
     state.fsm:change_state("roaming")
-
-    --print_err("Bear is ready")
 end
 
 function trigger_nearby_bears(origin_bear, trigger_distance)

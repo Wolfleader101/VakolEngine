@@ -6,11 +6,7 @@
 #include <Controller/Physics/PhysicsPool.hpp>
 #include <Controller/Scene.hpp>
 #include <Model/Components.hpp>
-
-#pragma warning(push)
-#pragma warning(disable : 4201)
 #include <glm/gtc/quaternion.hpp>
-#pragma warning(pop)
 
 using namespace Components;
 
@@ -35,10 +31,19 @@ namespace Vakol::Controller {
 
     void System::Drawable_Init() {
         Terrain_Init();
-        m_registry->view<Drawable>().each([&](auto& drawable) 
-        { 
-            if(drawable.model_ptr == nullptr)
-                drawable.model_ptr = AssetLoader::GetModel(drawable.name, drawable.scale, drawable.animated, drawable.backfaceCull).first;
+        m_registry->view<Drawable>().each([&](auto& drawable) {
+            if (drawable.model_ptr == nullptr)
+                drawable.model_ptr =
+                    AssetLoader::GetModel(drawable.name, drawable.scale, drawable.animated, drawable.backfaceCull)
+                        .first;
+        });
+
+        m_registry->group<Drawable, Components::Animator>().each([&](auto& drawable, auto& animator) {
+            if (!animator.animator_ptr) {
+                animator.animator_ptr =
+                    AssetLoader::GetModel(drawable.name, drawable.scale, drawable.animated, drawable.backfaceCull)
+                        .second;
+            }
         });
     }
 
@@ -88,6 +93,22 @@ namespace Vakol::Controller {
             lua->GetState()["state"] = script.state;
 
             lua->RunFunction("update");
+        });
+    }
+
+    void System::Script_Deserialize(std::shared_ptr<LuaState> lua, EntityList& list, Scene* scene) {
+        m_registry->view<Script>().each([&](auto entity_id, auto& script) {
+            lua->RunFile("scripts/" + script.script_name);
+
+            lua->GetState()["scene"] = scene;
+            lua->GetState()["entity"] = list.GetEntity(static_cast<unsigned int>(entity_id));
+
+            script.state = lua->GetState().create_table();
+            Controller::ConvertMapToSol(lua, script.data, script.state);
+
+            lua->GetState()["state"] = script.state;
+
+            lua->RunFunction("deserialize");
         });
     }
 
@@ -231,10 +252,5 @@ namespace Vakol::Controller {
     };
 
     void System::Physics_AddTerrain(const Terrain& ter) { m_SP->AddTerrain(ter); }
-
-    // void System::Script_Init()
-    // {
-
-    // }
 
 }  // namespace Vakol::Controller

@@ -1,7 +1,7 @@
 function init()
     print("Initialising Terrain");
   
-    local terrain = entity:create_height_map_terrain(scene, "coreAssets/textures/Heightmaps/height128.raw", -10, 50); -- size
+    local terrain = entity:create_height_map_terrain(scene, "assets/textures/Heightmaps/height128.raw", -10, 50); -- size
 
     local model = terrain:get_model();
 
@@ -23,7 +23,7 @@ function update()
     toggle_wireframe();
     clear_color(0.00961, 0.0431, 0.0784, 0);
 
-        
+
     local terrain = entity:get_terrain();
     local model = terrain:get_model();
     local shader = model:get_shader();
@@ -31,4 +31,8 @@ function update()
     shader:set_float("u_time", Time.curr_time * 2);
 
     toggle_wireframe();
+end
+
+function deserialize()
+    scene.globals.terrain = { transform = entity:get_transform(), terr = entity:get_terrain() };
 end

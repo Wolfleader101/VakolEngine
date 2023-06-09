@@ -140,6 +140,8 @@ namespace Vakol::Controller
         return ret;
     }
 
+    
+
     std::shared_ptr<Model::Shader> AssetLoader::GetShader(const std::string& file) 
     {
         std::shared_ptr<Model::Shader> ret;

@@ -7,6 +7,7 @@
 #include <filesystem>
 
 #include "LuaAccess.hpp"
+#include "SolSerialize.hpp"
 #include "System.hpp"
 
 namespace Vakol::Controller {
@@ -41,6 +42,8 @@ namespace Vakol::Controller {
         auto ent = entityList.CreateEntity();
 
         ent.GetComponent<Tag>().tag = tag;
+
+        if (!ent.GetComponent<GUID>().id.isValid()) ent.GetComponent<GUID>().GenNewGUID();
 
         if (!sname.empty()) ent.AddComponent<Script>(sname, lua, ent, *this);
 
@@ -104,19 +107,43 @@ namespace Vakol::Controller {
             json(cereal::make_nvp("Scene Name", name));
             json(cereal::make_nvp("Script Name", scriptName));
             json(cereal::make_nvp("camera", cam));
+        }
 
-            // json(cereal::make_nvp("Scene Globals", sceneGlobals));
+        std::ofstream globalOutput(FinalFolder + "/Globals.json");
+
+        if (globalOutput.good()) {
+            cereal::JSONOutputArchive json(globalOutput);
+
+            SolTableData globals;
+            ConvertSolToMap(sceneGlobals, globals);
+            json(CEREAL_NVP(globals));
         }
     }
 
     void Scene::Deserialize(const std::string& folder) {
+        std::ifstream globalInput(folder + "/Globals.json");
+
+        if (globalInput.good()) {
+            cereal::JSONInputArchive json(globalInput);
+
+            SolTableData globals;
+            json(globals);
+
+            ConvertMapToSol(lua, globals, sceneGlobals);
+
+            VK_TRACE("{0}", sceneGlobals["player"]["health"].get<float>());
+        }
+
         entityList.Deserialize(folder + "/EntityList.json");
 
         System::BindScene(*this);
         System::Drawable_Init();
         System::Physics_Init();
+        System::Script_Deserialize(lua, entityList, this);
 
-        if (std::ifstream input(folder + "/Scene.json"); input.good()) {
+        std::ifstream input(folder + "/Scene.json");
+
+        if (input.good()) {
             cereal::JSONInputArchive json(input);
             json(name);
             json(scriptName);

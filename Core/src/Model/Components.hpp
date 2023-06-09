@@ -4,16 +4,15 @@
 
 #include <Controller/LuaState.hpp>
 #include <Controller/Physics/ScenePhysics.hpp>
+#include <crossguid/guid.hpp>
 
-#pragma warning(push)
-#pragma warning(disable : 4201)
 #include <glm/glm.hpp>
-#pragma warning(pop)
 
 #include <memory>
 #include <string>
 
 #include "Controller/Animator.hpp"
+#include "Controller/SolSerialize.hpp"
 #include "Entity.hpp"
 #include "Model/Assets/Model.hpp"
 
@@ -86,8 +85,8 @@ namespace Vakol::Model::Components {
         template <class Archive>
         void serialize(Archive& ar) {
             ar(cereal::make_nvp("attached_model", attached_model));
+            // ar(cereal::make_nvp("State Table",state));
         }
-
     private:
         std::shared_ptr<Controller::Animator> animator_ptr = nullptr;
     };
@@ -162,6 +161,7 @@ namespace Vakol::Model::Components {
     struct Script {
         std::string script_name;
         sol::table state;
+        Controller::SolTableData data;
 
         Script() = default;
         explicit Script(std::string& name);
@@ -170,9 +170,21 @@ namespace Vakol::Model::Components {
                Controller::Scene& scene);
 
         template <class Archive>
-        void serialize(Archive& ar) {
+        void save(Archive& ar) const {
             ar(cereal::make_nvp("ScriptName", script_name));
-            // ar(cereal::make_nvp("State Table",state));
+
+            Controller::SolTableData temp;
+            Controller::ConvertSolToMap(state, temp);
+
+            ar(temp);
+        }
+
+        template <class Archive>
+        void load(Archive& ar) {
+            ar(cereal::make_nvp("ScriptName", script_name));
+
+            data.data.clear();
+            ar(data);
         }
     };
 
@@ -193,14 +205,28 @@ namespace Vakol::Model::Components {
         void Update();
 
         template <class Archive>
-        void serialize(Archive& ar) {
+        void save(Archive& ar) const {
             ar(cereal::make_nvp("Current State", currentState));
+
+            Controller::SolTableData temp;
+            Controller::ConvertSolToMap(states, temp);
+
+            ar(temp);
         }
 
-       private:
+        template <class Archive>
+        void load(Archive& ar) {
+            ar(cereal::make_nvp("Current State", currentState));
+
+            data.data.clear();
+            ar(data);
+        
+        }
+
         std::string currentState;
         sol::table states;
         std::shared_ptr<Controller::LuaState> lua;
+        Controller::SolTableData data;
     };
 
     struct Drawable {
@@ -351,4 +377,30 @@ namespace Vakol::Model::Components {
             ar(cereal::make_nvp("Max", max));
         }
     };
+
+    struct GUID {
+        GUID() = default;
+
+        void GenNewGUID();
+
+        bool operator==(const GUID& other) const;
+        bool operator!=(const GUID& other) const;
+        bool operator<(const GUID& other) const;
+
+        xg::Guid id;
+
+        template <class Archive>
+        void save(Archive& ar) const {
+            std::string id_str = id.str();
+            ar(cereal::make_nvp("guid", id_str));
+        }
+
+        template <class Archive>
+        void load(Archive& ar) {
+            std::string id_str;
+            ar(cereal::make_nvp("guid", id_str));
+            id = xg::Guid(id_str);
+        }
+    };
+
 }  // namespace Vakol::Model::Components

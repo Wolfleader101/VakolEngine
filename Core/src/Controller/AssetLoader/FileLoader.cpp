@@ -20,9 +20,9 @@ std::string LoadFile(const std::string& path) {
             in.seekg(0, std::ios::beg);
             in.read(result.data(), size);
         } else
-            VK_ERROR("Could not read file '{0}'", path);
+            VK_CRITICAL("Could not read file '{0}'", path);
     } else
-        VK_ERROR("Could not open file '{0}'", path);
+        VK_CRITICAL("Could not open file '{0}'", path);
 
     return result;
 }
@@ -35,7 +35,7 @@ unsigned char* LoadImage(const int size, int& width, int& height, int& nrChannel
         stbi_load_from_memory(static_cast<const stbi_uc* const>(data), size, &width, &height, &nrChannels, 0);
 
     if (!img_data) {
-        VK_ERROR("ERROR::FileLoader::LoadImage(): Failed to load embedded image");
+        VK_CRITICAL("FileLoader::LoadImage(): Failed to load embedded image");
         stbi_image_free(img_data);
     }
 
@@ -58,9 +58,9 @@ unsigned char* LoadImage(std::string&& path, int& width, int& height) {
             in.seekg(0, std::ios::beg);
             in.read(reinterpret_cast<char*>(result), size);
         } else
-            VK_ERROR("Could not read file '{0}'", path);
+            VK_CRITICAL("Could not read file '{0}'", path);
     } else
-        VK_ERROR("Could not open file '{0}'", path);
+        VK_CRITICAL("Could not open file '{0}'", path);
 
     return result;
 }
@@ -72,7 +72,7 @@ unsigned char* LoadImage(const char* path, int& width, int& height, int& channel
     const auto data = stbi_load(path, &width, &height, &channels, 0);
 
     if (!data) {
-        VK_ERROR("ERROR::FileLoader::LoadImage(): Failed to load image at path {0}", path);
+        VK_CRITICAL("FileLoader::LoadImage(): Failed to load image at path {0}", path);
         stbi_image_free(data);
     }
 
@@ -86,7 +86,7 @@ unsigned char* LoadImage(std::string&& path, int& width, int& height, int& chann
     const auto data = stbi_load(path.c_str(), &width, &height, &channels, 0);
 
     if (!data) {
-        VK_ERROR("ERROR::FileLoader::LoadImage(): Failed to load image at path {0}", path);
+        VK_CRITICAL("FileLoader::LoadImage(): Failed to load image at path {0}", path);
         stbi_image_free(data);
     }
 
