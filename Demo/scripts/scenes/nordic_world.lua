@@ -36,11 +36,39 @@ function init()
     for i = 1, 10 do
         scene.globals.bears[i] = scene:create_entity("Bear" .. i, "entities/agents/bear.lua");
         scene.globals.bears[i]:get_transform().pos = random_pos();
+
+        local rb = scene.globals.bears[i]:add_rigid();
+
+        rb.use_transform = true;
+
+        local collider = scene.globals.bears[i]:add_collider();
+
+        collider.Shape = Shape.Box;
+        collider.bounds.extents.x = 0.1;
+        collider.bounds.extents.y = 0.5;
+        collider.bounds.extents.z = 0.2;
+
+
+        scene.globals.bears[i]:physics_init(scene);
+    
     end
 
     for i = 1, 10 do
         scene.globals.monsters[i] = scene:create_entity("Monster" .. i, "entities/agents/monster.lua");
         scene.globals.monsters[i]:get_transform().pos = random_pos();
+
+        local rb = scene.globals.monsters[i]:add_rigid();
+
+        rb.use_transform = true;
+
+        local collider = scene.globals.monsters[i]:add_collider();
+
+        collider.Shape = Shape.Box;
+        collider.bounds.extents.x = 0.1;
+        collider.bounds.extents.y = 0.5;
+        collider.bounds.extents.z = 0.1;
+
+       scene.globals.monsters[i]:physics_init(scene);
     end
 
     for i = 1,10 do
@@ -51,11 +79,38 @@ function init()
     for i = 1, 10 do
         rabbits[i] = scene:create_entity("Rabbit" .. i, "entities/agents/rabbit.lua");
         rabbits[i]:get_transform().pos = random_pos();
+
+        local rb =  rabbits[i]:add_rigid();
+
+        rb.use_transform = true;
+
+        local collider =  rabbits[i]:add_collider();
+
+        collider.Shape = Shape.Box;
+        collider.bounds.extents.x = 0.05;
+        collider.bounds.extents.y = 0.1;
+        collider.bounds.extents.z = 0.05;
+
+        rabbits[i]:physics_init(scene);
     end
 
     for i = 1, 5 do
         deers[i] = scene:create_entity("Deer" .. i, "entities/agents/deer.lua");
         deers[i]:get_transform().pos = random_pos();
+
+        local rb = deers[i]:add_rigid();
+
+        rb.use_transform = true;
+
+        local collider = deers[i]:add_collider();
+
+        collider.Shape = Shape.Box;
+        collider.bounds.extents.x = 0.1;
+        collider.bounds.extents.y = 0.5;
+        collider.bounds.extents.z = 0.2;
+
+
+        deers[i]:physics_init(scene);
     end
 
     phys_debug = false;

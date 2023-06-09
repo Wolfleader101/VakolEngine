@@ -46,7 +46,7 @@ function init()
 
         tree_ent:get_transform().pos = pos_v;
         -- tree_ent:get_transform().scale = scl_v;
-        -- !fuck this, fuck shay leary, hes cursed our code, setting the tree ent scale fucking sets the terrains scale?!?!?!
+        -- !fuck this hes cursed our code, setting the tree ent scale fucking sets the terrains scale?!?!?!
 		--TODO FUCKING FUCK THIS
 
 
