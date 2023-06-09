@@ -10,7 +10,7 @@ function init()
     end
     state.dir:normalize();
 
-    state.speed = 2.5;
+    state.speed = 50;
 
     state.flyHeight = 2; -- the height of the bird's flying path above the terrain
     state.flyAmplitude = 2; -- the amplitude of the bird's up and down movement
@@ -18,7 +18,7 @@ function init()
 
     state.DIR_TIMER = 0.0;
 
-    state.model = entity:add_model("assets/models/agents/bird.glb", 0.005, true, true);
+    state.model = entity:add_model("assets/models/agents/bird.glb", 0.1, true, true); -- 0.005
     entity:set_shader("coreAssets/shaders/animation.prog");
 
     local shader = state.model:get_shader();
@@ -55,6 +55,16 @@ function update()
     local pos = entity:get_transform().pos;
     local terr_scale = scene.globals.terrain.transform.scale;
 
+    local pos = entity:get_transform().pos;
+    local diff = scene.globals.player.pos - pos;
+    local player_dist = diff:magnitude();
+
+    if (player_dist > 300) then
+        entity:active_model(false);
+        -- return;
+    else
+        entity:active_model(true);
+    end
 
     if (dir_wait(math.random(15,25))) then
         state.dir.x = math.random() * 2 - 1

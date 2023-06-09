@@ -69,7 +69,7 @@ namespace Vakol::Model::Components {
 
         void Update(const int state, const float delta_time) { animator_ptr->Update(state, delta_time); }
         void Update(const float delta_time) { animator_ptr->Update(delta_time); }
-      
+
         [[nodiscard]] int nAnimations() const { return animator_ptr->nAnimations(); }
 
         void set(const std::shared_ptr<Controller::Animator>& animator) { animator_ptr = animator; }
@@ -86,8 +86,7 @@ namespace Vakol::Model::Components {
         std::shared_ptr<Controller::Animator> animator_ptr = nullptr;
     };
 
-    struct Animation 
-    {
+    struct Animation {
         int state = 0;
         std::string attached_model;
 
@@ -235,6 +234,7 @@ namespace Vakol::Model::Components {
         bool animated = false;
         bool backfaceCull = true;
         bool instance = false;
+        bool active = true;
 
         std::shared_ptr<Assets::Model> model_ptr;
 

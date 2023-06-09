@@ -10,10 +10,8 @@
 #include "System.hpp"
 #include "View/GUI/GUIWindow.hpp"
 
-namespace Vakol::Controller 
-{
-    void RegisterMath(sol::state& lua) 
-    {
+namespace Vakol::Controller {
+    void RegisterMath(sol::state& lua) {
         {
             sol::constructors<glm::vec2(), glm::vec2(float), glm::vec2(float, float)> ctor;  // allow for constructors
 
@@ -351,12 +349,10 @@ namespace Vakol::Controller
                 draw.backfaceCull = backfaceCull;
                 draw.instance = instance;
 
-                if (animator && animated) 
-                {
+                if (animator && animated) {
                     if (!ent->HasComponent<Components::Animation>()) ent->AddComponent<Components::Animation>();
 
-                    if (!instance) 
-                    {
+                    if (!instance) {
                         if (!ent->HasComponent<Components::Animator>()) ent->AddComponent<Components::Animator>();
 
                         auto& _animator = ent->GetComponent<Components::Animator>();
@@ -375,6 +371,10 @@ namespace Vakol::Controller
 
         entity_type.set_function("get_model", [](const Entity* ent) {
             if (ent->HasComponent<Drawable>()) return ent->GetComponent<Drawable>().model_ptr;
+        });
+
+        entity_type.set_function("active_model", [](const Entity* ent, bool active) {
+            if (ent->HasComponent<Drawable>()) ent->GetComponent<Drawable>().active = active;
         });
 
         entity_type.set_function("set_shader", [](const Entity* ent, const std::string& path) {
