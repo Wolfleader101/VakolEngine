@@ -553,10 +553,12 @@ namespace Vakol::Controller
         terrain_type.set_function("get_model", &Terrain::GetModel);
 
         auto fsm_type = lua.new_usertype<FSM>("FSM");
-        fsm_type["get_state"] = &FSM::GetState;
-        fsm_type["change_state"] = &FSM::ChangeState;
-        fsm_type["add_state"] = &FSM::AddState;
-        fsm_type["update"] = &FSM::Update;
+        fsm_type.set_function("get_state", &FSM::GetState);
+        fsm_type.set_function("change_state", &FSM::ChangeState);
+        fsm_type.set_function("add_state", [](FSM& self, std::string& stateName, sol::protected_function& callback) {
+            return self.AddState(stateName, callback);
+        });
+        fsm_type.set_function("update", &FSM::Update);
     }
 
     void RegisterScene(sol::state& lua) {
