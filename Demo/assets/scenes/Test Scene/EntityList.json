@@ -74,11 +74,11 @@
     },
     "value19": 1,
     "value20": {
-        "pos.x": 2.0786871910095217,
-        "pos.y": 11.331977844238282,
-        "pos.z": 1.8580116033554078,
+        "pos.x": 8.11955451965332,
+        "pos.y": 9.498080253601075,
+        "pos.z": -2.2086806297302248,
         "rot.x": 0.0,
-        "rot.y": 93.40001678466797,
+        "rot.y": 125.5,
         "rot.z": 0.0,
         "scale.x": 1.0,
         "scale.y": 1.0,
@@ -110,11 +110,11 @@
     },
     "value25": 4,
     "value26": {
-        "pos.x": 6.865445613861084,
-        "pos.y": 9.280767440795899,
-        "pos.z": 0.1804123818874359,
+        "pos.x": 9.56957721710205,
+        "pos.y": 9.130084037780762,
+        "pos.z": -3.3260343074798586,
         "rot.x": 0.0,
-        "rot.y": 3.2119884490966799,
+        "rot.y": 138.1526641845703,
         "rot.z": 0.0,
         "scale.x": 1.0,
         "scale.y": 1.0,
@@ -122,11 +122,11 @@
     },
     "value27": 5,
     "value28": {
-        "pos.x": 11.856228828430176,
-        "pos.y": 7.480702877044678,
-        "pos.z": -2.03737735748291,
+        "pos.x": 10.567431449890137,
+        "pos.y": 8.952714920043946,
+        "pos.z": -4.30454158782959,
         "rot.x": 0.0,
-        "rot.y": 86.26090240478516,
+        "rot.y": -158.39694213867188,
         "rot.z": 0.0,
         "scale.x": 1.0,
         "scale.y": 1.0,
@@ -134,11 +134,11 @@
     },
     "value29": 6,
     "value30": {
-        "pos.x": 15.153153419494629,
-        "pos.y": 5.390596866607666,
-        "pos.z": 0.07683887332677841,
+        "pos.x": 14.435983657836914,
+        "pos.y": 5.681803226470947,
+        "pos.z": 0.9029812812805176,
         "rot.x": 0.0,
-        "rot.y": -40.42422103881836,
+        "rot.y": 38.773963928222659,
         "rot.z": 0.0,
         "scale.x": 1.0,
         "scale.y": 1.0,
@@ -146,11 +146,11 @@
     },
     "value31": 7,
     "value32": {
-        "pos.x": 19.32131004333496,
-        "pos.y": 5.796848297119141,
-        "pos.z": -0.6131706833839417,
+        "pos.x": 20.3073673248291,
+        "pos.y": 6.962750434875488,
+        "pos.z": -3.1051056385040285,
         "rot.x": 0.0,
-        "rot.y": -108.24574279785156,
+        "rot.y": -132.44712829589845,
         "rot.z": 0.0,
         "scale.x": 1.0,
         "scale.y": 1.0,
@@ -158,11 +158,11 @@
     },
     "value33": 8,
     "value34": {
-        "pos.x": 27.017501831054689,
-        "pos.y": 9.092535972595215,
-        "pos.z": -4.095476150512695,
+        "pos.x": 25.440893173217775,
+        "pos.y": 7.074210166931152,
+        "pos.z": -1.4242321252822877,
         "rot.x": 0.0,
-        "rot.y": 150.53131103515626,
+        "rot.y": 59.8474235534668,
         "rot.z": 0.0,
         "scale.x": 1.0,
         "scale.y": 1.0,
@@ -170,11 +170,11 @@
     },
     "value35": 9,
     "value36": {
-        "pos.x": 30.70163917541504,
-        "pos.y": 8.927887916564942,
-        "pos.z": -2.4768033027648927,
+        "pos.x": 29.182092666625978,
+        "pos.y": 8.04804515838623,
+        "pos.z": -0.5519014000892639,
         "rot.x": 0.0,
-        "rot.y": 161.4099884033203,
+        "rot.y": 102.78060150146485,
         "rot.z": 0.0,
         "scale.x": 1.0,
         "scale.y": 1.0,
@@ -182,11 +182,11 @@
     },
     "value37": 10,
     "value38": {
-        "pos.x": 33.029541015625,
-        "pos.y": 8.928058624267579,
-        "pos.z": -4.083887577056885,
+        "pos.x": 36.55746078491211,
+        "pos.y": 6.933633804321289,
+        "pos.z": -1.9266395568847657,
         "rot.x": 0.0,
-        "rot.y": -164.61888122558595,
+        "rot.y": 9.252181053161621,
         "rot.z": 0.0,
         "scale.x": 1.0,
         "scale.y": 1.0,
@@ -194,11 +194,11 @@
     },
     "value39": 11,
     "value40": {
-        "pos.x": 41.32941818237305,
-        "pos.y": 6.295270919799805,
-        "pos.z": -3.521057367324829,
+        "pos.x": 41.947269439697269,
+        "pos.y": 5.424693584442139,
+        "pos.z": -1.284039855003357,
         "rot.x": 0.0,
-        "rot.y": -116.79399108886719,
+        "rot.y": 125.2088851928711,
         "rot.z": 0.0,
         "scale.x": 1.0,
         "scale.y": 1.0,
@@ -206,11 +206,11 @@
     },
     "value41": 12,
     "value42": {
-        "pos.x": 45.708580017089847,
-        "pos.y": 5.781358242034912,
-        "pos.z": -3.1892240047454836,
+        "pos.x": 44.34743118286133,
+        "pos.y": 4.561949253082275,
+        "pos.z": 0.46895256638526919,
         "rot.x": 0.0,
-        "rot.y": -114.3839340209961,
+        "rot.y": 7.29860258102417,
         "rot.z": 0.0,
         "scale.x": 1.0,
         "scale.y": 1.0,
@@ -218,11 +218,11 @@
     },
     "value43": 13,
     "value44": {
-        "pos.x": 51.583953857421878,
-        "pos.y": 3.234720468521118,
-        "pos.z": -0.4672606587409973,
+        "pos.x": 49.812191009521487,
+        "pos.y": 4.273892402648926,
+        "pos.z": -2.2524187564849855,
         "rot.x": 0.0,
-        "rot.y": 46.475921630859378,
+        "rot.y": -132.82632446289063,
         "rot.z": 0.0,
         "scale.x": 1.0,
         "scale.y": 1.0,
@@ -292,24 +292,24 @@
         "value0": {
             "value0": [
                 {
-                    "key": "drowning_time",
-                    "value": {
-                        "index": 3,
-                        "data": 0
-                    }
-                },
-                {
                     "key": "moving_value",
                     "value": {
                         "index": 2,
-                        "data": 0.15559759736061097
+                        "data": 0.22664009034633637
                     }
                 },
                 {
                     "key": "MOVING_TIMER",
                     "value": {
                         "index": 2,
-                        "data": 5.586743354797363
+                        "data": 1.7433853149414063
+                    }
+                },
+                {
+                    "key": "REGEN_TIMER",
+                    "value": {
+                        "index": 3,
+                        "data": 0
                     }
                 },
                 {
@@ -320,7 +320,7 @@
                     }
                 },
                 {
-                    "key": "REGEN_TIMER",
+                    "key": "drowning_time",
                     "value": {
                         "index": 3,
                         "data": 0
@@ -335,10 +335,10 @@
         "value0": {
             "value0": [
                 {
-                    "key": "canAttack",
+                    "key": "attacking",
                     "value": {
                         "index": 4,
-                        "data": true
+                        "data": false
                     }
                 },
                 {
@@ -349,10 +349,10 @@
                     }
                 },
                 {
-                    "key": "attacking",
+                    "key": "canAttack",
                     "value": {
                         "index": 4,
-                        "data": false
+                        "data": true
                     }
                 }
             ]
@@ -378,17 +378,10 @@
         "value0": {
             "value0": [
                 {
-                    "key": "speed",
-                    "value": {
-                        "index": 2,
-                        "data": 0.5
-                    }
-                },
-                {
-                    "key": "VIEW_DISTANCE",
+                    "key": "sprint_speed",
                     "value": {
                         "index": 3,
-                        "data": 5
+                        "data": 3
                     }
                 },
                 {
@@ -397,13 +390,6 @@
                         "index": 0,
                         "data": {
                             "value0": [
-                                {
-                                    "key": "DIE",
-                                    "value": {
-                                        "index": 3,
-                                        "data": 0
-                                    }
-                                },
                                 {
                                     "key": "EAT",
                                     "value": {
@@ -419,6 +405,20 @@
                                     }
                                 },
                                 {
+                                    "key": "DIE",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 0
+                                    }
+                                },
+                                {
+                                    "key": "RUN",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 3
+                                    }
+                                },
+                                {
                                     "key": "STATIC",
                                     "value": {
                                         "index": 3,
@@ -431,44 +431,30 @@
                                         "index": 3,
                                         "data": 2
                                     }
-                                },
-                                {
-                                    "key": "RUN",
-                                    "value": {
-                                        "index": 3,
-                                        "data": 3
-                                    }
                                 }
                             ]
                         }
                     }
                 },
                 {
-                    "key": "SPOTTED",
+                    "key": "VIEW_DISTANCE",
                     "value": {
-                        "index": 4,
-                        "data": false
+                        "index": 3,
+                        "data": 5
                     }
                 },
                 {
                     "key": "WAIT_TIMER",
                     "value": {
                         "index": 2,
-                        "data": 0.5682487487792969
+                        "data": 3.4629838466644289
                     }
                 },
                 {
-                    "key": "sprint_speed",
+                    "key": "SPOTTED",
                     "value": {
-                        "index": 3,
-                        "data": 3
-                    }
-                },
-                {
-                    "key": "DIR_TIMER",
-                    "value": {
-                        "index": 2,
-                        "data": 0.9569592475891113
+                        "index": 4,
+                        "data": true
                     }
                 },
                 {
@@ -476,10 +462,24 @@
                     "value": {
                         "index": 5,
                         "data": {
-                            "value0": 0.049394164234399798,
+                            "value0": 0.3715645372867584,
                             "value1": 0.0,
-                            "value2": 0.880174994468689
+                            "value2": -0.41488203406333926
                         }
+                    }
+                },
+                {
+                    "key": "speed",
+                    "value": {
+                        "index": 2,
+                        "data": 0.5
+                    }
+                },
+                {
+                    "key": "DIR_TIMER",
+                    "value": {
+                        "index": 2,
+                        "data": 1.2289066314697266
                     }
                 }
             ]
@@ -491,17 +491,10 @@
         "value0": {
             "value0": [
                 {
-                    "key": "speed",
-                    "value": {
-                        "index": 2,
-                        "data": 0.5
-                    }
-                },
-                {
-                    "key": "VIEW_DISTANCE",
+                    "key": "sprint_speed",
                     "value": {
                         "index": 3,
-                        "data": 5
+                        "data": 3
                     }
                 },
                 {
@@ -510,13 +503,6 @@
                         "index": 0,
                         "data": {
                             "value0": [
-                                {
-                                    "key": "DIE",
-                                    "value": {
-                                        "index": 3,
-                                        "data": 0
-                                    }
-                                },
                                 {
                                     "key": "EAT",
                                     "value": {
@@ -532,6 +518,20 @@
                                     }
                                 },
                                 {
+                                    "key": "DIE",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 0
+                                    }
+                                },
+                                {
+                                    "key": "RUN",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 3
+                                    }
+                                },
+                                {
                                     "key": "STATIC",
                                     "value": {
                                         "index": 3,
@@ -544,16 +544,23 @@
                                         "index": 3,
                                         "data": 2
                                     }
-                                },
-                                {
-                                    "key": "RUN",
-                                    "value": {
-                                        "index": 3,
-                                        "data": 3
-                                    }
                                 }
                             ]
                         }
+                    }
+                },
+                {
+                    "key": "VIEW_DISTANCE",
+                    "value": {
+                        "index": 3,
+                        "data": 5
+                    }
+                },
+                {
+                    "key": "WAIT_TIMER",
+                    "value": {
+                        "index": 2,
+                        "data": 4.2308030128479
                     }
                 },
                 {
@@ -564,35 +571,28 @@
                     }
                 },
                 {
-                    "key": "WAIT_TIMER",
+                    "key": "dir",
                     "value": {
-                        "index": 2,
-                        "data": 0.5794773101806641
+                        "index": 5,
+                        "data": {
+                            "value0": -0.3846316337585449,
+                            "value1": 0.0,
+                            "value2": -0.9713174700737
+                        }
                     }
                 },
                 {
-                    "key": "sprint_speed",
+                    "key": "speed",
                     "value": {
-                        "index": 3,
-                        "data": 3
+                        "index": 2,
+                        "data": 0.5
                     }
                 },
                 {
                     "key": "DIR_TIMER",
                     "value": {
                         "index": 2,
-                        "data": 1.0004172325134278
-                    }
-                },
-                {
-                    "key": "dir",
-                    "value": {
-                        "index": 5,
-                        "data": {
-                            "value0": 0.3642410337924957,
-                            "value1": 0.0,
-                            "value2": 0.02380400523543358
-                        }
+                        "data": 1.2153425216674805
                     }
                 }
             ]
@@ -604,17 +604,10 @@
         "value0": {
             "value0": [
                 {
-                    "key": "speed",
-                    "value": {
-                        "index": 2,
-                        "data": 0.5
-                    }
-                },
-                {
-                    "key": "VIEW_DISTANCE",
+                    "key": "sprint_speed",
                     "value": {
                         "index": 3,
-                        "data": 5
+                        "data": 3
                     }
                 },
                 {
@@ -623,13 +616,6 @@
                         "index": 0,
                         "data": {
                             "value0": [
-                                {
-                                    "key": "DIE",
-                                    "value": {
-                                        "index": 3,
-                                        "data": 0
-                                    }
-                                },
                                 {
                                     "key": "EAT",
                                     "value": {
@@ -645,6 +631,20 @@
                                     }
                                 },
                                 {
+                                    "key": "DIE",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 0
+                                    }
+                                },
+                                {
+                                    "key": "RUN",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 3
+                                    }
+                                },
+                                {
                                     "key": "STATIC",
                                     "value": {
                                         "index": 3,
@@ -657,16 +657,23 @@
                                         "index": 3,
                                         "data": 2
                                     }
-                                },
-                                {
-                                    "key": "RUN",
-                                    "value": {
-                                        "index": 3,
-                                        "data": 3
-                                    }
                                 }
                             ]
                         }
+                    }
+                },
+                {
+                    "key": "VIEW_DISTANCE",
+                    "value": {
+                        "index": 3,
+                        "data": 5
+                    }
+                },
+                {
+                    "key": "WAIT_TIMER",
+                    "value": {
+                        "index": 2,
+                        "data": 4.125158786773682
                     }
                 },
                 {
@@ -677,35 +684,28 @@
                     }
                 },
                 {
-                    "key": "WAIT_TIMER",
+                    "key": "dir",
                     "value": {
-                        "index": 2,
-                        "data": 0.5794773101806641
+                        "index": 5,
+                        "data": {
+                            "value0": 0.7564303278923035,
+                            "value1": 0.0,
+                            "value2": 0.9416854977607727
+                        }
                     }
                 },
                 {
-                    "key": "sprint_speed",
+                    "key": "speed",
                     "value": {
-                        "index": 3,
-                        "data": 3
+                        "index": 2,
+                        "data": 0.5
                     }
                 },
                 {
                     "key": "DIR_TIMER",
                     "value": {
                         "index": 2,
-                        "data": 1.5798945426940919
-                    }
-                },
-                {
-                    "key": "dir",
-                    "value": {
-                        "index": 5,
-                        "data": {
-                            "value0": -0.5935945510864258,
-                            "value1": 0.0,
-                            "value2": 0.69687420129776
-                        }
+                        "data": 1.175710678100586
                     }
                 }
             ]
@@ -717,17 +717,10 @@
         "value0": {
             "value0": [
                 {
-                    "key": "speed",
-                    "value": {
-                        "index": 2,
-                        "data": 0.5
-                    }
-                },
-                {
-                    "key": "VIEW_DISTANCE",
+                    "key": "sprint_speed",
                     "value": {
                         "index": 3,
-                        "data": 5
+                        "data": 3
                     }
                 },
                 {
@@ -736,13 +729,6 @@
                         "index": 0,
                         "data": {
                             "value0": [
-                                {
-                                    "key": "DIE",
-                                    "value": {
-                                        "index": 3,
-                                        "data": 0
-                                    }
-                                },
                                 {
                                     "key": "EAT",
                                     "value": {
@@ -758,6 +744,20 @@
                                     }
                                 },
                                 {
+                                    "key": "DIE",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 0
+                                    }
+                                },
+                                {
+                                    "key": "RUN",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 3
+                                    }
+                                },
+                                {
                                     "key": "STATIC",
                                     "value": {
                                         "index": 3,
@@ -770,16 +770,23 @@
                                         "index": 3,
                                         "data": 2
                                     }
-                                },
-                                {
-                                    "key": "RUN",
-                                    "value": {
-                                        "index": 3,
-                                        "data": 3
-                                    }
                                 }
                             ]
                         }
+                    }
+                },
+                {
+                    "key": "VIEW_DISTANCE",
+                    "value": {
+                        "index": 3,
+                        "data": 5
+                    }
+                },
+                {
+                    "key": "WAIT_TIMER",
+                    "value": {
+                        "index": 2,
+                        "data": 4.218662738800049
                     }
                 },
                 {
@@ -790,35 +797,28 @@
                     }
                 },
                 {
-                    "key": "WAIT_TIMER",
+                    "key": "dir",
                     "value": {
-                        "index": 2,
-                        "data": 0.5575933456420898
+                        "index": 5,
+                        "data": {
+                            "value0": -0.8318257331848145,
+                            "value1": 0.0,
+                            "value2": -0.760816752910614
+                        }
                     }
                 },
                 {
-                    "key": "sprint_speed",
+                    "key": "speed",
                     "value": {
-                        "index": 3,
-                        "data": 3
+                        "index": 2,
+                        "data": 0.5
                     }
                 },
                 {
                     "key": "DIR_TIMER",
                     "value": {
                         "index": 2,
-                        "data": 1.5693106651306153
-                    }
-                },
-                {
-                    "key": "dir",
-                    "value": {
-                        "index": 5,
-                        "data": {
-                            "value0": -0.7205652594566345,
-                            "value1": 0.0,
-                            "value2": -0.2375473976135254
-                        }
+                        "data": 1.0239133834838868
                     }
                 }
             ]
@@ -830,17 +830,10 @@
         "value0": {
             "value0": [
                 {
-                    "key": "speed",
-                    "value": {
-                        "index": 2,
-                        "data": 0.5
-                    }
-                },
-                {
-                    "key": "VIEW_DISTANCE",
+                    "key": "sprint_speed",
                     "value": {
                         "index": 3,
-                        "data": 5
+                        "data": 3
                     }
                 },
                 {
@@ -849,13 +842,6 @@
                         "index": 0,
                         "data": {
                             "value0": [
-                                {
-                                    "key": "DIE",
-                                    "value": {
-                                        "index": 3,
-                                        "data": 0
-                                    }
-                                },
                                 {
                                     "key": "EAT",
                                     "value": {
@@ -871,6 +857,20 @@
                                     }
                                 },
                                 {
+                                    "key": "DIE",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 0
+                                    }
+                                },
+                                {
+                                    "key": "RUN",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 3
+                                    }
+                                },
+                                {
                                     "key": "STATIC",
                                     "value": {
                                         "index": 3,
@@ -883,16 +883,23 @@
                                         "index": 3,
                                         "data": 2
                                     }
-                                },
-                                {
-                                    "key": "RUN",
-                                    "value": {
-                                        "index": 3,
-                                        "data": 3
-                                    }
                                 }
                             ]
                         }
+                    }
+                },
+                {
+                    "key": "VIEW_DISTANCE",
+                    "value": {
+                        "index": 3,
+                        "data": 5
+                    }
+                },
+                {
+                    "key": "WAIT_TIMER",
+                    "value": {
+                        "index": 2,
+                        "data": 4.218662738800049
                     }
                 },
                 {
@@ -903,35 +910,28 @@
                     }
                 },
                 {
-                    "key": "WAIT_TIMER",
+                    "key": "dir",
                     "value": {
-                        "index": 2,
-                        "data": 0.5342321395874023
+                        "index": 5,
+                        "data": {
+                            "value0": 0.8293426632881165,
+                            "value1": 0.0,
+                            "value2": 0.48177042603492739
+                        }
                     }
                 },
                 {
-                    "key": "sprint_speed",
+                    "key": "speed",
                     "value": {
-                        "index": 3,
-                        "data": 3
+                        "index": 2,
+                        "data": 0.5
                     }
                 },
                 {
                     "key": "DIR_TIMER",
                     "value": {
                         "index": 2,
-                        "data": 0.9797754287719727
-                    }
-                },
-                {
-                    "key": "dir",
-                    "value": {
-                        "index": 5,
-                        "data": {
-                            "value0": 0.40021565556526186,
-                            "value1": 0.0,
-                            "value2": -0.7082818150520325
-                        }
+                        "data": 0.9742507934570313
                     }
                 }
             ]
@@ -943,17 +943,10 @@
         "value0": {
             "value0": [
                 {
-                    "key": "speed",
-                    "value": {
-                        "index": 2,
-                        "data": 0.5
-                    }
-                },
-                {
-                    "key": "VIEW_DISTANCE",
+                    "key": "sprint_speed",
                     "value": {
                         "index": 3,
-                        "data": 5
+                        "data": 3
                     }
                 },
                 {
@@ -962,13 +955,6 @@
                         "index": 0,
                         "data": {
                             "value0": [
-                                {
-                                    "key": "DIE",
-                                    "value": {
-                                        "index": 3,
-                                        "data": 0
-                                    }
-                                },
                                 {
                                     "key": "EAT",
                                     "value": {
@@ -984,6 +970,20 @@
                                     }
                                 },
                                 {
+                                    "key": "DIE",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 0
+                                    }
+                                },
+                                {
+                                    "key": "RUN",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 3
+                                    }
+                                },
+                                {
                                     "key": "STATIC",
                                     "value": {
                                         "index": 3,
@@ -996,16 +996,23 @@
                                         "index": 3,
                                         "data": 2
                                     }
-                                },
-                                {
-                                    "key": "RUN",
-                                    "value": {
-                                        "index": 3,
-                                        "data": 3
-                                    }
                                 }
                             ]
                         }
+                    }
+                },
+                {
+                    "key": "VIEW_DISTANCE",
+                    "value": {
+                        "index": 3,
+                        "data": 5
+                    }
+                },
+                {
+                    "key": "WAIT_TIMER",
+                    "value": {
+                        "index": 2,
+                        "data": 4.2308030128479
                     }
                 },
                 {
@@ -1016,35 +1023,28 @@
                     }
                 },
                 {
-                    "key": "WAIT_TIMER",
+                    "key": "dir",
                     "value": {
-                        "index": 2,
-                        "data": 0.5794773101806641
+                        "index": 5,
+                        "data": {
+                            "value0": 0.5813907980918884,
+                            "value1": 0.0,
+                            "value2": -0.1318817436695099
+                        }
                     }
                 },
                 {
-                    "key": "sprint_speed",
+                    "key": "speed",
                     "value": {
-                        "index": 3,
-                        "data": 3
+                        "index": 2,
+                        "data": 0.5
                     }
                 },
                 {
                     "key": "DIR_TIMER",
                     "value": {
                         "index": 2,
-                        "data": 1.5579009056091309
-                    }
-                },
-                {
-                    "key": "dir",
-                    "value": {
-                        "index": 5,
-                        "data": {
-                            "value0": 0.32512757182121279,
-                            "value1": 0.0,
-                            "value2": -0.9666545391082764
-                        }
+                        "data": 0.9989957809448242
                     }
                 }
             ]
@@ -1056,17 +1056,10 @@
         "value0": {
             "value0": [
                 {
-                    "key": "speed",
-                    "value": {
-                        "index": 2,
-                        "data": 0.5
-                    }
-                },
-                {
-                    "key": "VIEW_DISTANCE",
+                    "key": "sprint_speed",
                     "value": {
                         "index": 3,
-                        "data": 5
+                        "data": 3
                     }
                 },
                 {
@@ -1075,13 +1068,6 @@
                         "index": 0,
                         "data": {
                             "value0": [
-                                {
-                                    "key": "DIE",
-                                    "value": {
-                                        "index": 3,
-                                        "data": 0
-                                    }
-                                },
                                 {
                                     "key": "EAT",
                                     "value": {
@@ -1097,6 +1083,20 @@
                                     }
                                 },
                                 {
+                                    "key": "DIE",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 0
+                                    }
+                                },
+                                {
+                                    "key": "RUN",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 3
+                                    }
+                                },
+                                {
                                     "key": "STATIC",
                                     "value": {
                                         "index": 3,
@@ -1109,16 +1109,23 @@
                                         "index": 3,
                                         "data": 2
                                     }
-                                },
-                                {
-                                    "key": "RUN",
-                                    "value": {
-                                        "index": 3,
-                                        "data": 3
-                                    }
                                 }
                             ]
                         }
+                    }
+                },
+                {
+                    "key": "VIEW_DISTANCE",
+                    "value": {
+                        "index": 3,
+                        "data": 5
+                    }
+                },
+                {
+                    "key": "WAIT_TIMER",
+                    "value": {
+                        "index": 2,
+                        "data": 4.2308030128479
                     }
                 },
                 {
@@ -1129,35 +1136,28 @@
                     }
                 },
                 {
-                    "key": "WAIT_TIMER",
+                    "key": "dir",
                     "value": {
-                        "index": 2,
-                        "data": 0.5794773101806641
+                        "index": 5,
+                        "data": {
+                            "value0": 0.09147392958402634,
+                            "value1": 0.0,
+                            "value2": 0.5615362524986267
+                        }
                     }
                 },
                 {
-                    "key": "sprint_speed",
+                    "key": "speed",
                     "value": {
-                        "index": 3,
-                        "data": 3
+                        "index": 2,
+                        "data": 0.5
                     }
                 },
                 {
                     "key": "DIR_TIMER",
                     "value": {
                         "index": 2,
-                        "data": 1.0004172325134278
-                    }
-                },
-                {
-                    "key": "dir",
-                    "value": {
-                        "index": 5,
-                        "data": {
-                            "value0": -0.1817057877779007,
-                            "value1": 0.0,
-                            "value2": -0.6605290174484253
-                        }
+                        "data": 0.8740367889404297
                     }
                 }
             ]
@@ -1169,17 +1169,10 @@
         "value0": {
             "value0": [
                 {
-                    "key": "speed",
-                    "value": {
-                        "index": 2,
-                        "data": 0.5
-                    }
-                },
-                {
-                    "key": "VIEW_DISTANCE",
+                    "key": "sprint_speed",
                     "value": {
                         "index": 3,
-                        "data": 5
+                        "data": 3
                     }
                 },
                 {
@@ -1188,13 +1181,6 @@
                         "index": 0,
                         "data": {
                             "value0": [
-                                {
-                                    "key": "DIE",
-                                    "value": {
-                                        "index": 3,
-                                        "data": 0
-                                    }
-                                },
                                 {
                                     "key": "EAT",
                                     "value": {
@@ -1210,6 +1196,20 @@
                                     }
                                 },
                                 {
+                                    "key": "DIE",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 0
+                                    }
+                                },
+                                {
+                                    "key": "RUN",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 3
+                                    }
+                                },
+                                {
                                     "key": "STATIC",
                                     "value": {
                                         "index": 3,
@@ -1222,16 +1222,23 @@
                                         "index": 3,
                                         "data": 2
                                     }
-                                },
-                                {
-                                    "key": "RUN",
-                                    "value": {
-                                        "index": 3,
-                                        "data": 3
-                                    }
                                 }
                             ]
                         }
+                    }
+                },
+                {
+                    "key": "VIEW_DISTANCE",
+                    "value": {
+                        "index": 3,
+                        "data": 5
+                    }
+                },
+                {
+                    "key": "WAIT_TIMER",
+                    "value": {
+                        "index": 2,
+                        "data": 4.242989540100098
                     }
                 },
                 {
@@ -1242,35 +1249,28 @@
                     }
                 },
                 {
-                    "key": "WAIT_TIMER",
+                    "key": "dir",
                     "value": {
-                        "index": 2,
-                        "data": 0.5794773101806641
+                        "index": 5,
+                        "data": {
+                            "value0": 0.901938259601593,
+                            "value1": 0.0,
+                            "value2": -0.6364569067955017
+                        }
                     }
                 },
                 {
-                    "key": "sprint_speed",
+                    "key": "speed",
                     "value": {
-                        "index": 3,
-                        "data": 3
+                        "index": 2,
+                        "data": 0.5
                     }
                 },
                 {
                     "key": "DIR_TIMER",
                     "value": {
                         "index": 2,
-                        "data": 0.9898333549499512
-                    }
-                },
-                {
-                    "key": "dir",
-                    "value": {
-                        "index": 5,
-                        "data": {
-                            "value0": -0.8769350647926331,
-                            "value1": 0.0,
-                            "value2": -0.4428563714027405
-                        }
+                        "data": 1.2289066314697266
                     }
                 }
             ]
@@ -1282,17 +1282,10 @@
         "value0": {
             "value0": [
                 {
-                    "key": "speed",
-                    "value": {
-                        "index": 2,
-                        "data": 0.5
-                    }
-                },
-                {
-                    "key": "VIEW_DISTANCE",
+                    "key": "sprint_speed",
                     "value": {
                         "index": 3,
-                        "data": 5
+                        "data": 3
                     }
                 },
                 {
@@ -1301,13 +1294,6 @@
                         "index": 0,
                         "data": {
                             "value0": [
-                                {
-                                    "key": "DIE",
-                                    "value": {
-                                        "index": 3,
-                                        "data": 0
-                                    }
-                                },
                                 {
                                     "key": "EAT",
                                     "value": {
@@ -1323,6 +1309,20 @@
                                     }
                                 },
                                 {
+                                    "key": "DIE",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 0
+                                    }
+                                },
+                                {
+                                    "key": "RUN",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 3
+                                    }
+                                },
+                                {
                                     "key": "STATIC",
                                     "value": {
                                         "index": 3,
@@ -1335,16 +1335,23 @@
                                         "index": 3,
                                         "data": 2
                                     }
-                                },
-                                {
-                                    "key": "RUN",
-                                    "value": {
-                                        "index": 3,
-                                        "data": 3
-                                    }
                                 }
                             ]
                         }
+                    }
+                },
+                {
+                    "key": "VIEW_DISTANCE",
+                    "value": {
+                        "index": 3,
+                        "data": 5
+                    }
+                },
+                {
+                    "key": "WAIT_TIMER",
+                    "value": {
+                        "index": 2,
+                        "data": 4.2308030128479
                     }
                 },
                 {
@@ -1355,35 +1362,28 @@
                     }
                 },
                 {
-                    "key": "WAIT_TIMER",
+                    "key": "dir",
                     "value": {
-                        "index": 2,
-                        "data": 0.5575933456420898
+                        "index": 5,
+                        "data": {
+                            "value0": 0.1203056126832962,
+                            "value1": 0.0,
+                            "value2": 0.9393140077590942
+                        }
                     }
                 },
                 {
-                    "key": "sprint_speed",
+                    "key": "speed",
                     "value": {
-                        "index": 3,
-                        "data": 3
+                        "index": 2,
+                        "data": 0.5
                     }
                 },
                 {
                     "key": "DIR_TIMER",
                     "value": {
                         "index": 2,
-                        "data": 1.5798945426940919
-                    }
-                },
-                {
-                    "key": "dir",
-                    "value": {
-                        "index": 5,
-                        "data": {
-                            "value0": -0.45666420459747317,
-                            "value1": 0.0,
-                            "value2": -0.20699766278266908
-                        }
+                        "data": 0.9869437217712402
                     }
                 }
             ]
@@ -1395,17 +1395,10 @@
         "value0": {
             "value0": [
                 {
-                    "key": "speed",
-                    "value": {
-                        "index": 2,
-                        "data": 0.5
-                    }
-                },
-                {
-                    "key": "VIEW_DISTANCE",
+                    "key": "sprint_speed",
                     "value": {
                         "index": 3,
-                        "data": 5
+                        "data": 3
                     }
                 },
                 {
@@ -1414,13 +1407,6 @@
                         "index": 0,
                         "data": {
                             "value0": [
-                                {
-                                    "key": "DIE",
-                                    "value": {
-                                        "index": 3,
-                                        "data": 0
-                                    }
-                                },
                                 {
                                     "key": "EAT",
                                     "value": {
@@ -1436,6 +1422,20 @@
                                     }
                                 },
                                 {
+                                    "key": "DIE",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 0
+                                    }
+                                },
+                                {
+                                    "key": "RUN",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 3
+                                    }
+                                },
+                                {
                                     "key": "STATIC",
                                     "value": {
                                         "index": 3,
@@ -1448,16 +1448,23 @@
                                         "index": 3,
                                         "data": 2
                                     }
-                                },
-                                {
-                                    "key": "RUN",
-                                    "value": {
-                                        "index": 3,
-                                        "data": 3
-                                    }
                                 }
                             ]
                         }
+                    }
+                },
+                {
+                    "key": "VIEW_DISTANCE",
+                    "value": {
+                        "index": 3,
+                        "data": 5
+                    }
+                },
+                {
+                    "key": "WAIT_TIMER",
+                    "value": {
+                        "index": 2,
+                        "data": 4.242989540100098
                     }
                 },
                 {
@@ -1468,35 +1475,28 @@
                     }
                 },
                 {
-                    "key": "WAIT_TIMER",
+                    "key": "dir",
                     "value": {
-                        "index": 2,
-                        "data": 0.5794773101806641
+                        "index": 5,
+                        "data": {
+                            "value0": -0.6099454760551453,
+                            "value1": 0.0,
+                            "value2": -0.5653365850448608
+                        }
                     }
                 },
                 {
-                    "key": "sprint_speed",
+                    "key": "speed",
                     "value": {
-                        "index": 3,
-                        "data": 3
+                        "index": 2,
+                        "data": 0.5
                     }
                 },
                 {
                     "key": "DIR_TIMER",
                     "value": {
                         "index": 2,
-                        "data": 1.5693106651306153
-                    }
-                },
-                {
-                    "key": "dir",
-                    "value": {
-                        "index": 5,
-                        "data": {
-                            "value0": 0.5033233761787415,
-                            "value1": 0.0,
-                            "value2": 0.4780382215976715
-                        }
+                        "data": 0.986809253692627
                     }
                 }
             ]
@@ -1505,59 +1505,59 @@
     "value103": 14,
     "value104": 0,
     "value105": {
-        "guid": "7cb1d3c9-f8a5-497e-8b77-b189a49dc26c"
+        "guid": "ce74bea9-aa08-47ff-a002-80482741c094"
     },
     "value106": 1,
     "value107": {
-        "guid": "3e82fbd5-bb09-4d23-9500-f0017c6bb688"
+        "guid": "655865c3-315f-44f2-aa1a-0e0f5d5cfdb7"
     },
     "value108": 2,
     "value109": {
-        "guid": "352b229c-5c77-4679-815b-d93e8e2c477d"
+        "guid": "243c01f9-1fad-482b-9d9c-96dd0a03c5e0"
     },
     "value110": 3,
     "value111": {
-        "guid": "aae720a9-e610-49f4-b66f-30b362d74e7f"
+        "guid": "96250326-23aa-42c0-bb6c-bd27d3d17624"
     },
     "value112": 4,
     "value113": {
-        "guid": "40557aa9-3b42-4182-b82e-7ef9b041f019"
+        "guid": "0a9cd784-82ed-4833-b075-727b6037a43c"
     },
     "value114": 5,
     "value115": {
-        "guid": "6d8fbdb6-f32b-404c-913d-2cc16bb7d76e"
+        "guid": "cb8810fc-9b52-458e-af37-747a223c1d66"
     },
     "value116": 6,
     "value117": {
-        "guid": "699d0199-af84-4558-a88a-f9975d9f37bb"
+        "guid": "3a18114f-e9d6-40f0-bf46-26205cb46dc8"
     },
     "value118": 7,
     "value119": {
-        "guid": "3d0b7205-eac8-4bbf-a33a-9b2cf3e06867"
+        "guid": "37c8c2dd-c60d-40e0-b531-ea8bc4b43fa6"
     },
     "value120": 8,
     "value121": {
-        "guid": "5f00c553-a73e-43bf-b64f-5cac44a94d29"
+        "guid": "f8fb7951-6a23-4eff-8ae9-f7887adf042a"
     },
     "value122": 9,
     "value123": {
-        "guid": "baf7c91b-9bd0-4035-8f4d-b78958805027"
+        "guid": "bb26e4df-678e-4f2f-8995-23a4c6e085f8"
     },
     "value124": 10,
     "value125": {
-        "guid": "83ab9728-7dba-44ab-bda1-2243ea660b6a"
+        "guid": "d885456e-024a-4eb2-a0da-c70478c4399d"
     },
     "value126": 11,
     "value127": {
-        "guid": "57ce59d2-9a49-4089-b763-6a2fc096ec62"
+        "guid": "e527602a-43e4-484f-abb0-fa1670d80f4f"
     },
     "value128": 12,
     "value129": {
-        "guid": "23f32cdd-8761-43db-89d5-e95078d38ba0"
+        "guid": "66f1c5c8-f82f-43a4-b8b4-ebfcfaf0d867"
     },
     "value130": 13,
     "value131": {
-        "guid": "09400202-19f8-460f-ade1-0ef4fef650e6"
+        "guid": "a79df679-f4ea-4f47-9fb8-d0efaa2ead4f"
     },
     "value132": 12,
     "value133": 1,
@@ -1656,17 +1656,17 @@
     "value162": 11,
     "value163": 1,
     "value164": {
-        "state": 11,
+        "state": 12,
         "attached_model": "assets/models/player/fps/FPS_KIT.fbx"
     },
     "value165": 4,
     "value166": {
-        "state": 2,
+        "state": 3,
         "attached_model": "assets/models/agents/rabbit.fbx"
     },
     "value167": 5,
     "value168": {
-        "state": 2,
+        "state": 5,
         "attached_model": "assets/models/agents/rabbit.fbx"
     },
     "value169": 6,
@@ -1676,7 +1676,7 @@
     },
     "value171": 7,
     "value172": {
-        "state": 5,
+        "state": 1,
         "attached_model": "assets/models/agents/rabbit.fbx"
     },
     "value173": 8,
@@ -1686,7 +1686,7 @@
     },
     "value175": 9,
     "value176": {
-        "state": 5,
+        "state": 1,
         "attached_model": "assets/models/agents/rabbit.fbx"
     },
     "value177": 10,
@@ -1696,17 +1696,17 @@
     },
     "value179": 11,
     "value180": {
-        "state": 2,
+        "state": 5,
         "attached_model": "assets/models/agents/rabbit.fbx"
     },
     "value181": 12,
     "value182": {
-        "state": 5,
+        "state": 1,
         "attached_model": "assets/models/agents/rabbit.fbx"
     },
     "value183": 13,
     "value184": {
-        "state": 5,
+        "state": 1,
         "attached_model": "assets/models/agents/rabbit.fbx"
     },
     "value185": 0,

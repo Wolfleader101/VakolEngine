@@ -8,10 +8,21 @@
                     "data": {
                         "value0": [
                             {
-                                "key": "MAX_THIRST",
+                                "key": "MAX_HUNGER",
                                 "value": {
                                     "index": 3,
                                     "data": 100
+                                }
+                            },
+                            {
+                                "key": "pos",
+                                "value": {
+                                    "index": 5,
+                                    "data": {
+                                        "value0": 8.11955451965332,
+                                        "value1": 10.198080062866211,
+                                        "value2": -2.2086806297302248
+                                    }
                                 }
                             },
                             {
@@ -22,13 +33,13 @@
                                 }
                             },
                             {
-                                "key": "pos",
+                                "key": "last_pos",
                                 "value": {
                                     "index": 5,
                                     "data": {
-                                        "value0": 2.0786871910095217,
-                                        "value1": 12.031977653503418,
-                                        "value2": 1.8580116033554078
+                                        "value0": 8.11955451965332,
+                                        "value1": 10.198080062866211,
+                                        "value2": -2.2086806297302248
                                     }
                                 }
                             },
@@ -40,24 +51,10 @@
                                 }
                             },
                             {
-                                "key": "is_god",
-                                "value": {
-                                    "index": 4,
-                                    "data": false
-                                }
-                            },
-                            {
                                 "key": "base_speed",
                                 "value": {
                                     "index": 2,
                                     "data": 1.25
-                                }
-                            },
-                            {
-                                "key": "hunger",
-                                "value": {
-                                    "index": 3,
-                                    "data": 100
                                 }
                             },
                             {
@@ -68,10 +65,17 @@
                                 }
                             },
                             {
-                                "key": "is_sprinting",
+                                "key": "MAX_THIRST",
                                 "value": {
-                                    "index": 4,
-                                    "data": false
+                                    "index": 3,
+                                    "data": 100
+                                }
+                            },
+                            {
+                                "key": "hunger",
+                                "value": {
+                                    "index": 2,
+                                    "data": 98.80400085449219
                                 }
                             },
                             {
@@ -82,35 +86,31 @@
                                 }
                             },
                             {
+                                "key": "thirst",
+                                "value": {
+                                    "index": 2,
+                                    "data": 97.84449768066406
+                                }
+                            },
+                            {
                                 "key": "curr_speed",
                                 "value": {
                                     "index": 2,
-                                    "data": 1.25
+                                    "data": 1.9632866382598878
                                 }
                             },
                             {
-                                "key": "thirst",
+                                "key": "is_god",
                                 "value": {
-                                    "index": 3,
-                                    "data": 100
+                                    "index": 4,
+                                    "data": false
                                 }
                             },
                             {
-                                "key": "last_pos",
+                                "key": "is_sprinting",
                                 "value": {
-                                    "index": 5,
-                                    "data": {
-                                        "value0": 2.0786871910095217,
-                                        "value1": 12.031977653503418,
-                                        "value2": 1.8580116033554078
-                                    }
-                                }
-                            },
-                            {
-                                "key": "MAX_HUNGER",
-                                "value": {
-                                    "index": 3,
-                                    "data": 100
+                                    "index": 4,
+                                    "data": true
                                 }
                             }
                         ]
