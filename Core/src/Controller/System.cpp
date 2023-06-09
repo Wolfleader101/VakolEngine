@@ -6,7 +6,6 @@
 #include <Controller/Physics/PhysicsPool.hpp>
 #include <Controller/Scene.hpp>
 #include <Model/Components.hpp>
-
 #include <glm/gtc/quaternion.hpp>
 
 using namespace Components;
@@ -33,10 +32,19 @@ namespace Vakol::Controller {
 
     void System::Drawable_Init() {
         Terrain_Init();
-        m_registry->view<Drawable>().each([&](auto& drawable) 
-        { 
-            if(drawable.model_ptr == nullptr)
-                drawable.model_ptr = AssetLoader::GetModel(drawable.name, drawable.scale, drawable.animated, drawable.backfaceCull).first;
+        m_registry->view<Drawable>().each([&](auto& drawable) {
+            if (drawable.model_ptr == nullptr)
+                drawable.model_ptr =
+                    AssetLoader::GetModel(drawable.name, drawable.scale, drawable.animated, drawable.backfaceCull)
+                        .first;
+        });
+
+        m_registry->group<Drawable, Components::Animator>().each([&](auto& drawable, auto& animator) {
+            if (!animator.animator_ptr) {
+                animator.animator_ptr =
+                    AssetLoader::GetModel(drawable.name, drawable.scale, drawable.animated, drawable.backfaceCull)
+                        .second;
+            }
         });
     }
 
@@ -64,17 +72,18 @@ namespace Vakol::Controller {
 
         m_registry->view<Components::Animator>().each([&](const Components::Animator& animator) {
             s_animator_map[animator.attached_model] = animator;
-            
+
             for (const auto state : s_animation_set)
                 s_animator_map.at(animator.attached_model).Update(state, time.deltaTime);
         });
 
-        m_registry->view<Transform, Drawable, Components::Animation>().each([&](const auto& transform, const Drawable& drawable, const Components::Animation& animation)
-        {
-            s_animation_set.emplace(animation.state);
+        m_registry->view<Transform, Drawable, Components::Animation>().each(
+            [&](const auto& transform, const Drawable& drawable, const Components::Animation& animation) {
+                s_animation_set.emplace(animation.state);
 
-            renderer->DrawAnimated(transform, drawable, s_animator_map.at(animation.attached_model).c_animation(animation.state));
-        });
+                renderer->DrawAnimated(transform, drawable,
+                                       s_animator_map.at(animation.attached_model).c_animation(animation.state));
+            });
     }
 
     void System::Script_Update(std::shared_ptr<LuaState> lua, EntityList& list, Scene* scene) {
@@ -86,6 +95,22 @@ namespace Vakol::Controller {
             lua->GetState()["state"] = script.state;
 
             lua->RunFunction("update");
+        });
+    }
+
+    void System::Script_Deserialize(std::shared_ptr<LuaState> lua, EntityList& list, Scene* scene) {
+        m_registry->view<Script>().each([&](auto entity_id, auto& script) {
+            lua->RunFile("scripts/" + script.script_name);
+
+            lua->GetState()["scene"] = scene;
+            lua->GetState()["entity"] = list.GetEntity(static_cast<unsigned int>(entity_id));
+
+            script.state = lua->GetState().create_table();
+            Controller::ConvertMapToSol(lua, script.data, script.state);
+
+            lua->GetState()["state"] = script.state;
+
+            lua->RunFunction("deserialize");
         });
     }
 
@@ -229,10 +254,5 @@ namespace Vakol::Controller {
     };
 
     void System::Physics_AddTerrain(const Terrain& ter) { m_SP->AddTerrain(ter); }
-
-    // void System::Script_Init()
-    // {
-
-    // }
 
 }  // namespace Vakol::Controller

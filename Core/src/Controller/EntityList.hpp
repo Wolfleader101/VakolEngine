@@ -6,6 +6,9 @@
 #include <memory>
 #include <vector>
 
+#include "Logger.hpp"
+#include "Controller/LuaState.hpp"
+
 namespace Vakol::Model {
 
     class Entity;  // pre declared to prevent recursive include
@@ -16,6 +19,7 @@ using namespace Vakol::Model;
 namespace Vakol::Controller {
 
     class System;
+    class Scene;
 
     /**
      * @class EntityList
@@ -118,46 +122,17 @@ namespace Vakol::Controller {
             }
         }
 
-        // template <typename Archive, typename... Args>
-        // void privateDeserialize(const std::string& file) {
-        //     std::ifstream inp(file);
-
-        //     if (inp.good()) 
-        //     {
-        //         Archive json(inp);
-        //         json(ActiveEntityList);  // fills vector again
-
-        //         if(m_Registry.empty()) //if not initialized already
-        //         {
-        //             entt::snapshot_loader snapLoad(m_Registry);
-        //             snapLoad.entities(json);
-        //             snapLoad.component<Args...>(json);
-        //         }
-        //         else //if initialized 
-        //         {
-                   
-        //             entt::basic_continuous_loader<decltype(m_Registry)> continuousLoad(m_Registry);
-        //             continuousLoad.entities(json);
-        //             continuousLoad.component<Args...>(json);
-        //             continuousLoad.shrink();  // Remove entities that no longer have counterparts.  
-        //         }
-
-        //         inp.close();
-        //     }
-        // }
-
         template <typename Archive, typename... Args>
         void privateDeserialize(const std::string& file) {
             std::ifstream inp(file);
 
-            if (inp.good()) {
-                
+            if (inp.good()) 
+            {
                 m_Registry.clear();
-
                 Archive json(inp);
-
                 json(ActiveEntityList);  // fills vector again
 
+                
                 entt::snapshot_loader snapLoad(m_Registry);
                 snapLoad.entities(json);
                 snapLoad.component<Args...>(json);
@@ -165,6 +140,65 @@ namespace Vakol::Controller {
                 inp.close();
             }
         }
+
+        // template <typename Archive, typename... Args>
+        // void privateDeserialize(const std::string& file, std::shared_ptr<LuaState> lua, Scene* scene) {
+        //     std::ifstream inp(file);
+
+        //     if (inp.good()) {
+                
+
+        //         m_Registry.clear();
+        //         ActiveEntityList.clear();
+
+        //         Archive json(inp);
+        //         json(ActiveEntityList);  // fills vector again
+                
+                
+        //         entt::snapshot_loader snapLoad(m_Registry);
+        //         snapLoad.entities(json);
+        //         snapLoad.component<Args...>(json);
+
+
+
+        //         System::Script_Init(lua, *this, scene);
+
+        //         //inp.close();
+
+
+        //         inp.seekg(0, inp.beg); //reset file pointer to start of file
+
+        //         entt::registry tempReg;
+        //         entt::snapshot_loader tempSnap(tempReg);
+        //         tempSnap.entities(json);
+        //         tempSnap.component<Args...>(json);
+
+        //         //do n^2 view here
+                
+        //         m_Registry.group<Components::Script, Components::Transform, Components::GUID, Components::Tag>().each(
+        //             [&](auto& script, auto& trans, auto& guid, auto& tag)
+        //             {
+        //                     tempReg.group<Components::Script, Components::Transform, Components::GUID, Components::Tag>().each(
+        //                     [&](auto& scriptTemp, auto& transTemp, auto& guidTemp, auto& tagTemp)
+        //                     {
+        //                         if(guid == guidTemp)
+        //                         {
+        //                             Controller::ConvertMapToSol(scriptTemp.data, script.state); //convert map to sol state (lua
+        //                             script.state = scriptTemp.state;
+
+        //                             trans = transTemp;
+
+        //                             tag = tagTemp;
+        //                         }
+        //                     });
+        //             });
+
+                
+        //         inp.close();
+        //     }
+
+        //     
+        // }
 
         friend class Entity;  // friend to allow the api for entities to be clean.
         friend class System;

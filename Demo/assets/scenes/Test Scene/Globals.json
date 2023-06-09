@@ -1,0 +1,131 @@
+{
+    "globals": {
+        "value0": [
+            {
+                "key": "player",
+                "value": {
+                    "index": 0,
+                    "data": {
+                        "value0": [
+                            {
+                                "key": "base_speed",
+                                "value": {
+                                    "index": 2,
+                                    "data": 1.25
+                                }
+                            },
+                            {
+                                "key": "last_pos",
+                                "value": {
+                                    "index": 5,
+                                    "data": {
+                                        "value0": 11.69329833984375,
+                                        "value1": 4.232135772705078,
+                                        "value2": 13.063940048217774
+                                    }
+                                }
+                            },
+                            {
+                                "key": "MAX_HEALTH",
+                                "value": {
+                                    "index": 3,
+                                    "data": 100
+                                }
+                            },
+                            {
+                                "key": "curr_speed",
+                                "value": {
+                                    "index": 2,
+                                    "data": 1.7954893112182618
+                                }
+                            },
+                            {
+                                "key": "MAX_THIRST",
+                                "value": {
+                                    "index": 3,
+                                    "data": 100
+                                }
+                            },
+                            {
+                                "key": "is_sprinting",
+                                "value": {
+                                    "index": 4,
+                                    "data": true
+                                }
+                            },
+                            {
+                                "key": "hunger",
+                                "value": {
+                                    "index": 2,
+                                    "data": 93.2940902709961
+                                }
+                            },
+                            {
+                                "key": "health",
+                                "value": {
+                                    "index": 3,
+                                    "data": 100
+                                }
+                            },
+                            {
+                                "key": "thirst",
+                                "value": {
+                                    "index": 2,
+                                    "data": 88.0146484375
+                                }
+                            },
+                            {
+                                "key": "is_god",
+                                "value": {
+                                    "index": 4,
+                                    "data": false
+                                }
+                            },
+                            {
+                                "key": "pos",
+                                "value": {
+                                    "index": 5,
+                                    "data": {
+                                        "value0": 11.69329833984375,
+                                        "value1": 4.232135772705078,
+                                        "value2": 13.063940048217774
+                                    }
+                                }
+                            },
+                            {
+                                "key": "sprint_speed",
+                                "value": {
+                                    "index": 3,
+                                    "data": 2
+                                }
+                            },
+                            {
+                                "key": "MAX_HUNGER",
+                                "value": {
+                                    "index": 3,
+                                    "data": 100
+                                }
+                            },
+                            {
+                                "key": "last_damage_time",
+                                "value": {
+                                    "index": 3,
+                                    "data": 0
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "key": "terrain",
+                "value": {
+                    "index": 0,
+                    "data": {
+                        "value0": []
+                    }
+                }
+            }
+        ]
+    }
+}

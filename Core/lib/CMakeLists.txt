@@ -35,6 +35,7 @@ add_subdirectory(sol2)
 add_subdirectory(lua)
 add_subdirectory(assimp)
 add_subdirectory(cereal)
+add_subdirectory(crossguid)
 
 target_include_directories(imgui PUBLIC glfw/include)
 
@@ -51,4 +52,5 @@ target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC
     assimp/include
     lua/lua
     cereal/include
+    crossguid/include
 )
