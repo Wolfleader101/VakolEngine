@@ -8,6 +8,7 @@
 #include <sol/sol.hpp>
 
 #include "Controller/Math.hpp"
+#include "LuaState.hpp"
 
 namespace Vakol::Controller {
 
@@ -21,6 +22,6 @@ namespace Vakol::Controller {
     };
 
     void ConvertSolToMap(const sol::table& table, SolTableData& solTableData);
-    void ConvertMapToSol(const SolTableData& solTableData, sol::table& table);
+    void ConvertMapToSol(std::shared_ptr<LuaState> lua, const SolTableData& solTableData, sol::table& table);
 
 }  // namespace Vakol::Controller

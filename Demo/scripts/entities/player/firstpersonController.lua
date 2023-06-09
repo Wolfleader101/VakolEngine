@@ -48,6 +48,9 @@ function update()
         old_pos.z + (forward.z * dir.z + right.z * dir.x) * velocity
     )
 
+    if(scene.globals.terrain.transform == nil) then
+        return;
+    end
     if (not state.flying) then
         local terr_scale = scene.globals.terrain.transform.scale;
         new_pos.y = (scene.globals.terrain.terr:get_height(new_pos.x / terr_scale.x, new_pos.z / terr_scale.z) * terr_scale.y) + 0.5;

@@ -253,8 +253,7 @@ namespace Vakol::Controller {
             Input::KEY::KEY_ESCAPE);
     }
 
-    void RegisterEntity(std::shared_ptr<LuaState>& state, sol::state& lua)
-    {
+    void RegisterEntity(std::shared_ptr<LuaState>& state, sol::state& lua) {
         auto entity_type = lua.new_usertype<Entity>("entity");
         auto model_type = lua.new_usertype<Assets::Model>("model");
         auto mesh_type = lua.new_usertype<Mesh>("mesh");
@@ -272,15 +271,16 @@ namespace Vakol::Controller {
         entity_type.set_function("create_height_map_terrain",
                                  [](Entity* ent, Scene& scene, std::string&& path, const float min, const float max) {
                                      if (!ent->HasComponent<Drawable>()) ent->AddComponent<Drawable>();
-                                     if (ent->HasComponent<Components::Terrain>()) ent->RemoveComponent<Components::Terrain>();
+                                     if (ent->HasComponent<Components::Terrain>())
+                                         ent->RemoveComponent<Components::Terrain>();
 
                                      ent->AddComponent<Components::Terrain>();
-                                     
+
                                      const auto& name = scene.getName();
 
                                      std::shared_ptr<Terrain> terrain = AssetLoader::GetTerrain(name);
 
-                                     if(terrain == nullptr) terrain = AssetLoader::GetTerrain(name, path, min, max);
+                                     if (terrain == nullptr) terrain = AssetLoader::GetTerrain(name, path, min, max);
 
                                      auto& terrain_comp = ent->GetComponent<Components::Terrain>();
 
@@ -290,7 +290,6 @@ namespace Vakol::Controller {
                                      terrain_comp.path = std::move(path);
                                      terrain_comp.name = name;
 
-
                                      if (const auto& model = terrain->GetModel()) {
                                          model->mesh().SetDrawMode(DRAW_MODE::STRIPS);
                                          model->mesh().SetDrawType(DRAW_TYPE::ELEMENTS);
@@ -299,10 +298,9 @@ namespace Vakol::Controller {
 
                                          model->mesh().SetNumTrisPerStrip(terrain->GetSize() / 1 * 2 - 2);
 
-
-                                        Drawable& drawable = ent->GetComponent<Drawable>();
-                                        drawable.model_ptr = model;
-                                    }
+                                         Drawable& drawable = ent->GetComponent<Drawable>();
+                                         drawable.model_ptr = model;
+                                     }
 
                                      return terrain;
                                  });
@@ -341,8 +339,7 @@ namespace Vakol::Controller {
 
             auto [model, animator] = AssetLoader::GetModel(path, scale, animated, backfaceCull, instance);
 
-            if (model) 
-            {
+            if (model) {
                 auto& draw = ent->GetComponent<Drawable>();
 
                 draw.model_ptr = model;
@@ -352,12 +349,10 @@ namespace Vakol::Controller {
                 draw.backfaceCull = backfaceCull;
                 draw.instance = instance;
 
-                if (animator && animated) 
-                {
+                if (animator && animated) {
                     if (!ent->HasComponent<Components::Animation>()) ent->AddComponent<Components::Animation>();
-                    
-                    if (!instance)
-                    {   
+
+                    if (!instance) {
                         if (!ent->HasComponent<Components::Animator>()) ent->AddComponent<Components::Animator>();
 
                         auto& _animator = ent->GetComponent<Components::Animator>();
@@ -409,17 +404,15 @@ namespace Vakol::Controller {
                                      model->mesh(mesh_index).GetMaterial()->AddTexture(*AssetLoader::GetTexture(path));
                                  });
 
-        entity_type.set_function("set_animation_state", [](const Entity* ent, int animation_state) 
-        {
-            if (!ent->HasComponent<Components::Animation>()) 
-            {
+        entity_type.set_function("set_animation_state", [](const Entity* ent, double animation_state) {
+            if (!ent->HasComponent<Components::Animation>()) {
                 VK_ERROR("Animation component is needed to set it's animation state!");
                 return;
             }
 
             auto& animation = ent->GetComponent<Components::Animation>();
 
-            animation.state = animation_state;
+            animation.state = static_cast<int>(animation_state);
         });
 
         model_type.set_function("get_mesh_count", &Assets::Model::nMeshes);
@@ -509,12 +502,9 @@ namespace Vakol::Controller {
         });
 
         entity_type.set_function("add_fsm", [&state](Entity* ent) -> FSM& {
-            
             if (!ent->HasComponent<FSM>()) ent->AddComponent<FSM>(state);
             return ent->GetComponent<FSM>();
         });
-
-
     }
 
     void RegisterECS(sol::state& lua) {

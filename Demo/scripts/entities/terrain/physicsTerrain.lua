@@ -48,5 +48,5 @@ function update()
 end
 
 function deserialize()
-
+    scene.globals.terrain = { transform = entity:get_transform(), terr = entity:get_terrain() };
 end

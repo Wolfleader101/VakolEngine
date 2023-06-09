@@ -119,7 +119,7 @@ namespace Vakol::Controller {
             lua->RunFunction("init");
 
             if (!script.data.data.size()) {
-                Controller::ConvertMapToSol(script.data, script.state);
+                Controller::ConvertMapToSol(lua, script.data, script.state);
             }
         });
     }
@@ -144,7 +144,7 @@ namespace Vakol::Controller {
             lua->GetState()["entity"] = list.GetEntity(static_cast<unsigned int>(entity_id));
 
             script.state = lua->GetState().create_table();
-            Controller::ConvertMapToSol(script.data, script.state);
+            Controller::ConvertMapToSol(lua, script.data, script.state);
 
             lua->GetState()["state"] = script.state;
 

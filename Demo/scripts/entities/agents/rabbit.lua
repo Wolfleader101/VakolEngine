@@ -152,6 +152,10 @@ function update()
     if (entity:get_fsm() ~= nil) then
         entity:get_fsm():update()
     end
+
+    if(scene.globals.terrain == nil or scene.globals.terrain.transform == nil) then
+        return
+    end
     
 
     local terr_scale = scene.globals.terrain.transform.scale;
