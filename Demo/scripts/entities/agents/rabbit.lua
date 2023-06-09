@@ -1,3 +1,4 @@
+
 local function dir_wait(seconds)
     state.DIR_TIMER = state.DIR_TIMER + Time.delta_time;
     if (state.DIR_TIMER >= seconds) then
@@ -14,17 +15,14 @@ local function fsm_wait(seconds)
     end
     return false;
 end
-
 local function setup_fsm()
     state.fsm = entity:add_fsm();
-
     state.fsm:add_state("eating", function()
         entity:play_animation(state.ANIMATIONS.EAT);
         if (fsm_wait(math.random(5, 7))) then
             state.fsm:change_state("roaming")
         end
     end)
-
     state.fsm:add_state("looking", function()
         entity:play_animation(state.ANIMATIONS.IDLE);
         if (fsm_wait(math.random(5, 7))) then
@@ -36,7 +34,6 @@ local function setup_fsm()
             end
         end
     end)
-
     state.fsm:add_state("roaming", function()
         local stateChange = false
         if (fsm_wait(math.random(5, 7))) then
@@ -69,7 +66,6 @@ local function setup_fsm()
         local move = state.dir * velocity * 100;
         entity:get_rigid():set_velocity(move);
     end)
-
     state.fsm:add_state("running_away", function()
         entity:play_animation(state.ANIMATIONS.RUN);
         local diff = scene.globals.player.pos - entity:get_transform().pos;
@@ -84,7 +80,6 @@ local function setup_fsm()
                 rand_dir:normalize()
                 dotProduct = rand_dir:dot(diff:normalize())
             end
-
             -- Update the state direction
             state.dir = rand_dir
             state.SPOTTED = true;
@@ -97,10 +92,8 @@ local function setup_fsm()
             state.fsm:change_state("roaming")
         end
     end)
-
     state.fsm:change_state("roaming")
 end
-
 function init()
     state.ANIMATIONS = {
         DIE = 0,
@@ -110,7 +103,6 @@ function init()
         STATIC = 4,
         WALK = 5,
     }
-
     state.speed = 0.5;
     state.sprint_speed = 3;
     state.dir = Vector3.new(math.random() * 2 - 1, 0, math.random() * 2 - 1);
@@ -156,14 +148,6 @@ function update()
     local pos = entity:get_transform().pos;
     local diff = scene.globals.player.pos - pos;
     local player_dist = diff:magnitude();
-
-    if (player_dist > 50) then
-        entity:active_model(false);
-        return;
-    else
-        entity:active_model(true);
-    end
-
     if (player_dist < state.VIEW_DISTANCE) then
         local diff_normal = diff:normalize();
         local dot = diff_normal:dot(state.dir)
@@ -174,20 +158,16 @@ function update()
     if (entity:get_fsm() ~= nil) then
         entity:get_fsm():update()
     end
-
     if(scene.globals.terrain == nil or scene.globals.terrain.transform == nil) then
         return
     end
     
-
     local terr_scale = scene.globals.terrain.transform.scale;
     pos.y = (scene.globals.terrain.terr:get_height(pos.x / terr_scale.x, pos.z / terr_scale.z) * terr_scale.y) + 0.03;
     local targetRotation = math.atan(state.dir.x, state.dir.z)
     targetRotation = targetRotation * (180 / math.pi)
     entity:get_transform().rot.y = targetRotation
 end
-
-
 function deserialize()
     setup_fsm()
 end

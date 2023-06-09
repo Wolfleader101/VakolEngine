@@ -1,8 +1,8 @@
 function init()
 	local MAX_ATTEMPTS = 50;
 
-	local n_trees = 5000;
-	local n_rocks = 6000;
+	local n_trees = 2500;
+	local n_rocks = 2500;
 
 	local attempts = 0;
 

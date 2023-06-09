@@ -1,65 +1,4 @@
-function init()
-    state.ANIMATIONS = 
-    {
-        ATTACK = 0,
-        DIE = 1,
-        EAT = 2,
-        IDLE = 3,
-        RUN = 4,
-        WALK = 6
-    }
-
-    state.enemyAttackAnimDistance = 1.2;
-    state.giveUpDistance = 8.0;
-    state.speed = 0.7;
-    state.sprint_speed = 1.6;
-    state.dir = Vector3.new(math.random() * 2 - 1, 0, math.random() * 2 - 1);
-
-    while state.dir:magnitude() == 0 do
-        state.dir.x = math.random() * 2 - 1
-        state.dir.z = math.random() * 2 - 1
-    end
-
-    state.dir:normalize();
-
-    state.WAIT_TIMER = 0.0;
-    state.DIR_TIMER = 0.0;
-    state.ATTACK_TIMER = 0.0;
-
-    state.VIEW_DISTANCE = 10.0;
-    state.SPOTTED = false;
-
-    state.model = entity:add_model("assets/models/agents/bear.fbx", 0.25, true, true);
-    entity:set_shader("coreAssets/shaders/animation.prog");
-
-    local shader = state.model:get_shader();
-
-    shader:set_vec3v("light.direction", Vector3.new(math.rad(0.0), math.rad(0.0), math.rad(-90.0)));
-
-    shader:set_float("material.shininess", 32.0);
-    shader:set_vec3v("tint", Vector3.new(0.2, 0.65, 0.9));
-
-    shader:set_int("material.diffuse_map", 0);
-    shader:set_int("material.specular_map", 1);
-    shader:set_int("material.normal_map", 2);
-    shader:set_int("material.emission_map", 3);
-
-
-    -- local rb = entity:add_rigid();
-
-    -- rb.use_transform = true;
-
-    -- local collider = entity:add_collider();
-
-    -- collider.Shape = Shape.Box;
-    -- collider.bounds.extents.x = 0.1;
-    -- collider.bounds.extents.y = 0.5;
-    -- collider.bounds.extents.z = 0.2;
-
-
-    -- entity:physics_init(scene);
-    
-
+function setup_fsm()
     state.fsm = entity:add_fsm();
 
     state.fsm:add_state("eating", function()
@@ -187,7 +126,54 @@ function init()
         end
     end)
 
-    state.fsm:change_state("roaming")
+    state.fsm:change_state("roaming");
+end
+
+function init()
+    state.ANIMATIONS = {
+        ATTACK = 0,
+        DIE = 1,
+        EAT = 2,
+        IDLE = 3,
+        RUN = 4,
+        WALK = 6
+    }
+
+    state.enemyAttackAnimDistance = 1.2;
+    state.giveUpDistance = 8.0;
+    state.speed = 0.4;
+    state.sprint_speed = 1.6;
+    state.dir = Vector3.new(math.random() * 2 - 1, 0, math.random() * 2 - 1);
+    while state.dir:magnitude() == 0 do
+        state.dir.x = math.random() * 2 - 1
+        state.dir.z = math.random() * 2 - 1
+    end
+    state.dir:normalize();
+
+    state.WAIT_TIMER = 0.0;
+    state.DIR_TIMER = 0.0;
+
+    state.VIEW_DISTANCE = 10.0;
+    state.SPOTTED = false;
+
+    entity:get_transform().pos = Vector3.new(10, 0, 10);
+
+    state.model = entity:add_model("assets/models/agents/bear.fbx", 0.25, true, true);
+    entity:set_shader("coreAssets/shaders/animation.prog");
+
+    local shader = state.model:get_shader();
+
+    shader:set_vec3v("light.direction", Vector3.new(math.rad(0.0), math.rad(0.0), math.rad(-90.0)));
+
+    shader:set_float("material.shininess", 32.0);
+    shader:set_vec3v("tint", Vector3.new(0.2, 0.65, 0.9));
+
+    shader:set_int("material.diffuse_map", 0);
+    shader:set_int("material.specular_map", 1);
+    shader:set_int("material.normal_map", 2);
+    shader:set_int("material.emission_map", 3);
+
+   setup_fsm();
 end
 
 function trigger_nearby_bears(origin_bear, trigger_distance)
@@ -208,6 +194,9 @@ function player_distance()
 end
 
 function attack_wait(seconds)
+    if(state.ATTACK_TIMER == nil) then
+        state.ATTACK_TIMER = 0;
+    end
     state.ATTACK_TIMER = state.ATTACK_TIMER + Time.delta_time;
 
     if (state.ATTACK_TIMER >= seconds) then
@@ -268,4 +257,8 @@ function update()
     local terr_scale = scene.globals.terrain.transform.scale;
     pos.y = (scene.globals.terrain.terr:get_height(pos.x / terr_scale.x, pos.z / terr_scale.z) * terr_scale.y) + 0.03;
 
+end
+
+function deserialize()
+    setup_fsm();
 end

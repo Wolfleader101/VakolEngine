@@ -421,7 +421,7 @@ namespace Vakol::Controller {
                                      model->mesh(mesh_index).GetMaterial()->AddTexture(*AssetLoader::GetTexture(path));
                                  });
 
-        entity_type.set_function("play_animation", [](const Entity* ent, const int animation_state) {
+        entity_type.set_function("play_animation", [](const Entity* ent, const float animation_state) {
             if (!ent->HasComponent<Components::Animation>()) {
                 VK_ERROR("Animation component is needed to set it's animation state!");
                 return;

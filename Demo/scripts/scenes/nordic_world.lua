@@ -23,8 +23,6 @@ function init()
 
     scene:create_entity("terrain", "entities/terrain/physicsTerrain.lua");
 
-    scene:create_entity("serialization", "entities/misc/serialization.lua");
-
     scene:create_entity("static_props", "entities/instancing_new.lua");
 
     local rabbits          = {};
@@ -137,9 +135,11 @@ function update()
         scene:serialize("assets/scenes");
         print("Checkpoint saved!");
     end
-
     if(Input:get_key_down(KEYS["KEY_6"])) then
         scene:deserialize("assets/scenes/".. scene:get_name());
-        print("Checkpoint loaded!")
+        print("Checkpoint loaded!");
     end
+    
+
 end
+

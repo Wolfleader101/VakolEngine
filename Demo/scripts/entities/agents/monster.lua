@@ -1,61 +1,45 @@
-function init()
-    state.ANIMATIONS = {
-        CRAWL = 0,
-        IDLE = 2,
-        RUN = 6,
-        ATTACK = 7,
-        WALK = 11
-    }
+function player_distance()  -- Added a new function to calculate distance to the player
+    return (scene.globals.player.pos - entity:get_transform().pos):magnitude();
+end
 
-    state.enemyAttackAnimDistance = 1.0;
-    state.giveUpDistance = 10.0;
-    state.speed = 0.3;
-    state.sprint_speed = 1.35;
-    state.dir = Vector3.new(math.random() * 2 - 1, 0, math.random() * 2 - 1);
-    while state.dir:magnitude() == 0 do
-        state.dir.x = math.random() * 2 - 1
-        state.dir.z = math.random() * 2 - 1
+local function dir_wait(seconds)
+    state.DIR_TIMER = state.DIR_TIMER + Time.delta_time;
+
+    if (state.DIR_TIMER >= seconds) then
+        state.DIR_TIMER = 0
+        return true;
     end
-    state.dir:normalize();
 
-    state.WAIT_TIMER = 0.0;
-    state.DIR_TIMER = 0.0;
-    state.ATTACK_TIMER = 0.0;
+    return false;
+end
 
-    state.VIEW_DISTANCE = 10.0; -- increased view distance for a deer
-    state.SPOTTED = false;
+local function trigger_nearby_monsters(origin_monster, trigger_distance)
+    local origin_pos = origin_monster:get_transform().pos
 
-    entity:get_transform().pos = Vector3.new(10, 0, 10);
-
-    state.model = entity:add_model("assets/models/agents/monster.fbx", 0.25, true, true);
-    entity:set_shader("coreAssets/shaders/animation.prog");
-
-    local shader = state.model:get_shader();
-
-    shader:set_vec3v("light.direction", Vector3.new(math.rad(0.0), math.rad(0.0), math.rad(-90.0)));
-
-    shader:set_float("material.shininess", 32.0);
-    shader:set_vec3v("tint", Vector3.new(0.2, 0.65, 0.9));
-
-    shader:set_int("material.diffuse_map", 0);
-    shader:set_int("material.specular_map", 1);
-    shader:set_int("material.normal_map", 2);
-    shader:set_int("material.emission_map", 3);
-
-    -- local rb = entity:add_rigid();
-
-    -- rb.use_transform = true;
-
-    -- local collider = entity:add_collider();
-
-    -- collider.Shape = Shape.Box;
-    -- collider.bounds.extents.x = 0.1;
-    -- collider.bounds.extents.y = 0.5;
-    -- collider.bounds.extents.z = 0.1;
+    for i, monster in ipairs(scene.globals.monsters) do
+        if monster ~= origin_monster and monster:get_fsm():get_state() ~= "attack" then
+            local diff = origin_pos - monster:get_transform().pos
+            if diff:magnitude() <= trigger_distance then
+                monster:get_fsm():change_state("alerted")
+                --print("Monster " .. i .. " has been alerted and is now in alerted state.")
+            end
+        end
+    end
+end
 
 
-    -- entity:physics_init(scene); 
+local function fsm_wait(seconds)
+    state.WAIT_TIMER = state.WAIT_TIMER + Time.delta_time;
 
+    if (state.WAIT_TIMER  >= seconds) then
+        state.WAIT_TIMER = 0
+        return true;
+    end
+
+    return false;
+end
+
+local function setup_fsm()
     state.fsm = entity:add_fsm();
 
     state.fsm:add_state("attack", function()
@@ -171,62 +155,55 @@ function init()
             state.fsm:change_state("attack");
         end
     end)
-
-    state.fsm:change_state("roaming")
-
-    --print_err("Monster is ready")
+    
+    state.fsm:change_state("roaming");
 end
 
-function trigger_nearby_monsters(origin_monster, trigger_distance)
-    local origin_pos = origin_monster:get_transform().pos
+function init()
+    state.ANIMATIONS = {
+        CRAWL = 0,
+        IDLE = 2,
+        RUN = 6,
+        ATTACK = 7,
+        WALK = 11
+    }
 
-    for i, monster in ipairs(scene.globals.monsters) do
-        if monster ~= origin_monster and monster:get_fsm():get_state() ~= "attack" then
-            local diff = origin_pos - monster:get_transform().pos
-            if diff:magnitude() <= trigger_distance then
-                monster:get_fsm():change_state("alerted")
-                --print("Monster " .. i .. " has been alerted and is now in alerted state.")
-            end
-        end
+    state.enemyAttackAnimDistance = 1.0;
+    state.giveUpDistance = 10.0;
+    state.speed = 0.3;
+    state.sprint_speed = 1.7;
+    state.dir = Vector3.new(math.random() * 2 - 1, 0, math.random() * 2 - 1);
+    while state.dir:magnitude() == 0 do
+        state.dir.x = math.random() * 2 - 1
+        state.dir.z = math.random() * 2 - 1
     end
+    state.dir:normalize();
+
+    state.WAIT_TIMER = 0.0;
+    state.DIR_TIMER = 0.0;
+
+    state.VIEW_DISTANCE = 10.0; -- increased view distance for a deer
+    state.SPOTTED = false;
+    entity:get_transform().pos = Vector3.new(10, 0, 10);
+
+    state.model = entity:add_model("assets/models/agents/monster.fbx", 0.25, true, true);
+    entity:set_shader("coreAssets/shaders/animation.prog");
+
+    local shader = state.model:get_shader();
+
+    shader:set_vec3v("light.direction", Vector3.new(math.rad(0.0), math.rad(0.0), math.rad(-90.0)));
+
+    shader:set_float("material.shininess", 32.0);
+    shader:set_vec3v("tint", Vector3.new(0.2, 0.65, 0.9));
+
+    shader:set_int("material.diffuse_map", 0);
+    shader:set_int("material.specular_map", 1);
+    shader:set_int("material.normal_map", 2);
+    shader:set_int("material.emission_map", 3);
+
+    setup_fsm();
 end
 
-function player_distance()  -- Added a new function to calculate distance to the player
-    return (scene.globals.player.pos - entity:get_transform().pos):magnitude();
-end
-
-function attack_wait(seconds)
-    state.ATTACK_TIMER = state.ATTACK_TIMER + Time.delta_time;
-
-    if (state.ATTACK_TIMER >= seconds) then
-        state.ATTACK_TIMER = 0;
-        return true;
-    end
-
-    return false;
-end
-
-function dir_wait(seconds)
-    state.DIR_TIMER = state.DIR_TIMER + Time.delta_time;
-
-    if (state.DIR_TIMER >= seconds) then
-        state.DIR_TIMER = 0
-        return true;
-    end
-
-    return false;
-end
-
-function fsm_wait(seconds)
-    state.WAIT_TIMER = state.WAIT_TIMER + Time.delta_time;
-
-    if (state.WAIT_TIMER  >= seconds) then
-        state.WAIT_TIMER = 0
-        return true;
-    end
-
-    return false;
-end
 
 function update()
     PLAYER = scene.globals.player;
@@ -257,4 +234,8 @@ function update()
     pos.y = (scene.globals.terrain.terr:get_height(pos.x / terr_scale.x, pos.z / terr_scale.z) * terr_scale.y) + 0.03;
 
     entity:get_transform().pos = pos;
+end
+
+function deserialize()
+    setup_fsm();
 end
