@@ -373,6 +373,10 @@ namespace Vakol::Controller {
             if (ent->HasComponent<Drawable>()) return ent->GetComponent<Drawable>().model_ptr;
         });
 
+        entity_type.set_function("active_model", [](const Entity* ent, bool active) {
+            if (ent->HasComponent<Drawable>()) ent->GetComponent<Drawable>().active = active;
+        });
+
         entity_type.set_function("set_shader", [](const Entity* ent, const std::string& path) {
             if (!ent->HasComponent<Drawable>()) {
                 VK_ERROR("Drawable Component is needed to set shader!");

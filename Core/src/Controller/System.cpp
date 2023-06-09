@@ -66,6 +66,8 @@ namespace Vakol::Controller {
 
             transform.rot = glm::quat(euler_rads);
 
+            if (!drawable.active) return;
+
             if (!drawable.animated) renderer->Draw(transform, drawable);
         });
 
@@ -74,6 +76,8 @@ namespace Vakol::Controller {
 
         m_registry->view<Transform, Drawable, Components::Animation>().each(
             [&](const auto& transform, const Drawable& drawable, const Components::Animation& _animation) {
+                if (!drawable.active) return;
+
                 s_animation_set.emplace(std::make_pair(_animation.attached_model, _animation.state));
 
                 const auto& animation = AssetLoader::GetAnimation(_animation.attached_model, _animation.state);
