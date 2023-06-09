@@ -66,33 +66,82 @@ namespace Vakol::Model::Components {
         }
     };
 
+    /**
+     * @brief Animator component
+     */
     struct Animator {
-        std::string attached_model;
+    std::string attached_model; /**< The attached model name. */
 
-        void Update(const int state, const float delta_time) { animator_ptr->Update(state, delta_time); }
-        void Update(const float delta_time) { animator_ptr->Update(delta_time); }
+    /**
+     * \brief Updates the animator with the specified state and delta time.
+     * \param state The state of the animator.
+     * \param delta_time The elapsed time since the last update.
+     */
+    void Update(const int state, const float delta_time) { animator_ptr->Update(state, delta_time); }
 
-        const Model::Assets::Animation& c_animation(const int state) const { return animator_ptr->c_get(state); } 
-        Model::Assets::Animation animation(const int state) const { return animator_ptr->get(state); }
+    /**
+     * \brief Updates the animator with the specified delta time.
+     * \param delta_time The elapsed time since the last update.
+     */
+    void Update(const float delta_time) { animator_ptr->Update(delta_time); }
 
-        void set(const std::shared_ptr<Controller::Animator>& animator) { animator_ptr = animator; }
-        void set(const Controller::Animator& animator) {
-            animator_ptr = std::make_shared<Controller::Animator>(animator);
-        }
+    /**
+     * \brief Retrieves a constant reference to the animation for the specified state.
+     * \param state The state of the animation.
+     * \return A constant reference to the animation.
+     */
+    const Model::Assets::Animation& c_animation(const int state) const { return animator_ptr->c_get(state); }
 
-        template <class Archive>
-        void serialize(Archive& ar) {
-            ar(cereal::make_nvp("attached_model", attached_model));
-            // ar(cereal::make_nvp("State Table",state));
-        }
+    /**
+     * \brief Retrieves a copy of the animation for the specified state.
+     * \param state The state of the animation.
+     * \return A copy of the animation.
+     */
+    Model::Assets::Animation animation(const int state) const { return animator_ptr->get(state); }
 
-        std::shared_ptr<Controller::Animator> animator_ptr = nullptr;
-    };
+    /**
+     * \brief Sets the animator using a shared pointer.
+     * \param animator The shared pointer to the animator.
+     */
+    void set(const std::shared_ptr<Controller::Animator>& animator) { animator_ptr = animator; }
 
+    /**
+     * \brief Sets the animator using a non-const reference.
+     * \param animator The animator object.
+     */
+    void set(const Controller::Animator& animator) {
+        animator_ptr = std::make_shared<Controller::Animator>(animator);
+    }
+
+    /**
+     * \brief Serializes the Animator object.
+     * \tparam Archive The archive type.
+     * \param ar The archive.
+     */
+    template <class Archive>
+    void serialize(Archive& ar) {
+        ar(cereal::make_nvp("attached_model", attached_model));
+        // ar(cereal::make_nvp("State Table",state));
+    }
+
+    std::shared_ptr<Controller::Animator> animator_ptr = nullptr; /**< The pointer to the animator object. */
+};
+
+
+
+    /**
+     * @struct Animation
+     * @brief Represents an animation.
+     */
     struct Animation {
-        int state = 0;
-        std::string attached_model;
+        int state = 0;              /**< The state of the animation. */
+        std::string attached_model; /**< The attached model name. */
 
+        /**
+         * @brief Serializes the Animation object.
+         * @tparam Archive The archive type.
+         * @param ar The archive.
+         */
         template <class Archive>
         void serialize(Archive& ar) {
             ar(cereal::make_nvp("state", state));
@@ -154,19 +203,39 @@ namespace Vakol::Model::Components {
     /**
      * @struct Script
      *
-     * @brief script component that holds reference to file
+     * @brief Script component that holds reference to file
      */
     struct Script {
-        std::string script_name;
-        sol::table state;
-        Controller::SolTableData data;
+        std::string script_name;       /**< The name of the script file. */
+        sol::table state;              /**< The Lua state table. */
+        Controller::SolTableData data; /**< The serialized Lua state table data. */
 
+        /**
+         * @brief Default constructor for Script.
+         */
         Script() = default;
+
+        /**
+         * @brief Constructs a Script object with the specified script name.
+         * @param name The name of the script.
+         */
         explicit Script(std::string& name);
 
+        /**
+         * @brief Constructs a Script object with the specified script, Lua state, entity, and scene.
+         * @param script The script file.
+         * @param lua The shared pointer to the Lua state.
+         * @param entity The entity.
+         * @param scene The scene.
+         */
         Script(const std::string& script, std::shared_ptr<Controller::LuaState> lua, Entity& entity,
                Controller::Scene& scene);
 
+        /**
+         * @brief Serializes the Script object for saving.
+         * @tparam Archive The archive type.
+         * @param ar The archive.
+         */
         template <class Archive>
         void save(Archive& ar) const {
             ar(cereal::make_nvp("ScriptName", script_name));
@@ -177,6 +246,11 @@ namespace Vakol::Model::Components {
             ar(temp);
         }
 
+        /**
+         * @brief Deserializes the Script object for loading.
+         * @tparam Archive The archive type.
+         * @param ar The archive.
+         */
         template <class Archive>
         void load(Archive& ar) {
             ar(cereal::make_nvp("ScriptName", script_name));
@@ -185,23 +259,51 @@ namespace Vakol::Model::Components {
             ar(data);
         }
     };
+    
 
     /**
-     * @brief a finite state machine that can be controlled in lua
-     *
+     * @brief Struct representing a finite state machine that can be controlled in lua.
      */
     struct FSM {
+        /**
+         * @brief Default constructor for the FSM struct.
+         */
         FSM() = default;
+
+        /**
+         * @brief Overloaded constructor that initializes the FSM with a Lua state.
+         * @param lua A shared pointer to a LuaState.
+         */
         FSM(std::shared_ptr<Controller::LuaState> lua);
 
+        /**
+         * @brief Adds a new state to the FSM.
+         * @param stateName The name of the new state.
+         * @param callback The function to be executed when this state is active.
+         */
         void AddState(const std::string& stateName, const sol::function& callback);
 
+        /**
+         * @brief Changes the current state of the FSM.
+         * @param stateName The name of the state to change to.
+         */
         void ChangeState(const std::string& stateName);
 
+        /**
+         * @brief Returns the current state of the FSM.
+         * @return A string representing the current state.
+         */
         std::string GetState();
 
+        /**
+         * @brief Updates the state of the FSM.
+         */
         void Update();
 
+        /**
+         * @brief Saves the current state of the FSM.
+         * @param ar Archive to save the data to.
+         */
         template <class Archive>
         void save(Archive& ar) const {
             ar(cereal::make_nvp("Current State", currentState));
@@ -212,35 +314,61 @@ namespace Vakol::Model::Components {
             ar(temp);
         }
 
+        /**
+         * @brief Loads the state of the FSM from an archive.
+         * @param ar Archive to load the data from.
+         */
         template <class Archive>
         void load(Archive& ar) {
             ar(cereal::make_nvp("Current State", currentState));
 
             data.data.clear();
             ar(data);
-        
         }
 
-        std::string currentState;
-        sol::table states;
-        std::shared_ptr<Controller::LuaState> lua;
-        Controller::SolTableData data;
+        std::string currentState;                   ///< The current state of the FSM.
+        sol::table states;                          ///< The states of the FSM.
+        std::shared_ptr<Controller::LuaState> lua;  ///< Shared pointer to a LuaState.
+        Controller::SolTableData data;              ///< The data to be saved or loaded.
     };
 
+    /**
+     * @brief Struct representing a drawable entity.
+     */
     struct Drawable {
+        /**
+         * @brief Default constructor for the Drawable struct.
+         */
         Drawable() = default;
+
+        /**
+         * @brief Overloaded constructor that initializes a Drawable with a file path.
+         * @param file The file path to the drawable entity.
+         */
         explicit Drawable(std::string&& file);
+
+        /**
+         * @brief Overloaded constructor that initializes a Drawable with detailed information.
+         * @param file The file path to the drawable entity.
+         * @param scale The scale of the drawable entity.
+         * @param animated Boolean representing if the entity is animated.
+         * @param backfaceCull Boolean representing if backface culling is enabled.
+         */
         Drawable(const std::string& file, float scale, bool animated, bool backfaceCull);
 
-        std::string name;  // for serialization
+        std::string name;  ///< Name of the drawable entity. Used for serialization.
 
-        float scale = 1.0f;
-        bool animated = false;
-        bool backfaceCull = true;
-        bool instance = false;
+        float scale = 1.0f;        ///< The scale of the drawable entity.
+        bool animated = false;     ///< Boolean indicating if the entity is animated.
+        bool backfaceCull = true;  ///< Boolean indicating if backface culling is enabled.
+        bool instance = false;     ///< Boolean indicating if the entity is an instance.
 
-        std::shared_ptr<Assets::Model> model_ptr;
+        std::shared_ptr<Assets::Model> model_ptr;  ///< Shared pointer to the model of the entity.
 
+        /**
+         * @brief Serializes the drawable entity.
+         * @param ar Archive to serialize the data to.
+         */
         template <class Archive>
         void serialize(Archive& ar) {
             ar(cereal::make_nvp("Model", name));
@@ -252,46 +380,85 @@ namespace Vakol::Model::Components {
 
     using namespace Vakol::Controller::Physics;
 
+    /**
+     * @brief Struct representing a RigidBody.
+     */
     struct RigidBody {
+        /**
+         * @brief Enum for the type of body.
+         */
         enum BODY_TYPE {
-            STATIC = rp3d::BodyType::STATIC,
-            KINEMATIC = rp3d::BodyType::KINEMATIC,
-            DYNAMIC = rp3d::BodyType::DYNAMIC
+            STATIC = rp3d::BodyType::STATIC,        ///< Represents a static body type.
+            KINEMATIC = rp3d::BodyType::KINEMATIC,  ///< Represents a kinematic body type.
+            DYNAMIC = rp3d::BodyType::DYNAMIC       ///< Represents a dynamic body type.
         };
 
+        /**
+         * @brief Default constructor for the RigidBody struct.
+         */
         RigidBody() = default;
 
-        bool initialized = false;
-        bool use_transform = false;
-        bool is_colliding = false;
+        bool initialized = false;    ///< Boolean indicating if the rigid body is initialized.
+        bool use_transform = false;  ///< Boolean indicating if the rigid body is using transforms.
+        bool is_colliding = false;   ///< Boolean indicating if the rigid body is currently colliding.
 
+        /**
+         * @brief Struct representing the data for a rigid body.
+         */
         struct RigidData {
-            float mass = 3;                        /**< Mass of object*/
-            bool grav = false;                     /**< If gravity is enabled on the object*/
-            float LDamp = 0;                       /**< Linear Dampening*/
-            float ADamp = 1;                       /**< Angular Dampening*/
-            rp3d::Vector3 AngularLock = {0, 1, 0}; /**< Angular lock axis factor */
-            rp3d::Vector3 Orientation = {0, 0, 0}; /**< Orientation */
+            float mass = 3;                         ///< Mass of the rigid body.
+            bool grav = false;                      ///< Boolean indicating if gravity is enabled on the rigid body.
+            float LDamp = 0;                        ///< Linear dampening factor.
+            float ADamp = 1;                        ///< Angular dampening factor.
+            rp3d::Vector3 AngularLock = {0, 1, 0};  ///< Angular lock axis factor.
+            rp3d::Vector3 Orientation = {0, 0, 0};  ///< Orientation of the rigid body.
         };
 
+        /**
+         * @brief Sets the rigid data for the body.
+         * @param data The rigid data to be set.
+         */
         void SetRigidData(const RigidData& data);
-        void ToggleGravity();
+        void ToggleGravity();  ///< Toggles gravity for the rigid body.
+        /**
+         * @brief Sets the body type for the rigid body.
+         * @param t The body type to be set.
+         */
         void SetBodyType(BODY_TYPE t);
+        /**
+         * @brief Sets the velocity for the rigid body.
+         * @param vel The velocity to be set.
+         */
         void SetVelocity(const glm::vec3& vel) const;
+        /**
+         * @brief Sets the angular velocity for the rigid body.
+         * @param vel The angular velocity to be set.
+         */
         void SetAngularVelocity(const glm::vec3& vel) const;
+        /**
+         * @brief Sets the linear dampening for the rigid body.
+         * @param damp The linear dampening factor to be set.
+         */
         void SetLinearDamp(float damp) const;
+        /**
+         * @brief Sets the angular dampening for the rigid body.
+         * @param damp The angular dampening factor to be set.
+         */
         void SetAngularDamp(float damp) const;
 
-        // rigid body
-        std::shared_ptr<ScenePhysics> owningWorld = nullptr;
-        rp3d::RigidBody* RigidBodyPtr = nullptr;
-        BODY_TYPE Type = DYNAMIC;  // default
-        RigidData Data;
+        std::shared_ptr<ScenePhysics> owningWorld = nullptr;  ///< Shared pointer to the world owning the rigid body.
+        rp3d::RigidBody* RigidBodyPtr = nullptr;              ///< Pointer to the rigid body.
+        BODY_TYPE Type = DYNAMIC;                             ///< The type of the rigid body. Default is DYNAMIC.
+        RigidData Data;                                       ///< The rigid data for the rigid body.
 
-        rp3d::Transform prevTransform;
+        rp3d::Transform prevTransform;  ///< The previous transform of the rigid body.
 
+        /**
+         * @brief Serializes the rigid body.
+         * @param ar Archive to serialize the data to.
+         */
         template <class Archive>
-        void serialize(Archive& ar) {
+        void serialize(Archive& ar){
             ar(cereal::make_nvp("Mass", Data.mass));
             ar(cereal::make_nvp("Gravity", Data.grav));
             ar(cereal::make_nvp("Linear Dampening", Data.LDamp));
@@ -309,9 +476,18 @@ namespace Vakol::Model::Components {
         }
     };
 
+    /**
+     * @brief Struct representing a Collider.
+     */
     struct Collider {
+        /**
+         * @brief Enum for the name of the shape of the collider.
+         */
         enum ShapeName { BOX, SPHERE, CAPSULE, TRIANGLE_MESH };
 
+        /**
+         * @brief Struct representing the bounds of a collider.
+         */
         struct Bounds {
             rp3d::Vector3 min = {0, 0, 0};              /**< minimum vertice*/
             rp3d::Vector3 max = {1, 1, 1};              /**< Maximum vertice*/
@@ -321,6 +497,10 @@ namespace Vakol::Model::Components {
 
             float radius = 0.5f * extents.length(); /**< Radius*/
 
+            /**
+             * @brief Serializes the bounds of the collider.
+             * @param ar Archive to serialize the data to.
+             */
             template <class Archive>
             void serialize(Archive& ar) {
                 ar(cereal::make_nvp("min.x", min.x), cereal::make_nvp("min.y", min.y),
@@ -337,19 +517,36 @@ namespace Vakol::Model::Components {
             }
         };
 
+        /**
+         * @brief Default constructor for the Collider struct.
+         */
         Collider() = default;
+
+        /**
+         * @brief Overloaded constructor that initializes a Collider with the owner and the bounds.
+         * @param owner The owner of the collider.
+         * @param data The bounds of the collider.
+         */
         Collider(RigidBody& owner, const std::optional<Bounds>& data);
 
-        RigidBody* OwningBody = nullptr;
-        rp3d::Collider* ColliderPtr = nullptr;
-        rp3d::CollisionShape* Shape = nullptr;
-        ShapeName ShapeName = BOX;
-        bool DrawableBounds = false;
+        RigidBody* OwningBody = nullptr;        ///< Pointer to the body owning the collider.
+        rp3d::Collider* ColliderPtr = nullptr;  ///< Pointer to the collider.
+        rp3d::CollisionShape* Shape = nullptr;  ///< Pointer to the shape of the collider.
+        ShapeName ShapeName = BOX;              ///< The name of the shape of the collider. Default is BOX.
+        bool DrawableBounds = false;            ///< Boolean indicating if the bounds are drawable.
 
-        Bounds bounds;
+        Bounds bounds; ///< The bounds of the collider.
 
+        /**
+         * @brief Sets the bounds for the collider.
+         * @param data The bounds to be set.
+         */
         void SetBounds(const Bounds& data);
 
+        /**
+         * @brief Serializes the collider.
+         * @param ar Archive to serialize the data to.
+         */
         template <class Archive>
         void serialize(Archive& ar) {
             ar(cereal::make_nvp("CollisionShape", ShapeName));
@@ -358,15 +555,31 @@ namespace Vakol::Model::Components {
         }
     };
 
+    /**
+     * @brief Function to get the bounds of a collider.
+     * @param model Reference to the model of the Drawable.
+     * @param transform Reference to the Transform.
+     * @return Bounds of the collider.
+     */
     Collider::Bounds GetBounds(const Drawable& model, const Transform& transform);
 
+
+
+    /**
+     * @brief Struct representing a Terrain.
+     */
     struct Terrain {
-        std::shared_ptr<Controller::Terrain> terrain_ptr;
+        std::shared_ptr<Controller::Terrain> terrain_ptr;  ///< Shared pointer to the terrain.
 
-        std::string name;
-        std::string path;
-        float min, max;
+        std::string name;  ///< Name of the terrain.
+        std::string path;  ///< Path to the terrain.
+        float min;         ///< Minimum value for the terrain.
+        float max;         ///< Maximum value for the terrain.
 
+        /**
+         * @brief Serializes the terrain.
+         * @param ar Archive to serialize the data to.
+         */
         template <class Archive>
         void serialize(Archive& ar) {
             ar(cereal::make_nvp("Name", name));
@@ -376,23 +589,57 @@ namespace Vakol::Model::Components {
         }
     };
 
+    /**
+     * @brief Struct representing a Globally Unique Identifier (GUID).
+     */
     struct GUID {
+        /**
+         * @brief Default constructor for the GUID struct.
+         */
         GUID() = default;
 
+        /**
+         * @brief Function to generate a new GUID.
+         */
         void GenNewGUID();
 
+        /**
+         * @brief Equality operator for GUID.
+         * @param other The other GUID to compare with.
+         * @return True if the GUIDs are equal, false otherwise.
+         */
         bool operator==(const GUID& other) const;
+
+        /**
+         * @brief Inequality operator for GUID.
+         * @param other The other GUID to compare with.
+         * @return True if the GUIDs are not equal, false otherwise.
+         */
         bool operator!=(const GUID& other) const;
+
+        /**
+         * @brief Less than operator for GUID.
+         * @param other The other GUID to compare with.
+         * @return True if the current GUID is less than the other GUID, false otherwise.
+         */
         bool operator<(const GUID& other) const;
 
-        xg::Guid id;
+        xg::Guid id;  ///< The actual GUID.
 
+        /**
+         * @brief Function to save the GUID.
+         * @param ar Archive to save the GUID to.
+         */
         template <class Archive>
         void save(Archive& ar) const {
             std::string id_str = id.str();
             ar(cereal::make_nvp("guid", id_str));
         }
 
+        /**
+         * @brief Function to load the GUID.
+         * @param ar Archive to load the GUID from.
+         */
         template <class Archive>
         void load(Archive& ar) {
             std::string id_str;

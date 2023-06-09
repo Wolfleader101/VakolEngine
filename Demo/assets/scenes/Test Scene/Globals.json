@@ -2,50 +2,16 @@
     "globals": {
         "value0": [
             {
-                "key": "terrain",
-                "value": {
-                    "index": 0,
-                    "data": {
-                        "value0": []
-                    }
-                }
-            },
-            {
                 "key": "player",
                 "value": {
                     "index": 0,
                     "data": {
                         "value0": [
                             {
-                                "key": "pos",
-                                "value": {
-                                    "index": 5,
-                                    "data": {
-                                        "value0": 4.988359451293945,
-                                        "value1": 11.141654968261719,
-                                        "value2": -0.22105436027050019
-                                    }
-                                }
-                            },
-                            {
-                                "key": "sprint_speed",
-                                "value": {
-                                    "index": 3,
-                                    "data": 2
-                                }
-                            },
-                            {
-                                "key": "curr_speed",
+                                "key": "base_speed",
                                 "value": {
                                     "index": 2,
-                                    "data": 1.2287415266036988
-                                }
-                            },
-                            {
-                                "key": "MAX_HUNGER",
-                                "value": {
-                                    "index": 3,
-                                    "data": 100
+                                    "data": 1.25
                                 }
                             },
                             {
@@ -56,13 +22,6 @@
                                 }
                             },
                             {
-                                "key": "MAX_HEALTH",
-                                "value": {
-                                    "index": 3,
-                                    "data": 100
-                                }
-                            },
-                            {
                                 "key": "is_sprinting",
                                 "value": {
                                     "index": 4,
@@ -70,35 +29,49 @@
                                 }
                             },
                             {
-                                "key": "MAX_THIRST",
+                                "key": "thirst",
                                 "value": {
                                     "index": 3,
                                     "data": 100
                                 }
                             },
                             {
-                                "key": "last_pos",
+                                "key": "pos",
                                 "value": {
                                     "index": 5,
                                     "data": {
-                                        "value0": 4.988359451293945,
-                                        "value1": 11.141654968261719,
-                                        "value2": -0.22105436027050019
+                                        "value0": 1.1840416193008423,
+                                        "value1": 11.979880332946778,
+                                        "value2": 2.5932915210723879
                                     }
                                 }
                             },
                             {
-                                "key": "base_speed",
+                                "key": "curr_speed",
                                 "value": {
                                     "index": 2,
                                     "data": 1.25
                                 }
                             },
                             {
+                                "key": "health",
+                                "value": {
+                                    "index": 3,
+                                    "data": 100
+                                }
+                            },
+                            {
                                 "key": "hunger",
                                 "value": {
-                                    "index": 2,
-                                    "data": 98.89398956298828
+                                    "index": 3,
+                                    "data": 100
+                                }
+                            },
+                            {
+                                "key": "sprint_speed",
+                                "value": {
+                                    "index": 3,
+                                    "data": 2
                                 }
                             },
                             {
@@ -109,20 +82,47 @@
                                 }
                             },
                             {
-                                "key": "thirst",
+                                "key": "MAX_HUNGER",
                                 "value": {
-                                    "index": 2,
-                                    "data": 98.00199127197266
+                                    "index": 3,
+                                    "data": 100
                                 }
                             },
                             {
-                                "key": "health",
+                                "key": "MAX_HEALTH",
+                                "value": {
+                                    "index": 3,
+                                    "data": 100
+                                }
+                            },
+                            {
+                                "key": "last_pos",
+                                "value": {
+                                    "index": 5,
+                                    "data": {
+                                        "value0": 1.1840416193008423,
+                                        "value1": 11.979880332946778,
+                                        "value2": 2.5932915210723879
+                                    }
+                                }
+                            },
+                            {
+                                "key": "MAX_THIRST",
                                 "value": {
                                     "index": 3,
                                     "data": 100
                                 }
                             }
                         ]
+                    }
+                }
+            },
+            {
+                "key": "terrain",
+                "value": {
+                    "index": 0,
+                    "data": {
+                        "value0": []
                     }
                 }
             }

@@ -6,15 +6,29 @@
 
 namespace Vakol::Model
 {
-	struct Skybox
-	{
-		Skybox() = default;
+    /**
+     * @brief Struct representing a Skybox.
+     */
+    struct Skybox {
+        /**
+         * @brief Default constructor for the Skybox struct.
+         */
+        Skybox() = default;
 
-		void Init();
-		void Draw(const glm::mat4& projection, const glm::mat4& view) const;
+        /**
+         * @brief Function to initialize the skybox.
+         */
+        void Init();
 
-	private:
-		std::shared_ptr<Shader> shader = nullptr;
-		unsigned int CUBEMAP_ID = 0;
-	};
+        /**
+         * @brief Function to draw the skybox.
+         * @param projection Projection matrix.
+         * @param view View matrix.
+         */
+        void Draw(const glm::mat4& projection, const glm::mat4& view) const;
+
+       private:
+        std::shared_ptr<Shader> shader = nullptr;  ///< Pointer to the shader.
+        unsigned int CUBEMAP_ID = 0;               ///< ID of the cubemap texture.
+    };
 }
