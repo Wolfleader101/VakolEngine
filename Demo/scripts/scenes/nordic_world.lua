@@ -31,15 +31,16 @@ function init()
     end
 
     for i = 1, 5 do
-         rabbits[i] = scene:create_entity("Rabbit" .. i, "entities/agents/rabbit.lua");
-         rabbits[i]:get_transform().pos = Vector3.new(5.0 * i, 0.0, -2.0);
+        rabbits[i] = scene:create_entity("Rabbit" .. i, "entities/agents/rabbit.lua");
+        rabbits[i]:get_transform().pos = Vector3.new(5.0 * i, 0.0, -2.0);
     end
+    
+    phys_debug = false;
 
-    --scene:enable_debug(true);
 end
 
 function update()
-    if(Input:get_key_down(KEYS["KEY_ESC"])) then
+    if (Input:get_key_down(KEYS["KEY_ESC"])) then
         toggle_wireframe();
         toggle_skybox();
 
@@ -47,5 +48,10 @@ function update()
 
         local menu = get_scene("Start Scene");
         menu:set_active(true);
+    end
+    
+    if (Input:get_key_down(KEYS["KEY_N"])) then
+        phys_debug = not phys_debug;
+        scene:enable_debug(phys_debug);
     end
 end
