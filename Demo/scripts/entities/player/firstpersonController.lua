@@ -105,7 +105,7 @@ function update()
     end
 
     local camera = scene:get_camera();
-    local old_pos = camera:get_pos();
+    local old_pos = entity:get_transform().pos; --camera:get_pos();
     local forward = camera:get_forward();
     local right = camera:get_right();
 
@@ -121,10 +121,10 @@ function update()
         (forward.z * dir.z + right.z * dir.x) * velocity * 100
     )
 
-    if(scene.globals.terrain.transform == nil) then
+    if (scene.globals.terrain.transform == nil) then
         return;
     end
-
+    
     if (not state.flying) then
         local terr_scale = scene.globals.terrain.transform.scale;
         new_pos.y = (scene.globals.terrain.terr:get_height(new_pos.x / terr_scale.x, new_pos.z / terr_scale.z) * terr_scale.y) +

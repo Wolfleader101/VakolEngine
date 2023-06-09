@@ -13,16 +13,18 @@ function init()
 	local models = {};
 	local shaders = {};
 
-	entities[1] = entity;
+	entities[1] = scene:create_entity("trees", "");
 	models[1] = entities[1]:add_model("assets/models/Imported/OpenGameArt/Yughues/pine/snow_pine_tree.obj", 0.2, false, false);
 	entities[1]:set_shader("coreAssets/shaders/instance.prog");
 
 	shaders[1] = models[1]:get_shader();
+    
+    local terr_scale = scene.globals.terrain.transform.scale;
 
 	for i = 1, n_trees do
 		local mdl_m = Matrix4x4.new(1.0);
 
-		local scl_v = Vector3.new(math.random(20, 30) / 100);
+        local scl_v = Vector3.new(0.2);
 		local pos_v = Vector3.new(0.0);
 
 		attempts = 0;
@@ -35,16 +37,18 @@ function init()
 			pos_v = Vector3.new(math.random(-(math.floor(scene.globals.terrain.terr:get_size() / 2)), math.floor(scene.globals.terrain.terr:get_size() / 2)), 
 				0.0, math.random(-(math.floor(scene.globals.terrain.terr:get_size() / 2)), math.floor(scene.globals.terrain.terr:get_size() / 2)));
 
-			local terr_scale = scene.globals.terrain.transform.scale;
 			pos_v.y = (scene.globals.terrain.terr:get_height(pos_v.x / terr_scale.x, pos_v.z / terr_scale.z) * terr_scale.y) + 0.015;
 
 			attempts = attempts + 1
 		end
 
-		local tree_ent = scene:create_entity("tree" .. 1, "");
+        local tree_ent = scene:create_entity("tree  " .. i, "");
 
-		tree_ent:get_transform().pos = pos_v;
-		tree_ent:get_transform().scale = scl_v; 
+        tree_ent:get_transform().pos = pos_v;
+        -- tree_ent:get_transform().scale = scl_v;
+        -- !fuck this, fuck shay leary, hes cursed our code, setting the tree ent scale fucking sets the terrains scale?!?!?!
+		--TODO FUCKING FUCK THIS
+
 
 		local rb = tree_ent:add_rigid();
 		rb.BodyType = BodyType.Static;
@@ -71,7 +75,7 @@ function init()
 
 	instantiate_model(models[1], m_trees, n_trees);
 
-	entities[2] = scene:create_entity("rock", "");
+	entities[2] = scene:create_entity("rocks", "");
 	models[2] = entities[2]:add_model("assets/models/Imported/OpenGameArt/mastahcez/stone.fbx", 75.0, false, true);
 	entities[2]:set_shader("coreAssets/shaders/instance.prog");
 
@@ -98,14 +102,13 @@ function init()
                 math.random(-(math.floor(scene.globals.terrain.terr:get_size() / 2)),
                     math.floor(scene.globals.terrain.terr:get_size() / 2)));
 
-            local terr_scale = scene.globals.terrain.transform.scale;
             pos_v.y = (scene.globals.terrain.terr:get_height(pos_v.x / terr_scale.x, pos_v.z / terr_scale.z) * terr_scale.y) +
             0.015;
 
             attempts = attempts + 1
         end
 		
-		local rock_ent = scene:create_entity("rock" .. 1, "");
+		local rock_ent = scene:create_entity("rock" .. i, "");
 
 		rock_ent:get_transform().pos = pos_v;
 		rock_ent:get_transform().scale = scl_v; 
