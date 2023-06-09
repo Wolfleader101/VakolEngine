@@ -65,3 +65,7 @@ function update()
 
     plane_shader:set_float("time", Time.curr_time);
 end
+
+function deserialize()
+    scene.globals.terrain = { transform = entity:get_transform(), terr = entity:get_terrain() };
+end

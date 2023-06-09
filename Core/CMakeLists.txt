@@ -31,6 +31,7 @@ assimp
 lua
 sol2
 cereal
+crossguid
 )
 
 
