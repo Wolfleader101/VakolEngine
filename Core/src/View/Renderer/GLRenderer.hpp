@@ -144,10 +144,6 @@ namespace Vakol::View {
 
         void SetSkybox(const bool skybox) override  { isSkybox = skybox; }
     private:
-        std::vector<std::shared_ptr<Buffer>> buffers;
-        std::vector<std::shared_ptr<FrameBuffer>> framebuffers;
-
-       private:
         std::vector<std::shared_ptr<Buffer>> buffers;            ///< Vector of shared pointers to Buffer objects
         std::vector<std::shared_ptr<FrameBuffer>> framebuffers;  ///< Vector of shared pointers to FrameBuffer objects
         std::shared_ptr<Skybox> skybox = std::make_shared<Skybox>();  ///< Shared pointer to a Skybox object
