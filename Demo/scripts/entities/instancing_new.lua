@@ -41,6 +41,23 @@ function init()
 			attempts = attempts + 1
 		end
 
+		local tree_ent = scene:create_entity("tree" .. 1, "");
+
+		tree_ent:get_transform().pos = pos_v;
+		tree_ent:get_transform().scale = scl_v; 
+
+		local rb = tree_ent:add_rigid();
+		rb.BodyType = BodyType.Static;
+
+		local collider = tree_ent:add_collider();
+
+		collider.Shape = Shape.Box;
+		collider.bounds.extents.x = scl_v.x;
+		collider.bounds.extents.y = scl_v.y;
+		collider.bounds.extents.z = scl_v.z;
+		tree_ent:physics_init(scene); 
+		
+
 		mdl_m = translate(mdl_m, pos_v);
 
 		mdl_m = rotate(mdl_m, math.rad(0.0), Vector3.new(1.0, 0.0, 0.0));

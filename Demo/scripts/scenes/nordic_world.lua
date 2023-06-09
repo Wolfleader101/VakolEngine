@@ -17,6 +17,7 @@ function init()
     for i = 1, 5 do
         scene.globals.bears[i] = scene:create_entity("Bear" .. i, "entities/agents/bear.lua");
         scene.globals.bears[i]:get_transform().pos = Vector3.new(5.0 * i, 0.0, -2.0);
+        scene.globals.bears[i]:add_rigid();
     end
   
     for i = 1, 5 do
@@ -33,6 +34,8 @@ function init()
          rabbits[i] = scene:create_entity("Rabbit" .. i, "entities/agents/rabbit.lua");
          rabbits[i]:get_transform().pos = Vector3.new(5.0 * i, 0.0, -2.0);
     end
+
+    --scene:enable_debug(true);
 end
 
 function update()
