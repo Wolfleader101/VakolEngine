@@ -227,6 +227,13 @@ function update()
     local diff = scene.globals.player.pos - pos;
     local player_dist = diff:magnitude();
 
+    if (player_dist > 50) then
+        entity:active_model(false);
+        return;
+    else
+        entity:active_model(true);
+    end
+
     if (player_dist < state.VIEW_DISTANCE) and (player_dist >= state.enemyAttackAnimDistance) then
         local diff_normal = diff:normalize();
         local dot = diff_normal:dot(state.dir)

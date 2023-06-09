@@ -31,7 +31,7 @@ namespace Vakol::Model::Components {
         states = lua->GetState().create_table();
     }
 
-    void FSM::AddState(const std::string& stateName, const sol::function& callback) {
+    void FSM::AddState(std::string& stateName, sol::protected_function& callback) {
         // Add a new state to the states table
         states[stateName] = callback;
     }
@@ -164,26 +164,12 @@ namespace Vakol::Model::Components {
         return bounds;
     }
 
-    void GUID::GenNewGUID()
-    {
-        id = xg::newGuid();
-    }
+    void GUID::GenNewGUID() { id = xg::newGuid(); }
 
+    bool GUID::operator==(const GUID& other) const { return id == other.id; }
 
-    bool GUID::operator==(const GUID& other) const
-    {
-        return id == other.id;
-    }
+    bool GUID::operator!=(const GUID& other) const { return id != other.id; }
 
-    bool GUID::operator!=(const GUID& other) const
-    {
-        return id != other.id;
-    }
-
-    bool GUID::operator<(const GUID& other) const
-    {
-        return id < other.id;
-    }
-
+    bool GUID::operator<(const GUID& other) const { return id < other.id; }
 
 }  // namespace Vakol::Model::Components

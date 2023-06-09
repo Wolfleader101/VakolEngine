@@ -1,0 +1,156 @@
+{
+    "globals": {
+        "value0": [
+            {
+                "key": "waterlevel",
+                "value": {
+                    "index": 2,
+                    "data": 1.0
+                }
+            },
+            {
+                "key": "monsters",
+                "value": {
+                    "index": 0,
+                    "data": {
+                        "value0": []
+                    }
+                }
+            },
+            {
+                "key": "terrain",
+                "value": {
+                    "index": 0,
+                    "data": {
+                        "value0": []
+                    }
+                }
+            },
+            {
+                "key": "player",
+                "value": {
+                    "index": 0,
+                    "data": {
+                        "value0": [
+                            {
+                                "key": "MAX_HEALTH",
+                                "value": {
+                                    "index": 3,
+                                    "data": 100
+                                }
+                            },
+                            {
+                                "key": "base_speed",
+                                "value": {
+                                    "index": 2,
+                                    "data": 1.25
+                                }
+                            },
+                            {
+                                "key": "is_god",
+                                "value": {
+                                    "index": 4,
+                                    "data": false
+                                }
+                            },
+                            {
+                                "key": "hunger",
+                                "value": {
+                                    "index": 2,
+                                    "data": 96.56169128417969
+                                }
+                            },
+                            {
+                                "key": "sprint_speed",
+                                "value": {
+                                    "index": 3,
+                                    "data": 100
+                                }
+                            },
+                            {
+                                "key": "pos",
+                                "value": {
+                                    "index": 5,
+                                    "data": {
+                                        "value0": 427.8862609863281,
+                                        "value1": -11.120288848876954,
+                                        "value2": -256.1686096191406
+                                    }
+                                }
+                            },
+                            {
+                                "key": "curr_speed",
+                                "value": {
+                                    "index": 2,
+                                    "data": 1.1844900846481324
+                                }
+                            },
+                            {
+                                "key": "is_sprinting",
+                                "value": {
+                                    "index": 4,
+                                    "data": false
+                                }
+                            },
+                            {
+                                "key": "last_damage_time",
+                                "value": {
+                                    "index": 3,
+                                    "data": 0
+                                }
+                            },
+                            {
+                                "key": "thirst",
+                                "value": {
+                                    "index": 2,
+                                    "data": 93.85796356201172
+                                }
+                            },
+                            {
+                                "key": "health",
+                                "value": {
+                                    "index": 3,
+                                    "data": 100
+                                }
+                            },
+                            {
+                                "key": "last_pos",
+                                "value": {
+                                    "index": 5,
+                                    "data": {
+                                        "value0": 427.8862609863281,
+                                        "value1": -11.120288848876954,
+                                        "value2": -256.1686096191406
+                                    }
+                                }
+                            },
+                            {
+                                "key": "MAX_THIRST",
+                                "value": {
+                                    "index": 3,
+                                    "data": 100
+                                }
+                            },
+                            {
+                                "key": "MAX_HUNGER",
+                                "value": {
+                                    "index": 3,
+                                    "data": 100
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "key": "bears",
+                "value": {
+                    "index": 0,
+                    "data": {
+                        "value0": []
+                    }
+                }
+            }
+        ]
+    }
+}

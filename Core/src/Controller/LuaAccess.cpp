@@ -11,8 +11,6 @@
 #include "View/GUI/GUIWindow.hpp"
 
 namespace Vakol::Controller {
-    std::unordered_map<std::string, Components::Animator> s_animator_map;
-
     void RegisterMath(sol::state& lua) {
         {
             sol::constructors<glm::vec2(), glm::vec2(float), glm::vec2(float, float)> ctor;  // allow for constructors
@@ -361,8 +359,6 @@ namespace Vakol::Controller {
 
                         _animator.attached_model = draw.name;
                         _animator.set(animator);
-
-                        s_animator_map[_animator.attached_model] = _animator;
                     }
 
                     auto& animation = ent->GetComponent<Components::Animation>();
@@ -375,6 +371,10 @@ namespace Vakol::Controller {
 
         entity_type.set_function("get_model", [](const Entity* ent) {
             if (ent->HasComponent<Drawable>()) return ent->GetComponent<Drawable>().model_ptr;
+        });
+
+        entity_type.set_function("active_model", [](const Entity* ent, bool active) {
+            if (ent->HasComponent<Drawable>()) ent->GetComponent<Drawable>().active = active;
         });
 
         entity_type.set_function("set_shader", [](const Entity* ent, const std::string& path) {
@@ -430,7 +430,7 @@ namespace Vakol::Controller {
 
             const auto& animation = ent->GetComponent<Components::Animation>();
 
-            return s_animator_map.at(animation.attached_model).c_animation(animation_state).duration_s();
+            return AssetLoader::GetAnimation(animation.attached_model, animation.state).duration_s();
         });
 
         entity_type.set_function("reset_animation", [](const Entity* ent, const int animation_state) {
@@ -441,7 +441,7 @@ namespace Vakol::Controller {
 
             const auto& animation = ent->GetComponent<Components::Animation>();
 
-            s_animator_map.at(animation.attached_model).animation(animation_state).reset_animation();
+            return AssetLoader::GetAnimation(animation.attached_model, animation_state).reset_animation();
         });
 
         model_type.set_function("get_mesh_count", &Assets::Model::nMeshes);
@@ -553,10 +553,12 @@ namespace Vakol::Controller {
         terrain_type.set_function("get_model", &Terrain::GetModel);
 
         auto fsm_type = lua.new_usertype<FSM>("FSM");
-        fsm_type["get_state"] = &FSM::GetState;
-        fsm_type["change_state"] = &FSM::ChangeState;
-        fsm_type["add_state"] = &FSM::AddState;
-        fsm_type["update"] = &FSM::Update;
+        fsm_type.set_function("get_state", &FSM::GetState);
+        fsm_type.set_function("change_state", &FSM::ChangeState);
+        fsm_type.set_function("add_state", [](FSM& self, std::string& stateName, sol::protected_function& callback) {
+            return self.AddState(stateName, callback);
+        });
+        fsm_type.set_function("update", &FSM::Update);
     }
 
     void RegisterScene(sol::state& lua) {

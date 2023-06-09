@@ -145,11 +145,7 @@ namespace Vakol::Controller
          * @brief The near clipping plane distance of the camera.
          */
         float near = 0.01f;
-
-        /**
-         * @brief The far clipping plane distance of the camera.
-         */
-        float far = 500.0f;
+        float far = 1000.0f;
 
         /**
          * @brief The projection matrix of the camera.
