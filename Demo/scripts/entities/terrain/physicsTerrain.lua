@@ -9,9 +9,9 @@ function init()
 
     entity:add_raw_texture(0, "assets/textures/lightmap.raw");
 
-    entity:add_texture(0, "assets/textures/terrain/TEX_128_Grass.jpg", false, false);
+    entity:add_texture(0, "assets/textures/grass.png", false, false);
     entity:add_texture(0, "assets/textures/terrain/TEX_128_DirtNoRocks.jpg", false, false);
-    entity:add_texture(0, "assets/textures/terrain/TEX_128_SnowNoRocks.jpg", false, false);
+    entity:add_texture(0, "assets/textures/extras/snow.png", false, false);
     entity:add_texture(0, "assets/textures/terrain/TEX_128_SnowWithRocks.jpg", false, false);
 
     entity:add_texture(0, "assets/textures/noise/TEX_1024_Noise.jpg", false, false);
