@@ -10,8 +10,7 @@
 
 using namespace Components;
 
-static std::unordered_map<std::string, Components::Animator> s_animator_map;
-static std::set<int> s_animation_set;
+static std::set<std::pair<std::string, int>> s_animation_set;
 
 glm::vec3 to_glm(const rp3d::Vector3& v) { return {v.x, v.y, v.z}; }
 glm::quat to_glm(const rp3d::Quaternion& q) { return {q.w, q.x, q.y, q.z}; }
@@ -61,8 +60,10 @@ namespace Vakol::Controller {
         });
     }
 
-    void System::Drawable_Update(const Time& time, const std::shared_ptr<View::Renderer>& renderer) {
-        m_registry->view<Transform, Drawable>().each([&](auto& transform, const Drawable& drawable) {
+    void System::Drawable_Update(const Time& time, const std::shared_ptr<View::Renderer>& renderer) 
+    {
+        m_registry->view<Transform, Drawable>().each([&](auto& transform, const Drawable& drawable) 
+        {
             auto euler_rads = glm::radians(transform.eulerAngles);
 
             transform.rot = glm::quat(euler_rads);
@@ -70,20 +71,17 @@ namespace Vakol::Controller {
             if (!drawable.animated) renderer->Draw(transform, drawable);
         });
 
-        m_registry->view<Components::Animator>().each([&](const Components::Animator& animator) {
-            s_animator_map[animator.attached_model] = animator;
+        for (const auto& [model, state] : s_animation_set)
+            AssetLoader::GetAnimator(model)->Update(state, time.deltaTime);
 
-            for (const auto state : s_animation_set)
-                s_animator_map.at(animator.attached_model).Update(state, time.deltaTime);
+        m_registry->view<Transform, Drawable, Components::Animation>().each([&](const auto& transform, const Drawable& drawable, const Components::Animation& _animation)
+        {
+            s_animation_set.emplace(std::make_pair(_animation.attached_model, _animation.state));
+
+            const auto& animation = AssetLoader::GetAnimation(_animation.attached_model, _animation.state);
+
+            renderer->DrawAnimated(transform, drawable, animation);
         });
-
-        m_registry->view<Transform, Drawable, Components::Animation>().each(
-            [&](const auto& transform, const Drawable& drawable, const Components::Animation& animation) {
-                s_animation_set.emplace(animation.state);
-
-                renderer->DrawAnimated(transform, drawable,
-                                       s_animator_map.at(animation.attached_model).c_animation(animation.state));
-            });
     }
 
     void System::Script_Update(std::shared_ptr<LuaState> lua, EntityList& list, Scene* scene) {

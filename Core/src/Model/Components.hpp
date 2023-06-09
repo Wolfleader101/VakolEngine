@@ -69,9 +69,8 @@ namespace Vakol::Model::Components {
 
         void Update(const int state, const float delta_time) { animator_ptr->Update(state, delta_time); }
         void Update(const float delta_time) { animator_ptr->Update(delta_time); }
-
-        const Model::Assets::Animation& c_animation(const int state) const { return animator_ptr->c_get(state); }
-        Model::Assets::Animation animation(const int state) const { return animator_ptr->get(state); }
+      
+        [[nodiscard]] int nAnimations() const { return animator_ptr->nAnimations(); }
 
         void set(const std::shared_ptr<Controller::Animator>& animator) { animator_ptr = animator; }
         void set(const Controller::Animator& animator) {
@@ -87,7 +86,8 @@ namespace Vakol::Model::Components {
         std::shared_ptr<Controller::Animator> animator_ptr = nullptr;
     };
 
-    struct Animation {
+    struct Animation 
+    {
         int state = 0;
         std::string attached_model;
 
