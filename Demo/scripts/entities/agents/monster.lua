@@ -10,7 +10,7 @@ function init()
     state.enemyAttackAnimDistance = 1.0;
     state.giveUpDistance = 10.0;
     state.speed = 0.3;
-    state.sprint_speed = 1.7;
+    state.sprint_speed = 1.35;
     state.dir = Vector3.new(math.random() * 2 - 1, 0, math.random() * 2 - 1);
     while state.dir:magnitude() == 0 do
         state.dir.x = math.random() * 2 - 1
