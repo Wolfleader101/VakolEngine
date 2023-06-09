@@ -20,6 +20,7 @@ function init()
 
     state.WAIT_TIMER = 0.0;
     state.DIR_TIMER = 0.0;
+    state.ATTACK_TIMER = 0.0;
 
     state.VIEW_DISTANCE = 10.0; -- increased view distance for a deer
     state.SPOTTED = false;
@@ -48,7 +49,9 @@ function init()
     
         entity:play_animation(state.ANIMATIONS.ATTACK);
 
-        PLAYER.decrement_health((12.5 * OPTIONS.ATTACK_DAMAGE_DEALT_TO_PLAYER_MULTIPLIER) * Time.delta_time);
+        if (attack_wait(1.5)) then
+            PLAYER.decrement_health((10 * OPTIONS.ATTACK_DAMAGE_DEALT_TO_PLAYER_MULTIPLIER));
+        end
 
         if(fsm_wait(2)) then  -- The attack animation lasts for 2 seconds
             if player_distance() > state.enemyAttackAnimDistance then  -- If player moves more than state.enemyAttackAnimDistance units away, start chasing again
@@ -180,6 +183,17 @@ end
 
 function player_distance()  -- Added a new function to calculate distance to the player
     return (scene.globals.player.pos - entity:get_transform().pos):magnitude();
+end
+
+function attack_wait(seconds)
+    state.ATTACK_TIMER = state.ATTACK_TIMER + Time.delta_time;
+
+    if (state.ATTACK_TIMER >= seconds) then
+        state.ATTACK_TIMER = 0;
+        return true;
+    end
+
+    return false;
 end
 
 function dir_wait(seconds)

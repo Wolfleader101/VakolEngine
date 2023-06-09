@@ -1,5 +1,6 @@
 function init()
-    state.ANIMATIONS = {
+    state.ANIMATIONS = 
+    {
         ATTACK = 0,
         DIE = 1,
         EAT = 2,
@@ -13,14 +14,17 @@ function init()
     state.speed = 0.7;
     state.sprint_speed = 1.6;
     state.dir = Vector3.new(math.random() * 2 - 1, 0, math.random() * 2 - 1);
+
     while state.dir:magnitude() == 0 do
         state.dir.x = math.random() * 2 - 1
         state.dir.z = math.random() * 2 - 1
     end
+
     state.dir:normalize();
 
     state.WAIT_TIMER = 0.0;
     state.DIR_TIMER = 0.0;
+    state.ATTACK_TIMER = 0.0;
 
     state.VIEW_DISTANCE = 10.0;
     state.SPOTTED = false;
@@ -71,9 +75,11 @@ function init()
     
         entity:play_animation(state.ANIMATIONS.ATTACK);
 
-        PLAYER.decrement_health((10 * OPTIONS.ATTACK_DAMAGE_DEALT_TO_PLAYER_MULTIPLIER) * Time.delta_time);
+        if (attack_wait(1.5)) then
+            PLAYER.decrement_health((10 * OPTIONS.ATTACK_DAMAGE_DEALT_TO_PLAYER_MULTIPLIER));
+        end
 
-        if(fsm_wait(2)) then
+        if(fsm_wait(0.75)) then
             if player_distance() > state.enemyAttackAnimDistance then
                 state.fsm:change_state("running_towards");
             end
@@ -200,6 +206,17 @@ end
 
 function player_distance()
     return (scene.globals.player.pos - entity:get_transform().pos):magnitude();
+end
+
+function attack_wait(seconds)
+    state.ATTACK_TIMER = state.ATTACK_TIMER + Time.delta_time;
+
+    if (state.ATTACK_TIMER >= seconds) then
+        state.ATTACK_TIMER = 0;
+        return true;
+    end
+
+    return false;
 end
 
 function dir_wait(seconds)
