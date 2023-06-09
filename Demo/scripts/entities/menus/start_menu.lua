@@ -27,7 +27,7 @@ function start_menu()
 
     GUI:add_text(" ", true, false, 2.0, 1.0, 1.0, 1.0, 1.0);
 
-    GUI:add_text("ESC - Exit", true, false, 2.0, 1.0, 0.169, 0.169, 1.0);
+    GUI:add_text("ESC - Exit", true, false, 2.0, 1.0, 1.0, 1.0, 1.0);
 
     GUI:end_window();
 

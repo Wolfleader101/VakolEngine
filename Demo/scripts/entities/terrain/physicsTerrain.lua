@@ -38,7 +38,7 @@ function init()
     shader:set_int("water_layer_1", 7);
     shader:set_int("water_layer_2", 8);
 
-    scene:add_terrain_physics(entity);
+    -- scene:add_terrain_physics(entity);
 
     scene.globals.terrain = {transform = entity:get_transform(), terr = entity:get_terrain()};
 

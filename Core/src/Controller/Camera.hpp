@@ -60,7 +60,7 @@ namespace Vakol::Controller
         float pitch = 0.0f;
         float yaw = -90.0f;
 
-        float fov = 60.0f;
+        float fov = 65.0f;
         float aspect = 1.3f;
         float near = 0.01f;
         float far = 1000.0f;

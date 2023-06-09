@@ -46,7 +46,7 @@ function init()
     state.fsm:add_state("attack", function()
         trigger_nearby_monsters(entity, 10.0);
     
-        entity:set_animation_state(state.ANIMATIONS.ATTACK);
+        entity:play_animation(state.ANIMATIONS.ATTACK);
 
         if(fsm_wait(2)) then  -- The attack animation lasts for 2 seconds
             if player_distance() > state.enemyAttackAnimDistance then  -- If player moves more than state.enemyAttackAnimDistance units away, start chasing again
@@ -56,7 +56,7 @@ function init()
     end)
 
     state.fsm:add_state("idle", function()
-        entity:set_animation_state(state.ANIMATIONS.IDLE);
+        entity:play_animation(state.ANIMATIONS.IDLE);
         if(fsm_wait(math.random(5,7))) then
             local rand = math.random();
             if (rand < 0.6) then
@@ -80,7 +80,7 @@ function init()
         end
         
         if not stateChange then
-            entity:set_animation_state(state.ANIMATIONS.WALK);
+            entity:play_animation(state.ANIMATIONS.WALK);
         end
 
         if (dir_wait(math.random(4,6))) then
@@ -110,7 +110,7 @@ function init()
     end)
 
     state.fsm:add_state("running_towards", function()
-        entity:set_animation_state(state.ANIMATIONS.RUN);
+        entity:play_animation(state.ANIMATIONS.RUN);
 
         -- Now, we want to run towards the player
         local diff = scene.globals.player.pos - entity:get_transform().pos;
@@ -135,7 +135,7 @@ function init()
     end)
 
     state.fsm:add_state("alerted", function()
-        entity:set_animation_state(state.ANIMATIONS.RUN);
+        entity:play_animation(state.ANIMATIONS.RUN);
 
         -- Now, we want to run towards the player
         local diff = scene.globals.player.pos - entity:get_transform().pos;

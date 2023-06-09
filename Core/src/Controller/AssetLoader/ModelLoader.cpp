@@ -6,18 +6,13 @@
 #include <Controller/AssetLoader/AssetLoader.hpp>
 #include <Controller/AssetLoader/FileLoader.hpp>
 #include <Controller/AssetLoader/TextureLoader.hpp>
+#include <Controller/Logger.hpp>
 #include <Model/Assets/Animation/Animation.hpp>
 #include <Model/Assets/Animation/Keyframe.hpp>
 #include <assimp/Importer.hpp>
+#include <glm/gtc/quaternion.hpp>
 #include <iostream>
 #include <stack>
-
-#pragma warning(push)
-#pragma warning(disable : 4201)
-#include <glm/gtc/quaternion.hpp>
-#pragma warning(pop)
-
-#include <Controller/Logger.hpp>
 
 using Vakol::Model::Vertex;
 
@@ -61,24 +56,25 @@ namespace Vakol::Controller {
         IS_CORE_ASSET = path.find("coreAssets/");
 
         static_cast<void>(importer.SetPropertyFloat(AI_CONFIG_GLOBAL_SCALE_FACTOR_KEY, scale));
-        VK_ASSERT(FileExists(path), "File could not be found!");
 
-        const auto* scene = importer.ReadFile(path.c_str(), ASSIMP_LOADER_OPTIONS);
+        if (!FileExists(path)) {
+            VK_CRITICAL("File could not be found!");
+        }
+
+        auto* scene = importer.ReadFile(path.c_str(), ASSIMP_LOADER_OPTIONS);
 
         if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
-            VK_ERROR("ERROR::ASSIMP:: {0}", importer.GetErrorString());
+            VK_CRITICAL("ASSIMP:: {0}", importer.GetErrorString());
 
-            importer.ReadFile("coreAssets/models/error.obj", aiProcess_Triangulate);
+            scene = importer.ReadFile("coreAssets/models/error.obj", aiProcess_Triangulate);
+            VK_CRITICAL("Using Default ERROR model");
         }
 
         VK_TRACE("Model Path: {0}", path);
+        VK_TRACE("Animations Found: {0}", scene->mNumAnimations);
 
         for (unsigned int i = 0; i < scene->mNumAnimations; ++i)
-        {
             VK_TRACE("ANIMATION | NAME: {0} | STATE: {1}", scene->mAnimations[i]->mName.C_Str(), i);
-        }
-
-        VK_TRACE("Animations Found: {0}", scene->mNumAnimations);
 
         std::cout << std::endl;
 
@@ -162,8 +158,10 @@ namespace Vakol::Controller {
 
             if (mesh.HasTextureCoords(0)) {
                 vertex.uv = to_glm(mesh.mTextureCoords[0][i]);
-                vertex.tangent = to_glm(mesh.mTangents[i]);
-                vertex.bitangent = to_glm(mesh.mBitangents[i]);
+                if (mesh.HasTangentsAndBitangents()) {
+                    vertex.tangent = to_glm(mesh.mTangents[i]);
+                    vertex.bitangent = to_glm(mesh.mBitangents[i]);
+                }
             }
 
             std::fill(std::begin(vertex.bone_ids), std::end(vertex.bone_ids), -1);
@@ -212,7 +210,10 @@ namespace Vakol::Controller {
 
             const aiBone* const bone = mesh.mBones[i];
 
-            VK_ASSERT(bone, "Bone is nullptr");
+            if (bone == nullptr) {
+                VK_CRITICAL("extract_bones - Bone {0} is null", bone_name.C_Str());
+                continue;
+            }
 
             const aiVertexWeight* const weights = bone->mWeights;
 
@@ -220,10 +221,10 @@ namespace Vakol::Controller {
                 const auto vertex_id = weights[j].mVertexId;
                 const auto bone_weight = weights[j].mWeight;
 
-                VK_ASSERT(vertex_id <= static_cast<unsigned int>(vertices.size()),
-                          "id must not be greater than number of vertices!");
-                VK_ASSERT(vertex_id <= static_cast<unsigned int>(vertices.size()),
-                          "\n\nVertex ID must not be greater than the number of vertices!");
+                if (vertex_id > static_cast<unsigned int>(vertices.size())) {
+                    VK_CRITICAL("extract_bones - Vertex ID must not be greater than the number of vertices!");
+                    continue;
+                }
 
                 add_bone_weight_to_vertex(vertices[vertex_id], bone_index, bone_weight);
             }
@@ -338,7 +339,10 @@ namespace Vakol::Controller {
                 node.node_transform = to_glm(src->mTransformation);
 
                 // Ensure that the parent index is within the valid range
-                VK_ASSERT(node.parent < static_cast<int>(nodes.size()), "Parent index out of valid range");
+                if (node.parent >= static_cast<int>(nodes.size())) {
+                    VK_CRITICAL("extract_animations - Parent index out of valid range");
+                    continue;
+                }
 
                 // Store the current node and its name
                 nodes.push_back(node);
@@ -364,7 +368,10 @@ namespace Vakol::Controller {
                                         [&bone_name](const aiString* node_name) { return bone_name == *node_name; });
 
                 // Ensure that a matching node is found
-                VK_ASSERT(itr != node_names.end(), "\n\nNo node matching a bone.");
+                if (itr == node_names.end()) {
+                    VK_CRITICAL("extract_animations - No node matching a bone.");
+                    continue;
+                }
 
                 // Calculate the index of the node in the 'nodes' vector
                 const auto index = static_cast<int>(std::distance(node_names.cbegin(), itr));
@@ -374,13 +381,15 @@ namespace Vakol::Controller {
 
                 // Retrieve the bone info based on the bone name
                 const Bone* info = bone_map.get(bone_name.C_Str());
-                if (info == nullptr) continue;
 
                 if (!info) continue;
 
                 auto& [bone, bone_transform, parent, node_transform] = nodes[index];
 
-                VK_ASSERT(!bone.has_value(), "\n\nTwo or more bones matching same node.");
+                if (bone.has_value()) {
+                    VK_CRITICAL("extract_animations - Two or more bones matching same node.");
+                    continue;
+                }
 
                 bone.emplace(extract_keyframes(*channel, *info));
             }

@@ -1,9 +1,6 @@
 #include "LuaAccess.hpp"
 
-#pragma warning(push)
-#pragma warning(disable : 4201)
 #include <glm/gtc/type_ptr.hpp>
-#pragma warning(pop)
 
 #include "AssetLoader/AssetLoader.hpp"
 #include "AssetLoader/TextureLoader.hpp"
@@ -14,6 +11,8 @@
 #include "View/GUI/GUIWindow.hpp"
 
 namespace Vakol::Controller {
+    std::unordered_map<std::string, Components::Animator> s_animator_map;
+
     void RegisterMath(sol::state& lua) {
         {
             sol::constructors<glm::vec2(), glm::vec2(float), glm::vec2(float, float)> ctor;  // allow for constructors
@@ -230,31 +229,33 @@ namespace Vakol::Controller {
         input_type.set_function("get_key", &Input::GetKey);
         input_type.set_function("get_key_down", &Input::GetKeyDown);
         input_type.set_function("get_key_up", &Input::GetKeyUp);
+        input_type.set_function("get_mouse", &Input::GetMouseButton);
+        input_type.set_function("get_mouse_down", &Input::GetMouseButtonDown);
+        input_type.set_function("get_mouse_up", &Input::GetMouseButtonUp);
         input_type.set_function("get_mouse_pos", &Input::GetMousePos);
         input_type.set_function("get_delta_mouse_pos", &Input::GetDeltaMousePos);
 
         lua["Input"] = &app->GetInput();
 
         lua["KEYS"] = lua.create_table_with(
-            "KEY_SPACE", Input::KEY::KEY_SPACE, "KEY_APOSTROPHE", Input::KEY::KEY_APOSTROPHE, "KEY_COMMA",
-            Input::KEY::KEY_COMMA, "KEY_MINUS", Input::KEY::KEY_MINUS, "KEY_PERIOD", Input::KEY::KEY_PERIOD,
-            "KEY_SLASH", Input::KEY::KEY_SLASH, "KEY_0", Input::KEY::KEY_0, "KEY_1", Input::KEY::KEY_1, "KEY_2",
-            Input::KEY::KEY_2, "KEY_3", Input::KEY::KEY_3, "KEY_4", Input::KEY::KEY_4, "KEY_5", Input::KEY::KEY_5,
-            "KEY_6", Input::KEY::KEY_6, "KEY_7", Input::KEY::KEY_7, "KEY_8", Input::KEY::KEY_8, "KEY_9",
-            Input::KEY::KEY_9, "KEY_SEMICOLON", Input::KEY::KEY_SEMICOLON, "KEY_EQUAL", Input::KEY::KEY_EQUAL, "KEY_A",
-            Input::KEY::KEY_A, "KEY_B", Input::KEY::KEY_B, "KEY_C", Input::KEY::KEY_C, "KEY_D", Input::KEY::KEY_D,
-            "KEY_E", Input::KEY::KEY_E, "KEY_F", Input::KEY::KEY_F, "KEY_G", Input::KEY::KEY_G, "KEY_H",
-            Input::KEY::KEY_H, "KEY_I", Input::KEY::KEY_I, "KEY_J", Input::KEY::KEY_J, "KEY_K", Input::KEY::KEY_K,
-            "KEY_L", Input::KEY::KEY_L, "KEY_M", Input::KEY::KEY_M, "KEY_N", Input::KEY::KEY_N, "KEY_O",
-            Input::KEY::KEY_O, "KEY_P", Input::KEY::KEY_P, "KEY_Q", Input::KEY::KEY_Q, "KEY_R", Input::KEY::KEY_R,
-            "KEY_S", Input::KEY::KEY_S, "KEY_T", Input::KEY::KEY_T, "KEY_U", Input::KEY::KEY_U, "KEY_V",
-            Input::KEY::KEY_V, "KEY_W", Input::KEY::KEY_W, "KEY_X", Input::KEY::KEY_X, "KEY_Y", Input::KEY::KEY_Y,
-            "KEY_Z", Input::KEY::KEY_Z, "KEY_LEFT_SHIFT", Input::KEY::KEY_LEFT_SHIFT, "KEY_ESC",
-            Input::KEY::KEY_ESCAPE);
+            "MOUSE_0", Input::KEY::KEY_MOUSE_0, "MOUSE_1", Input::KEY::KEY_MOUSE_1, "KEY_SPACE", Input::KEY::KEY_SPACE,
+            "KEY_APOSTROPHE", Input::KEY::KEY_APOSTROPHE, "KEY_COMMA", Input::KEY::KEY_COMMA, "KEY_MINUS",
+            Input::KEY::KEY_MINUS, "KEY_PERIOD", Input::KEY::KEY_PERIOD, "KEY_SLASH", Input::KEY::KEY_SLASH, "KEY_0",
+            Input::KEY::KEY_0, "KEY_1", Input::KEY::KEY_1, "KEY_2", Input::KEY::KEY_2, "KEY_3", Input::KEY::KEY_3,
+            "KEY_4", Input::KEY::KEY_4, "KEY_5", Input::KEY::KEY_5, "KEY_6", Input::KEY::KEY_6, "KEY_7",
+            Input::KEY::KEY_7, "KEY_8", Input::KEY::KEY_8, "KEY_9", Input::KEY::KEY_9, "KEY_SEMICOLON",
+            Input::KEY::KEY_SEMICOLON, "KEY_EQUAL", Input::KEY::KEY_EQUAL, "KEY_A", Input::KEY::KEY_A, "KEY_B",
+            Input::KEY::KEY_B, "KEY_C", Input::KEY::KEY_C, "KEY_D", Input::KEY::KEY_D, "KEY_E", Input::KEY::KEY_E,
+            "KEY_F", Input::KEY::KEY_F, "KEY_G", Input::KEY::KEY_G, "KEY_H", Input::KEY::KEY_H, "KEY_I",
+            Input::KEY::KEY_I, "KEY_J", Input::KEY::KEY_J, "KEY_K", Input::KEY::KEY_K, "KEY_L", Input::KEY::KEY_L,
+            "KEY_M", Input::KEY::KEY_M, "KEY_N", Input::KEY::KEY_N, "KEY_O", Input::KEY::KEY_O, "KEY_P",
+            Input::KEY::KEY_P, "KEY_Q", Input::KEY::KEY_Q, "KEY_R", Input::KEY::KEY_R, "KEY_S", Input::KEY::KEY_S,
+            "KEY_T", Input::KEY::KEY_T, "KEY_U", Input::KEY::KEY_U, "KEY_V", Input::KEY::KEY_V, "KEY_W",
+            Input::KEY::KEY_W, "KEY_X", Input::KEY::KEY_X, "KEY_Y", Input::KEY::KEY_Y, "KEY_Z", Input::KEY::KEY_Z,
+            "KEY_LEFT_SHIFT", Input::KEY::KEY_LEFT_SHIFT, "KEY_ESC", Input::KEY::KEY_ESCAPE);
     }
 
-    void RegisterEntity(std::shared_ptr<LuaState>& state, sol::state& lua)
-    {
+    void RegisterEntity(std::shared_ptr<LuaState>& state, sol::state& lua) {
         auto entity_type = lua.new_usertype<Entity>("entity");
         auto model_type = lua.new_usertype<Assets::Model>("model");
         auto mesh_type = lua.new_usertype<Mesh>("mesh");
@@ -267,20 +268,21 @@ namespace Vakol::Controller {
 
         entity_type.set_function("get_tag", [](Entity* ent) { return ent->GetComponent<Tag>().tag; });
         entity_type.set_function("get_transform", &Entity::GetComponent<Transform>);
-        entity_type.set_function("get_fsm", &Entity::GetComponent<FSM>); 
+        entity_type.set_function("get_fsm", &Entity::GetComponent<FSM>);
 
         entity_type.set_function("create_height_map_terrain",
                                  [](Entity* ent, Scene& scene, std::string&& path, const float min, const float max) {
                                      if (!ent->HasComponent<Drawable>()) ent->AddComponent<Drawable>();
-                                     if (ent->HasComponent<Components::Terrain>()) ent->RemoveComponent<Components::Terrain>();
+                                     if (ent->HasComponent<Components::Terrain>())
+                                         ent->RemoveComponent<Components::Terrain>();
 
                                      ent->AddComponent<Components::Terrain>();
-                                     
+
                                      const auto& name = scene.getName();
 
                                      std::shared_ptr<Terrain> terrain = AssetLoader::GetTerrain(name);
 
-                                     if(terrain == nullptr) terrain = AssetLoader::GetTerrain(name, path, min, max);
+                                     if (terrain == nullptr) terrain = AssetLoader::GetTerrain(name, path, min, max);
 
                                      auto& terrain_comp = ent->GetComponent<Components::Terrain>();
 
@@ -290,7 +292,6 @@ namespace Vakol::Controller {
                                      terrain_comp.path = std::move(path);
                                      terrain_comp.name = name;
 
-
                                      if (const auto& model = terrain->GetModel()) {
                                          model->mesh().SetDrawMode(DRAW_MODE::STRIPS);
                                          model->mesh().SetDrawType(DRAW_TYPE::ELEMENTS);
@@ -299,10 +300,9 @@ namespace Vakol::Controller {
 
                                          model->mesh().SetNumTrisPerStrip(terrain->GetSize() / 1 * 2 - 2);
 
-
-                                        Drawable& drawable = ent->GetComponent<Drawable>();
-                                        drawable.model_ptr = model;
-                                    }
+                                         Drawable& drawable = ent->GetComponent<Drawable>();
+                                         drawable.model_ptr = model;
+                                     }
 
                                      return terrain;
                                  });
@@ -341,8 +341,7 @@ namespace Vakol::Controller {
 
             auto [model, animator] = AssetLoader::GetModel(path, scale, animated, backfaceCull, instance);
 
-            if (model) 
-            {
+            if (model) {
                 auto& draw = ent->GetComponent<Drawable>();
 
                 draw.model_ptr = model;
@@ -352,18 +351,18 @@ namespace Vakol::Controller {
                 draw.backfaceCull = backfaceCull;
                 draw.instance = instance;
 
-                if (animator && animated) 
-                {
+                if (animator && animated) {
                     if (!ent->HasComponent<Components::Animation>()) ent->AddComponent<Components::Animation>();
-                    
-                    if (!instance)
-                    {   
+
+                    if (!instance) {
                         if (!ent->HasComponent<Components::Animator>()) ent->AddComponent<Components::Animator>();
 
                         auto& _animator = ent->GetComponent<Components::Animator>();
 
                         _animator.attached_model = draw.name;
                         _animator.set(animator);
+
+                        s_animator_map[_animator.attached_model] = _animator;
                     }
 
                     auto& animation = ent->GetComponent<Components::Animation>();
@@ -412,10 +411,8 @@ namespace Vakol::Controller {
                                      model->mesh(mesh_index).GetMaterial()->AddTexture(*AssetLoader::GetTexture(path));
                                  });
 
-        entity_type.set_function("set_animation_state", [](const Entity* ent, int animation_state) 
-        {
-            if (!ent->HasComponent<Components::Animation>()) 
-            {
+        entity_type.set_function("play_animation", [](const Entity* ent, const int animation_state) {
+            if (!ent->HasComponent<Components::Animation>()) {
                 VK_ERROR("Animation component is needed to set it's animation state!");
                 return;
             }
@@ -423,6 +420,28 @@ namespace Vakol::Controller {
             auto& animation = ent->GetComponent<Components::Animation>();
 
             animation.state = animation_state;
+        });
+
+        entity_type.set_function("get_animation_duration", [](const Entity* ent, const int animation_state) {
+            if (!ent->HasComponent<Components::Animation>()) {
+                VK_ERROR("Animation component is needed to get it's duration!");
+                return -1.0f;
+            }
+
+            const auto& animation = ent->GetComponent<Components::Animation>();
+
+            return s_animator_map.at(animation.attached_model).c_animation(animation_state).duration_s();
+        });
+
+        entity_type.set_function("reset_animation", [](const Entity* ent, const int animation_state) {
+            if (!ent->HasComponent<Components::Animation>()) {
+                VK_ERROR("Animation component is needed to reset it!");
+                return;
+            }
+
+            const auto& animation = ent->GetComponent<Components::Animation>();
+
+            s_animator_map.at(animation.attached_model).animation(animation_state).reset_animation();
         });
 
         model_type.set_function("get_mesh_count", &Assets::Model::nMeshes);
@@ -512,7 +531,6 @@ namespace Vakol::Controller {
         });
 
         entity_type.set_function("add_fsm", [&state](Entity* ent) -> FSM& {
-            
             if (!ent->HasComponent<FSM>()) ent->AddComponent<FSM>(state);
             return ent->GetComponent<FSM>();
         });
@@ -656,6 +674,8 @@ namespace Vakol::Controller {
 
         auto rigidType = lua.new_usertype<RigidBody>("rigidBody");
 
+        rigidType["use_transform"] = &RigidBody::use_transform;
+
         lua["BodyType"] =
             lua.create_table_with("Static", RigidBody::BODY_TYPE::STATIC, "Kinematic", RigidBody::BODY_TYPE::KINEMATIC,
                                   "Dynamic", RigidBody::BODY_TYPE::DYNAMIC);
@@ -681,6 +701,7 @@ namespace Vakol::Controller {
 
         ColliderBoundsType["min"] = &Collider::Bounds::min;
         ColliderBoundsType["max"] = &Collider::Bounds::max;
+        ColliderBoundsType["size"] = &Collider::Bounds::size;
         ColliderBoundsType["center"] = &Collider::Bounds::center;
         ColliderBoundsType["extents"] = &Collider::Bounds::extents;
         ColliderBoundsType["radius"] = &Collider::Bounds::radius;
@@ -710,8 +731,7 @@ namespace Vakol::Controller {
         rigidType.set_function("set_angular_damp",
                                [](const RigidBody* rigid, const float damp) { rigid->SetAngularDamp(damp); });
 
-        colliderType.set_function(
-            "set_bounds", [](Collider* collider, const Collider::Bounds& bounds) { collider->SetBounds(bounds); });
+        colliderType["bounds"] = &Collider::bounds;
 
         colliderType.set_function(
             "set_bounds", [](Collider* collider, const Collider::Bounds& bounds) { collider->SetBounds(bounds); });

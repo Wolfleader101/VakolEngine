@@ -5,28 +5,23 @@
 #include <Controller/LuaState.hpp>
 #include <Controller/Physics/ScenePhysics.hpp>
 
-#pragma warning(push)
-#pragma warning(disable : 4201)
 #include <glm/glm.hpp>
-#pragma warning(pop)
 
 #include <memory>
 #include <string>
 
+#include "Controller/Animator.hpp"
 #include "Entity.hpp"
 #include "Model/Assets/Model.hpp"
-#include "Controller/Animator.hpp"
 
-namespace Vakol::Model::Components
-{
+namespace Vakol::Model::Components {
     /**
      * @struct Transform
      *
      * @brief store the position, rotation, and scale of an entity
      *
      */
-    struct Transform
-	{
+    struct Transform {
         /**
          * @brief Construct a new Transform object
          *
@@ -61,43 +56,43 @@ namespace Vakol::Model::Components
         void serialize(Archive& ar) {
             ar(cereal::make_nvp("pos.x", pos.x), cereal::make_nvp("pos.y", pos.y), cereal::make_nvp("pos.z", pos.z),
 
-
-               cereal::make_nvp("rot.x", eulerAngles.x), cereal::make_nvp("rot.y", eulerAngles.y), cereal::make_nvp("rot.z", eulerAngles.z),
+               cereal::make_nvp("rot.x", eulerAngles.x), cereal::make_nvp("rot.y", eulerAngles.y),
+               cereal::make_nvp("rot.z", eulerAngles.z),
 
                cereal::make_nvp("scale.x", scale.x), cereal::make_nvp("scale.y", scale.y),
                cereal::make_nvp("scale.z", scale.z));
         }
     };
 
-    struct Animator
-    {
+    struct Animator {
         std::string attached_model;
 
         void Update(const int state, const float delta_time) { animator_ptr->Update(state, delta_time); }
         void Update(const float delta_time) { animator_ptr->Update(delta_time); }
 
-        const Model::Assets::Animation& const animation(const int state) const { return animator_ptr->get(state); } 
+        const Model::Assets::Animation& c_animation(const int state) const { return animator_ptr->c_get(state); } 
+        Model::Assets::Animation animation(const int state) const { return animator_ptr->get(state); }
 
         void set(const std::shared_ptr<Controller::Animator>& animator) { animator_ptr = animator; }
-        void set(const Controller::Animator& animator) { animator_ptr = std::make_shared<Controller::Animator>(animator); }
+        void set(const Controller::Animator& animator) {
+            animator_ptr = std::make_shared<Controller::Animator>(animator);
+        }
 
         template <class Archive>
-        void serialize(Archive& ar) 
-        {
+        void serialize(Archive& ar) {
             ar(cereal::make_nvp("attached_model", attached_model));
         }
-    private:
+
+       private:
         std::shared_ptr<Controller::Animator> animator_ptr = nullptr;
     };
 
-    struct Animation
-    {
+    struct Animation {
         int state = 0;
         std::string attached_model;
 
         template <class Archive>
-        void serialize(Archive& ar) 
-        {
+        void serialize(Archive& ar) {
             ar(cereal::make_nvp("state", state));
             ar(cereal::make_nvp("attached_model", attached_model));
         }
@@ -110,8 +105,7 @@ namespace Vakol::Model::Components
      * @brief Component storing a string describing the entity
      *
      */
-    struct Tag
-	{
+    struct Tag {
         /**
          * @brief Returns bool indicating if string is empty
          *
@@ -167,12 +161,13 @@ namespace Vakol::Model::Components
         Script() = default;
         explicit Script(std::string& name);
 
-        Script(const std::string& script, std::shared_ptr<Controller::LuaState> lua, Entity& entity, Controller::Scene& scene);
+        Script(const std::string& script, std::shared_ptr<Controller::LuaState> lua, Entity& entity,
+               Controller::Scene& scene);
 
         template <class Archive>
         void serialize(Archive& ar) {
             ar(cereal::make_nvp("ScriptName", script_name));
-            //ar(cereal::make_nvp("State Table",state));
+            // ar(cereal::make_nvp("State Table",state));
         }
     };
 
@@ -180,10 +175,9 @@ namespace Vakol::Model::Components
      * @brief a finite state machine that can be controlled in lua
      *
      */
-    struct FSM
-	{
+    struct FSM {
         FSM() = default;
-		FSM(std::shared_ptr<Controller::LuaState> lua);
+        FSM(std::shared_ptr<Controller::LuaState> lua);
 
         void AddState(const std::string& stateName, const sol::function& callback);
 
@@ -194,22 +188,17 @@ namespace Vakol::Model::Components
         void Update();
 
         template <class Archive>
-        void serialize(Archive& ar) 
-        {
+        void serialize(Archive& ar) {
             ar(cereal::make_nvp("Current State", currentState));
         }
 
-
-    private:
+       private:
         std::string currentState;
         sol::table states;
-        std::shared_ptr<Controller::LuaState>  lua;
-
-
+        std::shared_ptr<Controller::LuaState> lua;
     };
 
-    struct Drawable
-    {
+    struct Drawable {
         Drawable() = default;
         explicit Drawable(std::string&& file);
         Drawable(const std::string& file, float scale, bool animated, bool backfaceCull);
@@ -234,10 +223,8 @@ namespace Vakol::Model::Components
 
     using namespace Vakol::Controller::Physics;
 
-    struct RigidBody
-    {
-        enum BODY_TYPE
-        {
+    struct RigidBody {
+        enum BODY_TYPE {
             STATIC = rp3d::BodyType::STATIC,
             KINEMATIC = rp3d::BodyType::KINEMATIC,
             DYNAMIC = rp3d::BodyType::DYNAMIC
@@ -246,11 +233,12 @@ namespace Vakol::Model::Components
         RigidBody() = default;
 
         bool initialized = false;
+        bool use_transform = false;
+        bool is_colliding = false;
 
-        struct RigidData
-        {
+        struct RigidData {
             float mass = 3;                        /**< Mass of object*/
-            bool grav = true;                      /**< If gravity is enabled on the object*/
+            bool grav = false;                     /**< If gravity is enabled on the object*/
             float LDamp = 0;                       /**< Linear Dampening*/
             float ADamp = 1;                       /**< Angular Dampening*/
             rp3d::Vector3 AngularLock = {0, 1, 0}; /**< Angular lock axis factor */
@@ -280,6 +268,7 @@ namespace Vakol::Model::Components
             ar(cereal::make_nvp("Linear Dampening", Data.LDamp));
             ar(cereal::make_nvp("Angular Dampening", Data.ADamp));
             ar(cereal::make_nvp("BodyType", Type));
+            ar(cereal::make_nvp("Use Transform", use_transform));
 
             ar(cereal::make_nvp("Angular Lock X", Data.AngularLock.x));
             ar(cereal::make_nvp("Angular Lock Y", Data.AngularLock.y));
@@ -291,8 +280,7 @@ namespace Vakol::Model::Components
         }
     };
 
-    struct Collider
-    {
+    struct Collider {
         enum ShapeName { BOX, SPHERE, CAPSULE, TRIANGLE_MESH };
 
         struct Bounds {
@@ -343,8 +331,7 @@ namespace Vakol::Model::Components
 
     Collider::Bounds GetBounds(const Drawable& model, const Transform& transform);
 
-    struct Terrain
-    {
+    struct Terrain {
         std::shared_ptr<Controller::Terrain> terrain_ptr;
 
         std::string name;

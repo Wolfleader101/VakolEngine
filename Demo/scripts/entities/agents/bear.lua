@@ -42,10 +42,25 @@ function init()
     shader:set_int("material.normal_map", 2);
     shader:set_int("material.emission_map", 3);
 
+
+    local rb = entity:add_rigid();
+
+    rb.use_transform = true;
+
+    local collider = entity:add_collider();
+
+    collider.Shape = Shape.Box;
+    collider.bounds.extents.x = 0.25;
+    collider.bounds.extents.y = 0.5;
+    collider.bounds.extents.z = 0.25;
+
+
+    entity:physics_init(scene); 
+
     state.fsm = entity:add_fsm();
 
     state.fsm:add_state("eating", function()
-        entity:set_animation_state(state.ANIMATIONS.EAT);
+        entity:play_animation(state.ANIMATIONS.EAT);
         if(fsm_wait(math.random(5,7))) then
             state.fsm:change_state("roaming")
         end
@@ -54,7 +69,7 @@ function init()
     state.fsm:add_state("attack", function()
         trigger_nearby_bears(entity, 12.0);
     
-        entity:set_animation_state(state.ANIMATIONS.ATTACK);
+        entity:play_animation(state.ANIMATIONS.ATTACK);
 
         if(fsm_wait(2)) then
             if player_distance() > state.enemyAttackAnimDistance then
@@ -64,7 +79,7 @@ function init()
     end)
 
     state.fsm:add_state("idle", function()
-        entity:set_animation_state(state.ANIMATIONS.IDLE);
+        entity:play_animation(state.ANIMATIONS.IDLE);
         if(fsm_wait(math.random(5,7))) then
             local rand = math.random();
             if (rand < 0.6) then
@@ -93,7 +108,7 @@ function init()
         end
         
         if not stateChange then
-            entity:set_animation_state(state.ANIMATIONS.WALK);
+            entity:play_animation(state.ANIMATIONS.WALK);
         end
 
         if (dir_wait(math.random(4,6))) then
@@ -122,7 +137,7 @@ function init()
     end)
 
     state.fsm:add_state("running_towards", function()
-        entity:set_animation_state(state.ANIMATIONS.RUN);
+        entity:play_animation(state.ANIMATIONS.RUN);
 
         local diff = scene.globals.player.pos - entity:get_transform().pos;
         state.dir = diff:normalize();
@@ -145,7 +160,7 @@ function init()
     end)
 
     state.fsm:add_state("alerted", function()
-        entity:set_animation_state(state.ANIMATIONS.RUN);
+        entity:play_animation(state.ANIMATIONS.RUN);
 
         local diff = scene.globals.player.pos - entity:get_transform().pos;
         state.dir = diff:normalize();
@@ -166,8 +181,6 @@ function init()
     end)
 
     state.fsm:change_state("roaming")
-
-    print_err("Bear is ready")
 end
 
 function trigger_nearby_bears(origin_bear, trigger_distance)
@@ -178,7 +191,6 @@ function trigger_nearby_bears(origin_bear, trigger_distance)
             local diff = origin_pos - bear:get_transform().pos
             if diff:magnitude() <= trigger_distance then
                 bear:get_fsm():change_state("alerted")
-                print("Bear " .. i .. " has been alerted and is now in alerted state.")
             end
         end
     end
@@ -228,5 +240,4 @@ function update()
     local terr_scale = scene.globals.terrain.transform.scale;
     pos.y = (scene.globals.terrain.terr:get_height(pos.x / terr_scale.x, pos.z / terr_scale.z) * terr_scale.y) + 0.03;
 
-    entity:get_transform().pos = pos;
 end
