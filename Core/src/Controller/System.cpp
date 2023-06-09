@@ -137,13 +137,6 @@ namespace Vakol::Controller {
     }
 
     void System::Script_Deserialize(std::shared_ptr<LuaState> lua, EntityList& list, Scene* scene) {
-
-        m_registry->view<FSM>().each([&](auto& fsm) {
-            fsm.states = lua->GetState().create_table();
-
-            Controller::ConvertMapToSol(fsm.data, fsm.states);
-        });
-
         m_registry->view<Script>().each([&](auto entity_id, auto& script) {
             lua->RunFile("scripts/" + script.script_name);
 
@@ -153,11 +146,10 @@ namespace Vakol::Controller {
             script.state = lua->GetState().create_table();
             Controller::ConvertMapToSol(script.data, script.state);
 
-            sol::function func = lua->GetState()["deserialize"];
-            if (func.valid()) lua->RunFunction("deserialize");
-        });
+            lua->GetState()["state"] = script.state;
 
-        
+            lua->RunFunction("deserialize");
+        });
     }
 
     void System::Physics_Init() {
