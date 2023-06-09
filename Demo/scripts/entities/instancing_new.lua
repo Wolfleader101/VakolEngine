@@ -85,20 +85,42 @@ function init()
 
 		attempts = 0;
 
-		while(pos_v.y < scene.globals.waterlevel)
+        while (pos_v.y < scene.globals.waterlevel)
         do
-			if attempts > MAX_ATTEMPTS then
-				break;
-			end
-		
-			pos_v = Vector3.new(math.random(-(math.floor(scene.globals.terrain.terr:get_size() / 2)), math.floor(scene.globals.terrain.terr:get_size() / 2)), 
-				0.0, math.random(-(math.floor(scene.globals.terrain.terr:get_size() / 2)), math.floor(scene.globals.terrain.terr:get_size() / 2)));
+            if attempts > MAX_ATTEMPTS then
+                break;
+            end
 
-			local terr_scale = scene.globals.terrain.transform.scale;
-			pos_v.y = (scene.globals.terrain.terr:get_height(pos_v.x / terr_scale.x, pos_v.z / terr_scale.z) * terr_scale.y) + 0.015;
+            pos_v = Vector3.new(
+                math.random(-(math.floor(scene.globals.terrain.terr:get_size() / 2)),
+                    math.floor(scene.globals.terrain.terr:get_size() / 2)),
+                0.0,
+                math.random(-(math.floor(scene.globals.terrain.terr:get_size() / 2)),
+                    math.floor(scene.globals.terrain.terr:get_size() / 2)));
 
-			attempts = attempts + 1
+            local terr_scale = scene.globals.terrain.transform.scale;
+            pos_v.y = (scene.globals.terrain.terr:get_height(pos_v.x / terr_scale.x, pos_v.z / terr_scale.z) * terr_scale.y) +
+            0.015;
+
+            attempts = attempts + 1
         end
+		
+		local rock_ent = scene:create_entity("rock" .. 1, "");
+
+		rock_ent:get_transform().pos = pos_v;
+		rock_ent:get_transform().scale = scl_v; 
+
+		local rb = rock_ent:add_rigid();
+		rb.BodyType = BodyType.Static;
+
+		local collider = rock_ent:add_collider();
+
+		collider.Shape = Shape.Box;
+		collider.bounds.extents.x = scl_v.x;
+		collider.bounds.extents.y = scl_v.y;
+		collider.bounds.extents.z = scl_v.z;
+		rock_ent:physics_init(scene); 
+		
 
 		mdl_m = translate(mdl_m, pos_v);
 

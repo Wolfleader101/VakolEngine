@@ -125,7 +125,12 @@ function update()
         return;
     end
 
-   
+    if (not state.flying) then
+        local terr_scale = scene.globals.terrain.transform.scale;
+        new_pos.y = (scene.globals.terrain.terr:get_height(new_pos.x / terr_scale.x, new_pos.z / terr_scale.z) * terr_scale.y) +
+        0.5;
+    end
+    
     if (not moving) then
         entity:get_rigid():set_velocity(Vector3.new(0, 0, 0));
     end
@@ -134,12 +139,6 @@ function update()
     entity:get_rigid():set_velocity(velocity_dir);
 
     entity:get_transform().pos.y = new_pos.y - 0.7;
-
-    if (not state.flying) then
-        local terr_scale = scene.globals.terrain.transform.scale;
-        new_pos.y = (scene.globals.terrain.terr:get_height(new_pos.x / terr_scale.x, new_pos.z / terr_scale.z) * terr_scale.y) +
-        0.5;
-    end
 
     camera:set_pos(entity:get_transform().pos.x, entity:get_transform().pos.y + 0.7, entity:get_transform().pos.z);
     scene.globals.player.pos = camera:get_pos();
