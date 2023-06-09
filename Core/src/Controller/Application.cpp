@@ -10,32 +10,37 @@
 
 #include "Logger.hpp"
 
-namespace Vakol::Controller
-{
+namespace Vakol::Controller {
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
-    Application::Application() : m_window(nullptr), m_renderer(nullptr), m_running(false), m_input()
-    {
-	    Logger::Init();
-	    scenes.reserve(10);
+    Application::Application() : m_window(nullptr), m_renderer(nullptr), m_running(false), m_input() {
+        Logger::Init();
+        scenes.reserve(10);
         lua = std::make_shared<LuaState>();
     };
 
-    void Application::Init() 
-    {
+    void Application::Init() {
         RegisterLua();
 
         auto config = LoadConfig();
 
-        if (!config) 
-        {
+        if (!config) {
             VK_CRITICAL("CONFIG COULD NOT BE LOADED");
             return;
         }
 
-        m_window = std::make_shared<View::Window>(config.value().name, config.value().windowWidth, config.value().windowHeight);
+        m_window = std::make_shared<View::Window>(config.value().name, config.value().windowWidth,
+                                                  config.value().windowHeight);
+
+        if (m_window == nullptr) {
+            return;
+        }
 
         m_renderer = CreateRenderer(config.value().rendererType, m_window);
+
+        if (m_renderer == nullptr) {
+            return;
+        }
 
         m_window->SetEventCallback([this](auto&& PH1) { OnEvent(std::forward<decltype(PH1)>(PH1)); });
 
@@ -50,8 +55,7 @@ namespace Vakol::Controller
         m_running = true;
     }
 
-    void Application::RegisterLua()
-	{
+    void Application::RegisterLua() {
         RegisterLogger(lua->GetState());
         RegisterMath(lua->GetState());
         RegisterEntity(lua, lua->GetState());
@@ -116,18 +120,15 @@ namespace Vakol::Controller
         return cfg;
     }
 
-    void Application::Run()
-	{
-        while (m_running) 
-        {
+    void Application::Run() {
+        while (m_running) {
             m_time.Update();
             m_gui.CreateNewFrame();
 
             m_renderer->Update();
 
             //! update scenes lua
-            for (auto& scene : scenes) 
-            {
+            for (auto& scene : scenes) {
                 if (!scene.active) continue;
 
                 if (!scene.initialized) scene.Init();
@@ -147,28 +148,24 @@ namespace Vakol::Controller
         }
     }
 
-    void Application::AddScene(const std::string& scriptName, const std::string& scene_name)
-	{
-	    const std::string sceneName = scene_name.length() == 0 ? "Scene" + std::to_string(scenes.size()) : scene_name;
+    void Application::AddScene(const std::string& scriptName, const std::string& scene_name) {
+        const std::string sceneName = scene_name.length() == 0 ? "Scene" + std::to_string(scenes.size()) : scene_name;
 
-	    const auto ref = std::make_shared<ScenePhysics>(PhysicsPool::CreatePhysicsWorld());
+        const auto ref = std::make_shared<ScenePhysics>(PhysicsPool::CreatePhysicsWorld());
 
-        scenes.emplace_back(sceneName,scriptName, lua, ref, true);
+        scenes.emplace_back(sceneName, scriptName, lua, ref, true);
     }
 
-    Scene& Application::GetScene(const std::string& sceneName)
-    {
-	    for (auto& scene : scenes)
-	    {
-	    	if (scene.getName() == sceneName) return scene;
-		}
+    Scene& Application::GetScene(const std::string& sceneName) {
+        for (auto& scene : scenes) {
+            if (scene.getName() == sceneName) return scene;
+        }
 
         VK_CRITICAL("Scene: {0} could not be found.", sceneName);
-		assert(false);
+        assert(false);
     }
 
-    void Application::OnEvent(Event& ev)
-	{
+    void Application::OnEvent(Event& ev) {
         EventDispatcher dispatcher(ev);
 
         dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
@@ -176,19 +173,8 @@ namespace Vakol::Controller
         dispatcher.Dispatch<KeyReleasedEvent>(BIND_EVENT_FN(OnKeyReleased));
         dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT_FN(OnWindowResize));
         dispatcher.Dispatch<MouseMovedEvent>(BIND_EVENT_FN(OnMouseMoved));
-
-        //! lua on event
-
-        // for (auto it = m_layerStack.end(); it != m_layerStack.begin();) {
-        //     (*--it)->OnEvent(ev);
-        //     if (ev.Handled) break;
-        // }
-
-        // VK_TRACE(ev);
-
-        // iterate backwards in the layer stack
-        // call on event
-        // if its handled then u can break
+        dispatcher.Dispatch<MouseButtonPressedEvent>(BIND_EVENT_FN(OnMouseButtonPressed));
+        dispatcher.Dispatch<MouseButtonReleasedEvent>(BIND_EVENT_FN(OnMouseButtonReleased));
     }
 
     bool Application::OnWindowClose([[maybe_unused]] WindowCloseEvent& ev) {
@@ -196,18 +182,14 @@ namespace Vakol::Controller
         return true;
     }
 
-    bool Application::OnWindowResize(const WindowResizeEvent& ev) const
-    {
+    bool Application::OnWindowResize(const WindowResizeEvent& ev) const {
         glViewport(0, 0, ev.GetWidth(), ev.GetHeight());
 
         return true;
     }
 
     bool Application::OnKeyPressed(KeyPressedEvent& kev) {
-        
-    	if (kev.GetKeyCode() == GLFW_KEY_K) {
-            m_renderer->ToggleWireframe();
-        }
+        if (kev.GetKeyCode() == GLFW_KEY_K) m_renderer->ToggleWireframe();
 
         m_input.OnKeyPressed(kev);
 
@@ -216,10 +198,25 @@ namespace Vakol::Controller
 
     bool Application::OnKeyReleased(KeyReleasedEvent& kev) {
         m_input.OnKeyReleased(kev);
+
         return true;
     }
+
     bool Application::OnMouseMoved(MouseMovedEvent& ev) {
         m_input.OnMouseMoved(ev);
+
+        return true;
+    }
+
+    bool Application::OnMouseButtonPressed(MouseButtonPressedEvent& mev) {
+        m_input.OnMouseButtonPressed(mev);
+
+        return true;
+    }
+
+    bool Application::OnMouseButtonReleased(MouseButtonReleasedEvent& mev) {
+        m_input.OnMouseButtonReleased(mev);
+
         return true;
     }
 

@@ -8,9 +8,14 @@
 
 namespace Vakol::Controller {
 
-    class Input {
-       public:
-           enum class KEY {
+    class Input 
+    {
+    public:
+           enum class KEY 
+           {
+               KEY_MOUSE_0 = 0,
+               KEY_MOUSE_1 = 1,
+               KEY_MOUSE_MIDDLE = 2,
                KEY_SPACE = 32,
                KEY_APOSTROPHE = 39,
                KEY_COMMA = 44,
@@ -60,9 +65,13 @@ namespace Vakol::Controller {
         };
 
         enum class KeyState { KEY_IDLE, KEY_PRESSED, KEY_HELD, KEY_RELEASED };
+
         bool OnKeyPressed(KeyPressedEvent& kev);
         bool OnKeyReleased(KeyReleasedEvent& kev);
         bool OnMouseMoved(MouseMovedEvent& ev);
+
+        bool OnMouseButtonPressed(MouseButtonPressedEvent& mev);
+        bool OnMouseButtonReleased(MouseButtonReleasedEvent& mev);
 
         const glm::vec2& GetMousePos() const { return m_mousePos; }
         glm::vec2 GetDeltaMousePos() {
@@ -75,9 +84,13 @@ namespace Vakol::Controller {
         bool GetKeyDown(KEY keycode) const;
         bool GetKeyUp(KEY keycode) const;
 
+        bool GetMouseButton(KEY keycode) const;
+        bool GetMouseButtonDown(KEY keycode) const;
+        bool GetMouseButtonUp(KEY keycode) const;
+
         void Update();
 
-       private:
+    private:
         glm::vec2 m_prevMousePos;
         glm::vec2 m_mousePos;
         glm::vec2 m_deltaMousePos;

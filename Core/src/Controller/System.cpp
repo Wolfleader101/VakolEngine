@@ -7,14 +7,12 @@
 #include <Controller/Scene.hpp>
 #include <Model/Components.hpp>
 
-#pragma warning(push)
-#pragma warning(disable : 4201)
 #include <glm/gtc/quaternion.hpp>
-#pragma warning(pop)
-
-static std::set<int> s_unique;
 
 using namespace Components;
+
+static std::unordered_map<std::string, Components::Animator> s_animator_map;
+static std::set<int> s_animation_set;
 
 glm::vec3 to_glm(const rp3d::Vector3& v) { return {v.x, v.y, v.z}; }
 glm::quat to_glm(const rp3d::Quaternion& q) { return {q.w, q.x, q.y, q.z}; }
@@ -64,8 +62,6 @@ namespace Vakol::Controller {
         });
     }
 
-    void System::Unique_Search() {}
-
     void System::Drawable_Update(const Time& time, const std::shared_ptr<View::Renderer>& renderer) {
         m_registry->view<Transform, Drawable>().each([&](auto& transform, const Drawable& drawable) {
             auto euler_rads = glm::radians(transform.eulerAngles);
@@ -75,52 +71,18 @@ namespace Vakol::Controller {
             if (!drawable.animated) renderer->Draw(transform, drawable);
         });
 
-        auto animation_view = m_registry->view<Transform, Drawable, Components::Animation>();
-
-        m_registry->view<Components::Animator>().each([&](Components::Animator& animator) {
-            for (const auto state : s_unique) animator.Update(state, time.deltaTime);
-
-            for (auto _entity : animation_view) {
-                const auto& transform = animation_view.get<Transform>(_entity);
-                const auto& drawable = animation_view.get<Drawable>(_entity);
-                const auto& animation = animation_view.get<Components::Animation>(_entity);
-
-                if (s_unique.insert(animation.state).second) continue;
-
-                renderer->DrawAnimated(transform, drawable, animator.animation(animation.state));
-            }
+        m_registry->view<Components::Animator>().each([&](const Components::Animator& animator) {
+            s_animator_map[animator.attached_model] = animator;
+            
+            for (const auto state : s_animation_set)
+                s_animator_map.at(animator.attached_model).Update(state, time.deltaTime);
         });
 
-        // This works fine, just non-performant (I WANT SPEEEED)
-        //
-        // m_registry->view<Components::Animator>().each([&](Components::Animator& animator)
-        //{
-        //    for (const auto state : s_unique)
-        //        animator.Update(state, time.deltaTime);
+        m_registry->view<Transform, Drawable, Components::Animation>().each([&](const auto& transform, const Drawable& drawable, const Components::Animation& animation)
+        {
+            s_animation_set.emplace(animation.state);
 
-        //    m_registry->view<Transform, Drawable, Components::Animation>().each([&](const auto& transform, const
-        //    Drawable& drawable, const Components::Animation& _animation)
-        //    {
-        //        if (!s_unique.insert(_animation.state).second) continue;
-
-        //        renderer->DrawAnimated(transform, drawable, animator.animation(_animation.state));
-        //    });
-        //});
-    }
-
-    void System::Script_Init(std::shared_ptr<LuaState> lua, EntityList& list, Scene* scene) {
-        m_registry->view<Script>().each([&](auto entity_id, auto& script) {
-            lua->RunFile("scripts/" + script.script_name);
-
-            lua->GetState()["scene"] = scene;
-            lua->GetState()["entity"] = list.GetEntity(static_cast<unsigned int>(entity_id));
-
-            script.state = lua->GetState().create_table();
-            lua->RunFunction("init");
-
-            if (!script.data.data.size()) {
-                Controller::ConvertMapToSol(lua, script.data, script.state);
-            }
+            renderer->DrawAnimated(transform, drawable, s_animator_map.at(animation.attached_model).c_animation(animation.state));
         });
     }
 
@@ -162,8 +124,19 @@ namespace Vakol::Controller {
     }
 
     void System::Physics_UpdateTransforms(const float factor) {
-        m_registry->group<Transform, RigidBody>().each([&](auto& trans, auto& rigid) {
+        m_registry->group<Transform, RigidBody>().each([&](Transform& trans, RigidBody& rigid) {
+            if (rigid.Type == RigidBody::BODY_TYPE::STATIC) return;
+
             rp3d::Transform curr_transform = rigid.RigidBodyPtr->getTransform();
+
+            if (rigid.use_transform && !rigid.is_colliding) {
+                const auto pos = to_rp3d(trans.pos);
+                const auto rot = to_rp3d(trans.rot);
+
+                rp3d::Transform newTrans(pos, rot);
+                rigid.RigidBodyPtr->setTransform(newTrans);
+                curr_transform = newTrans;
+            }
 
             // Compute the interpolated transform of the rigid body
             const rp3d::Transform interpolatedTransform =
@@ -173,6 +146,8 @@ namespace Vakol::Controller {
 
             trans.pos = to_glm(interpolatedTransform.getPosition());
             trans.rot = to_glm(interpolatedTransform.getOrientation());
+
+            rigid.is_colliding = false;
         });
     }
 
@@ -272,6 +247,8 @@ namespace Vakol::Controller {
             col.ColliderPtr = rigid.RigidBodyPtr->addCollider(col.Shape, rp3d::Transform::identity());
             col.OwningBody = &rigid;
         }
+
+        rigid.RigidBodyPtr->setUserData(static_cast<void*>(&rigid));
 
         rigid.initialized = true;
     };

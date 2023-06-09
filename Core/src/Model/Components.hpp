@@ -6,10 +6,7 @@
 #include <Controller/Physics/ScenePhysics.hpp>
 #include <crossguid/guid.hpp>
 
-#pragma warning(push)
-#pragma warning(disable : 4201)
 #include <glm/glm.hpp>
-#pragma warning(pop)
 
 #include <memory>
 #include <string>
@@ -71,10 +68,12 @@ namespace Vakol::Model::Components {
 
     struct Animator {
         std::string attached_model;
+
         void Update(const int state, const float delta_time) { animator_ptr->Update(state, delta_time); }
         void Update(const float delta_time) { animator_ptr->Update(delta_time); }
 
-        const Model::Assets::Animation& animation(const int state) const { return animator_ptr->get(state); }
+        const Model::Assets::Animation& c_animation(const int state) const { return animator_ptr->c_get(state); } 
+        Model::Assets::Animation animation(const int state) const { return animator_ptr->get(state); }
 
         void set(const std::shared_ptr<Controller::Animator>& animator) { animator_ptr = animator; }
         void set(const Controller::Animator& animator) {
@@ -92,10 +91,12 @@ namespace Vakol::Model::Components {
 
     struct Animation {
         int state = 0;
+        std::string attached_model;
 
         template <class Archive>
         void serialize(Archive& ar) {
             ar(cereal::make_nvp("state", state));
+            ar(cereal::make_nvp("attached_model", attached_model));
         }
     };
 
@@ -261,10 +262,12 @@ namespace Vakol::Model::Components {
         RigidBody() = default;
 
         bool initialized = false;
+        bool use_transform = false;
+        bool is_colliding = false;
 
         struct RigidData {
             float mass = 3;                        /**< Mass of object*/
-            bool grav = true;                      /**< If gravity is enabled on the object*/
+            bool grav = false;                     /**< If gravity is enabled on the object*/
             float LDamp = 0;                       /**< Linear Dampening*/
             float ADamp = 1;                       /**< Angular Dampening*/
             rp3d::Vector3 AngularLock = {0, 1, 0}; /**< Angular lock axis factor */
@@ -294,6 +297,7 @@ namespace Vakol::Model::Components {
             ar(cereal::make_nvp("Linear Dampening", Data.LDamp));
             ar(cereal::make_nvp("Angular Dampening", Data.ADamp));
             ar(cereal::make_nvp("BodyType", Type));
+            ar(cereal::make_nvp("Use Transform", use_transform));
 
             ar(cereal::make_nvp("Angular Lock X", Data.AngularLock.x));
             ar(cereal::make_nvp("Angular Lock Y", Data.AngularLock.y));
