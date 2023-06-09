@@ -71,6 +71,8 @@ function init()
     
         entity:play_animation(state.ANIMATIONS.ATTACK);
 
+        PLAYER.health = PLAYER.health - (10 * Time.delta_time);
+
         if(fsm_wait(2)) then
             if player_distance() > state.enemyAttackAnimDistance then
                 state.fsm:change_state("running_towards");
@@ -223,6 +225,9 @@ function fsm_wait(seconds)
 end
 
 function update()
+    PLAYER = get_scene("Nordic World").globals.player;
+    OPTIONS = get_scene("Options Scene");
+
     local pos = entity:get_transform().pos;
     local diff = scene.globals.player.pos - pos;
     local player_dist = diff:magnitude();

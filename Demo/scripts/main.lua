@@ -9,9 +9,9 @@ add_scene("scenes/nordic_world.lua", "Nordic World");
 add_scene("scenes/end_scene.lua", "End Scene");
 
 local menu = get_scene("Start Scene");
+menu:set_active(false);
 
 local options = get_scene("Options Scene");
-options:set_active(false);
 
 local controls = get_scene("Controls Scene");
 controls:set_active(false);

@@ -56,7 +56,8 @@ namespace Vakol::View
         virtual void ClearBuffer(unsigned int buffer_bit) const = 0;
 
         virtual void ToggleWireframe() = 0;
-        virtual void ToggleSkybox() = 0;
+        virtual void SetWireframe(const bool wireframe) = 0;
+        virtual void SetSkybox(const bool skybox) = 0;
 
     protected:
         bool isWireframe = false;

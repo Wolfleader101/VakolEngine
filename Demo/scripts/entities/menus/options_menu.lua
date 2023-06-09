@@ -1,16 +1,53 @@
 WINDOWWIDTHMINIMUM = 325.0;
 WINDOWWIDTHMAXIMUM = 400.0;
 
-function easy()
-    print("EASY MODE SELECTED");
+EASY = 1;
+MEDIUM = 2;
+HARD = 3;
+
+DIFFICULTY = nil;
+
+function set_easy()
+    scene.globals.options.DIFFICULTY = EASY;
+
+    scene.globals.options.DROWNING_SPEED_MULTIPLIER = 1.0;
+    scene.globals.options.ATTACK_DAMAGE_GIVEN_MULTIPLIER = 1.0;
+    scene.globals.options.ATTACK_DAMAGE_DEALT_MULTIPLIER = 1.0;
+    scene.globals.options.HEALTH_REGEN_RATE_MULTIPLIER = 1.0;
+    scene.globals.options.HUNGER_DECREASE_RATE_MULTIPLIER = 1.0;
+    scene.globals.options.THIRST_DECREASE_RATE_MULTIPLIER = 1.0;
 end
 
-function medium()
-    print("MEDIUM MODE SELECTED");
+function set_medium()
+    scene.globals.options.DIFFICULTY = MEDIUM;
+
+    scene.globals.options.DROWNING_SPEED_MULTIPLIER = 1.5;
+    scene.globals.options.ATTACK_DAMAGE_GIVEN_MULTIPLIER = 0.75;
+    scene.globals.options.ATTACK_DAMAGE_DEALT_MULTIPLIER = 1.5;
+    scene.globals.options.HEALTH_REGEN_RATE_MULTIPLIER = 0.75;
+    scene.globals.options.HUNGER_DECREASE_RATE_MULTIPLIER = 1.25;
+    scene.globals.options.THIRST_DECREASE_RATE_MULTIPLIER = 1.25;
 end
 
-function hard()
-    print("HARD MODE SELECTED");
+function set_hard()
+    scene.globals.options.DIFFICULTY = HARD;
+
+    scene.globals.options.DROWNING_SPEED_MULTIPLIER = 2.0;
+    scene.globals.options.ATTACK_DAMAGE_GIVEN_MULTIPLIER = 0.65;
+    scene.globals.options.ATTACK_DAMAGE_DEALT_MULTIPLIER = 2.0;
+    scene.globals.options.HEALTH_REGEN_RATE_MULTIPLIER = 0.65;
+    scene.globals.options.HUNGER_DECREASE_RATE_MULTIPLIER = 1.5;
+    scene.globals.options.THIRST_DECREASE_RATE_MULTIPLIER = 1.5;
+end
+
+function get_difficulty()
+    if (scene.globals.options.DIFFICULTY == EASY) then
+        return 'Tourist';
+    elseif (scene.globals.options.DIFFICULTY == MEDIUM) then
+        return 'Hiker';
+    elseif (scene.globals.options.DIFFICULTY == HARD) then
+        return 'Survivalist';
+    end
 end
 
 function options_menu()
@@ -27,16 +64,30 @@ function options_menu()
         GUI:start_window("Options Menu - Options", true, true, windowWidth, 0.0 , 0, 450); 
     end
 
-    GUI:add_text("---- OPTIONS ----", true, false, 3.0, 1.0, 1.0, 1.0, 1.0);
+    if (scene.globals.IN_OPTIONS_MENU) then
+        GUI:add_text("---- OPTIONS ----", true, false, 3.0, 1.0, 1.0, 1.0, 1.0);
+        
+        GUI:add_text(" ", true, false, 2.0, 1.0, 1.0, 1.0, 1.0);
+        GUI:add_text(" ", true, false, 1.0, 1.0, 1.0, 1.0, 1.0);
+    end
 
-    GUI:add_text(" ", true, false, 2.0, 1.0, 1.0, 1.0, 1.0);
-    GUI:add_text(" ", true, false, 2.0, 1.0, 1.0, 1.0, 1.0);
+    GUI:add_text("Please select a difficulty", true, false, 2.0, 1.0, 1.0, 1.0, 1.0);
+    
+    if (scene.globals.IN_OPTIONS_MENU) then
+        GUI:add_text(" ", true, false, 0.5, 1.0, 1.0, 1.0, 1.0);
+    else
+        GUI:add_text(" ", true, false, 1.0, 1.0, 1.0, 1.0, 1.0);
+    end
 
     GUI:add_text("---- Difficulty ----", true, false, 2.0, 1.0, 1.0, 1.0, 1.0);
 
-    GUI:add_button("Tourist", true, false, 200.0, 50.0, easy);
-    GUI:add_button("Hiker", true, false, 200.0, 50.0, medium);
-    GUI:add_button("Survivalist", true, false, 200.0, 50.0, hard);
+    GUI:add_text(" ", true, false, 1.0, 1.0, 1.0, 1.0, 1.0);
+    GUI:add_text("Current Difficulty: " .. get_difficulty(), true, false, 1.5, 1.0, 1.0, 1.0, 1.0);
+    GUI:add_text(" ", true, false, 2.0, 1.0, 1.0, 1.0, 1.0);
+
+    GUI:add_button("Tourist (Easy)", true, false, 225.0, 50.0, set_easy);
+    GUI:add_button("Hiker (Medium)", true, false, 225.0, 50.0, set_medium);
+    GUI:add_button("Survivalist (Hard)", true, false, 225.0, 50.0, set_hard);
 
     GUI:add_text(" ", true, false, 2.0, 1.0, 1.0, 1.0, 1.0);
     GUI:add_text(" ", true, false, 2.0, 1.0, 1.0, 1.0, 1.0);
@@ -50,16 +101,31 @@ function options_menu()
 end
 
 function init()
+    scene.globals.options = 
+    {
+        DIFFICULTY = EASY,
+        DROWNING_SPEED_MULTIPLIER = 1.0,
+        ATTACK_DAMAGE_GIVEN_MULTIPLIER = 1.0,
+        ATTACK_DAMAGE_DEALT_MULTIPLIER = 1.0,
+        HEALTH_REGEN_RATE_MULTIPLIER = 1.0,
+        HUNGER_DECREASE_RATE_MULTIPLIER = 1.0,
+        THIRST_DECREASE_RATE_MULTIPLIER = 1.0,
+        IN_OPTIONS_MENU = false,
+    }
+
     set_active_mouse(true);
+
+    set_wireframe(false);
+    set_skybox(false);
 end
 
 function update()
     options_menu();
 
     if(Input:get_key_down(KEYS["KEY_ESC"])) then
-        toggle_wireframe();
-        toggle_skybox();
+        set_wireframe(false);
         scene:set_active(false);
+        set_wireframe(true);
 
         local menu = get_scene("Start Scene");
         menu:set_active(true);

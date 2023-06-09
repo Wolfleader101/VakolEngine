@@ -14,13 +14,12 @@ function init()
     trans.pos.z = -1000;
 
     scene.globals.terrain = {transform = entity:get_transform(), terr = entity:get_terrain()};
-    toggle_skybox();
-    --toggle_wireframe();
-    
+
+    entity:set_backface_culling(false);
 end
 
 function update()
-    toggle_wireframe();
+    set_wireframe(true);
     clear_color(0.00961, 0.0431, 0.0784, 0);
 
 
@@ -29,8 +28,7 @@ function update()
     local shader = model:get_shader();
 
     shader:set_float("u_time", Time.curr_time * 2);
-
-    toggle_wireframe();
+    set_wireframe(false);
 end
 
 function deserialize()

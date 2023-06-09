@@ -50,7 +50,7 @@ namespace Vakol::View
         void Update(int index) const override;
         void LateUpdate(int index) const override;
 
-        void ToggleWireframe() override 
+        void ToggleWireframe() override
         {
             isWireframe = !isWireframe;
 
@@ -60,7 +60,17 @@ namespace Vakol::View
                 glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         }
 
-        void ToggleSkybox() override  { isSkybox = !isSkybox; }
+        void SetWireframe(const bool wireframe) override 
+        {
+            isWireframe = wireframe;
+
+            if (isWireframe)
+                glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+            else
+                glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        }
+
+        void SetSkybox(const bool skybox) override  { isSkybox = skybox; }
     private:
         std::vector<std::shared_ptr<Buffer>> buffers;
         std::vector<std::shared_ptr<FrameBuffer>> framebuffers;
