@@ -14,10 +14,6 @@ function hard()
 end
 
 function options_menu()
-    GUI:start_window("Options - Title", true, true, 600.0, 0.0 , 0, 250); 
-    GUI:add_text("---- OPTIONS ----", true, false, 4.0, 0.1, 0.1, 0.1, 1.0);
-    GUI:end_window();
-
     GUI:change_background_colour(0.349, 0.388, 1.0, 0.9);
     GUI:change_background_rounding(20.0);
 
@@ -31,11 +27,21 @@ function options_menu()
         GUI:start_window("Options Menu - Options", true, true, windowWidth, 0.0 , 0, 450); 
     end
 
+    GUI:add_text("---- OPTIONS ----", true, false, 3.0, 1.0, 1.0, 1.0, 1.0);
+
+    GUI:add_text(" ", true, false, 2.0, 1.0, 1.0, 1.0, 1.0);
+    GUI:add_text(" ", true, false, 2.0, 1.0, 1.0, 1.0, 1.0);
+
     GUI:add_text("---- Difficulty ----", true, false, 2.0, 1.0, 1.0, 1.0, 1.0);
 
     GUI:add_button("Tourist", true, false, 200.0, 50.0, easy);
     GUI:add_button("Hiker", true, false, 200.0, 50.0, medium);
     GUI:add_button("Survivalist", true, false, 200.0, 50.0, hard);
+
+    GUI:add_text(" ", true, false, 2.0, 1.0, 1.0, 1.0, 1.0);
+    GUI:add_text(" ", true, false, 2.0, 1.0, 1.0, 1.0, 1.0);
+
+    GUI:add_text("Press 'Esc' to return to menu", true, false, 2.0, 1.0, 1.0, 1.0, 1.0);
 
     GUI:end_window();
 
