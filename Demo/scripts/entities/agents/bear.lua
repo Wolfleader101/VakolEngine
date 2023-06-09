@@ -225,7 +225,7 @@ function fsm_wait(seconds)
 end
 
 function update()
-    PLAYER = get_scene("Nordic World").globals.player;
+    PLAYER = scene.globals.player;
     OPTIONS = get_scene("Options Scene").globals.options;
 
     local pos = entity:get_transform().pos;

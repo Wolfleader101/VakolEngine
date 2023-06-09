@@ -77,7 +77,7 @@ function update()
         entity:play_animation(0);
     end
 
-    if (not state.canAttack and wait(1.5)) then
+    if (not state.canAttack and wait(0.65)) then
         state.canAttack = true;
     end
 

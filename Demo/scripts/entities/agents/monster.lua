@@ -48,6 +48,8 @@ function init()
     
         entity:play_animation(state.ANIMATIONS.ATTACK);
 
+        PLAYER.decrement_health((10 * OPTIONS.ATTACK_DAMAGE_DEALT_TO_PLAYER_MULTIPLIER) * Time.delta_time);
+
         if(fsm_wait(2)) then  -- The attack animation lasts for 2 seconds
             if player_distance() > state.enemyAttackAnimDistance then  -- If player moves more than state.enemyAttackAnimDistance units away, start chasing again
                 state.fsm:change_state("running_towards");
@@ -203,6 +205,9 @@ function fsm_wait(seconds)
 end
 
 function update()
+    PLAYER = scene.globals.player;
+    OPTIONS = get_scene("Options Scene").globals.options;
+
     local pos = entity:get_transform().pos;
     local diff = scene.globals.player.pos - pos;
     local player_dist = diff:magnitude();
