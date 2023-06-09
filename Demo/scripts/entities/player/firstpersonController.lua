@@ -24,6 +24,19 @@ function init()
     shader:set_int("material.normal_map", 2);
     shader:set_int("material.emission_map", 3);
 
+    local rb = entity:add_rigid();
+
+    rb.use_transform = true;
+
+    local collider = entity:add_collider();
+
+    collider.Shape = Shape.Box;
+    collider.bounds.extents.x = 0.2;
+    collider.bounds.extents.y = 0.5;
+    collider.bounds.extents.z = 0.2;
+
+    entity:physics_init(scene); 
+
     TIMER = 0.0;
     state.attacking = false;
     state.canAttack = true;
@@ -102,18 +115,34 @@ function update()
         old_pos.z + (forward.z * dir.z + right.z * dir.x) * velocity
     )
 
+    local velocity_dir = Vector3.new(
+        (forward.x * dir.z + right.x * dir.x) * velocity * 100,
+        0,
+        (forward.z * dir.z + right.z * dir.x) * velocity * 100
+    )
+
     if(scene.globals.terrain.transform == nil) then
         return;
     end
+
+   
+    if (not moving) then
+        entity:get_rigid():set_velocity(Vector3.new(0, 0, 0));
+    end
+    
+    -- Set the new velocity
+    entity:get_rigid():set_velocity(velocity_dir);
+
+    entity:get_transform().pos.y = new_pos.y - 0.7;
+
     if (not state.flying) then
         local terr_scale = scene.globals.terrain.transform.scale;
-        new_pos.y = (scene.globals.terrain.terr:get_height(new_pos.x / terr_scale.x, new_pos.z / terr_scale.z) * terr_scale.y) + 0.5;
+        new_pos.y = (scene.globals.terrain.terr:get_height(new_pos.x / terr_scale.x, new_pos.z / terr_scale.z) * terr_scale.y) +
+        0.5;
     end
 
-    entity:get_transform().pos = Vector3.new(new_pos.x, new_pos.y - 0.70, new_pos.z);
-
-    camera:set_pos(new_pos.x, new_pos.y, new_pos.z);
-    scene.globals.player.pos = new_pos;
+    camera:set_pos(entity:get_transform().pos.x, entity:get_transform().pos.y + 0.7, entity:get_transform().pos.z);
+    scene.globals.player.pos = camera:get_pos();
 
     entity:get_transform().rot.y = math.deg(math.atan(forward.x, forward.z));
 
