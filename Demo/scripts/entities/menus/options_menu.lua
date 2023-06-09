@@ -127,11 +127,10 @@ function init()
 
     set_wireframe(true);
     set_skybox(false);
-
-    set_active_mouse(true);
 end
 
 function update()
+    set_active_mouse(true);
     options_menu();
 
     if(Input:get_key_down(KEYS["KEY_ESC"])) then
