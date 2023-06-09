@@ -74,11 +74,11 @@
     },
     "value19": 1,
     "value20": {
-        "pos.x": 0.0,
-        "pos.y": 0.0,
-        "pos.z": 0.0,
+        "pos.x": 2.0786871910095217,
+        "pos.y": 11.331977844238282,
+        "pos.z": 1.8580116033554078,
         "rot.x": 0.0,
-        "rot.y": 0.0,
+        "rot.y": 93.40001678466797,
         "rot.z": 0.0,
         "scale.x": 1.0,
         "scale.y": 1.0,
@@ -110,11 +110,11 @@
     },
     "value25": 4,
     "value26": {
-        "pos.x": -0.17908158898353578,
-        "pos.y": 13.322304725646973,
-        "pos.z": -3.181764602661133,
+        "pos.x": 6.865445613861084,
+        "pos.y": 9.280767440795899,
+        "pos.z": 0.1804123818874359,
         "rot.x": 0.0,
-        "rot.y": -47.16170120239258,
+        "rot.y": 3.2119884490966799,
         "rot.z": 0.0,
         "scale.x": 1.0,
         "scale.y": 1.0,
@@ -122,11 +122,11 @@
     },
     "value27": 5,
     "value28": {
-        "pos.x": 17.23733139038086,
-        "pos.y": 10.690650939941407,
-        "pos.z": -9.275848388671875,
+        "pos.x": 11.856228828430176,
+        "pos.y": 7.480702877044678,
+        "pos.z": -2.03737735748291,
         "rot.x": 0.0,
-        "rot.y": 125.22871398925781,
+        "rot.y": 86.26090240478516,
         "rot.z": 0.0,
         "scale.x": 1.0,
         "scale.y": 1.0,
@@ -134,11 +134,11 @@
     },
     "value29": 6,
     "value30": {
-        "pos.x": 14.134135246276856,
-        "pos.y": 5.7165913581848148,
-        "pos.z": 0.5918378829956055,
+        "pos.x": 15.153153419494629,
+        "pos.y": 5.390596866607666,
+        "pos.z": 0.07683887332677841,
         "rot.x": 0.0,
-        "rot.y": -125.0079345703125,
+        "rot.y": -40.42422103881836,
         "rot.z": 0.0,
         "scale.x": 1.0,
         "scale.y": 1.0,
@@ -146,11 +146,11 @@
     },
     "value31": 7,
     "value32": {
-        "pos.x": 20.434785842895509,
-        "pos.y": 5.0926194190979,
-        "pos.z": 2.0583016872406008,
+        "pos.x": 19.32131004333496,
+        "pos.y": 5.796848297119141,
+        "pos.z": -0.6131706833839417,
         "rot.x": 0.0,
-        "rot.y": -31.505434036254884,
+        "rot.y": -108.24574279785156,
         "rot.z": 0.0,
         "scale.x": 1.0,
         "scale.y": 1.0,
@@ -158,11 +158,11 @@
     },
     "value33": 8,
     "value34": {
-        "pos.x": 24.086488723754884,
-        "pos.y": 6.632955551147461,
-        "pos.z": -1.8654474020004273,
+        "pos.x": 27.017501831054689,
+        "pos.y": 9.092535972595215,
+        "pos.z": -4.095476150512695,
         "rot.x": 0.0,
-        "rot.y": 104.03436279296875,
+        "rot.y": 150.53131103515626,
         "rot.z": 0.0,
         "scale.x": 1.0,
         "scale.y": 1.0,
@@ -170,11 +170,11 @@
     },
     "value35": 9,
     "value36": {
-        "pos.x": 32.895198822021487,
-        "pos.y": 8.514369010925293,
-        "pos.z": -2.6687357425689699,
+        "pos.x": 30.70163917541504,
+        "pos.y": 8.927887916564942,
+        "pos.z": -2.4768033027648927,
         "rot.x": 0.0,
-        "rot.y": 57.10085678100586,
+        "rot.y": 161.4099884033203,
         "rot.z": 0.0,
         "scale.x": 1.0,
         "scale.y": 1.0,
@@ -182,11 +182,11 @@
     },
     "value37": 10,
     "value38": {
-        "pos.x": 29.115455627441408,
-        "pos.y": 8.055482864379883,
-        "pos.z": -0.6101729869842529,
+        "pos.x": 33.029541015625,
+        "pos.y": 8.928058624267579,
+        "pos.z": -4.083887577056885,
         "rot.x": 0.0,
-        "rot.y": -101.04602813720703,
+        "rot.y": -164.61888122558595,
         "rot.z": 0.0,
         "scale.x": 1.0,
         "scale.y": 1.0,
@@ -194,11 +194,11 @@
     },
     "value39": 11,
     "value40": {
-        "pos.x": 39.21733856201172,
-        "pos.y": 6.867145538330078,
-        "pos.z": -4.174187660217285,
+        "pos.x": 41.32941818237305,
+        "pos.y": 6.295270919799805,
+        "pos.z": -3.521057367324829,
         "rot.x": 0.0,
-        "rot.y": 83.26944732666016,
+        "rot.y": -116.79399108886719,
         "rot.z": 0.0,
         "scale.x": 1.0,
         "scale.y": 1.0,
@@ -206,11 +206,11 @@
     },
     "value41": 12,
     "value42": {
-        "pos.x": 42.504520416259769,
-        "pos.y": 4.9507317543029789,
-        "pos.z": -0.22417420148849488,
+        "pos.x": 45.708580017089847,
+        "pos.y": 5.781358242034912,
+        "pos.z": -3.1892240047454836,
         "rot.x": 0.0,
-        "rot.y": 179.21983337402345,
+        "rot.y": -114.3839340209961,
         "rot.z": 0.0,
         "scale.x": 1.0,
         "scale.y": 1.0,
@@ -218,11 +218,11 @@
     },
     "value43": 13,
     "value44": {
-        "pos.x": 55.472904205322269,
-        "pos.y": 4.346583843231201,
-        "pos.z": -3.4481101036071779,
+        "pos.x": 51.583953857421878,
+        "pos.y": 3.234720468521118,
+        "pos.z": -0.4672606587409973,
         "rot.x": 0.0,
-        "rot.y": 119.42218780517578,
+        "rot.y": 46.475921630859378,
         "rot.z": 0.0,
         "scale.x": 1.0,
         "scale.y": 1.0,
@@ -292,6 +292,27 @@
         "value0": {
             "value0": [
                 {
+                    "key": "drowning_time",
+                    "value": {
+                        "index": 3,
+                        "data": 0
+                    }
+                },
+                {
+                    "key": "moving_value",
+                    "value": {
+                        "index": 2,
+                        "data": 0.15559759736061097
+                    }
+                },
+                {
+                    "key": "MOVING_TIMER",
+                    "value": {
+                        "index": 2,
+                        "data": 5.586743354797363
+                    }
+                },
+                {
                     "key": "is_drowning",
                     "value": {
                         "index": 4,
@@ -300,27 +321,6 @@
                 },
                 {
                     "key": "REGEN_TIMER",
-                    "value": {
-                        "index": 3,
-                        "data": 0
-                    }
-                },
-                {
-                    "key": "MOVING_TIMER",
-                    "value": {
-                        "index": 2,
-                        "data": 2.4662322998046877
-                    }
-                },
-                {
-                    "key": "moving_value",
-                    "value": {
-                        "index": 2,
-                        "data": 0.3206101953983307
-                    }
-                },
-                {
-                    "key": "drowning_time",
                     "value": {
                         "index": 3,
                         "data": 0
@@ -335,7 +335,21 @@
         "value0": {
             "value0": [
                 {
+                    "key": "canAttack",
+                    "value": {
+                        "index": 4,
+                        "data": true
+                    }
+                },
+                {
                     "key": "flying",
+                    "value": {
+                        "index": 4,
+                        "data": false
+                    }
+                },
+                {
+                    "key": "attacking",
                     "value": {
                         "index": 4,
                         "data": false
@@ -364,14 +378,10 @@
         "value0": {
             "value0": [
                 {
-                    "key": "dir",
+                    "key": "speed",
                     "value": {
-                        "index": 5,
-                        "data": {
-                            "value0": -0.9178977012634277,
-                            "value1": 0.0,
-                            "value2": 0.851123034954071
-                        }
+                        "index": 2,
+                        "data": 0.5
                     }
                 },
                 {
@@ -382,30 +392,30 @@
                     }
                 },
                 {
-                    "key": "WAIT_TIMER",
-                    "value": {
-                        "index": 2,
-                        "data": 4.20843505859375
-                    }
-                },
-                {
-                    "key": "SPOTTED",
-                    "value": {
-                        "index": 4,
-                        "data": false
-                    }
-                },
-                {
                     "key": "ANIMATIONS",
                     "value": {
                         "index": 0,
                         "data": {
                             "value0": [
                                 {
+                                    "key": "DIE",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 0
+                                    }
+                                },
+                                {
                                     "key": "EAT",
                                     "value": {
                                         "index": 3,
                                         "data": 1
+                                    }
+                                },
+                                {
+                                    "key": "WALK",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 5
                                     }
                                 },
                                 {
@@ -423,28 +433,28 @@
                                     }
                                 },
                                 {
-                                    "key": "WALK",
-                                    "value": {
-                                        "index": 3,
-                                        "data": 5
-                                    }
-                                },
-                                {
                                     "key": "RUN",
                                     "value": {
                                         "index": 3,
                                         "data": 3
                                     }
-                                },
-                                {
-                                    "key": "DIE",
-                                    "value": {
-                                        "index": 3,
-                                        "data": 0
-                                    }
                                 }
                             ]
                         }
+                    }
+                },
+                {
+                    "key": "SPOTTED",
+                    "value": {
+                        "index": 4,
+                        "data": false
+                    }
+                },
+                {
+                    "key": "WAIT_TIMER",
+                    "value": {
+                        "index": 2,
+                        "data": 0.5682487487792969
                     }
                 },
                 {
@@ -455,17 +465,21 @@
                     }
                 },
                 {
-                    "key": "speed",
-                    "value": {
-                        "index": 2,
-                        "data": 0.5
-                    }
-                },
-                {
                     "key": "DIR_TIMER",
                     "value": {
                         "index": 2,
-                        "data": 0.69586181640625
+                        "data": 0.9569592475891113
+                    }
+                },
+                {
+                    "key": "dir",
+                    "value": {
+                        "index": 5,
+                        "data": {
+                            "value0": 0.049394164234399798,
+                            "value1": 0.0,
+                            "value2": 0.880174994468689
+                        }
                     }
                 }
             ]
@@ -477,14 +491,10 @@
         "value0": {
             "value0": [
                 {
-                    "key": "dir",
+                    "key": "speed",
                     "value": {
-                        "index": 5,
-                        "data": {
-                            "value0": 0.8395180702209473,
-                            "value1": 0.0,
-                            "value2": -0.59284508228302
-                        }
+                        "index": 2,
+                        "data": 0.5
                     }
                 },
                 {
@@ -495,30 +505,30 @@
                     }
                 },
                 {
-                    "key": "WAIT_TIMER",
-                    "value": {
-                        "index": 2,
-                        "data": 1.2866287231445313
-                    }
-                },
-                {
-                    "key": "SPOTTED",
-                    "value": {
-                        "index": 4,
-                        "data": false
-                    }
-                },
-                {
                     "key": "ANIMATIONS",
                     "value": {
                         "index": 0,
                         "data": {
                             "value0": [
                                 {
+                                    "key": "DIE",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 0
+                                    }
+                                },
+                                {
                                     "key": "EAT",
                                     "value": {
                                         "index": 3,
                                         "data": 1
+                                    }
+                                },
+                                {
+                                    "key": "WALK",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 5
                                     }
                                 },
                                 {
@@ -536,28 +546,28 @@
                                     }
                                 },
                                 {
-                                    "key": "WALK",
-                                    "value": {
-                                        "index": 3,
-                                        "data": 5
-                                    }
-                                },
-                                {
                                     "key": "RUN",
                                     "value": {
                                         "index": 3,
                                         "data": 3
                                     }
-                                },
-                                {
-                                    "key": "DIE",
-                                    "value": {
-                                        "index": 3,
-                                        "data": 0
-                                    }
                                 }
                             ]
                         }
+                    }
+                },
+                {
+                    "key": "SPOTTED",
+                    "value": {
+                        "index": 4,
+                        "data": false
+                    }
+                },
+                {
+                    "key": "WAIT_TIMER",
+                    "value": {
+                        "index": 2,
+                        "data": 0.5794773101806641
                     }
                 },
                 {
@@ -568,17 +578,21 @@
                     }
                 },
                 {
-                    "key": "speed",
-                    "value": {
-                        "index": 2,
-                        "data": 0.5
-                    }
-                },
-                {
                     "key": "DIR_TIMER",
                     "value": {
                         "index": 2,
-                        "data": 3.8335342407226564
+                        "data": 1.0004172325134278
+                    }
+                },
+                {
+                    "key": "dir",
+                    "value": {
+                        "index": 5,
+                        "data": {
+                            "value0": 0.3642410337924957,
+                            "value1": 0.0,
+                            "value2": 0.02380400523543358
+                        }
                     }
                 }
             ]
@@ -590,14 +604,10 @@
         "value0": {
             "value0": [
                 {
-                    "key": "dir",
+                    "key": "speed",
                     "value": {
-                        "index": 5,
-                        "data": {
-                            "value0": -0.9004776477813721,
-                            "value1": 0.0,
-                            "value2": -0.6307070255279541
-                        }
+                        "index": 2,
+                        "data": 0.5
                     }
                 },
                 {
@@ -608,30 +618,30 @@
                     }
                 },
                 {
-                    "key": "WAIT_TIMER",
-                    "value": {
-                        "index": 2,
-                        "data": 4.6071014404296879
-                    }
-                },
-                {
-                    "key": "SPOTTED",
-                    "value": {
-                        "index": 4,
-                        "data": false
-                    }
-                },
-                {
                     "key": "ANIMATIONS",
                     "value": {
                         "index": 0,
                         "data": {
                             "value0": [
                                 {
+                                    "key": "DIE",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 0
+                                    }
+                                },
+                                {
                                     "key": "EAT",
                                     "value": {
                                         "index": 3,
                                         "data": 1
+                                    }
+                                },
+                                {
+                                    "key": "WALK",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 5
                                     }
                                 },
                                 {
@@ -649,28 +659,28 @@
                                     }
                                 },
                                 {
-                                    "key": "WALK",
-                                    "value": {
-                                        "index": 3,
-                                        "data": 5
-                                    }
-                                },
-                                {
                                     "key": "RUN",
                                     "value": {
                                         "index": 3,
                                         "data": 3
                                     }
-                                },
-                                {
-                                    "key": "DIE",
-                                    "value": {
-                                        "index": 3,
-                                        "data": 0
-                                    }
                                 }
                             ]
                         }
+                    }
+                },
+                {
+                    "key": "SPOTTED",
+                    "value": {
+                        "index": 4,
+                        "data": false
+                    }
+                },
+                {
+                    "key": "WAIT_TIMER",
+                    "value": {
+                        "index": 2,
+                        "data": 0.5794773101806641
                     }
                 },
                 {
@@ -681,17 +691,21 @@
                     }
                 },
                 {
-                    "key": "speed",
-                    "value": {
-                        "index": 2,
-                        "data": 0.5
-                    }
-                },
-                {
                     "key": "DIR_TIMER",
                     "value": {
                         "index": 2,
-                        "data": 2.1762237548828127
+                        "data": 1.5798945426940919
+                    }
+                },
+                {
+                    "key": "dir",
+                    "value": {
+                        "index": 5,
+                        "data": {
+                            "value0": -0.5935945510864258,
+                            "value1": 0.0,
+                            "value2": 0.69687420129776
+                        }
                     }
                 }
             ]
@@ -703,14 +717,10 @@
         "value0": {
             "value0": [
                 {
-                    "key": "dir",
+                    "key": "speed",
                     "value": {
-                        "index": 5,
-                        "data": {
-                            "value0": -0.5109992027282715,
-                            "value1": 0.0,
-                            "value2": 0.8336974382400513
-                        }
+                        "index": 2,
+                        "data": 0.5
                     }
                 },
                 {
@@ -721,30 +731,30 @@
                     }
                 },
                 {
-                    "key": "WAIT_TIMER",
-                    "value": {
-                        "index": 2,
-                        "data": 2.3967514038085939
-                    }
-                },
-                {
-                    "key": "SPOTTED",
-                    "value": {
-                        "index": 4,
-                        "data": false
-                    }
-                },
-                {
                     "key": "ANIMATIONS",
                     "value": {
                         "index": 0,
                         "data": {
                             "value0": [
                                 {
+                                    "key": "DIE",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 0
+                                    }
+                                },
+                                {
                                     "key": "EAT",
                                     "value": {
                                         "index": 3,
                                         "data": 1
+                                    }
+                                },
+                                {
+                                    "key": "WALK",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 5
                                     }
                                 },
                                 {
@@ -762,28 +772,28 @@
                                     }
                                 },
                                 {
-                                    "key": "WALK",
-                                    "value": {
-                                        "index": 3,
-                                        "data": 5
-                                    }
-                                },
-                                {
                                     "key": "RUN",
                                     "value": {
                                         "index": 3,
                                         "data": 3
                                     }
-                                },
-                                {
-                                    "key": "DIE",
-                                    "value": {
-                                        "index": 3,
-                                        "data": 0
-                                    }
                                 }
                             ]
                         }
+                    }
+                },
+                {
+                    "key": "SPOTTED",
+                    "value": {
+                        "index": 4,
+                        "data": false
+                    }
+                },
+                {
+                    "key": "WAIT_TIMER",
+                    "value": {
+                        "index": 2,
+                        "data": 0.5575933456420898
                     }
                 },
                 {
@@ -794,17 +804,21 @@
                     }
                 },
                 {
-                    "key": "speed",
-                    "value": {
-                        "index": 2,
-                        "data": 0.5
-                    }
-                },
-                {
                     "key": "DIR_TIMER",
                     "value": {
                         "index": 2,
-                        "data": 3.442474365234375
+                        "data": 1.5693106651306153
+                    }
+                },
+                {
+                    "key": "dir",
+                    "value": {
+                        "index": 5,
+                        "data": {
+                            "value0": -0.7205652594566345,
+                            "value1": 0.0,
+                            "value2": -0.2375473976135254
+                        }
                     }
                 }
             ]
@@ -816,14 +830,10 @@
         "value0": {
             "value0": [
                 {
-                    "key": "dir",
+                    "key": "speed",
                     "value": {
-                        "index": 5,
-                        "data": {
-                            "value0": 0.6974049806594849,
-                            "value1": 0.0,
-                            "value2": -0.17432691156864167
-                        }
+                        "index": 2,
+                        "data": 0.5
                     }
                 },
                 {
@@ -834,30 +844,30 @@
                     }
                 },
                 {
-                    "key": "WAIT_TIMER",
-                    "value": {
-                        "index": 2,
-                        "data": 2.4227447509765627
-                    }
-                },
-                {
-                    "key": "SPOTTED",
-                    "value": {
-                        "index": 4,
-                        "data": false
-                    }
-                },
-                {
                     "key": "ANIMATIONS",
                     "value": {
                         "index": 0,
                         "data": {
                             "value0": [
                                 {
+                                    "key": "DIE",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 0
+                                    }
+                                },
+                                {
                                     "key": "EAT",
                                     "value": {
                                         "index": 3,
                                         "data": 1
+                                    }
+                                },
+                                {
+                                    "key": "WALK",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 5
                                     }
                                 },
                                 {
@@ -875,28 +885,28 @@
                                     }
                                 },
                                 {
-                                    "key": "WALK",
-                                    "value": {
-                                        "index": 3,
-                                        "data": 5
-                                    }
-                                },
-                                {
                                     "key": "RUN",
                                     "value": {
                                         "index": 3,
                                         "data": 3
                                     }
-                                },
-                                {
-                                    "key": "DIE",
-                                    "value": {
-                                        "index": 3,
-                                        "data": 0
-                                    }
                                 }
                             ]
                         }
+                    }
+                },
+                {
+                    "key": "SPOTTED",
+                    "value": {
+                        "index": 4,
+                        "data": false
+                    }
+                },
+                {
+                    "key": "WAIT_TIMER",
+                    "value": {
+                        "index": 2,
+                        "data": 0.5342321395874023
                     }
                 },
                 {
@@ -907,17 +917,21 @@
                     }
                 },
                 {
-                    "key": "speed",
-                    "value": {
-                        "index": 2,
-                        "data": 0.5
-                    }
-                },
-                {
                     "key": "DIR_TIMER",
                     "value": {
                         "index": 2,
-                        "data": 1.000091552734375
+                        "data": 0.9797754287719727
+                    }
+                },
+                {
+                    "key": "dir",
+                    "value": {
+                        "index": 5,
+                        "data": {
+                            "value0": 0.40021565556526186,
+                            "value1": 0.0,
+                            "value2": -0.7082818150520325
+                        }
                     }
                 }
             ]
@@ -929,14 +943,10 @@
         "value0": {
             "value0": [
                 {
-                    "key": "dir",
+                    "key": "speed",
                     "value": {
-                        "index": 5,
-                        "data": {
-                            "value0": 0.9379622340202332,
-                            "value1": 0.0,
-                            "value2": 0.6067751049995422
-                        }
+                        "index": 2,
+                        "data": 0.5
                     }
                 },
                 {
@@ -947,30 +957,30 @@
                     }
                 },
                 {
-                    "key": "WAIT_TIMER",
-                    "value": {
-                        "index": 2,
-                        "data": 2.4350357055664064
-                    }
-                },
-                {
-                    "key": "SPOTTED",
-                    "value": {
-                        "index": 4,
-                        "data": false
-                    }
-                },
-                {
                     "key": "ANIMATIONS",
                     "value": {
                         "index": 0,
                         "data": {
                             "value0": [
                                 {
+                                    "key": "DIE",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 0
+                                    }
+                                },
+                                {
                                     "key": "EAT",
                                     "value": {
                                         "index": 3,
                                         "data": 1
+                                    }
+                                },
+                                {
+                                    "key": "WALK",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 5
                                     }
                                 },
                                 {
@@ -988,28 +998,28 @@
                                     }
                                 },
                                 {
-                                    "key": "WALK",
-                                    "value": {
-                                        "index": 3,
-                                        "data": 5
-                                    }
-                                },
-                                {
                                     "key": "RUN",
                                     "value": {
                                         "index": 3,
                                         "data": 3
                                     }
-                                },
-                                {
-                                    "key": "DIE",
-                                    "value": {
-                                        "index": 3,
-                                        "data": 0
-                                    }
                                 }
                             ]
                         }
+                    }
+                },
+                {
+                    "key": "SPOTTED",
+                    "value": {
+                        "index": 4,
+                        "data": false
+                    }
+                },
+                {
+                    "key": "WAIT_TIMER",
+                    "value": {
+                        "index": 2,
+                        "data": 0.5794773101806641
                     }
                 },
                 {
@@ -1020,17 +1030,21 @@
                     }
                 },
                 {
-                    "key": "speed",
-                    "value": {
-                        "index": 2,
-                        "data": 0.5
-                    }
-                },
-                {
                     "key": "DIR_TIMER",
                     "value": {
                         "index": 2,
-                        "data": 0.5427932739257813
+                        "data": 1.5579009056091309
+                    }
+                },
+                {
+                    "key": "dir",
+                    "value": {
+                        "index": 5,
+                        "data": {
+                            "value0": 0.32512757182121279,
+                            "value1": 0.0,
+                            "value2": -0.9666545391082764
+                        }
                     }
                 }
             ]
@@ -1042,14 +1056,10 @@
         "value0": {
             "value0": [
                 {
-                    "key": "dir",
+                    "key": "speed",
                     "value": {
-                        "index": 5,
-                        "data": {
-                            "value0": -0.774242103099823,
-                            "value1": 0.0,
-                            "value2": -0.15114298462867738
-                        }
+                        "index": 2,
+                        "data": 0.5
                     }
                 },
                 {
@@ -1060,30 +1070,30 @@
                     }
                 },
                 {
-                    "key": "WAIT_TIMER",
-                    "value": {
-                        "index": 2,
-                        "data": 2.40350341796875
-                    }
-                },
-                {
-                    "key": "SPOTTED",
-                    "value": {
-                        "index": 4,
-                        "data": false
-                    }
-                },
-                {
                     "key": "ANIMATIONS",
                     "value": {
                         "index": 0,
                         "data": {
                             "value0": [
                                 {
+                                    "key": "DIE",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 0
+                                    }
+                                },
+                                {
                                     "key": "EAT",
                                     "value": {
                                         "index": 3,
                                         "data": 1
+                                    }
+                                },
+                                {
+                                    "key": "WALK",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 5
                                     }
                                 },
                                 {
@@ -1101,28 +1111,28 @@
                                     }
                                 },
                                 {
-                                    "key": "WALK",
-                                    "value": {
-                                        "index": 3,
-                                        "data": 5
-                                    }
-                                },
-                                {
                                     "key": "RUN",
                                     "value": {
                                         "index": 3,
                                         "data": 3
                                     }
-                                },
-                                {
-                                    "key": "DIE",
-                                    "value": {
-                                        "index": 3,
-                                        "data": 0
-                                    }
                                 }
                             ]
                         }
+                    }
+                },
+                {
+                    "key": "SPOTTED",
+                    "value": {
+                        "index": 4,
+                        "data": false
+                    }
+                },
+                {
+                    "key": "WAIT_TIMER",
+                    "value": {
+                        "index": 2,
+                        "data": 0.5794773101806641
                     }
                 },
                 {
@@ -1133,17 +1143,21 @@
                     }
                 },
                 {
-                    "key": "speed",
-                    "value": {
-                        "index": 2,
-                        "data": 0.5
-                    }
-                },
-                {
                     "key": "DIR_TIMER",
                     "value": {
                         "index": 2,
-                        "data": 2.586456298828125
+                        "data": 1.0004172325134278
+                    }
+                },
+                {
+                    "key": "dir",
+                    "value": {
+                        "index": 5,
+                        "data": {
+                            "value0": -0.1817057877779007,
+                            "value1": 0.0,
+                            "value2": -0.6605290174484253
+                        }
                     }
                 }
             ]
@@ -1155,14 +1169,10 @@
         "value0": {
             "value0": [
                 {
-                    "key": "dir",
+                    "key": "speed",
                     "value": {
-                        "index": 5,
-                        "data": {
-                            "value0": 0.744871199131012,
-                            "value1": 0.0,
-                            "value2": 0.08790500462055206
-                        }
+                        "index": 2,
+                        "data": 0.5
                     }
                 },
                 {
@@ -1173,30 +1183,30 @@
                     }
                 },
                 {
-                    "key": "WAIT_TIMER",
-                    "value": {
-                        "index": 2,
-                        "data": 2.4098281860351564
-                    }
-                },
-                {
-                    "key": "SPOTTED",
-                    "value": {
-                        "index": 4,
-                        "data": false
-                    }
-                },
-                {
                     "key": "ANIMATIONS",
                     "value": {
                         "index": 0,
                         "data": {
                             "value0": [
                                 {
+                                    "key": "DIE",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 0
+                                    }
+                                },
+                                {
                                     "key": "EAT",
                                     "value": {
                                         "index": 3,
                                         "data": 1
+                                    }
+                                },
+                                {
+                                    "key": "WALK",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 5
                                     }
                                 },
                                 {
@@ -1214,28 +1224,28 @@
                                     }
                                 },
                                 {
-                                    "key": "WALK",
-                                    "value": {
-                                        "index": 3,
-                                        "data": 5
-                                    }
-                                },
-                                {
                                     "key": "RUN",
                                     "value": {
                                         "index": 3,
                                         "data": 3
                                     }
-                                },
-                                {
-                                    "key": "DIE",
-                                    "value": {
-                                        "index": 3,
-                                        "data": 0
-                                    }
                                 }
                             ]
                         }
+                    }
+                },
+                {
+                    "key": "SPOTTED",
+                    "value": {
+                        "index": 4,
+                        "data": false
+                    }
+                },
+                {
+                    "key": "WAIT_TIMER",
+                    "value": {
+                        "index": 2,
+                        "data": 0.5794773101806641
                     }
                 },
                 {
@@ -1246,17 +1256,21 @@
                     }
                 },
                 {
-                    "key": "speed",
-                    "value": {
-                        "index": 2,
-                        "data": 0.5
-                    }
-                },
-                {
                     "key": "DIR_TIMER",
                     "value": {
                         "index": 2,
-                        "data": 3.4783477783203127
+                        "data": 0.9898333549499512
+                    }
+                },
+                {
+                    "key": "dir",
+                    "value": {
+                        "index": 5,
+                        "data": {
+                            "value0": -0.8769350647926331,
+                            "value1": 0.0,
+                            "value2": -0.4428563714027405
+                        }
                     }
                 }
             ]
@@ -1268,14 +1282,10 @@
         "value0": {
             "value0": [
                 {
-                    "key": "dir",
+                    "key": "speed",
                     "value": {
-                        "index": 5,
-                        "data": {
-                            "value0": 0.009217588230967522,
-                            "value1": 0.0,
-                            "value2": -0.6769047975540161
-                        }
+                        "index": 2,
+                        "data": 0.5
                     }
                 },
                 {
@@ -1286,30 +1296,30 @@
                     }
                 },
                 {
-                    "key": "WAIT_TIMER",
-                    "value": {
-                        "index": 2,
-                        "data": 2.349761962890625
-                    }
-                },
-                {
-                    "key": "SPOTTED",
-                    "value": {
-                        "index": 4,
-                        "data": false
-                    }
-                },
-                {
                     "key": "ANIMATIONS",
                     "value": {
                         "index": 0,
                         "data": {
                             "value0": [
                                 {
+                                    "key": "DIE",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 0
+                                    }
+                                },
+                                {
                                     "key": "EAT",
                                     "value": {
                                         "index": 3,
                                         "data": 1
+                                    }
+                                },
+                                {
+                                    "key": "WALK",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 5
                                     }
                                 },
                                 {
@@ -1327,28 +1337,28 @@
                                     }
                                 },
                                 {
-                                    "key": "WALK",
-                                    "value": {
-                                        "index": 3,
-                                        "data": 5
-                                    }
-                                },
-                                {
                                     "key": "RUN",
                                     "value": {
                                         "index": 3,
                                         "data": 3
                                     }
-                                },
-                                {
-                                    "key": "DIE",
-                                    "value": {
-                                        "index": 3,
-                                        "data": 0
-                                    }
                                 }
                             ]
                         }
+                    }
+                },
+                {
+                    "key": "SPOTTED",
+                    "value": {
+                        "index": 4,
+                        "data": false
+                    }
+                },
+                {
+                    "key": "WAIT_TIMER",
+                    "value": {
+                        "index": 2,
+                        "data": 0.5575933456420898
                     }
                 },
                 {
@@ -1359,17 +1369,21 @@
                     }
                 },
                 {
-                    "key": "speed",
-                    "value": {
-                        "index": 2,
-                        "data": 0.5
-                    }
-                },
-                {
                     "key": "DIR_TIMER",
                     "value": {
                         "index": 2,
-                        "data": 1.7925033569335938
+                        "data": 1.5798945426940919
+                    }
+                },
+                {
+                    "key": "dir",
+                    "value": {
+                        "index": 5,
+                        "data": {
+                            "value0": -0.45666420459747317,
+                            "value1": 0.0,
+                            "value2": -0.20699766278266908
+                        }
                     }
                 }
             ]
@@ -1381,14 +1395,10 @@
         "value0": {
             "value0": [
                 {
-                    "key": "dir",
+                    "key": "speed",
                     "value": {
-                        "index": 5,
-                        "data": {
-                            "value0": 0.998883843421936,
-                            "value1": 0.0,
-                            "value2": -0.5633518695831299
-                        }
+                        "index": 2,
+                        "data": 0.5
                     }
                 },
                 {
@@ -1399,30 +1409,30 @@
                     }
                 },
                 {
-                    "key": "WAIT_TIMER",
-                    "value": {
-                        "index": 2,
-                        "data": 2.3440628051757814
-                    }
-                },
-                {
-                    "key": "SPOTTED",
-                    "value": {
-                        "index": 4,
-                        "data": false
-                    }
-                },
-                {
                     "key": "ANIMATIONS",
                     "value": {
                         "index": 0,
                         "data": {
                             "value0": [
                                 {
+                                    "key": "DIE",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 0
+                                    }
+                                },
+                                {
                                     "key": "EAT",
                                     "value": {
                                         "index": 3,
                                         "data": 1
+                                    }
+                                },
+                                {
+                                    "key": "WALK",
+                                    "value": {
+                                        "index": 3,
+                                        "data": 5
                                     }
                                 },
                                 {
@@ -1440,28 +1450,28 @@
                                     }
                                 },
                                 {
-                                    "key": "WALK",
-                                    "value": {
-                                        "index": 3,
-                                        "data": 5
-                                    }
-                                },
-                                {
                                     "key": "RUN",
                                     "value": {
                                         "index": 3,
                                         "data": 3
                                     }
-                                },
-                                {
-                                    "key": "DIE",
-                                    "value": {
-                                        "index": 3,
-                                        "data": 0
-                                    }
                                 }
                             ]
                         }
+                    }
+                },
+                {
+                    "key": "SPOTTED",
+                    "value": {
+                        "index": 4,
+                        "data": false
+                    }
+                },
+                {
+                    "key": "WAIT_TIMER",
+                    "value": {
+                        "index": 2,
+                        "data": 0.5794773101806641
                     }
                 },
                 {
@@ -1472,17 +1482,21 @@
                     }
                 },
                 {
-                    "key": "speed",
-                    "value": {
-                        "index": 2,
-                        "data": 0.5
-                    }
-                },
-                {
                     "key": "DIR_TIMER",
                     "value": {
                         "index": 2,
-                        "data": 1.806182861328125
+                        "data": 1.5693106651306153
+                    }
+                },
+                {
+                    "key": "dir",
+                    "value": {
+                        "index": 5,
+                        "data": {
+                            "value0": 0.5033233761787415,
+                            "value1": 0.0,
+                            "value2": 0.4780382215976715
+                        }
                     }
                 }
             ]
@@ -1491,191 +1505,217 @@
     "value103": 14,
     "value104": 0,
     "value105": {
-        "guid": "c2285de5-4dbe-4969-85df-e8877d089b55"
+        "guid": "7cb1d3c9-f8a5-497e-8b77-b189a49dc26c"
     },
     "value106": 1,
     "value107": {
-        "guid": "db46f3d0-9697-4dec-8e88-11b033fcad6f"
+        "guid": "3e82fbd5-bb09-4d23-9500-f0017c6bb688"
     },
     "value108": 2,
     "value109": {
-        "guid": "c1c43e19-6e4d-4690-b326-ca47f4694d94"
+        "guid": "352b229c-5c77-4679-815b-d93e8e2c477d"
     },
     "value110": 3,
     "value111": {
-        "guid": "dbd8e84d-7479-4306-b6d2-309cbb4581b6"
+        "guid": "aae720a9-e610-49f4-b66f-30b362d74e7f"
     },
     "value112": 4,
     "value113": {
-        "guid": "969cdae0-26ee-419b-a677-e18343e19015"
+        "guid": "40557aa9-3b42-4182-b82e-7ef9b041f019"
     },
     "value114": 5,
     "value115": {
-        "guid": "b23267bc-a523-4e51-aa46-116ee449c92b"
+        "guid": "6d8fbdb6-f32b-404c-913d-2cc16bb7d76e"
     },
     "value116": 6,
     "value117": {
-        "guid": "16007d76-f1dd-4c9f-beb0-f88404b5ea2c"
+        "guid": "699d0199-af84-4558-a88a-f9975d9f37bb"
     },
     "value118": 7,
     "value119": {
-        "guid": "3f3ba54c-b4ca-48fe-9178-11bbf4daaa8f"
+        "guid": "3d0b7205-eac8-4bbf-a33a-9b2cf3e06867"
     },
     "value120": 8,
     "value121": {
-        "guid": "3d723838-faf6-44bd-a2c2-ef6d4da00509"
+        "guid": "5f00c553-a73e-43bf-b64f-5cac44a94d29"
     },
     "value122": 9,
     "value123": {
-        "guid": "4951a521-747a-4f7f-a31b-148ce72f3276"
+        "guid": "baf7c91b-9bd0-4035-8f4d-b78958805027"
     },
     "value124": 10,
     "value125": {
-        "guid": "4666ade9-3ca7-4ab8-aa0d-425f67d131de"
+        "guid": "83ab9728-7dba-44ab-bda1-2243ea660b6a"
     },
     "value126": 11,
     "value127": {
-        "guid": "b6ded802-53c2-4327-884a-77f01c6d1f44"
+        "guid": "57ce59d2-9a49-4089-b763-6a2fc096ec62"
     },
     "value128": 12,
     "value129": {
-        "guid": "c875f9cc-6a87-45e3-b084-a583d157d4d6"
+        "guid": "23f32cdd-8761-43db-89d5-e95078d38ba0"
     },
     "value130": 13,
     "value131": {
-        "guid": "833dbfab-0f63-450d-b3e6-5aad2c82c1a4"
+        "guid": "09400202-19f8-460f-ade1-0ef4fef650e6"
     },
-    "value132": 11,
-    "value133": 3,
+    "value132": 12,
+    "value133": 1,
     "value134": {
+        "Model": "assets/models/player/fps/FPS_KIT.fbx",
+        "Import Scale": 1.0,
+        "Animated": true,
+        "Back Face Culling": true
+    },
+    "value135": 3,
+    "value136": {
         "Model": "",
         "Import Scale": 1.0,
         "Animated": false,
         "Back Face Culling": true
     },
-    "value135": 4,
-    "value136": {
-        "Model": "assets/models/agents/rabbit.fbx",
-        "Import Scale": 0.25,
-        "Animated": true,
-        "Back Face Culling": true
-    },
-    "value137": 5,
+    "value137": 4,
     "value138": {
         "Model": "assets/models/agents/rabbit.fbx",
         "Import Scale": 0.25,
         "Animated": true,
         "Back Face Culling": true
     },
-    "value139": 6,
+    "value139": 5,
     "value140": {
         "Model": "assets/models/agents/rabbit.fbx",
         "Import Scale": 0.25,
         "Animated": true,
         "Back Face Culling": true
     },
-    "value141": 7,
+    "value141": 6,
     "value142": {
         "Model": "assets/models/agents/rabbit.fbx",
         "Import Scale": 0.25,
         "Animated": true,
         "Back Face Culling": true
     },
-    "value143": 8,
+    "value143": 7,
     "value144": {
         "Model": "assets/models/agents/rabbit.fbx",
         "Import Scale": 0.25,
         "Animated": true,
         "Back Face Culling": true
     },
-    "value145": 9,
+    "value145": 8,
     "value146": {
         "Model": "assets/models/agents/rabbit.fbx",
         "Import Scale": 0.25,
         "Animated": true,
         "Back Face Culling": true
     },
-    "value147": 10,
+    "value147": 9,
     "value148": {
         "Model": "assets/models/agents/rabbit.fbx",
         "Import Scale": 0.25,
         "Animated": true,
         "Back Face Culling": true
     },
-    "value149": 11,
+    "value149": 10,
     "value150": {
         "Model": "assets/models/agents/rabbit.fbx",
         "Import Scale": 0.25,
         "Animated": true,
         "Back Face Culling": true
     },
-    "value151": 12,
+    "value151": 11,
     "value152": {
         "Model": "assets/models/agents/rabbit.fbx",
         "Import Scale": 0.25,
         "Animated": true,
         "Back Face Culling": true
     },
-    "value153": 13,
+    "value153": 12,
     "value154": {
         "Model": "assets/models/agents/rabbit.fbx",
         "Import Scale": 0.25,
         "Animated": true,
         "Back Face Culling": true
     },
-    "value155": 1,
-    "value156": 4,
-    "value157": {
+    "value155": 13,
+    "value156": {
+        "Model": "assets/models/agents/rabbit.fbx",
+        "Import Scale": 0.25,
+        "Animated": true,
+        "Back Face Culling": true
+    },
+    "value157": 2,
+    "value158": 1,
+    "value159": {
+        "attached_model": "assets/models/player/fps/FPS_KIT.fbx"
+    },
+    "value160": 4,
+    "value161": {
         "attached_model": "assets/models/agents/rabbit.fbx"
     },
-    "value158": 10,
-    "value159": 4,
-    "value160": {
-        "state": 5
-    },
-    "value161": 5,
-    "value162": {
-        "state": 5
-    },
-    "value163": 6,
+    "value162": 11,
+    "value163": 1,
     "value164": {
-        "state": 5
+        "state": 11,
+        "attached_model": "assets/models/player/fps/FPS_KIT.fbx"
     },
-    "value165": 7,
+    "value165": 4,
     "value166": {
-        "state": 2
+        "state": 2,
+        "attached_model": "assets/models/agents/rabbit.fbx"
     },
-    "value167": 8,
+    "value167": 5,
     "value168": {
-        "state": 5
+        "state": 2,
+        "attached_model": "assets/models/agents/rabbit.fbx"
     },
-    "value169": 9,
+    "value169": 6,
     "value170": {
-        "state": 5
+        "state": 5,
+        "attached_model": "assets/models/agents/rabbit.fbx"
     },
-    "value171": 10,
+    "value171": 7,
     "value172": {
-        "state": 2
+        "state": 5,
+        "attached_model": "assets/models/agents/rabbit.fbx"
     },
-    "value173": 11,
+    "value173": 8,
     "value174": {
-        "state": 1
+        "state": 1,
+        "attached_model": "assets/models/agents/rabbit.fbx"
     },
-    "value175": 12,
+    "value175": 9,
     "value176": {
-        "state": 5
+        "state": 5,
+        "attached_model": "assets/models/agents/rabbit.fbx"
     },
-    "value177": 13,
+    "value177": 10,
     "value178": {
-        "state": 5
+        "state": 2,
+        "attached_model": "assets/models/agents/rabbit.fbx"
     },
-    "value179": 0,
-    "value180": 0,
-    "value181": 1,
-    "value182": 3,
-    "value183": {
+    "value179": 11,
+    "value180": {
+        "state": 2,
+        "attached_model": "assets/models/agents/rabbit.fbx"
+    },
+    "value181": 12,
+    "value182": {
+        "state": 5,
+        "attached_model": "assets/models/agents/rabbit.fbx"
+    },
+    "value183": 13,
+    "value184": {
+        "state": 5,
+        "attached_model": "assets/models/agents/rabbit.fbx"
+    },
+    "value185": 0,
+    "value186": 0,
+    "value187": 1,
+    "value188": 3,
+    "value189": {
         "Name": "Test Scene",
-        "Path": "coreAssets/textures/Heightmaps/height128.raw",
+        "Path": "assets/textures/Heightmaps/height128.raw",
         "Min": 0.0,
         "Max": 30.0
     }
