@@ -8,28 +8,53 @@
 #include "Texture.hpp"
 
 namespace Vakol::Model::Assets {
+    /**
+     * @brief Struct representing the material specifications.
+     */
     struct MaterialSpec {
         MaterialSpec() = default;
 
-        glm::vec3 AMBIENT = glm::vec3(0.0f);
-        glm::vec3 DIFFUSE = glm::vec3(0.0f);
-        glm::vec3 SPECULAR = glm::vec3(0.0f);
-        glm::vec3 EMISSIVE = glm::vec3(0.0f);
-        float SHININESS = 32.0f;
+        glm::vec3 AMBIENT = glm::vec3(0.0f);  /**< The ambient color of the material. */
+        glm::vec3 DIFFUSE = glm::vec3(0.0f);  /**< The diffuse color of the material. */
+        glm::vec3 SPECULAR = glm::vec3(0.0f); /**< The specular color of the material. */
+        glm::vec3 EMISSIVE = glm::vec3(0.0f); /**< The emissive color of the material. */
+        float SHININESS = 32.0f;              /**< The shininess factor of the material. */
 
-        std::vector<Texture> textures;
+        std::vector<Texture> textures; /**< The textures associated with the material. */
     };
 
+    /**
+     * @brief Default material specifications.
+     */
     inline MaterialSpec DEFAULT = {glm::vec3(1.0f), glm::vec3(0.6f), glm::vec3(0.2f), glm::vec3(0.0f), 32.0f, {}};
 
+    /**
+     * @brief Class representing a material.
+     */
     class Material {
        public:
+        /**
+         * @brief Constructs a Material object with the given material specifications.
+         *
+         * @param spec The material specifications.
+         */
         explicit Material(MaterialSpec&& spec) : m_spec(std::move(spec)) {
             this->m_textures = std::move(m_spec.textures);
         }
 
+        /**
+         * @brief Adds a texture to the material.
+         *
+         * @param texture The texture to add.
+         */
         void AddTexture(Texture& texture) { this->m_textures.push_back(std::move(texture)); }
 
+        /**
+         * @brief Gets the ID of the texture at the specified index.
+         *
+         * @param index The index of the texture.
+         * @return The ID of the texture.
+         */
         [[nodiscard]] unsigned int GetTexture(const int index) const {
             if (GetTextureCount() <= index) {
                 VK_CRITICAL("Material::GetTexture() - Texture index out of bounds.");
@@ -39,23 +64,86 @@ namespace Vakol::Model::Assets {
             return this->m_textures.at(index).GetID();
         }
 
+        /**
+         * @brief Gets the vector of textures associated with the material.
+         *
+         * @return The vector of textures.
+         */
         [[nodiscard]] const std::vector<Texture>& GetTextures() const { return this->m_textures; }
+
+        /**
+         * @brief Gets the number of textures associated with the material.
+         *
+         * @return The number of textures.
+         */
         [[nodiscard]] int GetTextureCount() const { return static_cast<int>(this->m_textures.size()); }
 
+        /**
+         * @brief Sets the ambient color of the material.
+         *
+         * @param r The red component of the color.
+         * @param g The green component of the color.
+         * @param b The blue component of the color.
+         */
         void SetAmbientColor(const float r, const float g, const float b) { this->m_spec.AMBIENT = glm::vec3(r, g, b); }
+
+        /**
+         * @brief Sets the diffuse color of the material.
+         *
+         * @param r The red component of the color.
+         * @param g The green component of the color.
+         * @param b The blue component of the color.
+         */
         void SetDiffuseColor(const float r, const float g, const float b) { this->m_spec.DIFFUSE = glm::vec3(r, g, b); }
+
+        /**
+         * @brief Sets the specular color of the material.
+         *
+         * @param r The red component of the color.
+         * @param g The green component of the color.
+         * @param b The blue component of the color.
+         */
         void SetSpecularColor(const float r, const float g, const float b) {
             this->m_spec.SPECULAR = glm::vec3(r, g, b);
         }
+
+        /**
+         * @brief Sets the shininess factor of the material.
+         *
+         * @param shine The shininess factor.
+         */
         void SetShininess(const float shine) { this->m_spec.SHININESS = shine; }
 
+        /**
+         * @brief Gets the ambient color of the material.
+         *
+         * @return The ambient color.
+         */
         [[nodiscard]] glm::vec3 GetAmbientColor() const { return this->m_spec.AMBIENT; }
+
+        /**
+         * @brief Gets the diffuse color of the material.
+         *
+         * @return The diffuse color.
+         */
         [[nodiscard]] glm::vec3 GetDiffuseColor() const { return this->m_spec.DIFFUSE; }
+
+        /**
+         * @brief Gets the specular color of the material.
+         *
+         * @return The specular color.
+         */
         [[nodiscard]] glm::vec3 GetSpecularColor() const { return this->m_spec.SPECULAR; }
+
+        /**
+         * @brief Gets the shininess factor of the material.
+         *
+         * @return The shininess factor.
+         */
         [[nodiscard]] float GetShininess() const { return this->m_spec.SHININESS; }
 
        private:
-        MaterialSpec m_spec;
-        std::vector<Texture> m_textures;
+        MaterialSpec m_spec;             /**< The material specifications. */
+        std::vector<Texture> m_textures; /**< The textures associated with the material. */
     };
 }  // namespace Vakol::Model::Assets
