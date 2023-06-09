@@ -3,7 +3,7 @@ function display_controls()
     GUI:change_background_colour(0.349, 0.388, 1.0, 0.9);
     GUI:change_background_rounding(20.0);
 
-	GUI:start_window("Controls Screen", true, true, 1200.0, 1000.0 , 0.0, 100); 
+	GUI:start_window("Controls Screen", true, true, 1200.0, 900.0 , 0.0, 100); 
 
     GUI:add_text("---- CONTROLS ----", true, false, 4.0, 1.0, 1.0, 1.0, 1.0);
     GUI:add_image("assets/textures/controls.png", 1200, 600, true, true);
