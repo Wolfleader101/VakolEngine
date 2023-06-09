@@ -25,6 +25,7 @@ local function setup_fsm()
 
     state.fsm:add_state("eating", function()
         entity:play_animation(state.ANIMATIONS.EAT);
+        entity:get_rigid():set_velocity(Vector3.new(0,0,0));
         if(fsm_wait(math.random(5,7))) then
             state.fsm:change_state("roaming")
         end
@@ -32,6 +33,7 @@ local function setup_fsm()
 
     state.fsm:add_state("idle", function()
         entity:play_animation(state.ANIMATIONS.IDLE);
+        entity:get_rigid():set_velocity(Vector3.new(0,0,0));
         if(fsm_wait(math.random(5,7))) then
             local rand = math.random();
             if (rand < 0.6) then
@@ -74,10 +76,8 @@ local function setup_fsm()
         end
         
         local velocity = state.speed * Time.delta_time;
-
-        local pos = entity:get_transform().pos;
-        pos.x = pos.x + (state.dir.x * velocity);
-        pos.z = pos.z + (state.dir.z * velocity);
+        local move = state.dir * velocity * 100;
+        entity:get_rigid():set_velocity(move);
     end)
 
     state.fsm:add_state("running_away", function()
@@ -103,11 +103,9 @@ local function setup_fsm()
             state.SPOTTED = true;
         end
 
-        local velocity = state.sprint_speed * Time.delta_time;
-
-        local pos = entity:get_transform().pos;
-        pos.x = pos.x + (state.dir.x * velocity);
-        pos.z = pos.z + (state.dir.z * velocity);
+        local velocity = state.speed * Time.delta_time;
+        local move = state.dir * velocity * 100;
+        entity:get_rigid():set_velocity(move);
 
         if (player_dist >= state.VIEW_DISTANCE + 1.5) then
             state.fsm:change_state("roaming")

@@ -215,6 +215,8 @@ namespace Vakol::Controller {
         lua.set_function("add_scene", &Application::AddScene, app);
         lua.set_function("get_scene", &Application::GetScene, app);
 
+        lua.set_function("set_active_mouse", &Application::SetActiveMouse, app);
+
         auto time_type = lua.new_usertype<Time>("Time");
         time_type["delta_time"] = &Time::deltaTime;
         time_type["curr_time"] = &Time::curTime;
@@ -367,6 +369,14 @@ namespace Vakol::Controller {
             }
 
             return model;
+        });
+
+        entity_type.set_function("set_backface_culling", [](const Entity* ent, const bool cull)
+        {
+            if (!ent->HasComponent<Drawable>())
+                VK_ERROR("Cannot set backface culling without a drawable component!");
+
+            ent->GetComponent<Drawable>().backfaceCull = cull;
         });
 
         entity_type.set_function("get_model", [](const Entity* ent) {
@@ -655,10 +665,15 @@ namespace Vakol::Controller {
         gui_window_type.set_function("end_window", &View::GUIWindow::EndWindowCreation);
     }
 
-    void RegisterRenderer(sol::state& lua, const std::shared_ptr<View::Renderer>& renderer) {
-        lua.set_function("toggle_wireframe", [&] { renderer->ToggleWireframe(); });
+    void RegisterRenderer(sol::state& lua, const std::shared_ptr<View::Renderer>& renderer) 
+    {
+        lua.set_function("toggle_wireframe", [&]{renderer->ToggleWireframe();});
 
-        lua.set_function("toggle_skybox", [&] { renderer->ToggleSkybox(); });
+        lua.set_function("toggle_skybox", [&]{renderer->ToggleSkybox();});
+
+        lua.set_function("set_wireframe", [&](const bool wireframe) { renderer->SetWireframe(wireframe); });
+
+        lua.set_function("set_skybox", [&](const bool skybox) { renderer->SetSkybox(skybox); });
 
         lua.set_function("clear_color_v", [&](const glm::vec4& color) { renderer->ClearColor(color); });
 
@@ -677,6 +692,7 @@ namespace Vakol::Controller {
         auto rigidType = lua.new_usertype<RigidBody>("rigidBody");
 
         rigidType["use_transform"] = &RigidBody::use_transform;
+        rigidType["is_colliding"] = &RigidBody::is_colliding;
 
         lua["BodyType"] =
             lua.create_table_with("Static", RigidBody::BODY_TYPE::STATIC, "Kinematic", RigidBody::BODY_TYPE::KINEMATIC,
@@ -732,6 +748,9 @@ namespace Vakol::Controller {
 
         rigidType.set_function("set_angular_damp",
                                [](const RigidBody* rigid, const float damp) { rigid->SetAngularDamp(damp); });
+
+        rigidType.set_function("apply_force",
+                               [](RigidBody* rigid, const glm::vec3& force) { rigid->ApplyForce(force); });
 
         colliderType["bounds"] = &Collider::bounds;
 

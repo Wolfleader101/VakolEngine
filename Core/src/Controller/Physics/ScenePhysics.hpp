@@ -88,7 +88,7 @@ namespace Vakol::Controller::Physics {
 
         /**
          * @brief Debug renderer for physics.
-         *         
+         *
          */
         View::DebugRenderer m_DebugRenderer;
 

@@ -3,6 +3,7 @@ function setup_fsm()
 
     state.fsm:add_state("eating", function()
         entity:play_animation(state.ANIMATIONS.EAT);
+        entity:get_rigid():set_velocity(Vector3.new(0,0,0));
         if(fsm_wait(math.random(5,7))) then
             state.fsm:change_state("roaming")
         end
@@ -10,10 +11,15 @@ function setup_fsm()
 
     state.fsm:add_state("attack", function()
         trigger_nearby_bears(entity, 12.0);
+        entity:get_rigid():set_velocity(Vector3.new(0,0,0));
     
         entity:play_animation(state.ANIMATIONS.ATTACK);
 
-        if(fsm_wait(2)) then
+        if (attack_wait(1.5)) then
+            PLAYER.decrement_health((10 * OPTIONS.ATTACK_DAMAGE_DEALT_TO_PLAYER_MULTIPLIER));
+        end
+
+        if(fsm_wait(0.75)) then
             if player_distance() > state.enemyAttackAnimDistance then
                 state.fsm:change_state("running_towards");
             end
@@ -22,7 +28,9 @@ function setup_fsm()
 
     state.fsm:add_state("idle", function()
         entity:play_animation(state.ANIMATIONS.IDLE);
-        if(fsm_wait(math.random(5,7))) then
+        entity:get_rigid():set_velocity(Vector3.new(0,0,0));
+
+        if (fsm_wait(math.random(5, 7))) then
             local rand = math.random();
             if (rand < 0.6) then
                 state.fsm:change_state("roaming")
@@ -64,10 +72,8 @@ function setup_fsm()
         end
         
         local velocity = state.speed * Time.delta_time;
-        local pos = entity:get_transform().pos;
-        pos.x = pos.x + (state.dir.x * velocity);
-        pos.z = pos.z + (state.dir.z * velocity);
-        entity:get_transform().pos = pos;
+        local move = state.dir * velocity * 100;
+        entity:get_rigid():set_velocity(move);
 
         local targetRotation = math.atan(state.dir.x, state.dir.z)
         targetRotation = targetRotation * (180 / math.pi)
@@ -83,12 +89,11 @@ function setup_fsm()
 
         local diff = scene.globals.player.pos - entity:get_transform().pos;
         state.dir = diff:normalize();
+      
+        local velocity = (state.sprint_speed * OPTIONS.SPRINT_SPEED_MULTIPLIER) * Time.delta_time;
+        local move = state.dir * velocity * 100;
 
-        local velocity = state.sprint_speed * Time.delta_time;
-        local pos = entity:get_transform().pos;
-        pos.x = pos.x + (state.dir.x * velocity);
-        pos.z = pos.z + (state.dir.z * velocity);
-        entity:get_transform().pos = pos;
+        entity:get_rigid():set_velocity(move);
 
         local targetRotation = math.atan(state.dir.x, state.dir.z)
         targetRotation = targetRotation * (180 / math.pi)
@@ -107,11 +112,10 @@ function setup_fsm()
         local diff = scene.globals.player.pos - entity:get_transform().pos;
         state.dir = diff:normalize();
 
-        local velocity = state.sprint_speed * Time.delta_time;
-        local pos = entity:get_transform().pos;
-        pos.x = pos.x + (state.dir.x * velocity);
-        pos.z = pos.z + (state.dir.z * velocity);
-        entity:get_transform().pos = pos;
+        local velocity = (state.sprint_speed * OPTIONS.SPRINT_SPEED_MULTIPLIER) * Time.delta_time;
+        local move = state.dir * velocity * 100;
+
+        entity:get_rigid():set_velocity(move);
 
         local targetRotation = math.atan(state.dir.x, state.dir.z)
         targetRotation = targetRotation * (180 / math.pi)
@@ -204,6 +208,17 @@ function player_distance()
     return (scene.globals.player.pos - entity:get_transform().pos):magnitude();
 end
 
+function attack_wait(seconds)
+    state.ATTACK_TIMER = state.ATTACK_TIMER + Time.delta_time;
+
+    if (state.ATTACK_TIMER >= seconds) then
+        state.ATTACK_TIMER = 0;
+        return true;
+    end
+
+    return false;
+end
+
 function dir_wait(seconds)
     state.DIR_TIMER = state.DIR_TIMER + Time.delta_time;
 
@@ -227,6 +242,9 @@ function fsm_wait(seconds)
 end
 
 function update()
+    PLAYER = scene.globals.player;
+    OPTIONS = get_scene("Options Scene").globals.options;
+
     local pos = entity:get_transform().pos;
     local diff = scene.globals.player.pos - pos;
     local player_dist = diff:magnitude();

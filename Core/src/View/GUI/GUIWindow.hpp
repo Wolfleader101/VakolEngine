@@ -98,7 +98,7 @@ namespace Vakol::View {
          * @param height The height of the button
          * @param inputFunction A function passed into the button to be run when the button is pressed
          */
-    	void AddButton(const std::string& buttonName, float width, float height, const std::function<void()>& inputFunction) const;
+    	void AddButton(const std::string& buttonName, const bool centerX, const bool centerY, float width, float height, const std::function<void()>& inputFunction) const;
         /**
          * @brief Adds a checkbox to a given window
          *

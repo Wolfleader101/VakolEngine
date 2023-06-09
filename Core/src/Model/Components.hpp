@@ -396,9 +396,11 @@ namespace Vakol::Model::Components {
          */
         RigidBody() = default;
 
-        bool initialized = false;    ///< Boolean indicating if the rigid body is initialized.
-        bool use_transform = false;  ///< Boolean indicating if the rigid body is using transforms.
-        bool is_colliding = false;   ///< Boolean indicating if the rigid body is currently colliding.
+        bool initialized = false;
+        bool use_transform = false;
+        // bool use_y_pos = false;
+        bool is_colliding = false;
+        bool was_colliding = false;
 
         /**
          * @brief Struct representing the data for a rigid body.
@@ -443,6 +445,7 @@ namespace Vakol::Model::Components {
          * @param damp The angular dampening factor to be set.
          */
         void SetAngularDamp(float damp) const;
+        void ApplyForce(const glm::vec3& force) const;
 
         std::shared_ptr<ScenePhysics> owningWorld = nullptr;  ///< Shared pointer to the world owning the rigid body.
         rp3d::RigidBody* RigidBodyPtr = nullptr;              ///< Pointer to the rigid body.

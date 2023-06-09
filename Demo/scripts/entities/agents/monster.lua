@@ -46,6 +46,11 @@ local function setup_fsm()
         trigger_nearby_monsters(entity, 10.0);
     
         entity:play_animation(state.ANIMATIONS.ATTACK);
+        entity:get_rigid():set_velocity(Vector3.new(0,0,0));
+
+        if (attack_wait(1.5)) then
+            PLAYER.decrement_health((10 * OPTIONS.ATTACK_DAMAGE_DEALT_TO_PLAYER_MULTIPLIER));
+        end
 
         if(fsm_wait(2)) then  -- The attack animation lasts for 2 seconds
             if player_distance() > state.enemyAttackAnimDistance then  -- If player moves more than state.enemyAttackAnimDistance units away, start chasing again
@@ -56,6 +61,7 @@ local function setup_fsm()
 
     state.fsm:add_state("idle", function()
         entity:play_animation(state.ANIMATIONS.IDLE);
+        entity:get_rigid():set_velocity(Vector3.new(0,0,0));
         if(fsm_wait(math.random(5,7))) then
             local rand = math.random();
             if (rand < 0.6) then
@@ -93,10 +99,8 @@ local function setup_fsm()
         end
         
         local velocity = state.speed * Time.delta_time;
-        local pos = entity:get_transform().pos;
-        pos.x = pos.x + (state.dir.x * velocity);
-        pos.z = pos.z + (state.dir.z * velocity);
-        entity:get_transform().pos = pos; -- Add this line
+        local move = state.dir * velocity * 100;
+        entity:get_rigid():set_velocity(move);
 
         local targetRotation = math.atan(state.dir.x, state.dir.z)
         targetRotation = targetRotation * (180 / math.pi)
@@ -114,12 +118,10 @@ local function setup_fsm()
         -- Now, we want to run towards the player
         local diff = scene.globals.player.pos - entity:get_transform().pos;
         state.dir = diff:normalize();  -- Update direction to run towards player
-
-        local velocity = state.sprint_speed * Time.delta_time;
-        local pos = entity:get_transform().pos;
-        pos.x = pos.x + (state.dir.x * velocity);
-        pos.z = pos.z + (state.dir.z * velocity);
-        entity:get_transform().pos = pos; -- Add this line
+      
+        local velocity = (state.sprint_speed * OPTIONS.SPRINT_SPEED_MULTIPLIER) * Time.delta_time;
+        local move = state.dir * velocity * 100;
+        entity:get_rigid():set_velocity(move);
 
         local targetRotation = math.atan(state.dir.x, state.dir.z)
         targetRotation = targetRotation * (180 / math.pi)
@@ -140,11 +142,9 @@ local function setup_fsm()
         local diff = scene.globals.player.pos - entity:get_transform().pos;
         state.dir = diff:normalize();  -- Update direction to run towards player
 
-        local velocity = state.sprint_speed * Time.delta_time;
-        local pos = entity:get_transform().pos;
-        pos.x = pos.x + (state.dir.x * velocity);
-        pos.z = pos.z + (state.dir.z * velocity);
-        entity:get_transform().pos = pos; -- Add this line
+        local velocity = (state.sprint_speed * OPTIONS.SPRINT_SPEED_MULTIPLIER) * Time.delta_time;
+        local move = state.dir * velocity * 100;
+        entity:get_rigid():set_velocity(move);
 
         local targetRotation = math.atan(state.dir.x, state.dir.z)
         targetRotation = targetRotation * (180 / math.pi)
@@ -184,7 +184,6 @@ function init()
 
     state.VIEW_DISTANCE = 10.0; -- increased view distance for a deer
     state.SPOTTED = false;
-
     entity:get_transform().pos = Vector3.new(10, 0, 10);
 
     state.model = entity:add_model("assets/models/agents/monster.fbx", 0.25, true, true);
@@ -207,6 +206,9 @@ end
 
 
 function update()
+    PLAYER = scene.globals.player;
+    OPTIONS = get_scene("Options Scene").globals.options;
+
     local pos = entity:get_transform().pos;
     local diff = scene.globals.player.pos - pos;
     local player_dist = diff:magnitude();

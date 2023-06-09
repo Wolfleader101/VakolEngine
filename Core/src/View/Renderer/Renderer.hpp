@@ -127,6 +127,9 @@ namespace Vakol::View {
          */
         virtual void ToggleSkybox() = 0;
 
+        virtual void SetWireframe(const bool wireframe) = 0;
+        virtual void SetSkybox(const bool skybox) = 0;
+      
        protected:
         bool isWireframe = false;  ///< Boolean flag indicating whether wireframe mode is on
         bool isSkybox = true;      ///< Boolean flag indicating whether skybox is on

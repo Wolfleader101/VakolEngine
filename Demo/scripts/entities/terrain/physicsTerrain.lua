@@ -2,6 +2,7 @@ function init()
     print("Initialising Terrain");
   
     local terrain = entity:create_height_map_terrain(scene, "assets/textures/Heightmaps/terrain_2048.raw", 0, 60); -- size
+    --local terrain = entity:create_height_map_terrain(scene, "assets/textures/Heightmaps/height128.raw", 0, 1); -- size
 
     local model = terrain:get_model();
     local mesh = model:get_mesh(0);
@@ -9,10 +10,9 @@ function init()
 
     entity:add_raw_texture(0, "assets/textures/lightmap.raw");
 
-    entity:add_texture(0, "assets/textures/terrain/TEX_128_DirtWithRocks.jpg", false, false);
+    entity:add_texture(0, "assets/textures/grass.png", false, false);
     entity:add_texture(0, "assets/textures/terrain/TEX_128_DirtNoRocks.jpg", false, false);
-    entity:add_texture(0, "assets/textures/terrain/TEX_128_Grass.jpg", false, false);
-    entity:add_texture(0, "assets/textures/terrain/TEX_128_SnowNoRocks.jpg", false, false);
+    entity:add_texture(0, "assets/textures/extras/snow.png", false, false);
     entity:add_texture(0, "assets/textures/terrain/TEX_128_SnowWithRocks.jpg", false, false);
 
     entity:add_texture(0, "assets/textures/noise/TEX_1024_Noise.jpg", false, false);
@@ -20,7 +20,9 @@ function init()
     entity:add_texture(0, "assets/textures/Water/water_1.jpg", false, false);
     entity:add_texture(0, "assets/textures/Water/water_4.png", false, false);
 
-    entity:set_shader("coreAssets/shaders/basic_terrain.prog");
+    entity:add_texture(0, "assets/textures/splatmaps/splatmap_1.jpg", false, false);
+
+    entity:set_shader("assets/shaders/splatmap_terrain.prog");
     shader = model:get_shader();
 
     shader:set_vec2v("uv_scale", Vector2.new(20));
@@ -31,16 +33,17 @@ function init()
     shader:set_int("layer_2", 2);
     shader:set_int("layer_3", 3);
     shader:set_int("layer_4", 4);
-    shader:set_int("layer_5", 5);
 
-    shader:set_int("noise", 6);
+    shader:set_int("noise", 5);
 
-    shader:set_int("water_layer_1", 7);
-    shader:set_int("water_layer_2", 8);
+    shader:set_int("water_layer_1", 6);
+    shader:set_int("water_layer_2", 7);
+
+    shader:set_int("splat_map", 8);
 
     -- scene:add_terrain_physics(entity);
 
-    scene.globals.terrain = {transform = entity:get_transform(), terr = entity:get_terrain()};
+    scene.globals.terrain = { transform = entity:get_transform(), terr = entity:get_terrain() };
 
     local planeEntity = scene:create_entity("planeEntity", "")
     local planeModel = planeEntity:add_model("coreAssets/models/plane.obj", scene.globals.terrain.terr:get_size(), false, true) -- get model and add a drawable component

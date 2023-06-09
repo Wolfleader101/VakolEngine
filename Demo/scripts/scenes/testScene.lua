@@ -6,7 +6,6 @@ function init()
     
     --scene:create_entity("Bob", "entities/agents/bob.lua");
     --scene:create_entity("Rabbit", "entities/agents/rabbit.lua");
-
     --scene:create_entity("Rabbit Test", "entities/agents/rabbit_test.lua");
     
     local birds = {};
@@ -39,9 +38,10 @@ function update()
     --GUI:end_window();
 
     if(Input:get_key_down(KEYS["KEY_ESC"])) then
+        scene:set_active(false);
+
         toggle_wireframe();
         toggle_skybox();
-        scene:set_active(false);
 
         local menu = get_scene("Start Scene");
         menu:set_active(true);

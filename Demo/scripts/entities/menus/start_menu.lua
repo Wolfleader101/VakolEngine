@@ -1,8 +1,10 @@
 WINDOWWIDTHMINIMUM = 325.0;
 WINDOWWIDTHMAXIMUM = 400.0;
 
+OPENED_OPTIONS_MENU = false;
+
 function start_menu()
-    GUI:start_window("Start Menu - Title", true, true, 600.0, 0.0 , 0, 350); 
+    GUI:start_window("Start Menu - Title", true, true, 700, 0.0 , 0, 350); 
 
     GUI:add_text("PLACES UNKNOWN", true, false, 4.0, 1.0, 0.169, 0.169, 1.0);
 
@@ -24,6 +26,7 @@ function start_menu()
 
     GUI:add_text("1 - Start/Continue Game", true, false, 2.0, 1.0, 1.0, 1.0, 1.0);
     GUI:add_text("2 - Options", true, false, 2.0, 1.0, 1.0, 1.0, 1.0);
+    GUI:add_text("3 - Controls", true, false, 2.0, 1.0, 1.0, 1.0, 1.0);
 
     GUI:add_text(" ", true, false, 2.0, 1.0, 1.0, 1.0, 1.0);
 
@@ -49,6 +52,21 @@ function update()
         local game = get_scene("Nordic World");
         game:set_active(true);
         toggle_wireframe();
+    end
+
+    if (Input:get_key_down(KEYS["KEY_2"])) then
+        scene:set_active(false);
+
+        local options_scene = get_scene("Options Scene");
+        options_scene:set_active(true);
+        options_scene.globals.options.OPENED_OPTIONS_MENU = true;
+    end
+
+    if (Input:get_key_down(KEYS["KEY_3"])) then
+        scene:set_active(false);
+
+        local controls = get_scene("Controls Scene");
+        controls:set_active(true);
     end
 
     if(Input:get_key_down(KEYS["KEY_ESC"])) then

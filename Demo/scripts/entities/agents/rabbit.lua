@@ -61,10 +61,10 @@ local function setup_fsm()
             end
             state.dir:normalize()
         end
+        
         local velocity = state.speed * Time.delta_time;
-        local pos = entity:get_transform().pos;
-        pos.x = pos.x + (state.dir.x * velocity);
-        pos.z = pos.z + (state.dir.z * velocity);
+        local move = state.dir * velocity * 100;
+        entity:get_rigid():set_velocity(move);
     end)
     state.fsm:add_state("running_away", function()
         entity:play_animation(state.ANIMATIONS.RUN);
@@ -84,10 +84,10 @@ local function setup_fsm()
             state.dir = rand_dir
             state.SPOTTED = true;
         end
-        local velocity = state.sprint_speed * Time.delta_time;
-        local pos = entity:get_transform().pos;
-        pos.x = pos.x + (state.dir.x * velocity);
-        pos.z = pos.z + (state.dir.z * velocity);
+       
+        local velocity = state.speed * Time.delta_time;
+        local move = state.dir * velocity * 100;
+        entity:get_rigid():set_velocity(move);
         if (player_dist >= state.VIEW_DISTANCE + 1.5) then
             state.fsm:change_state("roaming")
         end
@@ -125,6 +125,20 @@ function init()
     shader:set_int("material.specular_map", 1);
     shader:set_int("material.normal_map", 2);
     shader:set_int("material.emission_map", 3);
+
+    -- local rb = entity:add_rigid();
+
+    -- rb.use_transform = true;
+
+    -- local collider = entity:add_collider();
+
+    -- collider.Shape = Shape.Box;
+    -- collider.bounds.extents.x = 0.05;
+    -- collider.bounds.extents.y = 0.1;
+    -- collider.bounds.extents.z = 0.05;
+
+
+    -- entity:physics_init(scene); 
     
    
     setup_fsm();
