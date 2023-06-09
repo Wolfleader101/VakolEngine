@@ -24,6 +24,7 @@ function start_menu()
 
     GUI:add_text("1 - Start/Continue Game", true, false, 2.0, 1.0, 1.0, 1.0, 1.0);
     GUI:add_text("2 - Options", true, false, 2.0, 1.0, 1.0, 1.0, 1.0);
+    GUI:add_text("3 - Controls", true, false, 2.0, 1.0, 1.0, 1.0, 1.0);
 
     GUI:add_text(" ", true, false, 2.0, 1.0, 1.0, 1.0, 1.0);
 
@@ -46,8 +47,8 @@ function update()
         toggle_skybox();
         scene:set_active(false);
 
-        local loading = get_scene("Loading Scene");
-        loading:set_active(true);
+        local game = get_scene("Test Scene");
+        game:set_active(true);
         toggle_wireframe();
     end
 
@@ -57,6 +58,15 @@ function update()
 
         local options = get_scene("Options Scene");
         options:set_active(true);
+        toggle_wireframe();
+    end
+
+    if (Input:get_key_down(KEYS["KEY_3"])) then
+        toggle_skybox();
+        scene:set_active(false);
+
+        local controls = get_scene("Controls Scene");
+        controls:set_active(true);
         toggle_wireframe();
     end
 
