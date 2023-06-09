@@ -46,7 +46,7 @@ function update()
         toggle_skybox();
         scene:set_active(false);
 
-        local game = get_scene("Test Scene");
+        local game = get_scene("Nordic World");
         game:set_active(true);
         toggle_wireframe();
     end
