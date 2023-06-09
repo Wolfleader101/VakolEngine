@@ -173,21 +173,6 @@ function init()
     shader:set_int("material.normal_map", 2);
     shader:set_int("material.emission_map", 3);
 
-
-    local rb = entity:add_rigid();
-
-    rb.use_transform = true;
-
-    local collider = entity:add_collider();
-
-    collider.Shape = Shape.Box;
-    collider.bounds.extents.x = 0.25;
-    collider.bounds.extents.y = 0.5;
-    collider.bounds.extents.z = 0.25;
-
-
-    entity:physics_init(scene); 
-
    setup_fsm();
 end
 
@@ -209,6 +194,9 @@ function player_distance()
 end
 
 function attack_wait(seconds)
+    if(state.ATTACK_TIMER == nil) then
+        state.ATTACK_TIMER = 0;
+    end
     state.ATTACK_TIMER = state.ATTACK_TIMER + Time.delta_time;
 
     if (state.ATTACK_TIMER >= seconds) then
