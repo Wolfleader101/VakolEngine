@@ -177,8 +177,7 @@ namespace Vakol::Controller {
         dispatcher.Dispatch<MouseButtonReleasedEvent>(BIND_EVENT_FN(OnMouseButtonReleased));
     }
 
-    void Application::SetActiveMouse(const bool active)     
-    { 
+    void Application::SetActiveMouse(const bool active) {
         if (active)
             glfwSetInputMode(m_window->GetWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
         else

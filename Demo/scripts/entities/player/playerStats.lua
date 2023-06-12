@@ -107,7 +107,7 @@ end
 function update()
     display_player_stats();
 
-    LEVEL = get_scene("Options Scene").globals.options;
+    -- LEVEL = get_scene("Options Scene").globals.options;
 end
 
 function deserialize()
