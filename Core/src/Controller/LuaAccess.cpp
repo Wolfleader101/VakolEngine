@@ -371,10 +371,8 @@ namespace Vakol::Controller {
             return model;
         });
 
-        entity_type.set_function("set_backface_culling", [](const Entity* ent, const bool cull)
-        {
-            if (!ent->HasComponent<Drawable>())
-                VK_ERROR("Cannot set backface culling without a drawable component!");
+        entity_type.set_function("set_backface_culling", [](const Entity* ent, const bool cull) {
+            if (!ent->HasComponent<Drawable>()) VK_ERROR("Cannot set backface culling without a drawable component!");
 
             ent->GetComponent<Drawable>().backfaceCull = cull;
         });
@@ -467,21 +465,15 @@ namespace Vakol::Controller {
         material_type.set_function("get_diffuse_color", &Assets::Material::GetDiffuseColor);
 
         shader_type.set_function("set_bool", [](const Shader* shader, const std::string& name, const bool value) {
-            shader->Bind();
             shader->SetBool(name.c_str(), value);
-            shader->Unbind();
         });
 
         shader_type.set_function("set_int", [](const Shader* shader, const std::string& name, const int value) {
-            shader->Bind();
             shader->SetInt(name.c_str(), value);
-            shader->Unbind();
         });
 
         shader_type.set_function("set_float", [](const Shader* shader, const std::string& name, const float value) {
-            shader->Bind();
             shader->SetFloat(name.c_str(), value);
-            shader->Unbind();
         });
 
         shader_type.set_function("set_vec2v",
@@ -665,11 +657,10 @@ namespace Vakol::Controller {
         gui_window_type.set_function("end_window", &View::GUIWindow::EndWindowCreation);
     }
 
-    void RegisterRenderer(sol::state& lua, const std::shared_ptr<View::Renderer>& renderer) 
-    {
-        lua.set_function("toggle_wireframe", [&]{renderer->ToggleWireframe();});
+    void RegisterRenderer(sol::state& lua, const std::shared_ptr<View::Renderer>& renderer) {
+        lua.set_function("toggle_wireframe", [&] { renderer->ToggleWireframe(); });
 
-        lua.set_function("toggle_skybox", [&]{renderer->ToggleSkybox();});
+        lua.set_function("toggle_skybox", [&] { renderer->ToggleSkybox(); });
 
         lua.set_function("set_wireframe", [&](const bool wireframe) { renderer->SetWireframe(wireframe); });
 

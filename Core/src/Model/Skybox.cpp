@@ -1,69 +1,43 @@
 #include "Skybox.hpp"
 
-#include <vector>
-
 #include <glad/glad.h>
 
 #include <Controller/AssetLoader/TextureLoader.hpp>
+#include <vector>
 
 // Keep in this order
-std::vector skybox_faces = { "coreAssets/textures/skybox/imported/ambientCG/right.jpg", "coreAssets/textures/skybox/imported/ambientCG/left.jpg",
-							 "coreAssets/textures/skybox/imported/ambientCG/up.jpg",   "coreAssets/textures/skybox/imported/ambientCG/down.jpg",
-							 "coreAssets/textures/skybox/imported/ambientCG/front.jpg", "coreAssets/textures/skybox/imported/ambientCG/back.jpg" };
+std::vector skybox_faces = {"coreAssets/textures/skybox/imported/ambientCG/right.jpg",
+                            "coreAssets/textures/skybox/imported/ambientCG/left.jpg",
+                            "coreAssets/textures/skybox/imported/ambientCG/up.jpg",
+                            "coreAssets/textures/skybox/imported/ambientCG/down.jpg",
+                            "coreAssets/textures/skybox/imported/ambientCG/front.jpg",
+                            "coreAssets/textures/skybox/imported/ambientCG/back.jpg"};
 
-float skybox_vertices[] =
-{
-    // positions          
-    -1.0f,  1.0f, -1.0f,
-    -1.0f, -1.0f, -1.0f,
-     1.0f, -1.0f, -1.0f,
-     1.0f, -1.0f, -1.0f,
-     1.0f,  1.0f, -1.0f,
-    -1.0f,  1.0f, -1.0f,
+float skybox_vertices[] = {
+    // positions
+    -1.0f, 1.0f,  -1.0f, -1.0f, -1.0f, -1.0f, 1.0f,  -1.0f, -1.0f,
+    1.0f,  -1.0f, -1.0f, 1.0f,  1.0f,  -1.0f, -1.0f, 1.0f,  -1.0f,
 
-    -1.0f, -1.0f,  1.0f,
-    -1.0f, -1.0f, -1.0f,
-    -1.0f,  1.0f, -1.0f,
-    -1.0f,  1.0f, -1.0f,
-    -1.0f,  1.0f,  1.0f,
-    -1.0f, -1.0f,  1.0f,
+    -1.0f, -1.0f, 1.0f,  -1.0f, -1.0f, -1.0f, -1.0f, 1.0f,  -1.0f,
+    -1.0f, 1.0f,  -1.0f, -1.0f, 1.0f,  1.0f,  -1.0f, -1.0f, 1.0f,
 
-     1.0f, -1.0f, -1.0f,
-     1.0f, -1.0f,  1.0f,
-     1.0f,  1.0f,  1.0f,
-     1.0f,  1.0f,  1.0f,
-     1.0f,  1.0f, -1.0f,
-     1.0f, -1.0f, -1.0f,
+    1.0f,  -1.0f, -1.0f, 1.0f,  -1.0f, 1.0f,  1.0f,  1.0f,  1.0f,
+    1.0f,  1.0f,  1.0f,  1.0f,  1.0f,  -1.0f, 1.0f,  -1.0f, -1.0f,
 
-    -1.0f, -1.0f,  1.0f,
-    -1.0f,  1.0f,  1.0f,
-     1.0f,  1.0f,  1.0f,
-     1.0f,  1.0f,  1.0f,
-     1.0f, -1.0f,  1.0f,
-    -1.0f, -1.0f,  1.0f,
+    -1.0f, -1.0f, 1.0f,  -1.0f, 1.0f,  1.0f,  1.0f,  1.0f,  1.0f,
+    1.0f,  1.0f,  1.0f,  1.0f,  -1.0f, 1.0f,  -1.0f, -1.0f, 1.0f,
 
-    -1.0f,  1.0f, -1.0f,
-     1.0f,  1.0f, -1.0f,
-     1.0f,  1.0f,  1.0f,
-     1.0f,  1.0f,  1.0f,
-    -1.0f,  1.0f,  1.0f,
-    -1.0f,  1.0f, -1.0f,
+    -1.0f, 1.0f,  -1.0f, 1.0f,  1.0f,  -1.0f, 1.0f,  1.0f,  1.0f,
+    1.0f,  1.0f,  1.0f,  -1.0f, 1.0f,  1.0f,  -1.0f, 1.0f,  -1.0f,
 
-    -1.0f, -1.0f, -1.0f,
-    -1.0f, -1.0f,  1.0f,
-     1.0f, -1.0f, -1.0f,
-     1.0f, -1.0f, -1.0f,
-    -1.0f, -1.0f,  1.0f,
-     1.0f, -1.0f,  1.0f
-};
+    -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, 1.0f,  1.0f,  -1.0f, -1.0f,
+    1.0f,  -1.0f, -1.0f, -1.0f, -1.0f, 1.0f,  1.0f,  -1.0f, 1.0f};
 
 unsigned int SKYBOX_VAO, SKYBOX_VBO;
 
-namespace Vakol::Model
-{
-	void Skybox::Init()
-	{
-		shader = std::make_shared<Shader>("coreAssets/shaders/skybox.prog");
+namespace Vakol::Model {
+    void Skybox::Init() {
+        shader = std::make_shared<Shader>("coreAssets/shaders/skybox.prog");
 
         glGenVertexArrays(1, &SKYBOX_VAO);
         glGenBuffers(1, &SKYBOX_VBO);
@@ -78,18 +52,17 @@ namespace Vakol::Model
 
         glBindVertexArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
-        
-        CUBEMAP_ID = Controller::LoadTexture(std::move(skybox_faces), false, false);
-	}
 
-    void Skybox::Draw(const glm::mat4& projection, const glm::mat4& view) const
-	{
+        CUBEMAP_ID = Controller::LoadTexture(std::move(skybox_faces), false, false);
+    }
+
+    void Skybox::Draw(const glm::mat4& projection, const glm::mat4& view) const {
         glDepthFunc(GL_LEQUAL);
 
-        shader->Bind();
-
-        const auto t_view = glm::mat4(glm::mat3(view)); // remove transform matrix
+        const auto t_view = glm::mat4(glm::mat3(view));  // remove transform matrix
         shader->SetMat4("PV_MATRIX", projection * t_view);
+
+        shader->Bind();
 
         glBindVertexArray(SKYBOX_VAO);
         glActiveTexture(GL_TEXTURE0);
@@ -102,6 +75,6 @@ namespace Vakol::Model
         glDepthFunc(GL_LESS);
 
         shader->Unbind();
-	}
-	
-}
+    }
+
+}  // namespace Vakol::Model
