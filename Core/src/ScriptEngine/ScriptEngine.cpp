@@ -176,6 +176,7 @@ namespace Vakol {
     }
 
     void ScriptEngine::RegisterFunctions() {
+        //! TODO MOVE THESE INTO SEPERATE FILE
         duk_push_c_function(m_ctx, native_print, DUK_VARARGS);
         duk_put_global_string(m_ctx, "print");
 
