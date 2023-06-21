@@ -14,13 +14,24 @@ namespace Vakol {
             return;
         }
 
+        // TODO - register global vars
+
         this->RegisterFunctions();
 
         // Evaluate a JavaScript file
         this->RunFile("scripts/test.js");
 
+        CreateScript("scripts/test.js");
+
         std::vector<JSArg> args = {123, "hello", true, 3.14};
         this->RunFunction("testArgs", args);
+    }
+
+    ScriptEngine::~ScriptEngine() {
+        for (auto ctx : m_scriptCtxs) {
+            duk_destroy_heap(ctx);
+        }
+        duk_destroy_heap(m_ctx);
     }
 
     void ScriptEngine::RunFile(const std::string& file) {
@@ -31,6 +42,26 @@ namespace Vakol {
         }
         // Clear the result of the script evaluation
         duk_pop(m_ctx);
+    }
+
+    SScript ScriptEngine::CreateScript(const std::string& scriptPath) {
+        SScript script;
+        script.env_ctx = duk_create_heap(NULL, NULL, NULL, NULL, fatal_callback);
+        script.path = scriptPath;
+
+        if (!script.env_ctx) {
+            VK_CRITICAL("Failed to create Duktape context");
+            return script;
+        }
+
+        // TODO -  remove this code, only have it for testing (you probably dont want to run every script on creation?)
+        this->RunFile(scriptPath);
+
+        // Store the new context so that we can destroy it later
+        //! this might be doubling handling, may not need to store a list of contexts
+        m_scriptCtxs.push_back(script.env_ctx);
+
+        return script;
     }
 
     void ScriptEngine::RunFunction(const std::string& funcName, const std::vector<JSArg>& args) {
@@ -90,5 +121,4 @@ namespace Vakol {
         duk_put_global_string(m_ctx, "print_crit");
     }
 
-    ScriptEngine::~ScriptEngine() { duk_destroy_heap(m_ctx); }
 }  // namespace Vakol
