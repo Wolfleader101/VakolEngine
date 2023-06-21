@@ -2,8 +2,7 @@
 
 #include "Vakol/core.hpp"
 
-int main()
-{
+int main() {
     Vakol::Run();
 
     return 0;

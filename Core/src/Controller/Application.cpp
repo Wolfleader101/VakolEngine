@@ -14,7 +14,6 @@ namespace Vakol::Controller {
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
     Application::Application() : m_window(nullptr), m_renderer(nullptr), m_running(false), m_input() {
-        Logger::Init();
         scenes.reserve(10);
         lua = std::make_shared<LuaState>();
     };

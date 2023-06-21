@@ -17,6 +17,7 @@
 
 #include "Input.hpp"
 #include "Scene.hpp"
+#include "ScriptEngine/ScriptEngine.hpp"
 
 namespace Vakol::Controller {
 
@@ -114,7 +115,7 @@ namespace Vakol::Controller {
          */
         void RegisterLua();
 
-    private:
+       private:
         /**
          * @brief
          *
@@ -199,6 +200,7 @@ namespace Vakol::Controller {
          */
         std::shared_ptr<LuaState> lua;
 
+        ScriptEngine m_scriptEngine;
 
         /**
          * @brief holds the scenes
@@ -219,6 +221,5 @@ namespace Vakol::Controller {
          * @brief the input data of the engine
          */
         Input m_input;
-
     };
-}
+}  // namespace Vakol::Controller

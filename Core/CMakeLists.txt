@@ -32,6 +32,7 @@ lua
 sol2
 cereal
 crossguid
+duktape
 )
 
 
