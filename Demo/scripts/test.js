@@ -14,3 +14,6 @@ function testArgs(int, str, bool, float) {
   print(bool);
   print(float);
 }
+
+var age = 12;
+var name = "John";

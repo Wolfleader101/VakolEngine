@@ -6,6 +6,14 @@
 
 namespace Vakol {
 
+    void duk_copy_element_reference(duk_context* src, duk_context* dst, const char* element) {
+        duk_get_global_string(src, element);
+        duk_require_stack(dst, 1);
+        duk_xcopy_top(dst, src, 1);
+        duk_put_global_string(dst, element);
+        duk_pop(src);
+    }
+
     ScriptEngine::ScriptEngine() : m_ctx(nullptr) {
         m_ctx = duk_create_heap(NULL, NULL, NULL, NULL, fatal_callback);
 
@@ -44,8 +52,16 @@ namespace Vakol {
             return script;
         }
 
+        // duk_push_thread_new_globalenv(m_ctx);
+        // script.env_ctx = duk_require_context(m_ctx, -1);
+        // CopyAllElements(m_ctx, script.env_ctx);
+        // duk_copy_element_reference(m_ctx, script.env_ctx, "print");
+
         // TODO -  remove this code, only have it for testing (you probably dont want to run every script on creation?)
-        this->RunFile(scriptPath);
+        this->RunFile(scriptPath);  // run using the global context
+        // this->RunFile(script.env_ctx, scriptPath);  //! run using the scripts own context (NOT WORKING)
+        JSType age = this->GetGlobal("age");
+        VK_INFO("Age: {0}", std::get<double>(age));
 
         // Store the new context so that we can destroy it later
         //! this might be doubling handling, may not need to store a list of contexts
@@ -101,6 +117,16 @@ namespace Vakol {
 
         // Pop the result or error from the stack
         duk_pop(m_ctx);
+    }
+
+    void ScriptEngine::RunFile(duk_context* ctx, const std::string& file) {
+        if (duk_peval_file(ctx, file.c_str()) != 0) {
+            VK_CRITICAL("Could not evaluate file ({0}): {1}", file, duk_safe_to_string(ctx, -1));
+            duk_pop(ctx);
+            return;
+        }
+        // Clear the result of the script evaluation
+        duk_pop(ctx);
     }
 
     JSType ScriptEngine::GetVariable(duk_context* ctx, const std::string& varName) {
