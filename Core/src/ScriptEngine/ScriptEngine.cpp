@@ -23,7 +23,7 @@ namespace Vakol {
 
         CreateScript("scripts/test.js");
 
-        std::vector<JSArg> args = {123, "hello", true, 3.14};
+        std::vector<JSType> args = {123, "hello", true, 3.14};
         this->RunFunction("testArgs", args);
     }
 
@@ -34,18 +34,8 @@ namespace Vakol {
         duk_destroy_heap(m_ctx);
     }
 
-    void ScriptEngine::RunFile(const std::string& file) {
-        if (duk_peval_file(m_ctx, file.c_str()) != 0) {
-            VK_CRITICAL("Could not evaluate file ({0}): {1}", file, duk_safe_to_string(m_ctx, -1));
-            duk_pop(m_ctx);
-            return;
-        }
-        // Clear the result of the script evaluation
-        duk_pop(m_ctx);
-    }
-
-    SScript ScriptEngine::CreateScript(const std::string& scriptPath) {
-        SScript script;
+    JSScript ScriptEngine::CreateScript(const std::string& scriptPath) {
+        JSScript script;
         script.env_ctx = duk_create_heap(NULL, NULL, NULL, NULL, fatal_callback);
         script.path = scriptPath;
 
@@ -64,7 +54,29 @@ namespace Vakol {
         return script;
     }
 
-    void ScriptEngine::RunFunction(const std::string& funcName, const std::vector<JSArg>& args) {
+    JSType ScriptEngine::GetGlobal(const std::string& name) { return GetVariable(m_ctx, name); }
+
+    void ScriptEngine::SetGlobal(const std::string& name, const JSType& value) { SetVariable(m_ctx, name, value); }
+
+    JSType ScriptEngine::GetScriptVariable(const JSScript& script, const std::string& varName) {
+        return GetVariable(script.env_ctx, varName);
+    }
+
+    void ScriptEngine::SetScriptVariable(const JSScript& script, const std::string& name, const JSType& value) {
+        SetVariable(script.env_ctx, name, value);
+    }
+
+    void ScriptEngine::RunFile(const std::string& file) {
+        if (duk_peval_file(m_ctx, file.c_str()) != 0) {
+            VK_CRITICAL("Could not evaluate file ({0}): {1}", file, duk_safe_to_string(m_ctx, -1));
+            duk_pop(m_ctx);
+            return;
+        }
+        // Clear the result of the script evaluation
+        duk_pop(m_ctx);
+    }
+
+    void ScriptEngine::RunFunction(const std::string& funcName, const std::vector<JSType>& args) {
         // Get the function
         duk_get_global_string(m_ctx, funcName.c_str());
 
@@ -77,19 +89,7 @@ namespace Vakol {
 
         // Push arguments onto the stack
         for (const auto& arg : args) {
-            std::visit(
-                [&](auto&& val) {
-                    using T = std::decay_t<decltype(val)>;
-                    if constexpr (std::is_same_v<T, int>)
-                        duk_push_int(m_ctx, val);
-                    else if constexpr (std::is_same_v<T, double>)
-                        duk_push_number(m_ctx, val);
-                    else if constexpr (std::is_same_v<T, bool>)
-                        duk_push_boolean(m_ctx, val);
-                    else if constexpr (std::is_same_v<T, std::string>)
-                        duk_push_string(m_ctx, val.c_str());
-                },
-                arg);
+            PushArg(m_ctx, arg);
         }
 
         // Call the function with n arguments, and check for errors
@@ -101,6 +101,84 @@ namespace Vakol {
 
         // Pop the result or error from the stack
         duk_pop(m_ctx);
+    }
+
+    JSType ScriptEngine::GetVariable(duk_context* ctx, const std::string& varName) {
+        // Get the variable
+        duk_get_global_string(ctx, varName.c_str());
+
+        // Check the type and get the value
+        if (duk_is_string(ctx, -1)) {
+            std::string val = duk_get_string(ctx, -1);
+            duk_pop(ctx);
+            return val;
+        } else if (duk_is_number(ctx, -1)) {
+            double val = duk_get_number(ctx, -1);
+            duk_pop(ctx);
+            return val;
+        } else if (duk_is_boolean(ctx, -1)) {
+            bool val = duk_get_boolean(ctx, -1);
+            duk_pop(ctx);
+            return val;
+        } else if (duk_is_null_or_undefined(ctx, -1)) {
+            duk_pop(ctx);
+            return std::string();  // Return empty string as null
+        } else if (duk_is_object(ctx, -1)) {
+            auto obj = std::make_shared<JSObject>();
+            duk_enum(ctx, -1, 0); /* Enumerate keys in object on top of stack */
+            while (duk_next(ctx, -1, 1 /*get_value*/)) {
+                /* -1 is value, -2 is key */
+                std::string key = duk_get_string(ctx, -2);
+                // Recursively call GetVariable for object's properties.
+                JSType val = GetVariable(ctx, key);
+
+                obj->emplace(key, val);
+                duk_pop_2(ctx); /* pop key value pair */
+            }
+            duk_pop(ctx); /* pop enumerator object */
+            return obj;
+        } else {
+            // Unsupported type or an error occurred
+            VK_CRITICAL("Unsupported variable type or error occurred while getting variable {0}", varName);
+            duk_pop(ctx);
+            return std::string();  // Return empty string for error
+        }
+    }
+
+    void ScriptEngine::SetVariable(duk_context* ctx, const std::string& varName, const JSType& value) {
+        // Push variable name onto the stack
+        duk_push_string(ctx, varName.c_str());
+
+        // Push value onto the stack
+        PushArg(ctx, value);
+
+        // Set the variable in the global object
+        duk_put_global_string(ctx, varName.c_str());
+    }
+
+    void ScriptEngine::PushArg(duk_context* ctx, const JSType& arg) {
+        if (auto pval = std::get_if<std::shared_ptr<JSObject>>(&arg)) {
+            duk_push_object(ctx);
+            auto& map = **pval;
+            for (const auto& [key, value] : map) {
+                PushArg(ctx, value);
+                duk_put_prop_string(ctx, -2, key.c_str());
+            }
+        } else {
+            std::visit(
+                [this, ctx](auto&& val) {
+                    using T = std::decay_t<decltype(val)>;
+                    if constexpr (std::is_same_v<T, int>)
+                        duk_push_int(ctx, val);
+                    else if constexpr (std::is_same_v<T, double>)
+                        duk_push_number(ctx, val);
+                    else if constexpr (std::is_same_v<T, bool>)
+                        duk_push_boolean(ctx, val);
+                    else if constexpr (std::is_same_v<T, std::string>)
+                        duk_push_string(ctx, val.c_str());
+                },
+                arg);
+        }
     }
 
     void ScriptEngine::RegisterFunctions() {
