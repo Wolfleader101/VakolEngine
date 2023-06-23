@@ -126,6 +126,8 @@ namespace Vakol::Controller {
 
             m_renderer->Update();
 
+            m_scriptEngine.Update();
+
             //! update scenes lua
             for (auto& scene : scenes) {
                 if (!scene.active) continue;

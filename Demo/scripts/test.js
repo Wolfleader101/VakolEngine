@@ -15,5 +15,20 @@ function testArgs(int, str, bool, float) {
   print(float);
 }
 
+print(age);
 var age = 12;
 var name = "John";
+print(hello);
+
+function init() {
+  print("init");
+}
+
+function tick() {
+  print("tick");
+}
+
+function update() {
+  print("update");
+  // print_err(age);
+}

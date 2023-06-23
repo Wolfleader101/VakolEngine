@@ -4,6 +4,7 @@
 #include "DukUtils.hpp"
 #include "NativeFunctions.hpp"
 
+int i = 0;
 namespace Vakol {
 
     void duk_copy_element_reference(duk_context* src, duk_context* dst, const char* element) {
@@ -24,27 +25,32 @@ namespace Vakol {
 
         // TODO - register global vars
 
-        this->RegisterFunctions();
-
-        // Evaluate a JavaScript file
-        this->RunFile("scripts/test.js");
+        this->RegisterFunctions(m_ctx);
+        this->RegisterVars(m_ctx);
 
         CreateScript("scripts/test.js");
+        CreateScript("scripts/test1.js");
 
-        std::vector<JSType> args = {123, "hello", true, 3.14};
-        this->RunFunction("testArgs", args);
+        // std::vector<JSType> args = {123, "hello", true, 3.14};
+        // this->RunFunction("testArgs", args);
     }
 
     ScriptEngine::~ScriptEngine() {
-        for (auto ctx : m_scriptCtxs) {
-            duk_destroy_heap(ctx);
-        }
+        // for (auto ctx : m_scriptCtxs) {
+        //     duk_destroy_heap(ctx);
+        // }
         duk_destroy_heap(m_ctx);
     }
 
     JSScript ScriptEngine::CreateScript(const std::string& scriptPath) {
         JSScript script;
-        script.env_ctx = duk_create_heap(NULL, NULL, NULL, NULL, fatal_callback);
+        // duk_idx_t thread_index = duk_push_thread(m_ctx);  //! pushes a context onto existing heap, and copies the
+        //! global context (issue is that setting a global variable affects all scripts), i.e s1.js age = 10, s2.js age
+        //! is then 10
+
+        duk_idx_t thread_index = duk_push_thread_new_globalenv(
+            m_ctx);  //! creates a new heap and pushes a context onto it (does not copy global context)
+        script.env_ctx = duk_require_context(m_ctx, thread_index);
         script.path = scriptPath;
 
         if (!script.env_ctx) {
@@ -52,22 +58,60 @@ namespace Vakol {
             return script;
         }
 
-        // duk_push_thread_new_globalenv(m_ctx);
-        // script.env_ctx = duk_require_context(m_ctx, -1);
-        // CopyAllElements(m_ctx, script.env_ctx);
-        // duk_copy_element_reference(m_ctx, script.env_ctx, "print");
+        //! register the global vars and functions
+        duk_push_global_object(m_ctx);
+        duk_enum(m_ctx, -1, DUK_ENUM_OWN_PROPERTIES_ONLY);
+
+        while (duk_next(m_ctx, -1, 0)) {
+            // Here, the top of the stack contains the property key
+            const char* key = duk_safe_to_string(m_ctx, -1);
+
+            // Fetch the associated value
+            duk_get_global_string(m_ctx, key);
+
+            // Move it to the new context
+            duk_xmove_top(script.env_ctx, m_ctx, 1);
+
+            // And set it as a global in the new context
+            duk_put_global_string(script.env_ctx, key);
+
+            // Clean up the key
+            duk_pop(m_ctx);
+        }
 
         // TODO -  remove this code, only have it for testing (you probably dont want to run every script on creation?)
-        this->RunFile(scriptPath);  // run using the global context
-        // this->RunFile(script.env_ctx, scriptPath);  //! run using the scripts own context (NOT WORKING)
-        JSType age = this->GetGlobal("age");
-        VK_INFO("Age: {0}", std::get<double>(age));
+        // this->RunFile(scriptPath);  // run using the global context
+        this->RunFile(script.env_ctx, scriptPath);  //! run using the scripts own context (NOT WORKING)
+        JSType age = this->GetScriptVariable(script, "age");
+        if (std::holds_alternative<int>(age)) VK_INFO("Age: {0}", std::get<double>(age));
 
         // Store the new context so that we can destroy it later
         //! this might be doubling handling, may not need to store a list of contexts
         m_scriptCtxs.push_back(script.env_ctx);
 
+        m_scripts.push_back(script);  //! just for testing - remove later
+
         return script;
+    }
+
+    void ScriptEngine::Update() {
+        for (JSScript& script : m_scripts) {
+            // Check if the update function exists
+            duk_push_global_object(script.env_ctx);
+            duk_get_prop_string(script.env_ctx, -1, "update");
+
+            if (duk_is_callable(script.env_ctx, -1)) {
+                // The update function exists and is callable, so call it
+
+                // (Assume there's no argument, and expect no return value)
+                if (duk_pcall(script.env_ctx, 0) != DUK_EXEC_SUCCESS) {
+                    VK_ERROR("Script error: {0}", duk_safe_to_string(script.env_ctx, -1));
+                }
+            }
+
+            // Clean up the value stack
+            duk_pop_2(script.env_ctx);
+        }
     }
 
     JSType ScriptEngine::GetGlobal(const std::string& name) { return GetVariable(m_ctx, name); }
@@ -109,7 +153,7 @@ namespace Vakol {
         }
 
         // Call the function with n arguments, and check for errors
-        if (duk_pcall(m_ctx, args.size()) != DUK_EXEC_SUCCESS) {
+        if (duk_pcall(m_ctx, static_cast<duk_idx_t>(args.size())) != DUK_EXEC_SUCCESS) {
             VK_CRITICAL("Error calling function: {0}", duk_safe_to_string(m_ctx, -1));
         } else {
             VK_INFO("Function returned: {0}", duk_safe_to_string(m_ctx, -1));
@@ -207,22 +251,28 @@ namespace Vakol {
         }
     }
 
-    void ScriptEngine::RegisterFunctions() {
+    void ScriptEngine::RegisterFunctions(duk_context* ctx) {
         //! TODO MOVE THESE INTO SEPERATE FILE
-        duk_push_c_function(m_ctx, native_print, DUK_VARARGS);
-        duk_put_global_string(m_ctx, "print");
+        duk_push_c_function(ctx, native_print, DUK_VARARGS);
+        duk_put_global_string(ctx, "print");
 
-        duk_push_c_function(m_ctx, native_print_info, DUK_VARARGS);
-        duk_put_global_string(m_ctx, "print_info");
+        duk_push_c_function(ctx, native_print_info, DUK_VARARGS);
+        duk_put_global_string(ctx, "print_info");
 
-        duk_push_c_function(m_ctx, native_print_warn, DUK_VARARGS);
-        duk_put_global_string(m_ctx, "print_warn");
+        duk_push_c_function(ctx, native_print_warn, DUK_VARARGS);
+        duk_put_global_string(ctx, "print_warn");
 
-        duk_push_c_function(m_ctx, native_print_err, DUK_VARARGS);
-        duk_put_global_string(m_ctx, "print_err");
+        duk_push_c_function(ctx, native_print_err, DUK_VARARGS);
+        duk_put_global_string(ctx, "print_err");
 
-        duk_push_c_function(m_ctx, native_print_crit, DUK_VARARGS);
-        duk_put_global_string(m_ctx, "print_crit");
+        duk_push_c_function(ctx, native_print_crit, DUK_VARARGS);
+        duk_put_global_string(ctx, "print_crit");
+    }
+
+    void ScriptEngine::RegisterVars(duk_context* ctx) {
+        //! TODO MOVE THESE INTO SEPERATE FILE
+        duk_push_string(ctx, "Hello World!");
+        duk_put_global_string(ctx, "hello");
     }
 
 }  // namespace Vakol

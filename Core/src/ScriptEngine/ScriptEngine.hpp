@@ -39,15 +39,22 @@ namespace Vakol {
         void RunFunction(const std::string& funcName,
                          const std::vector<JSType>& args);  //! this runs using global context - probably not ideal
 
+        void Update();
+
+        void Tick();  //? should the script engine handle its own tickrate, or should this be called from app?
+
        private:
-        duk_context* m_ctx;
+        duk_context* m_ctx;  //! the global context
         std::vector<duk_context*> m_scriptCtxs;
+        std::vector<JSScript> m_scripts;  //! just for testing - remove later
 
         void PushArg(duk_context* ctx, const JSType& arg);
         JSType GetVariable(duk_context* ctx, const std::string& varName);
         void SetVariable(duk_context* ctx, const std::string& varName, const JSType& value);
         void RunFile(duk_context* ctx, const std::string& file);
-        void RegisterFunctions();
+
+        void RegisterFunctions(duk_context* ctx);
+        void RegisterVars(duk_context* ctx);
     };
 
 }  // namespace Vakol
