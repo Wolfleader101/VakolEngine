@@ -30,5 +30,5 @@ function tick() {
 
 function update() {
   print("update");
-  // print_err(age);
+  print_err(age);
 }

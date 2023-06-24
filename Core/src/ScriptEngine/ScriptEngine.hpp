@@ -7,8 +7,8 @@
 #include <unordered_map>
 #include <variant>
 #include <vector>
-namespace Vakol {
 
+namespace Vakol {
     struct JSScript {
         duk_context* env_ctx;
         std::string path;
@@ -20,10 +20,22 @@ namespace Vakol {
 
     struct JSObject : public std::unordered_map<std::string, JSType> {};
 
+    // class EngineSystem {  // interface for engine system, something to think about
+    //    public:
+    //     virtual void Enable() = 0;
+    //     virtual void Disable() = 0;
+    //     virtual void Init() = 0;  //? could take in registry shared ptr and time?
+    //     virtual void Update() = 0;
+    //     virtual void Tick() = 0;
+    // };
+
     class ScriptEngine {
        public:
         ScriptEngine();
         ~ScriptEngine();
+
+        // virtual void Enable(){};
+        // virtual void Disable(){};
 
         JSScript CreateScript(const std::string& scriptPath);  //? should this return a ref?
 
@@ -33,11 +45,6 @@ namespace Vakol {
         JSType GetScriptVariable(const JSScript& script,
                                  const std::string& varName);  //? should this be made const ref?
         void SetScriptVariable(const JSScript& script, const std::string& varName, const JSType& value);
-
-        void RunFile(const std::string& file);  //! this runs using global context - probably not ideal
-
-        void RunFunction(const std::string& funcName,
-                         const std::vector<JSType>& args);  //! this runs using global context - probably not ideal
 
         void Update();
 
@@ -51,7 +58,10 @@ namespace Vakol {
         void PushArg(duk_context* ctx, const JSType& arg);
         JSType GetVariable(duk_context* ctx, const std::string& varName);
         void SetVariable(duk_context* ctx, const std::string& varName, const JSType& value);
+
         void RunFile(duk_context* ctx, const std::string& file);
+        void RunFunction(duk_context* ctx, const std::string& funcName,
+                         const std::vector<JSType>& args);  //! this runs using global context - probably not ideal
 
         void RegisterFunctions(duk_context* ctx);
         void RegisterVars(duk_context* ctx);

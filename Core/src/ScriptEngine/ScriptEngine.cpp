@@ -23,9 +23,8 @@ namespace Vakol {
             return;
         }
 
-        // TODO - register global vars
-
         this->RegisterFunctions(m_ctx);
+        // TODO - register global vars
         this->RegisterVars(m_ctx);
 
         CreateScript("scripts/test.js");
@@ -79,9 +78,10 @@ namespace Vakol {
             duk_pop(m_ctx);
         }
 
-        // TODO -  remove this code, only have it for testing (you probably dont want to run every script on creation?)
-        // this->RunFile(scriptPath);  // run using the global context
-        this->RunFile(script.env_ctx, scriptPath);  //! run using the scripts own context (NOT WORKING)
+        //! run using the scripts own context, (you probably dont want to run every script on creation tho?)
+        this->RunFile(script.env_ctx, scriptPath);
+
+        // TODO -  remove this code, only have it for testing
         JSType age = this->GetScriptVariable(script, "age");
         if (std::holds_alternative<int>(age)) VK_INFO("Age: {0}", std::get<double>(age));
 
@@ -96,21 +96,7 @@ namespace Vakol {
 
     void ScriptEngine::Update() {
         for (JSScript& script : m_scripts) {
-            // Check if the update function exists
-            duk_push_global_object(script.env_ctx);
-            duk_get_prop_string(script.env_ctx, -1, "update");
-
-            if (duk_is_callable(script.env_ctx, -1)) {
-                // The update function exists and is callable, so call it
-
-                // (Assume there's no argument, and expect no return value)
-                if (duk_pcall(script.env_ctx, 0) != DUK_EXEC_SUCCESS) {
-                    VK_ERROR("Script error: {0}", duk_safe_to_string(script.env_ctx, -1));
-                }
-            }
-
-            // Clean up the value stack
-            duk_pop_2(script.env_ctx);
+            RunFunction(script.env_ctx, "update", {});
         }
     }
 
@@ -126,41 +112,33 @@ namespace Vakol {
         SetVariable(script.env_ctx, name, value);
     }
 
-    void ScriptEngine::RunFile(const std::string& file) {
-        if (duk_peval_file(m_ctx, file.c_str()) != 0) {
-            VK_CRITICAL("Could not evaluate file ({0}): {1}", file, duk_safe_to_string(m_ctx, -1));
-            duk_pop(m_ctx);
-            return;
-        }
-        // Clear the result of the script evaluation
-        duk_pop(m_ctx);
-    }
-
-    void ScriptEngine::RunFunction(const std::string& funcName, const std::vector<JSType>& args) {
+    void ScriptEngine::RunFunction(duk_context* ctx, const std::string& funcName, const std::vector<JSType>& args) {
         // Get the function
-        duk_get_global_string(m_ctx, funcName.c_str());
+        duk_get_global_string(ctx, funcName.c_str());
 
         // Check if it's callable
-        if (!duk_is_callable(m_ctx, -1)) {
+        if (!duk_is_callable(ctx, -1)) {
             VK_CRITICAL("Function {0} is not callable.", funcName);
-            duk_pop(m_ctx);  // Pop non-callable value from the stack
+            duk_pop(ctx);  // Pop non-callable value from the stack
             return;
         }
 
         // Push arguments onto the stack
         for (const auto& arg : args) {
-            PushArg(m_ctx, arg);
+            PushArg(ctx, arg);
         }
 
         // Call the function with n arguments, and check for errors
-        if (duk_pcall(m_ctx, static_cast<duk_idx_t>(args.size())) != DUK_EXEC_SUCCESS) {
-            VK_CRITICAL("Error calling function: {0}", duk_safe_to_string(m_ctx, -1));
-        } else {
-            VK_INFO("Function returned: {0}", duk_safe_to_string(m_ctx, -1));
+        if (duk_pcall(ctx, static_cast<duk_idx_t>(args.size())) != DUK_EXEC_SUCCESS) {
+            VK_CRITICAL("Error calling function: {0}", duk_safe_to_string(ctx, -1));
         }
+        //! TODO pass in return type and return it here if it returns anything
+        // else {
+        //     VK_INFO("Function returned: {0}", duk_safe_to_string(ctx, -1));
+        // }
 
         // Pop the result or error from the stack
-        duk_pop(m_ctx);
+        duk_pop(ctx);
     }
 
     void ScriptEngine::RunFile(duk_context* ctx, const std::string& file) {
