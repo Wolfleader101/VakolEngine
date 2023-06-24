@@ -16,7 +16,7 @@ function testArgs(int, str, bool, float) {
 }
 
 print(age);
-var age = 12;
+var age = 69;
 var name = "John";
 print(hello);
 
@@ -29,6 +29,6 @@ function tick() {
 }
 
 function update() {
-  print("update");
+  print(Time.deltaTime);
   print_err(age);
 }

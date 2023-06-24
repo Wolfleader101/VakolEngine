@@ -8,6 +8,8 @@
 #include <variant>
 #include <vector>
 
+#include "Controller/Time.hpp"
+
 namespace Vakol {
     struct JSScript {
         duk_context* env_ctx;
@@ -31,7 +33,7 @@ namespace Vakol {
 
     class ScriptEngine {
        public:
-        ScriptEngine();
+        ScriptEngine(Controller::Time& time);
         ~ScriptEngine();
 
         // virtual void Enable(){};
@@ -55,6 +57,8 @@ namespace Vakol {
         std::vector<duk_context*> m_scriptCtxs;
         std::vector<JSScript> m_scripts;  //! just for testing - remove later
 
+        Controller::Time& m_time;  // ! testing
+
         void PushArg(duk_context* ctx, const JSType& arg);
         JSType GetVariable(duk_context* ctx, const std::string& varName);
         void SetVariable(duk_context* ctx, const std::string& varName, const JSType& value);
@@ -65,6 +69,51 @@ namespace Vakol {
 
         void RegisterFunctions(duk_context* ctx);
         void RegisterVars(duk_context* ctx);
+
+        template <typename T>
+        void SetGlobal(const std::string& name, T* value) {
+            duk_idx_t objIdx = duk_push_object(m_ctx);
+            duk_push_pointer(m_ctx, static_cast<void*>(value));
+            // Assume objIdx is at -2, pointer is at -1
+            duk_put_prop_string(m_ctx, objIdx, "ptr");  // Associate pointer with Duktape object
+            duk_put_global_string(m_ctx, name.c_str());
+        }
+    };
+
+    class DukType {
+       public:
+        DukType(duk_context* ctx, const std::string& typeName) : m_ctx(ctx), m_typeName(typeName) {
+            m_objIdx = duk_push_object(m_ctx);
+        }
+
+        template <typename T, typename V>
+        void SetProperty(const std::string& propName, V T::*value) {
+            duk_push_c_function(m_ctx, getProp<T, V>, 2);
+            void* buffer = duk_push_fixed_buffer(m_ctx, sizeof(value));
+            std::memcpy(buffer, &value, sizeof(value));
+            duk_put_prop_string(m_ctx, -2, propName.c_str());
+        }
+
+        ~DukType() { duk_put_global_string(m_ctx, m_typeName.c_str()); }
+
+       private:
+        duk_context* m_ctx;
+        std::string m_typeName;
+        duk_idx_t m_objIdx;
+
+        template <typename T, typename V>
+        static duk_ret_t getProp(duk_context* ctx) {
+            auto ptr = static_cast<T*>(duk_to_pointer(ctx, 0));
+            V T::*memberPtr;
+            std::memcpy(&memberPtr, duk_get_buffer_data(ctx, -1, nullptr), sizeof(memberPtr));
+
+            if constexpr (std::is_same<V, std::string>::value) {
+                duk_push_string(ctx, (ptr->*memberPtr).c_str());
+            } else {
+                duk_push_number(ctx, ptr->*memberPtr);
+            }
+            return 1;
+        }
     };
 
 }  // namespace Vakol

@@ -15,7 +15,7 @@ namespace Vakol {
         duk_pop(src);
     }
 
-    ScriptEngine::ScriptEngine() : m_ctx(nullptr) {
+    ScriptEngine::ScriptEngine(Controller::Time& time) : m_ctx(nullptr), m_time(time) {
         m_ctx = duk_create_heap(NULL, NULL, NULL, NULL, fatal_callback);
 
         if (!m_ctx) {
@@ -251,6 +251,14 @@ namespace Vakol {
         //! TODO MOVE THESE INTO SEPERATE FILE
         duk_push_string(ctx, "Hello World!");
         duk_put_global_string(ctx, "hello");
+
+        DukType timeType(m_ctx, "Time");
+        timeType.SetProperty("deltaTime", &Controller::Time::deltaTime);
+        timeType.SetProperty("curTime", &Controller::Time::curTime);
+        timeType.SetProperty("prevTime", &Controller::Time::prevTime);
+        timeType.SetProperty("fps", &Controller::Time::fps);
+
+        SetGlobal("Time", &m_time);
     }
 
 }  // namespace Vakol
