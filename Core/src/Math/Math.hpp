@@ -9,6 +9,7 @@ namespace Vakol::Math {
     using Vec3 = glm::vec3;
     using Point = Vec3;
 
+    using Mat3 = glm::mat3;
     using Mat4 = glm::mat4;
 
     float Dot(const Vec2& a, const Vec2& b);
