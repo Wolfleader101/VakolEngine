@@ -347,4 +347,64 @@ namespace Vakol::Physics {
         return Dot(plane1.normal, plane2.normal) != 1.0f; // (assumes they are normalised)
         */
     }
+
+    float Raycast(const Sphere& sphere, const Ray& ray) {
+        Vec3 e = sphere.pos - ray.origin;
+        float rSq = sphere.radius * sphere.radius;
+        float eSq = MagnitudeSq(e);
+
+        // ray dir is assumed to be normalized
+        float a = Dot(e, ray.dir);
+
+        float bSq = eSq - (a * a);
+        float f = sqrt(rSq - bSq);
+
+        // No collision has happened
+        if (rSq - (eSq - (a * a)) < 0.0f) {
+            return -1;  // -1 is invalid.
+        }
+        // Ray starts inside the sphere
+        else if (eSq < rSq) {
+            return a + f;  // Just reverse direction
+        }
+        // else Normal intersection
+        return a - f;
+    }
+
+    float Raycast(const AABB& aabb, const Ray& ray) {
+        Vec3 min = GetMin(aabb);
+        Vec3 max = GetMax(aabb);
+
+        float t1 = (min.x - ray.origin.x) / ray.dir.x;
+        float t2 = (max.x - ray.origin.x) / ray.dir.x;
+        float t3 = (min.y - ray.origin.y) / ray.dir.y;
+        float t4 = (max.y - ray.origin.y) / ray.dir.y;
+        float t5 = (min.z - ray.origin.z) / ray.dir.z;
+        float t6 = (max.z - ray.origin.z) / ray.dir.z;
+
+        //! find the biggest min
+        float tmin = fmaxf(fmaxf(fminf(t1, t2), fminf(t3, t4)), fminf(t5, t6));
+
+        //! final the smallest max
+        float tmax = fminf(fminf(fmaxf(t1, t2), fmaxf(t3, t4)), fmaxf(t5, t6));
+
+        // If tmax is less than zero, the ray is intersecting AABB behind the origin of the ray, this should not be
+        // treated as an intersection
+        if (tmax < 0.0f) {
+            return -1;
+        }
+
+        // If tmin is greater than tmax, the ray does not intersect AABB
+        if (tmin > tmax) {
+            return -1;
+        }
+
+        // If tmin is less than zero, that means the ray intersects the AABB but its origin is
+        // inside the AABB. This means tmax is the valid collision point:
+        if (tmin < 0.0f) {
+            return tmax;
+        }
+
+        return tmin;
+    }
 }  // namespace Vakol::Physics

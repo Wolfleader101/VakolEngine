@@ -114,4 +114,6 @@ namespace Vakol::Physics {
     bool OBBPlane(const OBB& obb, const Plane& plane);
 
     bool PlanePlane(const Plane& plane1, const Plane& plane2);
+
+    float Raycast(const Sphere& sphere, const Ray& ray);
 }  // namespace Vakol::Physics
