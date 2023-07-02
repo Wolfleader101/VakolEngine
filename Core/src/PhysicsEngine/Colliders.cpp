@@ -523,4 +523,31 @@ namespace Vakol::Physics {
         return t >= 0.0f && t <= 1.0f;
     }
 
+    bool PointInTriangle(const Point& p, const Triangle& t) {
+        Vec3 a = t.a - p;
+        Vec3 b = t.b - p;
+        Vec3 c = t.c - p;
+
+        // The point should be moved too, so they are both
+        // relative, but because we don't use p in the
+        // equation anymore, we don't need it!
+        // p -= p; This would just equal the zero vector!
+
+        // Given point P and triangle ABC, create the sides of a pyramid. The sides of the
+        // pyramid will be triangles created from the points: PBC, PCA, PAB. Then, find and
+        // store the normal of each side of this pyramid:
+        Vec3 normPBC = Cross(b, c);  // Normal of PBC (u)
+        Vec3 normPCA = Cross(c, a);  // Normal of PCA (v)
+        Vec3 normPAB = Cross(a, b);  // Normal of PAB (w)
+
+        // If the faces of the pyramid do not have the same normal, the point is not in the triangle
+        if (Dot(normPBC, normPCA) < 0.0f) {
+            return false;
+        } else if (Dot(normPBC, normPAB) < 0.0f) {
+            return false;
+        }
+
+        return true;
+    }
+
 }  // namespace Vakol::Physics

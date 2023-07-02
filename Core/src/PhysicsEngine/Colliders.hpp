@@ -124,4 +124,6 @@ namespace Vakol::Physics {
     bool Linetest(const AABB& aabb, const Line& line);
     bool Linetest(const OBB& obb, const Line& line);
     bool Linetest(const Plane& plane, const Line& line);
+
+    bool PointInTriangle(const Point& p, const Triangle& t);
 }  // namespace Vakol::Physics
