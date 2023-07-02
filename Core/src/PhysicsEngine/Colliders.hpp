@@ -116,4 +116,12 @@ namespace Vakol::Physics {
     bool PlanePlane(const Plane& plane1, const Plane& plane2);
 
     float Raycast(const Sphere& sphere, const Ray& ray);
+    float Raycast(const AABB& aabb, const Ray& ray);
+    float Raycast(const OBB& obb, const Ray& ray);
+    float Raycast(const Plane& plane, const Ray& ray);
+
+    bool Linetest(const Sphere& sphere, const Line& line);
+    bool Linetest(const AABB& aabb, const Line& line);
+    bool Linetest(const OBB& obb, const Line& line);
+    bool Linetest(const Plane& plane, const Line& line);
 }  // namespace Vakol::Physics

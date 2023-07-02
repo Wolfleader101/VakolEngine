@@ -407,4 +407,120 @@ namespace Vakol::Physics {
 
         return tmin;
     }
+
+    float Raycast(const OBB& obb, const Ray& ray) {
+        // X, Y and Z axis of OBB
+        Vec3 X = obb.orientation[0];
+        Vec3 Y = obb.orientation[1];
+        Vec3 Z = obb.orientation[2];
+
+        // vector pointing from the origin of the ray to the OBB
+        Vec3 p = obb.pos - ray.origin;
+
+        // project the direction of the ray onto each of the axis of the OBB
+        Vec3 f(Dot(X, ray.dir), Dot(Y, ray.dir), Dot(Z, ray.dir));
+
+        // project p into every axis of the OBBs rotation frame
+        Vec3 e(Dot(X, p), Dot(Y, p), Dot(Z, p));
+
+        // tmin,max for x,y,z
+        float t[6] = {0, 0, 0, 0, 0, 0};
+        for (int i = 0; i < 3; ++i) {
+            if (f[i] == 0.0f) {
+                if (-e[i] - obb.size[i] > 0 || -e[i] + obb.size[i] < 0) {
+                    return -1;
+                }
+                f[i] = 0.00001f;  //! Avoid div by 0
+            }
+            t[i * 2 + 0] = (e[i] + obb.size[i]) / f[i];  // min
+            t[i * 2 + 1] = (e[i] - obb.size[i]) / f[i];  // max
+        }
+
+        //! find the biggest min
+        float tmin = fmaxf(fmaxf(fminf(t[0], t[1]), fminf(t[2], t[3])), fminf(t[4], t[5]));
+
+        //! final the smallest max
+        float tmax = fminf(fminf(fmaxf(t[0], t[1]), fmaxf(t[2], t[3])), fmaxf(t[4], t[5]));
+
+        // If tmax is less than zero, the ray is intersecting AABB behind the origin of the ray, this should not be
+        // treated as an intersection
+        if (tmax < 0) {
+            return -1.0f;
+        }
+
+        // If tmin is greater than tmax, the ray does not intersect AABB
+        if (tmin > tmax) {
+            return -1.0f;
+        }
+
+        // If tmin is less than zero, that means the ray intersects the AABB but its origin is
+        // inside the AABB. This means tmax is the valid collision point:
+        if (tmin < 0.0f) {
+            return tmax;
+        }
+        return tmin;
+    }
+
+    float Raycast(const Plane& plane, const Ray& ray) {
+        float nd = Dot(ray.dir, plane.normal);
+        float pn = Dot(ray.origin, plane.normal);
+
+        // ff nd is positive or 0, the ray and plane normals point in the same direction
+        if (nd >= 0.0f) {
+            return -1;
+        }
+
+        // if t is negative, the ray hits the plane behind its origin
+        float t = (plane.dist - pn) / nd;
+
+        if (t >= 0.0f) {
+            return t;
+        }
+        return -1;
+    }
+
+    bool Linetest(const Sphere& sphere, const Line& line) {
+        Point closest = ClosestPoint(line, sphere.pos);
+
+        // get distance between sphere pos and closest point (use squared as its faster)
+        float distSq = MagnitudeSq(sphere.pos - closest);
+
+        // if its smaller than the radius squareds, it intersects
+        return distSq <= (sphere.radius * sphere.radius);
+    }
+
+    bool Linetest(const AABB& aabb, const Line& line) {
+        // construct a ray, where origin is start, and directon is normalized
+        Ray ray;
+        ray.origin = line.start;
+        ray.dir = Normalized(line.end - line.start);
+        float t = Raycast(aabb, ray);
+
+        // check that the raycast is less then the length of the line squared
+        return t >= 0 && t * t <= LengthSq(line);
+    }
+
+    bool Linetest(const OBB& obb, const Line& line) {
+        // construct a ray, where origin is start, and directon is normalized
+        Ray ray;
+        ray.origin = line.start;
+        ray.dir = Normalized(line.end - line.start);
+        float t = Raycast(obb, ray);
+
+        // check that the raycast is less then the length of the line squared
+        return t >= 0 && t * t <= LengthSq(line);
+    }
+
+    bool Linetest(const Plane& plane, const Line& line) {
+        Vec3 ab = line.end - line.start;
+        float nA = Dot(plane.normal, line.start);
+        float nAB = Dot(plane.normal, ab);
+
+        // If the line and plane are parallel, nAB will be 0
+        if (nAB == 0.0f) return false;
+
+        float t = (plane.dist - nA) / nAB;
+        return t >= 0.0f && t <= 1.0f;
+    }
+
 }  // namespace Vakol::Physics
