@@ -33,6 +33,11 @@ namespace Vakol::Math {
     float Angle(const Vec2& a, const Vec2& b);
     float Angle(const Vec3& a, const Vec3& b);
 
+    Vec2 Project(const Vec2& length, const Vec2& direction);
+    Vec3 Project(const Vec3& length, const Vec3& direction);
+    Vec2 Perpendicular(const Vec2& len, const Vec2& dir);
+    Vec3 Perpendicular(const Vec3& len, const Vec3& dir);
+
     struct Line {
         Point start;
         Point end;

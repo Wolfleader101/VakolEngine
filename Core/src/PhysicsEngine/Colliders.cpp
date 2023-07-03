@@ -289,7 +289,7 @@ namespace Vakol::Physics {
 
     bool OverlapOnAxis(const OBB& obb1, const OBB& obb2, const Vec3& axis) {
         Interval a = GetInterval(obb1, axis);
-        Interval b = GetInterval(obb1, axis);
+        Interval b = GetInterval(obb2, axis);
         return ((b.min <= a.max) && (a.min <= b.max));
     }
 
@@ -550,4 +550,276 @@ namespace Vakol::Physics {
         return true;
     }
 
+    Plane FromTriangle(const Triangle& t) {
+        Plane result;
+        result.normal = Normalized(Cross(t.b - t.a, t.c - t.a));
+
+        result.dist = Dot(result.normal, t.a);
+
+        return result;
+    }
+
+    Point ClosestPoint(const Triangle& t, const Point& p) {
+        Plane plane = FromTriangle(t);
+
+        Point closest = ClosestPoint(plane, p);
+
+        // if its inside the triangle
+        if (PointInTriangle(closest, t)) {
+            return closest;
+        }
+
+        // line for each side of triangle
+        Point c1 = ClosestPoint(Line(t.a, t.b), p);  // Line AB
+        Point c2 = ClosestPoint(Line(t.b, t.c), p);  // Line BC
+        Point c3 = ClosestPoint(Line(t.c, t.a), p);  // Line CA
+
+        float magSq1 = MagnitudeSq(p - c1);
+        float magSq2 = MagnitudeSq(p - c2);
+        float magSq3 = MagnitudeSq(p - c3);
+
+        if (magSq1 < magSq2 && magSq1 < magSq3) {
+            return c1;
+        } else if (magSq2 < magSq1 && magSq2 < magSq3) {
+            return c2;
+        }
+        return c3;
+    }
+
+    bool TriangleSphere(const Triangle& t, const Sphere& s) {
+        Point closest = ClosestPoint(t, s.pos);
+        float magSq = MagnitudeSq(closest - s.pos);
+        return magSq <= s.radius * s.radius;
+    }
+
+    Interval GetInterval(const Triangle& triangle, const Vec3& axis) {
+        Interval result;
+        // project first point and store it as min and max
+        result.min = Dot(axis, triangle.points[0]);
+        result.max = result.min;
+
+        for (int i = 1; i < 3; ++i) {
+            float value = Dot(axis, triangle.points[i]);
+            result.min = fminf(result.min, value);
+            result.max = fmaxf(result.max, value);
+        }
+        return result;
+    }
+
+    bool OverlapOnAxis(const AABB& aabb, const Triangle& triangle, const Vec3& axis) {
+        Interval a = GetInterval(aabb, axis);
+        Interval b = GetInterval(triangle, axis);
+        return ((b.min <= a.max) && (a.min <= b.max));
+    }
+
+    bool TriangleAABB(const Triangle& t, const AABB& a) {
+        // edge vectors of ABC
+        Vec3 f0 = t.b - t.a;
+        Vec3 f1 = t.c - t.b;
+        Vec3 f2 = t.a - t.c;
+
+        // face normals of aabb
+        Vec3 u0(1.0f, 0.0f, 0.0f);
+        Vec3 u1(0.0f, 1.0f, 0.0f);
+        Vec3 u2(0.0f, 0.0f, 1.0f);
+
+        Vec3 test[13] = {u0,             // AABB Axis 1
+                         u1,             // AABB Axis 2
+                         u2,             // AABB Axis 3
+                         Cross(f0, f1),  // normal of the triangle
+                         Cross(u0, f0),
+                         Cross(u0, f1),
+                         Cross(u0, f2),
+                         Cross(u1, f0),
+                         Cross(u1, f1),
+                         Cross(u1, f2),
+                         Cross(u2, f0),
+                         Cross(u2, f1),
+                         Cross(u2, f2)};
+        // ^^all normals of the AABB with all edges of triangle
+
+        for (int i = 0; i < 13; ++i) {
+            if (!OverlapOnAxis(a, t, test[i])) {
+                return false;  // Separating axis found
+            }
+        }
+
+        return true;  // Separating axis not found
+    }
+
+    bool OverlapOnAxis(const OBB& obb, const Triangle& triangle, const Vec3& axis) {
+        Interval a = GetInterval(obb, axis);
+        Interval b = GetInterval(triangle, axis);
+        return ((b.min <= a.max) && (a.min <= b.max));
+    }
+
+    bool TriangleOBB(const Triangle& t, const OBB& o) {
+        //  edge vectors of triangle (ABC)
+        Vec3 f0 = t.b - t.a;
+        Vec3 f1 = t.c - t.b;
+        Vec3 f2 = t.a - t.c;
+
+        Vec3 u0(o.orientation[0]);
+        Vec3 u1(o.orientation[1]);
+        Vec3 u2(o.orientation[2]);
+
+        Vec3 test[13] = {u0,             // OBB Axis 1
+                         u1,             // OBB Axis 2
+                         u2,             // OBB Axis 3
+                         Cross(f0, f1),  // Normal of the Triangle
+                         Cross(u0, f0),
+                         Cross(u0, f1),
+                         Cross(u0, f2),
+                         Cross(u1, f0),
+                         Cross(u1, f1),
+                         Cross(u1, f2),
+                         Cross(u2, f0),
+                         Cross(u2, f1),
+                         Cross(u2, f2)};
+
+        for (int i = 0; i < 13; ++i) {
+            if (!OverlapOnAxis(o, t, test[i])) {
+                return false;  // Separating axis found
+            }
+        }
+
+        return true;  // Separating axis not found
+    }
+
+    bool TrianglePlane(const Triangle& t, const Plane& p) {
+        float side1 = PlaneEquation(t.a, p);
+        float side2 = PlaneEquation(t.b, p);
+        float side3 = PlaneEquation(t.c, p);
+
+        // if all points are on the plane
+        if (side1 == 0.0f && side2 == 0.0f && side3 == 0.0f) {
+            return true;
+        }
+
+        // if in front of the plane
+        if (side1 > 0.0f && side2 > 0.0f && side3 > 0.0f) {
+            return false;
+        }
+
+        // if behind the plane
+        if (side1 < 0.0f && side2 < 0.0f && side3 < 0.0f) {
+            return false;
+        }
+
+        // else one of the sides is intersecting
+        return true;
+    }
+
+    bool OverlapOnAxis(const Triangle& t1, const Triangle& t2, const Vec3& axis) {
+        Interval a = GetInterval(t1, axis);
+        Interval b = GetInterval(t2, axis);
+        return ((b.min <= a.max) && (a.min <= b.max));
+    }
+
+    Vec3 SatCrossEdge(const Vec3& a, const Vec3& b, const Vec3& c, const Vec3& d) {
+        Vec3 ab = a - b;
+        Vec3 cd = c - d;
+        Vec3 result = Cross(ab, cd);
+
+        // cross product returns 0 vector if parralel, if its not parralel return it
+        if (MagnitudeSq(result) != 0.0f) {
+            return result;
+        } else {  // in the case of being parralel, check perpendicular axis
+            Vec3 axis = Cross(ab, c - a);
+            result = Cross(ab, axis);
+
+            // if not parralel
+            if (MagnitudeSq(result) != 0.0f) {
+                return result;
+            }
+        }
+
+        return Vec3(0.0f);
+    }
+
+    bool TriangleTriangle(const Triangle& t1, const Triangle& t2) {
+        Vec3 axisToTest[11] = {
+            SatCrossEdge(t1.a, t1.b, t1.b, t1.c),  // triangle 1 normal
+            SatCrossEdge(t2.a, t2.b, t2.b, t2.c),  // triangle 2 normal
+            SatCrossEdge(t2.a, t2.b, t1.a, t1.b), SatCrossEdge(t2.a, t2.b, t1.b, t1.c),
+            SatCrossEdge(t2.a, t2.b, t1.c, t1.a), SatCrossEdge(t2.b, t2.c, t1.a, t1.b),
+            SatCrossEdge(t2.b, t2.c, t1.b, t1.c), SatCrossEdge(t2.b, t2.c, t1.c, t1.a),
+            SatCrossEdge(t2.c, t2.a, t1.a, t1.b), SatCrossEdge(t2.c, t2.a, t1.b, t1.c),
+            SatCrossEdge(t2.c, t2.a, t1.c, t1.a),
+
+        };
+
+        for (int i = 0; i < 11; ++i) {
+            if (!OverlapOnAxis(t1, t2, axisToTest[i])) {
+                if (MagnitudeSq(axisToTest[i]) == 0.0f) {
+                    return false;  // Seperating axis found
+                }
+            }
+        }
+        return true;
+    }
+
+    Vec3 Barycentric(const Point& p, const Triangle& t) {
+        // test point to each triangle point
+        Vec3 ap = p - t.a;
+        Vec3 bp = p - t.b;
+        Vec3 cp = p - t.c;
+
+        // edges of triangle
+        Vec3 ab = t.b - t.a;
+        Vec3 ac = t.c - t.a;
+        Vec3 bc = t.c - t.b;
+        Vec3 cb = t.b - t.c;
+        Vec3 ca = t.a - t.c;
+
+        // perpendicular to AB
+        Vec3 v = Perpendicular(ab, ac);
+        // perpendicular function looks like: ab - Project(ab, cb);
+
+        // is 0 if the projected point is on line AB. value is 1 if the projected point is at C
+        float a = 1.0f - (Dot(v, ap) / Dot(v, ab));
+
+        // perpenndicular to to BC
+        v = Perpendicular(bc, ac);
+        float b = 1.0f - (Dot(v, bp) / Dot(v, bc));
+
+        // perpendicular to CA
+        v = Perpendicular(ca, ab);
+        float c = 1.0f - (Dot(v, cp) / Dot(v, ca));
+
+        return Vec3(a, b, c);
+    }
+
+    float Raycast(const Triangle& triangle, const Ray& ray) {
+        Plane plane = FromTriangle(triangle);
+        float t = Raycast(plane, ray);
+
+        // if it does not hit the plane return
+        if (t < 0.0f) {
+            return t;
+        }
+
+        // find where it hit
+        Point result = ray.origin + ray.dir * t;
+
+        // find barbycentric coordinates
+        Vec3 barycentric = Barycentric(result, triangle);
+        if (barycentric.x >= 0.0f && barycentric.x <= 1.0f && barycentric.y >= 0.0f && barycentric.y <= 1.0f &&
+            barycentric.z >= 0.0f && barycentric.z <= 1.0f) {
+            return t;
+        }
+
+        return -1;
+    }
+
+    bool Linetest(const Triangle& triangle, const Line& line) {
+        Ray ray;
+        ray.origin = line.start;
+        ray.dir = Normalized(line.end - line.start);
+
+        float t = Raycast(triangle, ray);
+
+        // check that the raycast is within the limits of the line
+        return t >= 0 && t * t <= LengthSq(line);
+    }
 }  // namespace Vakol::Physics

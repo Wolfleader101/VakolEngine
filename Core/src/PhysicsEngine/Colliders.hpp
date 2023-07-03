@@ -126,4 +126,33 @@ namespace Vakol::Physics {
     bool Linetest(const Plane& plane, const Line& line);
 
     bool PointInTriangle(const Point& p, const Triangle& t);
+
+    Plane FromTriangle(const Triangle& t);
+    Point ClosestPoint(const Triangle& t, const Point& p);
+
+    bool TriangleSphere(const Triangle& t, const Sphere& s);
+
+    Interval GetInterval(const Triangle& triangle, const Vec3& axis);
+
+    bool OverlapOnAxis(const AABB& aabb, const Triangle& triangle, const Vec3& axis);
+    bool TriangleAABB(const Triangle& t, const AABB& a);
+
+    bool OverlapOnAxis(const OBB& obb, const Triangle& triangle, const Vec3& axis);
+    bool TriangleOBB(const Triangle& t, const OBB& o);
+
+    bool TrianglePlane(const Triangle& t, const Plane& p);
+
+    bool OverlapOnAxis(const Triangle& t1, const Triangle& t2, const Vec3& axis);
+    bool TriangleTriangle(const Triangle& t1, const Triangle& t2);
+
+    // A – Edge / Triangle 0, Point 0
+    // B – Edge / Triangle 0, Point 1
+    // C – Edge / Triangle 1, Point 0
+    // D – Edge / Triangle 1, Point 1
+    Vec3 SatCrossEdge(const Vec3& a, const Vec3& b, const Vec3& c, const Vec3& d);
+
+    Vec3 Barycentric(const Point& p, const Triangle& t);
+    float Raycast(const Triangle& triangle, const Ray& ray);
+
+    bool Linetest(const Triangle& triangle, const Line& line);
 }  // namespace Vakol::Physics

@@ -32,10 +32,26 @@ namespace Vakol::Math {
         float m = sqrtf(MagnitudeSq(a) * MagnitudeSq(b));
         return acos(Dot(a, b) / m);
     }
+
     float Angle(const Vec3& a, const Vec3& b) {
         float m = sqrtf(MagnitudeSq(a) * MagnitudeSq(b));
         return acos(Dot(a, b) / m);
     }
+
+    Vec2 Project(const Vec2& length, const Vec2& direction) {
+        float dot = Dot(length, direction);
+        float magSq = MagnitudeSq(direction);
+        return direction * (dot / magSq);
+    }
+
+    Vec3 Project(const Vec3& length, const Vec3& direction) {
+        float dot = Dot(length, direction);
+        float magSq = MagnitudeSq(direction);
+        return direction * (dot / magSq);
+    }
+
+    Vec2 Perpendicular(const Vec2& len, const Vec2& dir) { return len - Project(len, dir); }
+    Vec3 Perpendicular(const Vec3& len, const Vec3& dir) { return len - Project(len, dir); }
 
     float Length(const Line& line) { return Magnitude(line.start - line.end); }
     float LengthSq(const Line& line) { return MagnitudeSq(line.start - line.end); }
