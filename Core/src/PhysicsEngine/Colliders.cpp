@@ -1,5 +1,6 @@
 #include "Colliders.hpp"
 
+#include <list>
 namespace Vakol::Physics {
     Vec3 GetMin(const AABB& aabb) {
         Vec3 p1 = aabb.pos + aabb.size;
@@ -931,6 +932,293 @@ namespace Vakol::Physics {
             node->triangles = nullptr;
             node->numTriangles = 0;
         }
+    }
+
+    float MeshRay(const Mesh& mesh, const Ray& ray) {
+        if (mesh.accelerator == nullptr) {
+            for (int i = 0; i < mesh.numTriangles; i++) {
+                float res = Raycast(mesh.triangles[i], ray);
+                if (res >= 0.0f) return res;
+            }
+            return -1.0f;
+        }
+
+        // else it has a BVH
+        std::list<BVHNode*> nodesToCheck;
+        nodesToCheck.push_front(mesh.accelerator);
+        while (!nodesToCheck.empty()) {
+            BVHNode* it = *(nodesToCheck.begin());
+            nodesToCheck.erase(nodesToCheck.begin());
+
+            // if its a leaf node
+            if (it->numTriangles >= 0) {
+                for (int i = 0; i < it->numTriangles; ++i) {
+                    // Do a raycast against the triangle
+                    float r = Raycast(mesh.triangles[it->triangles[i]], ray);
+                    if (r >= 0) {
+                        return r;
+                    }
+                }
+            }
+
+            // if its a parent node
+            if (it->children != nullptr) {
+                for (int i = 8 - 1; i >= 0; --i) {
+                    if (Raycast(it->bounds, ray) >= 0.0f) {
+                        nodesToCheck.push_front(&it->children[i]);
+                    }
+                }
+            }
+        }
+
+        // if all else fails return -1
+        return -1.0f;
+    }
+
+    bool MeshAABB(const Mesh& mesh, const AABB& aabb) {
+        if (mesh.accelerator == nullptr) {
+            // brute force our way through the triangles
+            for (int i = 0; i < mesh.numTriangles; ++i) {
+                if (TriangleAABB(mesh.triangles[i], aabb)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        // else it has a BVH
+        std::list<BVHNode*> nodesToCheck;
+        nodesToCheck.push_front(mesh.accelerator);
+        while (!nodesToCheck.empty()) {
+            BVHNode* it = *(nodesToCheck.begin());
+            nodesToCheck.erase(nodesToCheck.begin());
+
+            // if its a leaf node
+            if (it->numTriangles >= 0) {
+                for (int i = 0; i < it->numTriangles; ++i) {
+                    // check if it collides
+                    if (TriangleAABB(mesh.triangles[it->triangles[i]], aabb)) {
+                        return true;
+                    }
+                }
+            }
+
+            // if its a parent node
+            if (it->children != nullptr) {
+                for (int i = 8 - 1; i >= 0; --i) {
+                    // if it collides then add it to the list
+                    if (AABBAABB(it->children[i].bounds, aabb)) {
+                        nodesToCheck.push_front(&it->children[i]);
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    bool Linetest(const Mesh& mesh, const Line& line) {
+        if (mesh.accelerator == nullptr) {
+            // brute force our way through the triangles
+            for (int i = 0; i < mesh.numTriangles; ++i) {
+                if (Linetest(mesh.triangles[i], line)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        // else it has a BVH
+        std::list<BVHNode*> nodesToCheck;
+        nodesToCheck.push_front(mesh.accelerator);
+        while (!nodesToCheck.empty()) {
+            BVHNode* it = *(nodesToCheck.begin());
+            nodesToCheck.erase(nodesToCheck.begin());
+
+            // if its a leaf node
+            if (it->numTriangles >= 0) {
+                for (int i = 0; i < it->numTriangles; ++i) {
+                    // check if it collides
+                    if (Linetest(mesh.triangles[it->triangles[i]], line)) {
+                        return true;
+                    }
+                }
+            }
+
+            // if its a parent node
+            if (it->children != nullptr) {
+                for (int i = 8 - 1; i >= 0; --i) {
+                    // if it collides then add it to the list
+                    if (Linetest(it->children[i].bounds, line)) {
+                        nodesToCheck.push_front(&it->children[i]);
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    bool MeshSphere(const Mesh& mesh, const Sphere& sphere) {
+        if (mesh.accelerator == nullptr) {
+            // brute force our way through the triangles
+            for (int i = 0; i < mesh.numTriangles; ++i) {
+                if (TriangleSphere(mesh.triangles[i], sphere)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        // else it has a BVH
+        std::list<BVHNode*> nodesToCheck;
+        nodesToCheck.push_front(mesh.accelerator);
+        while (!nodesToCheck.empty()) {
+            BVHNode* it = *(nodesToCheck.begin());
+            nodesToCheck.erase(nodesToCheck.begin());
+
+            // if its a leaf node
+            if (it->numTriangles >= 0) {
+                for (int i = 0; i < it->numTriangles; ++i) {
+                    // check if it collides
+                    if (TriangleSphere(mesh.triangles[it->triangles[i]], sphere)) {
+                        return true;
+                    }
+                }
+            }
+
+            // if its a parent node
+            if (it->children != nullptr) {
+                for (int i = 8 - 1; i >= 0; --i) {
+                    // if it collides then add it to the list
+                    if (AABBSphere(it->children[i].bounds, sphere)) {
+                        nodesToCheck.push_front(&it->children[i]);
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    bool MeshOBB(const Mesh& mesh, const OBB& obb) {
+        if (mesh.accelerator == nullptr) {
+            // brute force our way through the triangles
+            for (int i = 0; i < mesh.numTriangles; ++i) {
+                if (TriangleOBB(mesh.triangles[i], obb)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        // else it has a BVH
+        std::list<BVHNode*> nodesToCheck;
+        nodesToCheck.push_front(mesh.accelerator);
+        while (!nodesToCheck.empty()) {
+            BVHNode* it = *(nodesToCheck.begin());
+            nodesToCheck.erase(nodesToCheck.begin());
+
+            // if its a leaf node
+            if (it->numTriangles >= 0) {
+                for (int i = 0; i < it->numTriangles; ++i) {
+                    // check if it collides
+                    if (TriangleOBB(mesh.triangles[it->triangles[i]], obb)) {
+                        return true;
+                    }
+                }
+            }
+
+            // if its a parent node
+            if (it->children != nullptr) {
+                for (int i = 8 - 1; i >= 0; --i) {
+                    // if it collides then add it to the list
+                    if (AABBOBB(it->children[i].bounds, obb)) {
+                        nodesToCheck.push_front(&it->children[i]);
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    bool MeshPlane(const Mesh& mesh, const Plane& plane) {
+        if (mesh.accelerator == nullptr) {
+            // brute force our way through the triangles
+            for (int i = 0; i < mesh.numTriangles; ++i) {
+                if (TrianglePlane(mesh.triangles[i], plane)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        // else it has a BVH
+        std::list<BVHNode*> nodesToCheck;
+        nodesToCheck.push_front(mesh.accelerator);
+        while (!nodesToCheck.empty()) {
+            BVHNode* it = *(nodesToCheck.begin());
+            nodesToCheck.erase(nodesToCheck.begin());
+
+            // if its a leaf node
+            if (it->numTriangles >= 0) {
+                for (int i = 0; i < it->numTriangles; ++i) {
+                    // check if it collides
+                    if (TrianglePlane(mesh.triangles[it->triangles[i]], plane)) {
+                        return true;
+                    }
+                }
+            }
+
+            // if its a parent node
+            if (it->children != nullptr) {
+                for (int i = 8 - 1; i >= 0; --i) {
+                    // if it collides then add it to the list
+                    if (AABBPlane(it->children[i].bounds, plane)) {
+                        nodesToCheck.push_front(&it->children[i]);
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    bool MeshTriangle(const Mesh& mesh, const Triangle& triangle) {
+        if (mesh.accelerator == nullptr) {
+            // brute force our way through the triangles
+            for (int i = 0; i < mesh.numTriangles; ++i) {
+                if (TriangleTriangle(mesh.triangles[i], triangle)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        // else it has a BVH
+        std::list<BVHNode*> nodesToCheck;
+        nodesToCheck.push_front(mesh.accelerator);
+        while (!nodesToCheck.empty()) {
+            BVHNode* it = *(nodesToCheck.begin());
+            nodesToCheck.erase(nodesToCheck.begin());
+
+            // if its a leaf node
+            if (it->numTriangles >= 0) {
+                for (int i = 0; i < it->numTriangles; ++i) {
+                    // check if it collides
+                    if (TriangleTriangle(mesh.triangles[it->triangles[i]], triangle)) {
+                        return true;
+                    }
+                }
+            }
+
+            // if its a parent node
+            if (it->children != nullptr) {
+                for (int i = 8 - 1; i >= 0; --i) {
+                    // if it collides then add it to the list
+                    if (AABBTriangle(it->children[i].bounds, triangle)) {
+                        nodesToCheck.push_front(&it->children[i]);
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
 }  // namespace Vakol::Physics

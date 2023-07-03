@@ -98,6 +98,9 @@ namespace Vakol::Physics {
     bool SpherePlane(const Sphere& sphere, const Plane& plane);
 
     bool AABBAABB(const AABB& aabb1, const AABB& aabb2);
+    bool AABBTriangle(const AABB& aabb, const Triangle& triangle) { return TriangleAABB(triangle, aabb); }
+    bool AABBPlane(const AABB& aabb, const Plane& plane);
+    bool AABBSphere(const AABB& aabb, const Sphere& sphere) { return SphereAABB(sphere, aabb); }
 
     Interval GetInterval(const AABB& aabb, const Vec3& axis);
     Interval GetInterval(const OBB& obb, const Vec3& axis);
@@ -105,8 +108,6 @@ namespace Vakol::Physics {
 
     //! this follows Seperate Axis Theroem (SAT) for collision
     bool AABBOBB(const AABB& aabb, const OBB& obb);
-
-    bool AABBPlane(const AABB& aabb, const Plane& plane);
 
     bool OverlapOnAxis(const OBB& obb1, const OBB& obb2, const Vec3& axis);
 
@@ -183,4 +184,14 @@ namespace Vakol::Physics {
     void AccelerateMesh(Mesh& mesh);
     void SplitBVHNode(BVHNode* node, const Mesh& model, int depth);
     void FreeBVHNode(BVHNode* node);
+
+    float MeshRay(const Mesh& mesh, const Ray& ray);
+    bool MeshAABB(const Mesh& mesh, const AABB& aabb);
+    bool Linetest(const Mesh& mesh, const Line& line);
+    bool MeshSphere(const Mesh& mesh, const Sphere& sphere);
+    bool MeshOBB(const Mesh& mesh, const OBB& obb);
+    bool MeshPlane(const Mesh& mesh, const Plane& plane);
+    bool MeshTriangle(const Mesh& mesh, const Triangle& triangle);
+
+    float Raycast(const Mesh& mesh, const Ray& ray);
 }  // namespace Vakol::Physics
