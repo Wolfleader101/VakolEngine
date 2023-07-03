@@ -822,4 +822,115 @@ namespace Vakol::Physics {
         // check that the raycast is within the limits of the line
         return t >= 0 && t * t <= LengthSq(line);
     }
+
+    void AccelerateMesh(Mesh& mesh) {
+        // assume a BVH has already been created
+        if (mesh.accelerator != nullptr) {
+            return;
+        }
+
+        // find min and max points of meh
+        Vec3 min = mesh.vertices[0];
+        Vec3 max = mesh.vertices[0];
+        for (int i = 1; i < mesh.numTriangles * 3; ++i) {
+            min.x = fminf(mesh.vertices[i].x, min.x);
+            min.y = fminf(mesh.vertices[i].y, min.y);
+            min.z = fminf(mesh.vertices[i].z, min.z);
+            max.x = fmaxf(mesh.vertices[i].x, max.x);
+            max.y = fmaxf(mesh.vertices[i].y, max.y);
+            max.z = fmaxf(mesh.vertices[i].z, max.z);
+        }
+
+        // create new bvh
+        mesh.accelerator = new BVHNode();  //! WARNING this is unsafe if not treated carefully
+        mesh.accelerator->bounds = FromMinMax(min, max);
+        mesh.accelerator->numTriangles = mesh.numTriangles;
+        mesh.accelerator->triangles = new int[mesh.numTriangles];
+
+        for (int i = 0; i < mesh.numTriangles; ++i) {
+            mesh.accelerator->triangles[i] = i;
+        }
+
+        SplitBVHNode(mesh.accelerator, mesh, 3);
+    }
+
+    void SplitBVHNode(BVHNode* node, const Mesh& model, int depth) {
+        // return if depth has been reached
+        if (depth-- == 0) {
+            return;
+        }
+
+        // if its a leaf node split it into 8 child nodes
+        if (node->children == nullptr && node->numTriangles > 0) {
+            node->children = new BVHNode[8];
+
+            // set the bounding box of each child node (center is parent center)
+            Vec3 c = node->bounds.pos;
+            Vec3 e = node->bounds.size * 0.5f;
+            node->children[0].bounds = AABB(c + Vec3(-e.x, +e.y, -e.z), e);
+            node->children[1].bounds = AABB(c + Vec3(+e.x, +e.y, -e.z), e);
+            node->children[2].bounds = AABB(c + Vec3(-e.x, +e.y, +e.z), e);
+            node->children[3].bounds = AABB(c + Vec3(+e.x, +e.y, +e.z), e);
+            node->children[4].bounds = AABB(c + Vec3(-e.x, -e.y, -e.z), e);
+            node->children[5].bounds = AABB(c + Vec3(+e.x, -e.y, -e.z), e);
+            node->children[6].bounds = AABB(c + Vec3(-e.x, -e.y, +e.z), e);
+            node->children[7].bounds = AABB(c + Vec3(+e.x, -e.y, +e.z), e);
+        }
+
+        // if the node was split
+        if (node->children != nullptr && node->numTriangles > 0) {
+            // for each child check how many children it should contain
+            for (int i = 0; i < 8; i++) {
+                node->children[i].numTriangles = 0;
+
+                // figure out how many children it should contain
+                for (int j = 0; j < node->numTriangles; ++j) {
+                    Triangle t = model.triangles[node->triangles[j]];
+
+                    // if it intersects increase its triangle count
+                    if (TriangleAABB(t, node->children[i].bounds)) node->children[i].numTriangles += 1;
+                }
+
+                // if the child node does not contain any triangles then continue
+                if (node->children[i].numTriangles == 0) continue;
+
+                // allocate new memory for indices in child node
+                node->children[i].triangles = new int[node->children[i].numTriangles];
+                int index = 0;
+
+                // for any triangle that intersects the child node, add it's index to the triangle indices
+                for (int j = 0; j < node->numTriangles; ++j) {
+                    Triangle t = model.triangles[node->triangles[j]];
+                    if (TriangleAABB(t, node->children[i].bounds))
+                        node->children[i].triangles[index++] = node->triangles[j];
+                }
+            }
+
+            node->numTriangles = 0;
+            delete[] node->triangles;
+            node->triangles = 0;
+
+            for (int i = 0; i < 8; i++) {
+                SplitBVHNode(&node->children[i], model, depth);
+            }
+        }
+    }
+
+    void FreeBVHNode(BVHNode* node) {
+        if (node->children == nullptr) return;
+
+        for (int i = 0; i < 8; i++) {
+            FreeBVHNode(&node->children[i]);
+        }
+
+        delete[] node->children;
+        node->children = nullptr;
+
+        if (node->numTriangles != 0 || node->triangles != nullptr) {
+            delete[] node->triangles;
+            node->triangles = nullptr;
+            node->numTriangles = 0;
+        }
+    }
+
 }  // namespace Vakol::Physics

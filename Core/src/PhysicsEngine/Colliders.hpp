@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include "Math/Math.hpp"
 
 namespace Vakol::Physics {
@@ -155,4 +157,30 @@ namespace Vakol::Physics {
     float Raycast(const Triangle& triangle, const Ray& ray);
 
     bool Linetest(const Triangle& triangle, const Line& line);
+
+    //! warning book uses c style arrays, can use stl vector later
+    struct Mesh {
+        int numTriangles;
+        union {
+            Triangle* triangles;  // size = numTriangles
+            Point* vertices;      // size = numTriangles * 3
+            float* values;        // size = numTriangles * 3 * 3
+        };
+
+        BVHNode* accelerator;
+        Mesh() : numTriangles(0), values(nullptr), accelerator(nullptr) {}
+    };
+
+    //! warning while following the book, this uses raw pointers, ew yuck. can convert to smart pointers later
+    struct BVHNode {
+        AABB bounds;
+        BVHNode* children;
+        int numTriangles;  // if made a vector this can be removed
+        int* triangles;    // triangle indicies (could be made a vector)
+        BVHNode() : children(nullptr), numTriangles(0), triangles(nullptr) {}
+    };
+
+    void AccelerateMesh(Mesh& mesh);
+    void SplitBVHNode(BVHNode* node, const Mesh& model, int depth);
+    void FreeBVHNode(BVHNode* node);
 }  // namespace Vakol::Physics
