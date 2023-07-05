@@ -57,4 +57,56 @@ namespace Vakol::Math {
     float LengthSq(const Line& line) { return MagnitudeSq(line.start - line.end); }
 
     Ray FromPoints(const Point& from, const Point& to) { return Ray(from, Normalized(to - from)); }
+
+    Mat4 Translation(const Vec3& pos) {
+        return Mat4(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, pos.x, pos.y, pos.z, 1.0f);
+    }
+    Mat4 XRotation(float angle) {
+        angle = glm::radians(angle);
+        return Mat4(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, cosf(angle), sinf(angle), 0.0f, 0.0f, -sinf(angle), cos(angle), 0.0f,
+                    0.0f, 0.0f, 0.0f, 1.0f);
+    }
+    Mat4 YRotation(float angle) {
+        angle = glm::radians(angle);
+        return Mat4(cosf(angle), 0.0f, -sinf(angle), 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, sinf(angle), 0.0f, cosf(angle), 0.0f,
+                    0.0f, 0.0f, 0.0f, 1.0f);
+    }
+
+    Mat4 ZRotation(float angle) {
+        angle = glm::radians(angle);
+        return Mat4(cosf(angle), sinf(angle), 0.0f, 0.0f, -sinf(angle), cosf(angle), 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+                    0.0f, 0.0f, 0.0f, 1.0f);
+    }
+
+    Mat4 Rotation(float pitch, float yaw, float roll) { return ZRotation(roll) * XRotation(pitch) * YRotation(yaw); }
+
+    Point MultiplyPoint(const Point& point, const Mat4& mat) {
+        glm::vec4 tempPoint(point, 1.0f);
+        tempPoint = mat * tempPoint;
+        return Point(tempPoint);
+    }
+
+    Vec3 MultiplyVector(const Vec3& vec, const Mat4& mat) {
+        glm::vec4 temp(vec, 0.0f);
+        temp = mat * temp;
+        return Vec3(temp);
+    }
+
+    Mat3 Cut(const Mat4& mat, int row, int col) {
+        Mat3 res;
+        int targetRow = 0;
+        for (int i = 0; i < 4; ++i) {
+            if (i == row) continue;
+            int targetCol = 0;
+            for (int j = 0; j < 4; ++j) {
+                if (j == col) continue;
+                res[targetRow][targetCol] = mat[i][j];
+                ++targetCol;
+            }
+            ++targetRow;
+        }
+        return res;
+    }
+
+    Mat4 Inverse(const Mat4& mat) { return glm::inverse(mat); }
 }  // namespace Vakol::Math

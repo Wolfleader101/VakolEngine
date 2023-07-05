@@ -1221,4 +1221,156 @@ namespace Vakol::Physics {
         return false;
     }
 
+    void Model::SetMesh(Mesh* mesh) {
+        _mesh = mesh;
+        if (_mesh == nullptr) return;
+        Vec3 min = mesh->vertices[0];
+        Vec3 max = mesh->vertices[0];
+        for (int i = 1; i < mesh->numTriangles * 3; ++i) {
+            min.x = fminf(mesh->vertices[i].x, min.x);
+            min.y = fminf(mesh->vertices[i].y, min.y);
+            min.z = fminf(mesh->vertices[i].z, min.z);
+            max.x = fmaxf(mesh->vertices[i].x, max.x);
+            max.y = fmaxf(mesh->vertices[i].y, max.y);
+            max.z = fmaxf(mesh->vertices[i].z, max.z);
+        }
+        _bounds = FromMinMax(min, max);
+    }
+
+    Mat4 GetWorldMatrix(const Model& model) {
+        Mat4 translation = Translation(model.pos);
+        Mat4 rotation = Rotation(model.rot.x, model.rot.y, model.rot.z);
+        Mat4 localMat = rotation * translation;
+
+        Mat4 parentMat;
+        if (model.parent != nullptr) {
+            parentMat = GetWorldMatrix(*model.parent);
+        }
+
+        return localMat * parentMat;
+    }
+
+    OBB GetOBB(const Model& model) {
+        Mat4 world = GetWorldMatrix(model);
+        const AABB& aabb = model.GetBounds();
+        OBB obb;
+
+        obb.size = aabb.size;
+        obb.pos = MultiplyPoint(aabb.pos, world);
+        obb.orientation = Cut(world, 3, 3);
+
+        return obb;
+    }
+
+    float ModelRay(const Model& model, const Ray& ray) {
+        // get inverse matrix
+        Mat4 world = GetWorldMatrix(model);
+        Mat4 inv = Inverse(world);
+
+        // convert ray into model space
+        Ray local;
+        local.origin - MultiplyPoint(ray.origin, inv);
+        local.dir = MultiplyVector(ray.origin, inv);
+        local.NormalizeDirection();
+
+        // ray cast in local model space
+        if (model.GetMesh() != nullptr) {
+            return MeshRay(*(model.GetMesh()), local);
+        }
+        return -1;
+    }
+
+    bool Linetest(const Model& model, const Line& line) {
+        Mat4 world = GetWorldMatrix(model);
+        Mat4 inv = Inverse(world);
+
+        // convert into local space
+        Line local;
+        local.start = MultiplyPoint(line.start, inv);
+        local.end = MultiplyPoint(line.end, inv);
+
+        if (model.GetMesh() != nullptr) {
+            return Linetest(*(model.GetMesh()), local);
+        }
+
+        return false;
+    }
+
+    bool ModelSphere(const Model& model, const Sphere& sphere) {
+        Mat4 world = GetWorldMatrix(model);
+        Mat4 inv = Inverse(world);
+
+        // convert into local space
+        Sphere local;
+        local.pos = MultiplyPoint(sphere.pos, inv);
+
+        if (model.GetMesh() != nullptr) {
+            return MeshSphere(*(model.GetMesh()), local);
+        }
+
+        return false;
+    }
+
+    bool ModelAABB(const Model& model, const AABB& aabb) {
+        Mat4 world = GetWorldMatrix(model);
+        Mat4 inv = Inverse(world);
+
+        // convert into local space and convert to obb as it could have rotations
+        OBB local;
+        local.size = aabb.size;
+        local.pos = MultiplyPoint(aabb.pos, inv);
+        local.orientation = Cut(inv, 3, 3);
+
+        if (model.GetMesh() != nullptr) {
+            return MeshOBB(*(model.GetMesh()), local);
+        }
+        return false;
+    }
+
+    bool ModelOBB(const Model& model, const OBB& obb) {
+        Mat4 world = GetWorldMatrix(model);
+        Mat4 inv = Inverse(world);
+
+        // convert into local space
+        OBB local;
+        local.size = obb.size;
+        local.pos = MultiplyPoint(obb.pos, inv);
+        local.orientation = obb.orientation * Cut(inv, 3, 3);
+
+        if (model.GetMesh() != nullptr) {
+            return MeshOBB(*(model.GetMesh()), local);
+        }
+        return false;
+    }
+
+    bool ModelPlane(const Model& model, const Plane& plane) {
+        Mat4 world = GetWorldMatrix(model);
+        Mat4 inv = Inverse(world);
+
+        // convert into local space
+        Plane local;
+        local.normal = MultiplyVector(plane.normal, inv);
+        local.dist = plane.dist;
+
+        if (model.GetMesh() != nullptr) {
+            return MeshPlane(*(model.GetMesh()), local);
+        }
+        return false;
+    }
+
+    bool ModelTriangle(const Model& model, const Triangle& triangle) {
+        Mat4 world = GetWorldMatrix(model);
+        Mat4 inv = Inverse(world);
+
+        // convert into local space
+        Triangle local;
+        local.a = MultiplyPoint(triangle.a, inv);
+        local.b = MultiplyPoint(triangle.b, inv);
+        local.c = MultiplyPoint(triangle.c, inv);
+
+        if (model.GetMesh() != nullptr) {
+            return MeshTriangle(*(model.GetMesh()), local);
+        }
+        return false;
+    }
 }  // namespace Vakol::Physics

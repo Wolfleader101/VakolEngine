@@ -38,6 +38,23 @@ namespace Vakol::Math {
     Vec2 Perpendicular(const Vec2& len, const Vec2& dir);
     Vec3 Perpendicular(const Vec3& len, const Vec3& dir);
 
+    Mat4 Translation(const Vec3& pos);
+    Mat3 Cut(const Mat4& mat, int row, int col);
+
+    // assumes its degrees
+    Mat4 XRotation(float angle);
+    // assumes its degrees
+    Mat4 YRotation(float angle);
+    // assumes its degrees
+    Mat4 ZRotation(float angle);
+
+    Mat4 Rotation(float pitch, float yaw, float roll);
+
+    Point MultiplyPoint(const Point& point, const Mat4& mat);
+    Vec3 MultiplyVector(const Vec3& vec, const Mat4& mat);
+
+    Mat4 Inverse(const Mat4& mat);
+
     struct Line {
         Point start;
         Point end;

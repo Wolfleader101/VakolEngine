@@ -194,4 +194,33 @@ namespace Vakol::Physics {
     bool MeshTriangle(const Mesh& mesh, const Triangle& triangle);
 
     float Raycast(const Mesh& mesh, const Ray& ray);
+
+    class Model {
+       public:
+        Vec3 pos;
+        Vec3 rot;
+        Model* parent;
+
+        inline Model() : parent(nullptr), _mesh(nullptr) {}
+        inline Mesh* GetMesh() const { return _mesh; }
+
+        inline const AABB& GetBounds() const { return _bounds; }
+
+        void SetMesh(Mesh* mesh);
+
+       private:
+        Mesh* _mesh;
+        AABB _bounds;
+    };
+
+    Mat4 GetWorldMatrix(const Model& model);
+    OBB GetOBB(const Model& model);
+
+    float ModelRay(const Model& model, const Ray& ray);
+    bool Linetest(const Model& model, const Line& line);
+    bool ModelSphere(const Model& model, const Sphere& sphere);
+    bool ModelAABB(const Model& model, const AABB& aabb);
+    bool ModelOBB(const Model& model, const OBB& obb);
+    bool ModelPlane(const Model& model, const Plane& plane);
+    bool ModelTriangle(const Model& model, const Triangle& triangle);
 }  // namespace Vakol::Physics
