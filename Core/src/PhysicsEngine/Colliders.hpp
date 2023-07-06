@@ -223,4 +223,15 @@ namespace Vakol::Physics {
     bool ModelOBB(const Model& model, const OBB& obb);
     bool ModelPlane(const Model& model, const Plane& plane);
     bool ModelTriangle(const Model& model, const Triangle& triangle);
+
+    class Scene {
+       public:
+        void AddModel(Model* model);
+        void RemoveModel(Model* model);
+        void UpdateModel(Model* model);
+        std::vector<Model*> FindChildren(const Model* model);
+
+       private:
+        std::vector<Model*> objects;
+    };
 }  // namespace Vakol::Physics
