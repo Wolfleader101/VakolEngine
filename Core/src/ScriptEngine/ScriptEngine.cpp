@@ -1,6 +1,7 @@
 #include "ScriptEngine.hpp"
 
 #include "Controller/Logger.hpp"
+#include "Controller/LuaAccess.hpp"
 
 static std::string getStatusString(const sol::call_status status) {
     switch (status) {
@@ -33,14 +34,23 @@ namespace Vakol {
         m_state.open_libraries(sol::lib::string);
 
         this->RegisterFunctions();
+
         // TODO - register global vars
         this->RegisterVars();
 
-        CreateScript("scripts/test.js");
-        CreateScript("scripts/test1.js");
+        CreateScript("scripts/test.lua");
+    }
 
-        // std::vector<JSType> args = {123, "hello", true, 3.14};
-        // this->RunFunction("testArgs", args);
+    void ScriptEngine::Update() {
+        for (LuaScript& script : m_scripts) {
+            RunFunction(script.env, "update", {});
+        }
+    }
+
+    void ScriptEngine::Tick() {
+        for (LuaScript& script : m_scripts) {
+            RunFunction(script.env, "tick", {});
+        }
     }
 
     LuaScript ScriptEngine::CreateScript(const std::string& scriptPath) {
@@ -67,6 +77,7 @@ namespace Vakol {
 
         return script;
     }
+
     LuaType ScriptEngine::GetGlobal(const std::string& name) { return GetVariable(m_state.globals(), name); }
 
     void ScriptEngine::SetGlobal(const std::string& varName, const LuaType& value) {
@@ -142,5 +153,14 @@ namespace Vakol {
         }
 
         //! TODO pass in return type and return it here if it returns anything
+    }
+
+    void ScriptEngine::RegisterFunctions() {
+        //! TODO MOVE THESE INTO SEPERATE FILE
+        Controller::RegisterLogger(m_state);
+    }
+
+    void ScriptEngine::RegisterVars() {
+        //! TODO MOVE THESE INTO SEPERATE FILE
     }
 };  // namespace Vakol

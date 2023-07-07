@@ -46,6 +46,18 @@ namespace Vakol {
         LuaType GetScriptVariable(const LuaScript& script, const std::string& varName);
         void SetScriptVariable(const LuaScript& script, const std::string& varName, const LuaType& value);
 
+        template <typename Func>
+        void RegisterGlobalFunction(const std::string& funcName, Func funcPtr) {
+            m_state.set_function(
+                funcName, sol::overload([=](sol::variadic_args args) { return sol::call_status::ok, funcPtr(args); }));
+        }
+
+        template <typename Func>
+        void RegisterScriptFunction(const LuaScript& script, const std::string& funcName, Func funcPtr) {
+            script.env.set_function(
+                funcName, sol::overload([=](sol::variadic_args args) { return sol::call_status::ok, funcPtr(args); }));
+        }
+
         void Update();
 
         void Tick();
@@ -65,8 +77,5 @@ namespace Vakol {
 
         void RegisterFunctions();
         void RegisterVars();
-
-        template <typename T>
-        void SetGlobal(const std::string& name, T* value) {}
     };
 }  // namespace Vakol
