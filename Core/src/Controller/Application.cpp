@@ -13,8 +13,8 @@
 namespace Vakol::Controller {
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
-    Application::Application() : m_window(nullptr), m_renderer(nullptr), m_running(false), m_input() {
-        Logger::Init();
+    Application::Application()
+        : m_window(nullptr), m_renderer(nullptr), m_running(false), m_input(), m_scriptEngine(m_time) {
         scenes.reserve(10);
         lua = std::make_shared<LuaState>();
     };
@@ -126,6 +126,19 @@ namespace Vakol::Controller {
             m_gui.CreateNewFrame();
 
             m_renderer->Update();
+
+            m_scriptEngine.Update();
+
+            m_time.accumulator += m_time.deltaTime;
+
+            while (m_time.accumulator >= m_time.tickRate) {
+                m_scriptEngine.Tick();
+                // Decrease the accumulated time
+                m_time.accumulator -= m_time.tickRate;
+            }
+
+            // Compute the time interpolation factor
+            // float alpha = m_time.accumulator / m_time.tickRate;
 
             //! update scenes lua
             for (auto& scene : scenes) {

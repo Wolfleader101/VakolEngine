@@ -32,6 +32,10 @@ namespace Vakol {
              */
             int fps = 0;
 
+            float tickRate = 1.0f / 60.0f;
+
+            float accumulator = 0.0f;
+
             /**
              * @brief used to update the time struct
              */

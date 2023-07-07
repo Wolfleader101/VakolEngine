@@ -1,22 +1,19 @@
 #pragma once
 
-#include <View/GUI/GUIWindow.hpp>
-#include <View/Renderer/Renderer.hpp>
-#include <View/Window/Window.hpp>
 #include <memory>
 
+#include "Controller/LuaState.hpp"
 #include "Events/KeyEvent.hpp"
 #include "Events/WindowEvent.hpp"
-#include "Time.hpp"
-
-// just using this to test if ecs hooked in properly
-#include <Controller/EntityList.hpp>
-#include <Controller/LuaState.hpp>
-#include <Model/Entity.hpp>
-#include <Model/GameConfig.hpp>
-
 #include "Input.hpp"
+#include "Model/Entity.hpp"
+#include "Model/GameConfig.hpp"
 #include "Scene.hpp"
+#include "ScriptEngine/ScriptEngine.hpp"
+#include "Time.hpp"
+#include "View/GUI/GUIWindow.hpp"
+#include "View/Renderer/Renderer.hpp"
+#include "View/Window/Window.hpp"
 
 namespace Vakol::Controller {
 
@@ -114,7 +111,7 @@ namespace Vakol::Controller {
          */
         void RegisterLua();
 
-    private:
+       private:
         /**
          * @brief
          *
@@ -199,6 +196,7 @@ namespace Vakol::Controller {
          */
         std::shared_ptr<LuaState> lua;
 
+        ScriptEngine m_scriptEngine;
 
         /**
          * @brief holds the scenes
@@ -219,6 +217,5 @@ namespace Vakol::Controller {
          * @brief the input data of the engine
          */
         Input m_input;
-
     };
-}
+}  // namespace Vakol::Controller

@@ -37,6 +37,7 @@ namespace Vakol {
     class ScriptEngine {
        public:
         ScriptEngine(Controller::Time& time);
+        ~ScriptEngine();
 
         LuaScript CreateScript(const std::string& scriptPath);
 
@@ -44,7 +45,7 @@ namespace Vakol {
         void SetGlobal(const std::string& name, const LuaType& value);
 
         LuaType GetScriptVariable(const LuaScript& script, const std::string& varName);
-        void SetScriptVariable(const LuaScript& script, const std::string& varName, const LuaType& value);
+        void SetScriptVariable(LuaScript& script, const std::string& varName, const LuaType& value);
 
         template <typename Func>
         void RegisterGlobalFunction(const std::string& funcName, Func funcPtr) {
@@ -53,7 +54,7 @@ namespace Vakol {
         }
 
         template <typename Func>
-        void RegisterScriptFunction(const LuaScript& script, const std::string& funcName, Func funcPtr) {
+        void RegisterScriptFunction(LuaScript& script, const std::string& funcName, Func funcPtr) {
             script.env.set_function(
                 funcName, sol::overload([=](sol::variadic_args args) { return sol::call_status::ok, funcPtr(args); }));
         }
