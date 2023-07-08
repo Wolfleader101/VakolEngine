@@ -5,9 +5,7 @@
 #include "Application.hpp"
 #include "Scene.hpp"
 
-
-namespace Vakol::Controller
-{
+namespace Vakol::Controller {
     /**
      * @brief Register the asset loader in Lua.
      *
@@ -21,6 +19,10 @@ namespace Vakol::Controller
      * @param lua The Lua state.
      */
     void RegisterLogger(sol::state& lua);
+
+    void RegisterTime(sol::state& lua, Time* time);
+
+    void RegisterInput(sol::state& lua, Input* input);
 
     /**
      * @brief Register the application in Lua.

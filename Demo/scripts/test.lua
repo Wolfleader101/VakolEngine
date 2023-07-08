@@ -1,5 +1,3 @@
-print("test")
-
 function update()
     print("update")
 end

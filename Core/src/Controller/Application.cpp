@@ -55,7 +55,10 @@ namespace Vakol::Controller {
         m_running = true;
     }
 
+    //! this will be yeeted once script engine is done
     void Application::RegisterLua() {
+        RegisterTime(lua->GetState(), &m_time);
+        RegisterInput(lua->GetState(), &m_input);
         RegisterLogger(lua->GetState());
         RegisterMath(lua->GetState());
         RegisterEntity(lua, lua->GetState());
@@ -127,15 +130,16 @@ namespace Vakol::Controller {
 
             m_renderer->Update();
 
-            m_scriptEngine.Update();
-
             m_time.accumulator += m_time.deltaTime;
 
             while (m_time.accumulator >= m_time.tickRate) {
                 m_scriptEngine.Tick();
                 // Decrease the accumulated time
+                VK_ERROR(m_time.prevTime);
                 m_time.accumulator -= m_time.tickRate;
             }
+
+            m_scriptEngine.Update();
 
             // Compute the time interpolation factor
             // float alpha = m_time.accumulator / m_time.tickRate;

@@ -1,7 +1,7 @@
 #include "ScriptEngine.hpp"
 
 #include "Controller/Logger.hpp"
-// #include "Controller/LuaAccess.hpp"
+#include "Controller/LuaAccess.hpp"
 
 static std::string getStatusString(const sol::call_status status) {
     switch (status) {
@@ -33,10 +33,7 @@ namespace Vakol {
         m_state.open_libraries(sol::lib::math);
         m_state.open_libraries(sol::lib::string);
 
-        this->RegisterFunctions();
-
-        // TODO - register global vars
-        this->RegisterVars();
+        this->RegisterGlobals();
 
         CreateScript("scripts/test.lua");
     }
@@ -156,58 +153,25 @@ namespace Vakol {
         //! TODO pass in return type and return it here if it returns anything
     }
 
-    void ScriptEngine::RegisterFunctions() {
+    void ScriptEngine::RegisterGlobals() {
         //! TODO MOVE THESE INTO SEPERATE FILE
-        // Controller::RegisterLogger(m_state);
-
-        m_state.set_function("print", [](const sol::variadic_args& va) {
-            if (const auto arg = va[0]; arg.get_type() == sol::type::string)
-                Controller::Logger::ScriptPrintTrace(va[0].get<std::string>());
-            else if (arg.get_type() == sol::type::number)
-                Controller::Logger::ScriptPrintTrace(std::to_string(va[0].get<float>()));
-            else if (arg.get_type() == sol::type::boolean)
-                Controller::Logger::ScriptPrintTrace(std::to_string(va[0].get<bool>()));
-        });
-
-        m_state.set_function("print_info", [](const sol::variadic_args& va) {
-            if (const auto arg = va[0]; arg.get_type() == sol::type::string)
-                Controller::Logger::ScriptPrintInfo(va[0].get<std::string>());
-            else if (arg.get_type() == sol::type::number)
-                Controller::Logger::ScriptPrintInfo(std::to_string(va[0].get<float>()));
-        });
-
-        m_state.set_function("print_warn", [](const sol::variadic_args& va) {
-            if (const auto arg = va[0]; arg.get_type() == sol::type::string)
-                Controller::Logger::ScriptPrintWarn(va[0].get<std::string>());
-            else if (arg.get_type() == sol::type::number)
-                Controller::Logger::ScriptPrintWarn(std::to_string(va[0].get<float>()));
-        });
-
-        m_state.set_function("print_err", [](const sol::variadic_args& va) {
-            if (const auto arg = va[0]; arg.get_type() == sol::type::string)
-                Controller::Logger::ScriptPrintError(va[0].get<std::string>());
-            else if (arg.get_type() == sol::type::number)
-                Controller::Logger::ScriptPrintError(std::to_string(va[0].get<float>()));
-        });
-
-        m_state.set_function("print_critical", [](const sol::variadic_args& va) {
-            if (const auto arg = va[0]; arg.get_type() == sol::type::string)
-                Controller::Logger::ScriptPrintCrit(va[0].get<std::string>());
-            else if (arg.get_type() == sol::type::number)
-                Controller::Logger::ScriptPrintCrit(std::to_string(va[0].get<float>()));
-        });
+        Controller::RegisterLogger(m_state);
+        Controller::RegisterTime(m_state, &m_time);
     }
 
-    void ScriptEngine::RegisterVars() {
-        //! TODO MOVE THESE INTO SEPERATE FILE
+    // void ScriptEngine::RegisterFunctions() {
+    // }
 
-        auto time_type = m_state.new_usertype<Controller::Time>("Time");
-        time_type["delta_time"] = &Controller::Time::deltaTime;
-        time_type["tick_rate"] = &Controller::Time::tickRate;
-        time_type["curr_time"] = &Controller::Time::curTime;
-        time_type["prev_time"] = &Controller::Time::prevTime;
-        time_type["fps"] = &Controller::Time::fps;
+    // void ScriptEngine::RegisterVars() {
+    //     //! TODO MOVE THESE INTO SEPERATE FILE
 
-        m_state.globals()["Time"] = &m_time;
-    }
+    //     auto time_type = m_state.new_usertype<Controller::Time>("Time");
+    //     time_type["delta_time"] = &Controller::Time::deltaTime;
+    //     time_type["tick_rate"] = &Controller::Time::tickRate;
+    //     time_type["curr_time"] = &Controller::Time::curTime;
+    //     time_type["prev_time"] = &Controller::Time::prevTime;
+    //     time_type["fps"] = &Controller::Time::fps;
+
+    //     m_state.globals()["Time"] = &m_time;
+    // }
 };  // namespace Vakol

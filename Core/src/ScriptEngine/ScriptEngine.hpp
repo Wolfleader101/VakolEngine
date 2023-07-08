@@ -76,7 +76,6 @@ namespace Vakol {
         void RunFile(sol::environment env, const std::string& file);
         void RunFunction(sol::environment env, const std::string& funcName, const std::vector<LuaType>& args);
 
-        void RegisterFunctions();
-        void RegisterVars();
+        void RegisterGlobals();
     };
 }  // namespace Vakol
