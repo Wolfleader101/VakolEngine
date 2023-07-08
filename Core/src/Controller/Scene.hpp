@@ -6,7 +6,6 @@
 #include "Controller/Physics/ScenePhysics.hpp"
 #include "Controller/Terrain.hpp"
 #include "EntityList.hpp"
-#include "LuaState.hpp"
 #include "Time.hpp"
 #include "View/Renderer/Renderer.hpp"
 
@@ -24,11 +23,10 @@ namespace Vakol::Controller {
          *
          * @param name The name of the scene.
          * @param scriptName The name of the Lua script associated with the scene.
-         * @param lua The shared pointer to the Lua state.
          * @param SP The shared pointer to the ScenePhysics object.
          * @param active Whether the scene is active or not.
          */
-        Scene(const std::string& name, const std::string& scriptName, std::shared_ptr<LuaState> lua,
+        Scene(const std::string& name, const std::string& scriptName, 
               const std::shared_ptr<Physics::ScenePhysics>& SP, bool active);
 
         /**

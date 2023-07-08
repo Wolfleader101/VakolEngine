@@ -20,9 +20,29 @@ namespace Vakol::Controller {
      */
     void RegisterLogger(sol::state& lua);
 
-    void RegisterTime(sol::state& lua, Time* time);
+    void RegisterTime(sol::state& lua);
 
-    void RegisterInput(sol::state& lua, Input* input);
+    void RegisterInput(sol::state& lua);
+
+    void RegisterModel(sol::state& lua);
+
+    void RegisterMesh(sol::state& lua);
+
+    void RegisterMaterial(sol::state& lua);
+
+    void RegisterShader(sol::state& lua);
+
+    void RegisterTransform(sol::state& lua);
+
+    void RegisterTerrain(sol::state& lua);
+
+    void RegisterFSM(sol::state& lua);
+
+    void RegisterCamera(sol::state& lua);
+
+    void RegisterRigidBody(sol::state& lua);
+
+    void RegisterCollider(sol::state& lua);
 
     /**
      * @brief Register the application in Lua.
@@ -35,25 +55,16 @@ namespace Vakol::Controller {
     /**
      * @brief Register the entity in Lua.
      *
-     * @param state The shared pointer to the Lua state.
      * @param lua The Lua state.
      */
-    void RegisterEntity(std::shared_ptr<LuaState>& state, sol::state& lua);
-
-    /**
-     * @brief Register the ECS in Lua.
-     *
-     * @param lua The Lua state.
-     */
-    void RegisterECS(sol::state& lua);
+    void RegisterEntity(sol::state& lua);
 
     /**
      * @brief Register the GUI window in Lua.
      *
      * @param lua The Lua state.
-     * @param gui The pointer to the GUI window.
      */
-    void RegisterGUIWindow(sol::state& lua, View::GUIWindow* gui);
+    void RegisterGUIWindow(sol::state& lua);
 
     /**
      * @brief Register the renderer in Lua.

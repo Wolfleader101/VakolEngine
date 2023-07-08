@@ -33,7 +33,8 @@ namespace Vakol {
         m_state.open_libraries(sol::lib::math);
         m_state.open_libraries(sol::lib::string);
 
-        this->RegisterGlobals();
+        this->RegisterTypes();
+        this->RegisterFunctions();
 
         CreateScript("scripts/test.lua");
     }
@@ -76,9 +77,9 @@ namespace Vakol {
         return script;
     }
 
-    LuaType ScriptEngine::GetGlobal(const std::string& name) { return GetVariable(m_state.globals(), name); }
+    LuaType ScriptEngine::GetGlobalVariable(const std::string& name) { return GetVariable(m_state.globals(), name); }
 
-    void ScriptEngine::SetGlobal(const std::string& varName, const LuaType& value) {
+    void ScriptEngine::SetGlobalVariable(const std::string& varName, const LuaType& value) {
         m_state.globals()[varName] = value;
     }
 
@@ -153,14 +154,31 @@ namespace Vakol {
         //! TODO pass in return type and return it here if it returns anything
     }
 
-    void ScriptEngine::RegisterGlobals() {
-        //! TODO MOVE THESE INTO SEPERATE FILE
-        Controller::RegisterLogger(m_state);
-        Controller::RegisterTime(m_state, &m_time);
+    void ScriptEngine::RegisterTypes() {
+        //! TODO MOVE THESE INTO SEPERATE FILE???
+        Controller::RegisterTime(m_state);
+        Controller::RegisterMath(m_state);
+        Controller::RegisterInput(m_state);
+        Controller::RegisterModel(m_state);
+        Controller::RegisterMesh(m_state);
+        Controller::RegisterMaterial(m_state);
+        Controller::RegisterShader(m_state);
+        Controller::RegisterEntity(m_state);
+        Controller::RegisterTransform(m_state);
+        Controller::RegisterTerrain(m_state);
+        Controller::RegisterFSM(m_state);
+        Controller::RegisterCamera(m_state);
+        Controller::RegisterScene(m_state);
+        Controller::RegisterGUIWindow(m_state);
+        Controller::RegisterRigidBody(m_state);
+        Controller::RegisterCollider(m_state);
+        Controller::RegisterPhysics(m_state);
     }
 
-    // void ScriptEngine::RegisterFunctions() {
-    // }
+    void ScriptEngine::RegisterFunctions() {
+        Controller::RegisterAssetLoader(m_state);
+        Controller::RegisterLogger(m_state);
+    }
 
     // void ScriptEngine::RegisterVars() {
     //     //! TODO MOVE THESE INTO SEPERATE FILE

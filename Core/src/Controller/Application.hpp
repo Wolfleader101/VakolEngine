@@ -2,7 +2,6 @@
 
 #include <memory>
 
-#include "Controller/LuaState.hpp"
 #include "Events/KeyEvent.hpp"
 #include "Events/WindowEvent.hpp"
 #include "Input.hpp"
@@ -189,12 +188,6 @@ namespace Vakol::Controller {
          * @brief the renderer instance of the class
          */
         std::shared_ptr<View::Renderer> m_renderer;
-
-        /**
-         * @brief holds the lua state
-         *
-         */
-        std::shared_ptr<LuaState> lua;
 
         ScriptEngine m_scriptEngine;
 

@@ -16,7 +16,6 @@ namespace Vakol::Controller {
     Application::Application()
         : m_window(nullptr), m_renderer(nullptr), m_running(false), m_input(), m_scriptEngine(m_time) {
         scenes.reserve(10);
-        lua = std::make_shared<LuaState>();
     };
 
     void Application::Init() {
@@ -48,36 +47,29 @@ namespace Vakol::Controller {
 
         VK_INFO("Calling main.lua...");
 
-        lua->RunFile("scripts/main.lua");
-
-        const sol::function lua_main = lua->GetState()["main"];
+        LuaScript mainScript = m_scriptEngine.CreateScript("scripts/main.lua");
 
         m_running = true;
     }
 
     //! this will be yeeted once script engine is done
     void Application::RegisterLua() {
-        RegisterTime(lua->GetState(), &m_time);
-        RegisterInput(lua->GetState(), &m_input);
-        RegisterLogger(lua->GetState());
-        RegisterMath(lua->GetState());
-        RegisterEntity(lua, lua->GetState());
-        RegisterECS(lua->GetState());
-        RegisterAssetLoader(lua->GetState());
-        RegisterApplication(lua->GetState(), this);
-        RegisterRenderer(lua->GetState(), m_renderer);
-        RegisterScene(lua->GetState());
-        RegisterGUIWindow(lua->GetState(), &m_gui);  // Register GUI Window
-        RegisterPhysics(lua->GetState());
-        RegisterOther(lua->GetState());
+        // m_scriptEngine.SetGlobalVariable("Time", &m_time);
+        // m_scriptEngine.SetGlobalVariable("Input", &m_input);
+
+        // RegisterApplication(lua->GetState(), this);
+        // RegisterRenderer(lua->GetState(), m_renderer);
+        // RegisterGUIWindow(lua->GetState(), &m_gui);  // Register GUI Window
     }
 
     std::optional<Model::GameConfig> Application::LoadConfig() {
         VK_INFO("Loading game_config.lua...");
 
-        lua->RunFile("scripts/game_config.lua");
+        LuaScript configScript = m_scriptEngine.CreateScript("scripts/game_config.lua");
 
-        sol::table config = lua->GetState()["game_config"];
+        sol::table config = m_scriptEngine.GetScriptVariable(configScript, "game_config");
+
+        // sol::table config = lua->GetState()["game_config"];
 
         sol::optional<std::string> name = config["name"];
         if (!name) {
@@ -170,7 +162,7 @@ namespace Vakol::Controller {
 
         const auto ref = std::make_shared<ScenePhysics>(PhysicsPool::CreatePhysicsWorld());
 
-        scenes.emplace_back(sceneName, scriptName, lua, ref, true);
+        scenes.emplace_back(sceneName, scriptName, ref, true);
     }
 
     Scene& Application::GetScene(const std::string& sceneName) {

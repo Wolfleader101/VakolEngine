@@ -11,23 +11,18 @@
 #include "System.hpp"
 
 namespace Vakol::Controller {
-    Scene::Scene(const std::string& name, const std::string& scriptName, std::shared_ptr<LuaState> lua,
-                 const std::shared_ptr<ScenePhysics>& SP, const bool active)
-        : active(active),
-          scenePhysics(SP),
-          lua(lua),
-          scriptName(scriptName),
-          name(name),
-          cam(glm::vec3(0.0f, 0.0f, 2.0f)) {}
+    Scene::Scene(const std::string& name, const std::string& scriptName, const std::shared_ptr<ScenePhysics>& SP,
+                 const bool active)
+        : active(active), scenePhysics(SP), scriptName(scriptName), name(name), cam(glm::vec3(0.0f, 0.0f, 2.0f)) {}
 
     void Scene::Init() {
-        lua->RunFile("scripts/" + scriptName);
+        // lua->RunFile("scripts/" + scriptName);
 
-        sceneGlobals = lua->GetState().create_named_table(name);
+        // sceneGlobals = lua->GetState().create_named_table(name);
 
-        lua->GetState()["scene"] = this;
+        // lua->GetState()["scene"] = this;
 
-        lua->RunFunction("init");
+        // lua->RunFunction("init");
 
         initialized = true;
 
@@ -53,14 +48,14 @@ namespace Vakol::Controller {
     void Scene::DestroyEntity(const Entity entity) { entityList.RemoveEntity(entity); }
 
     void Scene::Update(const Time& time, const std::shared_ptr<View::Renderer>& renderer) {
-        lua->RunFile("scripts/" + scriptName);
+        // lua->RunFile("scripts/" + scriptName);
 
-        lua->GetState()["scene"] = this;
-        lua->RunFunction("update");
+        // lua->GetState()["scene"] = this;
+        // lua->RunFunction("update");
 
         scenePhysics->Update(time, cam);
 
-        System::Script_Update(lua, entityList, this);
+        // System::Script_Update(lua, entityList, this);
 
         System::Drawable_Update(time, renderer);
 
@@ -130,7 +125,6 @@ namespace Vakol::Controller {
             json(globals);
 
             ConvertMapToSol(lua, globals, sceneGlobals);
-
         }
 
         entityList.Deserialize(folder + "/EntityList.json");
