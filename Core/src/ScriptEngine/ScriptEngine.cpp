@@ -42,13 +42,13 @@ namespace Vakol {
 
     void ScriptEngine::Update() {
         for (LuaScript& script : m_scripts) {
-            RunFunction(script.env, "update", {});
+            RunFunction(script.env, "update", false);
         }
     }
 
     void ScriptEngine::Tick() {
         for (LuaScript& script : m_scripts) {
-            RunFunction(script.env, "tick", {});
+            RunFunction(script.env, "tick", false);
         }
     }
 
@@ -79,16 +79,8 @@ namespace Vakol {
 
     LuaType ScriptEngine::GetGlobalVariable(const std::string& name) { return GetVariable(m_state.globals(), name); }
 
-    void ScriptEngine::SetGlobalVariable(const std::string& varName, const LuaType& value) {
-        m_state.globals()[varName] = value;
-    }
-
     LuaType ScriptEngine::GetScriptVariable(const LuaScript& script, const std::string& varName) {
         return GetVariable(script.env, varName);
-    }
-
-    void ScriptEngine::SetScriptVariable(LuaScript& script, const std::string& varName, const LuaType& value) {
-        script.env[varName] = value;
     }
 
     LuaType ScriptEngine::GetVariable(sol::environment env, const std::string& varName) {
@@ -123,24 +115,27 @@ namespace Vakol {
         // return result;
     }
 
-    void ScriptEngine::RunFunction(sol::environment env, const std::string& funcName,
+    void ScriptEngine::RunFunction(sol::environment env, const std::string& funcName, bool error,
                                    const std::vector<LuaType>& args) {
         // Get the function
         sol::function func = env[funcName];
 
         // Check if it's callable
         if (!func.valid()) {
-            std::ostringstream oss;
-            oss << "Lua script execution error: Function '" << funcName << "' not found";
-            std::string errorMsg = oss.str();
+            if (error) {
+                std::ostringstream oss;
+                oss << "Lua script execution error: Function '" << funcName << "' not found";
+                std::string errorMsg = oss.str();
 
-            VK_ERROR(errorMsg);
+                VK_ERROR(errorMsg);
+            }
             return;
         }
 
         // Call the function with args, and check for errors
         //! could also use sol::variadic_args
         if (sol::protected_function_result result = func(args); !result.valid()) {
+            if (!error) return;  //! if returning someting get rid of this
             sol::error err = result;
             sol::call_status status = result.status();
 

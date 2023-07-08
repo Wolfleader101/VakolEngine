@@ -42,22 +42,38 @@ namespace Vakol {
         LuaScript CreateScript(const std::string& scriptPath);
 
         LuaType GetGlobalVariable(const std::string& name);
-        void SetGlobalVariable(const std::string& name, const LuaType& value);
+
+        template <typename T>
+        void SetGlobalVariable(const std::string& name, T&& value) {
+            m_state[name] = std::forward<T>(value);
+        }
 
         LuaType GetScriptVariable(const LuaScript& script, const std::string& varName);
-        void SetScriptVariable(LuaScript& script, const std::string& varName, const LuaType& value);
 
-        template <typename Func>
-        void SetGlobalFunction(const std::string& funcName, Func funcPtr) {
-            m_state.set_function(
-                funcName, sol::overload([=](sol::variadic_args args) { return sol::call_status::ok, funcPtr(args); }));
+        template <typename T>
+        void SetScriptVariable(LuaScript& script, const std::string& varName, T&& value) {
+            script.env[varName] = std::forward<T>(value);
+
+            m_state.set_function("app_run", &Application::SetRunning, app);
         }
 
-        template <typename Func>
-        void SetScriptFunction(LuaScript& script, const std::string& funcName, Func funcPtr) {
-            script.env.set_function(
-                funcName, sol::overload([=](sol::variadic_args args) { return sol::call_status::ok, funcPtr(args); }));
+        // template <typename... Args, typename Key>
+        // state_view& set_function(Key&& key, Args&&... args) {
+        // 	global.set_function(std::forward<Key>(key), std::forward<Args>(args)...);
+        // 	return *this;
+        // }
+
+        template <typename... Args, typename Key>
+        void SetGlobalFunction(Key&& key, Args&&... args) {
+            m_state.set_function(std::forward<Key>(key), std::forward<Args>(args)...);
         }
+
+        // template <typename... Args, typename Key>
+        // void SetScriptFunction(LuaScript& script, const std::string& funcName, Func funcPtr) {
+        //     script.env.set_function(
+        //         funcName, sol::overload([=](sol::variadic_args args) { return sol::call_status::ok, funcPtr(args);
+        //         }));
+        // }
 
         void Update();
 
@@ -74,7 +90,8 @@ namespace Vakol {
         LuaType GetVariable(sol::environment env, const std::string& varName);
 
         void RunFile(sol::environment env, const std::string& file);
-        void RunFunction(sol::environment env, const std::string& funcName, const std::vector<LuaType>& args);
+        void RunFunction(sol::environment env, const std::string& funcName, bool error = true,
+                         const std::vector<LuaType>& args = {});
 
         void RegisterFunctions();
         void RegisterTypes();

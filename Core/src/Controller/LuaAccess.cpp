@@ -202,9 +202,6 @@ namespace Vakol::Controller {
         time_type["curr_time"] = &Time::curTime;
         time_type["prev_time"] = &Time::prevTime;
         time_type["fps"] = &Time::fps;
-
-        // TODO this is to be set elsewhere
-        // lua["Time"] = time;
     }
 
     void RegisterInput(sol::state& lua) {
@@ -217,9 +214,6 @@ namespace Vakol::Controller {
         input_type.set_function("get_mouse_up", &Input::GetMouseButtonUp);
         input_type.set_function("get_mouse_pos", &Input::GetMousePos);
         input_type.set_function("get_delta_mouse_pos", &Input::GetDeltaMousePos);
-
-        // TODO this is to be set elsewhere
-        // lua["Input"] = input;
 
         lua["KEYS"] = lua.create_table_with(
             "MOUSE_0", Input::KEY::KEY_MOUSE_0, "MOUSE_1", Input::KEY::KEY_MOUSE_1, "KEY_SPACE", Input::KEY::KEY_SPACE,
@@ -260,15 +254,6 @@ namespace Vakol::Controller {
 
             return true;
         });
-    }
-
-    // TODO this is to be moved out
-    void RegisterApplication(sol::state& lua, Application* app) {
-        lua.set_function("app_run", &Application::SetRunning, app);
-        lua.set_function("add_scene", &Application::AddScene, app);
-        lua.set_function("get_scene", &Application::GetScene, app);
-
-        lua.set_function("set_active_mouse", &Application::SetActiveMouse, app);
     }
 
     void RegisterModel(sol::state& lua) {
@@ -619,9 +604,6 @@ namespace Vakol::Controller {
     void RegisterGUIWindow(sol::state& lua) {
         auto gui_window_type = lua.new_usertype<View::GUIWindow>("gui");
 
-        // TODO declare this elswehre
-        // lua["GUI"] = gui;
-
         gui_window_type.set_function("get_display_window_width", &View::GUIWindow::DisplayWindowWidth);
         gui_window_type.set_function("get_display_window_height", &View::GUIWindow::DisplayWindowHeight);
 
@@ -659,24 +641,6 @@ namespace Vakol::Controller {
         gui_window_type.set_function("change_background_rounding", &View::GUIWindow::WindowRoundingStyle);
 
         gui_window_type.set_function("end_window", &View::GUIWindow::EndWindowCreation);
-    }
-
-    // TODO this is to be moved out
-    void RegisterRenderer(sol::state& lua, const std::shared_ptr<View::Renderer>& renderer) {
-        lua.set_function("toggle_wireframe", [&] { renderer->ToggleWireframe(); });
-
-        lua.set_function("toggle_skybox", [&] { renderer->ToggleSkybox(); });
-
-        lua.set_function("set_wireframe", [&](const bool wireframe) { renderer->SetWireframe(wireframe); });
-
-        lua.set_function("set_skybox", [&](const bool skybox) { renderer->SetSkybox(skybox); });
-
-        lua.set_function("clear_color_v", [&](const glm::vec4& color) { renderer->ClearColor(color); });
-
-        lua.set_function("clear_color", [&](const float r, const float g, const float b, const float a) {
-            renderer->ClearColor(r, g, b, a);
-            renderer->ClearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        });
     }
 
     void RegisterRigidBody(sol::state& lua) {

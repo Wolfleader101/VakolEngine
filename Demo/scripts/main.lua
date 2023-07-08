@@ -23,5 +23,6 @@
 -- endScreen:set_active(false);
 
 print_info("HELLO FROM MAIN")
-print_err(Time.delta_time)
+print_err(Time.fps)
+
 -- add_scene("scenes/sandbox.lua", "sandbox");

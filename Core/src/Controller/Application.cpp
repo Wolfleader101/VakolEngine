@@ -54,12 +54,26 @@ namespace Vakol::Controller {
 
     //! this will be yeeted once script engine is done
     void Application::RegisterLua() {
-        // m_scriptEngine.SetGlobalVariable("Time", &m_time);
-        // m_scriptEngine.SetGlobalVariable("Input", &m_input);
+        m_scriptEngine.SetGlobalVariable("Time", &m_time);
+        m_scriptEngine.SetGlobalVariable("Input", &m_input);
+        m_scriptEngine.SetGlobalVariable("GUI", &m_gui);
 
-        // RegisterApplication(lua->GetState(), this);
-        // RegisterRenderer(lua->GetState(), m_renderer);
-        // RegisterGUIWindow(lua->GetState(), &m_gui);  // Register GUI Window
+        m_scriptEngine.SetGlobalFunction("app_run", &Application::SetRunning, this);
+        m_scriptEngine.SetGlobalFunction("add_scene", &Application::AddScene, this);
+        m_scriptEngine.SetGlobalFunction("get_scene", &Application::GetScene, this);
+        m_scriptEngine.SetGlobalFunction("set_active_mouse", &Application::SetActiveMouse, this);
+
+        m_scriptEngine.SetGlobalFunction("toggle_wireframe", &View::Renderer::ToggleWireframe, m_renderer);
+        m_scriptEngine.SetGlobalFunction("toggle_skybox", &View::Renderer::ToggleSkybox, m_renderer);
+        m_scriptEngine.SetGlobalFunction("set_wireframe", &View::Renderer::SetWireframe, m_renderer);
+        m_scriptEngine.SetGlobalFunction("set_skybox", &View::Renderer::SetSkybox, m_renderer);
+
+        // lua.set_function("clear_color_v", [&](const glm::vec4& color) { renderer->ClearColor(color); });
+
+        // lua.set_function("clear_color", [&](const float r, const float g, const float b, const float a) {
+        //     renderer->ClearColor(r, g, b, a);
+        //     renderer->ClearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        // });
     }
 
     std::optional<Model::GameConfig> Application::LoadConfig() {
@@ -68,8 +82,6 @@ namespace Vakol::Controller {
         LuaScript configScript = m_scriptEngine.CreateScript("scripts/game_config.lua");
 
         sol::table config = m_scriptEngine.GetScriptVariable(configScript, "game_config");
-
-        // sol::table config = lua->GetState()["game_config"];
 
         sol::optional<std::string> name = config["name"];
         if (!name) {
