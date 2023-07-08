@@ -40,7 +40,7 @@ namespace Vakol::Controller {
 
         if (!ent.GetComponent<GUID>().id.isValid()) ent.GetComponent<GUID>().GenNewGUID();
 
-        if (!sname.empty()) ent.AddComponent<Script>(sname, lua, ent, *this);
+        // if (!sname.empty()) ent.AddComponent<Script>(sname, lua, ent, *this);
 
         return ent;
     }
@@ -109,9 +109,9 @@ namespace Vakol::Controller {
         if (globalOutput.good()) {
             cereal::JSONOutputArchive json(globalOutput);
 
-            SolTableData globals;
-            ConvertSolToMap(sceneGlobals, globals);
-            json(CEREAL_NVP(globals));
+            // SolTableData globals;
+            // ConvertSolToMap(sceneGlobals, globals);
+            // json(CEREAL_NVP(globals));
         }
     }
 
@@ -119,12 +119,12 @@ namespace Vakol::Controller {
         std::ifstream globalInput(folder + "/Globals.json");
 
         if (globalInput.good()) {
-            cereal::JSONInputArchive json(globalInput);
+            // cereal::JSONInputArchive json(globalInput);
 
-            SolTableData globals;
-            json(globals);
+            // SolTableData globals;
+            // json(globals);
 
-            ConvertMapToSol(lua, globals, sceneGlobals);
+            // ConvertMapToSol(lua, globals, sceneGlobals);
         }
 
         entityList.Deserialize(folder + "/EntityList.json");
@@ -132,7 +132,7 @@ namespace Vakol::Controller {
         System::BindScene(*this);
         System::Drawable_Init();
         System::Physics_Init();
-        System::Script_Deserialize(lua, entityList, this);
+        // System::Script_Deserialize(lua, entityList, this);
 
         std::ifstream input(folder + "/Scene.json");
 

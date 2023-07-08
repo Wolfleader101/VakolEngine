@@ -86,33 +86,33 @@ namespace Vakol::Controller {
             });
     }
 
-    void System::Script_Update(std::shared_ptr<LuaState> lua, EntityList& list, Scene* scene) {
-        m_registry->view<Script>().each([&](auto entity_id, auto& script) {
-            lua->RunFile("scripts/" + script.script_name);
+    // void System::Script_Update(std::shared_ptr<LuaState> lua, EntityList& list, Scene* scene) {
+    //     m_registry->view<Script>().each([&](auto entity_id, auto& script) {
+    //         lua->RunFile("scripts/" + script.script_name);
 
-            lua->GetState()["scene"] = scene;
-            lua->GetState()["entity"] = list.GetEntity(static_cast<unsigned int>(entity_id));
-            lua->GetState()["state"] = script.state;
+    //         lua->GetState()["scene"] = scene;
+    //         lua->GetState()["entity"] = list.GetEntity(static_cast<unsigned int>(entity_id));
+    //         lua->GetState()["state"] = script.state;
 
-            lua->RunFunction("update");
-        });
-    }
+    //         lua->RunFunction("update");
+    //     });
+    // }
 
-    void System::Script_Deserialize(std::shared_ptr<LuaState> lua, EntityList& list, Scene* scene) {
-        m_registry->view<Script>().each([&](auto entity_id, auto& script) {
-            lua->RunFile("scripts/" + script.script_name);
+    // void System::Script_Deserialize(std::shared_ptr<LuaState> lua, EntityList& list, Scene* scene) {
+    //     m_registry->view<Script>().each([&](auto entity_id, auto& script) {
+    //         lua->RunFile("scripts/" + script.script_name);
 
-            lua->GetState()["scene"] = scene;
-            lua->GetState()["entity"] = list.GetEntity(static_cast<unsigned int>(entity_id));
+    //         lua->GetState()["scene"] = scene;
+    //         lua->GetState()["entity"] = list.GetEntity(static_cast<unsigned int>(entity_id));
 
-            script.state = lua->GetState().create_table();
-            Controller::ConvertMapToSol(lua, script.data, script.state);
+    //         script.state = lua->GetState().create_table();
+    //         Controller::ConvertMapToSol(lua, script.data, script.state);
 
-            lua->GetState()["state"] = script.state;
+    //         lua->GetState()["state"] = script.state;
 
-            lua->RunFunction("deserialize");
-        });
-    }
+    //         lua->RunFunction("deserialize");
+    //     });
+    // }
 
     void System::Physics_Init() {
         const auto view = m_registry->view<RigidBody>();

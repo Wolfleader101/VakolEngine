@@ -2,7 +2,6 @@
 
 #include <reactphysics3d/reactphysics3d.h>
 
-#include <Controller/LuaState.hpp>
 #include <Controller/Physics/ScenePhysics.hpp>
 #include <crossguid/guid.hpp>
 #include <glm/glm.hpp>
@@ -204,8 +203,8 @@ namespace Vakol::Model::Components {
      * @brief Script component that holds reference to file
      */
     struct Script {
-        std::string script_name;       /**< The name of the script file. */
-        sol::table state;              /**< The Lua state table. */
+        std::string script_name; /**< The name of the script file. */
+        // sol::table state;              /**< The Lua state table. */
         Controller::SolTableData data; /**< The serialized Lua state table data. */
 
         /**
@@ -226,8 +225,7 @@ namespace Vakol::Model::Components {
          * @param entity The entity.
          * @param scene The scene.
          */
-        Script(const std::string& script, std::shared_ptr<Controller::LuaState> lua, Entity& entity,
-               Controller::Scene& scene);
+        Script(const std::string& script, Entity& entity, Controller::Scene& scene);
 
         /**
          * @brief Serializes the Script object for saving.
@@ -238,10 +236,10 @@ namespace Vakol::Model::Components {
         void save(Archive& ar) const {
             ar(cereal::make_nvp("ScriptName", script_name));
 
-            Controller::SolTableData temp;
-            Controller::ConvertSolToMap(state, temp);
+            // Controller::SolTableData temp;
+            // Controller::ConvertSolToMap(state, temp);
 
-            ar(temp);
+            // ar(temp);
         }
 
         /**
@@ -271,14 +269,14 @@ namespace Vakol::Model::Components {
          * @brief Overloaded constructor that initializes the FSM with a Lua state.
          * @param lua A shared pointer to a LuaState.
          */
-        FSM(std::shared_ptr<Controller::LuaState> lua);
+        // FSM(std::shared_ptr<Controller::LuaState> lua);
 
         /**
          * @brief Adds a new state to the FSM.
          * @param stateName The name of the new state.
          * @param callback The function to be executed when this state is active.
          */
-        void AddState(const std::string& stateName, sol::protected_function& callback);
+        // void AddState(const std::string& stateName, sol::protected_function& callback);
 
         /**
          * @brief Changes the current state of the FSM.
@@ -303,12 +301,12 @@ namespace Vakol::Model::Components {
          */
         template <class Archive>
         void save(Archive& ar) const {
-            ar(cereal::make_nvp("Current State", currentState));
+            // ar(cereal::make_nvp("Current State", currentState));
 
-            Controller::SolTableData temp;
-            Controller::ConvertSolToMap(states, temp);
+            // Controller::SolTableData temp;
+            // Controller::ConvertSolToMap(states, temp);
 
-            ar(temp);
+            // ar(temp);
         }
 
         /**
@@ -317,16 +315,16 @@ namespace Vakol::Model::Components {
          */
         template <class Archive>
         void load(Archive& ar) {
-            ar(cereal::make_nvp("Current State", currentState));
+            // ar(cereal::make_nvp("Current State", currentState));
 
-            data.data.clear();
-            ar(data);
+            // data.data.clear();
+            // ar(data);
         }
 
-        std::string currentState;                   ///< The current state of the FSM.
-        sol::table states;                          ///< The states of the FSM.
-        std::shared_ptr<Controller::LuaState> lua;  ///< Shared pointer to a LuaState.
-        Controller::SolTableData data;              ///< The data to be saved or loaded.
+        std::string currentState;  ///< The current state of the FSM.
+        // sol::table states;                          ///< The states of the FSM.
+        // std::shared_ptr<Controller::LuaState> lua;  ///< Shared pointer to a LuaState.
+        // Controller::SolTableData data;  ///< The data to be saved or loaded.
     };
 
     /**

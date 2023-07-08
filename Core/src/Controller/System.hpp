@@ -5,18 +5,16 @@
 #include <Model/Components.hpp>
 
 #include "Controller/Terrain.hpp"
-#include "LuaState.hpp"
 #include "Scene.hpp"
 #include "View/Renderer/Renderer.hpp"
 
-namespace Vakol::Controller
-{
+namespace Vakol::Controller {
 
     class Scene;
     using namespace Physics;
     using namespace Components;
 
-   /**
+    /**
      * @class System
      *
      * @brief Class representing a system in the application.
@@ -56,7 +54,7 @@ namespace Vakol::Controller
          * @param list The entity list.
          * @param scene The pointer to the scene.
          */
-        static void Script_Init(std::shared_ptr<LuaState> lua, EntityList& list, Scene* scene);
+        // static void Script_Init(std::shared_ptr<LuaState> lua, EntityList& list, Scene* scene);
 
         /**
          * @brief Update the scripting system.
@@ -65,7 +63,7 @@ namespace Vakol::Controller
          * @param list The entity list.
          * @param scene The pointer to the scene.
          */
-        static void Script_Update(std::shared_ptr<LuaState> lua, EntityList& list, Scene* scene);
+        // static void Script_Update(std::shared_ptr<LuaState> lua, EntityList& list, Scene* scene);
 
         /**
          * @brief Prepare the scripting system for deserialization.
@@ -74,7 +72,7 @@ namespace Vakol::Controller
          * @param list The entity list.
          * @param scene The pointer to the scene.
          */
-        static void Script_Deserialize(std::shared_ptr<LuaState> lua, EntityList& list, Scene* scene);
+        // static void Script_Deserialize(std::shared_ptr<LuaState> lua, EntityList& list, Scene* scene);
 
         /**
          * @brief Initialize the physics system for an entity.

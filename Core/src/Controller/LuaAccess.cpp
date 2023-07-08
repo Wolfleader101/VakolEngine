@@ -545,7 +545,7 @@ namespace Vakol::Controller {
         fsm_type.set_function("get_state", &FSM::GetState);
         fsm_type.set_function("change_state", &FSM::ChangeState);
         fsm_type.set_function("add_state", [](FSM& self, std::string& stateName, sol::protected_function& callback) {
-            return self.AddState(stateName, callback);
+            // return self.AddState(stateName, callback);
         });
         fsm_type.set_function("update", &FSM::Update);
     }
@@ -568,7 +568,7 @@ namespace Vakol::Controller {
     void RegisterScene(sol::state& lua) {
         auto scene_type = lua.new_usertype<Scene>("scene");
 
-        scene_type["globals"] = &Scene::sceneGlobals;
+        // scene_type["globals"] = &Scene::sceneGlobals;
 
         scene_type.set_function("create_entity", &Scene::CreateEntity);
 

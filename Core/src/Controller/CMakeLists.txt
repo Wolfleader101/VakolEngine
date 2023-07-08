@@ -13,9 +13,6 @@ src/Controller/Application.cpp
 src/Controller/Animator.hpp
 src/Controller/Animator.cpp
 
-src/Controller/LuaState.hpp
-src/Controller/LuaState.cpp
-
 src/Controller/Logger.hpp
 src/Controller/Logger.cpp
 

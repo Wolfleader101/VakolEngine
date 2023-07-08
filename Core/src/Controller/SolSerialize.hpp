@@ -7,7 +7,6 @@
 #include <cereal/types/variant.hpp>
 
 #include "Controller/Math.hpp"
-#include "LuaState.hpp"
 
 namespace Vakol::Controller {
 
@@ -40,7 +39,7 @@ namespace Vakol::Controller {
      * @param table The sol::table to convert.
      * @param solTableData The SolTableData to store the converted data.
      */
-    void ConvertSolToMap(const sol::table& table, SolTableData& solTableData);
+    // void ConvertSolToMap(const sol::table& table, SolTableData& solTableData);
 
     /**
      * @brief Convert a SolTableData to a Lua table.
@@ -49,6 +48,6 @@ namespace Vakol::Controller {
      * @param solTableData The SolTableData to convert.
      * @param table The sol::table to store the converted data.
      */
-    void ConvertMapToSol(std::shared_ptr<LuaState> lua, const SolTableData& solTableData, sol::table& table);
+    // void ConvertMapToSol(std::shared_ptr<LuaState> lua, const SolTableData& solTableData, sol::table& table);
 
 }  // namespace Vakol::Controller

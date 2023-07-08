@@ -1,20 +1,19 @@
 #pragma once
 
-#include <View/Window/Window.hpp>
-#include <functional>  //Gives acces to std::function
-#include <string>
-
-#include <Controller/LuaState.hpp>
 #include <imgui.h>
+
+#include <View/Window/Window.hpp>
+#include <functional>
+#include <memory>
+#include <string>
 
 namespace Vakol::View {
     /**
      * @class GUIWindow
      * @brief GUIWindow class containing UI data
      */
-    class GUIWindow
-	{
-    public:
+    class GUIWindow {
+       public:
         /**
          * @brief Basic Constructor
          */
@@ -24,11 +23,11 @@ namespace Vakol::View {
          *
          * @param window The GLFW window the UI will be inside of
          */
-    	void Init(const std::shared_ptr<Window>& window) const;
+        void Init(const std::shared_ptr<Window>& window) const;
         /**
          * @brief Creates a new frame for the window
          */
-    	void CreateNewFrame() const;
+        void CreateNewFrame() const;
         /**
          * @brief Changes the default font being used in Dear ImGui
          *
@@ -40,8 +39,8 @@ namespace Vakol::View {
          */
         void EndFrame() const;
         /**
-		 * @brief Returns the width of the display window
-		 */
+         * @brief Returns the width of the display window
+         */
         float DisplayWindowWidth() const;
         /**
          * @brief Returns the height of the display window
@@ -58,16 +57,17 @@ namespace Vakol::View {
          * @param xOffset The x position of the window will be offset by
          * @param yOffset The y position of the window will be offset by
          */
-        void StartWindowCreation(const std::string& windowName, bool centerX, bool centerY, float width, float height, const float xOffset, float yOffset) const;
+        void StartWindowCreation(const std::string& windowName, bool centerX, bool centerY, float width, float height,
+                                 const float xOffset, float yOffset) const;
         /**
          * @brief Returns the FPS of the current window
          */
-    	float GetFramesPerSecond() const;
+        float GetFramesPerSecond() const;
         /**
          * @brief An update function to call new frame
          *
          */
-    	void Update() const;
+        void Update() const;
         /**
          * @brief Add a text string to the UI Window
          *
@@ -80,7 +80,8 @@ namespace Vakol::View {
          * @param inputBlue The blue value of the text
          * @param inputAlpha The alpha value of the text
          */
-        void AddText(const std::string& inputText, const bool centerX, const bool centerY, const float fontSize, const float inputRed, const float inputGreen, const float inputBlue, const float inputAlpha) const; 
+        void AddText(const std::string& inputText, const bool centerX, const bool centerY, const float fontSize,
+                     const float inputRed, const float inputGreen, const float inputBlue, const float inputAlpha) const;
 
         /**
          * \brief Adds an image to the UI Window
@@ -98,7 +99,8 @@ namespace Vakol::View {
          * @param height The height of the button
          * @param inputFunction A function passed into the button to be run when the button is pressed
          */
-    	void AddButton(const std::string& buttonName, const bool centerX, const bool centerY, float width, float height, const std::function<void()>& inputFunction) const;
+        void AddButton(const std::string& buttonName, const bool centerX, const bool centerY, float width, float height,
+                       const std::function<void()>& inputFunction) const;
         /**
          * @brief Adds a checkbox to a given window
          *
@@ -114,7 +116,7 @@ namespace Vakol::View {
          * @param minValue The minimum value of the slider
          * @param maxValue the maximum value of the slider
          */
-    	void AddIntSlider(const std::string& sliderName, int* sliderValue, int minValue, int maxValue) const;
+        void AddIntSlider(const std::string& sliderName, int* sliderValue, int minValue, int maxValue) const;
         /**
          * @brief Adds a Vector based Integer Slider to the window
          *
@@ -124,7 +126,8 @@ namespace Vakol::View {
          * @param minValue The minimum value of the slider
          * @param maxValue the maximum value of the slider
          */
-    	void AddVecIntSlider(const std::string& sliderName, int sliderValue[], const int size, const int minValue, const int maxValue) const;
+        void AddVecIntSlider(const std::string& sliderName, int sliderValue[], const int size, const int minValue,
+                             const int maxValue) const;
         /**
          * @brief Adds a Float Slider to the window
          *
@@ -133,9 +136,10 @@ namespace Vakol::View {
          * @param minValue The minimum value of the slider
          * @param maxValue the maximum value of the slider
          */
-    	void AddFloatSlider(const std::string& sliderName, float* sliderValue, const float minValue, const float maxValue) const;
+        void AddFloatSlider(const std::string& sliderName, float* sliderValue, const float minValue,
+                            const float maxValue) const;
 
-    	/**
+        /**
          * @brief Adds a Vector based Float Slider to the window
          *
          * @param sliderName The name of the slider
@@ -144,11 +148,12 @@ namespace Vakol::View {
          * @param minValue The minimum value of the slider
          * @param maxValue the maximum value of the slider
          */
-    	void AddVecFloatSlider(const std::string& sliderName, float sliderValue[], const int size, const float minValue, const float maxValue) const;
+        void AddVecFloatSlider(const std::string& sliderName, float sliderValue[], const int size, const float minValue,
+                               const float maxValue) const;
         /**
          * @brief Adds a new line in the same window
          */
-        void SameLine() const; 
+        void SameLine() const;
 
         /**
          * @brief Sets the background style of the window
@@ -158,7 +163,8 @@ namespace Vakol::View {
          * @param inputBlue The blue value of the background color
          * @param inputAlpha The alpha value of the background color
          */
-        void WindowBackgroundStyle(const float inputRed, const float inputGreen, const float inputBlue, const float inputAlpha) const;
+        void WindowBackgroundStyle(const float inputRed, const float inputGreen, const float inputBlue,
+                                   const float inputAlpha) const;
 
         /**
          * @brief Sets the rounding style of the window
@@ -169,13 +175,13 @@ namespace Vakol::View {
         /**
          * @brief Ends the creation of a GUI window
          */
-    	void EndWindowCreation() const;
+        void EndWindowCreation() const;
         /**
          * @brief A basic deconstructor for the GUI
          */
         ~GUIWindow();
 
-    private:
+       private:
         std::vector<ImFont*> fonts;  /**< Fonts used in the GUI window */
         bool is_initialised = false; /**< Flag indicating whether the GUI window is initialized */
         std::string scriptName;      /**< Name of the script */

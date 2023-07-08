@@ -12,29 +12,28 @@ namespace Vakol::Model::Components {
 
     Script::Script(std::string& name) : script_name(std::move(name)) {}
 
-    Script::Script(const std::string& script, std::shared_ptr<Controller::LuaState> lua, Entity& entity,
-                   Controller::Scene& scene)
-        : script_name(script) {
-        lua->GetState()["scene"] = std::ref(scene);
-        lua->GetState()["entity"] = entity;
+    Script::Script(const std::string& script, Entity& entity, Controller::Scene& scene)
+        : script_name(script){
+              // lua->GetState()["scene"] = std::ref(scene);
+              // lua->GetState()["entity"] = entity;
 
-        state = lua->GetState().create_table();
-        lua->GetState()["state"] = state;
+              // state = lua->GetState().create_table();
+              // lua->GetState()["state"] = state;
 
-        lua->RunFile("scripts/" + script);
+              // lua->RunFile("scripts/" + script);
 
-        lua->RunFunction("init");
-    };
+              // lua->RunFunction("init");
+          };
 
-    FSM::FSM(std::shared_ptr<Controller::LuaState> lua) : lua(lua) {
-        // Create a new table in the Lua state for the states
-        states = lua->GetState().create_table();
-    }
+    // FSM::FSM(std::shared_ptr<Controller::LuaState> lua) : lua(lua) {
+    //     // Create a new table in the Lua state for the states
+    //     states = lua->GetState().create_table();
+    // }
 
-    void FSM::AddState(const std::string& stateName, sol::protected_function& callback) {
-        // Add a new state to the states table
-        states[stateName] = callback;
-    }
+    // void FSM::AddState(const std::string& stateName, sol::protected_function& callback) {
+    //     // Add a new state to the states table
+    //     states[stateName] = callback;
+    // }
 
     void FSM::ChangeState(const std::string& stateName) {
         // Change the current state
@@ -48,8 +47,8 @@ namespace Vakol::Model::Components {
 
     void FSM::Update() {
         // Call the callback for the current state
-        const sol::function callback = states[currentState];
-        lua->RunFunction(callback);
+        // const sol::function callback = states[currentState];
+        // lua->RunFunction(callback);
     }
 
     Drawable::Drawable(std::string&& file)

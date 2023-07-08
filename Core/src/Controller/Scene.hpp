@@ -11,7 +11,7 @@
 
 namespace Vakol::Controller {
 
-   /**
+    /**
      * @class Scene
      *
      * @brief Class representing a scene in the application.
@@ -26,8 +26,8 @@ namespace Vakol::Controller {
          * @param SP The shared pointer to the ScenePhysics object.
          * @param active Whether the scene is active or not.
          */
-        Scene(const std::string& name, const std::string& scriptName, 
-              const std::shared_ptr<Physics::ScenePhysics>& SP, bool active);
+        Scene(const std::string& name, const std::string& scriptName, const std::shared_ptr<Physics::ScenePhysics>& SP,
+              bool active);
 
         /**
          * @brief Initialize the scene.
@@ -124,14 +124,9 @@ namespace Vakol::Controller {
         /**
          * @brief The scene globals in Lua.
          */
-        sol::table sceneGlobals;
+        // sol::table sceneGlobals;
 
        private:
-        /**
-         * @brief The shared pointer to the LuaState object.
-         */
-        std::shared_ptr<LuaState> lua;
-
         /**
          * @brief The name of the Lua script associated with the scene.
          */

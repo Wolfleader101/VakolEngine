@@ -7,7 +7,6 @@
 #include <vector>
 
 #include "Logger.hpp"
-#include "Controller/LuaState.hpp"
 
 namespace Vakol::Model {
 
