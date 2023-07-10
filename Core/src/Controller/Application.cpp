@@ -139,6 +139,16 @@ namespace Vakol::Controller {
             m_time.accumulator += m_time.deltaTime;
 
             while (m_time.accumulator >= m_time.tickRate) {
+                // eventually need to do something like m_scenemanager.GetCurrentScene().GetScript()
+
+                for (auto& scene : scenes) {
+                    if (!scene.active) continue;
+
+                    if (!scene.initialized) scene.Init();
+
+                    m_scriptEngine.Tick(scene.GetScript());
+                }
+
                 for (auto& script : scripts) {
                     m_scriptEngine.Tick(script);
                 }
@@ -156,8 +166,6 @@ namespace Vakol::Controller {
             // TODO move to a scene manager
             for (auto& scene : scenes) {
                 if (!scene.active) continue;
-
-                if (!scene.initialized) scene.Init();
 
                 System::BindScene(scene);
 

@@ -11,3 +11,7 @@ function update()
 
     end
 end
+
+function tick()
+    print_info("sandbox tick")
+end
