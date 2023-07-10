@@ -7,7 +7,10 @@ function update()
 end
 
 function tick()
-    print("tick")
     print_err(Time.prev_time)
     print(Time.delta_time)
+
+    if(Input:get_key_down(KEYS["KEY_ESC"])) then
+        app_run(false);
+    end
 end

@@ -28,29 +28,19 @@ static std::string getStatusString(const sol::call_status status) {
 
 namespace Vakol {
 
-    ScriptEngine::ScriptEngine(Controller::Time& time) : m_state(), m_time(time) {
+    ScriptEngine::ScriptEngine() : m_state() {
         m_state.open_libraries(sol::lib::base);
         m_state.open_libraries(sol::lib::math);
         m_state.open_libraries(sol::lib::string);
 
         this->RegisterTypes();
         this->RegisterFunctions();
-
-        CreateScript("scripts/test.lua");
     }
-    ScriptEngine::~ScriptEngine() { m_scripts.clear(); }
+    // ScriptEngine::~ScriptEngine() { m_scripts.clear(); }
 
-    void ScriptEngine::Update() {
-        for (LuaScript& script : m_scripts) {
-            RunFunction(script.env, "update", false);
-        }
-    }
+    void ScriptEngine::Update(LuaScript& script) { RunFunction(script.env, "update", false); }
 
-    void ScriptEngine::Tick() {
-        for (LuaScript& script : m_scripts) {
-            RunFunction(script.env, "tick", false);
-        }
-    }
+    void ScriptEngine::Tick(LuaScript& script) { RunFunction(script.env, "tick", false); }
 
     LuaScript ScriptEngine::CreateScript(const std::string& scriptPath) {
         LuaScript script;
@@ -64,15 +54,7 @@ namespace Vakol {
         //! run using the scripts own context, (you probably dont want to run every script on creation tho?)
         this->RunFile(script.env, scriptPath);
 
-        // TODO -  remove this code, only have it for testing
-        // JSType age = this->GetScriptVariable(script, "age");
-        // if (std::holds_alternative<int>(age)) VK_INFO("Age: {0}", std::get<double>(age));
-
-        // Store the new context so that we can destroy it later
-        //! this might be doubling handling, may not need to store a list of contexts
-        // m_scriptCtxs.push_back(script.env_ctx);
-
-        m_scripts.push_back(script);  //! just for testing - remove later
+        // m_scripts.push_back(script);  //! just for testing - remove later
 
         return script;
     }
@@ -175,16 +157,4 @@ namespace Vakol {
         Controller::RegisterLogger(m_state);
     }
 
-    // void ScriptEngine::RegisterVars() {
-    //     //! TODO MOVE THESE INTO SEPERATE FILE
-
-    //     auto time_type = m_state.new_usertype<Controller::Time>("Time");
-    //     time_type["delta_time"] = &Controller::Time::deltaTime;
-    //     time_type["tick_rate"] = &Controller::Time::tickRate;
-    //     time_type["curr_time"] = &Controller::Time::curTime;
-    //     time_type["prev_time"] = &Controller::Time::prevTime;
-    //     time_type["fps"] = &Controller::Time::fps;
-
-    //     m_state.globals()["Time"] = &m_time;
-    // }
 };  // namespace Vakol

@@ -13,8 +13,7 @@
 namespace Vakol::Controller {
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
-    Application::Application()
-        : m_window(nullptr), m_renderer(nullptr), m_running(false), m_input(), m_scriptEngine(m_time) {
+    Application::Application() : m_window(nullptr), m_renderer(nullptr), m_running(false), m_input(), m_scriptEngine() {
         scenes.reserve(10);
     };
 
@@ -128,6 +127,10 @@ namespace Vakol::Controller {
     }
 
     void Application::Run() {
+        std::vector<LuaScript> scripts;
+
+        scripts.push_back(m_scriptEngine.CreateScript("scripts/test.lua"));
+
         while (m_running) {
             m_time.Update();
             m_gui.CreateNewFrame();
@@ -137,13 +140,16 @@ namespace Vakol::Controller {
             m_time.accumulator += m_time.deltaTime;
 
             while (m_time.accumulator >= m_time.tickRate) {
-                m_scriptEngine.Tick();
+                for (auto& script : scripts) {
+                    m_scriptEngine.Tick(script);
+                }
                 // Decrease the accumulated time
-                VK_ERROR(m_time.prevTime);
                 m_time.accumulator -= m_time.tickRate;
             }
 
-            m_scriptEngine.Update();
+            for (auto& script : scripts) {
+                m_scriptEngine.Update(script);
+            }
 
             // Compute the time interpolation factor
             // float alpha = m_time.accumulator / m_time.tickRate;

@@ -15,6 +15,9 @@ namespace Vakol::Model {
 
 using namespace Vakol::Model;
 
+template <typename T>
+using ComponentList = entt::view<T>;
+
 namespace Vakol::Controller {
 
     class System;
@@ -109,6 +112,11 @@ namespace Vakol::Controller {
          * @param file The file path to deserialize from.
          */
         void Deserialize(const std::string& file);
+
+        template <typename T>
+        ComponentList<T> GetComponents() {
+            return m_Registry.view<T>();
+        }
 
        private:
         /**

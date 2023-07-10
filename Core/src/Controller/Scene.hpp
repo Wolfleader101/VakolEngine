@@ -35,11 +35,6 @@ namespace Vakol::Controller {
         void Init();
 
         /**
-         * @brief The entity list of the scene.
-         */
-        EntityList entityList;
-
-        /**
          * @brief Get the name of the scene.
          *
          * @return const std::string& The name of the scene.
@@ -121,6 +116,8 @@ namespace Vakol::Controller {
          */
         std::shared_ptr<Entity> GetEntity(const std::string& tag);
 
+        const EntityList& GetEntityList() const { return entityList; }
+
         /**
          * @brief The scene globals in Lua.
          */
@@ -141,5 +138,12 @@ namespace Vakol::Controller {
          * @brief The camera of the scene.
          */
         Camera cam;
+
+        //! todo store a LuaScript here (can then get rid of script name attribute)
+
+        /**
+         * @brief The entity list of the scene.
+         */
+        EntityList entityList;
     };
 }  // namespace Vakol::Controller

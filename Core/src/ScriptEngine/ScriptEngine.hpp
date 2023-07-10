@@ -3,10 +3,7 @@
 #define SOL_ALL_SAFETIES_ON 1
 #include <sol/sol.hpp>
 #include <string>
-#include <unordered_map>
-#include <variant>
-
-#include "Controller/Time.hpp"
+#include <vector>
 
 namespace Vakol {
 
@@ -36,8 +33,7 @@ namespace Vakol {
 
     class ScriptEngine {
        public:
-        ScriptEngine(Controller::Time& time);
-        ~ScriptEngine();
+        ScriptEngine();
 
         LuaScript CreateScript(const std::string& scriptPath);
 
@@ -57,35 +53,23 @@ namespace Vakol {
             m_state.set_function("app_run", &Application::SetRunning, app);
         }
 
-        // template <typename... Args, typename Key>
-        // state_view& set_function(Key&& key, Args&&... args) {
-        // 	global.set_function(std::forward<Key>(key), std::forward<Args>(args)...);
-        // 	return *this;
-        // }
-
         template <typename... Args, typename Key>
         void SetGlobalFunction(Key&& key, Args&&... args) {
             m_state.set_function(std::forward<Key>(key), std::forward<Args>(args)...);
         }
 
-        // template <typename... Args, typename Key>
-        // void SetScriptFunction(LuaScript& script, const std::string& funcName, Func funcPtr) {
-        //     script.env.set_function(
-        //         funcName, sol::overload([=](sol::variadic_args args) { return sol::call_status::ok, funcPtr(args);
-        //         }));
-        // }
+        template <typename... Args, typename Key>
+        void SetScriptFunction(LuaScript& script, Key&& key, Args&&... args) {
+            script.env.set_function(std::forward<Key>(key), std::forward<Args>(args)...);
+        }
 
-        void Update();
+        void Update(LuaScript& script);
 
-        void Tick();
+        void Tick(LuaScript& script);
 
        private:
-        std::vector<LuaScript> m_scripts;  //! just for testing - remove later
-
         //! global state
         sol::state m_state;
-
-        Controller::Time& m_time;  // ! testing
 
         LuaType GetVariable(sol::environment env, const std::string& varName);
 

@@ -568,6 +568,7 @@ namespace Vakol::Controller {
     void RegisterScene(sol::state& lua) {
         auto scene_type = lua.new_usertype<Scene>("scene");
 
+        // TODO reset this
         // scene_type["globals"] = &Scene::sceneGlobals;
 
         scene_type.set_function("create_entity", &Scene::CreateEntity);
