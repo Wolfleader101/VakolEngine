@@ -22,7 +22,4 @@
 -- local endScreen = get_scene("End Scene");
 -- endScreen:set_active(false);
 
-print_info("HELLO FROM MAIN")
-print_err(Time.fps)
-
--- add_scene("scenes/sandbox.lua", "sandbox");
+add_scene("scenes/sandbox.lua", "sandbox");

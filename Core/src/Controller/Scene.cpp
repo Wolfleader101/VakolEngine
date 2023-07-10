@@ -3,17 +3,20 @@
 #include <Controller/Camera.hpp>
 #include <Model/Components.hpp>
 #include <Model/Entity.hpp>
+#include <algorithm>
 #include <cereal/archives/json.hpp>
 #include <filesystem>
 
-#include "LuaAccess.hpp"
 #include "SolSerialize.hpp"
 #include "System.hpp"
 
 namespace Vakol::Controller {
-    Scene::Scene(const std::string& name, const std::string& scriptName, const std::shared_ptr<ScenePhysics>& SP,
-                 const bool active)
-        : active(active), scenePhysics(SP), scriptName(scriptName), name(name), cam(glm::vec3(0.0f, 0.0f, 2.0f)) {}
+    Scene::Scene(const std::string& name, LuaScript& script, const std::shared_ptr<ScenePhysics>& SP, const bool active)
+        : active(active),
+          scenePhysics(SP),
+          m_script(std::move(script)),
+          m_name(name),
+          m_cam(glm::vec3(0.0f, 0.0f, 2.0f)) {}
 
     void Scene::Init() {
         // lua->RunFile("scripts/" + scriptName);
@@ -26,15 +29,15 @@ namespace Vakol::Controller {
 
         initialized = true;
 
-        System::BindScene(*this);
+        // System::BindScene(*this);
     }
 
-    const std::string& Scene::getName() const { return name; }
+    const std::string& Scene::getName() const { return m_name; }
 
-    void Scene::setName(const std::string& newName) { name = newName; }
+    void Scene::setName(const std::string& newName) { m_name = newName; }
 
     Entity Scene::CreateEntity(const std::string& tag, const std::string& sname) {
-        auto ent = entityList.CreateEntity();
+        auto ent = m_entityList.CreateEntity();
 
         ent.GetComponent<Tag>().tag = tag;
 
@@ -45,7 +48,7 @@ namespace Vakol::Controller {
         return ent;
     }
 
-    void Scene::DestroyEntity(const Entity entity) { entityList.RemoveEntity(entity); }
+    void Scene::DestroyEntity(const Entity entity) { m_entityList.RemoveEntity(entity); }
 
     void Scene::Update(const Time& time, const std::shared_ptr<View::Renderer>& renderer) {
         // lua->RunFile("scripts/" + scriptName);
@@ -53,20 +56,20 @@ namespace Vakol::Controller {
         // lua->GetState()["scene"] = this;
         // lua->RunFunction("update");
 
-        scenePhysics->Update(time, cam);
+        scenePhysics->Update(time, m_cam);
 
         // System::Script_Update(lua, entityList, this);
 
         System::Drawable_Update(time, renderer);
 
-        cam.Update();
+        m_cam.Update();
     }
 
     std::shared_ptr<Entity> Scene::GetEntity(const std::string& tag) {
         Entity ent;
 
-        entityList.m_Registry.view<Tag>().each([&](auto entity, auto& tagComponent) {
-            if (tagComponent.tag == tag) ent = entityList.GetEntity(static_cast<unsigned int>(entity));
+        m_entityList.m_Registry.view<Tag>().each([&](auto entity, auto& tagComponent) {
+            if (tagComponent.tag == tag) ent = m_entityList.GetEntity(static_cast<unsigned int>(entity));
         });
 
         return std::make_shared<Entity>(ent);
@@ -78,7 +81,7 @@ namespace Vakol::Controller {
         std::string temp = folder;
         std::replace(temp.begin(), temp.end(), '/', '\\');  // replace / with \\ for filesystem
 
-        const std::string folderPath = "\\" + temp + "\\" + name;
+        const std::string folderPath = "\\" + temp + "\\" + m_name;
 
         fs::path currentPath = fs::current_path();
 
@@ -90,8 +93,8 @@ namespace Vakol::Controller {
         }
 
         System::Physics_SerializationPrep();
-        const std::string FinalFolder = folder + "/" + name;
-        entityList.Serialize(FinalFolder + "/EntityList.json");
+        const std::string FinalFolder = folder + "/" + m_name;
+        m_entityList.Serialize(FinalFolder + "/EntityList.json");
 
         //-- Serialize Scene info
         std::ofstream output(FinalFolder + "/Scene.json");
@@ -99,9 +102,9 @@ namespace Vakol::Controller {
         if (output.good()) {
             cereal::JSONOutputArchive json(output);
 
-            json(cereal::make_nvp("Scene Name", name));
-            json(cereal::make_nvp("Script Name", scriptName));
-            json(cereal::make_nvp("camera", cam));
+            json(cereal::make_nvp("Scene Name", m_name));
+            // json(cereal::make_nvp("Script Name", m_scriptName)); // TODO fix this
+            json(cereal::make_nvp("camera", m_cam));
         }
 
         std::ofstream globalOutput(FinalFolder + "/Globals.json");
@@ -127,7 +130,7 @@ namespace Vakol::Controller {
             // ConvertMapToSol(lua, globals, sceneGlobals);
         }
 
-        entityList.Deserialize(folder + "/EntityList.json");
+        m_entityList.Deserialize(folder + "/EntityList.json");
 
         System::BindScene(*this);
         System::Drawable_Init();
@@ -138,9 +141,9 @@ namespace Vakol::Controller {
 
         if (input.good()) {
             cereal::JSONInputArchive json(input);
-            json(name);
-            json(scriptName);
-            json(cam);
+            json(m_name);
+            // json(m_scriptName); // TODO fix this
+            json(m_cam);
         }
     }
 

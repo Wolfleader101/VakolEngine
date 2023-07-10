@@ -24,9 +24,9 @@ namespace Vakol::Controller {
     EntityList* System::Entlist = nullptr;
 
     void System::BindScene(Scene& scene) {
-        // m_registry = &scene.entityList.m_Registry;
-        // m_SP = scene.scenePhysics;
-        // Entlist = &scene.entityList;
+        // m_registry = &scene.GetEntityList().m_Registry;
+        m_SP = scene.scenePhysics;
+        // Entlist = &scene.GetEntityList();
     }
 
     void System::Drawable_Init() {

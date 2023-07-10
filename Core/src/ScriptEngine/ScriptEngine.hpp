@@ -74,7 +74,7 @@ namespace Vakol {
         LuaType GetVariable(sol::environment env, const std::string& varName);
 
         void RunFile(sol::environment env, const std::string& file);
-        void RunFunction(sol::environment env, const std::string& funcName, bool error = true,
+        void RunFunction(sol::environment env, const std::string& funcName, bool showError = true,
                          const std::vector<LuaType>& args = {});
 
         void RegisterFunctions();

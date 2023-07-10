@@ -1,7 +1,7 @@
 #include "ScriptEngine.hpp"
 
 #include "Controller/Logger.hpp"
-#include "Controller/LuaAccess.hpp"
+#include "LuaAccess.hpp"
 
 static std::string getStatusString(const sol::call_status status) {
     switch (status) {
@@ -97,14 +97,14 @@ namespace Vakol {
         // return result;
     }
 
-    void ScriptEngine::RunFunction(sol::environment env, const std::string& funcName, bool error,
+    void ScriptEngine::RunFunction(sol::environment env, const std::string& funcName, bool showError,
                                    const std::vector<LuaType>& args) {
         // Get the function
         sol::function func = env[funcName];
 
         // Check if it's callable
         if (!func.valid()) {
-            if (error) {
+            if (showError) {
                 std::ostringstream oss;
                 oss << "Lua script execution error: Function '" << funcName << "' not found";
                 std::string errorMsg = oss.str();
@@ -117,7 +117,7 @@ namespace Vakol {
         // Call the function with args, and check for errors
         //! could also use sol::variadic_args
         if (sol::protected_function_result result = func(args); !result.valid()) {
-            if (!error) return;  //! if returning someting get rid of this
+            if (!showError) return;  //! if returning someting get rid of this
             sol::error err = result;
             sol::call_status status = result.status();
 
@@ -133,28 +133,28 @@ namespace Vakol {
 
     void ScriptEngine::RegisterTypes() {
         //! TODO MOVE THESE INTO SEPERATE FILE???
-        Controller::RegisterTime(m_state);
-        Controller::RegisterMath(m_state);
-        Controller::RegisterInput(m_state);
-        Controller::RegisterModel(m_state);
-        Controller::RegisterMesh(m_state);
-        Controller::RegisterMaterial(m_state);
-        Controller::RegisterShader(m_state);
-        Controller::RegisterEntity(m_state);
-        Controller::RegisterTransform(m_state);
-        Controller::RegisterTerrain(m_state);
-        Controller::RegisterFSM(m_state);
-        Controller::RegisterCamera(m_state);
-        Controller::RegisterScene(m_state);
-        Controller::RegisterGUIWindow(m_state);
-        Controller::RegisterRigidBody(m_state);
-        Controller::RegisterCollider(m_state);
-        Controller::RegisterPhysics(m_state);
+        RegisterTime(m_state);
+        RegisterMath(m_state);
+        RegisterInput(m_state);
+        RegisterModel(m_state);
+        RegisterMesh(m_state);
+        RegisterMaterial(m_state);
+        RegisterShader(m_state);
+        RegisterEntity(m_state);
+        RegisterTransform(m_state);
+        RegisterTerrain(m_state);
+        RegisterFSM(m_state);
+        RegisterCamera(m_state);
+        RegisterScene(m_state);
+        RegisterGUIWindow(m_state);
+        RegisterRigidBody(m_state);
+        RegisterCollider(m_state);
+        RegisterPhysics(m_state);
     }
 
     void ScriptEngine::RegisterFunctions() {
-        Controller::RegisterAssetLoader(m_state);
-        Controller::RegisterLogger(m_state);
+        RegisterAssetLoader(m_state);
+        RegisterLogger(m_state);
     }
 
 };  // namespace Vakol

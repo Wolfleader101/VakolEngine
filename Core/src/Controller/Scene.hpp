@@ -9,6 +9,9 @@
 #include "Time.hpp"
 #include "View/Renderer/Renderer.hpp"
 
+//! todo move LuaScript to its own header
+#include "ScriptEngine/ScriptEngine.hpp"
+
 namespace Vakol::Controller {
 
     /**
@@ -22,11 +25,11 @@ namespace Vakol::Controller {
          * @brief Construct a new Scene object.
          *
          * @param name The name of the scene.
-         * @param scriptName The name of the Lua script associated with the scene.
+         * @param script The Lua script associated with the scene.
          * @param SP The shared pointer to the ScenePhysics object.
          * @param active Whether the scene is active or not.
          */
-        Scene(const std::string& name, const std::string& scriptName, const std::shared_ptr<Physics::ScenePhysics>& SP,
+        Scene(const std::string& name, LuaScript& script, const std::shared_ptr<Physics::ScenePhysics>& SP,
               bool active);
 
         /**
@@ -106,7 +109,7 @@ namespace Vakol::Controller {
          *
          * @return Camera& The reference to the camera.
          */
-        Camera& GetCamera() { return cam; }
+        Camera& GetCamera() { return m_cam; }
 
         /**
          * @brief Get an entity in the scene by its tag.
@@ -116,7 +119,10 @@ namespace Vakol::Controller {
          */
         std::shared_ptr<Entity> GetEntity(const std::string& tag);
 
-        const EntityList& GetEntityList() const { return entityList; }
+        const EntityList& GetEntityList() const { return m_entityList; }
+
+        //! should we make this const?
+        LuaScript& GetScript() { return m_script; }
 
         /**
          * @brief The scene globals in Lua.
@@ -124,26 +130,21 @@ namespace Vakol::Controller {
         // sol::table sceneGlobals;
 
        private:
-        /**
-         * @brief The name of the Lua script associated with the scene.
-         */
-        std::string scriptName;
+        LuaScript m_script;
 
         /**
          * @brief The name of the scene.
          */
-        std::string name;
+        std::string m_name;
 
         /**
          * @brief The camera of the scene.
          */
-        Camera cam;
-
-        //! todo store a LuaScript here (can then get rid of script name attribute)
+        Camera m_cam;
 
         /**
          * @brief The entity list of the scene.
          */
-        EntityList entityList;
+        EntityList m_entityList;
     };
 }  // namespace Vakol::Controller

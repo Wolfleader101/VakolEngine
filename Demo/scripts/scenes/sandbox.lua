@@ -4,6 +4,8 @@ function init()
 end
 
 function update()
+
+    print_warn("sandbox")
     if(Input:get_key_down(KEYS["KEY_ESC"])) then
         app_run(false);
 

@@ -1,13 +1,17 @@
 #include "LuaAccess.hpp"
 
 #include <glm/gtc/type_ptr.hpp>
+#include <memory>
 
-#include "AssetLoader/AssetLoader.hpp"
-#include "AssetLoader/TextureLoader.hpp"
+#include "Controller/AssetLoader/AssetLoader.hpp"
+#include "Controller/AssetLoader/TextureLoader.hpp"
+#include "Controller/Input.hpp"
+#include "Controller/Logger.hpp"
+#include "Controller/System.hpp"
+#include "Controller/Terrain.hpp"
 #include "Model/Assets/Material.hpp"
 #include "Model/Components.hpp"
 #include "Model/Instance.hpp"
-#include "System.hpp"
 #include "View/GUI/GUIWindow.hpp"
 
 std::vector<glm::mat4> create_mat4_vector(const int reserve) {
@@ -17,7 +21,10 @@ std::vector<glm::mat4> create_mat4_vector(const int reserve) {
 
     return vector;
 }
-namespace Vakol::Controller {
+
+using namespace Vakol::Controller;
+
+namespace Vakol {
 
     void RegisterMath(sol::state& lua) {
         {
@@ -323,7 +330,7 @@ namespace Vakol::Controller {
 
                                      const auto& name = scene.getName();
 
-                                     std::shared_ptr<Terrain> terrain = AssetLoader::GetTerrain(name);
+                                     std::shared_ptr<Controller::Terrain> terrain = AssetLoader::GetTerrain(name);
 
                                      if (terrain == nullptr) terrain = AssetLoader::GetTerrain(name, path, min, max);
 
@@ -349,7 +356,6 @@ namespace Vakol::Controller {
 
                                      return terrain;
                                  });
-        //                          });
 
         entity_type.set_function("get_terrain", [](const Entity* ent) {
             if (ent->HasComponent<Components::Terrain>()) return ent->GetComponent<Components::Terrain>().terrain_ptr;
@@ -475,8 +481,8 @@ namespace Vakol::Controller {
         });
 
         entity_type.set_function("physics_init", [](const Entity* ent, Scene& scene) {
-            System::BindScene(scene);
-            System::Physics_InitEntity(*ent);
+            // System::BindScene(scene);
+            // System::Physics_InitEntity(*ent);
         });
 
         entity_type.set_function("add_rigid", [](Entity* ent) -> RigidBody& {
@@ -533,11 +539,11 @@ namespace Vakol::Controller {
     }
 
     void RegisterTerrain(sol::state& lua) {
-        auto terrain_type = lua.new_usertype<Terrain>("terrain");
+        auto terrain_type = lua.new_usertype<Controller::Terrain>("terrain");
 
-        terrain_type.set_function("get_height", &Terrain::GetHeight);
-        terrain_type.set_function("get_size", &Terrain::GetSize);
-        terrain_type.set_function("get_model", &Terrain::GetModel);
+        terrain_type.set_function("get_height", &Controller::Terrain::GetHeight);
+        terrain_type.set_function("get_size", &Controller::Terrain::GetSize);
+        terrain_type.set_function("get_model", &Controller::Terrain::GetModel);
     }
 
     void RegisterFSM(sol::state& lua) {
@@ -586,9 +592,10 @@ namespace Vakol::Controller {
 
             const auto& terrain = ent.GetComponent<Components::Terrain>();
 
-            System::BindScene(*scene);
+            // TODO uhm remove
+            //  System::BindScene(*scene);
 
-            System::Physics_AddTerrain(*terrain.terrain_ptr);
+            // System::Physics_AddTerrain(*terrain.terrain_ptr);
         });
 
         scene_type.set_function("enable_debug",
@@ -725,4 +732,4 @@ namespace Vakol::Controller {
         rp3dVec3["z"] = &rp3d::Vector3::z;
     }
 
-}  // namespace Vakol::Controller
+}  // namespace Vakol

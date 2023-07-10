@@ -2,10 +2,7 @@
 
 #include <sol/sol.hpp>
 
-#include "Application.hpp"
-#include "Scene.hpp"
-
-namespace Vakol::Controller {
+namespace Vakol {
     /**
      * @brief Register the asset loader in Lua.
      *
@@ -45,14 +42,6 @@ namespace Vakol::Controller {
     void RegisterCollider(sol::state& lua);
 
     /**
-     * @brief Register the application in Lua.
-     *
-     * @param lua The Lua state.
-     * @param app The pointer to the application.
-     */
-    void RegisterApplication(sol::state& lua, Application* app);
-
-    /**
      * @brief Register the entity in Lua.
      *
      * @param lua The Lua state.
@@ -65,14 +54,6 @@ namespace Vakol::Controller {
      * @param lua The Lua state.
      */
     void RegisterGUIWindow(sol::state& lua);
-
-    /**
-     * @brief Register the renderer in Lua.
-     *
-     * @param lua The Lua state.
-     * @param renderer The shared pointer to the renderer.
-     */
-    void RegisterRenderer(sol::state& lua, const std::shared_ptr<View::Renderer>& renderer);
 
     /**
      * @brief Register the physics system in Lua.
@@ -101,4 +82,4 @@ namespace Vakol::Controller {
      * @param lua The Lua state.
      */
     void RegisterOther(sol::state& lua);
-}  // namespace Vakol::Controller
+}  // namespace Vakol

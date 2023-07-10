@@ -1,7 +1,6 @@
 #include "Application.hpp"
 
 #include <Controller/AssetLoader/AssetLoader.hpp>
-#include <Controller/LuaAccess.hpp>
 #include <Controller/Physics/PhysicsPool.hpp>
 #include <Controller/Scene.hpp>
 #include <Controller/System.hpp>
@@ -154,7 +153,7 @@ namespace Vakol::Controller {
             // Compute the time interpolation factor
             // float alpha = m_time.accumulator / m_time.tickRate;
 
-            //! update scenes lua
+            // TODO move to a scene manager
             for (auto& scene : scenes) {
                 if (!scene.active) continue;
 
@@ -164,7 +163,9 @@ namespace Vakol::Controller {
 
                 m_renderer->UpdateData(scene.GetCamera());
 
-                scene.Update(m_time, m_renderer);
+                m_scriptEngine.Update(scene.GetScript());
+
+                // scene.Update(m_time, m_renderer);
             }
 
             m_renderer->LateUpdate();
@@ -175,12 +176,14 @@ namespace Vakol::Controller {
         }
     }
 
+    // TODO move to a scene manager
     void Application::AddScene(const std::string& scriptName, const std::string& scene_name) {
         const std::string sceneName = scene_name.length() == 0 ? "Scene" + std::to_string(scenes.size()) : scene_name;
 
         const auto ref = std::make_shared<ScenePhysics>(PhysicsPool::CreatePhysicsWorld());
 
-        scenes.emplace_back(sceneName, scriptName, ref, true);
+        LuaScript script = m_scriptEngine.CreateScript("scripts/" + scriptName);
+        scenes.emplace_back(sceneName, script, ref, true);
     }
 
     Scene& Application::GetScene(const std::string& sceneName) {
