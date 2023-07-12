@@ -22,6 +22,10 @@ namespace Vakol {
 
     using LuaType = sol::object;
     using LuaTable = sol::table;
+    using LuaFunction = sol::protected_function;
+
+    //! this is not good, we shouldnt want to expose sol::state, but we need it for now because of FSM
+    using LuaState = sol::state;
 
     // class EngineSystem {  // interface for engine system, something to think about
     //    public:

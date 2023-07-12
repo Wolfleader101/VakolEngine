@@ -12,6 +12,7 @@
 #include "Controller/SolSerialize.hpp"
 #include "Entity.hpp"
 #include "Model/Assets/Model.hpp"
+#include "ScriptEngine/ScriptEngine.hpp"
 
 namespace Vakol::Model::Components {
     /**
@@ -265,18 +266,23 @@ namespace Vakol::Model::Components {
          */
         FSM() = default;
 
-        /**
-         * @brief Overloaded constructor that initializes the FSM with a Lua state.
-         * @param lua A shared pointer to a LuaState.
-         */
-        // FSM(std::shared_ptr<Controller::LuaState> lua);
+        //! this is fucked
+        FSM(LuaTable table);
+
+        // The current state of the FSM.
+        std::string currentState;
+
+        // table of FSM states
+        LuaTable states;
+
+        // Controller::SolTableData data;  ///< The data to be saved or loaded.
 
         /**
          * @brief Adds a new state to the FSM.
          * @param stateName The name of the new state.
          * @param callback The function to be executed when this state is active.
          */
-        // void AddState(const std::string& stateName, sol::protected_function& callback);
+        void AddState(const std::string& stateName, LuaFunction& callback);
 
         /**
          * @brief Changes the current state of the FSM.
@@ -320,11 +326,6 @@ namespace Vakol::Model::Components {
             // data.data.clear();
             // ar(data);
         }
-
-        std::string currentState;  ///< The current state of the FSM.
-        // sol::table states;                          ///< The states of the FSM.
-        // std::shared_ptr<Controller::LuaState> lua;  ///< Shared pointer to a LuaState.
-        // Controller::SolTableData data;  ///< The data to be saved or loaded.
     };
 
     /**

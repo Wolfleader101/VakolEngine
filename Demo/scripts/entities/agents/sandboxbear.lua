@@ -3,7 +3,7 @@ function setup_fsm()
 
     state.fsm:add_state("eating", function()
         entity:play_animation(state.ANIMATIONS.EAT);
-        entity:get_rigid():set_velocity(Vector3.new(0,0,0));
+        -- entity:get_rigid():set_velocity(Vector3.new(0,0,0));
         if(fsm_wait(math.random(5,7))) then
             state.fsm:change_state("roaming")
         end
@@ -11,13 +11,9 @@ function setup_fsm()
 
     state.fsm:add_state("attack", function()
         trigger_nearby_bears(entity, 12.0);
-        entity:get_rigid():set_velocity(Vector3.new(0,0,0));
+        -- entity:get_rigid():set_velocity(Vector3.new(0,0,0));
     
         entity:play_animation(state.ANIMATIONS.ATTACK);
-
-        if (attack_wait(1.5)) then
-            PLAYER.decrement_health((10 * OPTIONS.ATTACK_DAMAGE_DEALT_TO_PLAYER_MULTIPLIER));
-        end
 
         if(fsm_wait(0.75)) then
             if player_distance() > state.enemyAttackAnimDistance then
@@ -28,7 +24,7 @@ function setup_fsm()
 
     state.fsm:add_state("idle", function()
         entity:play_animation(state.ANIMATIONS.IDLE);
-        entity:get_rigid():set_velocity(Vector3.new(0,0,0));
+        -- entity:get_rigid():set_velocity(Vector3.new(0,0,0));
 
         if (fsm_wait(math.random(5, 7))) then
             local rand = math.random();
@@ -72,8 +68,9 @@ function setup_fsm()
         end
         
         local velocity = state.speed * Time.delta_time;
-        local move = state.dir * velocity * 100;
-        entity:get_rigid():set_velocity(move);
+        local move = state.dir * velocity;
+        -- entity:get_rigid():set_velocity(move);
+        entity:get_transform().pos = entity:get_transform().pos + move;
 
         local targetRotation = math.atan(state.dir.x, state.dir.z)
         targetRotation = targetRotation * (180 / math.pi)
@@ -90,10 +87,11 @@ function setup_fsm()
         local diff = scene.globals.player.pos - entity:get_transform().pos;
         state.dir = diff:normalize();
       
-        local velocity = (state.sprint_speed * OPTIONS.SPRINT_SPEED_MULTIPLIER) * Time.delta_time;
-        local move = state.dir * velocity * 100;
+        local velocity = state.sprint_speed * Time.delta_time;
+        local move = state.dir * velocity;
 
-        entity:get_rigid():set_velocity(move);
+        -- entity:get_rigid():set_velocity(move);
+        entity:get_transform().pos = entity:get_transform().pos + move;
 
         local targetRotation = math.atan(state.dir.x, state.dir.z)
         targetRotation = targetRotation * (180 / math.pi)
@@ -112,10 +110,11 @@ function setup_fsm()
         local diff = scene.globals.player.pos - entity:get_transform().pos;
         state.dir = diff:normalize();
 
-        local velocity = (state.sprint_speed * OPTIONS.SPRINT_SPEED_MULTIPLIER) * Time.delta_time;
-        local move = state.dir * velocity * 100;
+        local velocity = state.sprint_speed * Time.delta_time;
+        local move = state.dir * velocity;
 
-        entity:get_rigid():set_velocity(move);
+        -- entity:get_rigid():set_velocity(move);
+        entity:get_transform().pos = entity:get_transform().pos + move;
 
         local targetRotation = math.atan(state.dir.x, state.dir.z)
         targetRotation = targetRotation * (180 / math.pi)
@@ -229,7 +228,7 @@ function fsm_wait(seconds)
     return false;
 end
 
-function update()
+function tick()
     PLAYER = scene.globals.player;
 
     local pos = entity:get_transform().pos;
@@ -256,8 +255,4 @@ function update()
     local terr_scale = scene.globals.terrain.transform.scale;
     pos.y = (scene.globals.terrain.terr:get_height(pos.x / terr_scale.x, pos.z / terr_scale.z) * terr_scale.y) + 0.03;
 
-end
-
-function deserialize()
-    setup_fsm();
 end

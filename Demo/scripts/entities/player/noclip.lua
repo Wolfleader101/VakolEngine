@@ -4,10 +4,15 @@ function init()
     state.flying = false;
 
     entity:get_transform().rot = Vector3.new(0.0, 180.0, 0.0);
+
+
+        scene.globals.player = {
+        pos = Vector3.new(0.0, 0.0, 0.0)
+        }
+    scene.globals.player.pos = entity:get_transform().pos;
 end
 
 function update()
-
     local dir = { x = 0, y = 0, z = 0 };
     local velocity = 0;
 

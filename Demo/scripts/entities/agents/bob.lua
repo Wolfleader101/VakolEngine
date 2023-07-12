@@ -162,7 +162,7 @@ function wait(seconds)
     return false;
 end
 
-function update()
+function tick()
     state.fsm:update()
     local pos = entity:get_transform().pos;
     local terr_scale = scene.globals.terrain.transform.scale;

@@ -206,6 +206,7 @@ namespace Vakol {
     void RegisterTime(sol::state& lua) {
         auto time_type = lua.new_usertype<Time>("Time");
         time_type["delta_time"] = &Time::deltaTime;
+        time_type["tick_rate"] = &Time::tickRate;
         time_type["curr_time"] = &Time::curTime;
         time_type["prev_time"] = &Time::prevTime;
         time_type["fps"] = &Time::fps;
@@ -481,6 +482,7 @@ namespace Vakol {
         });
 
         entity_type.set_function("physics_init", [](const Entity* ent, Scene& scene) {
+            VK_CRITICAL("Physics init is deprecated!");
             // System::BindScene(scene);
             // System::Physics_InitEntity(*ent);
         });
@@ -523,11 +525,11 @@ namespace Vakol {
             }
         });
 
-        // TODO fix FSM from having shared ptr???
-        // entity_type.set_function("add_fsm", [&state](Entity* ent) -> FSM& {
-        //     if (!ent->HasComponent<FSM>()) ent->AddComponent<FSM>(state);
-        //     return ent->GetComponent<FSM>();
-        // });
+        // TODO this is fucked, such a bad component, pls remove
+        entity_type.set_function("add_fsm", [&](Entity* ent) -> FSM& {
+            if (!ent->HasComponent<FSM>()) ent->AddComponent<FSM>(lua.create_table());
+            return ent->GetComponent<FSM>();
+        });
     }
 
     void RegisterTransform(sol::state& lua) {
@@ -551,7 +553,7 @@ namespace Vakol {
         fsm_type.set_function("get_state", &FSM::GetState);
         fsm_type.set_function("change_state", &FSM::ChangeState);
         fsm_type.set_function("add_state", [](FSM& self, std::string& stateName, sol::protected_function& callback) {
-            // return self.AddState(stateName, callback);
+            return self.AddState(stateName, callback);
         });
         fsm_type.set_function("update", &FSM::Update);
     }
@@ -574,11 +576,7 @@ namespace Vakol {
     void RegisterScene(sol::state& lua) {
         auto scene_type = lua.new_usertype<Scene>("Scene");
 
-        // TODO reset this to point to scritpt env
-        //! PURELY FOR BACKWARDS COMPATABILITY, PREFER TO USE globals, over scene.globals
         scene_type.set("globals", sol::property([](Scene& self) { return self.GetScript().env; }));
-
-        // scene_type.set("globals", [](Scene* scene) { return scene->GetScript().env; });
 
         scene_type.set_function("create_entity", &Scene::CreateEntity);
 

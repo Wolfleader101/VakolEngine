@@ -25,15 +25,12 @@ namespace Vakol::Model::Components {
               // lua->RunFunction("init");
           };
 
-    // FSM::FSM(std::shared_ptr<Controller::LuaState> lua) : lua(lua) {
-    //     // Create a new table in the Lua state for the states
-    //     states = lua->GetState().create_table();
-    // }
+    FSM::FSM(LuaTable table) : states(table) {}
 
-    // void FSM::AddState(const std::string& stateName, sol::protected_function& callback) {
-    //     // Add a new state to the states table
-    //     states[stateName] = callback;
-    // }
+    void FSM::AddState(const std::string& stateName, LuaFunction& callback) {
+        // Add a new state to the states table
+        states[stateName] = callback;
+    }
 
     void FSM::ChangeState(const std::string& stateName) {
         // Change the current state
@@ -47,8 +44,8 @@ namespace Vakol::Model::Components {
 
     void FSM::Update() {
         // Call the callback for the current state
-        // const sol::function callback = states[currentState];
-        // lua->RunFunction(callback);
+        const LuaFunction callback = states[currentState];
+        callback();
     }
 
     Drawable::Drawable(std::string&& file)

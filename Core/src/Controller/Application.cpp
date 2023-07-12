@@ -149,6 +149,9 @@ namespace Vakol::Controller {
                         scene.Init();
                     }
 
+                    scene.GetEntityList().GetRegistry().view<LuaScript>().each(
+                        [&](auto& script) { m_scriptEngine.TickScript(script); });
+
                     m_scriptEngine.TickScript(scene.GetScript());
                 }
 
