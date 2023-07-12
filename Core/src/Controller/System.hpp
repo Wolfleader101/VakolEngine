@@ -48,24 +48,6 @@ namespace Vakol::Controller {
         static void Drawable_Update(const Time& time, const std::shared_ptr<View::Renderer>& renderer);
 
         /**
-         * @brief Initialize the scripting system.
-         *
-         * @param lua The shared pointer to the Lua state.
-         * @param list The entity list.
-         * @param scene The pointer to the scene.
-         */
-        // static void Script_Init(std::shared_ptr<LuaState> lua, EntityList& list, Scene* scene);
-
-        /**
-         * @brief Update the scripting system.
-         *
-         * @param lua The shared pointer to the Lua state.
-         * @param list The entity list.
-         * @param scene The pointer to the scene.
-         */
-        // static void Script_Update(std::shared_ptr<LuaState> lua, EntityList& list, Scene* scene);
-
-        /**
          * @brief Prepare the scripting system for deserialization.
          *
          * @param lua The shared pointer to the Lua state.

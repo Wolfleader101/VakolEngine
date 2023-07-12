@@ -38,9 +38,11 @@ namespace Vakol {
     }
     // ScriptEngine::~ScriptEngine() { m_scripts.clear(); }
 
-    void ScriptEngine::Update(LuaScript& script) { RunFunction(script.env, "update", false); }
+    void ScriptEngine::InitScript(LuaScript& script) { RunFunction(script.env, "init", true); }
 
-    void ScriptEngine::Tick(LuaScript& script) { RunFunction(script.env, "tick", false); }
+    void ScriptEngine::UpdateScript(LuaScript& script) { RunFunction(script.env, "update", true); }
+
+    void ScriptEngine::TickScript(LuaScript& script) { RunFunction(script.env, "tick", true); }
 
     LuaScript ScriptEngine::CreateScript(const std::string& scriptPath) {
         LuaScript script;
@@ -50,6 +52,7 @@ namespace Vakol {
         //! please note this may not work as environemnts aren't deep copied (might need to return a luaScript reference
         //! instead)
         script.env = sol::environment(m_state, sol::create, m_state.globals());
+        this->SetScriptVariable(script, "state", script.env);
 
         //! run using the scripts own context, (you probably dont want to run every script on creation tho?)
         this->RunFile(script.env, scriptPath);
@@ -97,27 +100,27 @@ namespace Vakol {
         // return result;
     }
 
-    void ScriptEngine::RunFunction(sol::environment env, const std::string& funcName, bool showError,
+    void ScriptEngine::RunFunction(sol::environment env, const std::string& funcName, bool ignoreMissing,
                                    const std::vector<LuaType>& args) {
         // Get the function
         sol::function func = env[funcName];
 
         // Check if it's callable
         if (!func.valid()) {
-            if (showError) {
-                std::ostringstream oss;
-                oss << "Lua script execution error: Function '" << funcName << "' not found";
-                std::string errorMsg = oss.str();
+            if (ignoreMissing) return;
 
-                VK_ERROR(errorMsg);
-            }
+            std::ostringstream oss;
+            oss << "Lua script execution error: Function '" << funcName << "' not found";
+            std::string errorMsg = oss.str();
+
+            VK_ERROR(errorMsg);
+
             return;
         }
 
         // Call the function with args, and check for errors
         //! could also use sol::variadic_args
         if (sol::protected_function_result result = func(args); !result.valid()) {
-            if (!showError) return;  //! if returning someting get rid of this
             sol::error err = result;
             sol::call_status status = result.status();
 
@@ -125,6 +128,7 @@ namespace Vakol {
             oss << "Lua script execution error: " << err.what() << " (status: " << getStatusString(status) << ")";
             std::string errorMsg = oss.str();
 
+            //! assumes we always want to know the error of a function
             VK_ERROR(errorMsg);
         }
 

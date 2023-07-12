@@ -29,12 +29,13 @@ namespace Vakol::Controller {
          * @param SP The shared pointer to the ScenePhysics object.
          * @param active Whether the scene is active or not.
          */
-        Scene(const std::string& name, LuaScript& script, const std::shared_ptr<Physics::ScenePhysics>& SP,
-              bool active);
+        Scene(const std::string& name, LuaScript& script, const std::shared_ptr<Physics::ScenePhysics>& SP, bool active,
+              ScriptEngine& scriptEngine);
 
         /**
          * @brief Initialize the scene.
          */
+        //! TODO this can probably be removed
         void Init();
 
         /**
@@ -121,16 +122,23 @@ namespace Vakol::Controller {
 
         const EntityList& GetEntityList() const { return m_entityList; }
 
-        //! should we make this const?
+        EntityList& GetEntityList() { return m_entityList; }
+
+        const LuaScript& GetScript() const { return m_script; }
+
         LuaScript& GetScript() { return m_script; }
 
         /**
          * @brief The scene globals in Lua.
          */
-        // sol::table sceneGlobals;
+        sol::table sceneGlobals;
+        // TODO move this out of here
 
        private:
         LuaScript m_script;
+
+        //! JUST for testing as scene is currently scuffed
+        ScriptEngine& m_scriptEngine;
 
         /**
          * @brief The name of the scene.

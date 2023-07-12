@@ -49,8 +49,6 @@ namespace Vakol {
         template <typename T>
         void SetScriptVariable(LuaScript& script, const std::string& varName, T&& value) {
             script.env[varName] = std::forward<T>(value);
-
-            m_state.set_function("app_run", &Application::SetRunning, app);
         }
 
         template <typename... Args, typename Key>
@@ -63,9 +61,11 @@ namespace Vakol {
             script.env.set_function(std::forward<Key>(key), std::forward<Args>(args)...);
         }
 
-        void Update(LuaScript& script);
+        void InitScript(LuaScript& script);
 
-        void Tick(LuaScript& script);
+        void UpdateScript(LuaScript& script);
+
+        void TickScript(LuaScript& script);
 
        private:
         //! global state
@@ -74,7 +74,7 @@ namespace Vakol {
         LuaType GetVariable(sol::environment env, const std::string& varName);
 
         void RunFile(sol::environment env, const std::string& file);
-        void RunFunction(sol::environment env, const std::string& funcName, bool showError = true,
+        void RunFunction(sol::environment env, const std::string& funcName, bool ignoreMissing = true,
                          const std::vector<LuaType>& args = {});
 
         void RegisterFunctions();

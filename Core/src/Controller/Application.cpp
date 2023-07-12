@@ -144,20 +144,27 @@ namespace Vakol::Controller {
                 for (auto& scene : scenes) {
                     if (!scene.active) continue;
 
-                    if (!scene.initialized) scene.Init();
+                    //! set the current scene globally, eventually want to move this elsewhere
+                    m_scriptEngine.SetGlobalVariable("scene", &scene);
 
-                    m_scriptEngine.Tick(scene.GetScript());
+                    if (!scene.initialized) {
+                        m_scriptEngine.InitScript(scene.GetScript());
+
+                        scene.Init();
+                    }
+
+                    m_scriptEngine.TickScript(scene.GetScript());
                 }
 
                 for (auto& script : scripts) {
-                    m_scriptEngine.Tick(script);
+                    m_scriptEngine.TickScript(script);
                 }
                 // Decrease the accumulated time
                 m_time.accumulator -= m_time.tickRate;
             }
 
             for (auto& script : scripts) {
-                m_scriptEngine.Update(script);
+                m_scriptEngine.UpdateScript(script);
             }
 
             // Compute the time interpolation factor
@@ -171,7 +178,10 @@ namespace Vakol::Controller {
 
                 m_renderer->UpdateData(scene.GetCamera());
 
-                m_scriptEngine.Update(scene.GetScript());
+                scene.GetEntityList().GetRegistry().view<LuaScript>().each(
+                    [&](auto& script) { m_scriptEngine.UpdateScript(script); });
+
+                m_scriptEngine.UpdateScript(scene.GetScript());
 
                 // scene.Update(m_time, m_renderer);
             }
@@ -191,7 +201,7 @@ namespace Vakol::Controller {
         const auto ref = std::make_shared<ScenePhysics>(PhysicsPool::CreatePhysicsWorld());
 
         LuaScript script = m_scriptEngine.CreateScript("scripts/" + scriptName);
-        scenes.emplace_back(sceneName, script, ref, true);
+        scenes.emplace_back(sceneName, script, ref, true, m_scriptEngine);
     }
 
     Scene& Application::GetScene(const std::string& sceneName) {

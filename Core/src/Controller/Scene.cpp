@@ -11,12 +11,14 @@
 #include "System.hpp"
 
 namespace Vakol::Controller {
-    Scene::Scene(const std::string& name, LuaScript& script, const std::shared_ptr<ScenePhysics>& SP, const bool active)
+    Scene::Scene(const std::string& name, LuaScript& script, const std::shared_ptr<ScenePhysics>& SP, const bool active,
+                 ScriptEngine& scriptEngine)
         : active(active),
           scenePhysics(SP),
           m_script(std::move(script)),
           m_name(name),
-          m_cam(glm::vec3(0.0f, 0.0f, 2.0f)) {}
+          m_cam(glm::vec3(0.0f, 0.0f, 2.0f)),
+          m_scriptEngine(scriptEngine) {}
 
     void Scene::Init() {
         // lua->RunFile("scripts/" + scriptName);
@@ -43,7 +45,10 @@ namespace Vakol::Controller {
 
         if (!ent.GetComponent<GUID>().id.isValid()) ent.GetComponent<GUID>().GenNewGUID();
 
-        // if (!sname.empty()) ent.AddComponent<Script>(sname, lua, ent, *this);
+        if (!sname.empty()) {
+            LuaScript script = m_scriptEngine.CreateScript("scripts/" + sname);
+            ent.AddComponent<LuaScript>(script);
+        }
 
         return ent;
     }

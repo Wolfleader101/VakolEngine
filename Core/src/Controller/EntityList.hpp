@@ -113,10 +113,8 @@ namespace Vakol::Controller {
          */
         void Deserialize(const std::string& file);
 
-        template <typename T>
-        ComponentList<T> GetComponents() {
-            return m_Registry.view<T>();
-        }
+        //! JUST FOR TESTING
+        entt::registry& GetRegistry() { return m_Registry; }
 
        private:
         /**
