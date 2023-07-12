@@ -124,15 +124,9 @@ namespace Vakol::Controller {
 
         EntityList& GetEntityList() { return m_entityList; }
 
-        const LuaScript& GetScript() const { return m_script; }
+        // const LuaScript& GetScript() const { return m_script; }
 
         LuaScript& GetScript() { return m_script; }
-
-        /**
-         * @brief The scene globals in Lua.
-         */
-        sol::table sceneGlobals;
-        // TODO move this out of here
 
        private:
         LuaScript m_script;

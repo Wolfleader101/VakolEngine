@@ -21,6 +21,7 @@ namespace Vakol {
     // struct JSObject : public std::unordered_map<std::string, LuaType> {};
 
     using LuaType = sol::object;
+    using LuaTable = sol::table;
 
     // class EngineSystem {  // interface for engine system, something to think about
     //    public:
@@ -36,6 +37,8 @@ namespace Vakol {
         ScriptEngine();
 
         LuaScript CreateScript(const std::string& scriptPath);
+
+        LuaTable CreateTable();
 
         LuaType GetGlobalVariable(const std::string& name);
 

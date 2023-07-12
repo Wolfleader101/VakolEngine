@@ -62,6 +62,8 @@ namespace Vakol {
         return script;
     }
 
+    LuaTable ScriptEngine::CreateTable() { return m_state.create_table(); }
+
     LuaType ScriptEngine::GetGlobalVariable(const std::string& name) { return GetVariable(m_state.globals(), name); }
 
     LuaType ScriptEngine::GetScriptVariable(const LuaScript& script, const std::string& varName) {

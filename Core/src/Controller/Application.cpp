@@ -126,10 +126,6 @@ namespace Vakol::Controller {
     }
 
     void Application::Run() {
-        std::vector<LuaScript> scripts;
-
-        scripts.push_back(m_scriptEngine.CreateScript("scripts/test.lua"));
-
         while (m_running) {
             m_time.Update();
             m_gui.CreateNewFrame();
@@ -156,15 +152,8 @@ namespace Vakol::Controller {
                     m_scriptEngine.TickScript(scene.GetScript());
                 }
 
-                for (auto& script : scripts) {
-                    m_scriptEngine.TickScript(script);
-                }
                 // Decrease the accumulated time
                 m_time.accumulator -= m_time.tickRate;
-            }
-
-            for (auto& script : scripts) {
-                m_scriptEngine.UpdateScript(script);
             }
 
             // Compute the time interpolation factor
@@ -178,12 +167,15 @@ namespace Vakol::Controller {
 
                 m_renderer->UpdateData(scene.GetCamera());
 
+                //! set the current scene globally, eventually want to move this elsewhere
+                m_scriptEngine.SetGlobalVariable("scene", &scene);
+
                 scene.GetEntityList().GetRegistry().view<LuaScript>().each(
                     [&](auto& script) { m_scriptEngine.UpdateScript(script); });
 
                 m_scriptEngine.UpdateScript(scene.GetScript());
 
-                // scene.Update(m_time, m_renderer);
+                scene.Update(m_time, m_renderer);
             }
 
             m_renderer->LateUpdate();
@@ -201,6 +193,8 @@ namespace Vakol::Controller {
         const auto ref = std::make_shared<ScenePhysics>(PhysicsPool::CreatePhysicsWorld());
 
         LuaScript script = m_scriptEngine.CreateScript("scripts/" + scriptName);
+        LuaTable tbl = m_scriptEngine.CreateTable();
+        m_scriptEngine.SetScriptVariable(script, "globals", tbl);
         scenes.emplace_back(sceneName, script, ref, true, m_scriptEngine);
     }
 

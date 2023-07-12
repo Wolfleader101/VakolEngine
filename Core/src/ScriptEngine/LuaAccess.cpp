@@ -264,7 +264,7 @@ namespace Vakol {
     }
 
     void RegisterModel(sol::state& lua) {
-        auto model_type = lua.new_usertype<Assets::Model>("model");
+        auto model_type = lua.new_usertype<Assets::Model>("Model");
         model_type.set_function("get_mesh_count", &Assets::Model::nMeshes);
         model_type.set_function("get_mesh", &Assets::Model::mesh);
 
@@ -276,13 +276,13 @@ namespace Vakol {
     }
 
     void RegisterMesh(sol::state& lua) {
-        auto mesh_type = lua.new_usertype<Mesh>("mesh");
+        auto mesh_type = lua.new_usertype<Mesh>("Mesh");
 
         mesh_type.set_function("get_material", &Mesh::GetMaterial);
     }
 
     void RegisterMaterial(sol::state& lua) {
-        auto material_type = lua.new_usertype<Assets::Material>("material");
+        auto material_type = lua.new_usertype<Assets::Material>("Material");
         material_type.set_function("get_texture", &Assets::Material::GetTexture);
 
         material_type.set_function("get_ambient_color", &Assets::Material::GetAmbientColor);
@@ -290,7 +290,7 @@ namespace Vakol {
     }
 
     void RegisterShader(sol::state& lua) {
-        auto shader_type = lua.new_usertype<Shader>("shader");
+        auto shader_type = lua.new_usertype<Shader>("Shader");
         shader_type.set_function("set_bool", [](const Shader* shader, const std::string& name, const bool value) {
             shader->SetBool(name.c_str(), value);
         });
@@ -314,7 +314,7 @@ namespace Vakol {
     }
 
     void RegisterEntity(sol::state& lua) {
-        auto entity_type = lua.new_usertype<Entity>("entity");
+        auto entity_type = lua.new_usertype<Entity>("Entity");
 
         entity_type.set_function("get_tag", [](Entity* ent) { return ent->GetComponent<Tag>().tag; });
         entity_type.set_function("get_transform", &Entity::GetComponent<Transform>);
@@ -531,7 +531,7 @@ namespace Vakol {
     }
 
     void RegisterTransform(sol::state& lua) {
-        auto transform_type = lua.new_usertype<Transform>("transform");
+        auto transform_type = lua.new_usertype<Transform>("Transform");
 
         transform_type["pos"] = &Transform::pos;
         transform_type["rot"] = &Transform::eulerAngles;
@@ -539,7 +539,7 @@ namespace Vakol {
     }
 
     void RegisterTerrain(sol::state& lua) {
-        auto terrain_type = lua.new_usertype<Controller::Terrain>("terrain");
+        auto terrain_type = lua.new_usertype<Controller::Terrain>("Terrain");
 
         terrain_type.set_function("get_height", &Controller::Terrain::GetHeight);
         terrain_type.set_function("get_size", &Controller::Terrain::GetSize);
@@ -557,7 +557,7 @@ namespace Vakol {
     }
 
     void RegisterCamera(sol::state& lua) {
-        auto camera_type = lua.new_usertype<Camera>("camera");
+        auto camera_type = lua.new_usertype<Camera>("Camera");
 
         camera_type.set_function("get_pos", &Camera::GetPos);
         camera_type.set_function("set_pos", &Camera::SetPos);
@@ -572,10 +572,13 @@ namespace Vakol {
     }
 
     void RegisterScene(sol::state& lua) {
-        auto scene_type = lua.new_usertype<Scene>("scene");
+        auto scene_type = lua.new_usertype<Scene>("Scene");
 
-        // TODO reset this
-        scene_type["globals"] = &Scene::sceneGlobals;
+        // TODO reset this to point to scritpt env
+        //! PURELY FOR BACKWARDS COMPATABILITY, PREFER TO USE globals, over scene.globals
+        scene_type.set("globals", sol::property([](Scene& self) { return self.GetScript().env; }));
+
+        // scene_type.set("globals", [](Scene* scene) { return scene->GetScript().env; });
 
         scene_type.set_function("create_entity", &Scene::CreateEntity);
 
@@ -610,7 +613,7 @@ namespace Vakol {
     }
 
     void RegisterGUIWindow(sol::state& lua) {
-        auto gui_window_type = lua.new_usertype<View::GUIWindow>("gui");
+        auto gui_window_type = lua.new_usertype<View::GUIWindow>("GUI");
 
         gui_window_type.set_function("get_display_window_width", &View::GUIWindow::DisplayWindowWidth);
         gui_window_type.set_function("get_display_window_height", &View::GUIWindow::DisplayWindowHeight);
@@ -652,7 +655,7 @@ namespace Vakol {
     }
 
     void RegisterRigidBody(sol::state& lua) {
-        auto rigidType = lua.new_usertype<RigidBody>("rigidBody");
+        auto rigidType = lua.new_usertype<RigidBody>("RigidBody");
 
         rigidType["use_transform"] = &RigidBody::use_transform;
         rigidType["is_colliding"] = &RigidBody::is_colliding;
@@ -663,7 +666,7 @@ namespace Vakol {
 
         rigidType["BodyType"] = &RigidBody::Type;
 
-        auto rigidDataType = lua.new_usertype<RigidBody::RigidData>("rigidData");
+        auto rigidDataType = lua.new_usertype<RigidBody::RigidData>("RigidData");
 
         rigidDataType["mass"] = &RigidBody::RigidData::mass;
         rigidDataType["gravity"] = &RigidBody::RigidData::grav;
@@ -700,7 +703,7 @@ namespace Vakol {
     }
 
     void RegisterCollider(sol::state& lua) {
-        auto colliderType = lua.new_usertype<Collider>("collider");
+        auto colliderType = lua.new_usertype<Collider>("Collider");
 
         lua["Shape"] =
             lua.create_table_with("Box", Collider::ShapeName::BOX, "Sphere", Collider::ShapeName::SPHERE, "Capsule",
@@ -708,7 +711,7 @@ namespace Vakol {
 
         colliderType["Shape"] = &Collider::ShapeName;
 
-        auto ColliderBoundsType = lua.new_usertype<Collider::Bounds>("colliderBounds");
+        auto ColliderBoundsType = lua.new_usertype<Collider::Bounds>("ColliderBounds");
 
         ColliderBoundsType["min"] = &Collider::Bounds::min;
         ColliderBoundsType["max"] = &Collider::Bounds::max;
@@ -726,7 +729,7 @@ namespace Vakol {
     // TODO remove this later, just used for rp3d vec
     void RegisterPhysics(sol::state& lua) {
         // TODO get rid of rp3d vec
-        auto rp3dVec3 = lua.new_usertype<rp3d::Vector3>("phyVec3");  // need for collider
+        auto rp3dVec3 = lua.new_usertype<rp3d::Vector3>("PhyVec3");  // need for collider
         rp3dVec3["x"] = &rp3d::Vector3::x;
         rp3dVec3["y"] = &rp3d::Vector3::y;
         rp3dVec3["z"] = &rp3d::Vector3::z;

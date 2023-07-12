@@ -47,6 +47,9 @@ namespace Vakol::Controller {
 
         if (!sname.empty()) {
             LuaScript script = m_scriptEngine.CreateScript("scripts/" + sname);
+
+            m_scriptEngine.SetScriptVariable(script, "entity", ent);
+            m_scriptEngine.InitScript(script);
             ent.AddComponent<LuaScript>(script);
         }
 
