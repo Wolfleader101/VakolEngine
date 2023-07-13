@@ -13,13 +13,6 @@ namespace Vakol {
         std::string path;
     };
 
-    //! if we dont want to expose sol at all we could do something like this
-    // struct JSObject;
-
-    // using LuaType = std::variant<int, double, bool, std::string, std::shared_ptr<JSObject>>;
-
-    // struct JSObject : public std::unordered_map<std::string, LuaType> {};
-
     using LuaType = sol::object;
     using LuaTable = sol::table;
     using LuaFunction = sol::protected_function;

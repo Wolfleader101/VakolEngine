@@ -20,19 +20,7 @@ namespace Vakol::Controller {
           m_cam(glm::vec3(0.0f, 0.0f, 2.0f)),
           m_scriptEngine(scriptEngine) {}
 
-    void Scene::Init() {
-        // lua->RunFile("scripts/" + scriptName);
-
-        // sceneGlobals = lua->GetState().create_named_table(name);
-
-        // lua->GetState()["scene"] = this;
-
-        // lua->RunFunction("init");
-
-        initialized = true;
-
-        // System::BindScene(*this);
-    }
+    void Scene::Init() { initialized = true; }
 
     const std::string& Scene::getName() const { return m_name; }
 

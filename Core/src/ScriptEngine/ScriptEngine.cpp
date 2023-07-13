@@ -49,15 +49,11 @@ namespace Vakol {
 
         script.path = scriptPath;
 
-        //! please note this may not work as environemnts aren't deep copied (might need to return a luaScript reference
-        //! instead)
         script.env = sol::environment(m_state, sol::create, m_state.globals());
         this->SetScriptVariable(script, "state", script.env);
 
-        //! run using the scripts own context, (you probably dont want to run every script on creation tho?)
+        // TODO - run using the scripts own context, (you probably dont want to run every script on creation tho?)
         this->RunFile(script.env, scriptPath);
-
-        // m_scripts.push_back(script);  //! just for testing - remove later
 
         return script;
     }
@@ -98,7 +94,7 @@ namespace Vakol {
             VK_ERROR(errorMsg);
         }
 
-        //! todo in future might want to return the result of the script
+        // TODO in future might want to return the result of the script
         // return result;
     }
 
@@ -121,7 +117,7 @@ namespace Vakol {
         }
 
         // Call the function with args, and check for errors
-        //! could also use sol::variadic_args
+        //  TODO look into sol::variadic_args
         if (sol::protected_function_result result = func(args); !result.valid()) {
             sol::error err = result;
             sol::call_status status = result.status();
@@ -134,11 +130,10 @@ namespace Vakol {
             VK_ERROR(errorMsg);
         }
 
-        //! TODO pass in return type and return it here if it returns anything
+        // TODO return value of function??
     }
 
     void ScriptEngine::RegisterTypes() {
-        //! TODO MOVE THESE INTO SEPERATE FILE???
         RegisterTime(m_state);
         RegisterMath(m_state);
         RegisterInput(m_state);

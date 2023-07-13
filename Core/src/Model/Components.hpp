@@ -266,7 +266,7 @@ namespace Vakol::Model::Components {
          */
         FSM() = default;
 
-        //! this is fucked
+        // TODO this is fucked
         FSM(LuaTable table);
 
         // The current state of the FSM.

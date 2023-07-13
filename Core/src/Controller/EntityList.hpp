@@ -113,7 +113,7 @@ namespace Vakol::Controller {
          */
         void Deserialize(const std::string& file);
 
-        //! JUST FOR TESTING
+        // TODO JUST FOR TESTING
         entt::registry& GetRegistry() { return m_Registry; }
 
        private:

@@ -50,7 +50,6 @@ namespace Vakol::Controller {
         m_running = true;
     }
 
-    //! this will be yeeted once script engine is done
     void Application::RegisterLua() {
         m_scriptEngine.SetGlobalVariable("Time", &m_time);
         m_scriptEngine.SetGlobalVariable("Input", &m_input);
@@ -140,7 +139,7 @@ namespace Vakol::Controller {
                 for (auto& scene : scenes) {
                     if (!scene.active) continue;
 
-                    //! set the current scene globally, eventually want to move this elsewhere
+                    // TODO set the current scene globally, eventually want to move this elsewhere
                     m_scriptEngine.SetGlobalVariable("scene", &scene);
 
                     if (!scene.initialized) {
@@ -170,7 +169,7 @@ namespace Vakol::Controller {
 
                 m_renderer->UpdateData(scene.GetCamera());
 
-                //! set the current scene globally, eventually want to move this elsewhere
+                // TODO set the current scene globally, eventually want to move this elsewhere
                 m_scriptEngine.SetGlobalVariable("scene", &scene);
 
                 scene.GetEntityList().GetRegistry().view<LuaScript>().each(

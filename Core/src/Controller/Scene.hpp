@@ -9,7 +9,7 @@
 #include "Time.hpp"
 #include "View/Renderer/Renderer.hpp"
 
-//! todo move LuaScript to its own header
+// TODO move LuaScript to its own header
 #include "ScriptEngine/ScriptEngine.hpp"
 
 namespace Vakol::Controller {
@@ -35,7 +35,7 @@ namespace Vakol::Controller {
         /**
          * @brief Initialize the scene.
          */
-        //! TODO this can probably be removed
+        // TODO this can probably be removed
         void Init();
 
         /**
@@ -131,7 +131,7 @@ namespace Vakol::Controller {
        private:
         LuaScript m_script;
 
-        //! JUST for testing as scene is currently scuffed
+        // TODO REOVE - JUST for testing as scene is currently scuffed
         ScriptEngine& m_scriptEngine;
 
         /**
