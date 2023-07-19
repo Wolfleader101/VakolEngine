@@ -8,22 +8,7 @@ namespace Vakol::Model::Components {
     rp3d::Quaternion to_rp3d(const glm::quat& q) { return {q.x, q.y, q.z, q.w}; }
 
     Transform::Transform(const glm::vec3& pos, const glm::quat& rot, const glm::vec3& scale)
-        : pos(pos), rot(rot), scale(scale){};
-
-    Script::Script(std::string& name) : script_name(std::move(name)) {}
-
-    Script::Script(const std::string& script, Entity& entity, Controller::Scene& scene)
-        : script_name(script){
-              // lua->GetState()["scene"] = std::ref(scene);
-              // lua->GetState()["entity"] = entity;
-
-              // state = lua->GetState().create_table();
-              // lua->GetState()["state"] = state;
-
-              // lua->RunFile("scripts/" + script);
-
-              // lua->RunFunction("init");
-          };
+        : pos(pos), rot(rot), scale(scale) {}
 
     FSM::FSM(LuaTable table) : states(table) {}
 

@@ -12,7 +12,7 @@
 #include "Controller/SolSerialize.hpp"
 #include "Entity.hpp"
 #include "Model/Assets/Model.hpp"
-#include "Scripting/ScriptEngine.hpp"
+#include "Scripting/ScriptTypes.hpp"
 
 namespace Vakol::Model::Components {
     /**
@@ -195,65 +195,6 @@ namespace Vakol::Model::Components {
         template <class Archive>
         void serialize(Archive& ar) {
             ar(cereal::make_nvp("TagType", type));
-        }
-    };
-
-    /**
-     * @struct Script
-     *
-     * @brief Script component that holds reference to file
-     */
-    struct Script {
-        std::string script_name; /**< The name of the script file. */
-        // sol::table state;              /**< The Lua state table. */
-        Controller::SolTableData data; /**< The serialized Lua state table data. */
-
-        /**
-         * @brief Default constructor for Script.
-         */
-        Script() = default;
-
-        /**
-         * @brief Constructs a Script object with the specified script name.
-         * @param name The name of the script.
-         */
-        explicit Script(std::string& name);
-
-        /**
-         * @brief Constructs a Script object with the specified script, Lua state, entity, and scene.
-         * @param script The script file.
-         * @param lua The shared pointer to the Lua state.
-         * @param entity The entity.
-         * @param scene The scene.
-         */
-        Script(const std::string& script, Entity& entity, Controller::Scene& scene);
-
-        /**
-         * @brief Serializes the Script object for saving.
-         * @tparam Archive The archive type.
-         * @param ar The archive.
-         */
-        template <class Archive>
-        void save(Archive& ar) const {
-            ar(cereal::make_nvp("ScriptName", script_name));
-
-            // Controller::SolTableData temp;
-            // Controller::ConvertSolToMap(state, temp);
-
-            // ar(temp);
-        }
-
-        /**
-         * @brief Deserializes the Script object for loading.
-         * @tparam Archive The archive type.
-         * @param ar The archive.
-         */
-        template <class Archive>
-        void load(Archive& ar) {
-            ar(cereal::make_nvp("ScriptName", script_name));
-
-            data.data.clear();
-            ar(data);
         }
     };
 
