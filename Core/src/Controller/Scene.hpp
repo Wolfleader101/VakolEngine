@@ -10,7 +10,7 @@
 #include "View/Renderer/Renderer.hpp"
 
 // TODO move LuaScript to its own header
-#include "ScriptEngine/ScriptEngine.hpp"
+#include "Scripting/ScriptEngine.hpp"
 
 namespace Vakol::Controller {
 

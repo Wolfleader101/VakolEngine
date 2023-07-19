@@ -1,7 +1,8 @@
-SET(SCRIPT_ENGINE
-src/ScriptEngine/ScriptEngine.hpp
-src/ScriptEngine/ScriptEngine.cpp
+SET(SCRIPTING
+src/Scripting/ScriptEngine.hpp
+src/Scripting/ScriptEngine.cpp
+src/Scripting/ScriptTypes.hpp
 
-src/ScriptEngine/LuaAccess.hpp
-src/ScriptEngine/LuaAccess.cpp
+src/Scripting/LuaAccess.hpp
+src/Scripting/LuaAccess.cpp
 PARENT_SCOPE)

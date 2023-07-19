@@ -8,7 +8,7 @@
 #include "Model/Entity.hpp"
 #include "Model/GameConfig.hpp"
 #include "Scene.hpp"
-#include "ScriptEngine/ScriptEngine.hpp"
+#include "Scripting/ScriptEngine.hpp"
 #include "Time.hpp"
 #include "View/GUI/GUIWindow.hpp"
 #include "View/Renderer/Renderer.hpp"

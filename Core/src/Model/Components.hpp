@@ -12,7 +12,7 @@
 #include "Controller/SolSerialize.hpp"
 #include "Entity.hpp"
 #include "Model/Assets/Model.hpp"
-#include "ScriptEngine/ScriptEngine.hpp"
+#include "Scripting/ScriptEngine.hpp"
 
 namespace Vakol::Model::Components {
     /**
