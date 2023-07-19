@@ -20,6 +20,7 @@ namespace Vakol {
        public:
         ScriptEngine();
 
+        // WARNING - lua state global access deprecated
         LuaScript CreateScript(const std::string& scriptPath);
 
         LuaTable CreateTable();

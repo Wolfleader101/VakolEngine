@@ -207,7 +207,7 @@ namespace Vakol::Model::Components {
          */
         FSM() = default;
 
-        // TODO this is fucked
+        // TODO probably dont want to store a table in FSM
         FSM(LuaTable table);
 
         // The current state of the FSM.

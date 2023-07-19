@@ -50,9 +50,11 @@ namespace Vakol {
         script.path = scriptPath;
 
         script.env = sol::environment(m_state, sol::create, m_state.globals());
+
+        // TODO this is deprecated, don't use state
         this->SetScriptVariable(script, "state", script.env);
 
-        // TODO - run using the scripts own context, (you probably dont want to run every script on creation tho?)
+        //! run the script on creation (load up global vars etc)
         this->RunFile(script.env, scriptPath);
 
         return script;

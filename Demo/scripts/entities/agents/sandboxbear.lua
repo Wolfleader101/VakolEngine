@@ -1,8 +1,17 @@
+     local ANIMATIONS = {
+        ATTACK = 0,
+        DIE = 1,
+        EAT = 2,
+        IDLE = 3,
+        RUN = 4,
+        WALK = 6
+}
+    
 function setup_fsm()
     state.fsm = entity:add_fsm();
 
     state.fsm:add_state("eating", function()
-        entity:play_animation(state.ANIMATIONS.EAT);
+        entity:play_animation(ANIMATIONS.EAT);
         -- entity:get_rigid():set_velocity(Vector3.new(0,0,0));
         if(fsm_wait(math.random(5,7))) then
             state.fsm:change_state("roaming")
@@ -13,7 +22,7 @@ function setup_fsm()
         trigger_nearby_bears(entity, 12.0);
         -- entity:get_rigid():set_velocity(Vector3.new(0,0,0));
     
-        entity:play_animation(state.ANIMATIONS.ATTACK);
+        entity:play_animation(ANIMATIONS.ATTACK);
 
         if(fsm_wait(0.75)) then
             if player_distance() > state.enemyAttackAnimDistance then
@@ -23,7 +32,7 @@ function setup_fsm()
     end)
 
     state.fsm:add_state("idle", function()
-        entity:play_animation(state.ANIMATIONS.IDLE);
+        entity:play_animation(ANIMATIONS.IDLE);
         -- entity:get_rigid():set_velocity(Vector3.new(0,0,0));
 
         if (fsm_wait(math.random(5, 7))) then
@@ -54,7 +63,7 @@ function setup_fsm()
         end
         
         if not stateChange then
-            entity:play_animation(state.ANIMATIONS.WALK);
+            entity:play_animation(ANIMATIONS.WALK);
         end
 
         if (dir_wait(math.random(4,6))) then
@@ -82,7 +91,7 @@ function setup_fsm()
     end)
 
     state.fsm:add_state("running_towards", function()
-        entity:play_animation(state.ANIMATIONS.RUN);
+        entity:play_animation(ANIMATIONS.RUN);
 
         local diff = scene.globals.player.pos - entity:get_transform().pos;
         state.dir = diff:normalize();
@@ -105,7 +114,7 @@ function setup_fsm()
     end)
 
     state.fsm:add_state("alerted", function()
-        entity:play_animation(state.ANIMATIONS.RUN);
+        entity:play_animation(ANIMATIONS.RUN);
 
         local diff = scene.globals.player.pos - entity:get_transform().pos;
         state.dir = diff:normalize();
@@ -129,14 +138,7 @@ function setup_fsm()
 end
 
 function init()
-    state.ANIMATIONS = {
-        ATTACK = 0,
-        DIE = 1,
-        EAT = 2,
-        IDLE = 3,
-        RUN = 4,
-        WALK = 6
-    }
+
 
     state.enemyAttackAnimDistance = 1.2;
     state.giveUpDistance = 8.0;

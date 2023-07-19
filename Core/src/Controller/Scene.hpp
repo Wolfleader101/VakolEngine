@@ -9,7 +9,7 @@
 #include "Time.hpp"
 #include "View/Renderer/Renderer.hpp"
 
-// TODO move LuaScript to its own header
+// TODO change this to ScriptTypes header, but need to get rid of script engine dependency
 #include "Scripting/ScriptEngine.hpp"
 
 namespace Vakol::Controller {
@@ -131,7 +131,7 @@ namespace Vakol::Controller {
        private:
         LuaScript m_script;
 
-        // TODO REOVE - JUST for testing as scene is currently scuffed
+        // TODO REMOVE - JUST for testing as scene is currently scuffed
         ScriptEngine& m_scriptEngine;
 
         /**

@@ -99,7 +99,7 @@ namespace Vakol::Controller {
             cereal::JSONOutputArchive json(output);
 
             json(cereal::make_nvp("Scene Name", m_name));
-            // json(cereal::make_nvp("Script Name", m_scriptName)); // TODO fix this
+            json(cereal::make_nvp("Script Name", m_script.path));  // TODO see if this works
             json(cereal::make_nvp("camera", m_cam));
         }
 
@@ -138,7 +138,7 @@ namespace Vakol::Controller {
         if (input.good()) {
             cereal::JSONInputArchive json(input);
             json(m_name);
-            // json(m_scriptName); // TODO fix this
+            json(m_script.path);  // TODO see if this works
             json(m_cam);
         }
     }

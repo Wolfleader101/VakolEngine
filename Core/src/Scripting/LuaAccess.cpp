@@ -525,7 +525,7 @@ namespace Vakol {
             }
         });
 
-        // TODO this is fucked, such a bad component, pls remove
+        // TODO remove FSM component
         entity_type.set_function("add_fsm", [&](Entity* ent) -> FSM& {
             if (!ent->HasComponent<FSM>()) ent->AddComponent<FSM>(lua.create_table());
             return ent->GetComponent<FSM>();
@@ -593,7 +593,7 @@ namespace Vakol {
 
             const auto& terrain = ent.GetComponent<Components::Terrain>();
 
-            // TODO uhm remove
+            // TODO remove this
             //  System::BindScene(*scene);
 
             // System::Physics_AddTerrain(*terrain.terrain_ptr);
