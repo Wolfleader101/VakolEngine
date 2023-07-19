@@ -1,4 +1,4 @@
-     local ANIMATIONS = {
+local ANIMATIONS = {
         ATTACK = 0,
         DIE = 1,
         EAT = 2,
@@ -6,60 +6,74 @@
         RUN = 4,
         WALK = 6
 }
+
+local enemyAttackAnimDistance = 1.2;
+local giveUpDistance = 8.0;
+local speed = 0.4;
+local sprint_speed = 1.6;
+local dir = Vector3.new(math.random() * 2 - 1, 0, math.random() * 2 - 1);
+    
+local WAIT_TIMER = 0.0;
+local DIR_TIMER = 0.0;
+local VIEW_DISTANCE = 10.0;
+local SPOTTED = false;
+
+local fsm = nil;
+
     
 function setup_fsm()
-    state.fsm = entity:add_fsm();
+    fsm = entity:add_fsm();
 
-    state.fsm:add_state("eating", function()
+    fsm:add_state("eating", function()
         entity:play_animation(ANIMATIONS.EAT);
         -- entity:get_rigid():set_velocity(Vector3.new(0,0,0));
         if(fsm_wait(math.random(5,7))) then
-            state.fsm:change_state("roaming")
+            fsm:change_state("roaming")
         end
     end)
 
-    state.fsm:add_state("attack", function()
+    fsm:add_state("attack", function()
         trigger_nearby_bears(entity, 12.0);
         -- entity:get_rigid():set_velocity(Vector3.new(0,0,0));
     
         entity:play_animation(ANIMATIONS.ATTACK);
 
         if(fsm_wait(0.75)) then
-            if player_distance() > state.enemyAttackAnimDistance then
-                state.fsm:change_state("running_towards");
+            if player_distance() > enemyAttackAnimDistance then
+                fsm:change_state("running_towards");
             end
         end
     end)
 
-    state.fsm:add_state("idle", function()
+    fsm:add_state("idle", function()
         entity:play_animation(ANIMATIONS.IDLE);
         -- entity:get_rigid():set_velocity(Vector3.new(0,0,0));
 
         if (fsm_wait(math.random(5, 7))) then
             local rand = math.random();
             if (rand < 0.6) then
-                state.fsm:change_state("roaming")
+                fsm:change_state("roaming")
             else
-                state.fsm:change_state("eating")
+                fsm:change_state("eating")
             end
         end
     end)
 
-    state.fsm:add_state("roaming", function()
+    fsm:add_state("roaming", function()
         local stateChange = false
         if (fsm_wait(math.random(5, 7))) then
             local rand = math.random();
             if (rand < 0.4) then
-                state.fsm:change_state("idle")
+                fsm:change_state("idle")
                 stateChange = true
             elseif (rand < 0.8) then
-                state.fsm:change_state("eating")
+                fsm:change_state("eating")
                 stateChange = true
             end
         end
 
-        if(state.SPOTTED) then
-            state.SPOTTED = false;
+        if(SPOTTED) then
+            SPOTTED = false;
         end
         
         if not stateChange then
@@ -67,102 +81,90 @@ function setup_fsm()
         end
 
         if (dir_wait(math.random(4,6))) then
-            state.dir.x = math.random() * 2 - 1
-            state.dir.z = math.random() * 2 - 1
-            while state.dir:magnitude() == 0 do
-                state.dir.x = math.random() * 2 - 1
-                state.dir.z = math.random() * 2 - 1
+            dir.x = math.random() * 2 - 1
+            dir.z = math.random() * 2 - 1
+            while dir:magnitude() == 0 do
+                dir.x = math.random() * 2 - 1
+                dir.z = math.random() * 2 - 1
             end
-            state.dir:normalize()
+            dir:normalize()
         end
         
-        local velocity = state.speed * Time.delta_time;
-        local move = state.dir * velocity;
+        local velocity = speed * Time.delta_time;
+        local move = dir * velocity;
         -- entity:get_rigid():set_velocity(move);
         entity:get_transform().pos = entity:get_transform().pos + move;
 
-        local targetRotation = math.atan(state.dir.x, state.dir.z)
+        local targetRotation = math.atan(dir.x, dir.z)
         targetRotation = targetRotation * (180 / math.pi)
         entity:get_transform().rot.y = targetRotation
 
-        if player_distance() < state.enemyAttackAnimDistance then
-            state.fsm:change_state("attack");
+        if player_distance() < enemyAttackAnimDistance then
+            fsm:change_state("attack");
         end
     end)
 
-    state.fsm:add_state("running_towards", function()
+    fsm:add_state("running_towards", function()
         entity:play_animation(ANIMATIONS.RUN);
 
         local diff = scene.globals.player.pos - entity:get_transform().pos;
-        state.dir = diff:normalize();
+        dir = diff:normalize();
       
-        local velocity = state.sprint_speed * Time.delta_time;
-        local move = state.dir * velocity;
+        local velocity = sprint_speed * Time.delta_time;
+        local move = dir * velocity;
 
         -- entity:get_rigid():set_velocity(move);
         entity:get_transform().pos = entity:get_transform().pos + move;
 
-        local targetRotation = math.atan(state.dir.x, state.dir.z)
+        local targetRotation = math.atan(dir.x, dir.z)
         targetRotation = targetRotation * (180 / math.pi)
         entity:get_transform().rot.y = targetRotation
 
-        if player_distance() < state.enemyAttackAnimDistance then
-            state.fsm:change_state("attack");
-        elseif player_distance() > state.giveUpDistance then
-            state.fsm:change_state("roaming");
+        if player_distance() < enemyAttackAnimDistance then
+            fsm:change_state("attack");
+        elseif player_distance() > giveUpDistance then
+            fsm:change_state("roaming");
         end
     end)
 
-    state.fsm:add_state("alerted", function()
+    fsm:add_state("alerted", function()
         entity:play_animation(ANIMATIONS.RUN);
 
         local diff = scene.globals.player.pos - entity:get_transform().pos;
-        state.dir = diff:normalize();
+        dir = diff:normalize();
 
-        local velocity = state.sprint_speed * Time.delta_time;
-        local move = state.dir * velocity;
+        local velocity = sprint_speed * Time.delta_time;
+        local move = dir * velocity;
 
         -- entity:get_rigid():set_velocity(move);
         entity:get_transform().pos = entity:get_transform().pos + move;
 
-        local targetRotation = math.atan(state.dir.x, state.dir.z)
+        local targetRotation = math.atan(dir.x, dir.z)
         targetRotation = targetRotation * (180 / math.pi)
         entity:get_transform().rot.y = targetRotation
 
-        if player_distance() < state.enemyAttackAnimDistance then
-            state.fsm:change_state("attack");
+        if player_distance() < enemyAttackAnimDistance then
+            fsm:change_state("attack");
         end
     end)
 
-    state.fsm:change_state("roaming");
+    fsm:change_state("roaming");
 end
 
 function init()
-
-
-    state.enemyAttackAnimDistance = 1.2;
-    state.giveUpDistance = 8.0;
-    state.speed = 0.4;
-    state.sprint_speed = 1.6;
-    state.dir = Vector3.new(math.random() * 2 - 1, 0, math.random() * 2 - 1);
-    while state.dir:magnitude() == 0 do
-        state.dir.x = math.random() * 2 - 1
-        state.dir.z = math.random() * 2 - 1
+    while dir:magnitude() == 0 do
+        dir.x = math.random() * 2 - 1
+        dir.z = math.random() * 2 - 1
     end
-    state.dir:normalize();
 
-    state.WAIT_TIMER = 0.0;
-    state.DIR_TIMER = 0.0;
-
-    state.VIEW_DISTANCE = 10.0;
-    state.SPOTTED = false;
+    dir:normalize();
 
     entity:get_transform().pos = Vector3.new(10, 0, 10);
 
-    state.model = entity:add_model("assets/models/agents/bear.fbx", 0.25, true, true);
+    local model = entity:add_model("assets/models/agents/bear.fbx", 0.25, true, true);
     entity:set_shader("coreAssets/shaders/animation.prog");
 
-    local shader = state.model:get_shader();
+    local shader = model:get_shader();
 
     shader:set_vec3v("light.direction", Vector3.new(math.rad(0.0), math.rad(0.0), math.rad(-90.0)));
 
@@ -194,25 +196,11 @@ function player_distance()
     return (scene.globals.player.pos - entity:get_transform().pos):magnitude();
 end
 
-function attack_wait(seconds)
-    if(state.ATTACK_TIMER == nil) then
-        state.ATTACK_TIMER = 0;
-    end
-    state.ATTACK_TIMER = state.ATTACK_TIMER + Time.delta_time;
-
-    if (state.ATTACK_TIMER >= seconds) then
-        state.ATTACK_TIMER = 0;
-        return true;
-    end
-
-    return false;
-end
-
 function dir_wait(seconds)
-    state.DIR_TIMER = state.DIR_TIMER + Time.delta_time;
+    DIR_TIMER = DIR_TIMER + Time.delta_time;
 
-    if (state.DIR_TIMER >= seconds) then
-        state.DIR_TIMER = 0
+    if (DIR_TIMER >= seconds) then
+        DIR_TIMER = 0
         return true;
     end
 
@@ -220,10 +208,10 @@ function dir_wait(seconds)
 end
 
 function fsm_wait(seconds)
-    state.WAIT_TIMER = state.WAIT_TIMER + Time.delta_time;
+    WAIT_TIMER = WAIT_TIMER + Time.delta_time;
 
-    if (state.WAIT_TIMER  >= seconds) then
-        state.WAIT_TIMER = 0
+    if (WAIT_TIMER  >= seconds) then
+        WAIT_TIMER = 0
         return true;
     end
 
@@ -244,15 +232,15 @@ function tick()
         entity:active_model(true);
     end
 
-    if (player_dist < state.VIEW_DISTANCE) and (player_dist >= state.enemyAttackAnimDistance) then
+    if (player_dist < VIEW_DISTANCE) and (player_dist >= enemyAttackAnimDistance) then
         local diff_normal = diff:normalize();
-        local dot = diff_normal:dot(state.dir)
+        local dot = diff_normal:dot(dir)
 
         if (dot > 0) then
-            state.fsm:change_state("running_towards");
+            fsm:change_state("running_towards");
         end
     end
-    state.fsm:update()
+    fsm:update()
 
     local terr_scale = scene.globals.terrain.transform.scale;
     pos.y = (scene.globals.terrain.terr:get_height(pos.x / terr_scale.x, pos.z / terr_scale.z) * terr_scale.y) + 0.03;
