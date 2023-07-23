@@ -13,18 +13,18 @@ namespace Vakol {
             /**
              * @brief current time
              */
-            float curTime = 0.0f;
+            double curTime = 0.0f;
 
             /**
              * @brief delta time
              */
-            float deltaTime = 0.0f;
+            double deltaTime = 0.0f;
 
             /**
              * @brief the previous frames time
              *
              */
-            float prevTime = 0.0f;
+            double prevTime = 0.0f;
 
             /**
              * @brief  the number of frames per second
@@ -32,11 +32,15 @@ namespace Vakol {
              */
             int fps = 0;
 
+            double tickRate = 1.0f / 60.0f;
+
+            double accumulator = 0.0f;
+
             /**
              * @brief used to update the time struct
              */
             void Update() {
-                curTime = static_cast<float>(glfwGetTime());
+                curTime = glfwGetTime();
                 frameCount++;
 
                 if (curTime - prevFPSTime >= 1.0f) {
@@ -56,7 +60,7 @@ namespace Vakol {
              *
              */
             int frameCount = 0;
-            float prevFPSTime = 0.0f;
+            double prevFPSTime = 0.0f;
         };
     }  // namespace Controller
 }  // namespace Vakol

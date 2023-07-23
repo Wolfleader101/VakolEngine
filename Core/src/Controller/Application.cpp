@@ -1,7 +1,6 @@
 #include "Application.hpp"
 
 #include <Controller/AssetLoader/AssetLoader.hpp>
-#include <Controller/LuaAccess.hpp>
 #include <Controller/Physics/PhysicsPool.hpp>
 #include <Controller/Scene.hpp>
 #include <Controller/System.hpp>
@@ -13,10 +12,8 @@
 namespace Vakol::Controller {
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
-    Application::Application() : m_window(nullptr), m_renderer(nullptr), m_running(false), m_input() {
-        Logger::Init();
+    Application::Application() : m_window(nullptr), m_renderer(nullptr), m_running(false), m_input(), m_scriptEngine() {
         scenes.reserve(10);
-        lua = std::make_shared<LuaState>();
     };
 
     void Application::Init() {
@@ -48,33 +45,40 @@ namespace Vakol::Controller {
 
         VK_INFO("Calling main.lua...");
 
-        lua->RunFile("scripts/main.lua");
-
-        const sol::function lua_main = lua->GetState()["main"];
+        LuaScript mainScript = m_scriptEngine.CreateScript("scripts/main.lua");
 
         m_running = true;
     }
 
     void Application::RegisterLua() {
-        RegisterLogger(lua->GetState());
-        RegisterMath(lua->GetState());
-        RegisterEntity(lua, lua->GetState());
-        RegisterECS(lua->GetState());
-        RegisterAssetLoader(lua->GetState());
-        RegisterApplication(lua->GetState(), this);
-        RegisterRenderer(lua->GetState(), m_renderer);
-        RegisterScene(lua->GetState());
-        RegisterGUIWindow(lua->GetState(), &m_gui);  // Register GUI Window
-        RegisterPhysics(lua->GetState());
-        RegisterOther(lua->GetState());
+        m_scriptEngine.SetGlobalVariable("Time", &m_time);
+        m_scriptEngine.SetGlobalVariable("Input", &m_input);
+        m_scriptEngine.SetGlobalVariable("GUI", &m_gui);
+
+        m_scriptEngine.SetGlobalFunction("app_run", &Application::SetRunning, this);
+        m_scriptEngine.SetGlobalFunction("add_scene", &Application::AddScene, this);
+        m_scriptEngine.SetGlobalFunction("get_scene", &Application::GetScene, this);
+        m_scriptEngine.SetGlobalFunction("set_active_mouse", &Application::SetActiveMouse, this);
+
+        m_scriptEngine.SetGlobalFunction("toggle_wireframe", &View::Renderer::ToggleWireframe, m_renderer);
+        m_scriptEngine.SetGlobalFunction("toggle_skybox", &View::Renderer::ToggleSkybox, m_renderer);
+        m_scriptEngine.SetGlobalFunction("set_wireframe", &View::Renderer::SetWireframe, m_renderer);
+        m_scriptEngine.SetGlobalFunction("set_skybox", &View::Renderer::SetSkybox, m_renderer);
+
+        // lua.set_function("clear_color_v", [&](const glm::vec4& color) { renderer->ClearColor(color); });
+
+        // lua.set_function("clear_color", [&](const float r, const float g, const float b, const float a) {
+        //     renderer->ClearColor(r, g, b, a);
+        //     renderer->ClearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        // });
     }
 
     std::optional<Model::GameConfig> Application::LoadConfig() {
         VK_INFO("Loading game_config.lua...");
 
-        lua->RunFile("scripts/game_config.lua");
+        LuaScript configScript = m_scriptEngine.CreateScript("scripts/game_config.lua");
 
-        sol::table config = lua->GetState()["game_config"];
+        sol::table config = m_scriptEngine.GetScriptVariable(configScript, "game_config");
 
         sol::optional<std::string> name = config["name"];
         if (!name) {
@@ -127,15 +131,51 @@ namespace Vakol::Controller {
 
             m_renderer->Update();
 
-            //! update scenes lua
+            m_time.accumulator += m_time.deltaTime;
+
+            while (m_time.accumulator >= m_time.tickRate) {
+                // eventually need to do something like m_scenemanager.GetCurrentScene().GetScript()
+
+                for (auto& scene : scenes) {
+                    if (!scene.active) continue;
+
+                    // TODO set the current scene globally, eventually want to move this elsewhere
+                    m_scriptEngine.SetGlobalVariable("scene", &scene);
+
+                    if (!scene.initialized) {
+                        m_scriptEngine.InitScript(scene.GetScript());
+
+                        scene.Init();
+                    }
+
+                    scene.GetEntityList().GetRegistry().view<LuaScript>().each(
+                        [&](auto& script) { m_scriptEngine.TickScript(script); });
+
+                    m_scriptEngine.TickScript(scene.GetScript());
+                }
+
+                // Decrease the accumulated time
+                m_time.accumulator -= m_time.tickRate;
+            }
+
+            // Compute the time interpolation factor
+            // float alpha = m_time.accumulator / m_time.tickRate;
+
+            // TODO move to a scene manager
             for (auto& scene : scenes) {
                 if (!scene.active) continue;
-
-                if (!scene.initialized) scene.Init();
 
                 System::BindScene(scene);
 
                 m_renderer->UpdateData(scene.GetCamera());
+
+                // TODO set the current scene globally, eventually want to move this elsewhere
+                m_scriptEngine.SetGlobalVariable("scene", &scene);
+
+                scene.GetEntityList().GetRegistry().view<LuaScript>().each(
+                    [&](auto& script) { m_scriptEngine.UpdateScript(script); });
+
+                m_scriptEngine.UpdateScript(scene.GetScript());
 
                 scene.Update(m_time, m_renderer);
             }
@@ -148,12 +188,16 @@ namespace Vakol::Controller {
         }
     }
 
+    // TODO move to a scene manager
     void Application::AddScene(const std::string& scriptName, const std::string& scene_name) {
         const std::string sceneName = scene_name.length() == 0 ? "Scene" + std::to_string(scenes.size()) : scene_name;
 
         const auto ref = std::make_shared<ScenePhysics>(PhysicsPool::CreatePhysicsWorld());
 
-        scenes.emplace_back(sceneName, scriptName, lua, ref, true);
+        LuaScript script = m_scriptEngine.CreateScript("scripts/" + scriptName);
+        LuaTable tbl = m_scriptEngine.CreateTable();
+        m_scriptEngine.SetScriptVariable(script, "globals", tbl);
+        scenes.emplace_back(sceneName, script, ref, true, m_scriptEngine);
     }
 
     Scene& Application::GetScene(const std::string& sceneName) {
@@ -177,8 +221,7 @@ namespace Vakol::Controller {
         dispatcher.Dispatch<MouseButtonReleasedEvent>(BIND_EVENT_FN(OnMouseButtonReleased));
     }
 
-    void Application::SetActiveMouse(const bool active)     
-    { 
+    void Application::SetActiveMouse(const bool active) {
         if (active)
             glfwSetInputMode(m_window->GetWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
         else

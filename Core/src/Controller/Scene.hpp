@@ -6,13 +6,15 @@
 #include "Controller/Physics/ScenePhysics.hpp"
 #include "Controller/Terrain.hpp"
 #include "EntityList.hpp"
-#include "LuaState.hpp"
 #include "Time.hpp"
 #include "View/Renderer/Renderer.hpp"
 
+// TODO change this to ScriptTypes header, but need to get rid of script engine dependency
+#include "Scripting/ScriptEngine.hpp"
+
 namespace Vakol::Controller {
 
-   /**
+    /**
      * @class Scene
      *
      * @brief Class representing a scene in the application.
@@ -23,23 +25,18 @@ namespace Vakol::Controller {
          * @brief Construct a new Scene object.
          *
          * @param name The name of the scene.
-         * @param scriptName The name of the Lua script associated with the scene.
-         * @param lua The shared pointer to the Lua state.
+         * @param script The Lua script associated with the scene.
          * @param SP The shared pointer to the ScenePhysics object.
          * @param active Whether the scene is active or not.
          */
-        Scene(const std::string& name, const std::string& scriptName, std::shared_ptr<LuaState> lua,
-              const std::shared_ptr<Physics::ScenePhysics>& SP, bool active);
+        Scene(const std::string& name, LuaScript& script, const std::shared_ptr<Physics::ScenePhysics>& SP, bool active,
+              ScriptEngine& scriptEngine);
 
         /**
          * @brief Initialize the scene.
          */
+        // TODO this can probably be removed
         void Init();
-
-        /**
-         * @brief The entity list of the scene.
-         */
-        EntityList entityList;
 
         /**
          * @brief Get the name of the scene.
@@ -113,7 +110,7 @@ namespace Vakol::Controller {
          *
          * @return Camera& The reference to the camera.
          */
-        Camera& GetCamera() { return cam; }
+        Camera& GetCamera() { return m_cam; }
 
         /**
          * @brief Get an entity in the scene by its tag.
@@ -123,30 +120,33 @@ namespace Vakol::Controller {
          */
         std::shared_ptr<Entity> GetEntity(const std::string& tag);
 
-        /**
-         * @brief The scene globals in Lua.
-         */
-        sol::table sceneGlobals;
+        const EntityList& GetEntityList() const { return m_entityList; }
+
+        EntityList& GetEntityList() { return m_entityList; }
+
+        // const LuaScript& GetScript() const { return m_script; }
+
+        LuaScript& GetScript() { return m_script; }
 
        private:
-        /**
-         * @brief The shared pointer to the LuaState object.
-         */
-        std::shared_ptr<LuaState> lua;
+        LuaScript m_script;
 
-        /**
-         * @brief The name of the Lua script associated with the scene.
-         */
-        std::string scriptName;
+        // TODO REMOVE - JUST for testing as scene is currently scuffed
+        ScriptEngine& m_scriptEngine;
 
         /**
          * @brief The name of the scene.
          */
-        std::string name;
+        std::string m_name;
 
         /**
          * @brief The camera of the scene.
          */
-        Camera cam;
+        Camera m_cam;
+
+        /**
+         * @brief The entity list of the scene.
+         */
+        EntityList m_entityList;
     };
 }  // namespace Vakol::Controller

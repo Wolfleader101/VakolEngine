@@ -4,9 +4,10 @@
 #include <Controller/Singleton.hpp>
 #include <iostream>
 
-namespace Vakol 
-{
+namespace Vakol {
     void Run() {
+        Controller::Logger::Init();
+
         Controller::Singleton<Controller::Application>::GetInstance().Init();
 
         Controller::Singleton<Controller::Application>::GetInstance().Run();

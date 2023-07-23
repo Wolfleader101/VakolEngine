@@ -8,30 +8,11 @@ namespace Vakol::Model::Components {
     rp3d::Quaternion to_rp3d(const glm::quat& q) { return {q.x, q.y, q.z, q.w}; }
 
     Transform::Transform(const glm::vec3& pos, const glm::quat& rot, const glm::vec3& scale)
-        : pos(pos), rot(rot), scale(scale){};
+        : pos(pos), rot(rot), scale(scale) {}
 
-    Script::Script(std::string& name) : script_name(std::move(name)) {}
+    FSM::FSM(LuaTable table) : states(table) {}
 
-    Script::Script(const std::string& script, std::shared_ptr<Controller::LuaState> lua, Entity& entity,
-                   Controller::Scene& scene)
-        : script_name(script) {
-        lua->GetState()["scene"] = std::ref(scene);
-        lua->GetState()["entity"] = entity;
-
-        state = lua->GetState().create_table();
-        lua->GetState()["state"] = state;
-
-        lua->RunFile("scripts/" + script);
-
-        lua->RunFunction("init");
-    };
-
-    FSM::FSM(std::shared_ptr<Controller::LuaState> lua) : lua(lua) {
-        // Create a new table in the Lua state for the states
-        states = lua->GetState().create_table();
-    }
-
-    void FSM::AddState(const std::string& stateName, sol::protected_function& callback) {
+    void FSM::AddState(const std::string& stateName, LuaFunction& callback) {
         // Add a new state to the states table
         states[stateName] = callback;
     }
@@ -48,8 +29,8 @@ namespace Vakol::Model::Components {
 
     void FSM::Update() {
         // Call the callback for the current state
-        const sol::function callback = states[currentState];
-        lua->RunFunction(callback);
+        const LuaFunction callback = states[currentState];
+        callback();
     }
 
     Drawable::Drawable(std::string&& file)

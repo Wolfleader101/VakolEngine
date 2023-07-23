@@ -231,7 +231,6 @@ end
 
 function update()
     PLAYER = scene.globals.player;
-    OPTIONS = get_scene("Options Scene").globals.options;
 
     local pos = entity:get_transform().pos;
     local diff = scene.globals.player.pos - pos;

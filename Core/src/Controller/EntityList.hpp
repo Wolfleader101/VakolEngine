@@ -7,7 +7,6 @@
 #include <vector>
 
 #include "Logger.hpp"
-#include "Controller/LuaState.hpp"
 
 namespace Vakol::Model {
 
@@ -15,6 +14,9 @@ namespace Vakol::Model {
 }
 
 using namespace Vakol::Model;
+
+template <typename T>
+using ComponentList = entt::view<T>;
 
 namespace Vakol::Controller {
 
@@ -110,6 +112,9 @@ namespace Vakol::Controller {
          * @param file The file path to deserialize from.
          */
         void Deserialize(const std::string& file);
+
+        // TODO JUST FOR TESTING
+        entt::registry& GetRegistry() { return m_Registry; }
 
        private:
         /**

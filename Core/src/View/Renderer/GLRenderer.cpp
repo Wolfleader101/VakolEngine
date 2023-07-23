@@ -107,8 +107,6 @@ namespace Vakol::View {
 
         if (!model->cullBackface()) glDisable(GL_CULL_FACE);
 
-        shader->Bind();
-
         const auto translation_matrix = translate(glm::mat4(1.0f), transform.pos);
 
         const auto rotation_matrix = mat4_cast(transform.rot);
@@ -119,6 +117,7 @@ namespace Vakol::View {
 
         shader->SetMat4v("BONE_TRANSFORMS", animation.numTransforms(), value_ptr(animation.transform()));
 
+        shader->Bind();
         for (int i = 0; i < model->nMeshes(); ++i) {
             const auto& mesh = model->mesh(i);
             const auto& material = mesh.GetMaterial();
@@ -151,8 +150,6 @@ namespace Vakol::View {
 
         if (!model->cullBackface()) glDisable(GL_CULL_FACE);
 
-        shader->Bind();
-
         const auto translation_matrix = translate(glm::mat4(1.0f), transform.pos);
 
         const auto rotation_matrix = mat4_cast(transform.rot);
@@ -160,6 +157,8 @@ namespace Vakol::View {
         const auto scale_matrix = scale(glm::mat4(1.0f), transform.scale);
 
         shader->SetMat4("MODEL_MATRIX", translation_matrix * rotation_matrix * scale_matrix);
+
+        shader->Bind();
 
         for (int i = 0; i < model->nMeshes(); ++i) {
             const auto& mesh = model->mesh(i);

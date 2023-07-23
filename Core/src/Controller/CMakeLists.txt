@@ -13,9 +13,6 @@ src/Controller/Application.cpp
 src/Controller/Animator.hpp
 src/Controller/Animator.cpp
 
-src/Controller/LuaState.hpp
-src/Controller/LuaState.cpp
-
 src/Controller/Logger.hpp
 src/Controller/Logger.cpp
 
@@ -32,8 +29,6 @@ src/Controller/EntityList.cpp
 src/Controller/System.hpp
 src/Controller/System.cpp
 
-src/Controller/LuaAccess.hpp
-src/Controller/LuaAccess.cpp
 
 src/Controller/Scene.hpp
 src/Controller/Scene.cpp

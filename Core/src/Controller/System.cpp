@@ -24,9 +24,9 @@ namespace Vakol::Controller {
     EntityList* System::Entlist = nullptr;
 
     void System::BindScene(Scene& scene) {
-        m_registry = &scene.entityList.m_Registry;
+        m_registry = &scene.GetEntityList().m_Registry;
         m_SP = scene.scenePhysics;
-        Entlist = &scene.entityList;
+        Entlist = &scene.GetEntityList();
     }
 
     void System::Drawable_Init() {
@@ -84,34 +84,6 @@ namespace Vakol::Controller {
 
                 renderer->DrawAnimated(transform, drawable, animation);
             });
-    }
-
-    void System::Script_Update(std::shared_ptr<LuaState> lua, EntityList& list, Scene* scene) {
-        m_registry->view<Script>().each([&](auto entity_id, auto& script) {
-            lua->RunFile("scripts/" + script.script_name);
-
-            lua->GetState()["scene"] = scene;
-            lua->GetState()["entity"] = list.GetEntity(static_cast<unsigned int>(entity_id));
-            lua->GetState()["state"] = script.state;
-
-            lua->RunFunction("update");
-        });
-    }
-
-    void System::Script_Deserialize(std::shared_ptr<LuaState> lua, EntityList& list, Scene* scene) {
-        m_registry->view<Script>().each([&](auto entity_id, auto& script) {
-            lua->RunFile("scripts/" + script.script_name);
-
-            lua->GetState()["scene"] = scene;
-            lua->GetState()["entity"] = list.GetEntity(static_cast<unsigned int>(entity_id));
-
-            script.state = lua->GetState().create_table();
-            Controller::ConvertMapToSol(lua, script.data, script.state);
-
-            lua->GetState()["state"] = script.state;
-
-            lua->RunFunction("deserialize");
-        });
     }
 
     void System::Physics_Init() {
