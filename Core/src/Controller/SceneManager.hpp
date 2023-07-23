@@ -29,9 +29,9 @@ namespace Vakol::Controller
         /**
          * @brief Get the current scene.
          *
-         * @return Scene* The current scene.
+         * @return Scene& The current scene.
          */
-        Scene* GetCurrentScene();
+        Scene& GetCurrentScene();
 
         /**
          * @brief Set the current scene.
@@ -44,17 +44,17 @@ namespace Vakol::Controller
          * @brief Get the Scene object at the given index.
          * 
          * @param index 
-         * @return Scene* scene at the given index
+         * @return Scene& scene at the given index
          */
-        Scene* GetScene(unsigned int index);
+        Scene& GetScene(unsigned int index);
 
         /**
          * @brief Get the scene with the given name.
          *
          * @param name The name of the scene to get.
-         * @return Scene* The scene with the given name.
+         * @return Scene& The scene with the given name.
          */
-        Scene* GetScene(const std::string& name);
+        Scene& GetScene(const std::string& name);
 
         /**
          * @brief Add a scene to the scene manager.
