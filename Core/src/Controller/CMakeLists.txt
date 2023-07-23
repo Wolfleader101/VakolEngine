@@ -33,6 +33,9 @@ src/Controller/System.cpp
 src/Controller/Scene.hpp
 src/Controller/Scene.cpp
 
+src/Controller/SceneManager.hpp
+#src/Controller/SceneManager.cpp
+
 src/Controller/Input.hpp
 src/Controller/Input.cpp
 
@@ -41,6 +44,7 @@ src/Controller/Terrain.cpp
 
 src/Controller/SolSerialize.hpp
 src/Controller/SolSerialize.cpp
+
 
 
 ${PHYSICS}
