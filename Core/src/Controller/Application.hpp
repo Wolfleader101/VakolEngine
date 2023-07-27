@@ -13,6 +13,7 @@
 #include "View/GUI/GUIWindow.hpp"
 #include "View/Renderer/Renderer.hpp"
 #include "View/Window/Window.hpp"
+#include "SceneManager.hpp"
 
 namespace Vakol::Controller {
 
@@ -67,21 +68,21 @@ namespace Vakol::Controller {
          */
         int GetHeight() const { return m_window->GetHeight(); }
 
-        /**
-         * @brief Add a scene with a script name and an optional scene name.
-         *
-         * @param scriptName The script name of the scene.
-         * @param scene_name The name of the scene (optional).
-         */
-        void AddScene(const std::string& scriptName, const std::string& scene_name = "");
+        // /**
+        //  * @brief Add a scene with a script name and an optional scene name.
+        //  *
+        //  * @param scriptName The script name of the scene.
+        //  * @param scene_name The name of the scene (optional).
+        //  */
+        // void AddScene(const std::string& scriptName, const std::string& scene_name = "");
 
-        /**
-         * @brief Get a scene by its name.
-         *
-         * @param sceneName The name of the scene.
-         * @return Scene& A reference to the scene.
-         */
-        Scene& GetScene(const std::string& sceneName);
+        // /**
+        //  * @brief Get a scene by its name.
+        //  *
+        //  * @param sceneName The name of the scene.
+        //  * @return Scene& A reference to the scene.
+        //  */
+        // Scene& GetScene(const std::string& sceneName);
 
         /**
          * @brief Set the running state of the game.
@@ -191,10 +192,7 @@ namespace Vakol::Controller {
 
         ScriptEngine m_scriptEngine;
 
-        /**
-         * @brief holds the scenes
-         */
-        std::vector<Scene> scenes;
+        SceneManager m_sceneManager;
 
         /**
          * @brief if the app should be running

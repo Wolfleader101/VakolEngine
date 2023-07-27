@@ -136,23 +136,20 @@ namespace Vakol::Controller {
             while (m_time.accumulator >= m_time.tickRate) {
                 // eventually need to do something like m_scenemanager.GetCurrentScene().GetScript()
 
-                for (auto& scene : scenes) {
-                    if (!scene.active) continue;
+                // TODO set the current scene globally, eventually want to move this elsewhere
+                m_scriptEngine.SetGlobalVariable("scene", &scene);
 
-                    // TODO set the current scene globally, eventually want to move this elsewhere
-                    m_scriptEngine.SetGlobalVariable("scene", &scene);
+                if (!scene.initialized) {
+                    m_scriptEngine.InitScript(scene.GetScript());
 
-                    if (!scene.initialized) {
-                        m_scriptEngine.InitScript(scene.GetScript());
-
-                        scene.Init();
-                    }
-
-                    scene.GetEntityList().GetRegistry().view<LuaScript>().each(
-                        [&](auto& script) { m_scriptEngine.TickScript(script); });
-
-                    m_scriptEngine.TickScript(scene.GetScript());
+                    scene.Init();
                 }
+
+                scene.GetEntityList().GetRegistry().view<LuaScript>().each(
+                    [&](auto& script) { m_scriptEngine.TickScript(script); });
+
+                m_scriptEngine.TickScript(scene.GetScript());
+                
 
                 // Decrease the accumulated time
                 m_time.accumulator -= m_time.tickRate;
@@ -160,25 +157,7 @@ namespace Vakol::Controller {
 
             // Compute the time interpolation factor
             // float alpha = m_time.accumulator / m_time.tickRate;
-
-            // TODO move to a scene manager
-            for (auto& scene : scenes) {
-                if (!scene.active) continue;
-
-                System::BindScene(scene);
-
-                m_renderer->UpdateData(scene.GetCamera());
-
-                // TODO set the current scene globally, eventually want to move this elsewhere
-                m_scriptEngine.SetGlobalVariable("scene", &scene);
-
-                scene.GetEntityList().GetRegistry().view<LuaScript>().each(
-                    [&](auto& script) { m_scriptEngine.UpdateScript(script); });
-
-                m_scriptEngine.UpdateScript(scene.GetScript());
-
-                scene.Update(m_time, m_renderer);
-            }
+            m_sceneManager.Update(m_time, m_renderer);
 
             m_renderer->LateUpdate();
 
@@ -188,26 +167,26 @@ namespace Vakol::Controller {
         }
     }
 
-    // TODO move to a scene manager
-    void Application::AddScene(const std::string& scriptName, const std::string& scene_name) {
-        const std::string sceneName = scene_name.length() == 0 ? "Scene" + std::to_string(scenes.size()) : scene_name;
+    // // TODO move to a scene manager
+    // void Application::AddScene(const std::string& scriptName, const std::string& scene_name) {
+    //     const std::string sceneName = scene_name.length() == 0 ? "Scene" + std::to_string(scenes.size()) : scene_name;
 
-        const auto ref = std::make_shared<ScenePhysics>(PhysicsPool::CreatePhysicsWorld());
+    //     const auto ref = std::make_shared<ScenePhysics>(PhysicsPool::CreatePhysicsWorld());
 
-        LuaScript script = m_scriptEngine.CreateScript("scripts/" + scriptName);
-        LuaTable tbl = m_scriptEngine.CreateTable();
-        m_scriptEngine.SetScriptVariable(script, "globals", tbl);
-        scenes.emplace_back(sceneName, script, ref, true, m_scriptEngine);
-    }
+    //     LuaScript script = m_scriptEngine.CreateScript("scripts/" + scriptName);
+    //     LuaTable tbl = m_scriptEngine.CreateTable();
+    //     m_scriptEngine.SetScriptVariable(script, "globals", tbl);
+    //     scenes.emplace_back(sceneName, script, ref, true, m_scriptEngine);
+    // }
 
-    Scene& Application::GetScene(const std::string& sceneName) {
-        for (auto& scene : scenes) {
-            if (scene.getName() == sceneName) return scene;
-        }
+    // Scene& Application::GetScene(const std::string& sceneName) {
+    //     for (auto& scene : scenes) {
+    //         if (scene.getName() == sceneName) return scene;
+    //     }
 
-        VK_CRITICAL("Scene: {0} could not be found.", sceneName);
-        assert(false);
-    }
+    //     VK_CRITICAL("Scene: {0} could not be found.", sceneName);
+    //     assert(false);
+    // }
 
     void Application::OnEvent(Event& ev) {
         EventDispatcher dispatcher(ev);

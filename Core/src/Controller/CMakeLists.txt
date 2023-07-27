@@ -34,7 +34,7 @@ src/Controller/Scene.hpp
 src/Controller/Scene.cpp
 
 src/Controller/SceneManager.hpp
-#src/Controller/SceneManager.cpp
+src/Controller/SceneManager.cpp
 
 src/Controller/Input.hpp
 src/Controller/Input.cpp

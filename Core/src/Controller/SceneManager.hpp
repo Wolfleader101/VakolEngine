@@ -38,18 +38,10 @@ namespace Vakol::Controller
          *
          * @param scene The new current scene.
          */
-        void SetCurrentScene(unsigned int index);
+        void SetCurrentScene(const std::string& name);
 
         /**
-         * @brief Get the Scene object at the given index.
-         * 
-         * @param index 
-         * @return Scene& scene at the given index
-         */
-        Scene& GetScene(unsigned int index);
-
-        /**
-         * @brief Get the scene with the given name.
+         * @brief Get the scene with the given name. Doesn't make it the current scene. Use SetCurrentScene for that.
          *
          * @param name The name of the scene to get.
          * @return Scene& The scene with the given name.
@@ -57,18 +49,20 @@ namespace Vakol::Controller
         Scene& GetScene(const std::string& name);
 
         /**
-         * @brief Add a scene to the scene manager.
-         *
-         * @param scene The scene to add.
+         * @brief Create a Scene object
+         * 
+         * @param name Name of Scene (unique)
+         * @param scriptName Script name 
+         * 
          */
-        unsigned int CreateScene();
+        void CreateScene(const std::string& name, const std::string& scriptName);
 
         /**
          * @brief Remove a scene from the scene manager.
          *
          * @param scene The scene to remove.
          */
-        void RemoveScene(unsigned int index);
+        void RemoveScene(const std::string& name);
 
         /**
          * @brief Update the current scene.
@@ -78,16 +72,25 @@ namespace Vakol::Controller
          */
         void Update(const Time& time, const std::shared_ptr<Vakol::View::Renderer>& renderer);
 
-    private:
         /**
-         * @brief The current scene.
+         * @brief Used to check if scene manager is valid to use.
+         *        Checks if empty, and if current scene is set.
+         * 
+         * @return true 
+         * @return false 
          */
-        unsigned int m_currentScene;
+        bool operator!() const;
+
+    private:
+
+        void ThrowRuntime(const std::string& str);
+
+        Scene* m_currentScene;
 
         /**
          * @brief The map of scenes.
          */
-        std::vector<Scene> m_scenes;
+        std::unordered_map<std::string, Scene> m_scenes;
 
         /**
          * @brief The script engine.

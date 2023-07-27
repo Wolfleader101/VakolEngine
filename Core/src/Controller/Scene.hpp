@@ -29,8 +29,7 @@ namespace Vakol::Controller {
          * @param SP The shared pointer to the ScenePhysics object.
          * @param active Whether the scene is active or not.
          */
-        Scene(const std::string& name, LuaScript& script, const std::shared_ptr<Physics::ScenePhysics>& SP, bool active,
-              ScriptEngine& scriptEngine);
+        Scene(const std::string& name, LuaScript& script, const std::shared_ptr<Physics::ScenePhysics>& SP);
 
         /**
          * @brief Initialize the scene.
@@ -91,11 +90,6 @@ namespace Vakol::Controller {
         void Deserialize(const std::string& folder);
 
         /**
-         * @brief Whether the scene is active or not.
-         */
-        bool active = false;
-
-        /**
          * @brief Whether the scene has been initialized or not.
          */
         bool initialized = false;
@@ -130,9 +124,6 @@ namespace Vakol::Controller {
 
        private:
         LuaScript m_script;
-
-        // TODO REMOVE - JUST for testing as scene is currently scuffed
-        ScriptEngine& m_scriptEngine;
 
         /**
          * @brief The name of the scene.
