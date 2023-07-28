@@ -7,7 +7,7 @@
 
 namespace Vakol 
 {
-    using Scene = Controller::Scene;
+    //using Scene = Controller::Scene;
     /**
      * @class SceneManager
      *
@@ -17,6 +17,7 @@ namespace Vakol
     {
        
        public:
+       using Scene = Controller::Scene;
         /**
          * @brief Construct a new Scene Manager object.
          *
@@ -77,14 +78,14 @@ namespace Vakol
         bool operator!() const;
 
        private:
-        void ThrowRuntime(const std::string& str);
+        void ThrowRuntime(const std::string& str) const;
 
         Scene* m_currentScene;
 
         /**
          * @brief The map of scenes.
          */
-        std::unordered_map<std::string, Controller::Scene> m_scenes;
+        std::unordered_map<std::string, Controller::Scene*> m_scenes;
 
         /**
          * @brief The script engine.

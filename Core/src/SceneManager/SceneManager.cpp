@@ -7,12 +7,21 @@
 
 namespace Vakol 
 {
+    using Scene = Controller::Scene;
+
     SceneManager::SceneManager(ScriptEngine& scriptEngine) : m_scriptEngine(scriptEngine) {}
 
-    SceneManager::~SceneManager() {}
+    SceneManager::~SceneManager()
+    {
+        for (auto& scene : m_scenes)
+        {
+            delete scene.second;
+        }
+        m_currentScene = nullptr;
+    }
 
     Scene& SceneManager::GetCurrentScene() {
-        
+
         if (m_scenes.empty()) 
             ThrowRuntime("No scenes in scene manager.");
 
@@ -31,7 +40,7 @@ namespace Vakol
 
     Scene& SceneManager::GetScene(const std::string& name)  // slow but adds flexiblility
     {
-        if (m_scenes.find(name) != m_scenes.end()) return m_scenes.at(name);
+        if (m_scenes.find(name) != m_scenes.end()) return *m_scenes.at(name);
 
         ThrowRuntime("Scene with name " + name + " not found.");
     }
@@ -39,16 +48,17 @@ namespace Vakol
     void SceneManager::CreateScene(const std::string& name, const std::string& scriptName) {
         if (m_scenes.find(name) != m_scenes.end()) ThrowRuntime("Scene with name " + name + " already exists.");
 
-        m_scenes.emplace(name,
-                         Scene(name, m_scriptEngine.CreateScript("scripts/" + scriptName),
-                               std::make_shared<Controller::Physics::ScenePhysics>(Controller::Physics::PhysicsPool::CreatePhysicsWorld())));
+        // m_scenes.emplace(name,
+        //                  new Scene(name, m_scriptEngine.CreateScript("scripts/" + scriptName),
+        //                        std::make_shared<Controller::Physics::ScenePhysics>(Controller::Physics::PhysicsPool::CreatePhysicsWorld())));
     }
 
     void SceneManager::RemoveScene(const std::string& name) {
         if (m_scenes.find(name) == m_scenes.end()) ThrowRuntime("Scene with name " + name + " not found.");
 
-        if (m_currentScene == &m_scenes.at(name)) m_currentScene = nullptr;
+        if (m_currentScene == m_scenes.at(name)) m_currentScene = nullptr;
 
+        delete m_scenes.at(name);
         m_scenes.erase(name);
     }
 
@@ -59,7 +69,7 @@ namespace Vakol
         return empty || currentNull;
     }
 
-    void ThrowRuntime(const std::string& str)  // probably should be its own class but I'm lazy
+    void SceneManager::ThrowRuntime(const std::string& str) const  // probably should be its own class but I'm lazy
     {
         VK_CRITICAL(str);
         throw std::runtime_error(str);
