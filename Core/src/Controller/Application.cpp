@@ -12,9 +12,13 @@
 namespace Vakol::Controller {
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
-    Application::Application() : m_window(nullptr), m_renderer(nullptr), m_running(false), m_input(), m_scriptEngine() {
-        scenes.reserve(10);
-    };
+    Application::Application()
+        : m_window(nullptr),
+          m_renderer(nullptr),
+          m_running(false),
+          m_input(),
+          m_scriptEngine(),
+          m_sceneManager(m_scriptEngine){};
 
     void Application::Init() {
         RegisterLua();
