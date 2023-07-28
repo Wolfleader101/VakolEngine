@@ -9,8 +9,7 @@
 #include "Time.hpp"
 #include "View/Renderer/Renderer.hpp"
 
-// TODO change this to ScriptTypes header, but need to get rid of script engine dependency
-#include "Scripting/ScriptEngine.hpp"
+#include "Scripting/ScriptTypes.hpp"
 
 namespace Vakol::Controller {
 
@@ -30,6 +29,11 @@ namespace Vakol::Controller {
          * @param active Whether the scene is active or not.
          */
         Scene(const std::string& name, LuaScript& script, const std::shared_ptr<Physics::ScenePhysics>& SP);
+
+        Scene(const Scene& other) = default;
+        Scene(Scene&& other) = default;
+
+        
 
         /**
          * @brief Initialize the scene.
@@ -66,7 +70,7 @@ namespace Vakol::Controller {
          * @param sname The name of the script associated with the entity.
          * @return Entity The created entity.
          */
-        Entity CreateEntity(const std::string& tag, const std::string& sname);
+        Entity CreateEntity(const std::string& tag);
 
         /**
          * @brief Destroy an entity in the scene.

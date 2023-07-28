@@ -14,6 +14,8 @@
 #include "Model/Instance.hpp"
 #include "View/GUI/GUIWindow.hpp"
 
+#include "Scripting/ScriptEngine.hpp"
+
 std::vector<glm::mat4> create_mat4_vector(const int reserve) {
     std::vector<glm::mat4> vector;
 
@@ -573,12 +575,27 @@ namespace Vakol {
         camera_type.set_function("set_yaw", &Camera::SetYaw);
     }
 
-    void RegisterScene(sol::state& lua) {
+    void RegisterScene(sol::state& lua, ScriptEngine& scriptEngine) {
         auto scene_type = lua.new_usertype<Scene>("Scene");
 
         scene_type.set("globals", sol::property([](Scene& self) { return self.GetScript().env; }));
 
-        scene_type.set_function("create_entity", &Scene::CreateEntity);
+        //scene_type.set_function("create_entity", &Scene::CreateEntity);
+
+        scene_type.set_function("create_entity", [&](Scene* scene, const std::string tag, const std::string& sname) {
+            auto ent = scene->CreateEntity(tag);
+
+            if (!sname.empty()) 
+            {
+                LuaScript script = scriptEngine.CreateScript("scripts/" + sname);
+
+                scriptEngine.SetScriptVariable(script, "entity", ent);
+                scriptEngine.InitScript(script);
+                ent.AddComponent<LuaScript>(script);
+            }
+            return ent;
+
+        });
 
         // scene_type.set_function("set_active", [](Scene* scene, const bool active) { scene->active = active; });
 

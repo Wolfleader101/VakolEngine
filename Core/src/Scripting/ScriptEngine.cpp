@@ -148,7 +148,7 @@ namespace Vakol {
         RegisterTerrain(m_state);
         RegisterFSM(m_state);
         RegisterCamera(m_state);
-        RegisterScene(m_state);
+        RegisterScene(m_state, *this);
         RegisterGUIWindow(m_state);
         RegisterRigidBody(m_state);
         RegisterCollider(m_state);

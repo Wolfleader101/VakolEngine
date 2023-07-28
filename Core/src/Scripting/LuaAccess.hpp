@@ -3,6 +3,7 @@
 #include <sol/sol.hpp>
 
 namespace Vakol {
+    class ScriptEngine;
     /**
      * @brief Register the asset loader in Lua.
      *
@@ -66,8 +67,9 @@ namespace Vakol {
      * @brief Register the scene in Lua.
      *
      * @param lua The Lua state.
+     * @param scriptEngine The script engine.
      */
-    void RegisterScene(sol::state& lua);
+    void RegisterScene(sol::state& lua, Vakol::ScriptEngine& scriptEngine);
 
 
     /**

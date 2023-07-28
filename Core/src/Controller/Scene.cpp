@@ -24,20 +24,12 @@ namespace Vakol::Controller {
 
     void Scene::setName(const std::string& newName) { m_name = newName; }
 
-    Entity Scene::CreateEntity(const std::string& tag, const std::string& sname) {
+    Entity Scene::CreateEntity(const std::string& tag) {
         auto ent = m_entityList.CreateEntity();
 
         ent.GetComponent<Tag>().tag = tag;
 
         if (!ent.GetComponent<GUID>().id.isValid()) ent.GetComponent<GUID>().GenNewGUID();
-
-        if (!sname.empty()) {
-            LuaScript script = m_scriptEngine.CreateScript("scripts/" + sname);
-
-            m_scriptEngine.SetScriptVariable(script, "entity", ent);
-            m_scriptEngine.InitScript(script);
-            ent.AddComponent<LuaScript>(script);
-        }
 
         return ent;
     }

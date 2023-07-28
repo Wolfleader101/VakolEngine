@@ -3,6 +3,8 @@
 #include "Controller/Scene.hpp"
 #include "View/Renderer/Renderer.hpp"
 
+#include "Scripting/ScriptEngine.hpp"
+
 namespace Vakol 
 {
     using Scene = Controller::Scene;
@@ -14,7 +16,6 @@ namespace Vakol
     class SceneManager 
     {
        
-
        public:
         /**
          * @brief Construct a new Scene Manager object.
@@ -83,11 +84,11 @@ namespace Vakol
         /**
          * @brief The map of scenes.
          */
-        std::unordered_map<std::string, Scene> m_scenes;
+        std::unordered_map<std::string, Controller::Scene> m_scenes;
 
         /**
          * @brief The script engine.
          */
         ScriptEngine& m_scriptEngine;
-    };
+    }; 
 }  // namespace Vakol::Controller
