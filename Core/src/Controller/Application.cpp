@@ -135,12 +135,11 @@ namespace Vakol::Controller {
 
             Scene& currentScene = m_sceneManager.GetCurrentScene();
 
+            // TODO set the current scene globally, might want to move this elsewhere?
+            m_scriptEngine.SetGlobalVariable("scene", &currentScene);
+
             while (m_time.accumulator >= m_time.tickRate) {
-                // eventually need to do something like m_scenemanager.GetCurrentScene().GetScript()
-
-                // TODO set the current scene globally, eventually want to move this elsewhere
-                m_scriptEngine.SetGlobalVariable("scene", currentScene);
-
+                // TODO move this to scene manager, not in game loop
                 if (!currentScene.initialized) {
                     m_scriptEngine.InitScript(currentScene.GetScript());
 
@@ -160,9 +159,6 @@ namespace Vakol::Controller {
             // float alpha = m_time.accumulator / m_time.tickRate;
 
             m_renderer->UpdateData(currentScene.GetCamera());
-
-            // TODO set the current scene globally, eventually want to move this elsewhere
-            m_scriptEngine.SetGlobalVariable("scene", &currentScene);
 
             currentScene.GetEntityList().GetRegistry().view<LuaScript>().each(
                 [&](auto& script) { m_scriptEngine.UpdateScript(script); });
