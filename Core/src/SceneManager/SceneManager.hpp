@@ -85,7 +85,7 @@ namespace Vakol
         /**
          * @brief The map of scenes.
          */
-        std::unordered_map<std::string, Controller::Scene*> m_scenes;
+        std::unordered_map<std::string, Controller::Scene* const> m_scenes;
 
         /**
          * @brief The script engine.

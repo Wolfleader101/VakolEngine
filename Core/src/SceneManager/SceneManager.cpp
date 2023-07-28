@@ -48,9 +48,10 @@ namespace Vakol
     void SceneManager::CreateScene(const std::string& name, const std::string& scriptName) {
         if (m_scenes.find(name) != m_scenes.end()) ThrowRuntime("Scene with name " + name + " already exists.");
 
-        // m_scenes.emplace(name,
-        //                  new Scene(name, m_scriptEngine.CreateScript("scripts/" + scriptName),
-        //                        std::make_shared<Controller::Physics::ScenePhysics>(Controller::Physics::PhysicsPool::CreatePhysicsWorld())));
+        auto script = m_scriptEngine.CreateScript("scripts/" + scriptName);
+        m_scenes.emplace(name,
+                         new Scene(name, script,
+                               std::make_shared<Controller::Physics::ScenePhysics>(Controller::Physics::PhysicsPool::CreatePhysicsWorld())));
     }
 
     void SceneManager::RemoveScene(const std::string& name) {
