@@ -70,7 +70,7 @@ namespace Vakol::Controller
          * @param time The time information for the update.
          * @param renderer The shared pointer to the renderer.
          */
-        void Update(const Time& time, const std::shared_ptr<Vakol::View::Renderer>& renderer);
+        void Update(Time& time, const std::shared_ptr<Vakol::View::Renderer>& renderer);
 
         /**
          * @brief Used to check if scene manager is valid to use.

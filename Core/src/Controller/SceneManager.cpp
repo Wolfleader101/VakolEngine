@@ -71,8 +71,34 @@ namespace Vakol::Controller
 
     }
 
-    void SceneManager::Update(const Time& time, const std::shared_ptr<View::Renderer>& renderer)
+    void SceneManager::Update(Time& time, const std::shared_ptr<View::Renderer>& renderer)
     {
+        time.accumulator += time.deltaTime;
+
+        while (time.accumulator >= time.tickRate)
+        {
+            // eventually need to do something like m_scenemanager.GetCurrentScene().GetScript()
+
+            // TODO set the current scene globally, eventually want to move this elsewhere
+            m_scriptEngine.SetGlobalVariable("scene", m_currentScene);
+
+            if (!m_currentScene->initialized) {
+                m_scriptEngine.InitScript(m_currentScene->GetScript());
+
+                m_currentScene->Init();
+            }
+
+            m_currentScene->GetEntityList().GetRegistry().view<LuaScript>().each(
+                [&](auto& script) { m_scriptEngine.TickScript(script); });
+
+            m_scriptEngine.TickScript(m_currentScene->GetScript());
+            
+
+            // Decrease the accumulated time
+            time.accumulator -= time.tickRate;
+        }
+
+
         if(!m_currentScene) ThrowRuntime("Current scene not set. Can not update Scene.");
 
         renderer->UpdateData(m_currentScene->GetCamera());

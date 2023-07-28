@@ -131,33 +131,49 @@ namespace Vakol::Controller {
 
             m_renderer->Update();
 
-            m_time.accumulator += m_time.deltaTime;
+                time.accumulator += time.deltaTime;
 
-            while (m_time.accumulator >= m_time.tickRate) {
+            while (time.accumulator >= time.tickRate)
+            {
                 // eventually need to do something like m_scenemanager.GetCurrentScene().GetScript()
 
                 // TODO set the current scene globally, eventually want to move this elsewhere
-                m_scriptEngine.SetGlobalVariable("scene", &scene);
+                m_scriptEngine.SetGlobalVariable("scene", m_currentScene);
 
-                if (!scene.initialized) {
-                    m_scriptEngine.InitScript(scene.GetScript());
+                if (!m_currentScene->initialized) {
+                    m_scriptEngine.InitScript(m_currentScene->GetScript());
 
-                    scene.Init();
+                    m_currentScene->Init();
                 }
 
-                scene.GetEntityList().GetRegistry().view<LuaScript>().each(
+                m_currentScene->GetEntityList().GetRegistry().view<LuaScript>().each(
                     [&](auto& script) { m_scriptEngine.TickScript(script); });
 
-                m_scriptEngine.TickScript(scene.GetScript());
+                m_scriptEngine.TickScript(m_currentScene->GetScript());
                 
 
                 // Decrease the accumulated time
-                m_time.accumulator -= m_time.tickRate;
+                time.accumulator -= time.tickRate;
             }
 
-            // Compute the time interpolation factor
-            // float alpha = m_time.accumulator / m_time.tickRate;
-            m_sceneManager.Update(m_time, m_renderer);
+
+            if(!m_currentScene) ThrowRuntime("Current scene not set. Can not update Scene.");
+
+            renderer->UpdateData(m_currentScene->GetCamera());
+
+            // TODO set the current scene globally, eventually want to move this elsewhere
+            m_scriptEngine.SetGlobalVariable("scene", m_currentScene);
+
+            m_currentScene->GetEntityList().GetRegistry().view<LuaScript>().each(
+                [&](auto& script) { m_scriptEngine.UpdateScript(script); });
+
+            m_scriptEngine.UpdateScript(m_currentScene->GetScript());
+
+            m_currentScene->Update(time, renderer);
+           
+            // // Compute the time interpolation factor
+            // // float alpha = m_time.accumulator / m_time.tickRate;
+            // m_sceneManager.Update(m_time, m_renderer);
 
             m_renderer->LateUpdate();
 
