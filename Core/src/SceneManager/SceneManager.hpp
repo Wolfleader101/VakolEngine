@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Scene.hpp"
+#include "Controller/Scene.hpp"
 #include "View/Renderer/Renderer.hpp"
 
 namespace Vakol::Controller {

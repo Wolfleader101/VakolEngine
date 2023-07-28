@@ -6,7 +6,7 @@
 #include "Controller/Physics/ScenePhysics.hpp"
 
 namespace Vakol::Controller {
-    SceneManager::SceneManager(ScriptEngine& scriptEngine) : m_scriptEngine(scriptEngine) {}
+    SceneManager::SceneManager(ScriptEngine& scriptEngine) : m_scri   ptEngine(scriptEngine) {}
 
     SceneManager::~SceneManager() {}
 
