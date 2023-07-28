@@ -5,21 +5,20 @@
 #include "Controller/Physics/PhysicsPool.hpp"
 #include "Controller/Physics/ScenePhysics.hpp"
 
-namespace Vakol::Controller {
-    SceneManager::SceneManager(ScriptEngine& scriptEngine) : m_scri   ptEngine(scriptEngine) {}
+namespace Vakol 
+{
+    SceneManager::SceneManager(ScriptEngine& scriptEngine) : m_scriptEngine(scriptEngine) {}
 
     SceneManager::~SceneManager() {}
 
     Scene& SceneManager::GetCurrentScene() {
-        if (m_scenes.empty()) {
-            std::string str = "No scenes in scene manager.";
-            ThrowRuntime(str);
-        }
+        
+        if (m_scenes.empty()) 
+            ThrowRuntime("No scenes in scene manager.");
 
-        if (!m_currentScene) {
-            std::string str = "Current scene not set.";
-            ThrowRuntime(str);
-        }
+        if (!m_currentScene)
+            ThrowRuntime("Current scene not set.");
+
 
         return *m_currentScene;
     }
@@ -42,7 +41,7 @@ namespace Vakol::Controller {
 
         m_scenes.emplace(name,
                          Scene(name, m_scriptEngine.CreateScript("scripts/" + scriptName),
-                               std::make_shared<Physics::ScenePhysics>(Physics::PhysicsPool::CreatePhysicsWorld())));
+                               std::make_shared<Controller::Physics::ScenePhysics>(Controller::Physics::PhysicsPool::CreatePhysicsWorld())));
     }
 
     void SceneManager::RemoveScene(const std::string& name) {

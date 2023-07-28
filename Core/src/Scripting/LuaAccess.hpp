@@ -69,6 +69,7 @@ namespace Vakol {
      */
     void RegisterScene(sol::state& lua);
 
+
     /**
      * @brief Register the math library in Lua.
      *

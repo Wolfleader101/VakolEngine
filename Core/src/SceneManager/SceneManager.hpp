@@ -3,13 +3,18 @@
 #include "Controller/Scene.hpp"
 #include "View/Renderer/Renderer.hpp"
 
-namespace Vakol::Controller {
+namespace Vakol 
+{
+    using Scene = Controller::Scene;
     /**
      * @class SceneManager
      *
      * @brief Class representing the scene manager in the application.
      */
-    class SceneManager {
+    class SceneManager 
+    {
+       
+
        public:
         /**
          * @brief Construct a new Scene Manager object.

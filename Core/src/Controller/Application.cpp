@@ -60,14 +60,22 @@ namespace Vakol::Controller {
         m_scriptEngine.SetGlobalVariable("GUI", &m_gui);
 
         m_scriptEngine.SetGlobalFunction("app_run", &Application::SetRunning, this);
-        m_scriptEngine.SetGlobalFunction("add_scene", &Application::AddScene, this);
-        m_scriptEngine.SetGlobalFunction("get_scene", &Application::GetScene, this);
+
+        m_scriptEngine.SetGlobalFunction("add_scene", &SceneManager::CreateScene, m_sceneManager);
+        m_scriptEngine.SetGlobalFunction("get_scene", &SceneManager::GetScene, m_sceneManager);
+        m_scriptEngine.SetGlobalFunction("remove_scene", &SceneManager::RemoveScene, m_sceneManager);
+        m_scriptEngine.SetGlobalFunction("set_current_scene", &SceneManager::SetCurrentScene, m_sceneManager);
+        //dont think we need get_current_scene as that's more for backend
+        
         m_scriptEngine.SetGlobalFunction("set_active_mouse", &Application::SetActiveMouse, this);
 
         m_scriptEngine.SetGlobalFunction("toggle_wireframe", &View::Renderer::ToggleWireframe, m_renderer);
         m_scriptEngine.SetGlobalFunction("toggle_skybox", &View::Renderer::ToggleSkybox, m_renderer);
         m_scriptEngine.SetGlobalFunction("set_wireframe", &View::Renderer::SetWireframe, m_renderer);
         m_scriptEngine.SetGlobalFunction("set_skybox", &View::Renderer::SetSkybox, m_renderer);
+
+        
+        
 
         // lua.set_function("clear_color_v", [&](const glm::vec4& color) { renderer->ClearColor(color); });
 

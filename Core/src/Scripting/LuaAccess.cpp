@@ -580,7 +580,7 @@ namespace Vakol {
 
         scene_type.set_function("create_entity", &Scene::CreateEntity);
 
-        scene_type.set_function("set_active", [](Scene* scene, const bool active) { scene->active = active; });
+        // scene_type.set_function("set_active", [](Scene* scene, const bool active) { scene->active = active; });
 
         scene_type.set_function("get_camera", &Scene::GetCamera);
         scene_type.set_function("get_entity", &Scene::GetEntity);
@@ -593,7 +593,7 @@ namespace Vakol {
 
             const auto& terrain = ent.GetComponent<Components::Terrain>();
 
-            // TODO remove this
+            // TODO remove this 
             //  System::BindScene(*scene);
 
             // System::Physics_AddTerrain(*terrain.terrain_ptr);
@@ -732,5 +732,7 @@ namespace Vakol {
         rp3dVec3["y"] = &rp3d::Vector3::y;
         rp3dVec3["z"] = &rp3d::Vector3::z;
     }
+
+    
 
 }  // namespace Vakol
