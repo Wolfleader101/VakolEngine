@@ -1,19 +1,16 @@
 #pragma once
 
 #include "Scene.hpp"
-
 #include "View/Renderer/Renderer.hpp"
 
-namespace Vakol::Controller
-{
+namespace Vakol::Controller {
     /**
      * @class SceneManager
      *
      * @brief Class representing the scene manager in the application.
      */
-    class SceneManager
-    {
-    public:
+    class SceneManager {
+       public:
         /**
          * @brief Construct a new Scene Manager object.
          *
@@ -50,10 +47,10 @@ namespace Vakol::Controller
 
         /**
          * @brief Create a Scene object
-         * 
+         *
          * @param name Name of Scene (unique)
-         * @param scriptName Script name 
-         * 
+         * @param scriptName Script name
+         *
          */
         void CreateScene(const std::string& name, const std::string& scriptName);
 
@@ -65,24 +62,15 @@ namespace Vakol::Controller
         void RemoveScene(const std::string& name);
 
         /**
-         * @brief Update the current scene.
-         *
-         * @param time The time information for the update.
-         * @param renderer The shared pointer to the renderer.
-         */
-        void Update(Time& time, const std::shared_ptr<Vakol::View::Renderer>& renderer);
-
-        /**
          * @brief Used to check if scene manager is valid to use.
          *        Checks if empty, and if current scene is set.
-         * 
-         * @return true 
-         * @return false 
+         *
+         * @return true
+         * @return false
          */
         bool operator!() const;
 
-    private:
-
+       private:
         void ThrowRuntime(const std::string& str);
 
         Scene* m_currentScene;
@@ -97,4 +85,4 @@ namespace Vakol::Controller
          */
         ScriptEngine& m_scriptEngine;
     };
-}
+}  // namespace Vakol::Controller

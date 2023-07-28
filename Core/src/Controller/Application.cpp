@@ -131,49 +131,45 @@ namespace Vakol::Controller {
 
             m_renderer->Update();
 
-                time.accumulator += time.deltaTime;
+            m_time.accumulator += m_time.deltaTime;
 
-            while (time.accumulator >= time.tickRate)
-            {
+            Scene& currentScene = m_sceneManager.GetCurrentScene();
+
+            while (m_time.accumulator >= m_time.tickRate) {
                 // eventually need to do something like m_scenemanager.GetCurrentScene().GetScript()
 
                 // TODO set the current scene globally, eventually want to move this elsewhere
-                m_scriptEngine.SetGlobalVariable("scene", m_currentScene);
+                m_scriptEngine.SetGlobalVariable("scene", currentScene);
 
-                if (!m_currentScene->initialized) {
-                    m_scriptEngine.InitScript(m_currentScene->GetScript());
+                if (!currentScene.initialized) {
+                    m_scriptEngine.InitScript(currentScene.GetScript());
 
-                    m_currentScene->Init();
+                    currentScene.Init();
                 }
 
-                m_currentScene->GetEntityList().GetRegistry().view<LuaScript>().each(
+                currentScene.GetEntityList().GetRegistry().view<LuaScript>().each(
                     [&](auto& script) { m_scriptEngine.TickScript(script); });
 
-                m_scriptEngine.TickScript(m_currentScene->GetScript());
-                
+                m_scriptEngine.TickScript(currentScene.GetScript());
 
                 // Decrease the accumulated time
-                time.accumulator -= time.tickRate;
+                m_time.accumulator -= m_time.tickRate;
             }
 
+            // Compute the time interpolation factor
+            // float alpha = m_time.accumulator / m_time.tickRate;
 
-            if(!m_currentScene) ThrowRuntime("Current scene not set. Can not update Scene.");
-
-            renderer->UpdateData(m_currentScene->GetCamera());
+            m_renderer->UpdateData(currentScene.GetCamera());
 
             // TODO set the current scene globally, eventually want to move this elsewhere
-            m_scriptEngine.SetGlobalVariable("scene", m_currentScene);
+            m_scriptEngine.SetGlobalVariable("scene", &currentScene);
 
-            m_currentScene->GetEntityList().GetRegistry().view<LuaScript>().each(
+            currentScene.GetEntityList().GetRegistry().view<LuaScript>().each(
                 [&](auto& script) { m_scriptEngine.UpdateScript(script); });
 
-            m_scriptEngine.UpdateScript(m_currentScene->GetScript());
+            m_scriptEngine.UpdateScript(currentScene.GetScript());
 
-            m_currentScene->Update(time, renderer);
-           
-            // // Compute the time interpolation factor
-            // // float alpha = m_time.accumulator / m_time.tickRate;
-            // m_sceneManager.Update(m_time, m_renderer);
+            currentScene.Update(m_time, m_renderer);
 
             m_renderer->LateUpdate();
 
@@ -185,7 +181,8 @@ namespace Vakol::Controller {
 
     // // TODO move to a scene manager
     // void Application::AddScene(const std::string& scriptName, const std::string& scene_name) {
-    //     const std::string sceneName = scene_name.length() == 0 ? "Scene" + std::to_string(scenes.size()) : scene_name;
+    //     const std::string sceneName = scene_name.length() == 0 ? "Scene" + std::to_string(scenes.size()) :
+    //     scene_name;
 
     //     const auto ref = std::make_shared<ScenePhysics>(PhysicsPool::CreatePhysicsWorld());
 
