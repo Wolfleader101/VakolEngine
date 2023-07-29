@@ -64,7 +64,7 @@ namespace Vakol::Controller {
         m_scriptEngine.SetGlobalFunction("add_scene", &SceneManager::CreateScene, &m_sceneManager);
         m_scriptEngine.SetGlobalFunction("get_scene", &SceneManager::GetScene, &m_sceneManager);
         m_scriptEngine.SetGlobalFunction("remove_scene", &SceneManager::RemoveScene, &m_sceneManager);
-        m_scriptEngine.SetGlobalFunction("set_current_scene", &SceneManager::SetCurrentScene, m_sceneManager);
+        m_scriptEngine.SetGlobalFunction("set_current_scene", &SceneManager::SetCurrentScene, &m_sceneManager);
         //dont think we need get_current_scene as that's more for backend
         
         m_scriptEngine.SetGlobalFunction("set_active_mouse", &Application::SetActiveMouse, this);

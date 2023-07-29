@@ -50,9 +50,6 @@ function update()
     end
 
     if(Input:get_key_down(KEYS["KEY_ESC"])) then
-        scene:set_active(false);
-
-        local endScreen = get_scene("End Scene");
-        endScreen:set_active(true);
+        app_run(false);
     end
 end
