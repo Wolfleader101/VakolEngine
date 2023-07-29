@@ -61,9 +61,9 @@ namespace Vakol::Controller {
 
         m_scriptEngine.SetGlobalFunction("app_run", &Application::SetRunning, this);
 
-        m_scriptEngine.SetGlobalFunction("add_scene", &SceneManager::CreateScene, m_sceneManager);
-        m_scriptEngine.SetGlobalFunction("get_scene", &SceneManager::GetScene, m_sceneManager);
-        m_scriptEngine.SetGlobalFunction("remove_scene", &SceneManager::RemoveScene, m_sceneManager);
+        m_scriptEngine.SetGlobalFunction("add_scene", &SceneManager::CreateScene, &m_sceneManager);
+        m_scriptEngine.SetGlobalFunction("get_scene", &SceneManager::GetScene, &m_sceneManager);
+        m_scriptEngine.SetGlobalFunction("remove_scene", &SceneManager::RemoveScene, &m_sceneManager);
         m_scriptEngine.SetGlobalFunction("set_current_scene", &SceneManager::SetCurrentScene, m_sceneManager);
         //dont think we need get_current_scene as that's more for backend
         
@@ -177,6 +177,7 @@ namespace Vakol::Controller {
 
             m_scriptEngine.UpdateScript(currentScene.GetScript());
 
+            System::BindScene(currentScene); // is here temporarily until this is replaced/removed
             currentScene.Update(m_time, m_renderer);
 
             m_renderer->LateUpdate();

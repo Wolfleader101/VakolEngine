@@ -5,7 +5,10 @@
 #include "Camera.hpp"
 #include "Controller/Physics/ScenePhysics.hpp"
 #include "Controller/Terrain.hpp"
+
 #include "EntityList.hpp"
+#include "Model/Entity.hpp"
+
 #include "Time.hpp"
 #include "View/Renderer/Renderer.hpp"
 
