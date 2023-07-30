@@ -11,7 +11,7 @@ end
 function update()
 
     if (Input:get_key_down(KEYS["KEY_ESC"])) then
-        set_current_scene("test menu");
+        change_scene("test menu");
     end
     
     GUI:start_window("Stats", false, false, 0.0, 0.0 , 25, 25); 

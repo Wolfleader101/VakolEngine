@@ -5,37 +5,30 @@
 #include "Controller/Physics/PhysicsPool.hpp"
 #include "Controller/Physics/ScenePhysics.hpp"
 
-namespace Vakol 
-{
+namespace Vakol {
     using Scene = Controller::Scene;
 
     SceneManager::SceneManager(ScriptEngine& scriptEngine) : m_scriptEngine(scriptEngine) {}
 
-    SceneManager::~SceneManager()
-    {
-        for (auto& scene : m_scenes)
-        {
+    SceneManager::~SceneManager() {
+        for (auto& scene : m_scenes) {
             delete scene.second;
         }
-        m_currentScene = nullptr;
+        m_activeScene = nullptr;
     }
 
-    Scene& SceneManager::GetCurrentScene() {
+    Scene& SceneManager::GetActiveScene() {
+        if (m_scenes.empty()) ThrowRuntime("No scenes in scene manager.");
 
-        if (m_scenes.empty()) 
-            ThrowRuntime("No scenes in scene manager.");
+        if (!m_activeScene) ThrowRuntime("There is no active scene");
 
-        if (!m_currentScene)
-            ThrowRuntime("Current scene not set.");
-
-
-        return *m_currentScene;
+        return *m_activeScene;
     }
 
-    void SceneManager::SetCurrentScene(const std::string& name) {
-        if (!m_currentScene && (*m_currentScene).getName() == name) return;
+    void SceneManager::ChangeActiveScene(const std::string& name) {
+        if (!m_activeScene && (*m_activeScene).getName() == name) return;
 
-        m_currentScene = &GetScene(name);
+        m_nextScene = &GetScene(name);
     }
 
     Scene& SceneManager::GetScene(const std::string& name)  // slow but adds flexiblility
@@ -49,25 +42,32 @@ namespace Vakol
         if (m_scenes.find(name) != m_scenes.end()) VK_ERROR("Scene with name: {0} already exists. Skipping...", name);
 
         auto script = m_scriptEngine.CreateScript("scripts/" + scriptName);
-        m_scenes.emplace(name,
-                         new Scene(name, script,
-                               std::make_shared<Controller::Physics::ScenePhysics>(Controller::Physics::PhysicsPool::CreatePhysicsWorld())));
-        
-        if(m_scenes.size() == 1) m_currentScene = m_scenes.at(name);
+        m_scenes.emplace(name, new Scene(name, script,
+                                         std::make_shared<Controller::Physics::ScenePhysics>(
+                                             Controller::Physics::PhysicsPool::CreatePhysicsWorld())));
+
+        if (m_scenes.size() == 1) m_activeScene = m_scenes.at(name);
     }
 
     void SceneManager::RemoveScene(const std::string& name) {
         if (m_scenes.find(name) == m_scenes.end()) ThrowRuntime("Scene with name " + name + " not found.");
 
-        if (m_currentScene == m_scenes.at(name)) m_currentScene = nullptr;
+        if (m_activeScene == m_scenes.at(name)) m_activeScene = nullptr;
 
         delete m_scenes.at(name);
         m_scenes.erase(name);
     }
 
+    void SceneManager::Update() {
+        if (!m_nextScene) return;
+
+        m_activeScene = m_nextScene;
+        m_nextScene = nullptr;
+    }
+
     bool SceneManager::operator!() const {
         bool empty = m_scenes.empty();
-        bool currentNull = !m_currentScene;
+        bool currentNull = !m_activeScene;
 
         return empty || currentNull;
     }
@@ -78,4 +78,4 @@ namespace Vakol
         throw std::runtime_error(str);
     }
 
-}  // namespace Vakol::Controller
+}  // namespace Vakol

@@ -64,18 +64,16 @@ namespace Vakol::Controller {
         m_scriptEngine.SetGlobalFunction("add_scene", &SceneManager::CreateScene, &m_sceneManager);
         m_scriptEngine.SetGlobalFunction("get_scene", &SceneManager::GetScene, &m_sceneManager);
         m_scriptEngine.SetGlobalFunction("remove_scene", &SceneManager::RemoveScene, &m_sceneManager);
-        m_scriptEngine.SetGlobalFunction("set_current_scene", &SceneManager::SetCurrentScene, &m_sceneManager);
-        //dont think we need get_current_scene as that's more for backend
-        
+        m_scriptEngine.SetGlobalFunction("change_scene", &SceneManager::ChangeActiveScene, &m_sceneManager);
+        // m_scriptEngine.SetGlobalFunction("set_current_scene", &SceneManager::SetactiveScene, &m_sceneManager);
+        // dont think we need get_current_scene as that's more for backend
+
         m_scriptEngine.SetGlobalFunction("set_active_mouse", &Application::SetActiveMouse, this);
 
         m_scriptEngine.SetGlobalFunction("toggle_wireframe", &View::Renderer::ToggleWireframe, m_renderer);
         m_scriptEngine.SetGlobalFunction("toggle_skybox", &View::Renderer::ToggleSkybox, m_renderer);
         m_scriptEngine.SetGlobalFunction("set_wireframe", &View::Renderer::SetWireframe, m_renderer);
         m_scriptEngine.SetGlobalFunction("set_skybox", &View::Renderer::SetSkybox, m_renderer);
-
-        
-        
 
         // lua.set_function("clear_color_v", [&](const glm::vec4& color) { renderer->ClearColor(color); });
 
@@ -145,23 +143,23 @@ namespace Vakol::Controller {
 
             m_time.accumulator += m_time.deltaTime;
 
-            Scene& currentScene = m_sceneManager.GetCurrentScene();
+            Scene& activeScene = m_sceneManager.GetActiveScene();
 
             // TODO set the current scene globally, might want to move this elsewhere?
-            m_scriptEngine.SetGlobalVariable("scene", &currentScene);
+            m_scriptEngine.SetGlobalVariable("scene", &activeScene);
 
             while (m_time.accumulator >= m_time.tickRate) {
                 // TODO move this to scene manager, not in game loop
-                if (!currentScene.initialized) {
-                    m_scriptEngine.InitScript(currentScene.GetScript());
+                if (!activeScene.initialized) {
+                    m_scriptEngine.InitScript(activeScene.GetScript());
 
-                    currentScene.Init();
+                    activeScene.Init();
                 }
 
-                currentScene.GetEntityList().GetRegistry().view<LuaScript>().each(
+                activeScene.GetEntityList().GetRegistry().view<LuaScript>().each(
                     [&](auto& script) { m_scriptEngine.TickScript(script); });
 
-                m_scriptEngine.TickScript(currentScene.GetScript());
+                m_scriptEngine.TickScript(activeScene.GetScript());
 
                 // Decrease the accumulated time
                 m_time.accumulator -= m_time.tickRate;
@@ -170,45 +168,25 @@ namespace Vakol::Controller {
             // Compute the time interpolation factor
             // float alpha = m_time.accumulator / m_time.tickRate;
 
-            m_renderer->UpdateData(currentScene.GetCamera());
+            m_renderer->UpdateData(activeScene.GetCamera());
 
-            currentScene.GetEntityList().GetRegistry().view<LuaScript>().each(
+            activeScene.GetEntityList().GetRegistry().view<LuaScript>().each(
                 [&](auto& script) { m_scriptEngine.UpdateScript(script); });
 
-            m_scriptEngine.UpdateScript(currentScene.GetScript());
+            m_scriptEngine.UpdateScript(activeScene.GetScript());
 
-            System::BindScene(currentScene); // is here temporarily until this is replaced/removed
-            currentScene.Update(m_time, m_renderer);
+            System::BindScene(activeScene);  // is here temporarily until this is replaced/removed
+            activeScene.Update(m_time, m_renderer);
 
             m_renderer->LateUpdate();
 
             m_gui.Update();
             m_input.Update();
             m_window->OnUpdate();
+
+            m_sceneManager.Update();
         }
     }
-
-    // // TODO move to a scene manager
-    // void Application::AddScene(const std::string& scriptName, const std::string& scene_name) {
-    //     const std::string sceneName = scene_name.length() == 0 ? "Scene" + std::to_string(scenes.size()) :
-    //     scene_name;
-
-    //     const auto ref = std::make_shared<ScenePhysics>(PhysicsPool::CreatePhysicsWorld());
-
-    //     LuaScript script = m_scriptEngine.CreateScript("scripts/" + scriptName);
-    //     LuaTable tbl = m_scriptEngine.CreateTable();
-    //     m_scriptEngine.SetScriptVariable(script, "globals", tbl);
-    //     scenes.emplace_back(sceneName, script, ref, true, m_scriptEngine);
-    // }
-
-    // Scene& Application::GetScene(const std::string& sceneName) {
-    //     for (auto& scene : scenes) {
-    //         if (scene.getName() == sceneName) return scene;
-    //     }
-
-    //     VK_CRITICAL("Scene: {0} could not be found.", sceneName);
-    //     assert(false);
-    // }
 
     void Application::OnEvent(Event& ev) {
         EventDispatcher dispatcher(ev);

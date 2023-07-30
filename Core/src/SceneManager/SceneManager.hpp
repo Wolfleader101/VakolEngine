@@ -1,24 +1,19 @@
 #pragma once
 
 #include "Controller/Scene.hpp"
+#include "Scripting/ScriptEngine.hpp"
 #include "View/Renderer/Renderer.hpp"
 
-
-#include "Scripting/ScriptEngine.hpp"
-
-namespace Vakol 
-{
-    //using Scene = Controller::Scene;
+namespace Vakol {
+    // using Scene = Controller::Scene;
     /**
      * @class SceneManager
      *
      * @brief Class representing the scene manager in the application.
      */
-    class SceneManager 
-    {
-       
+    class SceneManager {
        public:
-       using Scene = Controller::Scene;
+        using Scene = Controller::Scene;
         /**
          * @brief Construct a new Scene Manager object.
          *
@@ -34,19 +29,19 @@ namespace Vakol
         /**
          * @brief Get the current scene.
          *
-         * @return Scene& The current scene.
+         * @return Scene& of active scene
          */
-        Scene& GetCurrentScene();
+        Scene& GetActiveScene();
 
         /**
-         * @brief Set the current scene.
+         * @brief Change the active current scene.
          *
-         * @param scene The new current scene.
+         * @param name of the new scene
          */
-        void SetCurrentScene(const std::string& name);
+        void ChangeActiveScene(const std::string& name);
 
         /**
-         * @brief Get the scene with the given name. Doesn't make it the current scene. Use SetCurrentScene for that.
+         * @brief Get a scene with the given name.
          *
          * @param name The name of the scene to get.
          * @return Scene& The scene with the given name.
@@ -70,6 +65,12 @@ namespace Vakol
         void RemoveScene(const std::string& name);
 
         /**
+         * @brief Update the scene manager. Internally will change to the next scene if its been set
+         *
+         */
+        void Update();
+
+        /**
          * @brief Used to check if scene manager is valid to use.
          *        Checks if empty, and if current scene is set.
          *
@@ -81,7 +82,8 @@ namespace Vakol
        private:
         void ThrowRuntime(const std::string& str) const;
 
-        Scene* m_currentScene;
+        Scene* m_activeScene;
+        Scene* m_nextScene;
 
         /**
          * @brief The map of scenes.
@@ -92,5 +94,5 @@ namespace Vakol
          * @brief The script engine.
          */
         ScriptEngine& m_scriptEngine;
-    }; 
-}  // namespace Vakol::Controller
+    };
+}  // namespace Vakol

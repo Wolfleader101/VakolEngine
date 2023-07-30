@@ -44,9 +44,10 @@ function update()
     start_menu();
     
     if (Input:get_key_down(KEYS["KEY_1"])) then
-        toggle_skybox();
-        set_current_scene("sandbox");
-        toggle_wireframe();
+        -- toggle_skybox();
+        print("CHANGING SCENE")
+        change_scene("sandbox");
+        -- toggle_wireframe();
     end
 
     if(Input:get_key_down(KEYS["KEY_ESC"])) then

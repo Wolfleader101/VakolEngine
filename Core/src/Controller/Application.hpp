@@ -8,12 +8,12 @@
 #include "Model/Entity.hpp"
 #include "Model/GameConfig.hpp"
 #include "Scene.hpp"
+#include "SceneManager/SceneManager.hpp"
 #include "Scripting/ScriptEngine.hpp"
 #include "Time.hpp"
 #include "View/GUI/GUIWindow.hpp"
 #include "View/Renderer/Renderer.hpp"
 #include "View/Window/Window.hpp"
-#include "SceneManager/SceneManager.hpp"
 
 namespace Vakol::Controller {
 
