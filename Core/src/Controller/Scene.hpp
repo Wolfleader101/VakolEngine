@@ -5,14 +5,11 @@
 #include "Camera.hpp"
 #include "Controller/Physics/ScenePhysics.hpp"
 #include "Controller/Terrain.hpp"
-
 #include "EntityList.hpp"
 #include "Model/Entity.hpp"
-
+#include "Scripting/ScriptTypes.hpp"
 #include "Time.hpp"
 #include "View/Renderer/Renderer.hpp"
-
-#include "Scripting/ScriptTypes.hpp"
 
 namespace Vakol::Controller {
 
@@ -35,14 +32,6 @@ namespace Vakol::Controller {
 
         Scene(const Scene& other) = default;
         Scene(Scene&& other) = default;
-
-        
-
-        /**
-         * @brief Initialize the scene.
-         */
-        // TODO this can probably be removed
-        void Init();
 
         /**
          * @brief Get the name of the scene.

@@ -137,25 +137,16 @@ namespace Vakol::Controller {
     void Application::Run() {
         while (m_running) {
             m_time.Update();
-            m_gui.CreateNewFrame();
+            m_time.accumulator += m_time.deltaTime;
 
+            m_gui.CreateNewFrame();
             m_renderer->Update();
 
-            m_time.accumulator += m_time.deltaTime;
+            m_sceneManager.Update();
 
             Scene& activeScene = m_sceneManager.GetActiveScene();
 
-            // TODO set the current scene globally, might want to move this elsewhere?
-            m_scriptEngine.SetGlobalVariable("scene", &activeScene);
-
             while (m_time.accumulator >= m_time.tickRate) {
-                // TODO move this to scene manager, not in game loop
-                if (!activeScene.initialized) {
-                    m_scriptEngine.InitScript(activeScene.GetScript());
-
-                    activeScene.Init();
-                }
-
                 activeScene.GetEntityList().GetRegistry().view<LuaScript>().each(
                     [&](auto& script) { m_scriptEngine.TickScript(script); });
 
@@ -183,8 +174,6 @@ namespace Vakol::Controller {
             m_gui.Update();
             m_input.Update();
             m_window->OnUpdate();
-
-            m_sceneManager.Update();
         }
     }
 

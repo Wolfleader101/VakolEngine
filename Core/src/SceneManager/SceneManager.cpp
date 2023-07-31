@@ -59,10 +59,16 @@ namespace Vakol {
     }
 
     void SceneManager::Update() {
-        if (!m_nextScene) return;
+        if (m_nextScene != nullptr) {
+            m_activeScene = m_nextScene;
+            m_nextScene = nullptr;
+        }
 
-        m_activeScene = m_nextScene;
-        m_nextScene = nullptr;
+        m_scriptEngine.SetGlobalVariable("scene", m_activeScene);
+
+        if (!m_activeScene->initialized) {
+            m_scriptEngine.InitScript(m_activeScene->GetScript());
+        }
     }
 
     bool SceneManager::operator!() const {

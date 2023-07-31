@@ -51,7 +51,6 @@ namespace Vakol {
 
         script.env = sol::environment(m_state, sol::create, m_state.globals());
 
-        // TODO this is deprecated, don't use state
         this->SetScriptVariable(script, "state", script.env);
 
         //! run the script on creation (load up global vars etc)
