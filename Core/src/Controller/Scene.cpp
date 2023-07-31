@@ -31,14 +31,7 @@ namespace Vakol::Controller {
     void Scene::DestroyEntity(const Entity entity) { m_entityList.RemoveEntity(entity); }
 
     void Scene::Update(const Time& time, const std::shared_ptr<View::Renderer>& renderer) {
-        // lua->RunFile("scripts/" + scriptName);
-
-        // lua->GetState()["scene"] = this;
-        // lua->RunFunction("update");
-
         scenePhysics->Update(time, m_cam);
-
-        // System::Script_Update(lua, entityList, this);
 
         System::Drawable_Update(time, renderer);
 

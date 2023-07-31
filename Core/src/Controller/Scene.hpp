@@ -110,15 +110,32 @@ namespace Vakol::Controller {
          */
         std::shared_ptr<Entity> GetEntity(const std::string& tag);
 
+        /**
+         * @brief Get the Entity List object
+         *
+         * @return const EntityList&
+         */
         const EntityList& GetEntityList() const { return m_entityList; }
 
+        /**
+         * @brief Get the Entity List object
+         *
+         * @return EntityList&
+         */
         EntityList& GetEntityList() { return m_entityList; }
 
-        // const LuaScript& GetScript() const { return m_script; }
-
+        /**
+         * @brief Get the Script object
+         *
+         * @return LuaScript&
+         */
         LuaScript& GetScript() { return m_script; }
 
        private:
+        /**
+         * @brief The lua script of the scene.
+         *
+         */
         LuaScript m_script;
 
         /**

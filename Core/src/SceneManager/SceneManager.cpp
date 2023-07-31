@@ -68,6 +68,7 @@ namespace Vakol {
 
         if (!m_activeScene->initialized) {
             m_scriptEngine.InitScript(m_activeScene->GetScript());
+            m_activeScene->initialized = true;
         }
     }
 
