@@ -30,6 +30,10 @@ namespace Vakol::Controller {
          */
         Application();
 
+        /**
+         * @brief Init function for application
+         *
+         */
         void Init();
 
         /**
@@ -68,22 +72,6 @@ namespace Vakol::Controller {
          */
         int GetHeight() const { return m_window->GetHeight(); }
 
-        // /**
-        //  * @brief Add a scene with a script name and an optional scene name.
-        //  *
-        //  * @param scriptName The script name of the scene.
-        //  * @param scene_name The name of the scene (optional).
-        //  */
-        // void AddScene(const std::string& scriptName, const std::string& scene_name = "");
-
-        // /**
-        //  * @brief Get a scene by its name.
-        //  *
-        //  * @param sceneName The name of the scene.
-        //  * @return Scene& A reference to the scene.
-        //  */
-        // Scene& GetScene(const std::string& sceneName);
-
         /**
          * @brief Set the running state of the game.
          *
@@ -105,7 +93,13 @@ namespace Vakol::Controller {
          */
         const Input& GetInput() const { return m_input; }
 
+        /**
+         * @brief Set the Active Mouse object
+         *
+         * @param active mouse is active or not
+         */
         void SetActiveMouse(bool active);
+
         /**
          * @brief Register Lua scripting.
          */
@@ -113,8 +107,6 @@ namespace Vakol::Controller {
 
        private:
         /**
-         * @brief
-         *
          * @brief on window close event
          * @param ev event of windowClose
          * @return true if it was sucessful
@@ -190,8 +182,16 @@ namespace Vakol::Controller {
          */
         std::shared_ptr<View::Renderer> m_renderer;
 
+        /**
+         * @brief Script engine instance
+         *
+         */
         ScriptEngine m_scriptEngine;
 
+        /**
+         * @brief Scene manager instance
+         *
+         */
         SceneManager m_sceneManager;
 
         /**
