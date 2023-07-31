@@ -11,35 +11,19 @@
 #include "System.hpp"
 
 namespace Vakol::Controller {
-    Scene::Scene(const std::string& name, LuaScript& script, const std::shared_ptr<ScenePhysics>& SP, const bool active,
-                 ScriptEngine& scriptEngine)
-        : active(active),
-          scenePhysics(SP),
-          m_script(std::move(script)),
-          m_name(name),
-          m_cam(glm::vec3(0.0f, 0.0f, 2.0f)),
-          m_scriptEngine(scriptEngine) {}
-
-    void Scene::Init() { initialized = true; }
+    Scene::Scene(const std::string& name, LuaScript& script, const std::shared_ptr<ScenePhysics>& SP)
+        : scenePhysics(SP), m_script(std::move(script)), m_name(name), m_cam(glm::vec3(0.0f, 0.0f, 2.0f)) {}
 
     const std::string& Scene::getName() const { return m_name; }
 
     void Scene::setName(const std::string& newName) { m_name = newName; }
 
-    Entity Scene::CreateEntity(const std::string& tag, const std::string& sname) {
+    Entity Scene::CreateEntity(const std::string& tag) {
         auto ent = m_entityList.CreateEntity();
 
         ent.GetComponent<Tag>().tag = tag;
 
         if (!ent.GetComponent<GUID>().id.isValid()) ent.GetComponent<GUID>().GenNewGUID();
-
-        if (!sname.empty()) {
-            LuaScript script = m_scriptEngine.CreateScript("scripts/" + sname);
-
-            m_scriptEngine.SetScriptVariable(script, "entity", ent);
-            m_scriptEngine.InitScript(script);
-            ent.AddComponent<LuaScript>(script);
-        }
 
         return ent;
     }
@@ -47,14 +31,7 @@ namespace Vakol::Controller {
     void Scene::DestroyEntity(const Entity entity) { m_entityList.RemoveEntity(entity); }
 
     void Scene::Update(const Time& time, const std::shared_ptr<View::Renderer>& renderer) {
-        // lua->RunFile("scripts/" + scriptName);
-
-        // lua->GetState()["scene"] = this;
-        // lua->RunFunction("update");
-
         scenePhysics->Update(time, m_cam);
-
-        // System::Script_Update(lua, entityList, this);
 
         System::Drawable_Update(time, renderer);
 

@@ -6,11 +6,10 @@
 #include "Controller/Physics/ScenePhysics.hpp"
 #include "Controller/Terrain.hpp"
 #include "EntityList.hpp"
+#include "Model/Entity.hpp"
+#include "Scripting/ScriptTypes.hpp"
 #include "Time.hpp"
 #include "View/Renderer/Renderer.hpp"
-
-// TODO change this to ScriptTypes header, but need to get rid of script engine dependency
-#include "Scripting/ScriptEngine.hpp"
 
 namespace Vakol::Controller {
 
@@ -29,14 +28,10 @@ namespace Vakol::Controller {
          * @param SP The shared pointer to the ScenePhysics object.
          * @param active Whether the scene is active or not.
          */
-        Scene(const std::string& name, LuaScript& script, const std::shared_ptr<Physics::ScenePhysics>& SP, bool active,
-              ScriptEngine& scriptEngine);
+        Scene(const std::string& name, LuaScript& script, const std::shared_ptr<Physics::ScenePhysics>& SP);
 
-        /**
-         * @brief Initialize the scene.
-         */
-        // TODO this can probably be removed
-        void Init();
+        Scene(const Scene& other) = default;
+        Scene(Scene&& other) = default;
 
         /**
          * @brief Get the name of the scene.
@@ -67,7 +62,7 @@ namespace Vakol::Controller {
          * @param sname The name of the script associated with the entity.
          * @return Entity The created entity.
          */
-        Entity CreateEntity(const std::string& tag, const std::string& sname);
+        Entity CreateEntity(const std::string& tag);
 
         /**
          * @brief Destroy an entity in the scene.
@@ -89,11 +84,6 @@ namespace Vakol::Controller {
          * @param folder The folder to load the serialized data from.
          */
         void Deserialize(const std::string& folder);
-
-        /**
-         * @brief Whether the scene is active or not.
-         */
-        bool active = false;
 
         /**
          * @brief Whether the scene has been initialized or not.
@@ -120,19 +110,33 @@ namespace Vakol::Controller {
          */
         std::shared_ptr<Entity> GetEntity(const std::string& tag);
 
+        /**
+         * @brief Get the Entity List object
+         *
+         * @return const EntityList&
+         */
         const EntityList& GetEntityList() const { return m_entityList; }
 
+        /**
+         * @brief Get the Entity List object
+         *
+         * @return EntityList&
+         */
         EntityList& GetEntityList() { return m_entityList; }
 
-        // const LuaScript& GetScript() const { return m_script; }
-
+        /**
+         * @brief Get the Script object
+         *
+         * @return LuaScript&
+         */
         LuaScript& GetScript() { return m_script; }
 
        private:
+        /**
+         * @brief The lua script of the scene.
+         *
+         */
         LuaScript m_script;
-
-        // TODO REMOVE - JUST for testing as scene is currently scuffed
-        ScriptEngine& m_scriptEngine;
 
         /**
          * @brief The name of the scene.

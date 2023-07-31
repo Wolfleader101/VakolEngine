@@ -51,7 +51,6 @@ namespace Vakol {
 
         script.env = sol::environment(m_state, sol::create, m_state.globals());
 
-        // TODO this is deprecated, don't use state
         this->SetScriptVariable(script, "state", script.env);
 
         //! run the script on creation (load up global vars etc)
@@ -148,7 +147,7 @@ namespace Vakol {
         RegisterTerrain(m_state);
         RegisterFSM(m_state);
         RegisterCamera(m_state);
-        RegisterScene(m_state);
+        RegisterScene(m_state, *this);
         RegisterGUIWindow(m_state);
         RegisterRigidBody(m_state);
         RegisterCollider(m_state);

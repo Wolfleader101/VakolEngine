@@ -22,4 +22,7 @@
 -- local endScreen = get_scene("End Scene");
 -- endScreen:set_active(false);
 
-add_scene("scenes/sandbox.lua", "sandbox");
+add_scene("test menu", "scenes/start_scene.lua");
+
+add_scene("sandbox", "scenes/sandbox.lua");
+
