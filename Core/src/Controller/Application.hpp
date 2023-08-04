@@ -126,7 +126,7 @@ namespace Vakol::Controller {
          * @param kev on key pressed event
          * @return true if successful
          */
-        bool Application::OnKeyPressed(KeyPressedEvent& kev);
+        bool OnKeyPressed(KeyPressedEvent& kev);
 
         /**
          * @brief Handle the key released event.
