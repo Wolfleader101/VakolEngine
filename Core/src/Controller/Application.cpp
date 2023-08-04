@@ -7,6 +7,8 @@
 #include <Model/Components.hpp>
 #include <View/Renderer/RendererFactory.hpp>
 
+#include <Rendering/RenderEngine.hpp>
+
 #include "Logger.hpp"
 
 namespace Vakol::Controller {
