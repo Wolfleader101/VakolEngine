@@ -1,6 +1,8 @@
 #include "Colliders.hpp"
 
+#include <algorithm>
 #include <list>
+#include <stack>
 namespace Vakol::Physics {
     Vec3 GetMin(const AABB& aabb) {
         Vec3 p1 = aabb.pos + aabb.size;
@@ -1372,5 +1374,169 @@ namespace Vakol::Physics {
             return MeshTriangle(*(model.GetMesh()), local);
         }
         return false;
+    }
+
+    void Scene::AddModel(Model* model) {
+        if (std::find(objects.begin(), objects.end(), model) != objects.end()) {
+            // Duplicate object, don't add
+            return;
+        }
+
+        objects.push_back(model);
+    }
+
+    void Scene::RemoveModel(Model* model) {
+        objects.erase(std::remove(objects.begin(), objects.end(), model), objects.end());
+    }
+
+    void Scene::UpdateModel(Model* model) {}
+
+    std::vector<Model*> Scene::FindChildren(const Model* model) {
+        std::vector<Model*> res;
+        for (int i = 0, size = objects.size(); i < size; ++i) {
+            if (objects[i] == nullptr || objects[i] == model) {
+                continue;
+            }
+            Model* iterator = objects[i]->parent;
+            if (iterator != nullptr) {
+                if (iterator == model) {
+                    res.push_back(objects[i]);
+                    continue;
+                }
+                iterator = iterator->parent;
+            }
+        }
+
+        return res;
+    }
+
+    Model* Scene::Raycast(const Ray& ray) {
+        Model* result = nullptr;
+        float result_t = -1.0f;
+
+        for (int i = 0, size = objects.size(); i < size; ++i) {
+            float t = ModelRay(*objects[i], ray);
+
+            // on first collision set result
+            if (result == nullptr && t >= 0) {
+                result = objects[i];
+                result_t = t;
+
+                // store object closest to the ray origin
+            } else if (result != nullptr && t < result_t) {
+                result = objects[i];
+                result_t = t;
+            }
+        }
+
+        return result;
+    }
+
+    std::vector<Model*> Scene::Query(const Sphere& sphere) {
+        std::vector<Model*> result;
+        for (int i = 0, size = objects.size(); i < size; ++i) {
+            // alows for containment and intersection check
+            OBB bounds = GetOBB(*objects[i]);
+
+            if (SphereOBB(sphere, bounds)) {
+                result.push_back(objects[i]);
+            }
+        }
+
+        return result;
+    }
+
+    std::vector<Model*> Scene::Query(const AABB& aabb) {
+        std::vector<Model*> result;
+        for (int i = 0, size = objects.size(); i < size; ++i) {
+            // alows for containment and intersection check
+            OBB bounds = GetOBB(*objects[i]);
+
+            if (AABBOBB(aabb, bounds)) {
+                result.push_back(objects[i]);
+            }
+        }
+
+        return result;
+    }
+
+    void SplitTree(OctreeNode* node, int depth) {
+        if (depth-- <= 0) {
+            return;
+        }
+
+        if (node->children == nullptr) {
+            // should contain 8 children
+            node->children = new OctreeNode[8];
+
+            Vec3 pos = node->bounds.pos;
+            Vec3 e = node->bounds.size * 0.5f;
+
+            // split into eight child bounding boxes. Each child bounding box shares one vertex and center
+            node->children[0].bounds = AABB(pos + Vec3(-e.x, +e.y, -e.z), e);
+            node->children[1].bounds = AABB(pos + Vec3(+e.x, +e.y, -e.z), e);
+            node->children[2].bounds = AABB(pos + Vec3(-e.x, +e.y, +e.z), e);
+            node->children[3].bounds = AABB(pos + Vec3(+e.x, +e.y, +e.z), e);
+            node->children[4].bounds = AABB(pos + Vec3(-e.x, -e.y, -e.z), e);
+            node->children[5].bounds = AABB(pos + Vec3(+e.x, -e.y, -e.z), e);
+            node->children[6].bounds = AABB(pos + Vec3(-e.x, -e.y, +e.z), e);
+            node->children[7].bounds = AABB(pos + Vec3(+e.x, -e.y, +e.z), e);
+        }
+
+        // if it has children and models re assignment models
+        if (node->children != nullptr && node->models.size() > 0) {
+            // for each child
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0, size = node->models.size(); j < size; ++j) {
+                    OBB bounds = GetOBB(*node->models[j]);
+
+                    // if it intersects, add model to child
+                    if (AABBOBB(node->children[i].bounds, bounds)) {
+                        node->children[i].models.push_back(node->models[j]);
+                    }
+                }
+            }
+            node->models.clear();
+
+            // recursive function for each node
+            for (int i = 0; i < 8; ++i) {
+                SplitTree(&(node->children[i]), depth);
+            }
+        }
+    }
+
+    void Insert(OctreeNode* node, Model* model) {
+        OBB bounds = GetOBB(*model);
+        if (AABBOBB(node->bounds, bounds)) {
+            // only insert into leaf nodes
+            if (node->children == nullptr) {
+                node->models.push_back(model);
+            } else {
+                // recursively call it until u find a leaf node
+                for (int i = 0; i < 8; ++i) {
+                    Insert(&(node->children[i]), model);
+                }
+            }
+        }
+    }
+
+    void Remove(OctreeNode* node, Model* model) {
+        if (node->children == nullptr) {
+            // find the model and remove it
+            std::vector<Model*>::iterator it = std::find(node->models.begin(), node->models.end(), model);
+            if (it != node->models.end()) {
+                node->models.erase(it);
+            }
+        } else {
+            // if its not a leaf node
+            for (int i = 0; i < 8; ++i) {
+                Remove(&(node->children[i]), model);
+            }
+        }
+    }
+
+    void Update(OctreeNode* node, Model* model) {
+        Remove(node, model);
+        Insert(node, model);
     }
 }  // namespace Vakol::Physics

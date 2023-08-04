@@ -224,6 +224,20 @@ namespace Vakol::Physics {
     bool ModelPlane(const Model& model, const Plane& plane);
     bool ModelTriangle(const Model& model, const Triangle& triangle);
 
+    struct OctreeNode {
+        AABB bounds;
+        //! look into using std::array perhaps
+        OctreeNode* children;
+        std::vector<Model*> models;
+
+        inline OctreeNode() : children(nullptr) {}
+        inline ~OctreeNode() {
+            if (children != nullptr) {
+                delete[] children;
+            }
+        }
+    };
+
     class Scene {
        public:
         void AddModel(Model* model);
@@ -231,7 +245,18 @@ namespace Vakol::Physics {
         void UpdateModel(Model* model);
         std::vector<Model*> FindChildren(const Model* model);
 
+        Model* Raycast(const Ray& ray);
+        std::vector<Model*> Query(const Sphere& sphere);
+        std::vector<Model*> Query(const AABB& aabb);
+
        private:
         std::vector<Model*> objects;
     };
+
+    void SplitTree(OctreeNode* node, int depth);
+
+    void Insert(OctreeNode* node, Model* model);
+    void Remove(OctreeNode* node, Model* model);
+    void Update(OctreeNode* node, Model* model);
+
 }  // namespace Vakol::Physics
