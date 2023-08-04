@@ -7,8 +7,6 @@
 #include <Model/Components.hpp>
 #include <View/Renderer/RendererFactory.hpp>
 
-#include <Rendering/RenderEngine.hpp>
-
 #include "Logger.hpp"
 
 namespace Vakol::Controller {
@@ -17,10 +15,9 @@ namespace Vakol::Controller {
     Application::Application()
         : m_window(nullptr),
           m_renderer(nullptr),
+          m_sceneManager(m_scriptEngine),
           m_running(false),
-          m_input(),
-          m_scriptEngine(),
-          m_sceneManager(m_scriptEngine){};
+          m_input(){};
 
     void Application::Init() {
         RegisterLua();
@@ -39,9 +36,15 @@ namespace Vakol::Controller {
             return;
         }
 
-        m_renderer = CreateRenderer(config.value().rendererType, m_window);
+        //m_renderer = CreateRenderer(config.value().rendererType, m_window);
 
-        if (m_renderer == nullptr) {
+        m_renderEngine = Rendering::CreateRenderEngine(config.value().rendererType, m_window);
+
+        if (!m_renderer && m_renderEngine)
+            VK_TRACE("renderer is nullptr!");
+        else if (!m_renderer && !m_renderEngine) 
+        {
+            VK_ERROR("Both renderers are nullptr!");
             return;
         }
 
@@ -131,7 +134,7 @@ namespace Vakol::Controller {
             AssetLoader::shader_path = shader_dir.value();
         }
 
-        Model::GameConfig cfg = {name.value(), window_width.value(), window_height.value(), renderer_type.value()};
+        GameConfig cfg = {name.value(), window_width.value(), window_height.value(), renderer_type.value()};
 
         return cfg;
     }
@@ -142,7 +145,8 @@ namespace Vakol::Controller {
             m_time.accumulator += m_time.deltaTime;
 
             m_gui.CreateNewFrame();
-            m_renderer->Update();
+            m_renderEngine->PreDraw();
+            //m_renderer->Update();
 
             m_sceneManager.Update();
 
@@ -161,7 +165,8 @@ namespace Vakol::Controller {
             // Compute the time interpolation factor
             // float alpha = m_time.accumulator / m_time.tickRate;
 
-            m_renderer->UpdateData(activeScene.GetCamera());
+            m_renderEngine->Draw();
+            //m_renderer->UpdateData(activeScene.GetCamera());
 
             activeScene.GetEntityList().GetRegistry().view<LuaScript>().each(
                 [&](auto& script) { m_scriptEngine.UpdateScript(script); });
@@ -171,7 +176,8 @@ namespace Vakol::Controller {
             System::BindScene(activeScene);  // is here temporarily until this is replaced/removed
             activeScene.Update(m_time, m_renderer);
 
-            m_renderer->LateUpdate();
+            m_renderEngine->PostDraw();
+            //m_renderer->LateUpdate();
 
             m_gui.Update();
             m_input.Update();
@@ -210,7 +216,7 @@ namespace Vakol::Controller {
     }
 
     bool Application::OnKeyPressed(KeyPressedEvent& kev) {
-        if (kev.GetKeyCode() == GLFW_KEY_K) m_renderer->ToggleWireframe();
+        //if (kev.GetKeyCode() == GLFW_KEY_K) m_renderer->ToggleWireframe();
 
         m_input.OnKeyPressed(kev);
 

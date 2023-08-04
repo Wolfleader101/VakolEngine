@@ -24,9 +24,9 @@ function start_menu()
 
     GUI:add_text("---- MENU ----", true, false, 2.0, 1.0, 1.0, 1.0, 1.0);
 
-    GUI:add_text("1 - Enter Sandbox", true, false, 2.0, 1.0, 1.0, 1.0, 1.0);
+    --GUI:add_text("1 - Enter Sandbox", true, false, 2.0, 1.0, 1.0, 1.0, 1.0);
 
-    GUI:add_text(" ", true, false, 2.0, 1.0, 1.0, 1.0, 1.0);
+    --GUI:add_text(" ", true, false, 2.0, 1.0, 1.0, 1.0, 1.0);
 
     GUI:add_text("ESC - Exit", true, false, 2.0, 1.0, 1.0, 1.0, 1.0);
 

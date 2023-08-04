@@ -3,12 +3,20 @@
 #include "RenderAPI.hpp"
 
 #include <memory>
+#include <string>
+
+namespace Vakol::View
+{
+    class Window;
+}
 
 namespace Vakol::Rendering
 {
-    struct Model;
-
-    enum VK_RENDERDATA_HINT { VK_VERTEX_DATA, VK_SHADER_DATA, VK_TEXTURE_DATA };
+    namespace Assets
+    {
+        struct Model;
+        struct Mesh;
+    }
 
     class RenderEngine
     {
@@ -17,7 +25,7 @@ namespace Vakol::Rendering
         static void Draw();
         static void PostDraw();
 
-        static void SubmitModel(const Model& model); // submit an user-defined model to renderer to be broken down to low-level render items
+        static void SubmitModel(Assets::Model& model); // submit an user-defined model to renderer to be broken down to low-level render items
     private:
         /**
          * \brief Submit data to rendering api of user's choosing.
@@ -26,11 +34,13 @@ namespace Vakol::Rendering
          * \param data the actual data to be sent.
          */
         template <typename T>
-        static void SubmitData(VK_RENDERDATA_HINT hint, T&& data);
+        static void SubmitData(VK_RENDER_DATA_HINT hint, T&& data);
+
+        static void SubmitMesh(Assets::Mesh& mesh);
     };
 
     template <typename T>
-    void RenderEngine::SubmitData(const VK_RENDERDATA_HINT hint, T&& data)
+    void RenderEngine::SubmitData(const VK_RENDER_DATA_HINT hint, T&& data)
     {
         switch (hint) 
         {
@@ -47,4 +57,6 @@ namespace Vakol::Rendering
                 break;
         }
     }
+
+    std::shared_ptr<RenderEngine> CreateRenderEngine(const std::string& API, const std::shared_ptr<View::Window>& window);
 }

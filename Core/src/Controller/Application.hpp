@@ -5,15 +5,21 @@
 #include "Events/KeyEvent.hpp"
 #include "Events/WindowEvent.hpp"
 #include "Input.hpp"
+
 #include "Model/Entity.hpp"
 #include "Model/GameConfig.hpp"
+
 #include "Scene.hpp"
 #include "SceneManager/SceneManager.hpp"
 #include "Scripting/ScriptEngine.hpp"
+
 #include "Time.hpp"
+
 #include "View/GUI/GUIWindow.hpp"
 #include "View/Renderer/Renderer.hpp"
 #include "View/Window/Window.hpp"
+
+#include <Rendering/RenderEngine.hpp>
 
 namespace Vakol::Controller {
 
@@ -181,6 +187,8 @@ namespace Vakol::Controller {
          * @brief the renderer instance of the class
          */
         std::shared_ptr<View::Renderer> m_renderer;
+
+        std::shared_ptr<Rendering::RenderEngine> m_renderEngine = nullptr;
 
         /**
          * @brief Script engine instance

@@ -6,7 +6,7 @@
 
 namespace Vakol::Controller
 {
-#define BIT(x) (1 << x)
+    constexpr int BIT(const int x) { return 1 << x; }
 
 	/**
 	 * @brief the type of event

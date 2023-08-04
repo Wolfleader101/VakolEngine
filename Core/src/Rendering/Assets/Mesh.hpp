@@ -8,16 +8,14 @@
 
 namespace Vakol::Rendering::Assets
 {
+    struct Bounds
+    {
+        Math::Vec3 min;
+        Math::Vec3 max;
+    };
+
     struct Mesh
     {
-    private:
-        struct Bounds
-        {
-            Math::Vec3 min;
-            Math::Vec3 max;
-        };
-
-    public:
         const char* name = nullptr;
 
         std::vector<Vertex> vertices;
