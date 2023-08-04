@@ -1,17 +1,15 @@
 #pragma once
 
+#include <cereal/archives/json.hpp>
 #include <glm/mat4x4.hpp>
 #include <glm/vec3.hpp>
 
 #include "Math.hpp"
 
-#include <cereal/archives/json.hpp>
-
 constexpr unsigned char PROJECTION_MATRIX = 0x0;
 constexpr unsigned char VIEW_MATRIX = 0x1;
 
-namespace Vakol::Controller
-{
+namespace Vakol::Controller {
     /**
      * @brief Class representing a Camera.
      */
@@ -24,7 +22,7 @@ namespace Vakol::Controller
          *
          * @param position The position of the camera.
          */
-        explicit Camera(const glm::vec3& position);
+        explicit Camera(const glm::vec3& position = glm::vec3(0.0f, 0.0f, 5.0f));
 
         /**
          * @brief Get the transformation matrix of the camera based on the specified type.
@@ -119,8 +117,7 @@ namespace Vakol::Controller
                cereal::make_nvp("forwardDir", forwardDir), cereal::make_nvp("rightDir", rightDir));
         }
 
-
-   private:
+       private:
         /**
          * @brief The pitch angle of the camera.
          */
@@ -148,7 +145,7 @@ namespace Vakol::Controller
 
         /**
          * @brief The far clipping plane distance of the camera.
-         * 
+         *
          */
         float far = 1000.0f;
 

@@ -2,8 +2,8 @@
 
 #include <Controller/EntityList.hpp>
 #include <Controller/Logger.hpp>
-#include <entt/entt.hpp>
 #include <cereal/archives/json.hpp>
+#include <entt/entt.hpp>
 #include <functional>
 #include <string>
 
@@ -102,9 +102,8 @@ namespace Vakol::Model {
          */
         operator bool() const;
 
-        template<class Archive>
-        void serialize(Archive& ar)
-        {
+        template <class Archive>
+        void serialize(Archive& ar) {
             ar(cereal::make_nvp("handle", m_entityHandle));
         }
 
@@ -143,10 +142,11 @@ namespace Vakol::Model {
     }
 
     template <class T>
-    void Entity::RemoveComponent() const
-    {
+    void Entity::RemoveComponent() const {
         if (!this->HasComponent<T>())
-            VK_ERROR("Entity.RemoveComponent<>(): Entity does not have given component... skipping");  // error instead of critical as it wont crash
+            VK_ERROR("Entity.RemoveComponent<>(): Entity does not have given component... skipping");  // error instead
+                                                                                                       // of critical as
+                                                                                                       // it wont crash
         else
             m_EntityList->m_Registry.remove<T>(m_entityHandle);
     }
@@ -161,4 +161,4 @@ namespace Vakol::Model {
         return m_EntityList->m_Registry.get<T>(m_entityHandle);
     }
 
-}
+}  // namespace Vakol::Model

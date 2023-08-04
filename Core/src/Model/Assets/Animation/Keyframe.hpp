@@ -12,24 +12,24 @@ namespace Vakol::Model::Assets {
      * @brief Struct representing a key position in an animation.
      */
     struct KeyPosition {
-        glm::vec3 position{};   /**< The position value. */
-        float timestamp = 0.0f; /**< The timestamp of the key position. */
+        glm::vec3 position{};    /**< The position value. */
+        double timestamp = 0.0f; /**< The timestamp of the key position. */
     };
 
     /**
      * @brief Struct representing a key scale in an animation.
      */
     struct KeyScale {
-        glm::vec3 scale{};      /**< The scale value. */
-        float timestamp = 0.0f; /**< The timestamp of the key scale. */
+        glm::vec3 scale{};       /**< The scale value. */
+        double timestamp = 0.0f; /**< The timestamp of the key scale. */
     };
 
     /**
      * @brief Struct representing a key rotation in an animation.
      */
     struct KeyRotation {
-        glm::quat rotation{};   /**< The rotation value. */
-        float timestamp = 0.0f; /**< The timestamp of the key rotation. */
+        glm::quat rotation{};    /**< The rotation value. */
+        double timestamp = 0.0f; /**< The timestamp of the key rotation. */
     };
 
     /**
@@ -43,7 +43,7 @@ namespace Vakol::Model::Assets {
         std::vector<KeyScale> scales;       /**< The key scales of the key frame. */
         std::vector<KeyRotation> rotations; /**< The key rotations of the key frame. */
 
-        float prev_time = -1;         /**< The previous time frame. */
+        double prev_time = -1;        /**< The previous time frame. */
         int prev_position_index = -1; /**< The index of the previous key position. */
         int prev_scale_index = -1;    /**< The index of the previous key scale. */
         int prev_rotation_index = -1; /**< The index of the previous key rotation. */
@@ -54,10 +54,10 @@ namespace Vakol::Model::Assets {
          * @param time The time to interpolate the frames at.
          * @return The interpolated transformation matrix.
          */
-        glm::mat4 interpolate_frames_at(const float time) {
-            const auto translation = interpolate_position(time);
-            const auto rotation = interpolate_rotation(time);
-            const auto scale = interpolate_scaling(time);
+        glm::mat4 interpolate_frames_at(const double time) {
+            const glm::mat4 translation = interpolate_position(time);
+            const glm::mat4 rotation = interpolate_rotation(time);
+            const glm::mat4 scale = interpolate_scaling(time);
 
             prev_time = time;
 
@@ -81,22 +81,22 @@ namespace Vakol::Model::Assets {
             bool operator()(const Key& lhs, const Key& rhs) const noexcept { return lhs.timestamp < rhs.timestamp; }
 
             /**
-             * @brief Compare a key frame timestamp with a float value.
+             * @brief Compare a key frame timestamp with a double value.
              *
-             * @param time The float value representing time.
+             * @param time The double value representing time.
              * @param rhs The key frame to compare with.
              * @return True if time < rhs.timestamp, false otherwise.
              */
-            bool operator()(const float time, const Key& rhs) const noexcept { return time < rhs.timestamp; }
+            bool operator()(const double time, const Key& rhs) const noexcept { return time < rhs.timestamp; }
 
             /**
-             * @brief Compare a key frame with a float value representing time.
+             * @brief Compare a key frame with a double value representing time.
              *
              * @param lhs The key frame to compare.
-             * @param time The float value representing time.
+             * @param time The double value representing time.
              * @return True if lhs.timestamp < time, false otherwise.
              */
-            bool operator()(const Key& lhs, const float time) const noexcept { return lhs.timestamp < time; }
+            bool operator()(const Key& lhs, const double time) const noexcept { return lhs.timestamp < time; }
         };
 
         /**
@@ -110,7 +110,7 @@ namespace Vakol::Model::Assets {
          * @return The index of the frame if found, -1 otherwise.
          */
         template <typename Key>
-        static int GetFrameIndex(const std::vector<Key>& frames, float time, unsigned int start_offset,
+        static int GetFrameIndex(const std::vector<Key>& frames, double time, unsigned int start_offset,
                                  unsigned int end_offset) {
             if (frames.size() < 2) {
                 VK_CRITICAL("KeyFrame::GetFrameIndex() - There must be at least 2 animation frames");
@@ -170,8 +170,8 @@ namespace Vakol::Model::Assets {
          * @return The updated frame index.
          */
         template <typename Key>
-        static int UpdateFrameIndex(const std::vector<Key>& frames, const float time, const int prev_index,
-                                    const float prev_time) {
+        static int UpdateFrameIndex(const std::vector<Key>& frames, const double time, const int prev_index,
+                                    const double prev_time) {
             // Assert that the previous index is within the range of frames
             if (prev_index >= static_cast<int>(frames.size())) {
                 VK_CRITICAL(
@@ -209,7 +209,7 @@ namespace Vakol::Model::Assets {
          * @param time The current time.
          * @return The scale factor.
          */
-        static float GetScaleFactor(const float prev_timestamp, const float next_timestamp, const float time) {
+        static double GetScaleFactor(const double prev_timestamp, const double next_timestamp, const double time) {
             // Assert that the current time is greater than or equal to the previous timestamp
             if (time < prev_timestamp) {
                 VK_CRITICAL(
@@ -248,7 +248,7 @@ namespace Vakol::Model::Assets {
          * @param time The time to interpolate the position at.
          * @return The interpolated transformation matrix for the position.
          */
-        [[nodiscard]] glm::mat4 interpolate_position(const float time) {
+        glm::mat4 interpolate_position(const double time) {
             const int p0 = UpdateFrameIndex(positions, time, prev_position_index, prev_time);
 
             prev_position_index = p0;
@@ -256,7 +256,7 @@ namespace Vakol::Model::Assets {
             const auto& [position, timestamp] = positions.at(p0);
             const auto& next = positions.at(p0 + 1);
 
-            const float scale_factor = GetScaleFactor(timestamp, next.timestamp, time);
+            const double scale_factor = GetScaleFactor(timestamp, next.timestamp, time);
             const auto& target_position = mix(position, next.position, scale_factor);
 
             return translate(glm::mat4(1.0f), target_position);
@@ -268,17 +268,18 @@ namespace Vakol::Model::Assets {
          * @param time The time to interpolate the rotation at.
          * @return The interpolated transformation matrix for the rotation.
          */
-        [[nodiscard]] glm::mat4 interpolate_rotation(const float time) {
+        glm::mat4 interpolate_rotation(const double time) {
             const int p0 = UpdateFrameIndex(rotations, time, prev_rotation_index, prev_time);
 
             prev_rotation_index = p0;
 
-            const auto& [rotation, timestamp] = rotations.at(p0);
-            const auto& next = rotations.at(p0 + 1);
+            const Vakol::Model::Assets::KeyRotation& first = rotations.at(p0);
+            const Vakol::Model::Assets::KeyRotation& next = rotations.at(p0 + 1);
 
-            const float scale_factor = GetScaleFactor(timestamp, next.timestamp, time);
+            const double scale_factor = GetScaleFactor(first.timestamp, next.timestamp, time);
 
-            const auto& target_rotation = normalize(slerp(rotation, next.rotation, scale_factor));
+            glm::quat target_rotation =
+                glm::normalize(glm::slerp(first.rotation, next.rotation, static_cast<float>(scale_factor)));
 
             return mat4_cast(target_rotation);
         }
@@ -289,7 +290,7 @@ namespace Vakol::Model::Assets {
          * @param time The time to interpolate the scaling at.
          * @return The interpolated transformation matrix for the scaling.
          */
-        [[nodiscard]] glm::mat4 interpolate_scaling(const float time) {
+        glm::mat4 interpolate_scaling(const double time) {
             const int p0 = UpdateFrameIndex(scales, time, prev_scale_index, prev_time);
 
             prev_scale_index = p0;
@@ -297,7 +298,7 @@ namespace Vakol::Model::Assets {
             const auto& [scale, timestamp] = scales.at(p0);
             const auto& next = scales.at(p0 + 1);
 
-            const float scale_factor = GetScaleFactor(timestamp, next.timestamp, time);
+            const double scale_factor = GetScaleFactor(timestamp, next.timestamp, time);
             const auto& target_scale = mix(scale, next.scale, scale_factor);
 
             return glm::scale(glm::mat4(1.0f), target_scale);

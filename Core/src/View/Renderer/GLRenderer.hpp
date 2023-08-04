@@ -44,13 +44,17 @@ namespace Vakol::View {
          * @brief Bind a FrameBuffer
          * @param index optional index of the FrameBuffer to bind, default is 0
          */
-        void BindFrameBuffer(const int index = 0) const { if (static_cast<int>(framebuffers.size()) > index) framebuffers.at(index)->Bind(); }
+        void BindFrameBuffer(const int index = 0) const {
+            if (static_cast<int>(framebuffers.size()) > index) framebuffers.at(index)->Bind();
+        }
 
         /**
          * @brief Unbind a FrameBuffer
          * @param index optional index of the FrameBuffer to unbind, default is 0
          */
-        void UnbindFrameBuffer(const int index = 0) const { if (static_cast<int>(framebuffers.size()) > index) framebuffers.at(index)->Unbind(); }
+        void UnbindFrameBuffer(const int index = 0) const {
+            if (static_cast<int>(framebuffers.size()) > index) framebuffers.at(index)->Unbind();
+        }
 
         /**
          * @brief Set subdata in a buffer
@@ -120,8 +124,7 @@ namespace Vakol::View {
         /**
          * @brief Toggle wireframe mode on and off
          */
-        void ToggleWireframe() override 
-        {
+        void ToggleWireframe() override {
             isWireframe = !isWireframe;
 
             if (isWireframe)
@@ -129,11 +132,10 @@ namespace Vakol::View {
             else
                 glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         }
-      
+
         void ToggleSkybox() override { isSkybox = !isSkybox; }
 
-        void SetWireframe(const bool wireframe) override 
-        {
+        void SetWireframe(const bool wireframe) override {
             isWireframe = wireframe;
 
             if (isWireframe)
@@ -142,8 +144,9 @@ namespace Vakol::View {
                 glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         }
 
-        void SetSkybox(const bool skybox) override  { isSkybox = skybox; }
-    private:
+        void SetSkybox(const bool showSkybox) override { isSkybox = showSkybox; }
+
+       private:
         std::vector<std::shared_ptr<Buffer>> buffers;            ///< Vector of shared pointers to Buffer objects
         std::vector<std::shared_ptr<FrameBuffer>> framebuffers;  ///< Vector of shared pointers to FrameBuffer objects
         std::shared_ptr<Skybox> skybox = std::make_shared<Skybox>();  ///< Shared pointer to a Skybox object

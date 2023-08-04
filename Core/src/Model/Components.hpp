@@ -325,10 +325,10 @@ namespace Vakol::Model::Components {
         /**
          * @brief Enum for the type of body.
          */
-        enum BODY_TYPE {
-            STATIC = rp3d::BodyType::STATIC,        ///< Represents a static body type.
-            KINEMATIC = rp3d::BodyType::KINEMATIC,  ///< Represents a kinematic body type.
-            DYNAMIC = rp3d::BodyType::DYNAMIC       ///< Represents a dynamic body type.
+        enum class BODY_TYPE {
+            STATIC,     ///< Represents a static body type.
+            KINEMATIC,  ///< Represents a kinematic body type.
+            DYNAMIC     ///< Represents a dynamic body type.
         };
 
         /**
@@ -346,10 +346,10 @@ namespace Vakol::Model::Components {
          * @brief Struct representing the data for a rigid body.
          */
         struct RigidData {
-            float mass = 3;                         ///< Mass of the rigid body.
+            double mass = 3;                        ///< Mass of the rigid body.
             bool grav = false;                      ///< Boolean indicating if gravity is enabled on the rigid body.
-            float LDamp = 0;                        ///< Linear dampening factor.
-            float ADamp = 1;                        ///< Angular dampening factor.
+            double LDamp = 0;                       ///< Linear dampening factor.
+            double ADamp = 1;                       ///< Angular dampening factor.
             rp3d::Vector3 AngularLock = {0, 1, 0};  ///< Angular lock axis factor.
             rp3d::Vector3 Orientation = {0, 0, 0};  ///< Orientation of the rigid body.
         };
@@ -389,7 +389,7 @@ namespace Vakol::Model::Components {
 
         std::shared_ptr<ScenePhysics> owningWorld = nullptr;  ///< Shared pointer to the world owning the rigid body.
         rp3d::RigidBody* RigidBodyPtr = nullptr;              ///< Pointer to the rigid body.
-        BODY_TYPE Type = DYNAMIC;                             ///< The type of the rigid body. Default is DYNAMIC.
+        BODY_TYPE Type = BODY_TYPE::DYNAMIC;                  ///< The type of the rigid body. Default is DYNAMIC.
         RigidData Data;                                       ///< The rigid data for the rigid body.
 
         rp3d::Transform prevTransform;  ///< The previous transform of the rigid body.
@@ -436,7 +436,7 @@ namespace Vakol::Model::Components {
             rp3d::Vector3 extents = {0.5f, 0.5f, 0.5f}; /**< Extent of vertices*/
             rp3d::Vector3 size = {1, 1, 1};             /**< Size of vertices*/
 
-            float radius = 0.5f * extents.length(); /**< Radius*/
+            double radius = 0.5 * extents.length(); /**< Radius*/
 
             /**
              * @brief Serializes the bounds of the collider.

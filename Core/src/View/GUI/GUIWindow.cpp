@@ -11,7 +11,6 @@ namespace Vakol::View {
     };
 
     void GUIWindow::ChangeFontDefault(std::string inputPath) const {
-        ImGuiIO& io = ImGui::GetIO();
         ImFontConfig font_cfg;
         font_cfg.OversampleH = 8;
         font_cfg.OversampleV = 8;
@@ -128,7 +127,7 @@ namespace Vakol::View {
 
         ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(inputRed, inputGreen, inputBlue, inputAlpha));
 
-        ImGui::Text(inputText.c_str());
+        ImGui::Text("%s", inputText.c_str());
 
         ImGui::PopStyleColor();
     }
@@ -154,10 +153,13 @@ namespace Vakol::View {
     void GUIWindow::AddButton(const std::string& buttonName, const bool centerX, const bool centerY, float width,
                               float height, const std::function<void()>& inputFunction) const {
         float alignment = centerX ? 0.5f : 0.0f;
+        float yAlignment = centerY ? 0.5f : 0.0f;
         float avail = ImGui::GetContentRegionAvail().x;
         float off = (avail - width) * alignment;
 
         if (off > 0.0f) ImGui::SetCursorPosX(ImGui::GetCursorPosX() + off);
+        if (yAlignment > 0.0f)
+            ImGui::SetCursorPosY(ImGui::GetCursorPosY() + (ImGui::GetContentRegionAvail().y - height) * yAlignment);
 
         if (ImGui::Button(buttonName.c_str(), {width, height})) inputFunction();  // Runs the given input function
     };

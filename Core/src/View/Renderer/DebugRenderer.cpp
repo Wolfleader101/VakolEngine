@@ -1,14 +1,12 @@
 #include "DebugRenderer.hpp"
 
+#include <glad/glad.h>
 #include <reactphysics3d/reactphysics3d.h>
 
 #include "Controller/AssetLoader/AssetLoader.hpp"
 
-#include <glad/glad.h>
-
 namespace Vakol::View {
-    DebugRenderer::DebugRenderer(rp3d::PhysicsWorld* WorldPtr)
-	{
+    DebugRenderer::DebugRenderer(rp3d::PhysicsWorld* WorldPtr) {
         m_World = WorldPtr;
         m_rp3dRenderer = &m_World->getDebugRenderer();
 
@@ -41,9 +39,8 @@ namespace Vakol::View {
         m_rp3dRenderer = nullptr;
     }
 
-    void DebugRenderer::GetDebugColor(const uint32_t& color, glm::vec3& outColor) const
-	{
-	    const uint32_t colorValue = color;
+    void DebugRenderer::GetDebugColor(const uint32_t& color, glm::vec3& outColor) const {
+        const uint32_t colorValue = color;
 
         outColor.x = (colorValue >> 16 & 0xFF) / 255.0f;
         outColor.y = (colorValue >> 8 & 0xFF) / 255.0f;
@@ -55,13 +52,13 @@ namespace Vakol::View {
         PhysicsDebugVertex tempVert{};
 
         for (auto& tri : m_rp3dRenderer->getTriangles()) {
-	        glm::vec3 xyz;
-	        // v1
+            glm::vec3 xyz;
+            // v1
             GetDebugColor(tri.color1, color);
 
-            xyz.x = tri.point1.x;
-            xyz.y = tri.point1.y;
-            xyz.z = tri.point1.z;
+            xyz.x = static_cast<float>(tri.point1.x);
+            xyz.y = static_cast<float>(tri.point1.y);
+            xyz.z = static_cast<float>(tri.point1.z);
 
             tempVert = {xyz, color};
 
@@ -70,9 +67,9 @@ namespace Vakol::View {
             // v2
             GetDebugColor(tri.color2, color);
 
-            xyz.x = tri.point2.x;
-            xyz.y = tri.point2.y;
-            xyz.z = tri.point2.z;
+            xyz.x = static_cast<float>(tri.point2.x);
+            xyz.y = static_cast<float>(tri.point2.y);
+            xyz.z = static_cast<float>(tri.point2.z);
 
             tempVert = {xyz, color};
 
@@ -81,9 +78,9 @@ namespace Vakol::View {
             // v3
             GetDebugColor(tri.color3, color);
 
-            xyz.x = tri.point3.x;
-            xyz.y = tri.point3.y;
-            xyz.z = tri.point3.z;
+            xyz.x = static_cast<float>(tri.point3.x);
+            xyz.y = static_cast<float>(tri.point3.y);
+            xyz.z = static_cast<float>(tri.point3.z);
 
             tempVert = {xyz, color};
 
@@ -91,19 +88,17 @@ namespace Vakol::View {
         }
     }
 
-    void DebugRenderer::GetLines()
-	{
+    void DebugRenderer::GetLines() {
         glm::vec3 color;
 
-        for (auto& line : m_rp3dRenderer->getLines()) 
-        {
-	        glm::vec3 xyz;
-	        // v1
+        for (auto& line : m_rp3dRenderer->getLines()) {
+            glm::vec3 xyz;
+            // v1
             GetDebugColor(line.color1, color);
 
-            xyz.x = line.point1.x;
-            xyz.y = line.point1.y;
-            xyz.z = line.point1.z;
+            xyz.x = static_cast<float>(line.point1.x);
+            xyz.y = static_cast<float>(line.point1.y);
+            xyz.z = static_cast<float>(line.point1.z);
 
             PhysicsDebugVertex tempVert = {xyz, color};
 
@@ -112,9 +107,9 @@ namespace Vakol::View {
             // v2
             GetDebugColor(line.color2, color);
 
-            xyz.x = line.point2.x;
-            xyz.y = line.point2.y;
-            xyz.z = line.point2.z;
+            xyz.x = static_cast<float>(line.point2.x);
+            xyz.y = static_cast<float>(line.point2.y);
+            xyz.z = static_cast<float>(line.point2.z);
 
             tempVert = {xyz, color};
 
@@ -129,20 +124,21 @@ namespace Vakol::View {
         GetLines();
     }
 
-    void DebugRenderer::Draw(const Controller::Camera& camera) const
-	{
+    void DebugRenderer::Draw() const {
         m_Shader->Bind();
 
         glBindVertexArray(m_VAO);
 
         glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
-        glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(m_DebugData.size() * sizeof(PhysicsDebugVertex)), m_DebugData.data(),GL_DYNAMIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(m_DebugData.size() * sizeof(PhysicsDebugVertex)),
+                     m_DebugData.data(), GL_DYNAMIC_DRAW);
 
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(PhysicsDebugVertex), nullptr);
 
         glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(PhysicsDebugVertex), reinterpret_cast<void*>(3 * sizeof(float)));
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(PhysicsDebugVertex),
+                              reinterpret_cast<void*>(3 * sizeof(float)));
 
         glDrawArrays(GL_LINES, 0, static_cast<GLsizei>(m_DebugData.size()));
 
@@ -151,4 +147,4 @@ namespace Vakol::View {
 
         m_Shader->Unbind();
     }
-}
+}  // namespace Vakol::View

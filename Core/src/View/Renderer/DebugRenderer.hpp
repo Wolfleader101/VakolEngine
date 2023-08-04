@@ -49,9 +49,8 @@ namespace Vakol::View {
 
         /**
          * @brief Draw the DebugRenderer
-         * @param camera the camera to be used for drawing
          */
-        void Draw(const Controller::Camera& camera) const;
+        void Draw() const;
 
        private:
         /**

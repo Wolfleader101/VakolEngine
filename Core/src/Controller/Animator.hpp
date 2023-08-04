@@ -1,11 +1,9 @@
 #pragma once
 
+#include <Model/Assets/Animation/Animation.hpp>
 #include <vector>
 
-#include <Model/Assets/Animation/Animation.hpp>
-
-namespace Vakol::Controller
-{
+namespace Vakol::Controller {
     /**
      * @brief Class representing an Animator.
      */
@@ -29,7 +27,7 @@ namespace Vakol::Controller
          * @param state The animation state.
          * @param delta_time The time delta for the update.
          */
-        void Update(const int state, const float delta_time) {
+        void Update(const int state, const double delta_time) {
             if (state > nAnimations()) return;
 
             m_animations.at(state).Update(delta_time);
@@ -40,7 +38,7 @@ namespace Vakol::Controller
          *
          * @param delta_time The time delta for the update.
          */
-        void Update(const float delta_time) {
+        void Update(const double delta_time) {
             for (int i = 0; i < nAnimations(); ++i) m_animations.at(i).Update(delta_time);
         }
 
@@ -73,4 +71,4 @@ namespace Vakol::Controller
          */
         std::vector<Model::Assets::Animation> m_animations;
     };
-}
+}  // namespace Vakol::Controller

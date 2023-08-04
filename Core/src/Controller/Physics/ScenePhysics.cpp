@@ -20,7 +20,7 @@ namespace Vakol::Controller::Physics {
 
     void ScenePhysics::Init() { System::Physics_Init(); };
 
-    void ScenePhysics::Update(const Time& time, const Camera& camera) {
+    void ScenePhysics::Update(const Time& time) {
         // Add the time difference in the accumulator
         m_accumulator += time.deltaTime;
 
@@ -35,14 +35,14 @@ namespace Vakol::Controller::Physics {
         }
 
         // Compute the time interpolation factor
-        float factor = m_accumulator / m_timestep;
+        double factor = m_accumulator / m_timestep;
 
         // call update on transforms
         System::Physics_UpdateTransforms(factor);
 
         if (m_DebugRenderer.IsEnabled()) {
             m_DebugRenderer.Update();
-            m_DebugRenderer.Draw(camera);
+            m_DebugRenderer.Draw();
         }
     }
 
@@ -71,7 +71,7 @@ namespace Vakol::Controller::Physics {
     }
 
     void ScenePhysics::MyCollisionCallback::onContact(const rp3d::CollisionCallback::CallbackData& callbackData) {
-        for (int i = 0; i < callbackData.getNbContactPairs(); i++) {
+        for (unsigned int i = 0; i < callbackData.getNbContactPairs(); i++) {
             // Get the contact pair
             const ContactPair& contactPair = callbackData.getContactPair(i);
 
@@ -80,8 +80,8 @@ namespace Vakol::Controller::Physics {
             rp3d::RigidBody* body2 = static_cast<rp3d::RigidBody*>(contactPair.getBody2());
 
             // Get the entities associated with the bodies
-            Components::RigidBody* rb1 = static_cast<Components::RigidBody*>(body1->getUserData());
-            Components::RigidBody* rb2 = static_cast<Components::RigidBody*>(body2->getUserData());
+            Model::Components::RigidBody* rb1 = static_cast<Model::Components::RigidBody*>(body1->getUserData());
+            Model::Components::RigidBody* rb2 = static_cast<Model::Components::RigidBody*>(body2->getUserData());
 
             switch (contactPair.getEventType()) {
                 case ContactPair::EventType::ContactStart:
@@ -91,6 +91,8 @@ namespace Vakol::Controller::Physics {
                 case ContactPair::EventType::ContactExit:
                     if (rb1 != nullptr) rb1->is_colliding = false;
                     if (rb2 != nullptr) rb2->is_colliding = false;
+                    break;
+                default:
                     break;
             }
         }

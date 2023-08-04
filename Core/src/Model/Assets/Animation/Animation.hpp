@@ -38,13 +38,12 @@ namespace Vakol::Model::Assets {
             }
         }
 
-
         /**
          * @brief Updates the animation state based on the delta time.
          *
          * @param delta_time The time elapsed since the last update.
          */
-        void Update(const float delta_time) {
+        void Update(const double delta_time) {
             current_time +=
                 ticks_per_second * delta_time;  // Update the current time based on the ticks per second and delta time
             current_time = fmod(current_time, duration);  // Wrap the current time within the duration of the animation
@@ -82,7 +81,7 @@ namespace Vakol::Model::Assets {
             }
         }
 
-         /**
+        /**
          * @brief Get the bone transforms.
          *
          * @return The vector of bone transforms.
@@ -101,47 +100,47 @@ namespace Vakol::Model::Assets {
          *
          * @return The duration in seconds.
          */
-        [[nodiscard]] auto duration_s() const -> float { return duration * 0.001f; }
+        double duration_s() const { return duration * 0.001; }
 
         /**
          * @brief Get the duration of the animation in milliseconds.
          *
          * @return The duration in milliseconds.
          */
-        [[nodiscard]] auto duration_ms() const -> float { return duration; }
+        double duration_ms() const { return duration; }
 
         /**
          * @brief Get the current time of the animation in milliseconds.
          *
          * @return The current time in milliseconds.
          */
-        [[nodiscard]] auto get_current_time_ms() const -> float { return current_time; }
+        double get_current_time_ms() const { return current_time; }
 
         /**
          * @brief Get the current time of the animation in seconds.
          *
          * @return The current time in seconds.
          */
-        [[nodiscard]] auto get_current_time_s() const -> float { return current_time * 0.001f; }
+        double get_current_time_s() const { return current_time * 0.001f; }
 
         /**
          * @brief Reset the animation to the beginning.
          */
-        auto reset_animation() -> void { current_time = 0.0f; }
+        void reset_animation() { current_time = 0.0f; }
 
         /**
          * @brief Get the number of animation nodes.
          *
          * @return The number of animation nodes.
          */
-        [[nodiscard]] auto numNodes() const -> int { return static_cast<int>(m_nodes.size()); }
+        int numNodes() const { return static_cast<int>(m_nodes.size()); }
 
         /**
          * @brief Get the number of bone transforms.
          *
          * @return The number of bone transforms.
          */
-        [[nodiscard]] auto numTransforms() const -> int { return static_cast<int>(m_transforms.size()); }
+        int numTransforms() const { return static_cast<int>(m_transforms.size()); }
 
        private:
         glm::mat4 global_inverse{};
@@ -150,8 +149,8 @@ namespace Vakol::Model::Assets {
 
         [[maybe_unused]] unsigned int bone_count = 0;
 
-        float current_time = 0.0f;
-        float duration = 0.0f;
-        float ticks_per_second = 0.0f;
+        double current_time = 0.0f;
+        double duration = 0.0f;
+        double ticks_per_second = 0.0f;
     };
 }  // namespace Vakol::Model::Assets

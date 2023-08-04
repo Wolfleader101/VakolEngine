@@ -46,8 +46,7 @@ namespace Vakol::Model {
         unsigned int GetID() const { return m_ID; };
 
        public:
-
-         /**
+        /**
          * @brief Function to set a boolean uniform in the shader.
          * @param name Name of the uniform.
          * @param value Boolean value to set.
@@ -76,7 +75,7 @@ namespace Vakol::Model {
         void SetVec2(const char* name, const glm::vec2& value) const;
         void SetVec2(const char* name, float x, float y) const;
 
-         /**
+        /**
          * @brief Function to set a vec3 uniform in the shader.
          * @param name Name of the uniform.
          * @param value glm::vec3 value to set.
@@ -108,6 +107,6 @@ namespace Vakol::Model {
         void SetMat4v(const char* name, int count, const void* data) const;
 
        private:
-        unsigned int m_ID = 0; ///< ID of the Shader.
+        unsigned int m_ID = 0;  ///< ID of the Shader.
     };
 }  // namespace Vakol::Model

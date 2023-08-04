@@ -2,8 +2,7 @@
 
 #include <glm/vec4.hpp>
 
-namespace Vakol::Model
-{
+namespace Vakol::Model {
     struct ATTACHMENT {
         /**
          * \struct COLOR_ATTACHMENT
@@ -188,7 +187,6 @@ namespace Vakol::Model
          * \brief Sets a texture attachment for the frame buffer.
          * \param attachment The type of attachment to set (e.g., GL_COLOR_ATTACHMENT_0).
          * \param target The texture target (e.g., GL_TEXTURE_2D).
-         * \param level The level of detail for mip-maps (set to 0 if unsure).
          * \param internalformat The internal format of the attachment.
          * \param width The width of the texture.
          * \param height The height of the texture.
@@ -196,9 +194,8 @@ namespace Vakol::Model
          * \param type The data type of the pixels (keep at GL_UNSIGNED_BYTE).
          * \param data Pointer to the image data in memory.
          */
-        void SetTextureAttachment(unsigned int attachment, unsigned int target, int level, int internalformat,
-                                  int width, int height, unsigned int format, unsigned int type,
-                                  const void* data = nullptr);
+        void SetTextureAttachment(unsigned int attachment, unsigned int target, int internalformat, int width,
+                                  int height, unsigned int format, unsigned int type, const void* data = nullptr);
 
         /**
          * \brief Sets a depth attachment for the frame buffer.
@@ -244,4 +241,4 @@ namespace Vakol::Model
 
         bool hasDepth = false;
     };
-}
+}  // namespace Vakol::Model

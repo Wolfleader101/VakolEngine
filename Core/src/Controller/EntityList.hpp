@@ -13,11 +13,6 @@ namespace Vakol::Model {
     class Entity;  // pre declared to prevent recursive include
 }
 
-using namespace Vakol::Model;
-
-template <typename T>
-using ComponentList = entt::view<T>;
-
 namespace Vakol::Controller {
 
     class System;
@@ -33,14 +28,14 @@ namespace Vakol::Controller {
         /**
          * @brief Construct a new Entity Manager object.
          */
-        EntityList() : m_Registry(), ActiveEntityList(){};
+        EntityList();
 
         /**
          * @brief Create an Entity object.
          *
          * @return Entity created.
          */
-        Entity CreateEntity();
+        Model::Entity CreateEntity();
 
         /**
          * @brief Create an Entity object.
@@ -48,7 +43,7 @@ namespace Vakol::Controller {
          * @param SuggestedHandle Handle to use for entity.
          * @return Entity created.
          */
-        Entity CreateEntity(uint32_t SuggestedHandle);
+        Model::Entity CreateEntity(uint32_t SuggestedHandle);
 
         /**
          * @brief Get an Entity object if it exists.
@@ -56,7 +51,7 @@ namespace Vakol::Controller {
          * @param Handle Handle to get.
          * @return Entity from list.
          */
-        Entity GetEntity(uint32_t Handle);
+        Model::Entity GetEntity(uint32_t Handle);
 
         /**
          * @brief Removes an entity if it exists.
@@ -83,21 +78,7 @@ namespace Vakol::Controller {
          *
          * @return std::vector<Entity>& Reference to the entity vector.
          */
-        std::vector<Entity>& GetEntityVec();
-
-        //-------------- THESE ARE ADDITIONS IN ICT397 ------------------
-
-        /**
-         * @brief Initialize the entity list.
-         */
-        void Init();
-
-        /**
-         * @brief Update the entity list.
-         *
-         * @param d_t The time delta for the update.
-         */
-        void Update(double d_t);
+        std::vector<Model::Entity>& GetEntityVec();
 
         /**
          * @brief Serialize the entity list to a file.
@@ -124,7 +105,7 @@ namespace Vakol::Controller {
         /**
          * @brief List of entities created and active.
          */
-        std::vector<Entity> ActiveEntityList;
+        std::vector<Model::Entity> ActiveEntityList;
 
         template <typename Archive, typename... Args>
         /**
@@ -142,7 +123,7 @@ namespace Vakol::Controller {
                 json(CEREAL_NVP(ActiveEntityList));
 
                 entt::snapshot snapshot(m_Registry);
-                snapshot.entities(json).component<Args...>(json);
+                snapshot.entities(json).template component<Args...>(json);
 
                 out << "\n}";  // doesn't close off?
 
@@ -174,7 +155,7 @@ namespace Vakol::Controller {
             }
         }
 
-        friend class Entity;  // friend to allow the API for entities to be clean.
+        friend class Model::Entity;  // friend to allow the API for entities to be clean.
         friend class System;
         friend class Scene;
     };

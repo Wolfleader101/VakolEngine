@@ -8,7 +8,11 @@
 #include <Model/Entity.hpp>
 #include <cereal/cereal.hpp>
 
+using namespace Vakol::Model;
+
 namespace Vakol::Controller {
+
+    EntityList::EntityList() : m_Registry(), ActiveEntityList(){};
 
     Entity EntityList::CreateEntity() {
         Entity newEntity = Entity(m_Registry.create(), this);
@@ -72,24 +76,21 @@ namespace Vakol::Controller {
 
     //----------------------- ICT397 additions
 
-    void EntityList::Init() {}
-
-    void EntityList::Update(double d_t) {
-        // use systems functions to update the entt::registry
-        d_t;
-    }
-
     void EntityList::Serialize(const std::string& file) const {
-        privateSerialize<cereal::JSONOutputArchive, Transform, Tag, GUID, Drawable, Components::Animator, Animation,
-                         RigidBody, Collider, Components::Terrain>(file);
+        privateSerialize<cereal::JSONOutputArchive, Model::Components::Transform, Model::Components::Tag,
+                         Model::Components::GUID, Model::Components::Drawable, Model::Components::Animator,
+                         Model::Components::Animation, Model::Components::RigidBody, Model::Components::Collider,
+                         Model::Components::Terrain>(file);
 
         /*privateSerialize<cereal::JSONOutputArchive, Transform, Tag, Script, GUID, Drawable, Components::Animator,
                          Animation>(file);*/
     }
 
     void EntityList::Deserialize(const std::string& file) {
-        privateDeserialize<cereal::JSONInputArchive, Transform, Tag, GUID, Drawable, Components::Animator, Animation,
-                           RigidBody, Collider, Components::Terrain>(file);
+        privateDeserialize<cereal::JSONInputArchive, Model::Components::Transform, Model::Components::Tag,
+                           Model::Components::GUID, Model::Components::Drawable, Model::Components::Animator,
+                           Model::Components::Animation, Model::Components::RigidBody, Model::Components::Collider,
+                           Model::Components::Terrain>(file);
 
         /*privateDeserialize<cereal::JSONInputArchive, Transform, Tag, Script, GUID, Drawable, Components::Animator,
                            Animation>(file);*/

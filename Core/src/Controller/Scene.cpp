@@ -11,41 +11,43 @@
 #include "System.hpp"
 
 namespace Vakol::Controller {
-    Scene::Scene(const std::string& name, LuaScript& script, const std::shared_ptr<ScenePhysics>& SP)
+    Scene::Scene(const std::string& name, LuaScript& script, const std::shared_ptr<Physics::ScenePhysics>& SP)
         : scenePhysics(SP), m_script(std::move(script)), m_name(name), m_cam(glm::vec3(0.0f, 0.0f, 2.0f)) {}
 
     const std::string& Scene::getName() const { return m_name; }
 
     void Scene::setName(const std::string& newName) { m_name = newName; }
 
-    Entity Scene::CreateEntity(const std::string& tag) {
+    Model::Entity Scene::CreateEntity(const std::string& tag) {
         auto ent = m_entityList.CreateEntity();
 
-        ent.GetComponent<Tag>().tag = tag;
+        ent.GetComponent<Model::Components::Tag>().tag = tag;
 
-        if (!ent.GetComponent<GUID>().id.isValid()) ent.GetComponent<GUID>().GenNewGUID();
+        if (!ent.GetComponent<Model::Components::GUID>().id.isValid())
+            ent.GetComponent<Model::Components::GUID>().GenNewGUID();
 
         return ent;
     }
 
-    void Scene::DestroyEntity(const Entity entity) { m_entityList.RemoveEntity(entity); }
+    void Scene::DestroyEntity(const Model::Entity entity) { m_entityList.RemoveEntity(entity); }
 
     void Scene::Update(const Time& time, const std::shared_ptr<View::Renderer>& renderer) {
-        scenePhysics->Update(time, m_cam);
+        scenePhysics->Update(time);
 
         System::Drawable_Update(time, renderer);
 
         m_cam.Update();
     }
 
-    std::shared_ptr<Entity> Scene::GetEntity(const std::string& tag) {
-        Entity ent;
+    std::shared_ptr<Model::Entity> Scene::GetEntity(const std::string& tag) {
+        Model::Entity ent;
 
-        m_entityList.m_Registry.view<Tag>().each([&](auto entity, auto& tagComponent) {
-            if (tagComponent.tag == tag) ent = m_entityList.GetEntity(static_cast<unsigned int>(entity));
-        });
+        m_entityList.m_Registry.view<Model::Components::Tag>().each(
+            [&](auto entity, Model::Components::Tag& tagComponent) {
+                if (tagComponent.tag == tag) ent = m_entityList.GetEntity(static_cast<unsigned int>(entity));
+            });
 
-        return std::make_shared<Entity>(ent);
+        return std::make_shared<Model::Entity>(ent);
     }
 
     namespace fs = std::filesystem;

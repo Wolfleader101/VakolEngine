@@ -7,7 +7,9 @@
 #include <Controller/Time.hpp>
 #include <View/Renderer/DebugRenderer.hpp>
 
-class System;
+namespace Vakol::Controller {
+    class System;
+}
 
 namespace Vakol::Controller::Physics {
     /**
@@ -32,9 +34,8 @@ namespace Vakol::Controller::Physics {
          * @brief Update the physics scene.
          *
          * @param time The time information for the update.
-         * @param camera The camera used for the update.
          */
-        void Update(const Vakol::Controller::Time& time, const Vakol::Controller::Camera& camera);
+        void Update(const Vakol::Controller::Time& time);
 
         /**
          * @brief Enable or disable physics debugging.
@@ -82,9 +83,9 @@ namespace Vakol::Controller::Physics {
         rp3d::PhysicsWorld* m_World;
         static MyCollisionCallback m_callback;
 
-        float m_timestep = 1.0f / 60.0f;
+        double m_timestep = 1.0f / 60.0f;
 
-        float m_accumulator = 0.0f;
+        double m_accumulator = 0.0f;
 
         /**
          * @brief Debug renderer for physics.
@@ -93,6 +94,6 @@ namespace Vakol::Controller::Physics {
         View::DebugRenderer m_DebugRenderer;
 
         friend class PhysicsPool;
-        friend class System;
+        friend class Controller::System;
     };
 }  // namespace Vakol::Controller::Physics

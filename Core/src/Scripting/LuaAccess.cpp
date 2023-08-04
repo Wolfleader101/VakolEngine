@@ -12,9 +12,8 @@
 #include "Model/Assets/Material.hpp"
 #include "Model/Components.hpp"
 #include "Model/Instance.hpp"
-#include "View/GUI/GUIWindow.hpp"
-
 #include "Scripting/ScriptEngine.hpp"
+#include "View/GUI/GUIWindow.hpp"
 
 std::vector<glm::mat4> create_mat4_vector(const int reserve) {
     std::vector<glm::mat4> vector;
@@ -25,6 +24,8 @@ std::vector<glm::mat4> create_mat4_vector(const int reserve) {
 }
 
 using namespace Vakol::Controller;
+using namespace Vakol::Model;
+using namespace Vakol::Model::Components;
 
 namespace Vakol {
 
@@ -464,7 +465,7 @@ namespace Vakol {
         entity_type.set_function("get_animation_duration", [](const Entity* ent, const int animation_state) {
             if (!ent->HasComponent<Components::Animation>()) {
                 VK_ERROR("Animation component is needed to get it's duration!");
-                return -1.0f;
+                return -1.0;
             }
 
             const auto& animation = ent->GetComponent<Components::Animation>();
@@ -580,13 +581,12 @@ namespace Vakol {
 
         scene_type.set("globals", sol::property([](Scene& self) { return self.GetScript().env; }));
 
-        //scene_type.set_function("create_entity", &Scene::CreateEntity);
+        // scene_type.set_function("create_entity", &Scene::CreateEntity);
 
         scene_type.set_function("create_entity", [&](Scene* scene, const std::string tag, const std::string& sname) {
             auto ent = scene->CreateEntity(tag);
 
-            if (!sname.empty()) 
-            {
+            if (!sname.empty()) {
                 LuaScript script = scriptEngine.CreateScript("scripts/" + sname);
 
                 scriptEngine.SetScriptVariable(script, "entity", ent);
@@ -594,7 +594,6 @@ namespace Vakol {
                 ent.AddComponent<LuaScript>(script);
             }
             return ent;
-
         });
 
         // scene_type.set_function("set_active", [](Scene* scene, const bool active) { scene->active = active; });
@@ -610,7 +609,7 @@ namespace Vakol {
 
             const auto& terrain = ent.GetComponent<Components::Terrain>();
 
-            // TODO remove this 
+            // TODO remove this
             //  System::BindScene(*scene);
 
             // System::Physics_AddTerrain(*terrain.terrain_ptr);
@@ -749,7 +748,5 @@ namespace Vakol {
         rp3dVec3["y"] = &rp3d::Vector3::y;
         rp3dVec3["z"] = &rp3d::Vector3::z;
     }
-
-    
 
 }  // namespace Vakol

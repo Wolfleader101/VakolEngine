@@ -2,7 +2,10 @@
 
 #include <reactphysics3d/reactphysics3d.h>
 
-class System;
+namespace Vakol::Controller {
+    class System;
+
+}
 
 namespace Vakol::Controller::Physics {
     class ScenePhysics;
@@ -34,6 +37,6 @@ namespace Vakol::Controller::Physics {
         static rp3d::PhysicsCommon m_Common;
 
         friend class ScenePhysics;
-        friend class System;
+        friend class Controller::System;
     };
 };  // namespace Vakol::Controller::Physics

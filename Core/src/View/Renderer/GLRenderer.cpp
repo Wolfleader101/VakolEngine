@@ -90,8 +90,9 @@ namespace Vakol::View {
 
     void GLRenderer::ClearBuffer(const unsigned int buffer_bit) const { glClear(buffer_bit); }
 
-    void GLRenderer::DrawAnimated(const Components::Transform& transform, const Components::Drawable& drawable,
-                                  const Assets::Animation& animation) const {
+    void GLRenderer::DrawAnimated(const Model::Components::Transform& transform,
+                                  const Model::Components::Drawable& drawable,
+                                  const Model::Assets::Animation& animation) const {
         const auto& model = drawable.model_ptr;
         if (model == nullptr) {
             VK_CRITICAL("Model {0} is null", drawable.name);
@@ -133,7 +134,8 @@ namespace Vakol::View {
         shader->Unbind();
     }
 
-    void GLRenderer::Draw(const Components::Transform& transform, const Components::Drawable& drawable) const {
+    void GLRenderer::Draw(const Model::Components::Transform& transform,
+                          const Model::Components::Drawable& drawable) const {
         const auto& model = drawable.model_ptr;
 
         if (model == nullptr) {
