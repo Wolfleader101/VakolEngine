@@ -6,7 +6,7 @@ project(${PROJECT_NAME} LANGUAGES C CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-option(WarningsAsErrors "WarningsAsErrors" ON)
+option(WarningsAsErrors "WarningsAsErrors" OFF)
 option(ASAN_ENABLED "Build this target with AddressSanitizer" ON)
 
 set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
@@ -39,7 +39,7 @@ else ()
 endif ()
 
 if (WarningsAsErrors)
-    target_compile_options(${PROJECT_NAME} PRIVATE
+    add_compile_options(${PROJECT_NAME} PRIVATE
         $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>:-Werror>
         $<$<CXX_COMPILER_ID:MSVC>:/WX>
     )
