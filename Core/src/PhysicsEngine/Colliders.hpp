@@ -98,6 +98,7 @@ namespace Vakol::Physics {
     bool SpherePlane(const Sphere& sphere, const Plane& plane);
 
     bool AABBAABB(const AABB& aabb1, const AABB& aabb2);
+    bool TriangleAABB(const Triangle& t, const AABB& a);
     bool AABBTriangle(const AABB& aabb, const Triangle& triangle) { return TriangleAABB(triangle, aabb); }
     bool AABBPlane(const AABB& aabb, const Plane& plane);
     bool AABBSphere(const AABB& aabb, const Sphere& sphere) { return SphereAABB(sphere, aabb); }
@@ -118,15 +119,26 @@ namespace Vakol::Physics {
 
     bool PlanePlane(const Plane& plane1, const Plane& plane2);
 
-    float Raycast(const Sphere& sphere, const Ray& ray);
-    float Raycast(const AABB& aabb, const Ray& ray);
-    float Raycast(const OBB& obb, const Ray& ray);
-    float Raycast(const Plane& plane, const Ray& ray);
+    struct RaycastResult {
+        Point point;
+        Vec3 normal;
+        float t;
+        bool hit;
+    };
+
+    void ResetRaycastResult(RaycastResult* outResult);
+
+    bool Raycast(const Sphere& sphere, const Ray& ray, RaycastResult* outResult = nullptr);
+    bool Raycast(const AABB& aabb, const Ray& ray, RaycastResult* outResult = nullptr);
+    bool Raycast(const OBB& obb, const Ray& ray, RaycastResult* outResult = nullptr);
+    bool Raycast(const Plane& plane, const Ray& ray, RaycastResult* outResult = nullptr);
+    bool Raycast(const Triangle& triangle, const Ray& ray, RaycastResult* outResult = nullptr);
 
     bool Linetest(const Sphere& sphere, const Line& line);
     bool Linetest(const AABB& aabb, const Line& line);
     bool Linetest(const OBB& obb, const Line& line);
     bool Linetest(const Plane& plane, const Line& line);
+    bool Linetest(const Triangle& triangle, const Line& line);
 
     bool PointInTriangle(const Point& p, const Triangle& t);
 
@@ -138,7 +150,6 @@ namespace Vakol::Physics {
     Interval GetInterval(const Triangle& triangle, const Vec3& axis);
 
     bool OverlapOnAxis(const AABB& aabb, const Triangle& triangle, const Vec3& axis);
-    bool TriangleAABB(const Triangle& t, const AABB& a);
 
     bool OverlapOnAxis(const OBB& obb, const Triangle& triangle, const Vec3& axis);
     bool TriangleOBB(const Triangle& t, const OBB& o);
@@ -155,9 +166,6 @@ namespace Vakol::Physics {
     Vec3 SatCrossEdge(const Vec3& a, const Vec3& b, const Vec3& c, const Vec3& d);
 
     Vec3 Barycentric(const Point& p, const Triangle& t);
-    float Raycast(const Triangle& triangle, const Ray& ray);
-
-    bool Linetest(const Triangle& triangle, const Line& line);
 
     //! warning while following the book, this uses raw pointers, ew yuck. can convert to smart pointers later
     struct BVHNode {

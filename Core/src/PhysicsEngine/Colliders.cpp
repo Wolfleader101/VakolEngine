@@ -354,30 +354,42 @@ namespace Vakol::Physics {
         */
     }
 
-    float Raycast(const Sphere& sphere, const Ray& ray) {
+    bool Raycast(const Sphere& sphere, const Ray& ray, RaycastResult* outResult) {
+        ResetRaycastResult(outResult);
         Vec3 e = sphere.pos - ray.origin;
         float rSq = sphere.radius * sphere.radius;
         float eSq = MagnitudeSq(e);
 
-        // ray dir is assumed to be normalized
+        // ray dir is assumed to be normalized, project it
         float a = Dot(e, ray.dir);
 
         float bSq = eSq - (a * a);
         float f = sqrt(rSq - bSq);
 
+        float t = a - f;
+
         // No collision has happened
         if (rSq - (eSq - (a * a)) < 0.0f) {
-            return -1;  // -1 is invalid.
+            return false;
         }
         // Ray starts inside the sphere
         else if (eSq < rSq) {
-            return a + f;  // Just reverse direction
+            t = a + f;  // Just reverse direction
         }
         // else Normal intersection
-        return a - f;
+        if (outResult != 0) {
+            outResult->t = t;
+            outResult->hit = true;
+            outResult->point = ray.origin + ray.dir * t;
+            outResult->normal = Normalized(outResult->point - sphere.pos);
+        }
+
+        return true;
     }
 
-    float Raycast(const AABB& aabb, const Ray& ray) {
+    bool Raycast(const AABB& aabb, const Ray& ray, RaycastResult* outResult) {
+        ResetRaycastResult(outResult);
+
         Vec3 min = GetMin(aabb);
         Vec3 max = GetMax(aabb);
 
@@ -394,27 +406,43 @@ namespace Vakol::Physics {
         //! final the smallest max
         float tmax = fminf(fminf(fmaxf(t1, t2), fmaxf(t3, t4)), fmaxf(t5, t6));
 
-        // If tmax is less than zero, the ray is intersecting AABB behind the origin of the ray, this should not be
-        // treated as an intersection
+        // If tmax is less than zero, the ray is intersecting AABB behind the origin of the ray
         if (tmax < 0.0f) {
-            return -1;
+            return false;
         }
 
         // If tmin is greater than tmax, the ray does not intersect AABB
         if (tmin > tmax) {
-            return -1;
+            return false;
         }
+
+        float t_result = tmin;
 
         // If tmin is less than zero, that means the ray intersects the AABB but its origin is
         // inside the AABB. This means tmax is the valid collision point:
         if (tmin < 0.0f) {
-            return tmax;
+            t_result = tmax;
         }
 
-        return tmin;
+        if (outResult != 0) {
+            outResult->t = t_result;
+            outResult->hit = true;
+            outResult->point = ray.origin + ray.dir * t_result;
+            Vec3 normals[] = {Vec3(-1.0f, 0.0f, 0.0f), Vec3(1.0f, 0.0f, 0.0f),  Vec3(0.0f, -1.0f, 0.0f),
+                              Vec3(0.0f, 1.0f, 0.0f),  Vec3(0.0f, 0.0f, -1.0f), Vec3(0.0f, 0.0f, 1.0f)};
+            float t[] = {t1, t2, t3, t4, t5, t6};
+            for (int i = 0; i < 6; ++i) {
+                if (t_result == t[i]) {
+                    outResult->normal = normals[i];
+                }
+            }
+        }
+        return true;
     }
 
-    float Raycast(const OBB& obb, const Ray& ray) {
+    bool Raycast(const OBB& obb, const Ray& ray, RaycastResult* outResult) {
+        ResetRaycastResult(outResult);
+
         // X, Y and Z axis of OBB
         Vec3 X = obb.orientation[0];
         Vec3 Y = obb.orientation[1];
@@ -434,7 +462,7 @@ namespace Vakol::Physics {
         for (int i = 0; i < 3; ++i) {
             if (f[i] == 0.0f) {
                 if (-e[i] - obb.size[i] > 0 || -e[i] + obb.size[i] < 0) {
-                    return -1;
+                    return false;
                 }
                 f[i] = 0.00001f;  //! Avoid div by 0
             }
@@ -448,41 +476,90 @@ namespace Vakol::Physics {
         //! final the smallest max
         float tmax = fminf(fminf(fmaxf(t[0], t[1]), fmaxf(t[2], t[3])), fmaxf(t[4], t[5]));
 
-        // If tmax is less than zero, the ray is intersecting AABB behind the origin of the ray, this should not be
-        // treated as an intersection
+        // If tmax is less than zero, the ray is intersecting AABB behind the origin of the ray
         if (tmax < 0) {
-            return -1.0f;
+            return false;
         }
 
         // If tmin is greater than tmax, the ray does not intersect AABB
         if (tmin > tmax) {
-            return -1.0f;
+            return false;
         }
 
+        float t_result = tmin;
         // If tmin is less than zero, that means the ray intersects the AABB but its origin is
         // inside the AABB. This means tmax is the valid collision point:
         if (tmin < 0.0f) {
-            return tmax;
+            t_result = tmax;
         }
-        return tmin;
+
+        if (outResult != 0) {
+            outResult->hit = true;
+            outResult->t = t_result;
+            outResult->point = ray.origin + ray.dir * t_result;
+            Vec3 normals[] = {X, X * -1.0f, Y, Y * -1.0f, Z, Z * -1.0f};
+            for (int i = 0; i < 6; ++i) {
+                if (t_result == t[i]) {
+                    outResult->normal = Normalized(normals[i]);
+                }
+            }
+        }
+        return true;
     }
 
-    float Raycast(const Plane& plane, const Ray& ray) {
+    bool Raycast(const Plane& plane, const Ray& ray, RaycastResult* outResult) {
+        ResetRaycastResult(outResult);
+
         float nd = Dot(ray.dir, plane.normal);
         float pn = Dot(ray.origin, plane.normal);
 
         // ff nd is positive or 0, the ray and plane normals point in the same direction
         if (nd >= 0.0f) {
-            return -1;
+            return false;
         }
 
         // if t is negative, the ray hits the plane behind its origin
         float t = (plane.dist - pn) / nd;
 
         if (t >= 0.0f) {
-            return t;
+            if (outResult != nullptr) {
+                outResult->t = t;
+                outResult->hit = true;
+                outResult->point = ray.origin + ray.dir * t;
+                outResult->normal = Normalized(plane.normal);
+            }
+            return true;
         }
-        return -1;
+        return false;
+    }
+
+    bool Raycast(const Triangle& triangle, const Ray& ray, RaycastResult* outResult) {
+        ResetRaycastResult(outResult);
+
+        Plane plane = FromTriangle(triangle);
+
+        RaycastResult planeRes;
+        if (!Raycast(plane, ray, &planeRes)) return false;
+
+        float t = planeRes.t;
+
+        // find where it hit
+        Point result = ray.origin + ray.dir * t;
+
+        // find barbycentric coordinates
+        Vec3 barycentric = Barycentric(result, triangle);
+        if (barycentric.x >= 0.0f && barycentric.x <= 1.0f && barycentric.y >= 0.0f && barycentric.y <= 1.0f &&
+            barycentric.z >= 0.0f && barycentric.z <= 1.0f) {
+            if (outResult != 0) {
+                outResult->t = t;
+                outResult->hit = true;
+                outResult->point = result;
+                outResult->normal = plane.normal;
+            }
+            return true;
+        }
+
+        return false;
     }
 
     bool Linetest(const Sphere& sphere, const Line& line) {
@@ -500,7 +577,10 @@ namespace Vakol::Physics {
         Ray ray;
         ray.origin = line.start;
         ray.dir = Normalized(line.end - line.start);
-        float t = Raycast(aabb, ray);
+        RaycastResult res;
+        if (!Raycast(aabb, ray, &res)) return false;
+
+        float t = res.t;
 
         // check that the raycast is less then the length of the line squared
         return t >= 0 && t * t <= LengthSq(line);
@@ -511,7 +591,10 @@ namespace Vakol::Physics {
         Ray ray;
         ray.origin = line.start;
         ray.dir = Normalized(line.end - line.start);
-        float t = Raycast(obb, ray);
+        RaycastResult res;
+        if (!Raycast(obb, ray, &res)) return false;
+
+        float t = res.t;
 
         // check that the raycast is less then the length of the line squared
         return t >= 0 && t * t <= LengthSq(line);
@@ -527,6 +610,20 @@ namespace Vakol::Physics {
 
         float t = (plane.dist - nA) / nAB;
         return t >= 0.0f && t <= 1.0f;
+    }
+
+    bool Linetest(const Triangle& triangle, const Line& line) {
+        Ray ray;
+        ray.origin = line.start;
+        ray.dir = Normalized(line.end - line.start);
+
+        RaycastResult res;
+        if (!Raycast(triangle, ray, &res)) return false;
+
+        float t = res.t;
+
+        // check that the raycast is within the limits of the line
+        return t >= 0 && t * t <= LengthSq(line);
     }
 
     bool PointInTriangle(const Point& p, const Triangle& t) {
@@ -796,39 +893,6 @@ namespace Vakol::Physics {
         return Vec3(a, b, c);
     }
 
-    float Raycast(const Triangle& triangle, const Ray& ray) {
-        Plane plane = FromTriangle(triangle);
-        float t = Raycast(plane, ray);
-
-        // if it does not hit the plane return
-        if (t < 0.0f) {
-            return t;
-        }
-
-        // find where it hit
-        Point result = ray.origin + ray.dir * t;
-
-        // find barbycentric coordinates
-        Vec3 barycentric = Barycentric(result, triangle);
-        if (barycentric.x >= 0.0f && barycentric.x <= 1.0f && barycentric.y >= 0.0f && barycentric.y <= 1.0f &&
-            barycentric.z >= 0.0f && barycentric.z <= 1.0f) {
-            return t;
-        }
-
-        return -1;
-    }
-
-    bool Linetest(const Triangle& triangle, const Line& line) {
-        Ray ray;
-        ray.origin = line.start;
-        ray.dir = Normalized(line.end - line.start);
-
-        float t = Raycast(triangle, ray);
-
-        // check that the raycast is within the limits of the line
-        return t >= 0 && t * t <= LengthSq(line);
-    }
-
     void AccelerateMesh(Mesh& mesh) {
         // assume a BVH has already been created
         if (mesh.accelerator != nullptr) {
@@ -942,8 +1006,10 @@ namespace Vakol::Physics {
     float MeshRay(const Mesh& mesh, const Ray& ray) {
         if (mesh.accelerator == nullptr) {
             for (int i = 0; i < mesh.numTriangles; i++) {
-                float res = Raycast(mesh.triangles[i], ray);
-                if (res >= 0.0f) return res;
+                RaycastResult res;
+                Raycast(mesh.triangles[i], ray, &res);
+                float t = res.t;
+                if (t >= 0.0f) return t;
             }
             return -1.0f;
         }
@@ -959,9 +1025,11 @@ namespace Vakol::Physics {
             if (it->numTriangles >= 0) {
                 for (int i = 0; i < it->numTriangles; ++i) {
                     // Do a raycast against the triangle
-                    float r = Raycast(mesh.triangles[it->triangles[i]], ray);
-                    if (r >= 0) {
-                        return r;
+                    RaycastResult res;
+                    Raycast(mesh.triangles[it->triangles[i]], ray, &res);
+                    float t = res.t;
+                    if (t >= 0.0f) {
+                        return t;
                     }
                 }
             }
@@ -969,7 +1037,9 @@ namespace Vakol::Physics {
             // if its a parent node
             if (it->children != nullptr) {
                 for (int i = 8 - 1; i >= 0; --i) {
-                    if (Raycast(it->bounds, ray) >= 0.0f) {
+                    RaycastResult res;
+                    Raycast(it->bounds, ray, &res);
+                    if (res.t >= 0.0f) {
                         nodesToCheck.push_front(&it->children[i]);
                     }
                 }
@@ -1599,8 +1669,7 @@ namespace Vakol::Physics {
     }
 
     Model* Raycast(OctreeNode* node, const Ray& ray) {
-        float t = Raycast(node->bounds, ray);
-        if (t < 0) return nullptr;
+        if (!Raycast(node->bounds, ray)) return nullptr;
 
         if (node->children == nullptr) {
             return FindClosest(node->models, ray);
@@ -1821,5 +1890,14 @@ namespace Vakol::Physics {
             }
         }
         return result;
+    }
+
+    void ResetRaycastResult(RaycastResult* outResult) {
+        if (outResult != nullptr) {
+            outResult->t = -1;
+            outResult->hit = false;
+            outResult->normal = Vec3(0, 0, 1);
+            outResult->point = Vec3(0, 0, 0);
+        }
     }
 }  // namespace Vakol::Physics

@@ -1,10 +1,9 @@
 #pragma once
 
+#include <Controller/Camera.hpp>
 #include <Controller/Time.hpp>
 #include <View/Window/Window.hpp>
 #include <memory>
-
-#include "Controller/Camera.hpp"
 
 namespace Vakol::Model::Components {
     struct Drawable;
@@ -129,7 +128,7 @@ namespace Vakol::View {
 
         virtual void SetWireframe(const bool wireframe) = 0;
         virtual void SetSkybox(const bool skybox) = 0;
-      
+
        protected:
         bool isWireframe = false;  ///< Boolean flag indicating whether wireframe mode is on
         bool isSkybox = true;      ///< Boolean flag indicating whether skybox is on

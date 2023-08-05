@@ -15,7 +15,7 @@ namespace Vakol::Controller {
 
     Camera::Camera(const Math::Vec3& position) : forward(WORLD_FORWARD), up(WORLD_UP) { this->position = position; }
 
-    Physics::Frustum Camera::GetFrustum() {
+    Vakol::Physics::Frustum Camera::GetFrustum() {
         Physics::Frustum result;
         Math::Mat4 vp = this->VIEW * this->PROJECTION;
 

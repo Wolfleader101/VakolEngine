@@ -22,7 +22,7 @@ namespace Vakol::Controller {
          */
         explicit Camera(const Math::Vec3& position = Math::Vec3(0.0f, 0.0f, 5.0f));
 
-        Physics::Frustum GetFrustum();
+        Vakol::Physics::Frustum GetFrustum();
 
         /**
          * @brief Get the transformation matrix of the camera based on the specified type.
