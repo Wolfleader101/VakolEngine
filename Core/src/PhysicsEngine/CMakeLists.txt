@@ -1,6 +1,10 @@
 SET(PHYSICS_ENGINE
 src/PhysicsEngine/Colliders.hpp
 src/PhysicsEngine/Colliders.cpp
+src/PhysicsEngine/Rigidbody.hpp
+src/PhysicsEngine/Rigidbody.cpp
 src/PhysicsEngine/PhysicsEngine.hpp
 src/PhysicsEngine/PhysicsEngine.cpp
+src/PhysicsEngine/DrawPrimitives.hpp
+src/PhysicsEngine/DrawPrimitives.cpp
 PARENT_SCOPE)

@@ -58,11 +58,11 @@ namespace Vakol::Controller {
         lua->GetState()["scene"] = this;
         lua->RunFunction("update");
 
-        scenePhysics->Update(time, cam);
+        // scenePhysics->Update(time, cam);
 
         System::Script_Update(lua, entityList, this);
 
-        System::Drawable_Update(time, renderer);
+        // System::Drawable_Update(time, renderer);
 
         cam.Update();
     }
@@ -130,7 +130,6 @@ namespace Vakol::Controller {
             json(globals);
 
             ConvertMapToSol(lua, globals, sceneGlobals);
-
         }
 
         entityList.Deserialize(folder + "/EntityList.json");

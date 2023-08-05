@@ -386,9 +386,9 @@ namespace Vakol::Model::Components {
          * @brief Enum for the type of body.
          */
         enum BODY_TYPE {
-            STATIC = rp3d::BodyType::STATIC,        ///< Represents a static body type.
-            KINEMATIC = rp3d::BodyType::KINEMATIC,  ///< Represents a kinematic body type.
-            DYNAMIC = rp3d::BodyType::DYNAMIC       ///< Represents a dynamic body type.
+            STATIC,     ///< Represents a static body type.
+            KINEMATIC,  ///< Represents a kinematic body type.
+            DYNAMIC     ///< Represents a dynamic body type.
         };
 
         /**

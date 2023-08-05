@@ -10,6 +10,51 @@
 
 #include "Logger.hpp"
 
+int numParticles = 0;
+std::vector<Vakol::Physics::Particle> particles(0);
+
+float Random(float min, float max) {
+    if (max < min) {
+        float t = min;
+        min = max;
+        max = t;
+    }
+
+    float random = ((float)rand()) / (float)RAND_MAX;
+
+    float range = max - min;
+    return (random * range) + min;
+}
+
+Vakol::Math::Vec3 Random(Vakol::Math::Vec3 min, Vakol::Math::Vec3 max) {
+    Vakol::Math::Vec3 result;
+    result.x = Random(min.x, max.x);
+    result.y = Random(min.y, max.y);
+    result.z = Random(min.z, max.z);
+    return result;
+}
+
+constexpr float DEG2RAD(float degree) { return degree * 3.14159265358979323846f / 180.0f; }
+
+Vakol::Math::Mat3 XRotation3x3(float angle) {
+    angle = DEG2RAD(angle);
+    return Vakol::Math::Mat3(1.0f, 0.0f, 0.0f, 0.0f, cosf(angle), sinf(angle), 0.0f, -sinf(angle), cosf(angle));
+}
+
+Vakol::Math::Mat3 YRotation3x3(float angle) {
+    angle = DEG2RAD(angle);
+    return Vakol::Math::Mat3(cosf(angle), 0.0f, -sinf(angle), 0.0f, 1.0f, 0.0f, sinf(angle), 0.0f, cosf(angle));
+}
+
+Vakol::Math::Mat3 ZRotation3x3(float angle) {
+    angle = DEG2RAD(angle);
+    return Vakol::Math::Mat3(cosf(angle), sinf(angle), 0.0f, -sinf(angle), cosf(angle), 0.0f, 0.0f, 0.0f, 1.0f);
+}
+
+Vakol::Math::Mat3 Rotation3x3(float pitch, float yaw, float roll) {
+    return ZRotation3x3(roll) * XRotation3x3(pitch) * YRotation3x3(yaw);
+}
+
 namespace Vakol::Controller {
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
@@ -53,6 +98,48 @@ namespace Vakol::Controller {
         const sol::function lua_main = lua->GetState()["main"];
 
         m_running = true;
+
+        // TODO remove later
+        numParticles = 50;
+        particles.reserve(numParticles);
+
+        m_physicsEngine.ClearRigidbodys();
+        m_physicsEngine.ClearConstraints();
+
+        Vakol::Physics::OBB ground;
+        ground.size = Math::Vec3(10.0f, 0.15f, 10.0f);
+
+        Vakol::Physics::OBB obb1;
+        obb1.pos = Math::Vec3(0.0f, 1.86f, -1.92f);
+        obb1.orientation = Rotation3x3(30.716f, 0.0f, 0.0f);
+        obb1.size = Math::Vec3(2.0f, 0.15f, 2.0f);
+
+        Vakol::Physics::OBB obb2;
+        obb2.pos = Math::Vec3(-1.0f, 3.6f, 1.2f);
+        obb2.orientation = Rotation3x3(-33.964f, -24.233f, 9.128f);
+        obb2.size = Math::Vec3(2.0f, 0.15f, 2.0f);
+
+        Vakol::Physics::OBB obb3;
+        obb3.pos = Math::Vec3(0.0f, 3.93f, -2.27f);
+        obb3.orientation = Rotation3x3(24.702f, 0.0f, 0.0f);
+        obb3.size = Math::Vec3(2.0f, 0.15f, 0.7817011f);
+
+        m_physicsEngine.AddConstraint(ground);
+        m_physicsEngine.AddConstraint(obb1);
+        m_physicsEngine.AddConstraint(obb2);
+        m_physicsEngine.AddConstraint(obb3);
+
+        Math::Vec3 spawnPos = Math::Vec3(-0.5f, 6.5f, -1.01f);
+        Math::Vec3 spawnSize = Math::Vec3(3.8505f, 2, 4.034834f);
+        Math::Vec3 spawnMin = spawnPos - spawnSize;
+        Math::Vec3 spawnMax = spawnPos + spawnSize;
+
+        for (int i = 0; i < numParticles; ++i) {
+            particles.push_back(Vakol::Physics::Particle());
+            particles[i].SetPosition(Random(spawnMin, spawnMax));
+            particles[i].SetBounce(Random(0, 1));
+            m_physicsEngine.AddRigidbody(&particles[i]);
+        }
     }
 
     void Application::RegisterLua() {
@@ -127,7 +214,16 @@ namespace Vakol::Controller {
 
             m_renderer->Update();
 
-            //! update scenes lua
+            m_physicsEngine.Update(static_cast<float>(m_time.deltaTime));
+
+            Vakol::Physics::FixedFunctionOrigin();
+
+            float val[] = {0.0f, 1.0f, 0.0f, 0.0f};
+            glLightfv(GL_LIGHT0, GL_POSITION, val);
+
+            m_physicsEngine.Render();
+
+            // //! update scenes lua
             for (auto& scene : scenes) {
                 if (!scene.active) continue;
 

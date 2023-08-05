@@ -14,6 +14,7 @@
 #include <Controller/LuaState.hpp>
 #include <Model/Entity.hpp>
 #include <Model/GameConfig.hpp>
+#include <PhysicsEngine/PhysicsEngine.hpp>
 
 #include "Input.hpp"
 #include "Scene.hpp"
@@ -114,7 +115,7 @@ namespace Vakol::Controller {
          */
         void RegisterLua();
 
-    private:
+       private:
         /**
          * @brief
          *
@@ -199,7 +200,6 @@ namespace Vakol::Controller {
          */
         std::shared_ptr<LuaState> lua;
 
-
         /**
          * @brief holds the scenes
          */
@@ -220,5 +220,6 @@ namespace Vakol::Controller {
          */
         Input m_input;
 
+        Vakol::Physics::PhysicsEngine m_physicsEngine;
     };
-}
+}  // namespace Vakol::Controller
