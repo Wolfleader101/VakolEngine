@@ -30,7 +30,7 @@ namespace Vakol::Controller {
         void Update(const int state, const double delta_time) {
             if (state > nAnimations()) return;
 
-            m_animations.at(state).Update(delta_time);
+            m_animations.at(static_cast<size_t>(state)).Update(delta_time);
         }
 
         /**
@@ -39,7 +39,7 @@ namespace Vakol::Controller {
          * @param delta_time The time delta for the update.
          */
         void Update(const double delta_time) {
-            for (int i = 0; i < nAnimations(); ++i) m_animations.at(i).Update(delta_time);
+            for (size_t i = 0; i < nAnimations(); ++i) m_animations.at(i).Update(delta_time);
         }
 
         /**
@@ -47,7 +47,7 @@ namespace Vakol::Controller {
          *
          * @return int The number of animations.
          */
-        [[nodiscard]] int nAnimations() const { return static_cast<int>(m_animations.size()); }
+        int nAnimations() const { return static_cast<int>(m_animations.size()); }
 
         /**
          * @brief Get a constant reference to a specific animation.

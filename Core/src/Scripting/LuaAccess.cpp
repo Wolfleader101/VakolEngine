@@ -15,7 +15,7 @@
 #include "Scripting/ScriptEngine.hpp"
 #include "View/GUI/GUIWindow.hpp"
 
-std::vector<glm::mat4> create_mat4_vector(const int reserve) {
+std::vector<glm::mat4> create_mat4_vector(const size_t reserve) {
     std::vector<glm::mat4> vector;
 
     vector.reserve(reserve);
@@ -555,8 +555,8 @@ namespace Vakol {
         auto fsm_type = lua.new_usertype<FSM>("FSM");
         fsm_type.set_function("get_state", &FSM::GetState);
         fsm_type.set_function("change_state", &FSM::ChangeState);
-        fsm_type.set_function("add_state", [](FSM& self, std::string& stateName, sol::protected_function& callback) {
-            return self.AddState(stateName, callback);
+        fsm_type.set_function("add_state", [](FSM* self, std::string stateName, sol::function callback) {
+            self->AddState(stateName, callback);
         });
         fsm_type.set_function("update", &FSM::Update);
     }

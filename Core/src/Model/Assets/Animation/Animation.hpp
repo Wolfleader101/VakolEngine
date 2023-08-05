@@ -26,7 +26,7 @@ namespace Vakol::Model::Assets {
          * @param tps The ticks per second of the animation.
          */
         Animation(const glm::mat4& root_inverse, std::vector<AnimationNode>&& nodes, const unsigned int bone_count,
-                  const float duration, const float tps)
+                  const double duration, const double tps)
             : global_inverse(root_inverse),
               m_transforms(MAX_BONE_COUNT, glm::mat4(1.0f)),
               m_nodes(std::move(nodes)),

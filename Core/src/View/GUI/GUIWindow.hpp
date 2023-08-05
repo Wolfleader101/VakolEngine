@@ -72,8 +72,8 @@ namespace Vakol::View {
          * @brief Add a text string to the UI Window
          *
          * @param inputText The text to be set in the UI
-         * @param centerX
-         * @param centerY
+         * @param centerX should center on X axis
+         * @param centerY should center on Y axis
          * @param fontSize The size of the font
          * @param inputRed The red value of the text
          * @param inputGreen The green value of the text
@@ -83,14 +83,8 @@ namespace Vakol::View {
         void AddText(const std::string& inputText, const bool centerX, const bool centerY, const float fontSize,
                      const float inputRed, const float inputGreen, const float inputBlue, const float inputAlpha) const;
 
-        /**
-         * \brief Adds an image to the UI Window
-         * \param id
-         * \param imageSize
-         * \param centerX
-         * \param centerY
-         */
         void AddImage(unsigned int id, const ImVec2& imageSize, bool centerX, bool centerY) const;
+
         /**
          * @brief Adds a button to a given window
          *
