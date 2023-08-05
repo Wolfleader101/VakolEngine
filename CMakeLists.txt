@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 option(WarningsAsErrors "WarningsAsErrors" OFF)
-option(ASAN_ENABLED "Build this target with AddressSanitizer" OFF)
+option(ASAN_ENABLED "Build this target with AddressSanitizer" ON)
 
 set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
 set(CMAKE_DISABLE_SOURCE_CHANGES ON)
