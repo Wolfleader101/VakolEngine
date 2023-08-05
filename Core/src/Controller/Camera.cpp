@@ -2,6 +2,8 @@
 
 #include <GLFW/glfw3.h>
 
+#include <PhysicsEngine/Colliders.hpp>
+
 // TODO remove this
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>

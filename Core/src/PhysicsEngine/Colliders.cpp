@@ -863,34 +863,27 @@ namespace Vakol::Physics {
     }
 
     Vec3 Barycentric(const Point& p, const Triangle& t) {
-        // test point to each triangle point
-        Vec3 ap = p - t.a;
-        Vec3 bp = p - t.b;
-        Vec3 cp = p - t.c;
+        Vec3 v0 = t.b - t.a;
+        Vec3 v1 = t.c - t.a;
+        Vec3 v2 = p - t.a;
 
-        // edges of triangle
-        Vec3 ab = t.b - t.a;
-        Vec3 ac = t.c - t.a;
-        Vec3 bc = t.c - t.b;
-        Vec3 cb = t.b - t.c;
-        Vec3 ca = t.a - t.c;
+        float d00 = Dot(v0, v0);
+        float d01 = Dot(v0, v1);
+        float d11 = Dot(v1, v1);
+        float d20 = Dot(v2, v0);
+        float d21 = Dot(v2, v1);
+        float denom = d00 * d11 - d01 * d01;
 
-        // perpendicular to AB
-        Vec3 v = Perpendicular(ab, ac);
-        // perpendicular function looks like: ab - Project(ab, cb);
+        if (denom == 0.0f) {
+            return Vec3();
+        }
 
-        // is 0 if the projected point is on line AB. value is 1 if the projected point is at C
-        float a = 1.0f - (Dot(v, ap) / Dot(v, ab));
+        Vec3 result;
+        result.y = (d11 * d20 - d01 * d21) / denom;
+        result.z = (d00 * d21 - d01 * d20) / denom;
+        result.x = 1.0f - result.y - result.z;
 
-        // perpenndicular to to BC
-        v = Perpendicular(bc, ac);
-        float b = 1.0f - (Dot(v, bp) / Dot(v, bc));
-
-        // perpendicular to CA
-        v = Perpendicular(ca, ab);
-        float c = 1.0f - (Dot(v, cp) / Dot(v, ca));
-
-        return Vec3(a, b, c);
+        return result;
     }
 
     void AccelerateMesh(Mesh& mesh) {
@@ -1464,7 +1457,7 @@ namespace Vakol::Physics {
         octree = new OctreeNode();
         octree->bounds = FromMinMax(min, max);
         octree->children = nullptr;
-        for (int i = 0, size = objects.size(); i < size; ++i) {
+        for (size_t i = 0; i < objects.size(); ++i) {
             octree->models.push_back(objects[i]);
         }
         SplitTree(octree, 5);
@@ -1485,21 +1478,22 @@ namespace Vakol::Physics {
         objects.erase(std::remove(objects.begin(), objects.end(), model), objects.end());
     }
 
-    void Scene::UpdateModel(Model* model) {}
+    // void Scene::UpdateModel(Model* model) {}
 
     std::vector<Model*> Scene::FindChildren(const Model* model) {
         std::vector<Model*> res;
-        for (int i = 0, size = objects.size(); i < size; ++i) {
+        for (size_t i = 0, size = objects.size(); i < size; ++i) {
             if (objects[i] == nullptr || objects[i] == model) {
                 continue;
             }
+
             Model* iterator = objects[i]->parent;
             if (iterator != nullptr) {
                 if (iterator == model) {
                     res.push_back(objects[i]);
                     continue;
                 }
-                iterator = iterator->parent;
+                // iterator = iterator->parent;
             }
         }
 
@@ -1514,7 +1508,7 @@ namespace Vakol::Physics {
         Model* result = nullptr;
         float result_t = -1.0f;
 
-        for (int i = 0, size = objects.size(); i < size; ++i) {
+        for (size_t i = 0; i < objects.size(); ++i) {
             float t = ModelRay(*objects[i], ray);
 
             // on first collision set result
@@ -1538,7 +1532,7 @@ namespace Vakol::Physics {
         }
 
         std::vector<Model*> result;
-        for (int i = 0, size = objects.size(); i < size; ++i) {
+        for (size_t i = 0, size = objects.size(); i < size; ++i) {
             // alows for containment and intersection check
             OBB bounds = GetOBB(*objects[i]);
 
@@ -1555,7 +1549,7 @@ namespace Vakol::Physics {
             return Physics::Query(octree, aabb);
         }
         std::vector<Model*> result;
-        for (int i = 0, size = objects.size(); i < size; ++i) {
+        for (size_t i = 0, size = objects.size(); i < size; ++i) {
             // alows for containment and intersection check
             OBB bounds = GetOBB(*objects[i]);
 
@@ -1593,8 +1587,8 @@ namespace Vakol::Physics {
         // if it has children and models re assignment models
         if (node->children != nullptr && node->models.size() > 0) {
             // for each child
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0, size = node->models.size(); j < size; ++j) {
+            for (size_t i = 0; i < 8; i++) {
+                for (size_t j = 0, size = node->models.size(); j < size; ++j) {
                     OBB bounds = GetOBB(*node->models[j]);
 
                     // if it intersects, add model to child
@@ -1606,7 +1600,7 @@ namespace Vakol::Physics {
             node->models.clear();
 
             // recursive function for each node
-            for (int i = 0; i < 8; ++i) {
+            for (size_t i = 0; i < 8; ++i) {
                 SplitTree(&(node->children[i]), depth);
             }
         }
@@ -1690,14 +1684,14 @@ namespace Vakol::Physics {
         std::vector<Model*> result;
         if (SphereAABB(sphere, node->bounds)) {
             if (node->children == nullptr) {
-                for (size_t i; i < node->models.size(); i++) {
+                for (size_t i = 0; i < node->models.size(); i++) {
                     OBB bounds = GetOBB(*(node->models[i]));
                     if (SphereOBB(sphere, bounds)) {
                         result.push_back(node->models[i]);
                     }
                 }
             } else {
-                for (size_t i; i < 8; i++) {
+                for (size_t i = 0; i < 8; i++) {
                     std::vector<Model*> child = Query(&(node->children[i]), sphere);
                     if (child.size() > 0) {
                         result.insert(result.end(), child.begin(), child.end());
@@ -1712,14 +1706,14 @@ namespace Vakol::Physics {
         std::vector<Model*> result;
         if (AABBAABB(aabb, node->bounds)) {
             if (node->children == nullptr) {
-                for (size_t i; i < node->models.size(); i++) {
+                for (size_t i = 0; i < node->models.size(); i++) {
                     OBB bounds = GetOBB(*(node->models[i]));
                     if (AABBOBB(aabb, bounds)) {
                         result.push_back(node->models[i]);
                     }
                 }
             } else {
-                for (size_t i; i < 8; i++) {
+                for (size_t i = 0; i < 8; i++) {
                     std::vector<Model*> child = Query(&(node->children[i]), aabb);
                     if (child.size() > 0) {
                         result.insert(result.end(), child.begin(), child.end());

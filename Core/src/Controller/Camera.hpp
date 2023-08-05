@@ -1,12 +1,14 @@
 #pragma once
 
 #include <Math/Math.hpp>
-#include <PhysicsEngine/Colliders.hpp>
 #include <cereal/archives/json.hpp>
 
 constexpr unsigned char PROJECTION_MATRIX = 0x0;
 constexpr unsigned char VIEW_MATRIX = 0x1;
 
+namespace Vakol::Physics {
+    struct Frustum;
+}
 namespace Vakol::Controller {
     /**
      * @brief Class representing a Camera.

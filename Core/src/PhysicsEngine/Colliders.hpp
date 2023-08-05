@@ -99,9 +99,10 @@ namespace Vakol::Physics {
 
     bool AABBAABB(const AABB& aabb1, const AABB& aabb2);
     bool TriangleAABB(const Triangle& t, const AABB& a);
-    bool AABBTriangle(const AABB& aabb, const Triangle& triangle) { return TriangleAABB(triangle, aabb); }
     bool AABBPlane(const AABB& aabb, const Plane& plane);
-    bool AABBSphere(const AABB& aabb, const Sphere& sphere) { return SphereAABB(sphere, aabb); }
+
+    inline bool AABBTriangle(const AABB& aabb, const Triangle& triangle) { return TriangleAABB(triangle, aabb); }
+    inline bool AABBSphere(const AABB& aabb, const Sphere& sphere) { return SphereAABB(sphere, aabb); }
 
     Interval GetInterval(const AABB& aabb, const Vec3& axis);
     Interval GetInterval(const OBB& obb, const Vec3& axis);
@@ -294,7 +295,7 @@ namespace Vakol::Physics {
 
         void AddModel(Model* model);
         void RemoveModel(Model* model);
-        void UpdateModel(Model* model);
+        // void UpdateModel(Model* model);
         std::vector<Model*> FindChildren(const Model* model);
 
         Model* Raycast(const Ray& ray);
