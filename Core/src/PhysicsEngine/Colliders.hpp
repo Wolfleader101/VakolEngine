@@ -159,6 +159,15 @@ namespace Vakol::Physics {
 
     bool Linetest(const Triangle& triangle, const Line& line);
 
+    //! warning while following the book, this uses raw pointers, ew yuck. can convert to smart pointers later
+    struct BVHNode {
+        AABB bounds;
+        BVHNode* children;
+        int numTriangles;  // if made a vector this can be removed
+        int* triangles;    // triangle indicies (could be made a vector)
+        BVHNode() : children(nullptr), numTriangles(0), triangles(nullptr) {}
+    };
+
     //! warning book uses c style arrays, can use stl vector later
     struct Mesh {
         int numTriangles;
@@ -170,15 +179,6 @@ namespace Vakol::Physics {
 
         BVHNode* accelerator;
         Mesh() : numTriangles(0), values(nullptr), accelerator(nullptr) {}
-    };
-
-    //! warning while following the book, this uses raw pointers, ew yuck. can convert to smart pointers later
-    struct BVHNode {
-        AABB bounds;
-        BVHNode* children;
-        int numTriangles;  // if made a vector this can be removed
-        int* triangles;    // triangle indicies (could be made a vector)
-        BVHNode() : children(nullptr), numTriangles(0), triangles(nullptr) {}
     };
 
     void AccelerateMesh(Mesh& mesh);
@@ -238,8 +238,52 @@ namespace Vakol::Physics {
         }
     };
 
+    struct Frustum {
+        union {
+            struct {
+                Plane top;
+                Plane bottom;
+                Plane left;
+                Plane right;
+                Plane near;
+                Plane far;
+            };
+            Plane planes[6];
+        };
+        inline Frustum() {}
+    };
+
+    Point Intersection(Plane p1, Plane p2, Plane p3);
+    void GetCorners(const Frustum& f, Vec3* outCorners);
+
+    bool Intersects(const Frustum& f, const Point& p);
+    bool Intersects(const Frustum& f, const Sphere& s);
+
+    /**
+     * @brief
+     *
+     * @param aabb aabb to test
+     * @param plane plane to test
+     * @return float negative if box is behind, positive if box infront, 0 if intersects
+     */
+    float Classify(const AABB& aabb, const Plane& plane);
+
+    /**
+     * @brief
+     *
+     * @param obb obb to test
+     * @param plane plane to test
+     * @return float negative if box is behind, positive if box infront, 0 if intersects
+     */
+    float Classify(const OBB& obb, const Plane& plane);
+    bool Intersects(const Frustum& f, const AABB& aabb);
+    bool Intersects(const Frustum& f, const OBB& obb);
+
     class Scene {
        public:
+        Scene();
+        ~Scene();
+
         void AddModel(Model* model);
         void RemoveModel(Model* model);
         void UpdateModel(Model* model);
@@ -249,8 +293,16 @@ namespace Vakol::Physics {
         std::vector<Model*> Query(const Sphere& sphere);
         std::vector<Model*> Query(const AABB& aabb);
 
+        bool Accelerate(const Vec3& pos, float size);
+
+        std::vector<Model*> Cull(const Frustum& f);
+
        private:
         std::vector<Model*> objects;
+        OctreeNode* octree;
+
+        Scene(const Scene&);
+        Scene& operator=(const Scene&);
     };
 
     void SplitTree(OctreeNode* node, int depth);
@@ -258,5 +310,10 @@ namespace Vakol::Physics {
     void Insert(OctreeNode* node, Model* model);
     void Remove(OctreeNode* node, Model* model);
     void Update(OctreeNode* node, Model* model);
+
+    Model* FindClosest(const std::vector<Model*>& objs, const Ray& ray);
+    Model* Raycast(OctreeNode* node, const Ray& ray);
+    std::vector<Model*> Query(OctreeNode* node, const Sphere& sphere);
+    std::vector<Model*> Query(OctreeNode* node, const AABB& aabb);
 
 }  // namespace Vakol::Physics

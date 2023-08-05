@@ -7,8 +7,11 @@ namespace Vakol::Math {
     using Vec2 = glm::vec2;
 
     using Vec3 = glm::vec3;
+    using Vec4 = glm::vec4;
     using Point = Vec3;
 
+    //! TODO note i am not sure if i have initialised it correctly everywhere, glm is column major
+    //! physics cookbook is row major
     using Mat3 = glm::mat3;
     using Mat4 = glm::mat4;
 
@@ -54,6 +57,8 @@ namespace Vakol::Math {
     Vec3 MultiplyVector(const Vec3& vec, const Mat4& mat);
 
     Mat4 Inverse(const Mat4& mat);
+
+    float Determinant(const Mat3& mat);
 
     struct Line {
         Point start;

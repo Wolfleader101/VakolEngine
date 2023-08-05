@@ -109,4 +109,6 @@ namespace Vakol::Math {
     }
 
     Mat4 Inverse(const Mat4& mat) { return glm::inverse(mat); }
+
+    float Determinant(const Mat3& mat) { return glm::determinant(mat); }
 }  // namespace Vakol::Math

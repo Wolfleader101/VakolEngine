@@ -4,16 +4,19 @@
 #include <list>
 #include <stack>
 namespace Vakol::Physics {
+
     Vec3 GetMin(const AABB& aabb) {
         Vec3 p1 = aabb.pos + aabb.size;
         Vec3 p2 = aabb.pos - aabb.size;
         return Vec3(fminf(p1.x, p2.x), fminf(p1.y, p2.y), fminf(p1.z, p2.z));
     }
+
     Vec3 GetMax(const AABB& aabb) {
         Vec3 p1 = aabb.pos + aabb.size;
         Vec3 p2 = aabb.pos - aabb.size;
         return Vec3(fmaxf(p1.x, p2.x), fmaxf(p1.y, p2.y), fmaxf(p1.z, p2.z));
     }
+
     AABB FromMinMax(const Vec3& min, const Vec3& max) { return AABB((min + max) * 0.5f, (max - min) * 0.5f); }
 
     float PlaneEquation(const Point& point, const Plane& plane) { return Dot(point, plane.normal) - plane.dist; }
@@ -1376,6 +1379,29 @@ namespace Vakol::Physics {
         return false;
     }
 
+    Scene::Scene() : octree(nullptr) {}
+
+    Scene::~Scene() {
+        if (octree) delete octree;
+    }
+
+    bool Scene::Accelerate(const Vec3& pos, float size) {
+        if (octree != nullptr) return false;
+
+        Vec3 min(pos.x - size, pos.y - size, pos.z - size);
+        Vec3 max(pos.x + size, pos.y + size, pos.z + size);
+
+        octree = new OctreeNode();
+        octree->bounds = FromMinMax(min, max);
+        octree->children = nullptr;
+        for (int i = 0, size = objects.size(); i < size; ++i) {
+            octree->models.push_back(objects[i]);
+        }
+        SplitTree(octree, 5);
+
+        return true;
+    }
+
     void Scene::AddModel(Model* model) {
         if (std::find(objects.begin(), objects.end(), model) != objects.end()) {
             // Duplicate object, don't add
@@ -1411,6 +1437,10 @@ namespace Vakol::Physics {
     }
 
     Model* Scene::Raycast(const Ray& ray) {
+        if (octree != nullptr) {
+            return Physics::Raycast(octree, ray);
+        }
+
         Model* result = nullptr;
         float result_t = -1.0f;
 
@@ -1433,6 +1463,10 @@ namespace Vakol::Physics {
     }
 
     std::vector<Model*> Scene::Query(const Sphere& sphere) {
+        if (octree != nullptr) {
+            return Physics::Query(octree, sphere);
+        }
+
         std::vector<Model*> result;
         for (int i = 0, size = objects.size(); i < size; ++i) {
             // alows for containment and intersection check
@@ -1447,6 +1481,9 @@ namespace Vakol::Physics {
     }
 
     std::vector<Model*> Scene::Query(const AABB& aabb) {
+        if (octree != nullptr) {
+            return Physics::Query(octree, aabb);
+        }
         std::vector<Model*> result;
         for (int i = 0, size = objects.size(); i < size; ++i) {
             // alows for containment and intersection check
@@ -1538,5 +1575,251 @@ namespace Vakol::Physics {
     void Update(OctreeNode* node, Model* model) {
         Remove(node, model);
         Insert(node, model);
+    }
+
+    Model* FindClosest(const std::vector<Model*>& objs, const Ray& ray) {
+        if (objs.size() == 0) return nullptr;
+
+        Model* closest = nullptr;
+        float closest_t = -1;
+
+        for (size_t i = 0; i < objs.size(); i++) {
+            float t = ModelRay(*objs[i], ray);
+
+            // didnt intersect
+            if (t < 0) continue;
+
+            if (closest_t < 0 || t < closest_t) {
+                closest_t = t;
+                closest = objs[i];
+            }
+        }
+
+        return closest;
+    }
+
+    Model* Raycast(OctreeNode* node, const Ray& ray) {
+        float t = Raycast(node->bounds, ray);
+        if (t < 0) return nullptr;
+
+        if (node->children == nullptr) {
+            return FindClosest(node->models, ray);
+        }
+
+        std::vector<Model*> results;
+        for (int i = 0; i < 8; ++i) {
+            Model* result = Raycast(&(node->children[i]), ray);
+            if (result != 0) {
+                results.push_back(result);
+            }
+        }
+
+        return FindClosest(results, ray);
+    }
+
+    std::vector<Model*> Query(OctreeNode* node, const Sphere& sphere) {
+        std::vector<Model*> result;
+        if (SphereAABB(sphere, node->bounds)) {
+            if (node->children == nullptr) {
+                for (size_t i; i < node->models.size(); i++) {
+                    OBB bounds = GetOBB(*(node->models[i]));
+                    if (SphereOBB(sphere, bounds)) {
+                        result.push_back(node->models[i]);
+                    }
+                }
+            } else {
+                for (size_t i; i < 8; i++) {
+                    std::vector<Model*> child = Query(&(node->children[i]), sphere);
+                    if (child.size() > 0) {
+                        result.insert(result.end(), child.begin(), child.end());
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    std::vector<Model*> Query(OctreeNode* node, const AABB& aabb) {
+        std::vector<Model*> result;
+        if (AABBAABB(aabb, node->bounds)) {
+            if (node->children == nullptr) {
+                for (size_t i; i < node->models.size(); i++) {
+                    OBB bounds = GetOBB(*(node->models[i]));
+                    if (AABBOBB(aabb, bounds)) {
+                        result.push_back(node->models[i]);
+                    }
+                }
+            } else {
+                for (size_t i; i < 8; i++) {
+                    std::vector<Model*> child = Query(&(node->children[i]), aabb);
+                    if (child.size() > 0) {
+                        result.insert(result.end(), child.begin(), child.end());
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    Point Intersection(Plane p1, Plane p2, Plane p3) {
+        Mat3 D(Vec3(p1.normal.x, p2.normal.x, p3.normal.x),  // Column 1
+               Vec3(p1.normal.y, p2.normal.y, p3.normal.y),  // Column 2
+               Vec3(p1.normal.z, p2.normal.z, p3.normal.z)   // Column 3
+        );
+
+        Vec3 A(-p1.dist, -p2.dist, -p3.dist);
+
+        Mat3 Dx = D;
+        Mat3 Dy = D;
+        Mat3 Dz = D;
+
+        Dx[0] = A;  // Row 1
+        Dy[1] = A;  // Row 2
+        Dz[2] = A;  // Row 3
+
+        float detD = Determinant(D);
+        if (detD == 0.0f) {
+            return Point();
+        }
+
+        float detDx = Determinant(Dx);
+        float detDy = Determinant(Dy);
+        float detDz = Determinant(Dz);
+
+        return Point(detDx / detD, detDy / detD, detDz / detD);
+    }
+
+    void GetCorners(const Frustum& f, Vec3* outCorners) {
+        outCorners[0] = Intersection(f.near, f.top, f.left);
+        outCorners[1] = Intersection(f.near, f.top, f.right);
+        outCorners[2] = Intersection(f.near, f.bottom, f.left);
+        outCorners[3] = Intersection(f.near, f.bottom, f.right);
+        outCorners[4] = Intersection(f.far, f.top, f.left);
+        outCorners[5] = Intersection(f.far, f.top, f.right);
+        outCorners[6] = Intersection(f.far, f.bottom, f.left);
+        outCorners[7] = Intersection(f.far, f.bottom, f.right);
+    }
+
+    bool Intersects(const Frustum& f, const Point& p) {
+        for (size_t i = 0; i < 6; i++) {
+            Vec3 n = f.planes[i].normal;
+            float dist = f.planes[i].dist;
+            float side = Dot(p, n) + dist;
+
+            if (side < 0.0f) return false;
+        }
+
+        return true;
+    }
+
+    bool Intersects(const Frustum& f, const Sphere& s) {
+        for (size_t i = 0; i < 6; i++) {
+            Vec3 n = f.planes[i].normal;
+            float dist = f.planes[i].dist;
+            float side = Dot(s.pos, n) + dist;
+
+            if (side < -s.radius) return false;
+        }
+
+        return true;
+    }
+
+    float Classify(const AABB& aabb, const Plane& plane) {
+        float r = fabsf(aabb.size.x * plane.normal.x) + fabsf(aabb.size.y * plane.normal.y) +
+                  fabsf(aabb.size.z * plane.normal.z);
+
+        // distance from center of aabb and plane
+        float d = Dot(plane.normal, aabb.pos) + plane.dist;
+
+        // if theres no space they intersect
+        if (fabsf(d) < r) {
+            return 0.0f;
+        } else if (d < 0.0f) {
+            // else its in front
+            return d + r;
+        }
+
+        // else its behind
+        return d - r;
+    }
+
+    float Classify(const OBB& obb, const Plane& plane) {
+        Vec3 n = MultiplyVector(plane.normal, obb.orientation);
+
+        // max extent in dir of plane normal
+        float r = fabsf(obb.size.x * n.x) + fabsf(obb.size.y * n.y) + fabsf(obb.size.z * n.z);
+
+        // distance between box center and plane
+        float d = Dot(plane.normal, obb.pos) + plane.dist;
+
+        // if theres no space they intersect
+        if (fabsf(d) < r) {
+            return 0.0f;
+        } else if (d < 0.0f) {
+            // else its in front
+            return d + r;
+        }
+
+        // else its behind
+        return d - r;
+    }
+
+    bool Intersects(const Frustum& f, const AABB& aabb) {
+        for (size_t i = 0; i < 6; i++) {
+            if (Classify(aabb, f.planes[i]) < 0.0f) return 0;
+        }
+
+        return true;
+    }
+
+    bool Intersects(const Frustum& f, const OBB& obb) {
+        for (size_t i = 0; i < 6; i++) {
+            if (Classify(obb, f.planes[i]) < 0.0f) return 0;
+        }
+
+        return true;
+    }
+
+    std::vector<Model*> Scene::Cull(const Frustum& f) {
+        std::vector<Model*> result;
+        // if there is no octree this will be very slow
+        if (octree == nullptr) {
+            for (size_t i = 0; i < objects.size(); i++) {
+                OBB bounds = GetOBB(*(objects[i]));
+                if (Intersects(f, bounds)) {
+                    result.push_back(objects[i]);
+                }
+            }
+        } else {
+            // create a list of nodes to be considered for culling
+            std::list<OctreeNode*> nodes;
+            nodes.push_back(octree);
+
+            while (nodes.size() > 0) {
+                OctreeNode* active = *nodes.begin();
+                nodes.pop_front();
+
+                // if its not a leaf check for intersection
+                if (active->children != nullptr) {
+                    for (size_t i = 0; i < 8; ++i) {
+                        AABB bounds = active->children[i].bounds;
+
+                        // if it intersects see if u can cull it further
+                        if (Intersects(f, bounds)) {
+                            nodes.push_back(&active->children[i]);
+                        }
+                    }
+                } else {
+                    // if its a leaf node check all objects in the node
+                    for (size_t i = 0; i < active->models.size(); i++) {
+                        OBB bounds = GetOBB(*(active->models[i]));
+                        if (Intersects(f, bounds)) {
+                            result.push_back(active->models[i]);
+                        }
+                    }
+                }
+            }
+        }
+        return result;
     }
 }  // namespace Vakol::Physics
