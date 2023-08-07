@@ -11,15 +11,17 @@
 #include "Time.hpp"
 #include "View/Renderer/Renderer.hpp"
 
-namespace Vakol::Controller {
+namespace Vakol::Controller
+{
 
     /**
      * @class Scene
      *
      * @brief Class representing a scene in the application.
      */
-    class Scene {
-       public:
+    class Scene
+    {
+      public:
         /**
          * @brief Construct a new Scene object.
          *
@@ -100,7 +102,10 @@ namespace Vakol::Controller {
          *
          * @return Camera& The reference to the camera.
          */
-        Camera& GetCamera() { return m_cam; }
+        Camera& GetCamera()
+        {
+            return m_cam;
+        }
 
         /**
          * @brief Get an entity in the scene by its tag.
@@ -115,23 +120,32 @@ namespace Vakol::Controller {
          *
          * @return const EntityList&
          */
-        const EntityList& GetEntityList() const { return m_entityList; }
+        const EntityList& GetEntityList() const
+        {
+            return m_entityList;
+        }
 
         /**
          * @brief Get the Entity List object
          *
          * @return EntityList&
          */
-        EntityList& GetEntityList() { return m_entityList; }
+        EntityList& GetEntityList()
+        {
+            return m_entityList;
+        }
 
         /**
          * @brief Get the Script object
          *
          * @return LuaScript&
          */
-        LuaScript& GetScript() { return m_script; }
+        LuaScript& GetScript()
+        {
+            return m_script;
+        }
 
-       private:
+      private:
         /**
          * @brief The lua script of the scene.
          *
@@ -153,4 +167,4 @@ namespace Vakol::Controller {
          */
         EntityList m_entityList;
     };
-}  // namespace Vakol::Controller
+} // namespace Vakol::Controller

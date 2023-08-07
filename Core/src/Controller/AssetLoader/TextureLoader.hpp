@@ -13,7 +13,7 @@ namespace Vakol::Controller
      * @param flip Flag indicating whether the texture should be flipped vertically.
      * @return unsigned int The ID of the loaded texture.
      */
-    unsigned int LoadTexture(std::vector<const char *> &&faces, bool gamma, bool flip);
+    unsigned int LoadTexture(std::vector<const char*>&& faces, bool gamma, bool flip);
 
     /**
      * @brief Load a texture with specified parameters.
@@ -24,7 +24,7 @@ namespace Vakol::Controller
      * @param data Pointer to additional data for the texture.
      * @return unsigned int The ID of the loaded texture.
      */
-    unsigned int LoadTexture(int size, bool gamma, bool flip, const void *data);
+    unsigned int LoadTexture(int size, bool gamma, bool flip, const void* data);
 
     /**
      * @brief Load a texture from a file.
@@ -34,7 +34,7 @@ namespace Vakol::Controller
      * @param flip Flag indicating whether the texture should be flipped vertically.
      * @return unsigned int The ID of the loaded texture.
      */
-    unsigned int LoadTexture(std::string &path, bool gamma, bool flip);
+    unsigned int LoadTexture(std::string& path, bool gamma, bool flip);
 
     /**
      * @brief Load a raw texture from a file.
@@ -42,5 +42,5 @@ namespace Vakol::Controller
      * @param path The file path of the raw texture.
      * @return unsigned int The ID of the loaded texture.
      */
-    unsigned int LoadRawTexture(std::string &path);
+    unsigned int LoadRawTexture(std::string& path);
 } // namespace Vakol::Controller

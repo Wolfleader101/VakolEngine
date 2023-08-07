@@ -11,7 +11,7 @@ namespace Vakol::Controller::Physics
         return ScenePhysics(m_Common.createPhysicsWorld());
     }
 
-    void PhysicsPool::DeletePhysicsWorld(ScenePhysics &toDestroy)
+    void PhysicsPool::DeletePhysicsWorld(ScenePhysics& toDestroy)
     {
         if (toDestroy.m_World != nullptr)
         {

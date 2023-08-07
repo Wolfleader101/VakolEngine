@@ -10,7 +10,7 @@
 
 namespace Vakol::Model
 {
-    std::vector<Vertex> Convert(std::vector<float> &arr, const size_t size)
+    std::vector<Vertex> Convert(std::vector<float>& arr, const size_t size)
     {
         const auto arr_size = arr.size();
         const auto elements = static_cast<int>(size / sizeof(float));
@@ -92,7 +92,7 @@ namespace Vakol::Model
         return output;
     }
 
-    VertexArray::VertexArray(std::vector<Vertex> &&vertices, std::vector<unsigned int> &&indices, size_t size)
+    VertexArray::VertexArray(std::vector<Vertex>&& vertices, std::vector<unsigned int>&& indices, size_t size)
         : vertices(vertices), indices(indices)
     {
         int total_elements = static_cast<int>(size / sizeof(float));
@@ -155,49 +155,47 @@ namespace Vakol::Model
 
         if (total_elements >= 2 && total_elements <= 3)
         {
-            SetVertexAttributeData(1, 2, GL_FLOAT, GL_FALSE, size,
-                                   reinterpret_cast<const void *>(offsetof(Vertex, uv)));
+            SetVertexAttributeData(1, 2, GL_FLOAT, GL_FALSE, size, reinterpret_cast<const void*>(offsetof(Vertex, uv)));
             total_elements -= 2;
         }
 
         if (total_elements >= 3)
         {
             SetVertexAttributeData(1, 3, GL_FLOAT, GL_FALSE, size,
-                                   reinterpret_cast<const void *>(offsetof(Vertex, normal)));
+                                   reinterpret_cast<const void*>(offsetof(Vertex, normal)));
             total_elements -= 3;
         }
 
         if (total_elements >= 2)
         {
-            SetVertexAttributeData(2, 2, GL_FLOAT, GL_FALSE, size,
-                                   reinterpret_cast<const void *>(offsetof(Vertex, uv)));
+            SetVertexAttributeData(2, 2, GL_FLOAT, GL_FALSE, size, reinterpret_cast<const void*>(offsetof(Vertex, uv)));
             total_elements -= 2;
         }
 
         if (total_elements >= 3)
         {
             SetVertexAttributeData(3, 3, GL_FLOAT, GL_FALSE, size,
-                                   reinterpret_cast<const void *>(offsetof(Vertex, tangent)));
+                                   reinterpret_cast<const void*>(offsetof(Vertex, tangent)));
             total_elements -= 3;
         }
 
         if (total_elements >= 3)
         {
             SetVertexAttributeData(4, 3, GL_FLOAT, GL_FALSE, size,
-                                   reinterpret_cast<const void *>(offsetof(Vertex, bitangent)));
+                                   reinterpret_cast<const void*>(offsetof(Vertex, bitangent)));
             total_elements -= 3;
         }
 
         if (total_elements >= 4)
         {
-            SetVertexAttributeIData(5, 4, GL_INT, size, reinterpret_cast<const void *>(offsetof(Vertex, bone_ids)));
+            SetVertexAttributeIData(5, 4, GL_INT, size, reinterpret_cast<const void*>(offsetof(Vertex, bone_ids)));
             total_elements -= 4;
         }
 
         if (total_elements >= 4)
         {
             SetVertexAttributeData(6, 4, GL_FLOAT, GL_FALSE, size,
-                                   reinterpret_cast<const void *>(offsetof(Vertex, bone_weights)));
+                                   reinterpret_cast<const void*>(offsetof(Vertex, bone_weights)));
             total_elements -= 4;
         }
 
@@ -249,8 +247,8 @@ namespace Vakol::Model
             {
                 for (int strip = 0; strip < this->info.NUM_STRIPS; ++strip)
                     glDrawElements(GL_TRIANGLE_STRIP, this->info.NUM_TRIS_PER_STRIP + 2, GL_UNSIGNED_INT,
-                                   reinterpret_cast<const void *>(sizeof(unsigned int) *
-                                                                  (this->info.NUM_TRIS_PER_STRIP + 2) * strip));
+                                   reinterpret_cast<const void*>(sizeof(unsigned int) *
+                                                                 (this->info.NUM_TRIS_PER_STRIP + 2) * strip));
             }
         }
 
@@ -267,13 +265,13 @@ namespace Vakol::Model
         Unbind();
     }
 
-    void VertexArray::GenArray(const unsigned int n, unsigned int *array)
+    void VertexArray::GenArray(const unsigned int n, unsigned int* array)
     {
         glGenVertexArrays(static_cast<GLsizei>(n), array);
     }
 
     void VertexArray::SetVertexAttributeData(const unsigned int index, const int n, const unsigned int type,
-                                             const bool normalized, const size_t stride, const void *data)
+                                             const bool normalized, const size_t stride, const void* data)
     {
         glEnableVertexAttribArray(index); // enable the vertex attribute at the specific index/location first
         glVertexAttribPointer(static_cast<GLuint>(index), static_cast<GLint>(n), static_cast<GLenum>(type), normalized,
@@ -281,7 +279,7 @@ namespace Vakol::Model
     }
 
     void VertexArray::SetVertexAttributeIData(const unsigned int index, const int n, const unsigned int type,
-                                              const size_t stride, const void *data)
+                                              const size_t stride, const void* data)
     {
         glEnableVertexAttribArray(index);
         glVertexAttribIPointer(static_cast<GLuint>(index), static_cast<GLint>(n), static_cast<GLenum>(type),

@@ -17,7 +17,7 @@ namespace Vakol::Model::Assets
          *
          * @param path The path to the texture.
          */
-        explicit Texture(std::string &&path) : path(std::move(path))
+        explicit Texture(std::string&& path) : path(std::move(path))
         {
         }
 
@@ -26,7 +26,7 @@ namespace Vakol::Model::Assets
          *
          * @param path The path to the texture.
          */
-        explicit Texture(std::string &path) : path(std::move(path))
+        explicit Texture(std::string& path) : path(std::move(path))
         {
         }
 

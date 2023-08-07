@@ -85,14 +85,14 @@ namespace Vakol::Controller
         return m_Registry.valid((entt::entity)Handle);
     }
 
-    std::vector<Entity> &EntityList::GetEntityVec()
+    std::vector<Entity>& EntityList::GetEntityVec()
     {
         return ActiveEntityList;
     }
 
     //----------------------- ICT397 additions
 
-    void EntityList::Serialize(const std::string &file) const
+    void EntityList::Serialize(const std::string& file) const
     {
         privateSerialize<cereal::JSONOutputArchive, Model::Components::Transform, Model::Components::Tag,
                          Model::Components::GUID, Model::Components::Drawable, Model::Components::Animator,
@@ -103,7 +103,7 @@ namespace Vakol::Controller
                          Animation>(file);*/
     }
 
-    void EntityList::Deserialize(const std::string &file)
+    void EntityList::Deserialize(const std::string& file)
     {
         privateDeserialize<cereal::JSONInputArchive, Model::Components::Transform, Model::Components::Tag,
                            Model::Components::GUID, Model::Components::Drawable, Model::Components::Animator,

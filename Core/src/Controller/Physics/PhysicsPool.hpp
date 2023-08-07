@@ -2,18 +2,21 @@
 
 #include <reactphysics3d/reactphysics3d.h>
 
-namespace Vakol::Controller {
+namespace Vakol::Controller
+{
     class System;
 
 }
 
-namespace Vakol::Controller::Physics {
+namespace Vakol::Controller::Physics
+{
     class ScenePhysics;
     /**
      * @brief Class representing a pool of physics worlds.
      */
-    class PhysicsPool {
-       public:
+    class PhysicsPool
+    {
+      public:
         PhysicsPool() = delete;
 
         /**
@@ -30,7 +33,7 @@ namespace Vakol::Controller::Physics {
          */
         static void DeletePhysicsWorld(ScenePhysics& toDestroy);
 
-       private:
+      private:
         /**
          * @brief The common physics object used by the pool.
          */
@@ -39,4 +42,4 @@ namespace Vakol::Controller::Physics {
         friend class ScenePhysics;
         friend class Controller::System;
     };
-};  // namespace Vakol::Controller::Physics
+}; // namespace Vakol::Controller::Physics

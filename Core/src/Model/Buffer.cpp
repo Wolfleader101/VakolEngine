@@ -8,7 +8,7 @@ static int s_hitcount = 0;
 
 namespace Vakol::Model
 {
-    Buffer::Buffer(const unsigned int type, const int size, const unsigned int binding, const void *data,
+    Buffer::Buffer(const unsigned int type, const int size, const unsigned int binding, const void* data,
                    const unsigned int usage)
     {
         this->GenBuffer(1);
@@ -52,7 +52,7 @@ namespace Vakol::Model
 
     void Buffer::GenBuffer(const int n)
     {
-        glGenBuffers(static_cast<GLsizei>(n), static_cast<GLuint *>(&this->ID));
+        glGenBuffers(static_cast<GLsizei>(n), static_cast<GLuint*>(&this->ID));
     }
 
     void Buffer::Bind(const unsigned int type) const
@@ -65,12 +65,12 @@ namespace Vakol::Model
         glBindBuffer(static_cast<GLenum>(type), 0);
     }
 
-    void Buffer::SetData(const int size, const void *data, const unsigned int usage) const
+    void Buffer::SetData(const int size, const void* data, const unsigned int usage) const
     {
         glNamedBufferData(this->ID, static_cast<GLsizeiptr>(size), data, static_cast<GLenum>(usage));
     }
 
-    void Buffer::SetSubData(const int offset, const int size, const void *data) const
+    void Buffer::SetSubData(const int offset, const int size, const void* data) const
     {
         glNamedBufferSubData(this->ID, static_cast<GLintptr>(offset), static_cast<GLsizeiptr>(size), data);
     }
@@ -81,7 +81,7 @@ namespace Vakol::Model
     {
         glGenFramebuffers(1, &this->ID);
     }
-    FrameBuffer::FrameBuffer(const ATTACHMENT &attachment, const bool depth)
+    FrameBuffer::FrameBuffer(const ATTACHMENT& attachment, const bool depth)
     {
         hasDepth = depth;
 
@@ -116,7 +116,7 @@ namespace Vakol::Model
     {
         glClearColor(r, g, b, a);
     }
-    void FrameBuffer::ClearColor(const glm::vec4 &color) const
+    void FrameBuffer::ClearColor(const glm::vec4& color) const
     {
         glClearColor(color.r, color.g, color.b, color.a);
     }
@@ -159,7 +159,7 @@ namespace Vakol::Model
 
     void FrameBuffer::SetTextureAttachment(const unsigned int attachment, const unsigned int target,
                                            const int internalformat, const int width, const int height,
-                                           const unsigned int format, const unsigned int type, const void *data)
+                                           const unsigned int format, const unsigned int type, const void* data)
     {
         glCreateTextures(target, 1, &this->m_ColorAttachmentID);
         glBindTexture(target, this->m_ColorAttachmentID);

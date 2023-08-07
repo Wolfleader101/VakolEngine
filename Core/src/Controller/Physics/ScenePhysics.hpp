@@ -38,7 +38,7 @@ namespace Vakol::Controller::Physics
          *
          * @param time The time information for the update.
          */
-        void Update(const Vakol::Controller::Time &time);
+        void Update(const Vakol::Controller::Time& time);
 
         /**
          * @brief Enable or disable physics debugging.
@@ -59,7 +59,7 @@ namespace Vakol::Controller::Physics
          *
          * @param terrain The terrain to add.
          */
-        void AddTerrain(const Terrain &terrain);
+        void AddTerrain(const Terrain& terrain);
 
         /**
          * @brief Custom collision callback class.
@@ -72,7 +72,7 @@ namespace Vakol::Controller::Physics
              *
              * @param callbackData The collision callback data.
              */
-            virtual void onContact(const rp3d::CollisionCallback::CallbackData &callbackData) override;
+            virtual void onContact(const rp3d::CollisionCallback::CallbackData& callbackData) override;
         };
 
       private:
@@ -81,10 +81,10 @@ namespace Vakol::Controller::Physics
          *
          * @param newWorld The physics world for the scene.
          */
-        ScenePhysics(rp3d::PhysicsWorld *newWorld);
+        ScenePhysics(rp3d::PhysicsWorld* newWorld);
 
-        rp3d::RigidBody *m_Terrain;
-        rp3d::PhysicsWorld *m_World;
+        rp3d::RigidBody* m_Terrain;
+        rp3d::PhysicsWorld* m_World;
         static MyCollisionCallback m_callback;
 
         double m_timestep = 1.0f / 60.0f;

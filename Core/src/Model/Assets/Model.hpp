@@ -20,7 +20,7 @@ namespace Vakol::Model::Assets
          *
          * @param mesh The mesh of the model.
          */
-        Model(Mesh &mesh)
+        Model(Mesh& mesh)
         {
             m_meshes.push_back(std::move(mesh));
         }
@@ -30,7 +30,7 @@ namespace Vakol::Model::Assets
          *
          * @param mesh The mesh of the model.
          */
-        Model(Mesh &&mesh)
+        Model(Mesh&& mesh)
         {
             m_meshes.push_back(std::move(mesh));
         }
@@ -40,7 +40,7 @@ namespace Vakol::Model::Assets
          *
          * @param meshes The vector of meshes.
          */
-        Model(std::vector<Mesh> &meshes) : m_meshes(std::move(meshes))
+        Model(std::vector<Mesh>& meshes) : m_meshes(std::move(meshes))
         {
         }
 
@@ -49,7 +49,7 @@ namespace Vakol::Model::Assets
          *
          * @param meshes The vector of meshes.
          */
-        Model(std::vector<Mesh> &&meshes) : m_meshes(std::move(meshes))
+        Model(std::vector<Mesh>&& meshes) : m_meshes(std::move(meshes))
         {
         }
 
@@ -58,7 +58,7 @@ namespace Vakol::Model::Assets
          *
          * @param shader The shader.
          */
-        void set_shader(const std::shared_ptr<Shader> &shader)
+        void set_shader(const std::shared_ptr<Shader>& shader)
         {
             this->m_shader = shader;
             this->m_shader->Bind();
@@ -89,7 +89,7 @@ namespace Vakol::Model::Assets
          *
          * @return The shader.
          */
-        std::shared_ptr<Shader> &shader()
+        std::shared_ptr<Shader>& shader()
         {
             return m_shader;
         }
@@ -99,7 +99,7 @@ namespace Vakol::Model::Assets
          *
          * @return The constant reference to the shader.
          */
-        [[nodiscard]] const std::shared_ptr<Shader> &c_shader() const
+        [[nodiscard]] const std::shared_ptr<Shader>& c_shader() const
         {
             return m_shader;
         }
@@ -110,7 +110,7 @@ namespace Vakol::Model::Assets
          * @param index The index of the mesh.
          * @return The mesh.
          */
-        [[nodiscard]] const Mesh &mesh(const int index = 0) const
+        [[nodiscard]] const Mesh& mesh(const int index = 0) const
         {
             return m_meshes.at(index);
         }
@@ -120,7 +120,7 @@ namespace Vakol::Model::Assets
          *
          * @return The constant reference to the vector of meshes.
          */
-        [[nodiscard]] const std::vector<Mesh> &c_meshes() const
+        [[nodiscard]] const std::vector<Mesh>& c_meshes() const
         {
             return m_meshes;
         }
@@ -130,7 +130,7 @@ namespace Vakol::Model::Assets
          *
          * @return The reference to the vector of meshes.
          */
-        [[nodiscard]] std::vector<Mesh> &meshes()
+        [[nodiscard]] std::vector<Mesh>& meshes()
         {
             return m_meshes;
         }

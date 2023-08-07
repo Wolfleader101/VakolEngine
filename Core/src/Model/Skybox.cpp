@@ -58,7 +58,7 @@ namespace Vakol::Model
         CUBEMAP_ID = Controller::LoadTexture(std::move(skybox_faces), false, false);
     }
 
-    void Skybox::Draw(const glm::mat4 &projection, const glm::mat4 &view) const
+    void Skybox::Draw(const glm::mat4& projection, const glm::mat4& view) const
     {
         glDepthFunc(GL_LEQUAL);
 

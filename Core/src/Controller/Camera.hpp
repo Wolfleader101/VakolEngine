@@ -24,7 +24,7 @@ namespace Vakol::Controller
          *
          * @param position The position of the camera.
          */
-        explicit Camera(const glm::vec3 &position = glm::vec3(0.0f, 0.0f, 5.0f));
+        explicit Camera(const glm::vec3& position = glm::vec3(0.0f, 0.0f, 5.0f));
 
         /**
          * @brief Get the transformation matrix of the camera based on the specified type.
@@ -32,7 +32,7 @@ namespace Vakol::Controller
          * @param type The type of matrix (0 for projection matrix, 1 for view matrix).
          * @return const glm::mat4& The transformation matrix.
          */
-        const glm::mat4 &GetMatrix(unsigned char type) const;
+        const glm::mat4& GetMatrix(unsigned char type) const;
 
         /**
          * @brief Set the aspect ratio of the camera.
@@ -51,7 +51,7 @@ namespace Vakol::Controller
          *
          * @return const glm::vec3& The position of the camera.
          */
-        const glm::vec3 &GetPos() const
+        const glm::vec3& GetPos() const
         {
             return position;
         }
@@ -73,7 +73,7 @@ namespace Vakol::Controller
          *
          * @return const glm::vec3& The forward direction of the camera.
          */
-        const glm::vec3 &GetForward() const
+        const glm::vec3& GetForward() const
         {
             return forward;
         }
@@ -83,7 +83,7 @@ namespace Vakol::Controller
          *
          * @return const glm::vec3& The right direction of the camera.
          */
-        const glm::vec3 &GetRight() const
+        const glm::vec3& GetRight() const
         {
             return right;
         }
@@ -135,7 +135,7 @@ namespace Vakol::Controller
          * @param ar The archive object for serialization.
          */
         template <class Archive>
-        void serialize(Archive &ar)
+        void serialize(Archive& ar)
         {
             ar(cereal::make_nvp("position", position), cereal::make_nvp("forward", forward), cereal::make_nvp("up", up),
                cereal::make_nvp("right", right), cereal::make_nvp("pitch", pitch), cereal::make_nvp("yaw", yaw),

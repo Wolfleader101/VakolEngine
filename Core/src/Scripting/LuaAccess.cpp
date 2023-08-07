@@ -15,7 +15,8 @@
 #include "Scripting/ScriptEngine.hpp"
 #include "View/GUI/GUIWindow.hpp"
 
-std::vector<glm::mat4> create_mat4_vector(const size_t reserve) {
+std::vector<glm::mat4> create_mat4_vector(const size_t reserve)
+{
     std::vector<glm::mat4> vector;
 
     vector.reserve(reserve);
@@ -27,11 +28,13 @@ using namespace Vakol::Controller;
 using namespace Vakol::Model;
 using namespace Vakol::Model::Components;
 
-namespace Vakol {
+namespace Vakol
+{
 
-    void RegisterMath(sol::state& lua) {
+    void RegisterMath(sol::state& lua)
+    {
         {
-            sol::constructors<glm::vec2(), glm::vec2(float), glm::vec2(float, float)> ctor;  // allow for constructors
+            sol::constructors<glm::vec2(), glm::vec2(float), glm::vec2(float, float)> ctor; // allow for constructors
 
             auto div_overload = sol::overload([](const glm::vec2& v, const float k) -> glm::vec2 { return v / k; },
                                               [](const float k, const glm::vec2& v) -> glm::vec2 { return k / v; });
@@ -60,7 +63,7 @@ namespace Vakol {
 
         {
             sol::constructors<glm::vec3(), glm::vec3(float), glm::vec3(float, float, float)>
-                ctor;  // allow for constructors
+                ctor; // allow for constructors
 
             auto div_overload = sol::overload([](const glm::vec3& v, const float k) -> glm::vec3 { return v / k; },
                                               [](const float k, const glm::vec3& v) -> glm::vec3 { return k / v; });
@@ -95,7 +98,7 @@ namespace Vakol {
 
         {
             sol::constructors<glm::vec4(), glm::vec4(float), glm::vec4(float, float, float, float)>
-                ctor;  // allow for constructors
+                ctor; // allow for constructors
 
             auto div_overload = sol::overload([](const glm::vec4& v, const float k) -> glm::vec4 { return v / k; },
                                               [](const float k, const glm::vec4& v) -> glm::vec4 { return k / v; });
@@ -167,7 +170,8 @@ namespace Vakol {
         lua.set_function("vector_mat4", &create_mat4_vector);
     }
 
-    void RegisterLogger(sol::state& lua) {
+    void RegisterLogger(sol::state& lua)
+    {
         lua.set_function("print", [](const sol::variadic_args& va) {
             if (const auto arg = va[0]; arg.get_type() == sol::type::string)
                 Logger::ScriptPrintTrace(va[0].get<std::string>());
@@ -206,7 +210,8 @@ namespace Vakol {
         });
     }
 
-    void RegisterTime(sol::state& lua) {
+    void RegisterTime(sol::state& lua)
+    {
         auto time_type = lua.new_usertype<Time>("Time");
         time_type["delta_time"] = &Time::deltaTime;
         time_type["tick_rate"] = &Time::tickRate;
@@ -215,7 +220,8 @@ namespace Vakol {
         time_type["fps"] = &Time::fps;
     }
 
-    void RegisterInput(sol::state& lua) {
+    void RegisterInput(sol::state& lua)
+    {
         auto input_type = lua.new_usertype<Input>("Input");
         input_type.set_function("get_key", &Input::GetKey);
         input_type.set_function("get_key_down", &Input::GetKeyDown);
@@ -244,9 +250,11 @@ namespace Vakol {
             "KEY_LEFT_SHIFT", Input::KEY::KEY_LEFT_SHIFT, "KEY_ESC", Input::KEY::KEY_ESCAPE);
     }
 
-    void RegisterAssetLoader(sol::state& lua) {
+    void RegisterAssetLoader(sol::state& lua)
+    {
         lua.set_function("load_texture", [](const std::string& path, const bool gamma, const bool flip) {
-            if (const auto texture = AssetLoader::GetTexture(path, gamma, flip); texture == nullptr) return false;
+            if (const auto texture = AssetLoader::GetTexture(path, gamma, flip); texture == nullptr)
+                return false;
 
             return true;
         });
@@ -261,13 +269,15 @@ namespace Vakol {
         });
 
         lua.set_function("load_shader", [](const std::string& path) {
-            if (const auto& shader = AssetLoader::GetShader(path); shader == nullptr) return false;
+            if (const auto& shader = AssetLoader::GetShader(path); shader == nullptr)
+                return false;
 
             return true;
         });
     }
 
-    void RegisterModel(sol::state& lua) {
+    void RegisterModel(sol::state& lua)
+    {
         auto model_type = lua.new_usertype<Assets::Model>("Model");
         model_type.set_function("get_mesh_count", &Assets::Model::nMeshes);
         model_type.set_function("get_mesh", &Assets::Model::mesh);
@@ -279,13 +289,15 @@ namespace Vakol {
                             const int amount) { CreateInstances(model->meshes(), matrices, amount, 3); });
     }
 
-    void RegisterMesh(sol::state& lua) {
+    void RegisterMesh(sol::state& lua)
+    {
         auto mesh_type = lua.new_usertype<Mesh>("Mesh");
 
         mesh_type.set_function("get_material", &Mesh::GetMaterial);
     }
 
-    void RegisterMaterial(sol::state& lua) {
+    void RegisterMaterial(sol::state& lua)
+    {
         auto material_type = lua.new_usertype<Assets::Material>("Material");
         material_type.set_function("get_texture", &Assets::Material::GetTexture);
 
@@ -293,7 +305,8 @@ namespace Vakol {
         material_type.set_function("get_diffuse_color", &Assets::Material::GetDiffuseColor);
     }
 
-    void RegisterShader(sol::state& lua) {
+    void RegisterShader(sol::state& lua)
+    {
         auto shader_type = lua.new_usertype<Shader>("Shader");
         shader_type.set_function("set_bool", [](const Shader* shader, const std::string& name, const bool value) {
             shader->SetBool(name.c_str(), value);
@@ -317,7 +330,8 @@ namespace Vakol {
                                  sol::resolve<void(const char*, float, float, float, float) const>(&Shader::SetVec4));
     }
 
-    void RegisterEntity(sol::state& lua) {
+    void RegisterEntity(sol::state& lua)
+    {
         auto entity_type = lua.new_usertype<Entity>("Entity");
 
         entity_type.set_function("get_tag", [](Entity* ent) { return ent->GetComponent<Tag>().tag; });
@@ -326,7 +340,8 @@ namespace Vakol {
 
         entity_type.set_function("create_height_map_terrain",
                                  [](Entity* ent, Scene& scene, std::string&& path, const float min, const float max) {
-                                     if (!ent->HasComponent<Drawable>()) ent->AddComponent<Drawable>();
+                                     if (!ent->HasComponent<Drawable>())
+                                         ent->AddComponent<Drawable>();
                                      if (ent->HasComponent<Components::Terrain>())
                                          ent->RemoveComponent<Components::Terrain>();
 
@@ -336,7 +351,8 @@ namespace Vakol {
 
                                      std::shared_ptr<Controller::Terrain> terrain = AssetLoader::GetTerrain(name);
 
-                                     if (terrain == nullptr) terrain = AssetLoader::GetTerrain(name, path, min, max);
+                                     if (terrain == nullptr)
+                                         terrain = AssetLoader::GetTerrain(name, path, min, max);
 
                                      auto& terrain_comp = ent->GetComponent<Components::Terrain>();
 
@@ -346,11 +362,12 @@ namespace Vakol {
                                      terrain_comp.path = std::move(path);
                                      terrain_comp.name = name;
 
-                                     if (const auto& model = terrain->GetModel()) {
+                                     if (const auto& model = terrain->GetModel())
+                                     {
                                          model->mesh().SetDrawMode(DRAW_MODE::STRIPS);
                                          model->mesh().SetDrawType(DRAW_TYPE::ELEMENTS);
 
-                                         model->mesh().SetDrawModeInfo((terrain->GetSize() - 1) / 1);  // num strips
+                                         model->mesh().SetDrawModeInfo((terrain->GetSize() - 1) / 1); // num strips
 
                                          model->mesh().SetNumTrisPerStrip(terrain->GetSize() / 1 * 2 - 2);
 
@@ -362,18 +379,21 @@ namespace Vakol {
                                  });
 
         entity_type.set_function("get_terrain", [](const Entity* ent) {
-            if (ent->HasComponent<Components::Terrain>()) return ent->GetComponent<Components::Terrain>().terrain_ptr;
+            if (ent->HasComponent<Components::Terrain>())
+                return ent->GetComponent<Components::Terrain>().terrain_ptr;
         });
 
         entity_type.set_function("add_model", [](Entity* ent, const std::string& path, const float scale = 1.0f,
                                                  const bool animated = false, const bool backfaceCull = true) {
-            if (!ent->HasComponent<Drawable>()) ent->AddComponent<Drawable>();
+            if (!ent->HasComponent<Drawable>())
+                ent->AddComponent<Drawable>();
 
             auto instance = false;
 
             auto [model, animator] = AssetLoader::GetModel(path, scale, animated, backfaceCull, instance);
 
-            if (model) {
+            if (model)
+            {
                 auto& draw = ent->GetComponent<Drawable>();
 
                 draw.model_ptr = model;
@@ -383,11 +403,15 @@ namespace Vakol {
                 draw.backfaceCull = backfaceCull;
                 draw.instance = instance;
 
-                if (animator && animated) {
-                    if (!ent->HasComponent<Components::Animation>()) ent->AddComponent<Components::Animation>();
+                if (animator && animated)
+                {
+                    if (!ent->HasComponent<Components::Animation>())
+                        ent->AddComponent<Components::Animation>();
 
-                    if (!instance) {
-                        if (!ent->HasComponent<Components::Animator>()) ent->AddComponent<Components::Animator>();
+                    if (!instance)
+                    {
+                        if (!ent->HasComponent<Components::Animator>())
+                            ent->AddComponent<Components::Animator>();
 
                         auto& _animator = ent->GetComponent<Components::Animator>();
 
@@ -404,21 +428,25 @@ namespace Vakol {
         });
 
         entity_type.set_function("set_backface_culling", [](const Entity* ent, const bool cull) {
-            if (!ent->HasComponent<Drawable>()) VK_ERROR("Cannot set backface culling without a drawable component!");
+            if (!ent->HasComponent<Drawable>())
+                VK_ERROR("Cannot set backface culling without a drawable component!");
 
             ent->GetComponent<Drawable>().backfaceCull = cull;
         });
 
         entity_type.set_function("get_model", [](const Entity* ent) {
-            if (ent->HasComponent<Drawable>()) return ent->GetComponent<Drawable>().model_ptr;
+            if (ent->HasComponent<Drawable>())
+                return ent->GetComponent<Drawable>().model_ptr;
         });
 
         entity_type.set_function("active_model", [](const Entity* ent, bool active) {
-            if (ent->HasComponent<Drawable>()) ent->GetComponent<Drawable>().active = active;
+            if (ent->HasComponent<Drawable>())
+                ent->GetComponent<Drawable>().active = active;
         });
 
         entity_type.set_function("set_shader", [](const Entity* ent, const std::string& path) {
-            if (!ent->HasComponent<Drawable>()) {
+            if (!ent->HasComponent<Drawable>())
+            {
                 VK_ERROR("Drawable Component is needed to set shader!");
                 return;
             }
@@ -431,7 +459,8 @@ namespace Vakol {
 
         entity_type.set_function("add_texture", [](const Entity* ent, const int mesh_index, const std::string& path,
                                                    const bool gamma, const bool flip) {
-            if (!ent->HasComponent<Drawable>()) {
+            if (!ent->HasComponent<Drawable>())
+            {
                 VK_ERROR("Drawable component is needed to add texture to material!");
                 return;
             }
@@ -442,7 +471,8 @@ namespace Vakol {
 
         entity_type.set_function("add_raw_texture",
                                  [](const Entity* ent, const int mesh_index, const std::string& path) {
-                                     if (!ent->HasComponent<Drawable>()) {
+                                     if (!ent->HasComponent<Drawable>())
+                                     {
                                          VK_ERROR("Drawable component is needed to add texture to material!");
                                          return;
                                      }
@@ -452,7 +482,8 @@ namespace Vakol {
                                  });
 
         entity_type.set_function("play_animation", [](const Entity* ent, const float animation_state) {
-            if (!ent->HasComponent<Components::Animation>()) {
+            if (!ent->HasComponent<Components::Animation>())
+            {
                 VK_ERROR("Animation component is needed to set it's animation state!");
                 return;
             }
@@ -463,7 +494,8 @@ namespace Vakol {
         });
 
         entity_type.set_function("get_animation_duration", [](const Entity* ent, const int animation_state) {
-            if (!ent->HasComponent<Components::Animation>()) {
+            if (!ent->HasComponent<Components::Animation>())
+            {
                 VK_ERROR("Animation component is needed to get it's duration!");
                 return -1.0;
             }
@@ -474,7 +506,8 @@ namespace Vakol {
         });
 
         entity_type.set_function("reset_animation", [](const Entity* ent, const int animation_state) {
-            if (!ent->HasComponent<Components::Animation>()) {
+            if (!ent->HasComponent<Components::Animation>())
+            {
                 VK_ERROR("Animation component is needed to reset it!");
                 return;
             }
@@ -491,38 +524,45 @@ namespace Vakol {
         });
 
         entity_type.set_function("add_rigid", [](Entity* ent) -> RigidBody& {
-            if (!ent->HasComponent<RigidBody>()) ent->AddComponent<RigidBody>();
+            if (!ent->HasComponent<RigidBody>())
+                ent->AddComponent<RigidBody>();
 
             return ent->GetComponent<RigidBody>();
         });
 
         entity_type.set_function("get_rigid", [](const Entity* ent) -> RigidBody& {
-            if (ent->HasComponent<RigidBody>()) return ent->GetComponent<RigidBody>();
+            if (ent->HasComponent<RigidBody>())
+                return ent->GetComponent<RigidBody>();
 
             VK_CRITICAL("No rigid body component found on entity");
             assert(0);
         });
 
         entity_type.set_function("add_collider", [](Entity* ent) -> Collider& {
-            if (!ent->HasComponent<Collider>()) ent->AddComponent<Collider>();
+            if (!ent->HasComponent<Collider>())
+                ent->AddComponent<Collider>();
             return ent->GetComponent<Collider>();
         });
 
         entity_type.set_function("get_collider", [](const Entity* ent) -> Collider& {
-            if (ent->HasComponent<Collider>()) return ent->GetComponent<Collider>();
+            if (ent->HasComponent<Collider>())
+                return ent->GetComponent<Collider>();
 
             VK_CRITICAL("No collider component found on entity");
             assert(0);
         });
 
         entity_type.set_function("get_bounds_from_model", [](const Entity* ent) -> void {
-            if (ent->HasComponent<Drawable, Collider>()) {
+            if (ent->HasComponent<Drawable, Collider>())
+            {
                 const auto& model = ent->GetComponent<Drawable>();
 
                 auto& collider = ent->GetComponent<Collider>();
 
                 collider.bounds = GetBounds(model, ent->GetComponent<Transform>());
-            } else {
+            }
+            else
+            {
                 VK_CRITICAL("drawable and collider must be present to get bounds from");
                 assert(0);
             }
@@ -530,12 +570,14 @@ namespace Vakol {
 
         // TODO remove FSM component
         entity_type.set_function("add_fsm", [&](Entity* ent) -> FSM& {
-            if (!ent->HasComponent<FSM>()) ent->AddComponent<FSM>(lua.create_table());
+            if (!ent->HasComponent<FSM>())
+                ent->AddComponent<FSM>(lua.create_table());
             return ent->GetComponent<FSM>();
         });
     }
 
-    void RegisterTransform(sol::state& lua) {
+    void RegisterTransform(sol::state& lua)
+    {
         auto transform_type = lua.new_usertype<Transform>("Transform");
 
         transform_type["pos"] = &Transform::pos;
@@ -543,7 +585,8 @@ namespace Vakol {
         transform_type["scale"] = &Transform::scale;
     }
 
-    void RegisterTerrain(sol::state& lua) {
+    void RegisterTerrain(sol::state& lua)
+    {
         auto terrain_type = lua.new_usertype<Controller::Terrain>("Terrain");
 
         terrain_type.set_function("get_height", &Controller::Terrain::GetHeight);
@@ -551,7 +594,8 @@ namespace Vakol {
         terrain_type.set_function("get_model", &Controller::Terrain::GetModel);
     }
 
-    void RegisterFSM(sol::state& lua) {
+    void RegisterFSM(sol::state& lua)
+    {
         auto fsm_type = lua.new_usertype<FSM>("FSM");
         fsm_type.set_function("get_state", &FSM::GetState);
         fsm_type.set_function("change_state", &FSM::ChangeState);
@@ -561,7 +605,8 @@ namespace Vakol {
         fsm_type.set_function("update", &FSM::Update);
     }
 
-    void RegisterCamera(sol::state& lua) {
+    void RegisterCamera(sol::state& lua)
+    {
         auto camera_type = lua.new_usertype<Camera>("Camera");
 
         camera_type.set_function("get_pos", &Camera::GetPos);
@@ -576,7 +621,8 @@ namespace Vakol {
         camera_type.set_function("set_yaw", &Camera::SetYaw);
     }
 
-    void RegisterScene(sol::state& lua, ScriptEngine& scriptEngine) {
+    void RegisterScene(sol::state& lua, ScriptEngine& scriptEngine)
+    {
         auto scene_type = lua.new_usertype<Scene>("Scene");
 
         scene_type.set("globals", sol::property([](Scene& self) { return self.GetScript().env; }));
@@ -586,7 +632,8 @@ namespace Vakol {
         scene_type.set_function("create_entity", [&](Scene* scene, const std::string tag, const std::string& sname) {
             auto ent = scene->CreateEntity(tag);
 
-            if (!sname.empty()) {
+            if (!sname.empty())
+            {
                 LuaScript script = scriptEngine.CreateScript("scripts/" + sname);
 
                 scriptEngine.SetScriptVariable(script, "entity", ent);
@@ -602,7 +649,8 @@ namespace Vakol {
         scene_type.set_function("get_entity", &Scene::GetEntity);
 
         scene_type.set_function("add_terrain_physics", [](Scene* scene, const Entity ent) {
-            if (!ent.HasComponent<Components::Terrain>()) {
+            if (!ent.HasComponent<Components::Terrain>())
+            {
                 VK_WARN("Entity does not have a terrain component. Can't add physics");
                 return;
             }
@@ -619,14 +667,15 @@ namespace Vakol {
                                 [](Scene* scene, const bool enable) { scene->scenePhysics->EnableDebug(enable); });
 
         scene_type.set_function("serialize",
-                                &Scene::Serialize);  // Give it folder assets/scenes. will create subfolder for scene
+                                &Scene::Serialize); // Give it folder assets/scenes. will create subfolder for scene
         scene_type.set_function(
             "deserialize",
-            &Scene::Deserialize);  // needs to be given folder assets/scenes/scene_name .ie assets/scenes/Test Scene
+            &Scene::Deserialize); // needs to be given folder assets/scenes/scene_name .ie assets/scenes/Test Scene
         scene_type.set_function("get_name", &Scene::getName);
     }
 
-    void RegisterGUIWindow(sol::state& lua) {
+    void RegisterGUIWindow(sol::state& lua)
+    {
         auto gui_window_type = lua.new_usertype<View::GUIWindow>("GUI");
 
         gui_window_type.set_function("get_display_window_width", &View::GUIWindow::DisplayWindowWidth);
@@ -645,14 +694,14 @@ namespace Vakol {
         gui_window_type.set_function("add_button", &View::GUIWindow::AddButton);
         gui_window_type.set_function("add_checkbox", &View::GUIWindow::AddCheckbox);
 
-        gui_window_type.set_function(
-            "add_image", [](const View::GUIWindow* GUI, const std::string& path, const float width, const float height,
-                            const bool centerX, const bool centerY) {
-                const auto& tex = AssetLoader::GetTexture(path, false, false);
-                const unsigned int texID = tex->GetID();
+        gui_window_type.set_function("add_image",
+                                     [](const View::GUIWindow* GUI, const std::string& path, const float width,
+                                        const float height, const bool centerX, const bool centerY) {
+                                         const auto& tex = AssetLoader::GetTexture(path, false, false);
+                                         const unsigned int texID = tex->GetID();
 
-                GUI->AddImage(texID, {width, height}, centerX, centerY);
-            });
+                                         GUI->AddImage(texID, {width, height}, centerX, centerY);
+                                     });
 
         gui_window_type.set_function("add_integer_slider", &View::GUIWindow::AddIntSlider);
         gui_window_type.set_function("add_float_slider", &View::GUIWindow::AddFloatSlider);
@@ -668,7 +717,8 @@ namespace Vakol {
         gui_window_type.set_function("end_window", &View::GUIWindow::EndWindowCreation);
     }
 
-    void RegisterRigidBody(sol::state& lua) {
+    void RegisterRigidBody(sol::state& lua)
+    {
         auto rigidType = lua.new_usertype<RigidBody>("RigidBody");
 
         rigidType["use_transform"] = &RigidBody::use_transform;
@@ -716,7 +766,8 @@ namespace Vakol {
                                [](RigidBody* rigid, const glm::vec3& force) { rigid->ApplyForce(force); });
     }
 
-    void RegisterCollider(sol::state& lua) {
+    void RegisterCollider(sol::state& lua)
+    {
         auto colliderType = lua.new_usertype<Collider>("Collider");
 
         lua["Shape"] =
@@ -741,12 +792,13 @@ namespace Vakol {
     }
 
     // TODO remove this later, just used for rp3d vec
-    void RegisterPhysics(sol::state& lua) {
+    void RegisterPhysics(sol::state& lua)
+    {
         // TODO get rid of rp3d vec
-        auto rp3dVec3 = lua.new_usertype<rp3d::Vector3>("PhyVec3");  // need for collider
+        auto rp3dVec3 = lua.new_usertype<rp3d::Vector3>("PhyVec3"); // need for collider
         rp3dVec3["x"] = &rp3d::Vector3::x;
         rp3dVec3["y"] = &rp3d::Vector3::y;
         rp3dVec3["z"] = &rp3d::Vector3::z;
     }
 
-}  // namespace Vakol
+} // namespace Vakol

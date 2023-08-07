@@ -75,7 +75,7 @@ namespace Vakol::Model
      * @param size Size of the array.
      * @return Vector of Vertex.
      */
-    std::vector<Vertex> Convert(std::vector<float> &arr, size_t size);
+    std::vector<Vertex> Convert(std::vector<float>& arr, size_t size);
 
     /**
      * @brief Class representing a Vertex Array Object (VAO).
@@ -89,7 +89,7 @@ namespace Vakol::Model
          * @param indices A vector of indices.
          * @param size Size of the array.
          */
-        VertexArray(std::vector<Vertex> &&vertices, std::vector<unsigned int> &&indices, size_t size);
+        VertexArray(std::vector<Vertex>&& vertices, std::vector<unsigned int>&& indices, size_t size);
 
         /**
          * @brief Destructs the Vertex Array.
@@ -106,7 +106,7 @@ namespace Vakol::Model
          * @param n Number of arrays to generate.
          * @param array Pointer to the array.
          */
-        static void GenArray(unsigned int n, unsigned int *array);
+        static void GenArray(unsigned int n, unsigned int* array);
 
         /**
          * @brief Specify the data of a vertex attribute.
@@ -118,9 +118,9 @@ namespace Vakol::Model
          * @param data The byte offset from the starting vertex attribute.
          */
         static void SetVertexAttributeData(unsigned int index, int n, unsigned int type, bool normalized, size_t stride,
-                                           const void *data);
+                                           const void* data);
         static void SetVertexAttributeIData(unsigned int index, int n, unsigned int type, size_t stride,
-                                            const void *data);
+                                            const void* data);
 
         /**
          * @brief Binds the Vertex Array.
@@ -163,7 +163,7 @@ namespace Vakol::Model
          * @brief Sets the vertices.
          * @param in_vertices Vector of vertices.
          */
-        void set(std::vector<Vertex> &in_vertices)
+        void set(std::vector<Vertex>& in_vertices)
         {
             this->vertices = std::move(in_vertices);
         }
@@ -172,25 +172,25 @@ namespace Vakol::Model
          * @brief Sets the indices.
          * @param in_indices Vector of indices.
          */
-        void set(std::vector<unsigned int> &in_indices)
+        void set(std::vector<unsigned int>& in_indices)
         {
             this->indices = std::move(in_indices);
         }
 
-        [[nodiscard]] const std::vector<Vertex> &GetConstVertices() const
+        [[nodiscard]] const std::vector<Vertex>& GetConstVertices() const
         {
             return this->vertices;
         }
-        [[nodiscard]] std::vector<Vertex> &GetVertices()
+        [[nodiscard]] std::vector<Vertex>& GetVertices()
         {
             return this->vertices;
         }
 
-        [[nodiscard]] const std::vector<unsigned int> &GetConstIndices() const
+        [[nodiscard]] const std::vector<unsigned int>& GetConstIndices() const
         {
             return this->indices;
         }
-        [[nodiscard]] std::vector<unsigned int> &GetIndices()
+        [[nodiscard]] std::vector<unsigned int>& GetIndices()
         {
             return this->indices;
         }

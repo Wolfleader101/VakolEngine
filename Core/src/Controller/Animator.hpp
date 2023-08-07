@@ -21,7 +21,7 @@ namespace Vakol::Controller
          *
          * @param animations The vector of animations.
          */
-        explicit Animator(std::vector<Model::Assets::Animation> &animations) : m_animations(std::move(animations))
+        explicit Animator(std::vector<Model::Assets::Animation>& animations) : m_animations(std::move(animations))
         {
         }
 
@@ -66,7 +66,7 @@ namespace Vakol::Controller
          * @param state The animation state.
          * @return const Model::Assets::Animation& The reference to the animation.
          */
-        [[nodiscard]] const Model::Assets::Animation &c_get(const int state) const
+        [[nodiscard]] const Model::Assets::Animation& c_get(const int state) const
         {
             return m_animations.at(state);
         }

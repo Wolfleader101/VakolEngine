@@ -8,7 +8,6 @@ using Vakol::Controller::LoadShader;
 
 namespace Vakol::Model
 {
-
     /**
      * @brief Class representing a Shader.
      */

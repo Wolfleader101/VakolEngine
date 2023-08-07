@@ -41,7 +41,7 @@ namespace Vakol::Model::Assets
          *
          * @param spec The material specifications.
          */
-        explicit Material(MaterialSpec &&spec) : m_spec(std::move(spec))
+        explicit Material(MaterialSpec&& spec) : m_spec(std::move(spec))
         {
             this->m_textures = std::move(m_spec.textures);
         }
@@ -51,7 +51,7 @@ namespace Vakol::Model::Assets
          *
          * @param texture The texture to add.
          */
-        void AddTexture(Texture &texture)
+        void AddTexture(Texture& texture)
         {
             this->m_textures.push_back(std::move(texture));
         }
@@ -78,7 +78,7 @@ namespace Vakol::Model::Assets
          *
          * @return The vector of textures.
          */
-        [[nodiscard]] const std::vector<Texture> &GetTextures() const
+        [[nodiscard]] const std::vector<Texture>& GetTextures() const
         {
             return this->m_textures;
         }

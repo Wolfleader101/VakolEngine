@@ -23,53 +23,53 @@ namespace Vakol
         ScriptEngine();
 
         // WARNING - lua state global access deprecated
-        LuaScript CreateScript(const std::string &scriptPath);
+        LuaScript CreateScript(const std::string& scriptPath);
 
         LuaTable CreateTable();
 
-        LuaType GetGlobalVariable(const std::string &name);
+        LuaType GetGlobalVariable(const std::string& name);
 
         template <typename T>
-        void SetGlobalVariable(const std::string &name, T &&value)
+        void SetGlobalVariable(const std::string& name, T&& value)
         {
             m_state[name] = std::forward<T>(value);
         }
 
-        LuaType GetScriptVariable(const LuaScript &script, const std::string &varName);
+        LuaType GetScriptVariable(const LuaScript& script, const std::string& varName);
 
         template <typename T>
-        void SetScriptVariable(LuaScript &script, const std::string &varName, T &&value)
+        void SetScriptVariable(LuaScript& script, const std::string& varName, T&& value)
         {
             script.env[varName] = std::forward<T>(value);
         }
 
         template <typename... Args, typename Key>
-        void SetGlobalFunction(Key &&key, Args &&...args)
+        void SetGlobalFunction(Key&& key, Args&&... args)
         {
             m_state.set_function(std::forward<Key>(key), std::forward<Args>(args)...);
         }
 
         template <typename... Args, typename Key>
-        void SetScriptFunction(LuaScript &script, Key &&key, Args &&...args)
+        void SetScriptFunction(LuaScript& script, Key&& key, Args&&... args)
         {
             script.env.set_function(std::forward<Key>(key), std::forward<Args>(args)...);
         }
 
-        void InitScript(LuaScript &script);
+        void InitScript(LuaScript& script);
 
-        void UpdateScript(LuaScript &script);
+        void UpdateScript(LuaScript& script);
 
-        void TickScript(LuaScript &script);
+        void TickScript(LuaScript& script);
 
       private:
         //! global state
         LuaState m_state;
 
-        LuaType GetVariable(sol::environment env, const std::string &varName);
+        LuaType GetVariable(sol::environment env, const std::string& varName);
 
-        void RunFile(sol::environment env, const std::string &file);
-        void RunFunction(sol::environment env, const std::string &funcName, bool ignoreMissing = true,
-                         const std::vector<LuaType> &args = {});
+        void RunFile(sol::environment env, const std::string& file);
+        void RunFunction(sol::environment env, const std::string& funcName, bool ignoreMissing = true,
+                         const std::vector<LuaType>& args = {});
 
         void RegisterFunctions();
         void RegisterTypes();

@@ -9,20 +9,20 @@ namespace Vakol
 {
     using Scene = Controller::Scene;
 
-    SceneManager::SceneManager(ScriptEngine &scriptEngine) : m_scriptEngine(scriptEngine)
+    SceneManager::SceneManager(ScriptEngine& scriptEngine) : m_scriptEngine(scriptEngine)
     {
     }
 
     SceneManager::~SceneManager()
     {
-        for (auto &scene : m_scenes)
+        for (auto& scene : m_scenes)
         {
             delete scene.second;
         }
         m_activeScene = nullptr;
     }
 
-    Scene &SceneManager::GetActiveScene()
+    Scene& SceneManager::GetActiveScene()
     {
         if (m_scenes.empty())
             ThrowRuntime("No scenes in scene manager.");
@@ -33,7 +33,7 @@ namespace Vakol
         return *m_activeScene;
     }
 
-    void SceneManager::ChangeActiveScene(const std::string &name)
+    void SceneManager::ChangeActiveScene(const std::string& name)
     {
         if (!m_activeScene && (*m_activeScene).getName() == name)
             return;
@@ -41,7 +41,7 @@ namespace Vakol
         m_nextScene = &GetScene(name);
     }
 
-    Scene &SceneManager::GetScene(const std::string &name) // slow but adds flexiblility
+    Scene& SceneManager::GetScene(const std::string& name) // slow but adds flexiblility
     {
         if (m_scenes.find(name) != m_scenes.end())
             return *m_scenes.at(name);
@@ -49,7 +49,7 @@ namespace Vakol
         ThrowRuntime("Scene with name " + name + " not found.");
     }
 
-    void SceneManager::CreateScene(const std::string &name, const std::string &scriptName)
+    void SceneManager::CreateScene(const std::string& name, const std::string& scriptName)
     {
         if (m_scenes.find(name) != m_scenes.end())
             VK_ERROR("Scene with name: {0} already exists. Skipping...", name);
@@ -63,7 +63,7 @@ namespace Vakol
             m_activeScene = m_scenes.at(name);
     }
 
-    void SceneManager::RemoveScene(const std::string &name)
+    void SceneManager::RemoveScene(const std::string& name)
     {
         if (m_scenes.find(name) == m_scenes.end())
             ThrowRuntime("Scene with name " + name + " not found.");
@@ -100,7 +100,7 @@ namespace Vakol
         return empty || currentNull;
     }
 
-    void SceneManager::ThrowRuntime(const std::string &str) const // probably should be its own class but I'm lazy
+    void SceneManager::ThrowRuntime(const std::string& str) const // probably should be its own class but I'm lazy
     {
         VK_CRITICAL(str);
         throw std::runtime_error(str);

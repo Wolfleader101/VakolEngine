@@ -42,22 +42,22 @@ namespace Vakol
     }
     // ScriptEngine::~ScriptEngine() { m_scripts.clear(); }
 
-    void ScriptEngine::InitScript(LuaScript &script)
+    void ScriptEngine::InitScript(LuaScript& script)
     {
         RunFunction(script.env, "init", true);
     }
 
-    void ScriptEngine::UpdateScript(LuaScript &script)
+    void ScriptEngine::UpdateScript(LuaScript& script)
     {
         RunFunction(script.env, "update", true);
     }
 
-    void ScriptEngine::TickScript(LuaScript &script)
+    void ScriptEngine::TickScript(LuaScript& script)
     {
         RunFunction(script.env, "tick", true);
     }
 
-    LuaScript ScriptEngine::CreateScript(const std::string &scriptPath)
+    LuaScript ScriptEngine::CreateScript(const std::string& scriptPath)
     {
         LuaScript script;
 
@@ -78,17 +78,17 @@ namespace Vakol
         return m_state.create_table();
     }
 
-    LuaType ScriptEngine::GetGlobalVariable(const std::string &name)
+    LuaType ScriptEngine::GetGlobalVariable(const std::string& name)
     {
         return GetVariable(m_state.globals(), name);
     }
 
-    LuaType ScriptEngine::GetScriptVariable(const LuaScript &script, const std::string &varName)
+    LuaType ScriptEngine::GetScriptVariable(const LuaScript& script, const std::string& varName)
     {
         return GetVariable(script.env, varName);
     }
 
-    LuaType ScriptEngine::GetVariable(sol::environment env, const std::string &varName)
+    LuaType ScriptEngine::GetVariable(sol::environment env, const std::string& varName)
     {
         sol::object var = env[varName];
 
@@ -105,7 +105,7 @@ namespace Vakol
         return var;
     }
 
-    void ScriptEngine::RunFile(sol::environment env, const std::string &file)
+    void ScriptEngine::RunFile(sol::environment env, const std::string& file)
     {
         auto result = m_state.safe_script_file(file, env, &sol::script_pass_on_error);
 
@@ -124,8 +124,8 @@ namespace Vakol
         // return result;
     }
 
-    void ScriptEngine::RunFunction(sol::environment env, const std::string &funcName, bool ignoreMissing,
-                                   const std::vector<LuaType> &args)
+    void ScriptEngine::RunFunction(sol::environment env, const std::string& funcName, bool ignoreMissing,
+                                   const std::vector<LuaType>& args)
     {
         // Get the function
         sol::function func = env[funcName];

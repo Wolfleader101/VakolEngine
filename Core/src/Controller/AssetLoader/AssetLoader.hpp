@@ -42,19 +42,19 @@ namespace Vakol::Controller
          * @param data Pointer to additional data for embedded textures.
          * @return std::shared_ptr<Model::Assets::Texture> A shared pointer to the loaded texture.
          */
-        static std::shared_ptr<Model::Assets::Texture> GetTexture(const std::string &file, int size, bool gamma,
-                                                                  bool flip, const void *data); // embedded textures
-        static std::shared_ptr<Model::Assets::Texture> GetTexture(const std::string &file, bool gamma,
+        static std::shared_ptr<Model::Assets::Texture> GetTexture(const std::string& file, int size, bool gamma,
+                                                                  bool flip, const void* data); // embedded textures
+        static std::shared_ptr<Model::Assets::Texture> GetTexture(const std::string& file, bool gamma,
                                                                   bool flip);               // regular textures
-        static std::shared_ptr<Model::Assets::Texture> GetTexture(const std::string &file); // raw textures
+        static std::shared_ptr<Model::Assets::Texture> GetTexture(const std::string& file); // raw textures
 
-        static Model::Assets::Animation GetAnimation(const std::string &file, const int state);
-        static std::shared_ptr<Animator> GetAnimator(const std::string &file);
+        static Model::Assets::Animation GetAnimation(const std::string& file, const int state);
+        static std::shared_ptr<Animator> GetAnimator(const std::string& file);
 
         static std::pair<std::shared_ptr<Model::Assets::Model>, std::shared_ptr<Animator>> GetModel(
-            const std::string &file, float scale, bool animated, bool backfaceCull, bool &instance);
+            const std::string& file, float scale, bool animated, bool backfaceCull, bool& instance);
         static std::pair<std::shared_ptr<Model::Assets::Model>, std::shared_ptr<Animator>> GetModel(
-            const std::string &file, float scale, bool animated, bool backfaceCull);
+            const std::string& file, float scale, bool animated, bool backfaceCull);
 
         /**
          * @brief Get a shader.
@@ -62,7 +62,7 @@ namespace Vakol::Controller
          * @param file The file path of the shader.
          * @return std::shared_ptr<Model::Shader> A shared pointer to the loaded shader.
          */
-        static std::shared_ptr<Model::Shader> GetShader(const std::string &file);
+        static std::shared_ptr<Model::Shader> GetShader(const std::string& file);
 
         /**
          * @brief Get a terrain with specified parameters.
@@ -73,7 +73,7 @@ namespace Vakol::Controller
          * @param max The maximum height of the terrain.
          * @return std::shared_ptr<Terrain> A shared pointer to the loaded terrain.
          */
-        static std::shared_ptr<Terrain> GetTerrain(const std::string &name, const std::string &heightmap, float min,
+        static std::shared_ptr<Terrain> GetTerrain(const std::string& name, const std::string& heightmap, float min,
                                                    float max);
 
         /**
@@ -82,7 +82,7 @@ namespace Vakol::Controller
          * @param name The name of the terrain.
          * @return std::shared_ptr<Terrain> A shared pointer to the loaded terrain.
          */
-        static std::shared_ptr<Terrain> GetTerrain(const std::string &name);
+        static std::shared_ptr<Terrain> GetTerrain(const std::string& name);
 
       private:
         /**

@@ -13,14 +13,14 @@ constexpr glm::vec3 WORLD_UP = glm::vec3(0.0f, 1.0f, 0.0f);
 namespace Vakol::Controller
 {
 
-    Camera::Camera(const glm::vec3 &position) : forward(WORLD_FORWARD), up(WORLD_UP)
+    Camera::Camera(const glm::vec3& position) : forward(WORLD_FORWARD), up(WORLD_UP)
     {
         this->position = position;
 
         // this->Update();
     }
 
-    const glm::mat4 &Camera::GetMatrix(const unsigned char type) const
+    const glm::mat4& Camera::GetMatrix(const unsigned char type) const
     {
         static constexpr glm::mat4 defaultMatrix = glm::mat4(1.0f);
         switch (type)

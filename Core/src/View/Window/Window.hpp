@@ -21,7 +21,7 @@ namespace Vakol::View
     class Window
     {
       public:
-        using EventCallbackFn = std::function<void(Controller::Event &)>;
+        using EventCallbackFn = std::function<void(Controller::Event&)>;
 
         /**
          * @brief window constructor
@@ -46,19 +46,19 @@ namespace Vakol::View
          * @brief get the GLFW window
          * @return
          */
-        GLFWwindow *GetWindow() const;
+        GLFWwindow* GetWindow() const;
 
         /**
          * @brief set the event callback function
          * @param callback to set
          */
-        void SetEventCallback(const EventCallbackFn &callback);
+        void SetEventCallback(const EventCallbackFn& callback);
 
         /**
          * @brief get the width of the window
          * @return width of the window
          */
-        [[nodiscard]] const int &GetWidth() const
+        [[nodiscard]] const int& GetWidth() const
         {
             return m_width;
         }
@@ -67,7 +67,7 @@ namespace Vakol::View
          * @brief get the height of the window
          * @return height of window
          */
-        [[nodiscard]] const int &GetHeight() const
+        [[nodiscard]] const int& GetHeight() const
         {
             return m_height;
         }
@@ -76,7 +76,7 @@ namespace Vakol::View
         /**
          * @brief glfw window ptr
          */
-        GLFWwindow *m_window;
+        GLFWwindow* m_window;
 
         /**
          * @brief event callback fn

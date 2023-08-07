@@ -5,8 +5,10 @@
 
 #include "Controller/AssetLoader/AssetLoader.hpp"
 
-namespace Vakol::View {
-    DebugRenderer::DebugRenderer(rp3d::PhysicsWorld* WorldPtr) {
+namespace Vakol::View
+{
+    DebugRenderer::DebugRenderer(rp3d::PhysicsWorld* WorldPtr)
+    {
         m_World = WorldPtr;
         m_rp3dRenderer = &m_World->getDebugRenderer();
 
@@ -18,13 +20,23 @@ namespace Vakol::View {
         VK_INFO("Debug Renderer Initialized");
     }
 
-    void DebugRenderer::SetShader(const std::shared_ptr<Shader>& shader) { m_Shader = shader; }
+    void DebugRenderer::SetShader(const std::shared_ptr<Shader>& shader)
+    {
+        m_Shader = shader;
+    }
 
-    void DebugRenderer::Enable(bool enable) { enable ? EnableWorldDebug() : DisableWorldDebug(); }
+    void DebugRenderer::Enable(bool enable)
+    {
+        enable ? EnableWorldDebug() : DisableWorldDebug();
+    }
 
-    bool DebugRenderer::IsEnabled() const { return m_World->getIsDebugRenderingEnabled(); }
+    bool DebugRenderer::IsEnabled() const
+    {
+        return m_World->getIsDebugRenderingEnabled();
+    }
 
-    void DebugRenderer::EnableWorldDebug() {
+    void DebugRenderer::EnableWorldDebug()
+    {
         m_World->setIsDebugRenderingEnabled(true);
 
         m_rp3dRenderer = &m_World->getDebugRenderer();
@@ -34,12 +46,14 @@ namespace Vakol::View {
         m_rp3dRenderer->setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::CONTACT_POINT, true);
     }
 
-    void DebugRenderer::DisableWorldDebug() {
+    void DebugRenderer::DisableWorldDebug()
+    {
         m_World->setIsDebugRenderingEnabled(false);
         m_rp3dRenderer = nullptr;
     }
 
-    void DebugRenderer::GetDebugColor(const uint32_t& color, glm::vec3& outColor) const {
+    void DebugRenderer::GetDebugColor(const uint32_t& color, glm::vec3& outColor) const
+    {
         const uint32_t colorValue = color;
 
         outColor.x = (colorValue >> 16 & 0xFF) / 255.0f;
@@ -47,11 +61,13 @@ namespace Vakol::View {
         outColor.z = (colorValue & 0xFF) / 255.0f;
     }
 
-    void DebugRenderer::GetTriangles() {
+    void DebugRenderer::GetTriangles()
+    {
         glm::vec3 color;
         PhysicsDebugVertex tempVert{};
 
-        for (auto& tri : m_rp3dRenderer->getTriangles()) {
+        for (auto& tri : m_rp3dRenderer->getTriangles())
+        {
             glm::vec3 xyz;
             // v1
             GetDebugColor(tri.color1, color);
@@ -88,10 +104,12 @@ namespace Vakol::View {
         }
     }
 
-    void DebugRenderer::GetLines() {
+    void DebugRenderer::GetLines()
+    {
         glm::vec3 color;
 
-        for (auto& line : m_rp3dRenderer->getLines()) {
+        for (auto& line : m_rp3dRenderer->getLines())
+        {
             glm::vec3 xyz;
             // v1
             GetDebugColor(line.color1, color);
@@ -117,14 +135,16 @@ namespace Vakol::View {
         }
     }
 
-    void DebugRenderer::Update() {
+    void DebugRenderer::Update()
+    {
         m_DebugData.clear();
 
         GetTriangles();
         GetLines();
     }
 
-    void DebugRenderer::Draw() const {
+    void DebugRenderer::Draw() const
+    {
         m_Shader->Bind();
 
         glBindVertexArray(m_VAO);
@@ -147,4 +167,4 @@ namespace Vakol::View {
 
         m_Shader->Unbind();
     }
-}  // namespace Vakol::View
+} // namespace Vakol::View

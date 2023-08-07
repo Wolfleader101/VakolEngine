@@ -94,7 +94,7 @@ namespace Vakol::Controller
          * @param kev The KeyPressedEvent.
          * @return bool True if the event is handled, false otherwise.
          */
-        bool OnKeyPressed(KeyPressedEvent &kev);
+        bool OnKeyPressed(KeyPressedEvent& kev);
 
         /**
          * @brief Handle the event when a key is released.
@@ -102,7 +102,7 @@ namespace Vakol::Controller
          * @param kev The KeyReleasedEvent.
          * @return bool True if the event is handled, false otherwise.
          */
-        bool OnKeyReleased(KeyReleasedEvent &kev);
+        bool OnKeyReleased(KeyReleasedEvent& kev);
 
         /**
          * @brief Handle the event when the mouse is moved.
@@ -110,7 +110,7 @@ namespace Vakol::Controller
          * @param ev The MouseMovedEvent.
          * @return bool True if the event is handled, false otherwise.
          */
-        bool OnMouseMoved(MouseMovedEvent &ev);
+        bool OnMouseMoved(MouseMovedEvent& ev);
 
         /**
          * @brief Handle the event when a mouse button is pressed.
@@ -118,7 +118,7 @@ namespace Vakol::Controller
          * @param mev The MouseButtonPressedEvent.
          * @return bool True if the event is handled, false otherwise.
          */
-        bool OnMouseButtonPressed(MouseButtonPressedEvent &mev);
+        bool OnMouseButtonPressed(MouseButtonPressedEvent& mev);
 
         /**
          * @brief Handle the event when a mouse button is released.
@@ -126,14 +126,14 @@ namespace Vakol::Controller
          * @param mev The MouseButtonReleasedEvent.
          * @return bool True if the event is handled, false otherwise.
          */
-        bool OnMouseButtonReleased(MouseButtonReleasedEvent &mev);
+        bool OnMouseButtonReleased(MouseButtonReleasedEvent& mev);
 
         /**
          * @brief Get the current mouse position.
          *
          * @return const glm::vec2& The current mouse position.
          */
-        const glm::vec2 &GetMousePos() const
+        const glm::vec2& GetMousePos() const
         {
             return m_mousePos;
         }

@@ -8,12 +8,14 @@
 
 #include "Logger.hpp"
 
-namespace Vakol::Model {
+namespace Vakol::Model
+{
 
-    class Entity;  // pre declared to prevent recursive include
+    class Entity; // pre declared to prevent recursive include
 }
 
-namespace Vakol::Controller {
+namespace Vakol::Controller
+{
 
     class System;
     class Scene;
@@ -23,8 +25,9 @@ namespace Vakol::Controller {
      *
      * @brief Wrapper for entt registry and contains a list of all active entities.
      */
-    class EntityList {
-       public:
+    class EntityList
+    {
+      public:
         /**
          * @brief Construct a new Entity Manager object.
          */
@@ -58,7 +61,7 @@ namespace Vakol::Controller {
          *
          * @param Handle Handle to remove.
          */
-        void RemoveEntity(uint32_t Handle);  // can also use entity because type conversion is provided in entity
+        void RemoveEntity(uint32_t Handle); // can also use entity because type conversion is provided in entity
 
         /**
          * @brief Clears the list and registry of all entities.
@@ -94,9 +97,12 @@ namespace Vakol::Controller {
          */
         void Deserialize(const std::string& file);
 
-        entt::registry& GetRegistry() { return m_Registry; }
+        entt::registry& GetRegistry()
+        {
+            return m_Registry;
+        }
 
-       private:
+      private:
         /**
          * @brief EnTT registry actually containing all the entity and component data.
          */
@@ -115,9 +121,11 @@ namespace Vakol::Controller {
          * @tparam Args The component types to serialize.
          * @param file The file path to serialize to.
          */
-        void privateSerialize(const std::string& file) const {
+        void privateSerialize(const std::string& file) const
+        {
             std::ofstream out(file);
-            if (out.good()) {
+            if (out.good())
+            {
                 Archive json(out);
 
                 json(CEREAL_NVP(ActiveEntityList));
@@ -125,7 +133,7 @@ namespace Vakol::Controller {
                 entt::snapshot snapshot(m_Registry);
                 snapshot.entities(json).template component<Args...>(json);
 
-                out << "\n}";  // doesn't close off?
+                out << "\n}"; // doesn't close off?
 
                 out.close();
             }
@@ -139,13 +147,15 @@ namespace Vakol::Controller {
          * @tparam Args The component types to deserialize.
          * @param file The file path to deserialize from.
          */
-        void privateDeserialize(const std::string& file) {
+        void privateDeserialize(const std::string& file)
+        {
             std::ifstream inp(file);
 
-            if (inp.good()) {
+            if (inp.good())
+            {
                 m_Registry.clear();
                 Archive json(inp);
-                json(ActiveEntityList);  // fills vector again
+                json(ActiveEntityList); // fills vector again
 
                 entt::snapshot_loader snapLoad(m_Registry);
                 snapLoad.entities(json);
@@ -155,9 +165,9 @@ namespace Vakol::Controller {
             }
         }
 
-        friend class Model::Entity;  // friend to allow the API for entities to be clean.
+        friend class Model::Entity; // friend to allow the API for entities to be clean.
         friend class System;
         friend class Scene;
     };
 
-}  // namespace Vakol::Controller
+} // namespace Vakol::Controller

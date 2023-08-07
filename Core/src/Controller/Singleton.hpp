@@ -18,21 +18,21 @@ namespace Vakol::Controller
          *
          * @param other The other singleton instance.
          */
-        Singleton(Singleton &other) = delete;
+        Singleton(Singleton& other) = delete;
 
         /**
          * @brief Deleted assignment operator.
          *
          * @param The other singleton instance.
          */
-        void operator=(const Singleton &) = delete;
+        void operator=(const Singleton&) = delete;
 
         /**
          * @brief Get the instance of the singleton.
          *
          * @return T& The reference to the singleton instance.
          */
-        static T &GetInstance()
+        static T& GetInstance()
         {
             static T instance;
             return instance;

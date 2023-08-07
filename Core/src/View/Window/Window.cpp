@@ -9,8 +9,8 @@
 using namespace Vakol::Controller;
 
 void APIENTRY DebugOutput(const unsigned int source, const unsigned int type, const unsigned int id,
-                          const unsigned int severity, [[maybe_unused]] int length, const char *message,
-                          [[maybe_unused]] const void *userParam)
+                          const unsigned int severity, [[maybe_unused]] int length, const char* message,
+                          [[maybe_unused]] const void* userParam)
 {
     if (id == 131169 || id == 131185 || id == 131218 || id == 131204)
         return; // ignore these non-significant error codes
@@ -139,9 +139,9 @@ namespace Vakol::View
         std::cout << std::endl;
 
         VK_INFO("OpenGL Info:");
-        VK_INFO("Vendor: {0}", reinterpret_cast<const char *>(glGetString(GL_VENDOR)));
-        VK_INFO("Renderer: {0}", reinterpret_cast<const char *>(glGetString(GL_RENDERER)));
-        VK_INFO("OpenGL Version: {0}", reinterpret_cast<const char *>(glGetString(GL_VERSION)));
+        VK_INFO("Vendor: {0}", reinterpret_cast<const char*>(glGetString(GL_VENDOR)));
+        VK_INFO("Renderer: {0}", reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
+        VK_INFO("OpenGL Version: {0}", reinterpret_cast<const char*>(glGetString(GL_VERSION)));
 
         if (GLVersion.major < 4 || (GLVersion.major != 4 && GLVersion.minor <= 5))
         {
@@ -165,8 +165,8 @@ namespace Vakol::View
 
         glfwSetWindowUserPointer(m_window, this);
 
-        glfwSetWindowSizeCallback(m_window, [](GLFWwindow *window, const int width, const int height) {
-            const auto wp = static_cast<Window *>(glfwGetWindowUserPointer(window));
+        glfwSetWindowSizeCallback(m_window, [](GLFWwindow* window, const int width, const int height) {
+            const auto wp = static_cast<Window*>(glfwGetWindowUserPointer(window));
             wp->m_height = height;
             wp->m_width = width;
 
@@ -174,15 +174,15 @@ namespace Vakol::View
             wp->m_eventCallback(event);
         });
 
-        glfwSetWindowCloseCallback(m_window, [](GLFWwindow *window) {
-            auto wp = static_cast<Window *>(glfwGetWindowUserPointer(window));
+        glfwSetWindowCloseCallback(m_window, [](GLFWwindow* window) {
+            auto wp = static_cast<Window*>(glfwGetWindowUserPointer(window));
             WindowCloseEvent event;
             wp->m_eventCallback(event);
         });
 
-        glfwSetKeyCallback(m_window, [](GLFWwindow *window, const int key, [[maybe_unused]] int scancode,
+        glfwSetKeyCallback(m_window, [](GLFWwindow* window, const int key, [[maybe_unused]] int scancode,
                                         const int action, [[maybe_unused]] int mods) {
-            const auto wp = static_cast<Window *>(glfwGetWindowUserPointer(window));
+            const auto wp = static_cast<Window*>(glfwGetWindowUserPointer(window));
 
             switch (action)
             {
@@ -207,8 +207,8 @@ namespace Vakol::View
         });
 
         glfwSetMouseButtonCallback(
-            m_window, [](GLFWwindow *window, const int button, const int action, [[maybe_unused]] int mods) {
-                const auto wp = static_cast<Window *>(glfwGetWindowUserPointer(window));
+            m_window, [](GLFWwindow* window, const int button, const int action, [[maybe_unused]] int mods) {
+                const auto wp = static_cast<Window*>(glfwGetWindowUserPointer(window));
 
                 switch (action)
                 {
@@ -227,15 +227,15 @@ namespace Vakol::View
                 }
             });
 
-        glfwSetScrollCallback(m_window, [](GLFWwindow *window, const double xOffset, const double yOffset) {
-            const auto wp = static_cast<Window *>(glfwGetWindowUserPointer(window));
+        glfwSetScrollCallback(m_window, [](GLFWwindow* window, const double xOffset, const double yOffset) {
+            const auto wp = static_cast<Window*>(glfwGetWindowUserPointer(window));
 
             MouseScrolledEvent event(static_cast<float>(xOffset), static_cast<float>(yOffset));
             wp->m_eventCallback(event);
         });
 
-        glfwSetCursorPosCallback(m_window, [](GLFWwindow *window, const double xPos, const double yPos) {
-            auto wp = static_cast<Window *>(glfwGetWindowUserPointer(window));
+        glfwSetCursorPosCallback(m_window, [](GLFWwindow* window, const double xPos, const double yPos) {
+            auto wp = static_cast<Window*>(glfwGetWindowUserPointer(window));
 
             MouseMovedEvent event(static_cast<float>(xPos), static_cast<float>(yPos));
             wp->m_eventCallback(event);
@@ -256,12 +256,12 @@ namespace Vakol::View
         glfwPollEvents();
     }
 
-    GLFWwindow *Window::GetWindow() const
+    GLFWwindow* Window::GetWindow() const
     {
         return m_window;
     }
 
-    void Window::SetEventCallback(const EventCallbackFn &callback)
+    void Window::SetEventCallback(const EventCallbackFn& callback)
     {
         m_eventCallback = callback;
     }

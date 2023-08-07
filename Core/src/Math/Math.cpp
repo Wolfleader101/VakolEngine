@@ -3,56 +3,56 @@
 namespace Vakol::Math
 {
 
-    float Dot(const Vec2 &a, const Vec2 &b)
+    float Dot(const Vec2& a, const Vec2& b)
     {
         return a.x * b.x + a.y * b.y;
     }
-    float Dot(const Vec3 &a, const Vec3 &b)
+    float Dot(const Vec3& a, const Vec3& b)
     {
         return a.x * b.x + a.y * b.y + a.z * b.z;
     }
 
-    float Magnitude(const Vec2 &v)
+    float Magnitude(const Vec2& v)
     {
         return sqrtf(Dot(v, v));
     }
-    float Magnitude(const Vec3 &v)
+    float Magnitude(const Vec3& v)
     {
         return sqrtf(Dot(v, v));
     }
-    float MagnitudeSq(const Vec2 &v)
+    float MagnitudeSq(const Vec2& v)
     {
         return Dot(v, v);
     }
-    float MagnitudeSq(const Vec3 &v)
+    float MagnitudeSq(const Vec3& v)
     {
         return Dot(v, v);
     }
 
-    float Distance(const Point &p1, const Point &p2)
+    float Distance(const Point& p1, const Point& p2)
     {
         Vec3 t = p1 - p2;
         return Magnitude(t);
     }
 
-    void Normalize(Vec2 &v)
+    void Normalize(Vec2& v)
     {
         v = v * (1.0f / Magnitude(v));
     }
-    void Normalize(Vec3 &v)
+    void Normalize(Vec3& v)
     {
         v = v * (1.0f / Magnitude(v));
     }
-    Vec2 Normalized(const Vec2 &v)
+    Vec2 Normalized(const Vec2& v)
     {
         return v * (1.0f / Magnitude(v));
     }
-    Vec3 Normalized(const Vec3 &v)
+    Vec3 Normalized(const Vec3& v)
     {
         return v * (1.0f / Magnitude(v));
     }
 
-    Vec3 Cross(const Vec3 &a, const Vec3 &b)
+    Vec3 Cross(const Vec3& a, const Vec3& b)
     {
         Vec3 res;
         res.x = a.y * b.z - a.z * b.y;
@@ -61,56 +61,56 @@ namespace Vakol::Math
         return res;
     }
 
-    float Angle(const Vec2 &a, const Vec2 &b)
+    float Angle(const Vec2& a, const Vec2& b)
     {
         float m = sqrtf(MagnitudeSq(a) * MagnitudeSq(b));
         return acos(Dot(a, b) / m);
     }
 
-    float Angle(const Vec3 &a, const Vec3 &b)
+    float Angle(const Vec3& a, const Vec3& b)
     {
         float m = sqrtf(MagnitudeSq(a) * MagnitudeSq(b));
         return acos(Dot(a, b) / m);
     }
 
-    Vec2 Project(const Vec2 &length, const Vec2 &direction)
+    Vec2 Project(const Vec2& length, const Vec2& direction)
     {
         float dot = Dot(length, direction);
         float magSq = MagnitudeSq(direction);
         return direction * (dot / magSq);
     }
 
-    Vec3 Project(const Vec3 &length, const Vec3 &direction)
+    Vec3 Project(const Vec3& length, const Vec3& direction)
     {
         float dot = Dot(length, direction);
         float magSq = MagnitudeSq(direction);
         return direction * (dot / magSq);
     }
 
-    Vec2 Perpendicular(const Vec2 &len, const Vec2 &dir)
+    Vec2 Perpendicular(const Vec2& len, const Vec2& dir)
     {
         return len - Project(len, dir);
     }
-    Vec3 Perpendicular(const Vec3 &len, const Vec3 &dir)
+    Vec3 Perpendicular(const Vec3& len, const Vec3& dir)
     {
         return len - Project(len, dir);
     }
 
-    float Length(const Line &line)
+    float Length(const Line& line)
     {
         return Magnitude(line.start - line.end);
     }
-    float LengthSq(const Line &line)
+    float LengthSq(const Line& line)
     {
         return MagnitudeSq(line.start - line.end);
     }
 
-    Ray FromPoints(const Point &from, const Point &to)
+    Ray FromPoints(const Point& from, const Point& to)
     {
         return Ray(from, Normalized(to - from));
     }
 
-    Mat4 Translation(const Vec3 &pos)
+    Mat4 Translation(const Vec3& pos)
     {
         return Mat4(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, pos.x, pos.y, pos.z, 1.0f);
     }
@@ -139,21 +139,21 @@ namespace Vakol::Math
         return ZRotation(roll) * XRotation(pitch) * YRotation(yaw);
     }
 
-    Point MultiplyPoint(const Point &point, const Mat4 &mat)
+    Point MultiplyPoint(const Point& point, const Mat4& mat)
     {
         glm::vec4 tempPoint(point, 1.0f);
         tempPoint = mat * tempPoint;
         return Point(tempPoint);
     }
 
-    Vec3 MultiplyVector(const Vec3 &vec, const Mat4 &mat)
+    Vec3 MultiplyVector(const Vec3& vec, const Mat4& mat)
     {
         glm::vec4 temp(vec, 0.0f);
         temp = mat * temp;
         return Vec3(temp);
     }
 
-    Mat3 Cut(const Mat4 &mat, int row, int col)
+    Mat3 Cut(const Mat4& mat, int row, int col)
     {
         Mat3 res;
         int targetRow = 0;
@@ -174,7 +174,7 @@ namespace Vakol::Math
         return res;
     }
 
-    Mat4 Inverse(const Mat4 &mat)
+    Mat4 Inverse(const Mat4& mat)
     {
         return glm::inverse(mat);
     }

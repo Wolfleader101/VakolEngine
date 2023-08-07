@@ -6,26 +6,32 @@
 
 #include "Controller/Camera.hpp"
 
-namespace Vakol::Model::Components {
+namespace Vakol::Model::Components
+{
     struct Drawable;
     struct Transform;
-}  // namespace Vakol::Model::Components
+} // namespace Vakol::Model::Components
 
-namespace Vakol::Model::Assets {
+namespace Vakol::Model::Assets
+{
     class Animation;
 }
 
-namespace Vakol::View {
+namespace Vakol::View
+{
     /**
      * @brief Renderer class for abstracting rendering operations
      */
-    class Renderer {
-       public:
+    class Renderer
+    {
+      public:
         /**
          * @brief Renderer constructor
          * @param window shared pointer to a Window object
          */
-        explicit Renderer(const std::shared_ptr<Window>& window) : m_window(window) {}
+        explicit Renderer(const std::shared_ptr<Window>& window) : m_window(window)
+        {
+        }
 
         /**
          * @brief Virtual Renderer destructor
@@ -130,10 +136,10 @@ namespace Vakol::View {
         virtual void SetWireframe(const bool wireframe) = 0;
         virtual void SetSkybox(const bool skybox) = 0;
 
-       protected:
-        bool isWireframe = false;  ///< Boolean flag indicating whether wireframe mode is on
-        bool isSkybox = true;      ///< Boolean flag indicating whether skybox is on
+      protected:
+        bool isWireframe = false; ///< Boolean flag indicating whether wireframe mode is on
+        bool isSkybox = true;     ///< Boolean flag indicating whether skybox is on
 
-        std::shared_ptr<Window> m_window = nullptr;  ///< Shared pointer to a Window object
+        std::shared_ptr<Window> m_window = nullptr; ///< Shared pointer to a Window object
     };
-}  // namespace Vakol::View
+} // namespace Vakol::View

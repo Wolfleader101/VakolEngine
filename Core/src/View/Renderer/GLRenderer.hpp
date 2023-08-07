@@ -21,7 +21,7 @@ namespace Vakol::View
          * @brief GLRenderer constructor
          * @param window shared pointer to a Window object
          */
-        explicit GLRenderer(const std::shared_ptr<Window> &window);
+        explicit GLRenderer(const std::shared_ptr<Window>& window);
 
         /**
          * @brief Add a buffer to the GLRenderer
@@ -40,7 +40,7 @@ namespace Vakol::View
          * @param data pointer to initial data for the buffer
          * @param usage OpenGL usage flag, often GL_STATIC_DRAW
          */
-        void AddBuffer(unsigned int type, int size, int binding, const void *data, unsigned int usage) override;
+        void AddBuffer(unsigned int type, int size, int binding, const void* data, unsigned int usage) override;
 
         /**
          * @brief Bind a FrameBuffer
@@ -69,13 +69,13 @@ namespace Vakol::View
          * @param size size of the data in bytes
          * @param data pointer to the data
          */
-        void SetBufferSubData(int index, int offset, int size, const void *data) const override;
+        void SetBufferSubData(int index, int offset, int size, const void* data) const override;
 
         /**
          * @brief Clear color buffer with a color
          * @param color optional glm::vec4 specifying the color, default is black with full opacity
          */
-        void ClearColor(const glm::vec4 &color = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)) const override;
+        void ClearColor(const glm::vec4& color = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)) const override;
 
         /**
          * @brief Clear color buffer with a color specified by four floats
@@ -98,22 +98,22 @@ namespace Vakol::View
          * @param drawable drawable component of the model
          * @param animation animation asset of the model
          */
-        void DrawAnimated(const Model::Components::Transform &transform, const Model::Components::Drawable &drawable,
-                          const Model::Assets::Animation &animation) const override;
+        void DrawAnimated(const Model::Components::Transform& transform, const Model::Components::Drawable& drawable,
+                          const Model::Assets::Animation& animation) const override;
 
         /**
          * @brief Draw a model without animation
          * @param transform transform component of the model
          * @param drawable drawable component of the model
          */
-        void Draw(const Model::Components::Transform &transform,
-                  const Model::Components::Drawable &drawable) const override;
+        void Draw(const Model::Components::Transform& transform,
+                  const Model::Components::Drawable& drawable) const override;
 
         /**
          * @brief Update data in the renderer based on a camera
          * @param camera the camera to update data from
          */
-        void UpdateData(const Controller::Camera &camera) override;
+        void UpdateData(const Controller::Camera& camera) override;
 
         /**
          * @brief Perform update at index

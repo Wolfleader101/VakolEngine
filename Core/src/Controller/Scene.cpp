@@ -12,22 +12,22 @@
 
 namespace Vakol::Controller
 {
-    Scene::Scene(const std::string &name, LuaScript &script, const std::shared_ptr<Physics::ScenePhysics> &SP)
+    Scene::Scene(const std::string& name, LuaScript& script, const std::shared_ptr<Physics::ScenePhysics>& SP)
         : scenePhysics(SP), m_script(std::move(script)), m_name(name), m_cam(glm::vec3(0.0f, 0.0f, 2.0f))
     {
     }
 
-    const std::string &Scene::getName() const
+    const std::string& Scene::getName() const
     {
         return m_name;
     }
 
-    void Scene::setName(const std::string &newName)
+    void Scene::setName(const std::string& newName)
     {
         m_name = newName;
     }
 
-    Model::Entity Scene::CreateEntity(const std::string &tag)
+    Model::Entity Scene::CreateEntity(const std::string& tag)
     {
         auto ent = m_entityList.CreateEntity();
 
@@ -44,7 +44,7 @@ namespace Vakol::Controller
         m_entityList.RemoveEntity(entity);
     }
 
-    void Scene::Update(const Time &time, const std::shared_ptr<View::Renderer> &renderer)
+    void Scene::Update(const Time& time, const std::shared_ptr<View::Renderer>& renderer)
     {
         scenePhysics->Update(time);
 
@@ -53,12 +53,12 @@ namespace Vakol::Controller
         m_cam.Update();
     }
 
-    std::shared_ptr<Model::Entity> Scene::GetEntity(const std::string &tag)
+    std::shared_ptr<Model::Entity> Scene::GetEntity(const std::string& tag)
     {
         Model::Entity ent;
 
         m_entityList.m_Registry.view<Model::Components::Tag>().each(
-            [&](auto entity, Model::Components::Tag &tagComponent) {
+            [&](auto entity, Model::Components::Tag& tagComponent) {
                 if (tagComponent.tag == tag)
                     ent = m_entityList.GetEntity(static_cast<unsigned int>(entity));
             });
@@ -68,7 +68,7 @@ namespace Vakol::Controller
 
     namespace fs = std::filesystem;
 
-    void Scene::Serialize(const std::string &folder) const
+    void Scene::Serialize(const std::string& folder) const
     {
         std::string temp = folder;
         std::replace(temp.begin(), temp.end(), '/', '\\'); // replace / with \\ for filesystem
@@ -115,7 +115,7 @@ namespace Vakol::Controller
         }
     }
 
-    void Scene::Deserialize(const std::string &folder)
+    void Scene::Deserialize(const std::string& folder)
     {
         std::ifstream globalInput(folder + "/Globals.json");
 

@@ -15,5 +15,5 @@ namespace Vakol::Controller
      * @param animated Flag indicating whether the model is animated.
      * @return std::pair<Model::Assets::Model, Animator> A pair of the loaded model and animator.
      */
-    std::pair<Model::Assets::Model, Animator> LoadModel(const std::string &path, float scale, bool animated);
+    std::pair<Model::Assets::Model, Animator> LoadModel(const std::string& path, float scale, bool animated);
 } // namespace Vakol::Controller

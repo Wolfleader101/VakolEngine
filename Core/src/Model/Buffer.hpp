@@ -36,7 +36,7 @@ namespace Vakol::Model
          * \brief Constructs an ATTACHMENT object with a color attachment.
          * \param color The color attachment.
          */
-        explicit ATTACHMENT(const COLOR_ATTACHMENT &color) : color(color)
+        explicit ATTACHMENT(const COLOR_ATTACHMENT& color) : color(color)
         {
         }
 
@@ -45,7 +45,7 @@ namespace Vakol::Model
          * \param color The color attachment.
          * \param depth The depth attachment.
          */
-        ATTACHMENT(const COLOR_ATTACHMENT &color, const DEPTH_ATTACHMENT &depth) : color(color), depth(depth)
+        ATTACHMENT(const COLOR_ATTACHMENT& color, const DEPTH_ATTACHMENT& depth) : color(color), depth(depth)
         {
         }
     };
@@ -65,7 +65,7 @@ namespace Vakol::Model
          * \param data Pointer to the data for the buffer.
          * \param usage The usage pattern of the buffer.
          */
-        Buffer(unsigned int type, int size, unsigned int binding, const void *data,
+        Buffer(unsigned int type, int size, unsigned int binding, const void* data,
                unsigned int usage); // go ahead and set the data
 
         /**
@@ -122,7 +122,7 @@ namespace Vakol::Model
          * \param data Pointer to the data.
          * \param usage The usage pattern of the buffer.
          */
-        void SetData(int size, const void *data, unsigned int usage) const;
+        void SetData(int size, const void* data, unsigned int usage) const;
 
         /**
          * \brief Sets a portion of the buffer's data with the specified offset, size, and data.
@@ -130,7 +130,7 @@ namespace Vakol::Model
          * \param size The size of the data.
          * \param data Pointer to the data.
          */
-        void SetSubData(int offset, int size, const void *data) const;
+        void SetSubData(int offset, int size, const void* data) const;
 
         /**
          * \brief Retrieves the ID of the buffer.
@@ -157,7 +157,7 @@ namespace Vakol::Model
          * \param attachment The frame buffer attachment.
          * \param depth Flag indicating whether the frame buffer has depth attachment.
          */
-        FrameBuffer(const ATTACHMENT &attachment, bool depth);
+        FrameBuffer(const ATTACHMENT& attachment, bool depth);
 
         /**
          * \brief Destructor for FrameBuffer.
@@ -184,7 +184,7 @@ namespace Vakol::Model
          * \brief Clears the color buffer with the specified color.
          * \param color The color to clear.
          */
-        void ClearColor(const glm::vec4 &color) const;
+        void ClearColor(const glm::vec4& color) const;
 
         /**
          * \brief Clears the color buffer with the specified color.
@@ -207,7 +207,7 @@ namespace Vakol::Model
          * \param data Pointer to the image data in memory.
          */
         void SetTextureAttachment(unsigned int attachment, unsigned int target, int internalformat, int width,
-                                  int height, unsigned int format, unsigned int type, const void *data = nullptr);
+                                  int height, unsigned int format, unsigned int type, const void* data = nullptr);
 
         /**
          * \brief Sets a depth attachment for the frame buffer.

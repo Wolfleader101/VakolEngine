@@ -9,19 +9,26 @@ unsigned int LoadGLTexture(std::vector<const char*>&&, bool, bool);
 unsigned int LoadGLTexture(std::string&, bool, bool, bool);
 unsigned int LoadGLTexture(int, bool, bool, const void*);
 
-namespace Vakol::Controller {
-    unsigned int LoadTexture(std::vector<const char*>&& faces, const bool gamma, const bool flip) {
+namespace Vakol::Controller
+{
+    unsigned int LoadTexture(std::vector<const char*>&& faces, const bool gamma, const bool flip)
+    {
         return LoadGLTexture(std::move(faces), gamma, flip);
     }
-    unsigned int LoadTexture(const int size, const bool gamma, const bool flip, const void* data) {
+    unsigned int LoadTexture(const int size, const bool gamma, const bool flip, const void* data)
+    {
         return LoadGLTexture(size, gamma, flip, data);
     }
-    unsigned int LoadTexture(std::string& path, const bool gamma, const bool flip) {
+    unsigned int LoadTexture(std::string& path, const bool gamma, const bool flip)
+    {
         return ::LoadGLTexture(path, false, gamma, flip);
     }
     // gamma correction only applies for RGB/RGBA channels
-    unsigned int LoadRawTexture(std::string& path) { return ::LoadGLTexture(path, true, false, false); }
-}  // namespace Vakol::Controller
+    unsigned int LoadRawTexture(std::string& path)
+    {
+        return ::LoadGLTexture(path, true, false, false);
+    }
+} // namespace Vakol::Controller
 
 // loads a cubemap texture from 6 individual texture faces
 // order:
@@ -32,7 +39,8 @@ namespace Vakol::Controller {
 // +Z (front)
 // -Z (back)
 // -------------------------------------------------------
-unsigned int LoadGLTexture(std::vector<const char*>&& faces, const bool gamma, const bool flip) {
+unsigned int LoadGLTexture(std::vector<const char*>&& faces, const bool gamma, const bool flip)
+{
     const auto size = static_cast<int>(faces.size());
 
     unsigned int ID = 0;
@@ -42,10 +50,12 @@ unsigned int LoadGLTexture(std::vector<const char*>&& faces, const bool gamma, c
 
     int width = 0, height = 0, channels = 1;
 
-    for (int i = 0; i < size; ++i) {
+    for (int i = 0; i < size; ++i)
+    {
         auto data = LoadImage(faces.at(i), width, height, channels, flip);
 
-        if (!data) {
+        if (!data)
+        {
             data = LoadImage("coreAssets/textures/error.png", width, height, channels, flip);
         }
 
@@ -68,12 +78,13 @@ unsigned int LoadGLTexture(std::vector<const char*>&& faces, const bool gamma, c
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-    glBindTexture(GL_TEXTURE_CUBE_MAP, 0);  // unbind cube map
+    glBindTexture(GL_TEXTURE_CUBE_MAP, 0); // unbind cube map
 
     return ID;
 }
 
-unsigned int LoadGLTexture(const int size, const bool gamma, const bool flip, const void* data) {
+unsigned int LoadGLTexture(const int size, const bool gamma, const bool flip, const void* data)
+{
     unsigned int ID = 0;
 
     glGenTextures(1, &ID);
@@ -88,7 +99,8 @@ unsigned int LoadGLTexture(const int size, const bool gamma, const bool flip, co
     int width = 0, height = 0, channels = 1;
     auto img_data = LoadImage(size, width, height, channels, flip, data);
 
-    if (!img_data) {
+    if (!img_data)
+    {
         img_data = LoadImage("coreAssets/textures/error.png", width, height, channels, flip);
     }
 
@@ -105,12 +117,13 @@ unsigned int LoadGLTexture(const int size, const bool gamma, const bool flip, co
     delete[] img_data;
     img_data = nullptr;
 
-    glBindTexture(GL_TEXTURE_2D, 0);  // unbind
+    glBindTexture(GL_TEXTURE_2D, 0); // unbind
 
     return ID;
 }
 
-unsigned int LoadGLTexture(std::string& path, const bool raw, const bool gamma, const bool flip) {
+unsigned int LoadGLTexture(std::string& path, const bool raw, const bool gamma, const bool flip)
+{
     unsigned int ID = 0;
 
     glGenTextures(1, &ID);
@@ -126,7 +139,8 @@ unsigned int LoadGLTexture(std::string& path, const bool raw, const bool gamma, 
     auto data =
         (raw) ? LoadImage(std::move(path), width, height) : LoadImage(std::move(path), width, height, channels, flip);
 
-    if (!data) {
+    if (!data)
+    {
         data = LoadImage("coreAssets/textures/error.png", width, height, channels, flip);
     }
 
@@ -143,7 +157,7 @@ unsigned int LoadGLTexture(std::string& path, const bool raw, const bool gamma, 
     delete[] data;
     data = nullptr;
 
-    glBindTexture(GL_TEXTURE_2D, 0);  // unbind
+    glBindTexture(GL_TEXTURE_2D, 0); // unbind
 
     return ID;
 }

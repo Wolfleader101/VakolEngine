@@ -9,7 +9,7 @@
 #include <fstream>
 #include <iostream>
 
-std::string LoadFile(const std::string &path)
+std::string LoadFile(const std::string& path)
 {
     std::string result;
 
@@ -32,13 +32,13 @@ std::string LoadFile(const std::string &path)
     return result;
 }
 
-unsigned char *LoadImage(const int size, int &width, int &height, int &nrChannels, const bool flip, const void *data)
+unsigned char* LoadImage(const int size, int& width, int& height, int& nrChannels, const bool flip, const void* data)
 {
     // OpenGL be like: Nah we want textures upside down.
     stbi_set_flip_vertically_on_load(flip);
 
     const auto img_data =
-        stbi_load_from_memory(static_cast<const stbi_uc *const>(data), size, &width, &height, &nrChannels, 0);
+        stbi_load_from_memory(static_cast<const stbi_uc* const>(data), size, &width, &height, &nrChannels, 0);
 
     if (!img_data)
     {
@@ -49,9 +49,9 @@ unsigned char *LoadImage(const int size, int &width, int &height, int &nrChannel
     return img_data;
 }
 
-unsigned char *LoadImage(std::string &&path, int &width, int &height)
+unsigned char* LoadImage(std::string&& path, int& width, int& height)
 {
-    unsigned char *result = nullptr;
+    unsigned char* result = nullptr;
 
     if (std::ifstream in(path, std::ios::in | std::ios::binary); in)
     {
@@ -67,7 +67,7 @@ unsigned char *LoadImage(std::string &&path, int &width, int &height)
         if (size != -1)
         {
             in.seekg(0, std::ios::beg);
-            in.read(reinterpret_cast<char *>(result), size);
+            in.read(reinterpret_cast<char*>(result), size);
         }
         else
             VK_CRITICAL("Could not read file '{0}'", path);
@@ -78,7 +78,7 @@ unsigned char *LoadImage(std::string &&path, int &width, int &height)
     return result;
 }
 
-unsigned char *LoadImage(const char *path, int &width, int &height, int &channels, const bool flip = true)
+unsigned char* LoadImage(const char* path, int& width, int& height, int& channels, const bool flip = true)
 {
     // OpenGL be like: Nah we want textures upside down.
     stbi_set_flip_vertically_on_load(flip);
@@ -94,7 +94,7 @@ unsigned char *LoadImage(const char *path, int &width, int &height, int &channel
     return data;
 }
 
-unsigned char *LoadImage(std::string &&path, int &width, int &height, int &channels, const bool flip = true)
+unsigned char* LoadImage(std::string&& path, int& width, int& height, int& channels, const bool flip = true)
 {
     // OpenGL be like: Nah we want textures upside down.
     stbi_set_flip_vertically_on_load(flip);
@@ -110,14 +110,14 @@ unsigned char *LoadImage(std::string &&path, int &width, int &height, int &chann
     return data;
 }
 
-bool FileExists(const std::string &file)
+bool FileExists(const std::string& file)
 {
     const auto s = std::filesystem::file_status{};
 
     return status_known(s) ? exists(s) : std::filesystem::exists(file);
 }
 
-std::string GetFileSuffix(const std::string &path, const char ch)
+std::string GetFileSuffix(const std::string& path, const char ch)
 {
     if (path.find_last_of(ch) > 1024)
         return {};
@@ -125,7 +125,7 @@ std::string GetFileSuffix(const std::string &path, const char ch)
     return path.substr(path.find_last_of(ch) + 1);
 }
 
-std::string GetFileExtension(const std::string &path)
+std::string GetFileExtension(const std::string& path)
 {
     return path.substr(path.find_last_of('.'));
 }

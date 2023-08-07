@@ -8,7 +8,8 @@
 #include "Scene.hpp"
 #include "View/Renderer/Renderer.hpp"
 
-namespace Vakol::Controller {
+namespace Vakol::Controller
+{
 
     class Scene;
 
@@ -17,8 +18,9 @@ namespace Vakol::Controller {
      *
      * @brief Class representing a system in the application.
      */
-    class System {
-       public:
+    class System
+    {
+      public:
         System() = delete;
 
         /**
@@ -95,7 +97,7 @@ namespace Vakol::Controller {
          */
         static void FSM_Init();
 
-       private:
+      private:
         /**
          * @brief The shared pointer to the ScenePhysics object.
          */
@@ -111,4 +113,4 @@ namespace Vakol::Controller {
          */
         static EntityList* Entlist;
     };
-}  // namespace Vakol::Controller
+} // namespace Vakol::Controller

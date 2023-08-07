@@ -18,7 +18,7 @@ namespace Vakol::Controller
         s_script_logger->set_level(spdlog::level::trace);
     }
 
-    std::shared_ptr<spdlog::logger> &Logger::GetLogger()
+    std::shared_ptr<spdlog::logger>& Logger::GetLogger()
     {
         return s_logger;
     }

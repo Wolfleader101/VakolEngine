@@ -7,15 +7,15 @@
 #include <iostream>
 #include <vector>
 
-unsigned int LoadShader(const std::string &, const std::string &, const std::string &, const std::string &,
-                        const std::string &);
+unsigned int LoadShader(const std::string&, const std::string&, const std::string&, const std::string&,
+                        const std::string&);
 
-unsigned int CompileGLShader(std::string &&, std::string &&, std::string &&, std::string &&, std::string &&);
-int CheckCompileErrors(const unsigned int, const std::string &);
+unsigned int CompileGLShader(std::string&&, std::string&&, std::string&&, std::string&&, std::string&&);
+int CheckCompileErrors(const unsigned int, const std::string&);
 
 namespace Vakol::Controller
 {
-    unsigned int LoadShader(const std::string &path)
+    unsigned int LoadShader(const std::string& path)
     {
         const std::string directory = path.substr(0, path.find_last_of('.'));
 
@@ -23,7 +23,7 @@ namespace Vakol::Controller
 
         std::vector<std::string> shaders;
 
-        for (const auto &extension : extensions)
+        for (const auto& extension : extensions)
         {
             if (std::string file = directory + extension; FileExists(file))
                 shaders.push_back(file);
@@ -35,8 +35,8 @@ namespace Vakol::Controller
     }
 } // namespace Vakol::Controller
 
-unsigned int LoadShader(const std::string &vPath, const std::string &fPath, const std::string &gPath,
-                        const std::string &tcPath, const std::string &tePath)
+unsigned int LoadShader(const std::string& vPath, const std::string& fPath, const std::string& gPath,
+                        const std::string& tcPath, const std::string& tePath)
 {
     // Vertex, Fragment Code
     std::string v_code;
@@ -66,8 +66,8 @@ unsigned int LoadShader(const std::string &vPath, const std::string &fPath, cons
                            std::move(te_code));
 }
 
-unsigned int CompileGLShader(std::string &&v_code, std::string &&f_code, std::string &&g_code, std::string &&tc_code,
-                             std::string &&te_code)
+unsigned int CompileGLShader(std::string&& v_code, std::string&& f_code, std::string&& g_code, std::string&& tc_code,
+                             std::string&& te_code)
 {
     // Vertex Shader Code (same thing as v_code)
     const auto vs_code = v_code.c_str();
@@ -160,7 +160,7 @@ unsigned int CompileGLShader(std::string &&v_code, std::string &&f_code, std::st
     return id;
 }
 
-int CheckCompileErrors(const unsigned int id, const std::string &type)
+int CheckCompileErrors(const unsigned int id, const std::string& type)
 {
     int success;
     char info_log[1024];

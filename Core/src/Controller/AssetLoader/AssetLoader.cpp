@@ -18,8 +18,8 @@ namespace Vakol::Controller
     std::unordered_map<std::string, std::shared_ptr<Model::Shader>> AssetLoader::m_ShaderMap;
     std::unordered_map<std::string, std::shared_ptr<Terrain>> AssetLoader::m_TerrainMap;
 
-    std::shared_ptr<Texture> AssetLoader::GetTexture(const std::string &file, const int size, const bool gamma,
-                                                     const bool flip, const void *data)
+    std::shared_ptr<Texture> AssetLoader::GetTexture(const std::string& file, const int size, const bool gamma,
+                                                     const bool flip, const void* data)
     {
         auto ret = std::make_shared<Texture>();
 
@@ -42,7 +42,7 @@ namespace Vakol::Controller
         return ret;
     }
 
-    std::shared_ptr<Texture> AssetLoader::GetTexture(const std::string &file, const bool gamma, const bool flip)
+    std::shared_ptr<Texture> AssetLoader::GetTexture(const std::string& file, const bool gamma, const bool flip)
     {
         auto ret = std::make_shared<Texture>();
 
@@ -66,7 +66,7 @@ namespace Vakol::Controller
         return ret;
     }
 
-    std::shared_ptr<Texture> AssetLoader::GetTexture(const std::string &file)
+    std::shared_ptr<Texture> AssetLoader::GetTexture(const std::string& file)
     {
         auto ret = std::make_shared<Texture>();
 
@@ -90,7 +90,7 @@ namespace Vakol::Controller
         return ret;
     }
 
-    std::shared_ptr<Animator> AssetLoader::GetAnimator(const std::string &file)
+    std::shared_ptr<Animator> AssetLoader::GetAnimator(const std::string& file)
     {
         std::shared_ptr<Animator> ret = nullptr;
 
@@ -104,13 +104,13 @@ namespace Vakol::Controller
         return ret;
     }
 
-    Model::Assets::Animation AssetLoader::GetAnimation(const std::string &attached_model, const int state)
+    Model::Assets::Animation AssetLoader::GetAnimation(const std::string& attached_model, const int state)
     {
         return GetAnimator(attached_model)->get(state);
     }
 
     std::pair<std::shared_ptr<Model::Assets::Model>, std::shared_ptr<Animator>> AssetLoader::GetModel(
-        const std::string &file, const float scale, const bool animated, const bool backfaceCull)
+        const std::string& file, const float scale, const bool animated, const bool backfaceCull)
     {
         bool instance;
 
@@ -118,13 +118,13 @@ namespace Vakol::Controller
     }
 
     std::pair<std::shared_ptr<::Model>, std::shared_ptr<Animator>> AssetLoader::GetModel(
-        const std::string &file, const float scale, const bool animated, const bool backfaceCull, bool &instance)
+        const std::string& file, const float scale, const bool animated, const bool backfaceCull, bool& instance)
     {
         std::pair<std::shared_ptr<::Model>, std::shared_ptr<Animator>> ret;
 
         if (const auto itr = m_ModelMap.find(file); itr == m_ModelMap.end())
         {
-            auto &&[model, animator] = LoadModel(file, scale, animated);
+            auto&& [model, animator] = LoadModel(file, scale, animated);
 
             ret.first = std::make_shared<::Model>(model);
             ret.second = std::make_shared<Animator>(animator);
@@ -150,7 +150,7 @@ namespace Vakol::Controller
         return ret;
     }
 
-    std::shared_ptr<Model::Shader> AssetLoader::GetShader(const std::string &file)
+    std::shared_ptr<Model::Shader> AssetLoader::GetShader(const std::string& file)
     {
         std::shared_ptr<Model::Shader> ret;
 
@@ -170,7 +170,7 @@ namespace Vakol::Controller
         return ret;
     }
 
-    std::shared_ptr<Terrain> AssetLoader::GetTerrain(const std::string &name, const std::string &heightmap, float min,
+    std::shared_ptr<Terrain> AssetLoader::GetTerrain(const std::string& name, const std::string& heightmap, float min,
                                                      float max)
     {
         std::shared_ptr<Terrain> ret;
@@ -191,7 +191,7 @@ namespace Vakol::Controller
         return ret;
     }
 
-    std::shared_ptr<Terrain> AssetLoader::GetTerrain(const std::string &name)
+    std::shared_ptr<Terrain> AssetLoader::GetTerrain(const std::string& name)
     {
         if (const auto itr = m_TerrainMap.find(name); itr != m_TerrainMap.end())
             return itr->second;

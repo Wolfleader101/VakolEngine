@@ -21,7 +21,7 @@ namespace Vakol::Controller
          * @brief get the logger
          * @return return pointer to logger
          */
-        static std::shared_ptr<spdlog::logger> &GetLogger();
+        static std::shared_ptr<spdlog::logger>& GetLogger();
 
         /**
          * @brief Print a trace message from a script.

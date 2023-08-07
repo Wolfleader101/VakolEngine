@@ -27,7 +27,7 @@ namespace Vakol::Model::Assets
          * @param duration The duration of the animation.
          * @param tps The ticks per second of the animation.
          */
-        Animation(const glm::mat4 &root_inverse, std::vector<AnimationNode> &&nodes, const unsigned int bone_count,
+        Animation(const glm::mat4& root_inverse, std::vector<AnimationNode>&& nodes, const unsigned int bone_count,
                   const double duration, const double tps)
             : global_inverse(root_inverse), m_transforms(MAX_BONE_COUNT, glm::mat4(1.0f)), m_nodes(std::move(nodes)),
               bone_count(bone_count), duration(duration), ticks_per_second(tps)
@@ -51,17 +51,17 @@ namespace Vakol::Model::Assets
 
             for (int i = 0, count = numNodes(); i < count; ++i)
             {
-                auto &[bone, bone_transform, parent, node_transform] = m_nodes.at(i);
+                auto& [bone, bone_transform, parent, node_transform] = m_nodes.at(i);
                 if (i <= parent)
                 {
                     VK_CRITICAL("Animation::Update() - Node index must be greater than parent index!");
                     return;
                 }
 
-                const auto &transform =
+                const auto& transform =
                     bone ? bone->interpolate_frames_at(current_time)
                          : node_transform; // Interpolate the transform based on the bone or node animation
-                const auto &parent_transform =
+                const auto& parent_transform =
                     parent >= 0 ? m_nodes.at(parent).bone_transform
                                 : glm::mat4(1.0f); // Get the parent's transform or use the identity matrix if no parent
 
@@ -90,7 +90,7 @@ namespace Vakol::Model::Assets
          *
          * @return The vector of bone transforms.
          */
-        [[nodiscard]] const std::vector<glm::mat4> &transforms() const
+        [[nodiscard]] const std::vector<glm::mat4>& transforms() const
         {
             return m_transforms;
         }
@@ -100,7 +100,7 @@ namespace Vakol::Model::Assets
          *
          * @return The transform matrix.
          */
-        [[nodiscard]] const glm::mat4 &transform() const
+        [[nodiscard]] const glm::mat4& transform() const
         {
             return m_transforms.at(0);
         }

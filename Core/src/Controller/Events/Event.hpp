@@ -48,7 +48,7 @@ namespace Vakol::Controller
     {                                               \
         return GetStaticType();                     \
     }                                               \
-    virtual const char *GetName() const override    \
+    virtual const char* GetName() const override    \
     {                                               \
         return #type;                               \
     }
@@ -81,7 +81,7 @@ namespace Vakol::Controller
          * @brief get the name of the event
          * @return name of event
          */
-        virtual const char *GetName() const = 0;
+        virtual const char* GetName() const = 0;
 
         /**
          * @brief get the categories of the event
@@ -118,14 +118,14 @@ namespace Vakol::Controller
     class EventDispatcher
     {
         template <typename T>
-        using EventFn = std::function<bool(T &)>;
+        using EventFn = std::function<bool(T&)>;
 
       public:
         /**
          * @brief default constructor
          * @param event to dispatch
          */
-        EventDispatcher(Event &event) : m_Event(event)
+        EventDispatcher(Event& event) : m_Event(event)
         {
         }
 
@@ -140,7 +140,7 @@ namespace Vakol::Controller
         {
             if (m_Event.GetEventType() == T::GetStaticType())
             {
-                m_Event.Handled = func(*(T *)&m_Event);
+                m_Event.Handled = func(*(T*)&m_Event);
                 return true;
             }
             return false;
@@ -150,10 +150,10 @@ namespace Vakol::Controller
         /**
          * @brief the event to dispatch
          */
-        Event &m_Event;
+        Event& m_Event;
     };
 
-    inline std::ostream &operator<<(std::ostream &os, const Event &e)
+    inline std::ostream& operator<<(std::ostream& os, const Event& e)
     {
         return os << e.ToString();
     }

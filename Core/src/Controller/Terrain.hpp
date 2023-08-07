@@ -29,7 +29,7 @@ namespace Vakol::Controller
          *
          * @param mesh The mesh to set.
          */
-        void SetModel(Model::Assets::Mesh &&mesh)
+        void SetModel(Model::Assets::Mesh&& mesh)
         {
             this->m_model = std::make_shared<Model::Assets::Model>(mesh);
         }
@@ -39,7 +39,7 @@ namespace Vakol::Controller
          *
          * @param model The model to set.
          */
-        void SetModel(Model::Assets::Model &&model)
+        void SetModel(Model::Assets::Model&& model)
         {
             this->m_model = std::make_shared<Model::Assets::Model>(std::move(model));
         }
@@ -49,7 +49,7 @@ namespace Vakol::Controller
          *
          * @return The shared pointer to the model.
          */
-        const std::shared_ptr<Model::Assets::Model> &GetModel() const
+        const std::shared_ptr<Model::Assets::Model>& GetModel() const
         {
             return this->m_model;
         }
@@ -59,7 +59,7 @@ namespace Vakol::Controller
          *
          * @param data The pointer to the terrain data.
          */
-        void SetData(const unsigned char *data);
+        void SetData(const unsigned char* data);
 
         /**
          * @brief Get the terrain size.
@@ -109,7 +109,7 @@ namespace Vakol::Controller
          *
          * @return The vector containing the height map.
          */
-        const std::vector<float> &GetHeightMap() const
+        const std::vector<float>& GetHeightMap() const
         {
             return this->m_height_map;
         }
@@ -119,7 +119,7 @@ namespace Vakol::Controller
          *
          * @return The vector containing the terrain data.
          */
-        const std::vector<unsigned char> &GetData() const
+        const std::vector<unsigned char>& GetData() const
         {
             return this->m_data;
         }
@@ -187,7 +187,7 @@ namespace Vakol::Controller
              * @param other The other point to compare.
              * @return True if the points are equal, false otherwise.
              */
-            bool operator==(const Point &other) const
+            bool operator==(const Point& other) const
             {
                 return this->x == other.x && this->z == other.z;
             }
@@ -198,7 +198,7 @@ namespace Vakol::Controller
              * @param other The other point to subtract.
              * @return The result of the subtraction.
              */
-            Point operator-(const Point &other) const
+            Point operator-(const Point& other) const
             {
                 return {this->x - other.x, this->z - other.z};
             }
@@ -211,7 +211,7 @@ namespace Vakol::Controller
          * @param p2 The second point.
          * @param size The size of the terrain.
          */
-        static void GenRandomPoints(Point &p1, Point &p2, const int size);
+        static void GenRandomPoints(Point& p1, Point& p2, const int size);
 
         /**
          * @brief Normalize values in an array.
@@ -219,7 +219,7 @@ namespace Vakol::Controller
          * @param arr The array to normalize.
          * @param size The size of the array.
          */
-        void NormalizeValues(std::vector<float> &arr, const int size);
+        void NormalizeValues(std::vector<float>& arr, const int size);
 
         /**
          * @brief Set the height map of the terrain.
@@ -233,7 +233,7 @@ namespace Vakol::Controller
          * @param size The size of the array.
          * @param filter The FIR filter value.
          */
-        static void ApplyFIRFilter(std::vector<float> &arr, const int size, const float filter);
+        static void ApplyFIRFilter(std::vector<float>& arr, const int size, const float filter);
 
         /**
          * @brief Perform a single pass of the FIR filter.
@@ -244,7 +244,7 @@ namespace Vakol::Controller
          * @param filter The FIR filter value.
          * @return The filtered value at the current index.
          */
-        static float FirSinglePass(std::vector<float> &arr, const int index, const float prev, const float filter);
+        static float FirSinglePass(std::vector<float>& arr, const int index, const float prev, const float filter);
 
         /**
          * @brief The shared pointer to the terrain model.
@@ -285,7 +285,7 @@ namespace Vakol::Controller
      * @param max The maximum height of the terrain.
      * @return The loaded height map terrain.
      */
-    Terrain LoadHeightMapTerrain(std::string &&path, float min, float max);
+    Terrain LoadHeightMapTerrain(std::string&& path, float min, float max);
 
     /**
      * @brief Load a CLOD (Continuous Level of Detail) terrain from a file.
@@ -295,5 +295,5 @@ namespace Vakol::Controller
      * @param max The maximum height of the terrain.
      * @return The loaded CLOD terrain.
      */
-    Terrain LoadCLODTerrain(std::string &&path, float min, float max);
+    Terrain LoadCLODTerrain(std::string&& path, float min, float max);
 } // namespace Vakol::Controller
