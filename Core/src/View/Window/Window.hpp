@@ -1,9 +1,10 @@
 #pragma once
-#include <GLFW/glfw3.h>
 #include <glad/glad.h>
 
 #include <functional>
 #include <string>
+
+#include "GLFW/glfw3.h"
 
 namespace Vakol::Controller {
     class Event;
