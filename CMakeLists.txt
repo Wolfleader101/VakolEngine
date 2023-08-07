@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 option(WarningsAsErrors "WarningsAsErrors" OFF)
-option(ASAN_ENABLED "Build this target with AddressSanitizer" ON)
+option(ASAN_ENABLED "Build this target with AddressSanitizer" OFF)
 
 set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
 set(CMAKE_DISABLE_SOURCE_CHANGES ON)
@@ -49,7 +49,7 @@ endif()
 
 if(ASAN_ENABLED)
   if(MSVC)
-    add_compile_options(${PROJECT_NAME} PUBLIC /fsanitize=address)
+    add_compile_options(${PROJECT_NAME} PUBLIC /fsanitize=address, /permissive-)
   else()
     add_compile_options(${PROJECT_NAME} PUBLIC -fsanitize=address,undefined,leak)
     add_link_options(${PROJECT_NAME} PUBLIC -fsanitize=address,undefined,leak)
