@@ -34,7 +34,7 @@ namespace Vakol::Model::Assets
          * @param bone_to_model The bone-to-model transformation matrix.
          * @return The index of the added bone.
          */
-        int add_new_bone(std::string &&name, const glm::mat4 &bone_to_model)
+        int add_new_bone(std::string&& name, const glm::mat4& bone_to_model)
         {
             // Insert the new bone into the map
             auto [itr, inserted] = name_to_info.insert(std::make_pair(std::move(name), Bone{-1, bone_to_model}));
@@ -43,7 +43,7 @@ namespace Vakol::Model::Assets
                 return itr->second.index;
 
             // Retrieve the inserted bone's index and set it to the next available bone ID
-            auto &[index, offset] = itr->second;
+            auto& [index, offset] = itr->second;
             index = next_bone_id++;
 
             return index;
@@ -55,7 +55,7 @@ namespace Vakol::Model::Assets
          * @param name The name of the bone.
          * @return The pointer to the Bone if the bone is found, nullptr otherwise.
          */
-        const Bone *get(const char *name) const
+        const Bone* get(const char* name) const
         {
             // Find the bone in the map based on the name
             const auto itr = name_to_info.find(name);

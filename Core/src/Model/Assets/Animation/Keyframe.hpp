@@ -85,7 +85,7 @@ namespace Vakol::Model::Assets
              * @param rhs The right-hand side key frame.
              * @return True if lhs.timestamp < rhs.timestamp, false otherwise.
              */
-            bool operator()(const Key &lhs, const Key &rhs) const noexcept
+            bool operator()(const Key& lhs, const Key& rhs) const noexcept
             {
                 return lhs.timestamp < rhs.timestamp;
             }
@@ -97,7 +97,7 @@ namespace Vakol::Model::Assets
              * @param rhs The key frame to compare with.
              * @return True if time < rhs.timestamp, false otherwise.
              */
-            bool operator()(const double time, const Key &rhs) const noexcept
+            bool operator()(const double time, const Key& rhs) const noexcept
             {
                 return time < rhs.timestamp;
             }
@@ -109,7 +109,7 @@ namespace Vakol::Model::Assets
              * @param time The double value representing time.
              * @return True if lhs.timestamp < time, false otherwise.
              */
-            bool operator()(const Key &lhs, const double time) const noexcept
+            bool operator()(const Key& lhs, const double time) const noexcept
             {
                 return lhs.timestamp < time;
             }
@@ -126,7 +126,7 @@ namespace Vakol::Model::Assets
          * @return The index of the frame if found, -1 otherwise.
          */
         template <typename Key>
-        static int GetFrameIndex(const std::vector<Key> &frames, double time, unsigned int start_offset,
+        static int GetFrameIndex(const std::vector<Key>& frames, double time, unsigned int start_offset,
                                  unsigned int end_offset)
         {
             if (frames.size() < 2)
@@ -194,7 +194,7 @@ namespace Vakol::Model::Assets
          * @return The updated frame index.
          */
         template <typename Key>
-        static int UpdateFrameIndex(const std::vector<Key> &frames, const double time, const int prev_index,
+        static int UpdateFrameIndex(const std::vector<Key>& frames, const double time, const int prev_index,
                                     const double prev_time)
         {
             // Assert that the previous index is within the range of frames
@@ -287,11 +287,11 @@ namespace Vakol::Model::Assets
 
             prev_position_index = p0;
 
-            const auto &[position, timestamp] = positions.at(p0);
-            const auto &next = positions.at(p0 + 1);
+            const auto& [position, timestamp] = positions.at(p0);
+            const auto& next = positions.at(p0 + 1);
 
             const double scale_factor = GetScaleFactor(timestamp, next.timestamp, time);
-            const auto &target_position = mix(position, next.position, scale_factor);
+            const auto& target_position = mix(position, next.position, scale_factor);
 
             return translate(glm::mat4(1.0f), target_position);
         }
@@ -308,8 +308,8 @@ namespace Vakol::Model::Assets
 
             prev_rotation_index = p0;
 
-            const Vakol::Model::Assets::KeyRotation &first = rotations.at(p0);
-            const Vakol::Model::Assets::KeyRotation &next = rotations.at(p0 + 1);
+            const Vakol::Model::Assets::KeyRotation& first = rotations.at(p0);
+            const Vakol::Model::Assets::KeyRotation& next = rotations.at(p0 + 1);
 
             const double scale_factor = GetScaleFactor(first.timestamp, next.timestamp, time);
 
@@ -331,11 +331,11 @@ namespace Vakol::Model::Assets
 
             prev_scale_index = p0;
 
-            const auto &[scale, timestamp] = scales.at(p0);
-            const auto &next = scales.at(p0 + 1);
+            const auto& [scale, timestamp] = scales.at(p0);
+            const auto& next = scales.at(p0 + 1);
 
             const double scale_factor = GetScaleFactor(timestamp, next.timestamp, time);
-            const auto &target_scale = mix(scale, next.scale, scale_factor);
+            const auto& target_scale = mix(scale, next.scale, scale_factor);
 
             return glm::scale(glm::mat4(1.0f), target_scale);
         }
