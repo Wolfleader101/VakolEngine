@@ -1,5 +1,6 @@
 #include "RendererFactory.hpp"
 
+#include "Controller/Logger.hpp"
 #include "GLRenderer.hpp"
 
 namespace Vakol::View

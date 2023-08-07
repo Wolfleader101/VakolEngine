@@ -1,5 +1,9 @@
 #include "Math.hpp"
 
+#include <glm/glm.hpp>
+#include <glm/gtc/noise.hpp>
+#include <glm/gtc/quaternion.hpp>
+
 namespace Vakol::Math
 {
 
@@ -178,4 +182,24 @@ namespace Vakol::Math
     {
         return glm::inverse(mat);
     }
+
+    float Lerp(const float a, const float b, const float t)
+    {
+        return (1.0f - t) * a + b * t;
+    }
+
+    /// return a fraction 't' (between 0 and 1) based on the given value
+    float InverseLerp(const float a, const float b, const float v)
+    {
+        return (v - a) / (b - a);
+    }
+
+    /// takes a value within a given input range into a given output range
+    float Remap(const float iMin, const float iMax, const float oMin, const float oMax, const float v)
+    {
+        float t = InverseLerp(iMin, iMax, v);
+
+        return Lerp(oMin, oMax, t);
+    }
+
 } // namespace Vakol::Math
