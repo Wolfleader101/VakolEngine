@@ -26,6 +26,15 @@ namespace Vakol::Rendering
         Math::Vec3 bitangent;
     };
 
+    struct Transform
+    {
+        Math::Vec3 position;
+        Math::Vec3 rotation;
+        Math::Vec3 scale = Math::Vec3(1.0f);
+
+        Math::Quaternion m_rotation = Math::Quaternion(1.0f, 0.0f, 0.0f, 0.0f);
+    };
+
     struct VertexArray
     {
         std::vector<Vertex> vertices;

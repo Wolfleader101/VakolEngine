@@ -2,6 +2,8 @@
 
 #include "RenderQueue.hpp"
 
+#include "Math/Math.hpp"
+
 namespace Vakol::Rendering
 {
     constexpr int BIT(const int x) { return 1 << x; }
@@ -13,6 +15,8 @@ namespace Vakol::Rendering
     struct VertexCommand;
     struct ShaderCommand;
     struct TextureCommand;
+
+    struct Transform;
 
     enum VK_RENDER_API_HINT { OPENGL, VULKAN, DIRECT3D, METAL };
     enum VK_BUFFER_HINT { VK_COLOR_BUFFER = BIT(0), VK_DEPTH_BUFFER = BIT(1), VK_STENCIL_BUFFER = BIT(2) };
@@ -28,7 +32,8 @@ namespace Vakol::Rendering
         static void ClearColor(const float color[]);
         static void Clear(unsigned int mask);
 
-        static void 
+        // transform / model matrix
+        static Math::Mat4& GetTransformMatrix(Transform& transform);
 
         static void GenerateVertexCommand(VertexArray&& vertexArray);
         static void GenerateShaderCommand(Shader&& shader);

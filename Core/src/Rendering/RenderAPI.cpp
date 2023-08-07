@@ -96,4 +96,9 @@ namespace Vakol::Rendering
         }
     }
 
+    Math::Mat4& RenderAPI::GetTransformMatrix(Transform& transform)
+    {
+        auto transform_matrix = Math::Mat4(1.0f);
+    }
+
 }

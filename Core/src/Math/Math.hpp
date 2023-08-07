@@ -2,6 +2,11 @@
 
 #include <glm/glm.hpp>
 
+#pragma warning(push)
+#pragma warning(disable:4201)
+#include <glm/gtc/quaternion.hpp>
+#pragma warning(pop)
+
 namespace Vakol::Math {
     //! glm usage is currently just here for backwards compatability reasons
     using Vec2 = glm::vec2;
@@ -11,6 +16,8 @@ namespace Vakol::Math {
 
     using Mat3 = glm::mat3;
     using Mat4 = glm::mat4;
+
+    using Quaternion = glm::quat;
 
     float Dot(const Vec2& a, const Vec2& b);
     float Dot(const Vec3& a, const Vec3& b);
