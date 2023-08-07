@@ -7,7 +7,7 @@
 
 namespace Vakol::Controller {
 
-    enum class TerrainType { FAULT, HEIGHT, CLOD }; //for serializing
+    enum class TerrainType { FAULT, HEIGHT, CLOD };  // for serializing
     /**
      * @class Terrain
      *

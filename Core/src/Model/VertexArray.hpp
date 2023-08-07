@@ -47,7 +47,7 @@ namespace Vakol::Model {
         ELEMENTS  ///< Draw using indices (elements).
     };
 
-   /**
+    /**
      * @brief Struct representing draw information.
      */
     struct DrawInfo {
@@ -72,7 +72,7 @@ namespace Vakol::Model {
      */
     std::vector<Vertex> Convert(std::vector<float>& arr, size_t size);
 
-   /**
+    /**
      * @brief Class representing a Vertex Array Object (VAO).
      */
     class VertexArray {

@@ -2,8 +2,7 @@
 
 #include <string>
 
-namespace Vakol::Controller
-{
+namespace Vakol::Controller {
     /**
      * @brief Load a shader from a file.
      *
@@ -11,4 +10,4 @@ namespace Vakol::Controller
      * @return unsigned int The ID of the loaded shader.
      */
     unsigned int LoadShader(const std::string& path);
-}
+}  // namespace Vakol::Controller

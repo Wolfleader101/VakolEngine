@@ -1,11 +1,10 @@
 #pragma once
 
+#include <Controller/Logger.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtc/noise.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <vector>
-#include <Controller/Logger.hpp>
-
 
 /**
  * @brief Perform linear interpolation between two values.

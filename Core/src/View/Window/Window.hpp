@@ -1,94 +1,91 @@
 #pragma once
-#include <string>
-#include <functional>
-
-#include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <glad/glad.h>
 
+#include <functional>
+#include <string>
 
-namespace Vakol::Controller
-{
-	class Event;
+namespace Vakol::Controller {
+    class Event;
 }
 
-namespace Vakol::View
-{
+namespace Vakol::View {
 
-	/**
-	 * @class Window
-	 * @brief window class containing window data
-	*/
-	class Window
-	{
-	public:
-		using EventCallbackFn = std::function<void(Controller::Event&)>;
+    /**
+     * @class Window
+     * @brief window class containing window data
+     */
+    class Window {
+       public:
+        using EventCallbackFn = std::function<void(Controller::Event&)>;
 
-		/**
-		 * @brief window constructor
-		 * @param title of window
-		 * @param width of window
-		 * @param height of window
-		*/
-		Window(std::string title, int width, int height);
+        /**
+         * @brief window constructor
+         * @param title of window
+         * @param width of window
+         * @param height of window
+         */
+        Window(std::string title, int width, int height);
 
-		/**
-		 * @brief Destroy the Window object
-		 * 
-		 */
-		~Window();
+        /**
+         * @brief Destroy the Window object
+         *
+         */
+        ~Window();
 
-		/**
-		 * @brief on window update
-		*/
-		void OnUpdate() const;
+        /**
+         * @brief on window update
+         */
+        void OnUpdate() const;
 
-		/**
-		 * @brief get the GLFW window
-		 * @return 
-		*/
-		GLFWwindow* GetWindow() const;
+        /**
+         * @brief get the GLFW window
+         * @return
+         */
+        GLFWwindow* GetWindow() const;
 
-		/**
-		 * @brief set the event callback function
-		 * @param callback to set
-		*/
-		void SetEventCallback(const EventCallbackFn& callback);
+        /**
+         * @brief set the event callback function
+         * @param callback to set
+         */
+        void SetEventCallback(const EventCallbackFn& callback);
 
-		/**
-		 * @brief get the width of the window
-		 * @return width of the window
-		*/
-		[[nodiscard]] const int& GetWidth() const { return m_width; }
+        /**
+         * @brief get the width of the window
+         * @return width of the window
+         */
+        [[nodiscard]] const int& GetWidth() const { return m_width; }
 
-		/**
-		 * @brief get the height of the window
-		 * @return height of window
-		*/
-		[[nodiscard]] const int& GetHeight() const { return m_height; }
-	private:
-		/**
-		 * @brief glfw window ptr
-		*/
-		GLFWwindow* m_window;
+        /**
+         * @brief get the height of the window
+         * @return height of window
+         */
+        [[nodiscard]] const int& GetHeight() const { return m_height; }
 
-		/**
-		 * @brief event callback fn
-		*/
-		EventCallbackFn m_eventCallback;
+       private:
+        /**
+         * @brief glfw window ptr
+         */
+        GLFWwindow* m_window;
 
-		/**
-		 * @brief title of window
-		*/
-		std::string m_title;
+        /**
+         * @brief event callback fn
+         */
+        EventCallbackFn m_eventCallback;
 
-		/**
-		 * @brief width of window
-		*/
-		int m_width;
+        /**
+         * @brief title of window
+         */
+        std::string m_title;
 
-		/**
-		 * @brief height of window
-		*/
-		int m_height;
-	};
-}
+        /**
+         * @brief width of window
+         */
+        int m_width;
+
+        /**
+         * @brief height of window
+         */
+        int m_height;
+    };
+}  // namespace Vakol::View
