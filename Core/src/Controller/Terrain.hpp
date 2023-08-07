@@ -5,16 +5,23 @@
 #include <string>
 #include <vector>
 
-namespace Vakol::Controller {
+namespace Vakol::Controller
+{
 
-    enum class TerrainType { FAULT, HEIGHT, CLOD }; //for serializing
+    enum class TerrainType
+    {
+        FAULT,
+        HEIGHT,
+        CLOD
+    }; // for serializing
     /**
      * @class Terrain
      *
      * @brief Class representing terrain in the application.
      */
-    class Terrain {
-       public:
+    class Terrain
+    {
+      public:
         Terrain() = default;
 
         /**
@@ -22,14 +29,18 @@ namespace Vakol::Controller {
          *
          * @param mesh The mesh to set.
          */
-        void SetModel(Model::Assets::Mesh&& mesh) { this->m_model = std::make_shared<Model::Assets::Model>(mesh); }
+        void SetModel(Model::Assets::Mesh&& mesh)
+        {
+            this->m_model = std::make_shared<Model::Assets::Model>(mesh);
+        }
 
         /**
          * @brief Set the terrain model using a model.
          *
          * @param model The model to set.
          */
-        void SetModel(Model::Assets::Model&& model) {
+        void SetModel(Model::Assets::Model&& model)
+        {
             this->m_model = std::make_shared<Model::Assets::Model>(std::move(model));
         }
 
@@ -38,7 +49,10 @@ namespace Vakol::Controller {
          *
          * @return The shared pointer to the model.
          */
-        const std::shared_ptr<Model::Assets::Model>& GetModel() const { return this->m_model; }
+        const std::shared_ptr<Model::Assets::Model>& GetModel() const
+        {
+            return this->m_model;
+        }
 
         /**
          * @brief Set the terrain data.
@@ -52,14 +66,20 @@ namespace Vakol::Controller {
          *
          * @return The size of the terrain.
          */
-        int GetSize() const { return this->m_size; }
+        int GetSize() const
+        {
+            return this->m_size;
+        }
 
         /**
          * @brief Set the terrain size.
          *
          * @param size The size of the terrain.
          */
-        void SetSize(const int size) { this->m_size = size; }
+        void SetSize(const int size)
+        {
+            this->m_size = size;
+        }
 
         /**
          * @brief Get the height at the specified position in the terrain.
@@ -89,14 +109,20 @@ namespace Vakol::Controller {
          *
          * @return The vector containing the height map.
          */
-        const std::vector<float>& GetHeightMap() const { return this->m_height_map; }
+        const std::vector<float>& GetHeightMap() const
+        {
+            return this->m_height_map;
+        }
 
         /**
          * @brief Get the terrain data.
          *
          * @return The vector containing the terrain data.
          */
-        const std::vector<unsigned char>& GetData() const { return this->m_data; }
+        const std::vector<unsigned char>& GetData() const
+        {
+            return this->m_data;
+        }
 
         /**
          * @brief Set the minimum and maximum height of the terrain.
@@ -104,7 +130,8 @@ namespace Vakol::Controller {
          * @param min The minimum height.
          * @param max The maximum height.
          */
-        void SetMinMax(const float min, const float max) {
+        void SetMinMax(const float min, const float max)
+        {
             this->m_min_height = min;
             this->m_max_height = max;
         }
@@ -114,16 +141,22 @@ namespace Vakol::Controller {
          *
          * @return The minimum height.
          */
-        [[nodiscard]] float GetMinHeight() const { return static_cast<float>(this->m_min_height); }
+        [[nodiscard]] float GetMinHeight() const
+        {
+            return static_cast<float>(this->m_min_height);
+        }
 
         /**
          * @brief Get the maximum height of the terrain.
          *
          * @return The maximum height.
          */
-        [[nodiscard]] float GetMaxHeight() const { return static_cast<float>(this->m_max_height); }
+        [[nodiscard]] float GetMaxHeight() const
+        {
+            return static_cast<float>(this->m_max_height);
+        }
 
-       private:
+      private:
         /**
          * @brief Load a fault formation terrain mesh.
          *
@@ -143,7 +176,8 @@ namespace Vakol::Controller {
          *
          * @brief Struct representing a point in the terrain.
          */
-        struct Point {
+        struct Point
+        {
             int x = 0;
             int z = 0;
 
@@ -153,7 +187,10 @@ namespace Vakol::Controller {
              * @param other The other point to compare.
              * @return True if the points are equal, false otherwise.
              */
-            bool operator==(const Point& other) const { return this->x == other.x && this->z == other.z; }
+            bool operator==(const Point& other) const
+            {
+                return this->x == other.x && this->z == other.z;
+            }
 
             /**
              * @brief Subtract operator for points.
@@ -161,7 +198,10 @@ namespace Vakol::Controller {
              * @param other The other point to subtract.
              * @return The result of the subtraction.
              */
-            Point operator-(const Point& other) const { return {this->x - other.x, this->z - other.z}; }
+            Point operator-(const Point& other) const
+            {
+                return {this->x - other.x, this->z - other.z};
+            }
         };
 
         /**
@@ -256,4 +296,4 @@ namespace Vakol::Controller {
      * @return The loaded CLOD terrain.
      */
     Terrain LoadCLODTerrain(std::string&& path, float min, float max);
-}  // namespace Vakol::Controller
+} // namespace Vakol::Controller

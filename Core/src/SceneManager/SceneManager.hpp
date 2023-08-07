@@ -4,15 +4,17 @@
 #include "Scripting/ScriptEngine.hpp"
 #include "View/Renderer/Renderer.hpp"
 
-namespace Vakol {
+namespace Vakol
+{
     // using Scene = Controller::Scene;
     /**
      * @class SceneManager
      *
      * @brief Class representing the scene manager in the application.
      */
-    class SceneManager {
-       public:
+    class SceneManager
+    {
+      public:
         using Scene = Controller::Scene;
         /**
          * @brief Construct a new Scene Manager object.
@@ -79,7 +81,7 @@ namespace Vakol {
          */
         bool operator!() const;
 
-       private:
+      private:
         void ThrowRuntime(const std::string& str) const;
 
         Scene* m_activeScene;
@@ -95,4 +97,4 @@ namespace Vakol {
          */
         ScriptEngine& m_scriptEngine;
     };
-}  // namespace Vakol
+} // namespace Vakol

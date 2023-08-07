@@ -6,21 +6,24 @@
 #include "Events/KeyEvent.hpp"
 #include "Events/MouseEvent.hpp"
 
-namespace Vakol::Controller {
+namespace Vakol::Controller
+{
 
     /**
      * @class Input
      *
      * @brief Class representing the input manager.
      */
-    class Input {
-       public:
+    class Input
+    {
+      public:
         /**
          * @enum KEY
          *
          * @brief Enum representing key codes.
          */
-        enum class KEY {
+        enum class KEY
+        {
             KEY_MOUSE_0 = 0,
             KEY_MOUSE_1 = 1,
             KEY_MOUSE_MIDDLE = 2,
@@ -77,7 +80,13 @@ namespace Vakol::Controller {
          *
          * @brief Enum representing the state of a key.
          */
-        enum class KeyState { KEY_IDLE, KEY_PRESSED, KEY_HELD, KEY_RELEASED };
+        enum class KeyState
+        {
+            KEY_IDLE,
+            KEY_PRESSED,
+            KEY_HELD,
+            KEY_RELEASED
+        };
 
         /**
          * @brief Handle the event when a key is pressed.
@@ -124,14 +133,18 @@ namespace Vakol::Controller {
          *
          * @return const glm::vec2& The current mouse position.
          */
-        const glm::vec2& GetMousePos() const { return m_mousePos; }
+        const glm::vec2& GetMousePos() const
+        {
+            return m_mousePos;
+        }
 
         /**
          * @brief Get the delta mouse position since the last update.
          *
          * @return glm::vec2 The delta mouse position.
          */
-        glm::vec2 GetDeltaMousePos() {
+        glm::vec2 GetDeltaMousePos()
+        {
             auto pos = m_deltaMousePos;
             m_deltaMousePos = glm::vec2(0.0f, 0.0f);
             return pos;
@@ -190,7 +203,7 @@ namespace Vakol::Controller {
          */
         void Update();
 
-       private:
+      private:
         /**
          * @brief The previous mouse position.
          */
@@ -211,4 +224,4 @@ namespace Vakol::Controller {
          */
         std::unordered_map<KEY, KeyState> m_keyStates;
     };
-}  // namespace Vakol::Controller
+} // namespace Vakol::Controller

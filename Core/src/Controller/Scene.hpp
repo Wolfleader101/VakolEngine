@@ -11,15 +11,17 @@
 #include "Time.hpp"
 #include "View/Renderer/Renderer.hpp"
 
-namespace Vakol::Controller {
+namespace Vakol::Controller
+{
 
     /**
      * @class Scene
      *
      * @brief Class representing a scene in the application.
      */
-    class Scene {
-       public:
+    class Scene
+    {
+      public:
         /**
          * @brief Construct a new Scene object.
          *
@@ -30,7 +32,7 @@ namespace Vakol::Controller {
          */
         Scene(const std::string& name, LuaScript& script, const std::shared_ptr<Physics::ScenePhysics>& SP);
 
-        Scene(const Scene& other) = default;
+        Scene(const Scene& other) = delete;
         Scene(Scene&& other) = default;
 
         /**
@@ -62,14 +64,14 @@ namespace Vakol::Controller {
          * @param sname The name of the script associated with the entity.
          * @return Entity The created entity.
          */
-        Entity CreateEntity(const std::string& tag);
+        Model::Entity CreateEntity(const std::string& tag);
 
         /**
          * @brief Destroy an entity in the scene.
          *
          * @param entity The entity to destroy.
          */
-        void DestroyEntity(Entity entity);
+        void DestroyEntity(Model::Entity entity);
 
         /**
          * @brief Serialize the scene.
@@ -100,7 +102,10 @@ namespace Vakol::Controller {
          *
          * @return Camera& The reference to the camera.
          */
-        Camera& GetCamera() { return m_cam; }
+        Camera& GetCamera()
+        {
+            return m_cam;
+        }
 
         /**
          * @brief Get an entity in the scene by its tag.
@@ -108,30 +113,39 @@ namespace Vakol::Controller {
          * @param tag The tag of the entity.
          * @return std::shared_ptr<Entity> The shared pointer to the entity.
          */
-        std::shared_ptr<Entity> GetEntity(const std::string& tag);
+        std::shared_ptr<Model::Entity> GetEntity(const std::string& tag);
 
         /**
          * @brief Get the Entity List object
          *
          * @return const EntityList&
          */
-        const EntityList& GetEntityList() const { return m_entityList; }
+        const EntityList& GetEntityList() const
+        {
+            return m_entityList;
+        }
 
         /**
          * @brief Get the Entity List object
          *
          * @return EntityList&
          */
-        EntityList& GetEntityList() { return m_entityList; }
+        EntityList& GetEntityList()
+        {
+            return m_entityList;
+        }
 
         /**
          * @brief Get the Script object
          *
          * @return LuaScript&
          */
-        LuaScript& GetScript() { return m_script; }
+        LuaScript& GetScript()
+        {
+            return m_script;
+        }
 
-       private:
+      private:
         /**
          * @brief The lua script of the scene.
          *
@@ -153,4 +167,4 @@ namespace Vakol::Controller {
          */
         EntityList m_entityList;
     };
-}  // namespace Vakol::Controller
+} // namespace Vakol::Controller

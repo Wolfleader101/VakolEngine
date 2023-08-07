@@ -4,13 +4,15 @@
 
 namespace Vakol::Model
 {
-    void CreateInstances(const std::vector<Mesh>& meshes, const std::vector<glm::mat4>& matrices, const int amount, const int start_index)
+    void CreateInstances(const std::vector<Mesh>& meshes, const std::vector<glm::mat4>& matrices, const int amount,
+                         const int start_index)
     {
         unsigned int buffer;
 
         glGenBuffers(1, &buffer);
         glBindBuffer(GL_ARRAY_BUFFER, buffer);
-        glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(matrices.size() * sizeof(glm::mat4)), matrices.data(), GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(matrices.size() * sizeof(glm::mat4)), matrices.data(),
+                     GL_STATIC_DRAW);
 
         for (const auto& mesh : meshes)
         {
@@ -18,7 +20,7 @@ namespace Vakol::Model
             mesh.SetDrawModeInfo(amount);
             mesh.SetDrawType(DRAW_TYPE::ELEMENTS);
 
-	        const unsigned int vao = mesh.GetId();
+            const unsigned int vao = mesh.GetId();
             glBindVertexArray(vao);
 
             // mat4 is a 4x4 matrix (4 * vec4), which in our case, represents the transformation matrix of a model.
@@ -33,17 +35,20 @@ namespace Vakol::Model
 
             // set the attribute location to 3, reserving 4 GL_FLOATS in the vertex array
 
-			glEnableVertexAttribArray(start_index);
+            glEnableVertexAttribArray(start_index);
             glVertexAttribPointer(start_index, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), nullptr);
 
             glEnableVertexAttribArray(start_index + 1);
-            glVertexAttribPointer(start_index + 1, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), reinterpret_cast<void*>(sizeof(glm::vec4)));
+            glVertexAttribPointer(start_index + 1, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4),
+                                  reinterpret_cast<void*>(sizeof(glm::vec4)));
 
             glEnableVertexAttribArray(start_index + 2);
-            glVertexAttribPointer(start_index + 2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), reinterpret_cast<void*>(2 * sizeof(glm::vec4)));
+            glVertexAttribPointer(start_index + 2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4),
+                                  reinterpret_cast<void*>(2 * sizeof(glm::vec4)));
 
             glEnableVertexAttribArray(start_index + 3);
-            glVertexAttribPointer(start_index + 3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), reinterpret_cast<void*>(3 * sizeof(glm::vec4)));
+            glVertexAttribPointer(start_index + 3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4),
+                                  reinterpret_cast<void*>(3 * sizeof(glm::vec4)));
 
             glVertexAttribDivisor(start_index, 1);
             glVertexAttribDivisor(start_index + 1, 1);
@@ -53,4 +58,4 @@ namespace Vakol::Model
             glBindVertexArray(0);
         }
     }
-}
+} // namespace Vakol::Model

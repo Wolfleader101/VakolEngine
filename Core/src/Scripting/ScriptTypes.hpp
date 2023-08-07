@@ -3,8 +3,10 @@
 #define SOL_ALL_SAFETIES_ON 1
 #include <sol/sol.hpp>
 
-namespace Vakol {
-    struct LuaScript {
+namespace Vakol
+{
+    struct LuaScript
+    {
         sol::environment env;
         std::string path;
     };
@@ -14,4 +16,4 @@ namespace Vakol {
     using LuaFunction = sol::protected_function;
 
     using LuaState = sol::state;
-}  // namespace Vakol
+} // namespace Vakol

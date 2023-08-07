@@ -9,7 +9,8 @@ namespace Vakol::Model
     /**
      * @brief Struct representing a Skybox.
      */
-    struct Skybox {
+    struct Skybox
+    {
         /**
          * @brief Default constructor for the Skybox struct.
          */
@@ -27,8 +28,8 @@ namespace Vakol::Model
          */
         void Draw(const glm::mat4& projection, const glm::mat4& view) const;
 
-       private:
-        std::shared_ptr<Shader> shader = nullptr;  ///< Pointer to the shader.
-        unsigned int CUBEMAP_ID = 0;               ///< ID of the cubemap texture.
+      private:
+        std::shared_ptr<Shader> shader = nullptr; ///< Pointer to the shader.
+        unsigned int CUBEMAP_ID = 0;              ///< ID of the cubemap texture.
     };
-}
+} // namespace Vakol::Model

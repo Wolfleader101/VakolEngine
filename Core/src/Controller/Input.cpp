@@ -1,8 +1,8 @@
 #include "Input.hpp"
 
-namespace Vakol::Controller 
+namespace Vakol::Controller
 {
-    bool Input::OnKeyPressed(KeyPressedEvent& kev) 
+    bool Input::OnKeyPressed(KeyPressedEvent& kev)
     {
         KEY keycode = static_cast<KEY>(kev.GetKeyCode());
 
@@ -12,7 +12,7 @@ namespace Vakol::Controller
         return true;
     }
 
-    bool Input::OnKeyReleased(KeyReleasedEvent& kev) 
+    bool Input::OnKeyReleased(KeyReleasedEvent& kev)
     {
         KEY keycode = static_cast<KEY>(kev.GetKeyCode());
 
@@ -21,49 +21,49 @@ namespace Vakol::Controller
         return true;
     }
 
-    bool Input::GetKey(KEY keycode) const 
+    bool Input::GetKey(KEY keycode) const
     {
         auto it = m_keyStates.find(keycode);
 
         return it != m_keyStates.end() && (it->second == KeyState::KEY_PRESSED || it->second == KeyState::KEY_HELD);
     }
 
-    bool Input::GetKeyDown(KEY keycode) const 
+    bool Input::GetKeyDown(KEY keycode) const
     {
         auto it = m_keyStates.find(keycode);
 
         return it != m_keyStates.end() && it->second == KeyState::KEY_PRESSED;
     }
 
-    bool Input::GetKeyUp(KEY keycode) const 
+    bool Input::GetKeyUp(KEY keycode) const
     {
         auto it = m_keyStates.find(keycode);
 
         return it != m_keyStates.end() && it->second == KeyState::KEY_RELEASED;
     }
 
-    bool Input::GetMouseButton(KEY keycode) const 
+    bool Input::GetMouseButton(KEY keycode) const
     {
         auto it = m_keyStates.find(keycode);
 
         return it != m_keyStates.end() && (it->second == KeyState::KEY_PRESSED || it->second == KeyState::KEY_HELD);
     }
 
-    bool Input::GetMouseButtonDown(KEY keycode) const 
+    bool Input::GetMouseButtonDown(KEY keycode) const
     {
         auto it = m_keyStates.find(keycode);
 
         return it != m_keyStates.end() && it->second == KeyState::KEY_PRESSED;
     }
 
-    bool Input::GetMouseButtonUp(KEY keycode) const 
+    bool Input::GetMouseButtonUp(KEY keycode) const
     {
         auto it = m_keyStates.find(keycode);
 
         return it != m_keyStates.end() && it->second == KeyState::KEY_RELEASED;
     }
 
-    bool Input::OnMouseMoved(MouseMovedEvent& ev) 
+    bool Input::OnMouseMoved(MouseMovedEvent& ev)
     {
         m_mousePos = glm::vec2(ev.GetX(), ev.GetY());
 
@@ -94,14 +94,18 @@ namespace Vakol::Controller
         return true;
     }
 
-    void Input::Update() {
-        for (auto& [key, state] : m_keyStates) 
+    void Input::Update()
+    {
+        for (auto& [key, state] : m_keyStates)
         {
-            if (state == KeyState::KEY_PRESSED) {
+            if (state == KeyState::KEY_PRESSED)
+            {
                 state = KeyState::KEY_HELD;
-            } else if (state == KeyState::KEY_RELEASED) {
+            }
+            else if (state == KeyState::KEY_RELEASED)
+            {
                 state = KeyState::KEY_IDLE;
             }
         }
     }
-}  // namespace Vakol::Controller
+} // namespace Vakol::Controller

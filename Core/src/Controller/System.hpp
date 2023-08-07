@@ -8,19 +8,19 @@
 #include "Scene.hpp"
 #include "View/Renderer/Renderer.hpp"
 
-namespace Vakol::Controller {
+namespace Vakol::Controller
+{
 
     class Scene;
-    using namespace Physics;
-    using namespace Components;
 
     /**
      * @class System
      *
      * @brief Class representing a system in the application.
      */
-    class System {
-       public:
+    class System
+    {
+      public:
         System() = delete;
 
         /**
@@ -61,7 +61,7 @@ namespace Vakol::Controller {
          *
          * @param ent The entity to initialize.
          */
-        static void Physics_InitEntity(const Entity& ent);
+        static void Physics_InitEntity(const Model::Entity& ent);
 
         /**
          * @brief Initialize the physics system.
@@ -73,7 +73,7 @@ namespace Vakol::Controller {
          *
          * @param factor The update factor.
          */
-        static void Physics_UpdateTransforms(float factor);
+        static void Physics_UpdateTransforms(double factor);
 
         /**
          * @brief Prepare the physics system for serialization.
@@ -97,11 +97,11 @@ namespace Vakol::Controller {
          */
         static void FSM_Init();
 
-       private:
+      private:
         /**
          * @brief The shared pointer to the ScenePhysics object.
          */
-        static std::shared_ptr<ScenePhysics> m_SP;
+        static std::shared_ptr<Physics::ScenePhysics> m_SP;
 
         /**
          * @brief The pointer to the entt::registry object.
@@ -113,4 +113,4 @@ namespace Vakol::Controller {
          */
         static EntityList* Entlist;
     };
-}  // namespace Vakol::Controller
+} // namespace Vakol::Controller

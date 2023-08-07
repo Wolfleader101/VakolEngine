@@ -3,7 +3,8 @@
 
 #include "Renderer.hpp"
 
-namespace Vakol::View {
+namespace Vakol::View
+{
     /**
      * @brief Factory function to create Renderer objects
      * @param type Type of renderer to be created
@@ -11,4 +12,4 @@ namespace Vakol::View {
      * @return Shared pointer to a newly created Renderer object
      */
     std::shared_ptr<Renderer> CreateRenderer(const std::string& type, const std::shared_ptr<Window>& window);
-}  // namespace Vakol::View
+} // namespace Vakol::View

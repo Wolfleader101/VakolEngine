@@ -4,12 +4,14 @@
 
 namespace Vakol::Model
 {
-    struct ATTACHMENT {
+    struct ATTACHMENT
+    {
         /**
          * \struct COLOR_ATTACHMENT
          * \brief Represents a color attachment.
          */
-        struct COLOR_ATTACHMENT {
+        struct COLOR_ATTACHMENT
+        {
             int attachment = 0;     /**< The attachment index. */
             int internalformat = 0; /**< The internal format. */
             int format = 0;         /**< The format. */
@@ -21,7 +23,8 @@ namespace Vakol::Model
          * \struct DEPTH_ATTACHMENT
          * \brief Represents a depth attachment.
          */
-        struct DEPTH_ATTACHMENT {
+        struct DEPTH_ATTACHMENT
+        {
             int attachment = 0;     /**< The attachment index. */
             int internalformat = 0; /**< The internal format. */
         };
@@ -33,17 +36,22 @@ namespace Vakol::Model
          * \brief Constructs an ATTACHMENT object with a color attachment.
          * \param color The color attachment.
          */
-        explicit ATTACHMENT(const COLOR_ATTACHMENT& color) : color(color) {}
+        explicit ATTACHMENT(const COLOR_ATTACHMENT& color) : color(color)
+        {
+        }
 
         /**
          * \brief Constructs an ATTACHMENT object with a color and depth attachment.
          * \param color The color attachment.
          * \param depth The depth attachment.
          */
-        ATTACHMENT(const COLOR_ATTACHMENT& color, const DEPTH_ATTACHMENT& depth) : color(color), depth(depth) {}
+        ATTACHMENT(const COLOR_ATTACHMENT& color, const DEPTH_ATTACHMENT& depth) : color(color), depth(depth)
+        {
+        }
     };
 
-    struct Buffer {
+    struct Buffer
+    {
         /**
          * \brief Default constructor for Buffer.
          */
@@ -58,7 +66,7 @@ namespace Vakol::Model
          * \param usage The usage pattern of the buffer.
          */
         Buffer(unsigned int type, int size, unsigned int binding, const void* data,
-               unsigned int usage);  // go ahead and set the data
+               unsigned int usage); // go ahead and set the data
 
         /**
          * \brief Constructs a Buffer object with specified parameters.
@@ -67,7 +75,7 @@ namespace Vakol::Model
          * \param binding The binding index of the buffer.
          * \param usage The usage pattern of the buffer.
          */
-        Buffer(unsigned int type, int size, unsigned int binding, unsigned int usage);  // set data empty for now...
+        Buffer(unsigned int type, int size, unsigned int binding, unsigned int usage); // set data empty for now...
 
         /**
          * \brief Destructor for Buffer.
@@ -94,7 +102,7 @@ namespace Vakol::Model
          * \brief Generates a buffer ID based on the specified number of buffers.
          * \param n The number of buffer IDs to generate.
          */
-        void GenBuffer(int n);  // generate a buffer id based on 'n'- amount of buffers
+        void GenBuffer(int n); // generate a buffer id based on 'n'- amount of buffers
 
         /**
          * \brief Binds the buffer to the specified type.
@@ -128,13 +136,16 @@ namespace Vakol::Model
          * \brief Retrieves the ID of the buffer.
          * \return The buffer ID.
          */
-        [[nodiscard]] unsigned int GetID() const { return ID; }
+        [[nodiscard]] unsigned int GetID() const
+        {
+            return ID;
+        }
 
-       private:
+      private:
         unsigned int ID = 0;
     };
 
-    struct FrameBuffer  // is-a buffer (impl too different for derived class)
+    struct FrameBuffer // is-a buffer (impl too different for derived class)
     {
         /**
          * \brief Default constructor for FrameBuffer.
@@ -188,7 +199,6 @@ namespace Vakol::Model
          * \brief Sets a texture attachment for the frame buffer.
          * \param attachment The type of attachment to set (e.g., GL_COLOR_ATTACHMENT_0).
          * \param target The texture target (e.g., GL_TEXTURE_2D).
-         * \param level The level of detail for mip-maps (set to 0 if unsure).
          * \param internalformat The internal format of the attachment.
          * \param width The width of the texture.
          * \param height The height of the texture.
@@ -196,9 +206,8 @@ namespace Vakol::Model
          * \param type The data type of the pixels (keep at GL_UNSIGNED_BYTE).
          * \param data Pointer to the image data in memory.
          */
-        void SetTextureAttachment(unsigned int attachment, unsigned int target, int level, int internalformat,
-                                  int width, int height, unsigned int format, unsigned int type,
-                                  const void* data = nullptr);
+        void SetTextureAttachment(unsigned int attachment, unsigned int target, int internalformat, int width,
+                                  int height, unsigned int format, unsigned int type, const void* data = nullptr);
 
         /**
          * \brief Sets a depth attachment for the frame buffer.
@@ -213,21 +222,30 @@ namespace Vakol::Model
          * \brief Retrieves the ID of the frame buffer.
          * \return The frame buffer ID.
          */
-        [[nodiscard]] unsigned int GetID() const { return ID; }
+        [[nodiscard]] unsigned int GetID() const
+        {
+            return ID;
+        }
 
         /**
          * \brief Retrieves the ID of the color attachment.
          * \return The color attachment ID.
          */
-        [[nodiscard]] unsigned int GetColorAttachmentID() const { return m_ColorAttachmentID; }
+        [[nodiscard]] unsigned int GetColorAttachmentID() const
+        {
+            return m_ColorAttachmentID;
+        }
 
         /**
          * \brief Checks if the frame buffer has a depth attachment.
          * \return True if the frame buffer has a depth attachment, false otherwise.
          */
-        [[nodiscard]] bool HasDepth() const { return hasDepth; }
+        [[nodiscard]] bool HasDepth() const
+        {
+            return hasDepth;
+        }
 
-       private:
+      private:
         void CreateRenderBuffer();
         void DeleteRenderBuffer() const;
 
@@ -244,4 +262,4 @@ namespace Vakol::Model
 
         bool hasDepth = false;
     };
-}
+} // namespace Vakol::Model

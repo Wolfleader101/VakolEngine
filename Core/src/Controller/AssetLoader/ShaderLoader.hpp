@@ -11,4 +11,4 @@ namespace Vakol::Controller
      * @return unsigned int The ID of the loaded shader.
      */
     unsigned int LoadShader(const std::string& path);
-}
+} // namespace Vakol::Controller
