@@ -7,9 +7,13 @@
 #include <Controller/Time.hpp>
 #include <View/Renderer/DebugRenderer.hpp>
 
-class System;
+namespace Vakol::Controller
+{
+    class System;
+}
 
-namespace Vakol::Controller::Physics {
+namespace Vakol::Controller::Physics
+{
     /**
      * @brief Forward declaration of PhysicsPool class.
      */
@@ -18,8 +22,9 @@ namespace Vakol::Controller::Physics {
     /**
      * @brief Class representing a physics scene.
      */
-    class ScenePhysics {
-       public:
+    class ScenePhysics
+    {
+      public:
         ScenePhysics() = delete;
         ~ScenePhysics() = default;
 
@@ -32,9 +37,8 @@ namespace Vakol::Controller::Physics {
          * @brief Update the physics scene.
          *
          * @param time The time information for the update.
-         * @param camera The camera used for the update.
          */
-        void Update(const Vakol::Controller::Time& time, const Vakol::Controller::Camera& camera);
+        void Update(const Vakol::Controller::Time& time);
 
         /**
          * @brief Enable or disable physics debugging.
@@ -60,8 +64,9 @@ namespace Vakol::Controller::Physics {
         /**
          * @brief Custom collision callback class.
          */
-        class MyCollisionCallback : public rp3d::EventListener {
-           public:
+        class MyCollisionCallback : public rp3d::EventListener
+        {
+          public:
             /**
              * @brief Override function for handling collision events.
              *
@@ -70,7 +75,7 @@ namespace Vakol::Controller::Physics {
             virtual void onContact(const rp3d::CollisionCallback::CallbackData& callbackData) override;
         };
 
-       private:
+      private:
         /**
          * @brief Private constructor for creating a ScenePhysics instance.
          *
@@ -82,9 +87,9 @@ namespace Vakol::Controller::Physics {
         rp3d::PhysicsWorld* m_World;
         static MyCollisionCallback m_callback;
 
-        float m_timestep = 1.0f / 60.0f;
+        double m_timestep = 1.0f / 60.0f;
 
-        float m_accumulator = 0.0f;
+        double m_accumulator = 0.0f;
 
         /**
          * @brief Debug renderer for physics.
@@ -93,6 +98,6 @@ namespace Vakol::Controller::Physics {
         View::DebugRenderer m_DebugRenderer;
 
         friend class PhysicsPool;
-        friend class System;
+        friend class Controller::System;
     };
-}  // namespace Vakol::Controller::Physics
+} // namespace Vakol::Controller::Physics

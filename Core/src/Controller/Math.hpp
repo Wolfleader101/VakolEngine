@@ -3,8 +3,8 @@
 #include <Controller/Logger.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtc/noise.hpp>
+#include <glm/gtc/quaternion.hpp>
 #include <vector>
-
 
 /**
  * @brief Perform linear interpolation between two values.
@@ -55,13 +55,15 @@ unsigned char* GenerateNoise(const int size, float scale, const int octaves, con
  * @namespace glm
  * @brief Namespace for GLM library.
  */
-namespace glm {
+namespace glm
+{
 
     /**
      * @brief Serialize glm::vec2 for serialization.
      */
     template <class Archive>
-    void serialize(Archive& archive, glm::vec2& v) {
+    void serialize(Archive& archive, glm::vec2& v)
+    {
         archive(v.x, v.y);
     }
 
@@ -69,7 +71,8 @@ namespace glm {
      * @brief Serialize glm::vec3 for serialization.
      */
     template <class Archive>
-    void serialize(Archive& archive, glm::vec3& v) {
+    void serialize(Archive& archive, glm::vec3& v)
+    {
         archive(v.x, v.y, v.z);
     }
 
@@ -77,7 +80,8 @@ namespace glm {
      * @brief Serialize glm::vec4 for serialization.
      */
     template <class Archive>
-    void serialize(Archive& archive, glm::vec4& v) {
+    void serialize(Archive& archive, glm::vec4& v)
+    {
         archive(v.x, v.y, v.z, v.w);
     }
 
@@ -85,7 +89,8 @@ namespace glm {
      * @brief Serialize glm::ivec2 for serialization.
      */
     template <class Archive>
-    void serialize(Archive& archive, glm::ivec2& v) {
+    void serialize(Archive& archive, glm::ivec2& v)
+    {
         archive(v.x, v.y);
     }
 
@@ -93,7 +98,8 @@ namespace glm {
      * @brief Serialize glm::ivec3 for serialization.
      */
     template <class Archive>
-    void serialize(Archive& archive, glm::ivec3& v) {
+    void serialize(Archive& archive, glm::ivec3& v)
+    {
         archive(v.x, v.y, v.z);
     }
 
@@ -101,7 +107,8 @@ namespace glm {
      * @brief Serialize glm::ivec4 for serialization.
      */
     template <class Archive>
-    void serialize(Archive& archive, glm::ivec4& v) {
+    void serialize(Archive& archive, glm::ivec4& v)
+    {
         archive(v.x, v.y, v.z, v.w);
     }
 
@@ -109,7 +116,8 @@ namespace glm {
      * @brief Serialize glm::uvec2 for serialization.
      */
     template <class Archive>
-    void serialize(Archive& archive, glm::uvec2& v) {
+    void serialize(Archive& archive, glm::uvec2& v)
+    {
         archive(v.x, v.y);
     }
 
@@ -117,7 +125,8 @@ namespace glm {
      * @brief Serialize glm::uvec3 for serialization.
      */
     template <class Archive>
-    void serialize(Archive& archive, glm::uvec3& v) {
+    void serialize(Archive& archive, glm::uvec3& v)
+    {
         archive(v.x, v.y, v.z);
     }
 
@@ -125,7 +134,8 @@ namespace glm {
      * @brief Serialize glm::uvec4 for serialization.
      */
     template <class Archive>
-    void serialize(Archive& archive, glm::uvec4& v) {
+    void serialize(Archive& archive, glm::uvec4& v)
+    {
         archive(v.x, v.y, v.z, v.w);
     }
 
@@ -133,7 +143,8 @@ namespace glm {
      * @brief Serialize glm::dvec2 for serialization.
      */
     template <class Archive>
-    void serialize(Archive& archive, glm::dvec2& v) {
+    void serialize(Archive& archive, glm::dvec2& v)
+    {
         archive(v.x, v.y);
     }
 
@@ -141,7 +152,8 @@ namespace glm {
      * @brief Serialize glm::dvec3 for serialization.
      */
     template <class Archive>
-    void serialize(Archive& archive, glm::dvec3& v) {
+    void serialize(Archive& archive, glm::dvec3& v)
+    {
         archive(v.x, v.y, v.z);
     }
 
@@ -149,7 +161,8 @@ namespace glm {
      * @brief Serialize glm::dvec4 for serialization.
      */
     template <class Archive>
-    void serialize(Archive& archive, glm::dvec4& v) {
+    void serialize(Archive& archive, glm::dvec4& v)
+    {
         archive(v.x, v.y, v.z, v.w);
     }
 
@@ -157,7 +170,8 @@ namespace glm {
      * @brief Serialize glm::mat2 for serialization.
      */
     template <class Archive>
-    void serialize(Archive& archive, glm::mat2& m) {
+    void serialize(Archive& archive, glm::mat2& m)
+    {
         archive(m[0], m[1]);
     }
 
@@ -165,7 +179,8 @@ namespace glm {
      * @brief Serialize glm::dmat2 for serialization.
      */
     template <class Archive>
-    void serialize(Archive& archive, glm::dmat2& m) {
+    void serialize(Archive& archive, glm::dmat2& m)
+    {
         archive(m[0], m[1]);
     }
 
@@ -173,7 +188,8 @@ namespace glm {
      * @brief Serialize glm::mat3 for serialization.
      */
     template <class Archive>
-    void serialize(Archive& archive, glm::mat3& m) {
+    void serialize(Archive& archive, glm::mat3& m)
+    {
         archive(m[0], m[1], m[2]);
     }
 
@@ -181,7 +197,8 @@ namespace glm {
      * @brief Serialize glm::mat4 for serialization.
      */
     template <class Archive>
-    void serialize(Archive& archive, glm::mat4& m) {
+    void serialize(Archive& archive, glm::mat4& m)
+    {
         archive(m[0], m[1], m[2], m[3]);
     }
 
@@ -189,7 +206,8 @@ namespace glm {
      * @brief Serialize glm::dmat4 for serialization.
      */
     template <class Archive>
-    void serialize(Archive& archive, glm::dmat4& m) {
+    void serialize(Archive& archive, glm::dmat4& m)
+    {
         archive(m[0], m[1], m[2], m[3]);
     }
 
@@ -197,7 +215,8 @@ namespace glm {
      * @brief Serialize glm::quat for serialization.
      */
     template <class Archive>
-    void serialize(Archive& archive, glm::quat& q) {
+    void serialize(Archive& archive, glm::quat& q)
+    {
         archive(q.x, q.y, q.z, q.w);
     }
 
@@ -205,8 +224,9 @@ namespace glm {
      * @brief Serialize glm::dquat for serialization.
      */
     template <class Archive>
-    void serialize(Archive& archive, glm::dquat& q) {
+    void serialize(Archive& archive, glm::dquat& q)
+    {
         archive(q.x, q.y, q.z, q.w);
     }
 
-}  // namespace glm
+} // namespace glm

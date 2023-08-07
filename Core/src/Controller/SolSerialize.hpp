@@ -1,21 +1,23 @@
 #pragma once
 
 #include <cereal/archives/json.hpp>
-#include <cereal/types/common.hpp>  // For basic types like int, float, and bool
+#include <cereal/types/common.hpp> // For basic types like int, float, and bool
 #include <cereal/types/string.hpp>
 #include <cereal/types/unordered_map.hpp>
 #include <cereal/types/variant.hpp>
 
 #include "Controller/Math.hpp"
 
-namespace Vakol::Controller {
+namespace Vakol::Controller
+{
 
     /**
      * @struct SolTableData
      *
      * @brief Struct representing the data stored in a Lua table.
      */
-    struct SolTableData {
+    struct SolTableData
+    {
         /**
          * @brief The map storing the data in the Lua table.
          */
@@ -28,7 +30,8 @@ namespace Vakol::Controller {
          * @param archive The archive object.
          */
         template <class Archive>
-        void serialize(Archive& archive) {
+        void serialize(Archive& archive)
+        {
             archive(data);
         }
     };
@@ -50,4 +53,4 @@ namespace Vakol::Controller {
      */
     // void ConvertMapToSol(std::shared_ptr<LuaState> lua, const SolTableData& solTableData, sol::table& table);
 
-}  // namespace Vakol::Controller
+} // namespace Vakol::Controller

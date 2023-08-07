@@ -2,12 +2,13 @@
 
 #include <Controller/EntityList.hpp>
 #include <Controller/Logger.hpp>
-#include <entt/entt.hpp>
 #include <cereal/archives/json.hpp>
+#include <entt/entt.hpp>
 #include <functional>
 #include <string>
 
-namespace Vakol::Model {
+namespace Vakol::Model
+{
 
     /**
      * @class Entity
@@ -17,8 +18,9 @@ namespace Vakol::Model {
      * 		  These objects are used to modify an entity's component structure.
      *
      */
-    class Entity {
-       public:
+    class Entity
+    {
+      public:
         Entity() = default;
 
         /**
@@ -28,14 +30,14 @@ namespace Vakol::Model {
          * @param scene to add entity too
          */
         Entity(entt::entity handle,
-               Controller::EntityList* scene);  // this is the intended constructor. Entity = Scene.CreateEntity()
+               Controller::EntityList* scene); // this is the intended constructor. Entity = Scene.CreateEntity()
 
         /**
          * @brief copy constructor of a new entity
          * @param otherEntity to copy
          */
-        Entity(const Entity& otherEntity) = default;  // may want this to actually copy over the components in the
-                                                      // future
+        Entity(const Entity& otherEntity) = default; // may want this to actually copy over the components in the
+                                                     // future
 
         /**
          * @brief returns true if all components listed are associated with entity
@@ -102,13 +104,13 @@ namespace Vakol::Model {
          */
         operator bool() const;
 
-        template<class Archive>
+        template <class Archive>
         void serialize(Archive& ar)
         {
             ar(cereal::make_nvp("handle", m_entityHandle));
         }
 
-       private:
+      private:
         /**
          * @brief entity handle
          */
@@ -123,21 +125,24 @@ namespace Vakol::Model {
     };
 
     template <typename... Types>
-    bool Entity::HasComponent() const {
+    bool Entity::HasComponent() const
+    {
         return m_EntityList->m_Registry.all_of<Types...>(m_entityHandle);
     }
 
     template <typename... Types>
-    bool Entity::HasAnyComponent() const {
+    bool Entity::HasAnyComponent() const
+    {
         return m_EntityList->m_Registry.all_of<Types..>(m_entityHandle);
     }
 
     template <class T, typename... Args>
-    void Entity::AddComponent(Args&&... args) {
+    void Entity::AddComponent(Args&&... args)
+    {
         if (this->HasComponent<T>())
             VK_ERROR(
-                "Entity.AddComponent<>(): Entity already has component... skipping");  // could make it that the new
-                                                                                       // component over writes the old
+                "Entity.AddComponent<>(): Entity already has component... skipping"); // could make it that the new
+                                                                                      // component over writes the old
         else
             m_EntityList->m_Registry.emplace<T>(m_entityHandle, std::forward<Args>(args)...);
     }
@@ -146,19 +151,23 @@ namespace Vakol::Model {
     void Entity::RemoveComponent() const
     {
         if (!this->HasComponent<T>())
-            VK_ERROR("Entity.RemoveComponent<>(): Entity does not have given component... skipping");  // error instead of critical as it wont crash
+            VK_ERROR("Entity.RemoveComponent<>(): Entity does not have given component... skipping"); // error instead
+                                                                                                      // of critical as
+                                                                                                      // it wont crash
         else
             m_EntityList->m_Registry.remove<T>(m_entityHandle);
     }
 
     template <class T>
-    T& Entity::GetComponent() const {
-        if (!this->HasComponent<T>()) {
+    T& Entity::GetComponent() const
+    {
+        if (!this->HasComponent<T>())
+        {
             VK_CRITICAL("Entity does not have given component!");
-            assert(0);  // asserting because I need to return a type.
+            assert(0); // asserting because I need to return a type.
         }
 
         return m_EntityList->m_Registry.get<T>(m_entityHandle);
     }
 
-}
+} // namespace Vakol::Model

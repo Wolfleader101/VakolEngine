@@ -4,12 +4,14 @@
 #include <Controller/Singleton.hpp>
 #include <iostream>
 
-namespace Vakol {
-    void Run() {
+namespace Vakol
+{
+    void Run()
+    {
         Controller::Logger::Init();
 
         Controller::Singleton<Controller::Application>::GetInstance().Init();
 
         Controller::Singleton<Controller::Application>::GetInstance().Run();
     }
-}  // namespace Vakol
+} // namespace Vakol

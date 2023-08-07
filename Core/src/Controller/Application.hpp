@@ -28,8 +28,9 @@ namespace Vakol::Controller {
      * @brief The main application class to launch the game engine, expected use is a singleton
      *
      */
-    class Application {
-       public:
+    class Application
+    {
+      public:
         /**
          * @brief Construct a new Application object
          *
@@ -69,35 +70,50 @@ namespace Vakol::Controller {
          *
          * @return const int
          */
-        int GetWidth() const { return m_window->GetWidth(); }
+        int GetWidth() const
+        {
+            return m_window->GetWidth();
+        }
 
         /**
          * @brief Get the Height of window
          *
          * @return const int
          */
-        int GetHeight() const { return m_window->GetHeight(); }
+        int GetHeight() const
+        {
+            return m_window->GetHeight();
+        }
 
         /**
          * @brief Set the running state of the game.
          *
          * @param run Flag indicating whether the game is running.
          */
-        void SetRunning(const bool run) { m_running = run; }
+        void SetRunning(const bool run)
+        {
+            m_running = run;
+        }
 
         /**
          * @brief Get the time information.
          *
          * @return const Time& The time information.
          */
-        const Time& GetTime() const { return m_time; }
+        const Time& GetTime() const
+        {
+            return m_time;
+        }
 
         /**
          * @brief Get the input information.
          *
          * @return const Input& The input information.
          */
-        const Input& GetInput() const { return m_input; }
+        const Input& GetInput() const
+        {
+            return m_input;
+        }
 
         /**
          * @brief Set the Active Mouse object
@@ -111,7 +127,7 @@ namespace Vakol::Controller {
          */
         void RegisterLua();
 
-       private:
+      private:
         /**
          * @brief on window close event
          * @param ev event of windowClose
@@ -132,7 +148,7 @@ namespace Vakol::Controller {
          * @param kev on key pressed event
          * @return true if successful
          */
-        bool Application::OnKeyPressed(KeyPressedEvent& kev);
+        bool OnKeyPressed(KeyPressedEvent& kev);
 
         /**
          * @brief Handle the key released event.
@@ -217,4 +233,4 @@ namespace Vakol::Controller {
          */
         Input m_input;
     };
-}  // namespace Vakol::Controller
+} // namespace Vakol::Controller

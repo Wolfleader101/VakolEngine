@@ -43,4 +43,4 @@ namespace Vakol::Controller
      * @return unsigned int The ID of the loaded texture.
      */
     unsigned int LoadRawTexture(std::string& path);
-}
+} // namespace Vakol::Controller

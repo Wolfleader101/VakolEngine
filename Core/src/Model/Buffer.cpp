@@ -8,7 +8,8 @@ static int s_hitcount = 0;
 
 namespace Vakol::Model
 {
-    Buffer::Buffer(const unsigned int type, const int size, const unsigned int binding, const void* data, const unsigned int usage)
+    Buffer::Buffer(const unsigned int type, const int size, const unsigned int binding, const void* data,
+                   const unsigned int usage)
     {
         this->GenBuffer(1);
 
@@ -16,7 +17,7 @@ namespace Vakol::Model
         this->SetData(size, data, usage);
         this->Unbind(type);
 
-        //this->BindBufferBase(type, binding);
+        // this->BindBufferBase(type, binding);
         this->BindBufferRange(type, binding, 0, size);
     }
 
@@ -28,7 +29,7 @@ namespace Vakol::Model
         this->SetData(size, nullptr, usage);
         this->Unbind(type);
 
-        //this->BindBufferBase(type, binding);
+        // this->BindBufferBase(type, binding);
         this->BindBufferRange(type, binding, 0, size);
     }
 
@@ -42,9 +43,11 @@ namespace Vakol::Model
         glBindBufferBase(static_cast<GLenum>(type), static_cast<GLuint>(binding), this->ID);
     }
 
-    void Buffer::BindBufferRange(const unsigned int type, const unsigned int binding, const int offset, const int size) const
+    void Buffer::BindBufferRange(const unsigned int type, const unsigned int binding, const int offset,
+                                 const int size) const
     {
-        glBindBufferRange(static_cast<GLenum>(type), static_cast<GLuint>(binding), this->ID, static_cast<GLintptr>(offset), static_cast<GLsizeiptr>(size));
+        glBindBufferRange(static_cast<GLenum>(type), static_cast<GLuint>(binding), this->ID,
+                          static_cast<GLintptr>(offset), static_cast<GLsizeiptr>(size));
     }
 
     void Buffer::GenBuffer(const int n)
@@ -72,22 +75,26 @@ namespace Vakol::Model
         glNamedBufferSubData(this->ID, static_cast<GLintptr>(offset), static_cast<GLsizeiptr>(size), data);
     }
 
-/******************************************************************************************************************/
+    /******************************************************************************************************************/
 
-    FrameBuffer::FrameBuffer() { glGenFramebuffers(1, &this->ID); }
-	FrameBuffer::FrameBuffer(const ATTACHMENT& attachment, const bool depth)
+    FrameBuffer::FrameBuffer()
+    {
+        glGenFramebuffers(1, &this->ID);
+    }
+    FrameBuffer::FrameBuffer(const ATTACHMENT& attachment, const bool depth)
     {
         hasDepth = depth;
 
         glGenFramebuffers(1, &this->ID);
         Bind();
 
-        SetTextureAttachment(attachment.color.attachment, GL_TEXTURE_2D, 0,
-							 attachment.color.internalformat, attachment.color.width, attachment.color.height, 
-							 attachment.color.format, GL_UNSIGNED_BYTE, nullptr);
+        SetTextureAttachment(attachment.color.attachment, GL_TEXTURE_2D, attachment.color.internalformat,
+                             attachment.color.width, attachment.color.height, attachment.color.format, GL_UNSIGNED_BYTE,
+                             nullptr);
 
         if (depth)
-            SetDepthAttachment(attachment.depth.attachment, attachment.depth.internalformat, attachment.color.width, attachment.color.height);
+            SetDepthAttachment(attachment.depth.attachment, attachment.depth.internalformat, attachment.color.width,
+                               attachment.color.height);
 
         if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
             VK_ERROR("You're doing something wrong");
@@ -101,30 +108,65 @@ namespace Vakol::Model
         DeleteRenderBuffer();
     }
 
-    void FrameBuffer::ClearBuffer(const unsigned int buffer) const { glClear(buffer); }
-    void FrameBuffer::ClearColor(const float r, const float g, const float b, const float a) const { glClearColor(r, g, b, a); }
-    void FrameBuffer::ClearColor(const glm::vec4& color) const { glClearColor(color.r, color.g, color.b, color.a); }
+    void FrameBuffer::ClearBuffer(const unsigned int buffer) const
+    {
+        glClear(buffer);
+    }
+    void FrameBuffer::ClearColor(const float r, const float g, const float b, const float a) const
+    {
+        glClearColor(r, g, b, a);
+    }
+    void FrameBuffer::ClearColor(const glm::vec4& color) const
+    {
+        glClearColor(color.r, color.g, color.b, color.a);
+    }
 
-    void FrameBuffer::Bind() const { glBindFramebuffer(GL_FRAMEBUFFER, this->ID); }
-    void FrameBuffer::Unbind() const { glBindFramebuffer(GL_FRAMEBUFFER, 0); }
+    void FrameBuffer::Bind() const
+    {
+        glBindFramebuffer(GL_FRAMEBUFFER, this->ID);
+    }
+    void FrameBuffer::Unbind() const
+    {
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
 
-    void FrameBuffer::CreateRenderBuffer() { glGenRenderbuffers(1, &this->m_RenderBufferID); }
-    void FrameBuffer::DeleteRenderBuffer() const { glDeleteRenderbuffers(1, &this->m_RenderBufferID); }
+    void FrameBuffer::CreateRenderBuffer()
+    {
+        glGenRenderbuffers(1, &this->m_RenderBufferID);
+    }
+    void FrameBuffer::DeleteRenderBuffer() const
+    {
+        glDeleteRenderbuffers(1, &this->m_RenderBufferID);
+    }
 
-    void FrameBuffer::BindRenderBuffer() const { glBindRenderbuffer(GL_RENDERBUFFER, this->m_RenderBufferID); }
-    void FrameBuffer::UnbindRenderBuffer() const{ glBindRenderbuffer(GL_RENDERBUFFER, 0); }
+    void FrameBuffer::BindRenderBuffer() const
+    {
+        glBindRenderbuffer(GL_RENDERBUFFER, this->m_RenderBufferID);
+    }
+    void FrameBuffer::UnbindRenderBuffer() const
+    {
+        glBindRenderbuffer(GL_RENDERBUFFER, 0);
+    }
 
-    void FrameBuffer::RenderBufferStorage(const int internalformat, const int width, const int height) const { glRenderbufferStorage(GL_RENDERBUFFER, internalformat, width, height); }
-    void FrameBuffer::AttachRenderBuffer(const unsigned int attachment) const { glFramebufferRenderbuffer(GL_FRAMEBUFFER, attachment, GL_RENDERBUFFER, this->m_RenderBufferID); }
+    void FrameBuffer::RenderBufferStorage(const int internalformat, const int width, const int height) const
+    {
+        glRenderbufferStorage(GL_RENDERBUFFER, internalformat, width, height);
+    }
+    void FrameBuffer::AttachRenderBuffer(const unsigned int attachment) const
+    {
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, attachment, GL_RENDERBUFFER, this->m_RenderBufferID);
+    }
 
-    void FrameBuffer::SetTextureAttachment(const unsigned int attachment, const unsigned int target, const int level, const int internalformat, const int width, const int height, const unsigned int format, const unsigned int type, const void* data)
+    void FrameBuffer::SetTextureAttachment(const unsigned int attachment, const unsigned int target,
+                                           const int internalformat, const int width, const int height,
+                                           const unsigned int format, const unsigned int type, const void* data)
     {
         glCreateTextures(target, 1, &this->m_ColorAttachmentID);
         glBindTexture(target, this->m_ColorAttachmentID);
 
         glTexImage2D(target, 0, internalformat, width, height, 0, format, type, data);
 
-    	glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(target, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
         glTexParameteri(target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -133,7 +175,8 @@ namespace Vakol::Model
         glFramebufferTexture2D(GL_FRAMEBUFFER, attachment, target, this->m_ColorAttachmentID, 0);
     }
 
-    void FrameBuffer::SetDepthAttachment(const unsigned int attachment, const int internalformat, const int width, const int height)
+    void FrameBuffer::SetDepthAttachment(const unsigned int attachment, const int internalformat, const int width,
+                                         const int height)
     {
         CreateRenderBuffer();
         BindRenderBuffer();
@@ -141,4 +184,4 @@ namespace Vakol::Model
         RenderBufferStorage(internalformat, width, height);
         AttachRenderBuffer(attachment);
     }
-}
+} // namespace Vakol::Model

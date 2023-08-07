@@ -5,7 +5,8 @@
 
 #include "ScriptTypes.hpp"
 
-namespace Vakol {
+namespace Vakol
+{
 
     // class EngineSystem {  // interface for engine system, something to think about
     //    public:
@@ -16,8 +17,9 @@ namespace Vakol {
     //     virtual void Tick() = 0;
     // };
 
-    class ScriptEngine {
-       public:
+    class ScriptEngine
+    {
+      public:
         ScriptEngine();
 
         // WARNING - lua state global access deprecated
@@ -28,24 +30,28 @@ namespace Vakol {
         LuaType GetGlobalVariable(const std::string& name);
 
         template <typename T>
-        void SetGlobalVariable(const std::string& name, T&& value) {
+        void SetGlobalVariable(const std::string& name, T&& value)
+        {
             m_state[name] = std::forward<T>(value);
         }
 
         LuaType GetScriptVariable(const LuaScript& script, const std::string& varName);
 
         template <typename T>
-        void SetScriptVariable(LuaScript& script, const std::string& varName, T&& value) {
+        void SetScriptVariable(LuaScript& script, const std::string& varName, T&& value)
+        {
             script.env[varName] = std::forward<T>(value);
         }
 
         template <typename... Args, typename Key>
-        void SetGlobalFunction(Key&& key, Args&&... args) {
+        void SetGlobalFunction(Key&& key, Args&&... args)
+        {
             m_state.set_function(std::forward<Key>(key), std::forward<Args>(args)...);
         }
 
         template <typename... Args, typename Key>
-        void SetScriptFunction(LuaScript& script, Key&& key, Args&&... args) {
+        void SetScriptFunction(LuaScript& script, Key&& key, Args&&... args)
+        {
             script.env.set_function(std::forward<Key>(key), std::forward<Args>(args)...);
         }
 
@@ -55,7 +61,7 @@ namespace Vakol {
 
         void TickScript(LuaScript& script);
 
-       private:
+      private:
         //! global state
         LuaState m_state;
 
@@ -68,4 +74,4 @@ namespace Vakol {
         void RegisterFunctions();
         void RegisterTypes();
     };
-}  // namespace Vakol
+} // namespace Vakol

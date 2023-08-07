@@ -6,13 +6,14 @@
 
 using Vakol::Controller::LoadShader;
 
-namespace Vakol::Model {
-
+namespace Vakol::Model
+{
     /**
      * @brief Class representing a Shader.
      */
-    class Shader {
-       public:
+    class Shader
+    {
+      public:
         /**
          * @brief Default constructor for Shader class.
          */
@@ -22,7 +23,9 @@ namespace Vakol::Model {
          * @brief Constructor for Shader class.
          * @param path Path to the shader file.
          */
-        explicit Shader(const std::string& path) : m_ID(LoadShader(path)) {}
+        explicit Shader(const std::string& path) : m_ID(LoadShader(path))
+        {
+        }
 
         /**
          * @brief Destructor for Shader class.
@@ -43,11 +46,13 @@ namespace Vakol::Model {
          * @brief Function to get the shader's ID.
          * @return The shader's ID.
          */
-        unsigned int GetID() const { return m_ID; };
+        unsigned int GetID() const
+        {
+            return m_ID;
+        };
 
-       public:
-
-         /**
+      public:
+        /**
          * @brief Function to set a boolean uniform in the shader.
          * @param name Name of the uniform.
          * @param value Boolean value to set.
@@ -76,7 +81,7 @@ namespace Vakol::Model {
         void SetVec2(const char* name, const glm::vec2& value) const;
         void SetVec2(const char* name, float x, float y) const;
 
-         /**
+        /**
          * @brief Function to set a vec3 uniform in the shader.
          * @param name Name of the uniform.
          * @param value glm::vec3 value to set.
@@ -107,7 +112,7 @@ namespace Vakol::Model {
         void SetMat4(const char* name, const glm::mat4& value) const;
         void SetMat4v(const char* name, int count, const void* data) const;
 
-       private:
+      private:
         unsigned int m_ID = 0; ///< ID of the Shader.
     };
-}  // namespace Vakol::Model
+} // namespace Vakol::Model

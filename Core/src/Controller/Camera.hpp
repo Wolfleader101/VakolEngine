@@ -1,11 +1,10 @@
 #pragma once
 
+#include <cereal/archives/json.hpp>
 #include <glm/mat4x4.hpp>
 #include <glm/vec3.hpp>
 
 #include "Math.hpp"
-
-#include <cereal/archives/json.hpp>
 
 constexpr unsigned char PROJECTION_MATRIX = 0x0;
 constexpr unsigned char VIEW_MATRIX = 0x1;
@@ -15,8 +14,9 @@ namespace Vakol::Controller
     /**
      * @brief Class representing a Camera.
      */
-    class Camera {
-       public:
+    class Camera
+    {
+      public:
         Camera() = default;
 
         /**
@@ -24,7 +24,7 @@ namespace Vakol::Controller
          *
          * @param position The position of the camera.
          */
-        explicit Camera(const glm::vec3& position);
+        explicit Camera(const glm::vec3& position = glm::vec3(0.0f, 0.0f, 5.0f));
 
         /**
          * @brief Get the transformation matrix of the camera based on the specified type.
@@ -51,7 +51,10 @@ namespace Vakol::Controller
          *
          * @return const glm::vec3& The position of the camera.
          */
-        const glm::vec3& GetPos() const { return position; }
+        const glm::vec3& GetPos() const
+        {
+            return position;
+        }
 
         /**
          * @brief Set the position of the camera.
@@ -60,49 +63,70 @@ namespace Vakol::Controller
          * @param y The y-coordinate of the position.
          * @param z The z-coordinate of the position.
          */
-        void SetPos(const float x, const float y, const float z) { position = glm::vec3(x, y, z); }
+        void SetPos(const float x, const float y, const float z)
+        {
+            position = glm::vec3(x, y, z);
+        }
 
         /**
          * @brief Get the forward direction of the camera.
          *
          * @return const glm::vec3& The forward direction of the camera.
          */
-        const glm::vec3& GetForward() const { return forward; }
+        const glm::vec3& GetForward() const
+        {
+            return forward;
+        }
 
         /**
          * @brief Get the right direction of the camera.
          *
          * @return const glm::vec3& The right direction of the camera.
          */
-        const glm::vec3& GetRight() const { return right; }
+        const glm::vec3& GetRight() const
+        {
+            return right;
+        }
 
         /**
          * @brief Get the pitch angle of the camera.
          *
          * @return float The pitch angle of the camera.
          */
-        float GetPitch() const { return pitch; }
+        float GetPitch() const
+        {
+            return pitch;
+        }
 
         /**
          * @brief Get the yaw angle of the camera.
          *
          * @return float The yaw angle of the camera.
          */
-        float GetYaw() const { return yaw; }
+        float GetYaw() const
+        {
+            return yaw;
+        }
 
         /**
          * @brief Set the pitch angle of the camera.
          *
          * @param _pitch The pitch angle.
          */
-        void SetPitch(const float _pitch) { pitch = _pitch; }
+        void SetPitch(const float _pitch)
+        {
+            pitch = _pitch;
+        }
 
         /**
          * @brief Set the yaw angle of the camera.
          *
          * @param _yaw The yaw angle.
          */
-        void SetYaw(const float _yaw) { yaw = _yaw; }
+        void SetYaw(const float _yaw)
+        {
+            yaw = _yaw;
+        }
 
         /**
          * @brief Serialize the Camera object using cereal library.
@@ -111,7 +135,8 @@ namespace Vakol::Controller
          * @param ar The archive object for serialization.
          */
         template <class Archive>
-        void serialize(Archive& ar) {
+        void serialize(Archive& ar)
+        {
             ar(cereal::make_nvp("position", position), cereal::make_nvp("forward", forward), cereal::make_nvp("up", up),
                cereal::make_nvp("right", right), cereal::make_nvp("pitch", pitch), cereal::make_nvp("yaw", yaw),
                cereal::make_nvp("fov", fov), cereal::make_nvp("aspect", aspect), cereal::make_nvp("near", near),
@@ -119,8 +144,7 @@ namespace Vakol::Controller
                cereal::make_nvp("forwardDir", forwardDir), cereal::make_nvp("rightDir", rightDir));
         }
 
-
-   private:
+      private:
         /**
          * @brief The pitch angle of the camera.
          */
@@ -148,7 +172,7 @@ namespace Vakol::Controller
 
         /**
          * @brief The far clipping plane distance of the camera.
-         * 
+         *
          */
         float far = 1000.0f;
 
@@ -197,4 +221,4 @@ namespace Vakol::Controller
          */
         float rightDir = 0.0f;
     };
-}  // namespace Vakol::Controller
+} // namespace Vakol::Controller

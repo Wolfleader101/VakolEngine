@@ -62,26 +62,40 @@ namespace Vakol::Math {
 
     Mat4 Inverse(const Mat4& mat);
 
-    struct Line {
+    struct Line
+    {
         Point start;
         Point end;
 
-        inline Line() {}
-        inline Line(const Point& s, const Point& e) : start(s), end(e) {}
+        inline Line()
+        {
+        }
+        inline Line(const Point& s, const Point& e) : start(s), end(e)
+        {
+        }
     };
 
     float Length(const Line& line);
     float LengthSq(const Line& line);
 
-    struct Ray {
+    struct Ray
+    {
         Point origin;
         Vec3 dir;
 
-        inline Ray() : dir(0.0f, 0.0f, 1.0f) {}
-        inline Ray(const Point& o, const Vec3& d) : origin(o), dir(d) { NormalizeDirection(); }
-        inline void NormalizeDirection() { Normalize(dir); }
+        inline Ray() : dir(0.0f, 0.0f, 1.0f)
+        {
+        }
+        inline Ray(const Point& o, const Vec3& d) : origin(o), dir(d)
+        {
+            NormalizeDirection();
+        }
+        inline void NormalizeDirection()
+        {
+            Normalize(dir);
+        }
     };
 
     Ray FromPoints(const Point& from, const Point& to);
 
-}  // namespace Vakol::Math
+} // namespace Vakol::Math

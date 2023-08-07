@@ -2,13 +2,16 @@
 
 #include <View/Window/Window.hpp>
 
-namespace Vakol {
-    namespace Controller {
+namespace Vakol
+{
+    namespace Controller
+    {
         /**
          * @struct Time
          * @brief time data used everywhere
          */
-        struct Time {
+        struct Time
+        {
             Time(){};
             /**
              * @brief current time
@@ -39,11 +42,13 @@ namespace Vakol {
             /**
              * @brief used to update the time struct
              */
-            void Update() {
+            void Update()
+            {
                 curTime = glfwGetTime();
                 frameCount++;
 
-                if (curTime - prevFPSTime >= 1.0f) {
+                if (curTime - prevFPSTime >= 1.0f)
+                {
                     fps = frameCount;
                     frameCount = 0;
                     prevFPSTime = curTime;
@@ -54,7 +59,7 @@ namespace Vakol {
                 prevTime = curTime;
             }
 
-           private:
+          private:
             /**
              * @brief internal frame count
              *
@@ -62,5 +67,5 @@ namespace Vakol {
             int frameCount = 0;
             double prevFPSTime = 0.0f;
         };
-    }  // namespace Controller
-}  // namespace Vakol
+    } // namespace Controller
+} // namespace Vakol
