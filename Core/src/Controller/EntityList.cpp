@@ -10,11 +10,13 @@
 
 using namespace Vakol::Model;
 
-namespace Vakol::Controller {
+namespace Vakol::Controller
+{
 
     EntityList::EntityList() : m_Registry(), ActiveEntityList(){};
 
-    Entity EntityList::CreateEntity() {
+    Entity EntityList::CreateEntity()
+    {
         Entity newEntity = Entity(m_Registry.create(), this);
 
         ActiveEntityList.push_back(newEntity);
@@ -22,7 +24,8 @@ namespace Vakol::Controller {
         return ActiveEntityList.back();
     }
 
-    Entity EntityList::CreateEntity(uint32_t SuggestedHandle) {
+    Entity EntityList::CreateEntity(uint32_t SuggestedHandle)
+    {
         Entity newEntity = Entity(m_Registry.create((entt::entity)SuggestedHandle), this);
 
         ActiveEntityList.push_back(newEntity);
@@ -30,8 +33,9 @@ namespace Vakol::Controller {
         return newEntity;
     }
 
-    Entity EntityList::GetEntity(uint32_t Handle) {
-        if (!CheckEntityExistence(Handle))  // ensuring the entity actually exists
+    Entity EntityList::GetEntity(uint32_t Handle)
+    {
+        if (!CheckEntityExistence(Handle)) // ensuring the entity actually exists
         {
             VK_CRITICAL("EntityList.GetEntity(uint32_t): Entity with given handle does not exist");
             assert(0);
@@ -43,20 +47,25 @@ namespace Vakol::Controller {
         return newEnt;
     }
 
-    void EntityList::RemoveEntity(uint32_t Handle) {
+    void EntityList::RemoveEntity(uint32_t Handle)
+    {
         entt::entity ID = (entt::entity)Handle;
 
-        if (!CheckEntityExistence(Handle))  // ensuring the entity actually exists
+        if (!CheckEntityExistence(Handle)) // ensuring the entity actually exists
         {
             VK_ERROR("EntityList.RemoveEntity(uint32_t): Entity with given handle does not exist... skipping");
-        } else {
+        }
+        else
+        {
             m_Registry.destroy(ID);
 
             auto it = ActiveEntityList.begin();
             auto end = ActiveEntityList.end();
 
-            while (it != end) {
-                if (it->GetHandle() == Handle) {
+            while (it != end)
+            {
+                if (it->GetHandle() == Handle)
+                {
                     ActiveEntityList.erase(it);
                     break;
                 }
@@ -65,18 +74,26 @@ namespace Vakol::Controller {
         }
     }
 
-    void EntityList::Clear() {
+    void EntityList::Clear()
+    {
         m_Registry.clear();
         ActiveEntityList.clear();
     }
 
-    bool EntityList::CheckEntityExistence(uint32_t Handle) const { return m_Registry.valid((entt::entity)Handle); }
+    bool EntityList::CheckEntityExistence(uint32_t Handle) const
+    {
+        return m_Registry.valid((entt::entity)Handle);
+    }
 
-    std::vector<Entity>& EntityList::GetEntityVec() { return ActiveEntityList; }
+    std::vector<Entity> &EntityList::GetEntityVec()
+    {
+        return ActiveEntityList;
+    }
 
     //----------------------- ICT397 additions
 
-    void EntityList::Serialize(const std::string& file) const {
+    void EntityList::Serialize(const std::string &file) const
+    {
         privateSerialize<cereal::JSONOutputArchive, Model::Components::Transform, Model::Components::Tag,
                          Model::Components::GUID, Model::Components::Drawable, Model::Components::Animator,
                          Model::Components::Animation, Model::Components::RigidBody, Model::Components::Collider,
@@ -86,7 +103,8 @@ namespace Vakol::Controller {
                          Animation>(file);*/
     }
 
-    void EntityList::Deserialize(const std::string& file) {
+    void EntityList::Deserialize(const std::string &file)
+    {
         privateDeserialize<cereal::JSONInputArchive, Model::Components::Transform, Model::Components::Tag,
                            Model::Components::GUID, Model::Components::Drawable, Model::Components::Animator,
                            Model::Components::Animation, Model::Components::RigidBody, Model::Components::Collider,
@@ -96,4 +114,4 @@ namespace Vakol::Controller {
                            Animation>(file);*/
     }
 
-}  // namespace Vakol::Controller
+} // namespace Vakol::Controller

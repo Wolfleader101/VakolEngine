@@ -3,13 +3,15 @@
 #include "spdlog/fmt/ostr.h"
 #include "spdlog/spdlog.h"
 
-namespace Vakol::Controller {
+namespace Vakol::Controller
+{
     /**
      * @class Logger
      * @brief the logger class
      */
-    class Logger {
-       public:
+    class Logger
+    {
+      public:
         /**
          * @brief initialise the logger
          */
@@ -19,7 +21,7 @@ namespace Vakol::Controller {
          * @brief get the logger
          * @return return pointer to logger
          */
-        static std::shared_ptr<spdlog::logger>& GetLogger();
+        static std::shared_ptr<spdlog::logger> &GetLogger();
 
         /**
          * @brief Print a trace message from a script.
@@ -56,7 +58,7 @@ namespace Vakol::Controller {
          */
         static void ScriptPrintCrit(std::string args);
 
-       private:
+      private:
         /**
          * @brief logger pointer
          */
@@ -68,7 +70,7 @@ namespace Vakol::Controller {
          */
         static std::shared_ptr<spdlog::logger> s_script_logger;
     };
-}  // namespace Vakol::Controller
+} // namespace Vakol::Controller
 
 #define VK_TRACE(...) ::Vakol::Controller::Logger::GetLogger()->trace(__VA_ARGS__)
 #define VK_INFO(...) ::Vakol::Controller::Logger::GetLogger()->info(__VA_ARGS__)

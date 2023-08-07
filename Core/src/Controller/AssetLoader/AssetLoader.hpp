@@ -9,12 +9,14 @@
 
 #include "Controller/Terrain.hpp"
 
-namespace Vakol::Controller {
+namespace Vakol::Controller
+{
     /**
      * @brief AssetLoader class for loading game assets.
      */
-    class AssetLoader {
-       public:
+    class AssetLoader
+    {
+      public:
         /**
          * @brief Path to the model files.
          */
@@ -40,17 +42,19 @@ namespace Vakol::Controller {
          * @param data Pointer to additional data for embedded textures.
          * @return std::shared_ptr<Model::Assets::Texture> A shared pointer to the loaded texture.
          */
-        static std::shared_ptr<Model::Assets::Texture> GetTexture(const std::string& file, int size, bool gamma,
-                                                                  bool flip, const void* data);  // embedded textures
-        static std::shared_ptr<Model::Assets::Texture> GetTexture(const std::string& file, bool gamma,
-                                                                  bool flip);                // regular textures
-        static std::shared_ptr<Model::Assets::Texture> GetTexture(const std::string& file);  // raw textures
-      
-        static Model::Assets::Animation GetAnimation(const std::string& file, const int state);
-        static std::shared_ptr<Animator> GetAnimator(const std::string& file);
+        static std::shared_ptr<Model::Assets::Texture> GetTexture(const std::string &file, int size, bool gamma,
+                                                                  bool flip, const void *data); // embedded textures
+        static std::shared_ptr<Model::Assets::Texture> GetTexture(const std::string &file, bool gamma,
+                                                                  bool flip);               // regular textures
+        static std::shared_ptr<Model::Assets::Texture> GetTexture(const std::string &file); // raw textures
 
-        static std::pair<std::shared_ptr<Model::Assets::Model>, std::shared_ptr<Animator>> GetModel(const std::string& file, float scale, bool animated, bool backfaceCull, bool& instance);
-        static std::pair<std::shared_ptr<Model::Assets::Model>, std::shared_ptr<Animator>> GetModel(const std::string& file, float scale, bool animated, bool backfaceCull);
+        static Model::Assets::Animation GetAnimation(const std::string &file, const int state);
+        static std::shared_ptr<Animator> GetAnimator(const std::string &file);
+
+        static std::pair<std::shared_ptr<Model::Assets::Model>, std::shared_ptr<Animator>> GetModel(
+            const std::string &file, float scale, bool animated, bool backfaceCull, bool &instance);
+        static std::pair<std::shared_ptr<Model::Assets::Model>, std::shared_ptr<Animator>> GetModel(
+            const std::string &file, float scale, bool animated, bool backfaceCull);
 
         /**
          * @brief Get a shader.
@@ -58,7 +62,7 @@ namespace Vakol::Controller {
          * @param file The file path of the shader.
          * @return std::shared_ptr<Model::Shader> A shared pointer to the loaded shader.
          */
-        static std::shared_ptr<Model::Shader> GetShader(const std::string& file);
+        static std::shared_ptr<Model::Shader> GetShader(const std::string &file);
 
         /**
          * @brief Get a terrain with specified parameters.
@@ -69,7 +73,7 @@ namespace Vakol::Controller {
          * @param max The maximum height of the terrain.
          * @return std::shared_ptr<Terrain> A shared pointer to the loaded terrain.
          */
-        static std::shared_ptr<Terrain> GetTerrain(const std::string& name, const std::string& heightmap, float min,
+        static std::shared_ptr<Terrain> GetTerrain(const std::string &name, const std::string &heightmap, float min,
                                                    float max);
 
         /**
@@ -78,14 +82,16 @@ namespace Vakol::Controller {
          * @param name The name of the terrain.
          * @return std::shared_ptr<Terrain> A shared pointer to the loaded terrain.
          */
-        static std::shared_ptr<Terrain> GetTerrain(const std::string& name);
+        static std::shared_ptr<Terrain> GetTerrain(const std::string &name);
 
-       private:
+      private:
         /**
          * @brief Map storing loaded textures.
          */
         static std::unordered_map<std::string, std::shared_ptr<Model::Assets::Texture>> m_TextureMap;
-        static std::unordered_map<std::string, std::pair<std::shared_ptr<Model::Assets::Model>, std::shared_ptr<Animator>>> m_ModelMap;
+        static std::unordered_map<std::string,
+                                  std::pair<std::shared_ptr<Model::Assets::Model>, std::shared_ptr<Animator>>>
+            m_ModelMap;
         static std::unordered_map<std::string, std::shared_ptr<Animator>> m_AnimatorMap;
         static std::unordered_map<std::string, std::shared_ptr<Model::Shader>> m_ShaderMap;
 
@@ -95,4 +101,4 @@ namespace Vakol::Controller {
         static std::unordered_map<std::string, std::shared_ptr<Terrain>> m_TerrainMap;
     };
 
-}  // namespace Vakol::Controller
+} // namespace Vakol::Controller

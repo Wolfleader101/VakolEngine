@@ -1,5 +1,7 @@
 ---
-BasedOnStyle: Google
+BasedOnStyle: Microsoft
+AlignEscapedNewlines: Left
+AlwaysBreakTemplateDeclarations: "Yes"
 ColumnLimit: "120"
-IndentWidth: "4"
+PointerAlignment: Left
 NamespaceIndentation: All

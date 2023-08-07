@@ -4,22 +4,24 @@
 #include "Scripting/ScriptEngine.hpp"
 #include "View/Renderer/Renderer.hpp"
 
-namespace Vakol {
+namespace Vakol
+{
     // using Scene = Controller::Scene;
     /**
      * @class SceneManager
      *
      * @brief Class representing the scene manager in the application.
      */
-    class SceneManager {
-       public:
+    class SceneManager
+    {
+      public:
         using Scene = Controller::Scene;
         /**
          * @brief Construct a new Scene Manager object.
          *
          * @param scriptEngine The script engine.
          */
-        SceneManager(ScriptEngine& scriptEngine);
+        SceneManager(ScriptEngine &scriptEngine);
 
         /**
          * @brief Destroy the Scene Manager object.
@@ -31,14 +33,14 @@ namespace Vakol {
          *
          * @return Scene& of active scene
          */
-        Scene& GetActiveScene();
+        Scene &GetActiveScene();
 
         /**
          * @brief Change the active current scene.
          *
          * @param name of the new scene
          */
-        void ChangeActiveScene(const std::string& name);
+        void ChangeActiveScene(const std::string &name);
 
         /**
          * @brief Get a scene with the given name.
@@ -46,7 +48,7 @@ namespace Vakol {
          * @param name The name of the scene to get.
          * @return Scene& The scene with the given name.
          */
-        Scene& GetScene(const std::string& name);
+        Scene &GetScene(const std::string &name);
 
         /**
          * @brief Create a Scene object
@@ -55,14 +57,14 @@ namespace Vakol {
          * @param scriptName Script name
          *
          */
-        void CreateScene(const std::string& name, const std::string& scriptName);
+        void CreateScene(const std::string &name, const std::string &scriptName);
 
         /**
          * @brief Remove a scene from the scene manager.
          *
          * @param scene The scene to remove.
          */
-        void RemoveScene(const std::string& name);
+        void RemoveScene(const std::string &name);
 
         /**
          * @brief Update the scene manager. Internally will change to the next scene if its been set
@@ -79,20 +81,20 @@ namespace Vakol {
          */
         bool operator!() const;
 
-       private:
-        void ThrowRuntime(const std::string& str) const;
+      private:
+        void ThrowRuntime(const std::string &str) const;
 
-        Scene* m_activeScene;
-        Scene* m_nextScene;
+        Scene *m_activeScene;
+        Scene *m_nextScene;
 
         /**
          * @brief The map of scenes.
          */
-        std::unordered_map<std::string, Controller::Scene* const> m_scenes;
+        std::unordered_map<std::string, Controller::Scene *const> m_scenes;
 
         /**
          * @brief The script engine.
          */
-        ScriptEngine& m_scriptEngine;
+        ScriptEngine &m_scriptEngine;
     };
-}  // namespace Vakol
+} // namespace Vakol

@@ -35,8 +35,10 @@ float skybox_vertices[] = {
 
 unsigned int SKYBOX_VAO, SKYBOX_VBO;
 
-namespace Vakol::Model {
-    void Skybox::Init() {
+namespace Vakol::Model
+{
+    void Skybox::Init()
+    {
         shader = std::make_shared<Shader>("coreAssets/shaders/skybox.prog");
 
         glGenVertexArrays(1, &SKYBOX_VAO);
@@ -56,10 +58,11 @@ namespace Vakol::Model {
         CUBEMAP_ID = Controller::LoadTexture(std::move(skybox_faces), false, false);
     }
 
-    void Skybox::Draw(const glm::mat4& projection, const glm::mat4& view) const {
+    void Skybox::Draw(const glm::mat4 &projection, const glm::mat4 &view) const
+    {
         glDepthFunc(GL_LEQUAL);
 
-        const auto t_view = glm::mat4(glm::mat3(view));  // remove transform matrix
+        const auto t_view = glm::mat4(glm::mat3(view)); // remove transform matrix
         shader->SetMat4("PV_MATRIX", projection * t_view);
 
         shader->Bind();
@@ -77,4 +80,4 @@ namespace Vakol::Model {
         shader->Unbind();
     }
 
-}  // namespace Vakol::Model
+} // namespace Vakol::Model

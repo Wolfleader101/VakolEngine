@@ -5,7 +5,8 @@
 
 #include "Renderer.hpp"
 
-namespace Vakol::View {
+namespace Vakol::View
+{
     using Model::Buffer;
     using Model::FrameBuffer;
     using Model::Skybox;
@@ -13,13 +14,14 @@ namespace Vakol::View {
     /**
      * @brief GLRenderer class derived from Renderer, for rendering in OpenGL
      */
-    class GLRenderer final : public Renderer {
-       public:
+    class GLRenderer final : public Renderer
+    {
+      public:
         /**
          * @brief GLRenderer constructor
          * @param window shared pointer to a Window object
          */
-        explicit GLRenderer(const std::shared_ptr<Window>& window);
+        explicit GLRenderer(const std::shared_ptr<Window> &window);
 
         /**
          * @brief Add a buffer to the GLRenderer
@@ -38,22 +40,26 @@ namespace Vakol::View {
          * @param data pointer to initial data for the buffer
          * @param usage OpenGL usage flag, often GL_STATIC_DRAW
          */
-        void AddBuffer(unsigned int type, int size, int binding, const void* data, unsigned int usage) override;
+        void AddBuffer(unsigned int type, int size, int binding, const void *data, unsigned int usage) override;
 
         /**
          * @brief Bind a FrameBuffer
          * @param index optional index of the FrameBuffer to bind, default is 0
          */
-        void BindFrameBuffer(const int index = 0) const {
-            if (static_cast<int>(framebuffers.size()) > index) framebuffers.at(index)->Bind();
+        void BindFrameBuffer(const int index = 0) const
+        {
+            if (static_cast<int>(framebuffers.size()) > index)
+                framebuffers.at(index)->Bind();
         }
 
         /**
          * @brief Unbind a FrameBuffer
          * @param index optional index of the FrameBuffer to unbind, default is 0
          */
-        void UnbindFrameBuffer(const int index = 0) const {
-            if (static_cast<int>(framebuffers.size()) > index) framebuffers.at(index)->Unbind();
+        void UnbindFrameBuffer(const int index = 0) const
+        {
+            if (static_cast<int>(framebuffers.size()) > index)
+                framebuffers.at(index)->Unbind();
         }
 
         /**
@@ -63,13 +69,13 @@ namespace Vakol::View {
          * @param size size of the data in bytes
          * @param data pointer to the data
          */
-        void SetBufferSubData(int index, int offset, int size, const void* data) const override;
+        void SetBufferSubData(int index, int offset, int size, const void *data) const override;
 
         /**
          * @brief Clear color buffer with a color
          * @param color optional glm::vec4 specifying the color, default is black with full opacity
          */
-        void ClearColor(const glm::vec4& color = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)) const override;
+        void ClearColor(const glm::vec4 &color = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)) const override;
 
         /**
          * @brief Clear color buffer with a color specified by four floats
@@ -92,22 +98,22 @@ namespace Vakol::View {
          * @param drawable drawable component of the model
          * @param animation animation asset of the model
          */
-        void DrawAnimated(const Model::Components::Transform& transform, const Model::Components::Drawable& drawable,
-                          const Model::Assets::Animation& animation) const override;
+        void DrawAnimated(const Model::Components::Transform &transform, const Model::Components::Drawable &drawable,
+                          const Model::Assets::Animation &animation) const override;
 
         /**
          * @brief Draw a model without animation
          * @param transform transform component of the model
          * @param drawable drawable component of the model
          */
-        void Draw(const Model::Components::Transform& transform,
-                  const Model::Components::Drawable& drawable) const override;
+        void Draw(const Model::Components::Transform &transform,
+                  const Model::Components::Drawable &drawable) const override;
 
         /**
          * @brief Update data in the renderer based on a camera
          * @param camera the camera to update data from
          */
-        void UpdateData(const Controller::Camera& camera) override;
+        void UpdateData(const Controller::Camera &camera) override;
 
         /**
          * @brief Perform update at index
@@ -124,7 +130,8 @@ namespace Vakol::View {
         /**
          * @brief Toggle wireframe mode on and off
          */
-        void ToggleWireframe() override {
+        void ToggleWireframe() override
+        {
             isWireframe = !isWireframe;
 
             if (isWireframe)
@@ -133,9 +140,13 @@ namespace Vakol::View {
                 glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         }
 
-        void ToggleSkybox() override { isSkybox = !isSkybox; }
+        void ToggleSkybox() override
+        {
+            isSkybox = !isSkybox;
+        }
 
-        void SetWireframe(const bool wireframe) override {
+        void SetWireframe(const bool wireframe) override
+        {
             isWireframe = wireframe;
 
             if (isWireframe)
@@ -144,11 +155,14 @@ namespace Vakol::View {
                 glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         }
 
-        void SetSkybox(const bool showSkybox) override { isSkybox = showSkybox; }
+        void SetSkybox(const bool showSkybox) override
+        {
+            isSkybox = showSkybox;
+        }
 
-       private:
-        std::vector<std::shared_ptr<Buffer>> buffers;            ///< Vector of shared pointers to Buffer objects
-        std::vector<std::shared_ptr<FrameBuffer>> framebuffers;  ///< Vector of shared pointers to FrameBuffer objects
-        std::shared_ptr<Skybox> skybox = std::make_shared<Skybox>();  ///< Shared pointer to a Skybox object
+      private:
+        std::vector<std::shared_ptr<Buffer>> buffers;           ///< Vector of shared pointers to Buffer objects
+        std::vector<std::shared_ptr<FrameBuffer>> framebuffers; ///< Vector of shared pointers to FrameBuffer objects
+        std::shared_ptr<Skybox> skybox = std::make_shared<Skybox>(); ///< Shared pointer to a Skybox object
     };
-}  // namespace Vakol::View
+} // namespace Vakol::View
