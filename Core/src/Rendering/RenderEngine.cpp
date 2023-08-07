@@ -4,11 +4,13 @@
 
 #include <View/Window/Window.hpp>
 
+#include <Controller/Logger.hpp>
+
 namespace Vakol::Rendering
 {
     void RenderEngine::PreDraw()
     {
-        constexpr float color[] = {0.2f, 0.2f, 0.2f};
+        constexpr float color[] = {0.45f, 0.6f, 0.75f};
 
         RenderAPI::ClearColor(color);
         RenderAPI::Clear(VK_COLOR_BUFFER | VK_DEPTH_BUFFER);
@@ -40,7 +42,9 @@ namespace Vakol::Rendering
         vertexArray.indices = mesh.indices;
 
         // swap vector with an empty vector to de-allocate the memory taken by the vector
-        std::vector<unsigned int>().swap(mesh.indices); 
+        std::vector<unsigned int>().swap(mesh.indices);
+
+        SubmitVertexData(std::move(vertexArray));
     }
 
     std::shared_ptr<RenderEngine> CreateRenderEngine(const std::string& API, const std::shared_ptr<View::Window>& window)

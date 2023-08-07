@@ -34,7 +34,7 @@ namespace Vakol::Rendering
 
     struct Shader
     {
-        
+        const char* path = nullptr;
     };
 
     struct Texture

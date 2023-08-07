@@ -11,8 +11,8 @@ namespace Vakol::Rendering
     struct Texture;
 
     struct VertexCommand;
-
-    enum VK_RENDER_DATA_HINT { VK_VERTEX_DATA, VK_SHADER_DATA, VK_TEXTURE_DATA };
+    struct ShaderCommand;
+    struct TextureCommand;
 
     enum VK_RENDER_API_HINT { OPENGL, VULKAN, DIRECT3D, METAL };
     enum VK_BUFFER_HINT { VK_COLOR_BUFFER = BIT(0), VK_DEPTH_BUFFER = BIT(1), VK_STENCIL_BUFFER = BIT(2) };
@@ -28,11 +28,15 @@ namespace Vakol::Rendering
         static void ClearColor(const float color[]);
         static void Clear(unsigned int mask);
 
+        static void 
+
         static void GenerateVertexCommand(VertexArray&& vertexArray);
         static void GenerateShaderCommand(Shader&& shader);
         static void GenerateTextureCommand(Texture&& texture);
     private:
-        static RenderQueue<VertexCommand> m_vertexQueue;
+        static RenderQueue<VertexCommand>  m_vertexQueue;
+        static RenderQueue<ShaderCommand>  m_shaderQueue;
+        static RenderQueue<TextureCommand> m_textureQueue;
 
         static RenderSettings m_settings;
     };

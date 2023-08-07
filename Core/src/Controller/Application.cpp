@@ -7,6 +7,8 @@
 #include <Model/Components.hpp>
 #include <View/Renderer/RendererFactory.hpp>
 
+#include <Rendering/Assets/Importer/ModelImporter.hpp>
+
 #include "Logger.hpp"
 
 namespace Vakol::Controller {
@@ -41,7 +43,7 @@ namespace Vakol::Controller {
         m_renderEngine = Rendering::CreateRenderEngine(config.value().rendererType, m_window);
 
         if (!m_renderer && m_renderEngine)
-            VK_TRACE("renderer is nullptr!");
+            VK_WARN("renderer is nullptr!");
         else if (!m_renderer && !m_renderEngine) 
         {
             VK_ERROR("Both renderers are nullptr!");
@@ -55,6 +57,9 @@ namespace Vakol::Controller {
         VK_INFO("Calling main.lua...");
 
         LuaScript mainScript = m_scriptEngine.CreateScript("scripts/main.lua");
+
+        auto model = Assets::Importer::ImportModel("coreAssets/models/cube.obj", 1.0f);
+        Rendering::RenderEngine::SubmitModel(model);
 
         m_running = true;
     }
