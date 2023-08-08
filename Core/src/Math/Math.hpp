@@ -8,6 +8,18 @@ namespace Vakol::Math
     using Vec2 = glm::vec2;
 
     using Vec3 = glm::vec3;
+    
+    // struct Vec3
+    // {
+    //     union {
+    //         float x;
+    //         float y;
+    //         float z;
+    //     };
+    //     glm::vec3 glm;
+    //     float[3] arr;
+    // };
+
     using Vec4 = glm::vec4;
     using Point = Vec3;
 
@@ -126,6 +138,10 @@ namespace Vakol::Math
      */
     float Remap(const float iMin, const float iMax, const float oMin, const float oMax, const float v);
 
+    float DegToRad(const float deg);
+    float RadToDeg(const float rad);
+
+    Mat4 Perspective(float fovy, float aspect, float zNear, float zFar);
 } // namespace Vakol::Math
 
 /**

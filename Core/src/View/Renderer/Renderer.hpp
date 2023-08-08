@@ -17,6 +17,11 @@ namespace Vakol::Model::Assets
     class Animation;
 }
 
+namespace Vakol::Math
+{
+    struct Vec4;
+}
+
 namespace Vakol::View
 {
     /**
@@ -106,7 +111,7 @@ namespace Vakol::View
          * @brief Clear color buffer with a specified color
          * @param color the color to clear the color buffer with, default is black with full alpha
          */
-        virtual void ClearColor(const glm::vec4& color = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)) const = 0;
+        virtual void ClearColor(const Math::Vec4& color = Math::Vec4(0.0f, 0.0f, 0.0f, 1.0f)) const = 0;
 
         /**
          * @brief Clear color buffer with a specified color

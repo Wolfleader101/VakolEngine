@@ -85,7 +85,7 @@ namespace Vakol::Controller
     {
         m_registry->view<Model::Components::Transform, Model::Components::Drawable>().each(
             [&](Model::Components::Transform& transform, const Model::Components::Drawable& drawable) {
-                auto euler_rads = glm::radians(transform.eulerAngles);
+                auto euler_rads = Math::DegToRad(transform.eulerAngles);
 
                 transform.rot = Math::Quat(euler_rads);
 

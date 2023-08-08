@@ -24,15 +24,15 @@ namespace Vakol::Controller
          *
          * @param position The position of the camera.
          */
-        explicit Camera(const glm::vec3& position = glm::vec3(0.0f, 0.0f, 5.0f));
+        explicit Camera(const Math::Vec3& position = Math::Vec3(0.0f, 0.0f, 5.0f));
 
         /**
          * @brief Get the transformation matrix of the camera based on the specified type.
          *
          * @param type The type of matrix (0 for projection matrix, 1 for view matrix).
-         * @return const glm::mat4& The transformation matrix.
+         * @return const Math::Mat4& The transformation matrix.
          */
-        const glm::mat4& GetMatrix(unsigned char type) const;
+        const Math::Mat4& GetMatrix(unsigned char type) const;
 
         /**
          * @brief Set the aspect ratio of the camera.
@@ -49,9 +49,9 @@ namespace Vakol::Controller
         /**
          * @brief Get the position of the camera.
          *
-         * @return const glm::vec3& The position of the camera.
+         * @return const Math::Vec3& The position of the camera.
          */
-        const glm::vec3& GetPos() const
+        const Math::Vec3& GetPos() const
         {
             return position;
         }
@@ -65,15 +65,15 @@ namespace Vakol::Controller
          */
         void SetPos(const float x, const float y, const float z)
         {
-            position = glm::vec3(x, y, z);
+            position = Math::Vec3(x, y, z);
         }
 
         /**
          * @brief Get the forward direction of the camera.
          *
-         * @return const glm::vec3& The forward direction of the camera.
+         * @return const Math::Vec3& The forward direction of the camera.
          */
-        const glm::vec3& GetForward() const
+        const Math::Vec3& GetForward() const
         {
             return forward;
         }
@@ -81,9 +81,9 @@ namespace Vakol::Controller
         /**
          * @brief Get the right direction of the camera.
          *
-         * @return const glm::vec3& The right direction of the camera.
+         * @return const Math::Vec3& The right direction of the camera.
          */
-        const glm::vec3& GetRight() const
+        const Math::Vec3& GetRight() const
         {
             return right;
         }
@@ -179,32 +179,32 @@ namespace Vakol::Controller
         /**
          * @brief The projection matrix of the camera.
          */
-        glm::mat4 PROJECTION = glm::mat4(1.0f);
+        Math::Mat4 PROJECTION = Math::Mat4(1.0f);
 
         /**
          * @brief The view matrix of the camera.
          */
-        glm::mat4 VIEW = glm::mat4(1.0f);
+        Math::Mat4 VIEW = Math::Mat4(1.0f);
 
         /**
          * @brief The position of the camera.
          */
-        glm::vec3 position = glm::vec3(0.0f, 0.0f, 2.0f);
+        Math::Vec3 position = Math::Vec3(0.0f, 0.0f, 2.0f);
 
         /**
          * @brief The forward direction of the camera.
          */
-        glm::vec3 forward = glm::vec3(0.0f, 0.0f, -1.0f);
+        Math::Vec3 forward = Math::Vec3(0.0f, 0.0f, -1.0f);
 
         /**
          * @brief The up direction of the camera.
          */
-        glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+        Math::Vec3 up = Math::Vec3(0.0f, 1.0f, 0.0f);
 
         /**
          * @brief The right direction of the camera.
          */
-        glm::vec3 right = glm::vec3(0.0f);
+        Math::Vec3 right = Math::Vec3(0.0f);
 
         /**
          * @brief Flag indicating whether the camera is sprinting.

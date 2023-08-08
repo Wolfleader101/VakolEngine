@@ -1,5 +1,6 @@
 #include "Skybox.hpp"
 
+#include <Math/Math.hpp>
 #include <glad/glad.h>
 
 #include <Controller/AssetLoader/TextureLoader.hpp>
@@ -58,11 +59,11 @@ namespace Vakol::Model
         CUBEMAP_ID = Controller::LoadTexture(std::move(skybox_faces), false, false);
     }
 
-    void Skybox::Draw(const glm::mat4& projection, const glm::mat4& view) const
+    void Skybox::Draw(const Math::Mat4& projection, const Math::Mat4& view) const
     {
         glDepthFunc(GL_LEQUAL);
 
-        const auto t_view = glm::mat4(glm::mat3(view)); // remove transform matrix
+        const auto t_view = Math::Mat4(Math::Mat3(view)); // remove transform matrix
         shader->SetMat4("PV_MATRIX", projection * t_view);
 
         shader->Bind();

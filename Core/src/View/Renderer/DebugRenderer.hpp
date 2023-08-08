@@ -2,7 +2,7 @@
 
 #include <reactphysics3d/reactphysics3d.h>
 
-#include <glm/vec3.hpp>
+#include <Math/Math.hpp>
 #include <memory>
 #include <vector>
 
@@ -72,8 +72,8 @@ namespace Vakol::View
          */
         struct PhysicsDebugVertex
         {
-            glm::vec3 xyz;   ///< position of the debug vertex
-            glm::vec3 color; ///< colour of the debug vertex
+            Math::Vec3 xyz;   ///< position of the debug vertex
+            Math::Vec3 color; ///< colour of the debug vertex
         };
 
         /**
@@ -89,9 +89,9 @@ namespace Vakol::View
         /**
          * @brief Get debug colour
          * @param color the color to be translated
-         * @param outColor the resulting glm::vec3 colour
+         * @param outColor the resulting Math::Vec3 colour
          */
-        void GetDebugColor(const uint32_t& color, glm::vec3& outColor) const;
+        void GetDebugColor(const uint32_t& color, Math::Vec3& outColor) const;
 
         /**
          * @brief Get Triangles for debug rendering

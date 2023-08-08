@@ -1,7 +1,9 @@
 #pragma once
 
-#include <glm/vec4.hpp>
-
+namespace Vakol::Math
+{
+    struct Vec4;
+}
 namespace Vakol::Model
 {
     struct ATTACHMENT
@@ -184,7 +186,7 @@ namespace Vakol::Model
          * \brief Clears the color buffer with the specified color.
          * \param color The color to clear.
          */
-        void ClearColor(const glm::vec4& color) const;
+        void ClearColor(const Math::Vec4& color) const;
 
         /**
          * \brief Clears the color buffer with the specified color.

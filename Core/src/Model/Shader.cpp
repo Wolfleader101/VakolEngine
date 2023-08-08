@@ -42,7 +42,7 @@ namespace Vakol::Model
         Unbind();
     }
 
-    void Shader::SetVec2(const char* name, const glm::vec2& value) const
+    void Shader::SetVec2(const char* name, const Math::Vec2& value) const
     {
         Bind();
         glUniform2fv(glGetUniformLocation(this->m_ID, name), 1, glm::value_ptr(value));
@@ -56,7 +56,7 @@ namespace Vakol::Model
         Unbind();
     }
 
-    void Shader::SetVec3(const char* name, const glm::vec3& value) const
+    void Shader::SetVec3(const char* name, const Math::Vec3& value) const
     {
         Bind();
         glUniform3fv(glGetUniformLocation(this->m_ID, name), 1, glm::value_ptr(value));
@@ -70,7 +70,7 @@ namespace Vakol::Model
         Unbind();
     }
 
-    void Shader::SetVec4(const char* name, const glm::vec4& value) const
+    void Shader::SetVec4(const char* name, const Math::Vec4& value) const
     {
         Bind();
         glUniform4fv(glGetUniformLocation(this->m_ID, name), 1, glm::value_ptr(value));
@@ -84,14 +84,14 @@ namespace Vakol::Model
         Unbind();
     }
 
-    void Shader::SetMat3(const char* name, const glm::mat3& value) const
+    void Shader::SetMat3(const char* name, const Math::Mat3& value) const
     {
         Bind();
         glUniformMatrix3fv(glGetUniformLocation(this->m_ID, name), 1, GL_FALSE, glm::value_ptr(value));
         Unbind();
     }
 
-    void Shader::SetMat4(const char* name, const glm::mat4& value) const
+    void Shader::SetMat4(const char* name, const Math::Mat4& value) const
     {
         Bind();
         glUniformMatrix4fv(glGetUniformLocation(this->m_ID, name), 1, GL_FALSE, glm::value_ptr(value));

@@ -201,4 +201,18 @@ namespace Vakol::Math
         return Lerp(oMin, oMax, t);
     }
 
+    float DegToRad(const float deg)
+    {
+        return glm::radians(deg);
+    }
+
+    float RadToDeg(const float rad)
+    {
+        return glm::degrees(rad);
+    }
+
+    Mat4 Perspective(float fovy, float aspect, float zNear, float zFar)
+    {
+        glm::perspective(fovy, aspect, zNear, zFar);
+    }
 } // namespace Vakol::Math

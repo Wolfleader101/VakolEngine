@@ -3,6 +3,7 @@
 #include <glad/glad.h>
 
 #include <Controller/Logger.hpp>
+#include <Math/Math.hpp>
 
 static int s_hitcount = 0;
 
@@ -116,7 +117,7 @@ namespace Vakol::Model
     {
         glClearColor(r, g, b, a);
     }
-    void FrameBuffer::ClearColor(const glm::vec4& color) const
+    void FrameBuffer::ClearColor(const Math::Vec4& color) const
     {
         glClearColor(color.r, color.g, color.b, color.a);
     }
