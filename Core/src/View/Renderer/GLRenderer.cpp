@@ -34,8 +34,8 @@ constexpr float LIGHT_CONSTANT = 1.0f;
 constexpr float LIGHT_LINEAR = 0.045f;
 constexpr float LIGHT_QUADRATIC = 0.0075f;
 
-const float LIGHT_CUT_OFF = glm::cos(glm::radians(7.5f));
-const float LIGHT_OUTER_CUT_OFF = glm::cos(glm::radians(12.5f));
+const float LIGHT_CUT_OFF = Math::Cos(Math::DegToRad(7.5f));
+const float LIGHT_OUTER_CUT_OFF = Math::Cos(Math::DegToRad(12.5f));
 
 Math::Mat4 PROJECTION = Math::Mat4(1.0f);
 Math::Mat4 VIEW = Math::Mat4(1.0f);

@@ -127,11 +127,11 @@ namespace Vakol::Model::Components
     Math::Mat4 to_rp3d_mat4(const Transform& transform)
     {
         Math::Mat4 mat(1.0f);
-        mat = glm::translate(mat, transform.pos);
-        mat = glm::scale(mat, transform.scale);
-        mat = glm::rotate(mat, transform.rot.x, Math::Vec3(1.0f, 0.0f, 0.0f));
-        mat = glm::rotate(mat, transform.rot.y, Math::Vec3(0.0f, 1.0f, 0.0f));
-        mat = glm::rotate(mat, transform.rot.z, Math::Vec3(0.0f, 0.0f, 1.0f));
+        mat = Math::Translate(mat, transform.pos);
+        mat = Math::Scale(mat, transform.scale);
+        mat = Math::Rotate(mat, transform.rot.x, Math::Vec3(1.0f, 0.0f, 0.0f));
+        mat = Math::Rotate(mat, transform.rot.y, Math::Vec3(0.0f, 1.0f, 0.0f));
+        mat = Math::Rotate(mat, transform.rot.z, Math::Vec3(0.0f, 0.0f, 1.0f));
         return mat;
     }
 

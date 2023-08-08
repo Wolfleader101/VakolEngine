@@ -93,9 +93,9 @@ namespace Vakol
             vec3["g"] = &Math::Vec3::g;
             vec3["b"] = &Math::Vec3::b;
 
-            vec3.set_function("magnitude", [](const Math::Vec3& v) -> float { return glm::length(v); });
-            vec3.set_function("normalize", [](const Math::Vec3& v) -> Math::Vec3 { return glm::normalize(v); });
-            vec3.set_function("dot", [](const Math::Vec3& u, const Math::Vec3& v) -> float { return glm::dot(u, v); });
+            vec3.set_function("magnitude", [](const Math::Vec3& v) -> float { return Math::Magnitude(v); });
+            vec3.set_function("normalize", [](const Math::Vec3& v) -> Math::Vec3 { return Math::Normalized(v); });
+            vec3.set_function("dot", [](const Math::Vec3& u, const Math::Vec3& v) -> float { return Math::Dot(u, v); });
         }
 
         {
@@ -152,7 +152,7 @@ namespace Vakol
             });
 
             lua.set_function(
-                "scale", [](const Math::Mat4& matrix, const Math::Vec3& scale) { return glm::scale(matrix, scale); });
+                "scale", [](const Math::Mat4& matrix, const Math::Vec3& scale) { return Math::Scale(matrix, scale); });
 
             lua.set_function("rotate", [](const Math::Mat4& matrix, const float angle, const Math::Vec3& axis) {
                 return rotate(matrix, angle, axis);

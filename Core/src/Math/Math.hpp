@@ -95,6 +95,7 @@ namespace Vakol::Math
         inline Ray() : dir(0.0f, 0.0f, 1.0f)
         {
         }
+
         inline Ray(const Point& o, const Vec3& d) : origin(o), dir(d)
         {
             NormalizeDirection();
@@ -153,6 +154,18 @@ namespace Vakol::Math
     const float* AsArray(const Mat3& m);
     const float* AsArray(const Mat4& m);
     const float* AsArray(const Quat& q);
+
+    float Cos(float val);
+
+    Mat4 Translate(const Mat4& mat, const Vec3& vec);
+
+    Mat4 Scale(const Mat4& mat, const Vec3& vec);
+
+    Mat4 Rotate(const Mat4& mat, float angle, const Vec3& axis);
+
+    Quat Slerp(const Quat& x, const Quat& y, float a);
+
+    Quat Normalized(const Quat& x);
 } // namespace Vakol::Math
 
 /**

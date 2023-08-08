@@ -1,9 +1,6 @@
 #include "Shader.hpp"
 
 #include <glad/glad.h>
-
-#include <glm/gtc/type_ptr.hpp>
-
 namespace Vakol::Model
 {
     Shader::~Shader()

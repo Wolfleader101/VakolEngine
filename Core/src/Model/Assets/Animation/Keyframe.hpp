@@ -292,7 +292,7 @@ namespace Vakol::Model::Assets
             const double scale_factor = GetScaleFactor(timestamp, next.timestamp, time);
             const auto& target_position = mix(position, next.position, scale_factor);
 
-            return translate(Math::Mat4(1.0f), target_position);
+            return Math::Translate(Math::Mat4(1.0f), target_position);
         }
 
         /**
@@ -313,7 +313,7 @@ namespace Vakol::Model::Assets
             const double scale_factor = GetScaleFactor(first.timestamp, next.timestamp, time);
 
             Math::Quat target_rotation =
-                glm::normalize(glm::slerp(first.rotation, next.rotation, static_cast<float>(scale_factor)));
+                Math::Normalized(Math::Slerp(first.rotation, next.rotation, static_cast<float>(scale_factor)));
 
             return mat4_cast(target_rotation);
         }
@@ -336,7 +336,7 @@ namespace Vakol::Model::Assets
             const double scale_factor = GetScaleFactor(timestamp, next.timestamp, time);
             const auto& target_scale = mix(scale, next.scale, scale_factor);
 
-            return glm::scale(Math::Mat4(1.0f), target_scale);
+            return Math::Scale(Math::Mat4(1.0f), target_scale);
         }
     };
 

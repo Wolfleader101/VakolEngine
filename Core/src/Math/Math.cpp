@@ -248,4 +248,35 @@ namespace Vakol::Math
     {
         return glm::value_ptr(q);
     }
+
+    float Cos(float val)
+    {
+        return glm::cos(val);
+    }
+
+    Mat4 Translate(const Mat4& mat, const Vec3& vec)
+    {
+        return glm::translate(mat, vec);
+    }
+
+    Mat4 Scale(const Mat4& mat, const Vec3& vec)
+    {
+        return glm::scale(mat, vec);
+    }
+
+    Mat4 Rotate(const Mat4& mat, float angle, const Vec3& axis)
+    {
+        return glm::rotate(mat, angle, axis);
+    }
+
+    Quat Slerp(const Quat& x, const Quat& y, float a)
+    {
+        return glm::slerp(x, y, a);
+    }
+
+    Quat Normalized(const Quat& x)
+    {
+        return glm::normalize(x);
+    }
+
 } // namespace Vakol::Math

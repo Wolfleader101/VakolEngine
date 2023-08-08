@@ -11,7 +11,6 @@
 #include <Model/Assets/Animation/Animation.hpp>
 #include <Model/Assets/Animation/Keyframe.hpp>
 #include <assimp/Importer.hpp>
-#include <glm/gtc/quaternion.hpp>
 #include <iostream>
 #include <stack>
 
