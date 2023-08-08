@@ -4,6 +4,7 @@
 #include <Model/Skybox.hpp>
 
 #include "Renderer.hpp"
+#include <Math/Math.hpp>
 
 namespace Vakol::View
 {
@@ -73,9 +74,9 @@ namespace Vakol::View
 
         /**
          * @brief Clear color buffer with a color
-         * @param color optional glm::vec4 specifying the color, default is black with full opacity
+         * @param color optional Math::Vec4 specifying the color, default is black with full opacity
          */
-        void ClearColor(const glm::vec4& color = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)) const override;
+        void ClearColor(const Math::Vec4& color = Math::Vec4(0.0f, 0.0f, 0.0f, 1.0f)) const override;
 
         /**
          * @brief Clear color buffer with a color specified by four floats

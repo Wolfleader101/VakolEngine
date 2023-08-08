@@ -4,8 +4,6 @@
 
 #include <Controller/Logger.hpp>
 #include <Model/Components.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 #include <memory>
 #include <vector>
 
@@ -25,20 +23,22 @@ Distance	Constant	Linear	Quadratic
 3250	    1.0	        0.0014	0.000007
 */
 
-constexpr glm::vec4 VAKOL_CLASSIC = glm::vec4(0.52941f, 0.80784f, 0.92157f, 1.0f);
-constexpr glm::vec4 VAKOL_FOGGY = glm::vec4(0.4f, 0.4f, 0.4f, 1.0);
-constexpr glm::vec4 VAKOL_FOGGY_2 = glm::vec4(0.8f, 0.8f, 0.8f, 0.0);
-constexpr glm::vec4 VAKOL_DARK = glm::vec4(0.1f, 0.1f, 0.1f, 1.0f);
+using namespace Vakol;
+
+constexpr Math::Vec4 VAKOL_CLASSIC = Math::Vec4(0.52941f, 0.80784f, 0.92157f, 1.0f);
+constexpr Math::Vec4 VAKOL_FOGGY = Math::Vec4(0.4f, 0.4f, 0.4f, 1.0);
+constexpr Math::Vec4 VAKOL_FOGGY_2 = Math::Vec4(0.8f, 0.8f, 0.8f, 0.0);
+constexpr Math::Vec4 VAKOL_DARK = Math::Vec4(0.1f, 0.1f, 0.1f, 1.0f);
 
 constexpr float LIGHT_CONSTANT = 1.0f;
 constexpr float LIGHT_LINEAR = 0.045f;
 constexpr float LIGHT_QUADRATIC = 0.0075f;
 
-const float LIGHT_CUT_OFF = glm::cos(glm::radians(7.5f));
-const float LIGHT_OUTER_CUT_OFF = glm::cos(glm::radians(12.5f));
+const float LIGHT_CUT_OFF = Math::Cos(Math::DegToRad(7.5f));
+const float LIGHT_OUTER_CUT_OFF = Math::Cos(Math::DegToRad(12.5f));
 
-glm::mat4 PROJECTION = glm::mat4(1.0f);
-glm::mat4 VIEW = glm::mat4(1.0f);
+Math::Mat4 PROJECTION = Math::Mat4(1.0f);
+Math::Mat4 VIEW = Math::Mat4(1.0f);
 
 namespace Vakol::View
 {
@@ -54,7 +54,7 @@ namespace Vakol::View
         // layout (std140, binding = 1) uniform <name>
         // std140 - memory layout, binding - index, uniform (typeof buffer)
         // add a uniform buffer which size is that of a 4x4 matrix with a binding index of 1
-        AddBuffer(GL_UNIFORM_BUFFER, 3 * sizeof(glm::mat4), 1, GL_STATIC_DRAW);
+        AddBuffer(GL_UNIFORM_BUFFER, 3 * sizeof(Math::Mat4), 1, GL_STATIC_DRAW);
         AddBuffer(GL_UNIFORM_BUFFER, 5 * sizeof(float), 2, GL_STATIC_DRAW);
 
         SetBufferSubData(1, 0, sizeof(float), &LIGHT_CONSTANT);
@@ -88,7 +88,7 @@ namespace Vakol::View
         buffers.at(index)->SetSubData(offset, size, data);
     }
 
-    void GLRenderer::ClearColor(const glm::vec4& color) const
+    void GLRenderer::ClearColor(const Math::Vec4& color) const
     {
         glClearColor(color.r, color.g, color.b, color.a);
     }
@@ -125,15 +125,15 @@ namespace Vakol::View
         if (!model->cullBackface())
             glDisable(GL_CULL_FACE);
 
-        const auto translation_matrix = translate(glm::mat4(1.0f), transform.pos);
+        const auto translation_matrix = translate(Math::Mat4(1.0f), transform.pos);
 
         const auto rotation_matrix = mat4_cast(transform.rot);
 
-        const auto scale_matrix = scale(glm::mat4(1.0f), transform.scale);
+        const auto scale_matrix = scale(Math::Mat4(1.0f), transform.scale);
 
         shader->SetMat4("MODEL_MATRIX", translation_matrix * rotation_matrix * scale_matrix);
 
-        shader->SetMat4v("BONE_TRANSFORMS", animation.numTransforms(), value_ptr(animation.transform()));
+        shader->SetMat4v("BONE_TRANSFORMS", animation.numTransforms(), Math::AsArray(animation.transform()));
 
         shader->Bind();
         for (int i = 0; i < model->nMeshes(); ++i)
@@ -175,11 +175,11 @@ namespace Vakol::View
         if (!model->cullBackface())
             glDisable(GL_CULL_FACE);
 
-        const auto translation_matrix = translate(glm::mat4(1.0f), transform.pos);
+        const auto translation_matrix = translate(Math::Mat4(1.0f), transform.pos);
 
         const auto rotation_matrix = mat4_cast(transform.rot);
 
-        const auto scale_matrix = scale(glm::mat4(1.0f), transform.scale);
+        const auto scale_matrix = scale(Math::Mat4(1.0f), transform.scale);
 
         shader->SetMat4("MODEL_MATRIX", translation_matrix * rotation_matrix * scale_matrix);
 
@@ -209,9 +209,9 @@ namespace Vakol::View
 
         // at index 0, with an offset of 0 (since PV_MATRIX is the only element in the buffer), with a size of a 4x4
         // matrix, set PV_MATRIX
-        SetBufferSubData(0, 0, sizeof(glm::mat4), glm::value_ptr(PROJECTION));
-        SetBufferSubData(0, sizeof(glm::mat4), sizeof(glm::mat4), value_ptr(VIEW));
-        SetBufferSubData(0, 2 * sizeof(glm::mat4), sizeof(glm::mat4), value_ptr(PROJECTION * VIEW));
+        SetBufferSubData(0, 0, sizeof(Math::Mat4), Math::AsArray(PROJECTION));
+        SetBufferSubData(0, sizeof(Math::Mat4), sizeof(Math::Mat4), Math::AsArray(VIEW));
+        SetBufferSubData(0, 2 * sizeof(Math::Mat4), sizeof(Math::Mat4), Math::AsArray(PROJECTION * VIEW));
     }
 
     void GLRenderer::Update([[maybe_unused]] const int index) const

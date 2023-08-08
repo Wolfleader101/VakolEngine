@@ -77,7 +77,7 @@ namespace Vakol::Controller
         m_scriptEngine.SetGlobalFunction("set_wireframe", &View::Renderer::SetWireframe, m_renderer);
         m_scriptEngine.SetGlobalFunction("set_skybox", &View::Renderer::SetSkybox, m_renderer);
 
-        // lua.set_function("clear_color_v", [&](const glm::vec4& color) { renderer->ClearColor(color); });
+        // lua.set_function("clear_color_v", [&](const Math::Vec4& color) { renderer->ClearColor(color); });
 
         // lua.set_function("clear_color", [&](const float r, const float g, const float b, const float a) {
         //     renderer->ClearColor(r, g, b, a);

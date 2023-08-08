@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Math/Math.hpp>
 #include <Model/Assets/Mesh.hpp>
 
 namespace Vakol::Model
@@ -13,6 +14,6 @@ namespace Vakol::Model
      * @param amount The number of instances to create.
      * @param start_index The starting index for instance creation. Default is 3.
      */
-    void CreateInstances(const std::vector<Mesh>& meshes, const std::vector<glm::mat4>& matrices, int amount,
+    void CreateInstances(const std::vector<Mesh>& meshes, const std::vector<Math::Mat4>& matrices, int amount,
                          int start_index = 3);
 } // namespace Vakol::Model

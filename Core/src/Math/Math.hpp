@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 namespace Vakol::Math
 {
@@ -8,10 +9,24 @@ namespace Vakol::Math
     using Vec2 = glm::vec2;
 
     using Vec3 = glm::vec3;
+
+    // struct Vec3
+    // {
+    //     union {
+    //         float x;
+    //         float y;
+    //         float z;
+    //     };
+    //     glm::vec3 glm;
+    //     float[3] arr;
+    // };
+
+    using Vec4 = glm::vec4;
     using Point = Vec3;
 
     using Mat3 = glm::mat3;
     using Mat4 = glm::mat4;
+    using Quat = glm::quat;
 
     float Dot(const Vec2& a, const Vec2& b);
     float Dot(const Vec3& a, const Vec3& b);
@@ -80,6 +95,7 @@ namespace Vakol::Math
         inline Ray() : dir(0.0f, 0.0f, 1.0f)
         {
         }
+
         inline Ray(const Point& o, const Vec3& d) : origin(o), dir(d)
         {
             NormalizeDirection();
@@ -124,6 +140,32 @@ namespace Vakol::Math
      */
     float Remap(const float iMin, const float iMax, const float oMin, const float oMax, const float v);
 
+    float DegToRad(const float deg);
+    Vec3 DegToRad(const Vec3& vec);
+
+    float RadToDeg(const float rad);
+    Vec3 RadToDeg(const Vec3& vec);
+
+    Mat4 Perspective(float fovy, float aspect, float zNear, float zFar);
+
+    const float* AsArray(const Vec2& v);
+    const float* AsArray(const Vec3& v);
+    const float* AsArray(const Vec4& v);
+    const float* AsArray(const Mat3& m);
+    const float* AsArray(const Mat4& m);
+    const float* AsArray(const Quat& q);
+
+    float Cos(float val);
+
+    Mat4 Translate(const Mat4& mat, const Vec3& vec);
+
+    Mat4 Scale(const Mat4& mat, const Vec3& vec);
+
+    Mat4 Rotate(const Mat4& mat, float angle, const Vec3& axis);
+
+    Quat Slerp(const Quat& x, const Quat& y, float a);
+
+    Quat Normalized(const Quat& x);
 } // namespace Vakol::Math
 
 /**

@@ -1,10 +1,10 @@
 #pragma once
 
-#include <glm/glm.hpp>
 #include <unordered_map>
 
 #include "Events/KeyEvent.hpp"
 #include "Events/MouseEvent.hpp"
+#include <Math/Math.hpp>
 
 namespace Vakol::Controller
 {
@@ -131,9 +131,9 @@ namespace Vakol::Controller
         /**
          * @brief Get the current mouse position.
          *
-         * @return const glm::vec2& The current mouse position.
+         * @return const Math::Vec2& The current mouse position.
          */
-        const glm::vec2& GetMousePos() const
+        const Math::Vec2& GetMousePos() const
         {
             return m_mousePos;
         }
@@ -141,12 +141,12 @@ namespace Vakol::Controller
         /**
          * @brief Get the delta mouse position since the last update.
          *
-         * @return glm::vec2 The delta mouse position.
+         * @return Math::Vec2 The delta mouse position.
          */
-        glm::vec2 GetDeltaMousePos()
+        Math::Vec2 GetDeltaMousePos()
         {
             auto pos = m_deltaMousePos;
-            m_deltaMousePos = glm::vec2(0.0f, 0.0f);
+            m_deltaMousePos = Math::Vec2(0.0f, 0.0f);
             return pos;
         }
 
@@ -207,17 +207,17 @@ namespace Vakol::Controller
         /**
          * @brief The previous mouse position.
          */
-        glm::vec2 m_prevMousePos;
+        Math::Vec2 m_prevMousePos;
 
         /**
          * @brief The current mouse position.
          */
-        glm::vec2 m_mousePos;
+        Math::Vec2 m_mousePos;
 
         /**
          * @brief The delta mouse position since the last update.
          */
-        glm::vec2 m_deltaMousePos;
+        Math::Vec2 m_deltaMousePos;
 
         /**
          * @brief Map of key states.

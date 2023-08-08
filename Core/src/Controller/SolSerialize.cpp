@@ -23,8 +23,8 @@ namespace Vakol::Controller
     //             else if (value.is<std::string>())
     //                 solTableData.data[key.as<std::string>()] = value.as<std::string>();
 
-    //             else if (value.is<glm::vec3>())
-    //                 solTableData.data[key.as<std::string>()] = value.as<glm::vec3>();
+    //             else if (value.is<Math::Vec3>())
+    //                 solTableData.data[key.as<std::string>()] = value.as<Math::Vec3>();
     //         }
     //     });
     // };

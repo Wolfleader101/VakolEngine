@@ -1,11 +1,11 @@
 #pragma once
 
 #include <Controller/Logger.hpp>
-#include <glm/glm.hpp>
 #include <utility>
 #include <vector>
 
 #include "Texture.hpp"
+#include <Math/Math.hpp>
 
 namespace Vakol::Model::Assets
 {
@@ -16,11 +16,11 @@ namespace Vakol::Model::Assets
     {
         MaterialSpec() = default;
 
-        glm::vec3 AMBIENT = glm::vec3(0.0f);  /**< The ambient color of the material. */
-        glm::vec3 DIFFUSE = glm::vec3(0.0f);  /**< The diffuse color of the material. */
-        glm::vec3 SPECULAR = glm::vec3(0.0f); /**< The specular color of the material. */
-        glm::vec3 EMISSIVE = glm::vec3(0.0f); /**< The emissive color of the material. */
-        float SHININESS = 32.0f;              /**< The shininess factor of the material. */
+        Math::Vec3 AMBIENT = Math::Vec3(0.0f);  /**< The ambient color of the material. */
+        Math::Vec3 DIFFUSE = Math::Vec3(0.0f);  /**< The diffuse color of the material. */
+        Math::Vec3 SPECULAR = Math::Vec3(0.0f); /**< The specular color of the material. */
+        Math::Vec3 EMISSIVE = Math::Vec3(0.0f); /**< The emissive color of the material. */
+        float SHININESS = 32.0f;                /**< The shininess factor of the material. */
 
         std::vector<Texture> textures; /**< The textures associated with the material. */
     };
@@ -28,7 +28,7 @@ namespace Vakol::Model::Assets
     /**
      * @brief Default material specifications.
      */
-    inline MaterialSpec DEFAULT = {glm::vec3(1.0f), glm::vec3(0.6f), glm::vec3(0.2f), glm::vec3(0.0f), 32.0f, {}};
+    inline MaterialSpec DEFAULT = {Math::Vec3(1.0f), Math::Vec3(0.6f), Math::Vec3(0.2f), Math::Vec3(0.0f), 32.0f, {}};
 
     /**
      * @brief Class representing a material.
@@ -102,7 +102,7 @@ namespace Vakol::Model::Assets
          */
         void SetAmbientColor(const float r, const float g, const float b)
         {
-            this->m_spec.AMBIENT = glm::vec3(r, g, b);
+            this->m_spec.AMBIENT = Math::Vec3(r, g, b);
         }
 
         /**
@@ -114,7 +114,7 @@ namespace Vakol::Model::Assets
          */
         void SetDiffuseColor(const float r, const float g, const float b)
         {
-            this->m_spec.DIFFUSE = glm::vec3(r, g, b);
+            this->m_spec.DIFFUSE = Math::Vec3(r, g, b);
         }
 
         /**
@@ -126,7 +126,7 @@ namespace Vakol::Model::Assets
          */
         void SetSpecularColor(const float r, const float g, const float b)
         {
-            this->m_spec.SPECULAR = glm::vec3(r, g, b);
+            this->m_spec.SPECULAR = Math::Vec3(r, g, b);
         }
 
         /**
@@ -144,7 +144,7 @@ namespace Vakol::Model::Assets
          *
          * @return The ambient color.
          */
-        [[nodiscard]] glm::vec3 GetAmbientColor() const
+        [[nodiscard]] Math::Vec3 GetAmbientColor() const
         {
             return this->m_spec.AMBIENT;
         }
@@ -154,7 +154,7 @@ namespace Vakol::Model::Assets
          *
          * @return The diffuse color.
          */
-        [[nodiscard]] glm::vec3 GetDiffuseColor() const
+        [[nodiscard]] Math::Vec3 GetDiffuseColor() const
         {
             return this->m_spec.DIFFUSE;
         }
@@ -164,7 +164,7 @@ namespace Vakol::Model::Assets
          *
          * @return The specular color.
          */
-        [[nodiscard]] glm::vec3 GetSpecularColor() const
+        [[nodiscard]] Math::Vec3 GetSpecularColor() const
         {
             return this->m_spec.SPECULAR;
         }
