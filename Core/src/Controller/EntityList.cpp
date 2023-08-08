@@ -10,7 +10,7 @@
 
 using namespace Vakol::Model;
 
-namespace Vakol::Controller
+namespace Vakol
 {
 
     EntityList::EntityList() : m_Registry(), ActiveEntityList(){};
@@ -94,10 +94,9 @@ namespace Vakol::Controller
 
     void EntityList::Serialize(const std::string& file) const
     {
-        privateSerialize<cereal::JSONOutputArchive, Model::Components::Transform, Model::Components::Tag,
-                         Model::Components::GUID, Model::Components::Drawable, Model::Components::Animator,
-                         Model::Components::Animation, Model::Components::RigidBody, Model::Components::Collider,
-                         Model::Components::Terrain>(file);
+        privateSerialize<cereal::JSONOutputArchive, Components::Transform, Components::Tag, Components::GUID,
+                         Components::Drawable, Components::Animator, Components::Animation, Components::RigidBody,
+                         Components::Collider, Components::Terrain>(file);
 
         /*privateSerialize<cereal::JSONOutputArchive, Transform, Tag, Script, GUID, Drawable, Components::Animator,
                          Animation>(file);*/
@@ -105,13 +104,12 @@ namespace Vakol::Controller
 
     void EntityList::Deserialize(const std::string& file)
     {
-        privateDeserialize<cereal::JSONInputArchive, Model::Components::Transform, Model::Components::Tag,
-                           Model::Components::GUID, Model::Components::Drawable, Model::Components::Animator,
-                           Model::Components::Animation, Model::Components::RigidBody, Model::Components::Collider,
-                           Model::Components::Terrain>(file);
+        privateDeserialize<cereal::JSONInputArchive, Components::Transform, Components::Tag, Components::GUID,
+                           Components::Drawable, Components::Animator, Components::Animation, Components::RigidBody,
+                           Components::Collider, Components::Terrain>(file);
 
         /*privateDeserialize<cereal::JSONInputArchive, Transform, Tag, Script, GUID, Drawable, Components::Animator,
                            Animation>(file);*/
     }
 
-} // namespace Vakol::Controller
+} // namespace Vakol

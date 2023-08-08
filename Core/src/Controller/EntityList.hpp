@@ -8,15 +8,10 @@
 
 #include "Logger.hpp"
 
-namespace Vakol::Model
+namespace Vakol
 {
 
     class Entity; // pre declared to prevent recursive include
-}
-
-namespace Vakol::Controller
-{
-
     class System;
     class Scene;
 
@@ -38,7 +33,7 @@ namespace Vakol::Controller
          *
          * @return Entity created.
          */
-        Model::Entity CreateEntity();
+        Entity CreateEntity();
 
         /**
          * @brief Create an Entity object.
@@ -46,7 +41,7 @@ namespace Vakol::Controller
          * @param SuggestedHandle Handle to use for entity.
          * @return Entity created.
          */
-        Model::Entity CreateEntity(uint32_t SuggestedHandle);
+        Entity CreateEntity(uint32_t SuggestedHandle);
 
         /**
          * @brief Get an Entity object if it exists.
@@ -54,7 +49,7 @@ namespace Vakol::Controller
          * @param Handle Handle to get.
          * @return Entity from list.
          */
-        Model::Entity GetEntity(uint32_t Handle);
+        Entity GetEntity(uint32_t Handle);
 
         /**
          * @brief Removes an entity if it exists.
@@ -81,7 +76,7 @@ namespace Vakol::Controller
          *
          * @return std::vector<Entity>& Reference to the entity vector.
          */
-        std::vector<Model::Entity>& GetEntityVec();
+        std::vector<Entity>& GetEntityVec();
 
         /**
          * @brief Serialize the entity list to a file.
@@ -111,7 +106,7 @@ namespace Vakol::Controller
         /**
          * @brief List of entities created and active.
          */
-        std::vector<Model::Entity> ActiveEntityList;
+        std::vector<Entity> ActiveEntityList;
 
         template <typename Archive, typename... Args>
         /**
@@ -165,9 +160,9 @@ namespace Vakol::Controller
             }
         }
 
-        friend class Model::Entity; // friend to allow the API for entities to be clean.
+        friend class Entity; // friend to allow the API for entities to be clean.
         friend class System;
         friend class Scene;
     };
 
-} // namespace Vakol::Controller
+} // namespace Vakol

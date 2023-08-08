@@ -1,6 +1,6 @@
 #include "Instance.hpp"
 
-#include <Math/Math.hpp>
+#include "Math/include/Math.hpp"
 #include <glad/glad.h>
 
 namespace Vakol::Model

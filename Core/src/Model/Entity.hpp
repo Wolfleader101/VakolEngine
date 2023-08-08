@@ -7,7 +7,7 @@
 #include <functional>
 #include <string>
 
-namespace Vakol::Model
+namespace Vakol
 {
 
     /**
@@ -30,7 +30,7 @@ namespace Vakol::Model
          * @param scene to add entity too
          */
         Entity(entt::entity handle,
-               Controller::EntityList* scene); // this is the intended constructor. Entity = Scene.CreateEntity()
+               EntityList* scene); // this is the intended constructor. Entity = Scene.CreateEntity()
 
         /**
          * @brief copy constructor of a new entity
@@ -119,9 +119,9 @@ namespace Vakol::Model
         /**
          * @brief entity list pointer
          */
-        Controller::EntityList* m_EntityList = nullptr;
+        EntityList* m_EntityList = nullptr;
 
-        friend Controller::EntityList;
+        friend EntityList;
     };
 
     template <typename... Types>
@@ -170,4 +170,4 @@ namespace Vakol::Model
         return m_EntityList->m_Registry.get<T>(m_entityHandle);
     }
 
-} // namespace Vakol::Model
+} // namespace Vakol

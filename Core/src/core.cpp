@@ -1,7 +1,7 @@
 #include "../include/Vakol/core.hpp"
 
-#include <Controller/Application.hpp>
-#include <Controller/Singleton.hpp>
+#include "Application/include/Application.hpp"
+#include "Controller/Singleton.hpp"
 #include <iostream>
 
 namespace Vakol
@@ -10,8 +10,8 @@ namespace Vakol
     {
         Controller::Logger::Init();
 
-        Controller::Singleton<Controller::Application>::GetInstance().Init();
+        Controller::Singleton<Application>::GetInstance().Init();
 
-        Controller::Singleton<Controller::Application>::GetInstance().Run();
+        Controller::Singleton<Application>::GetInstance().Run();
     }
 } // namespace Vakol

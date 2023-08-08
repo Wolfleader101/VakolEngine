@@ -4,7 +4,7 @@
 
 #include "Events/KeyEvent.hpp"
 #include "Events/MouseEvent.hpp"
-#include <Math/Math.hpp>
+#include "Math/include/Math.hpp"
 
 namespace Vakol::Controller
 {

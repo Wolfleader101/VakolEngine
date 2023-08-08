@@ -1,8 +1,9 @@
 #pragma once
 
-#include <Controller/AssetLoader/ShaderLoader.hpp>
-#include <Math/Math.hpp>
 #include <string>
+
+#include "AssetLoader/include/ShaderLoader.hpp"
+#include "Math/include/Math.hpp"
 
 using Vakol::Controller::LoadShader;
 

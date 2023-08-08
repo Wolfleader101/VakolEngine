@@ -2,7 +2,6 @@
 
 #include <reactphysics3d/reactphysics3d.h>
 
-#include <Controller/Physics/ScenePhysics.hpp>
 #include <crossguid/guid.hpp>
 #include <memory>
 #include <string>
@@ -10,11 +9,12 @@
 #include "Controller/Animator.hpp"
 #include "Controller/SolSerialize.hpp"
 #include "Entity.hpp"
+#include "Math/include/Math.hpp"
 #include "Model/Assets/Model.hpp"
-#include "Scripting/ScriptTypes.hpp"
-#include <Math/Math.hpp>
+#include "Physics/include/ScenePhysics.hpp"
+#include "Scripting/include/ScriptTypes.hpp"
 
-namespace Vakol::Model::Components
+namespace Vakol::Components
 {
     /**
      * @struct Transform
@@ -347,7 +347,7 @@ namespace Vakol::Model::Components
         bool instance = false;    ///< Boolean indicating if the entity is an instance.
         bool active = true;       ///< Boolean indicating if the entity is active.
 
-        std::shared_ptr<Assets::Model> model_ptr; ///< Shared pointer to the model of the entity.
+        std::shared_ptr<Model::Assets::Model> model_ptr; ///< Shared pointer to the model of the entity.
 
         /**
          * @brief Serializes the drawable entity.
@@ -363,7 +363,7 @@ namespace Vakol::Model::Components
         }
     };
 
-    using namespace Vakol::Controller::Physics;
+    using namespace Vakol::Physics;
 
     /**
      * @brief Struct representing a RigidBody.
@@ -653,4 +653,4 @@ namespace Vakol::Model::Components
         }
     };
 
-} // namespace Vakol::Model::Components
+} // namespace Vakol::Components

@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include <Math/Math.hpp>
+#include "Math/include/Math.hpp"
 #include <Model/Shader.hpp>
 
 namespace Vakol::Model

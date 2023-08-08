@@ -1,8 +1,10 @@
-SET(SCRIPTING
-src/Scripting/ScriptEngine.hpp
-src/Scripting/ScriptEngine.cpp
-src/Scripting/ScriptTypes.hpp
+SET(SCRIPTING_SRC
+    ${CMAKE_CURRENT_SOURCE_DIR}/ScriptEngine.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/LuaAccess.cpp
+    PARENT_SCOPE
+)
 
-src/Scripting/LuaAccess.hpp
-src/Scripting/LuaAccess.cpp
-PARENT_SCOPE)
+SET(SCRIPTING_INCLUDE_DIR
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    PARENT_SCOPE
+)

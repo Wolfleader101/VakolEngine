@@ -2,12 +2,13 @@
 
 #include <reactphysics3d/reactphysics3d.h>
 
-#include <Controller/AssetLoader/AssetLoader.hpp>
-#include <Controller/Physics/PhysicsPool.hpp>
-#include <Controller/Scene.hpp>
+#include "AssetLoader/include/AssetLoader.hpp"
+#include "Physics/include/PhysicsPool.hpp"
+#include "Physics/include/ScenePhysics.hpp"
+#include "SceneManager/include/Scene.hpp"
 #include <Model/Components.hpp>
 
-#include <Math/Math.hpp>
+#include "Math/include/Math.hpp"
 
 static std::set<std::pair<std::string, int>> s_animation_set;
 
@@ -31,7 +32,7 @@ rp3d::Quaternion to_rp3d(const Vakol::Math::Quat& q)
     return {q.x, q.y, q.z, q.w};
 }
 
-namespace Vakol::Controller
+namespace Vakol
 {
     entt::registry* System::m_registry = nullptr;
     std::shared_ptr<Physics::ScenePhysics> System::m_SP = nullptr;
@@ -47,28 +48,26 @@ namespace Vakol::Controller
     void System::Drawable_Init()
     {
         Terrain_Init();
-        m_registry->view<Model::Components::Drawable>().each([&](auto& drawable) {
+        m_registry->view<Components::Drawable>().each([&](auto& drawable) {
             if (drawable.model_ptr == nullptr)
                 drawable.model_ptr =
                     AssetLoader::GetModel(drawable.name, drawable.scale, drawable.animated, drawable.backfaceCull)
                         .first;
         });
 
-        m_registry->group<Model::Components::Drawable, Model::Components::Animator>().each(
-            [&](auto& drawable, auto& animator) {
-                if (!animator.animator_ptr)
-                {
-                    animator.animator_ptr =
-                        AssetLoader::GetModel(drawable.name, drawable.scale, drawable.animated, drawable.backfaceCull)
-                            .second;
-                }
-            });
+        m_registry->group<Components::Drawable, Components::Animator>().each([&](auto& drawable, auto& animator) {
+            if (!animator.animator_ptr)
+            {
+                animator.animator_ptr =
+                    AssetLoader::GetModel(drawable.name, drawable.scale, drawable.animated, drawable.backfaceCull)
+                        .second;
+            }
+        });
     }
 
     void System::Terrain_Init()
     {
-        m_registry->view<Model::Components::Drawable, Model::Components::Terrain>().each([&](auto& drawable,
-                                                                                             auto& terrainComp) {
+        m_registry->view<Components::Drawable, Components::Terrain>().each([&](auto& drawable, auto& terrainComp) {
             std::shared_ptr<Terrain> terrain = AssetLoader::GetTerrain(terrainComp.name);
 
             if (!terrain)
@@ -81,10 +80,10 @@ namespace Vakol::Controller
         });
     }
 
-    void System::Drawable_Update(const Time& time, const std::shared_ptr<View::Renderer>& renderer)
+    void System::Drawable_Update(const Time& time, const std::shared_ptr<Renderer>& renderer)
     {
-        m_registry->view<Model::Components::Transform, Model::Components::Drawable>().each(
-            [&](Model::Components::Transform& transform, const Model::Components::Drawable& drawable) {
+        m_registry->view<Components::Transform, Components::Drawable>().each(
+            [&](Components::Transform& transform, const Components::Drawable& drawable) {
                 auto euler_rads = Math::DegToRad(transform.eulerAngles);
 
                 transform.rot = Math::Quat(euler_rads);
@@ -99,9 +98,8 @@ namespace Vakol::Controller
         for (const auto& [model, state] : s_animation_set)
             AssetLoader::GetAnimator(model)->Update(state, time.deltaTime);
 
-        m_registry->view<Model::Components::Transform, Model::Components::Drawable, Model::Components::Animation>()
-            .each([&](const auto& transform, const Model::Components::Drawable& drawable,
-                      const Model::Components::Animation& animation) {
+        m_registry->view<Components::Transform, Components::Drawable, Components::Animation>().each(
+            [&](const auto& transform, const Components::Drawable& drawable, const Components::Animation& animation) {
                 if (!drawable.active)
                     return;
 
@@ -115,7 +113,7 @@ namespace Vakol::Controller
 
     void System::Physics_Init()
     {
-        const auto view = m_registry->view<Model::Components::RigidBody>();
+        const auto view = m_registry->view<Components::RigidBody>();
 
         for (auto entity : view)
         {
@@ -126,9 +124,9 @@ namespace Vakol::Controller
 
     void System::Physics_UpdateTransforms(const double factor)
     {
-        m_registry->group<Model::Components::Transform, Model::Components::RigidBody>().each(
-            [&](Model::Components::Transform& trans, Model::Components::RigidBody& rigid) {
-                if (rigid.Type == Model::Components::RigidBody::BODY_TYPE::STATIC)
+        m_registry->group<Components::Transform, Components::RigidBody>().each(
+            [&](Components::Transform& trans, Components::RigidBody& rigid) {
+                if (rigid.Type == Components::RigidBody::BODY_TYPE::STATIC)
                     return;
 
                 rp3d::Transform curr_transform = rigid.RigidBodyPtr->getTransform();
@@ -162,9 +160,9 @@ namespace Vakol::Controller
 
     void System::Physics_SerializationPrep()
     {
-        m_registry->group<Model::Components::RigidBody, Model::Components::Transform>()
+        m_registry->group<Components::RigidBody, Components::Transform>()
             .each( // can deduce that a collider can't exist without a rigidbody
-                [&](Model::Components::RigidBody& rigid, const Model::Components::Transform& trans) {
+                [&](Components::RigidBody& rigid, const Components::Transform& trans) {
                     if (rigid.RigidBodyPtr)
                     {
                         rigid.Data.mass = rigid.RigidBodyPtr->getMass();
@@ -174,8 +172,7 @@ namespace Vakol::Controller
                         rigid.Data.AngularLock = rigid.RigidBodyPtr->getAngularLockAxisFactor();
                         rigid.Data.Orientation = rigid.RigidBodyPtr->getTransform().getOrientation().getVectorV();
 
-                        rigid.Type =
-                            static_cast<Model::Components::RigidBody::BODY_TYPE>(rigid.RigidBodyPtr->getType());
+                        rigid.Type = static_cast<Components::RigidBody::BODY_TYPE>(rigid.RigidBodyPtr->getType());
 
                         const auto pos = to_rp3d(trans.pos);
                         const auto rot = to_rp3d(trans.rot);
@@ -185,15 +182,15 @@ namespace Vakol::Controller
                 });
     }
 
-    void System::Physics_InitEntity(const Model::Entity& ent)
+    void System::Physics_InitEntity(const Entity& ent)
     {
-        const auto& trans = ent.GetComponent<Model::Components::Transform>();
-        auto& rigid = ent.GetComponent<Model::Components::RigidBody>();
+        const auto& trans = ent.GetComponent<Components::Transform>();
+        auto& rigid = ent.GetComponent<Components::RigidBody>();
 
         if (rigid.initialized)
             return;
 
-        if (!ent.HasComponent<Model::Components::RigidBody>())
+        if (!ent.HasComponent<Components::RigidBody>())
         {
             VK_CRITICAL("No rigid body component found on entity: {0}", ent.GetHandle());
             assert(0);
@@ -218,37 +215,37 @@ namespace Vakol::Controller
 
         rigid.prevTransform = rpTrans;
 
-        if (ent.HasComponent<Model::Components::Collider>())
+        if (ent.HasComponent<Components::Collider>())
         {
-            auto& col = ent.GetComponent<Model::Components::Collider>();
+            auto& col = ent.GetComponent<Components::Collider>();
 
             col.OwningBody = &rigid;
 
-            const Model::Components::Collider::Bounds& bounds = col.bounds;
+            const Components::Collider::Bounds& bounds = col.bounds;
 
-            if (col.ShapeName == Model::Components::Collider::ShapeName::BOX)
+            if (col.ShapeName == Components::Collider::ShapeName::BOX)
             {
                 col.Shape = Physics::PhysicsPool::m_Common.createBoxShape(
                     (bounds.extents) * rp3d::Vector3(trans.scale.x, trans.scale.y, trans.scale.z));
             }
-            else if (col.ShapeName == Model::Components::Collider::ShapeName::SPHERE)
+            else if (col.ShapeName == Components::Collider::ShapeName::SPHERE)
             {
                 col.Shape = Physics::PhysicsPool::m_Common.createSphereShape(bounds.radius * trans.scale.x);
             }
-            else if (col.ShapeName == Model::Components::Collider::ShapeName::CAPSULE)
+            else if (col.ShapeName == Components::Collider::ShapeName::CAPSULE)
             {
                 col.Shape = Physics::PhysicsPool::m_Common.createCapsuleShape(bounds.extents.x * trans.scale.x,
                                                                               bounds.extents.y * trans.scale.y);
             }
-            else if (col.ShapeName == Model::Components::Collider::ShapeName::TRIANGLE_MESH)
+            else if (col.ShapeName == Components::Collider::ShapeName::TRIANGLE_MESH)
             {
-                if (!ent.HasComponent<Model::Components::Drawable>())
+                if (!ent.HasComponent<Components::Drawable>())
                 {
                     VK_CRITICAL("Trying to add triangle mesh collider without providing model!");
                     assert(0);
                 }
 
-                const auto& draw = ent.GetComponent<Model::Components::Drawable>();
+                const auto& draw = ent.GetComponent<Components::Drawable>();
 
                 const auto mesh_ptr = Physics::PhysicsPool::m_Common.createTriangleMesh();
 
@@ -286,4 +283,4 @@ namespace Vakol::Controller
         m_SP->AddTerrain(ter);
     }
 
-} // namespace Vakol::Controller
+} // namespace Vakol

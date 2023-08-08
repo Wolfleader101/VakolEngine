@@ -2,7 +2,7 @@
 
 #include <cereal/archives/json.hpp>
 
-#include "Math/Math.hpp"
+#include "Math/include/Math.hpp"
 
 constexpr unsigned char PROJECTION_MATRIX = 0x0;
 constexpr unsigned char VIEW_MATRIX = 0x1;

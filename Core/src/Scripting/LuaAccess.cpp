@@ -2,18 +2,18 @@
 
 #include <memory>
 
-#include "Controller/AssetLoader/AssetLoader.hpp"
-#include "Controller/AssetLoader/TextureLoader.hpp"
+#include "AssetLoader/include/AssetLoader.hpp"
+#include "AssetLoader/include/TextureLoader.hpp"
 #include "Controller/Input.hpp"
 #include "Controller/Logger.hpp"
 #include "Controller/System.hpp"
 #include "Controller/Terrain.hpp"
+#include "GUI/include/GUIWindow.hpp"
+#include "Math/include/Math.hpp"
 #include "Model/Assets/Material.hpp"
 #include "Model/Components.hpp"
 #include "Model/Instance.hpp"
-#include "Scripting/ScriptEngine.hpp"
-#include "View/GUI/GUIWindow.hpp"
-#include <Math/Math.hpp>
+#include "include/ScriptEngine.hpp"
 
 std::vector<Vakol::Math::Mat4> create_mat4_vector(const size_t reserve)
 {
@@ -26,7 +26,7 @@ std::vector<Vakol::Math::Mat4> create_mat4_vector(const size_t reserve)
 
 using namespace Vakol::Controller;
 using namespace Vakol::Model;
-using namespace Vakol::Model::Components;
+using namespace Vakol::Components;
 
 namespace Vakol
 {
@@ -679,45 +679,44 @@ namespace Vakol
 
     void RegisterGUIWindow(sol::state& lua)
     {
-        auto gui_window_type = lua.new_usertype<View::GUIWindow>("GUI");
+        auto gui_window_type = lua.new_usertype<GUIWindow>("GUI");
 
-        gui_window_type.set_function("get_display_window_width", &View::GUIWindow::DisplayWindowWidth);
-        gui_window_type.set_function("get_display_window_height", &View::GUIWindow::DisplayWindowHeight);
+        gui_window_type.set_function("get_display_window_width", &GUIWindow::DisplayWindowWidth);
+        gui_window_type.set_function("get_display_window_height", &GUIWindow::DisplayWindowHeight);
 
-        gui_window_type.set_function("start_window", &View::GUIWindow::StartWindowCreation);
+        gui_window_type.set_function("start_window", &GUIWindow::StartWindowCreation);
 
-        gui_window_type.set_function("update", &View::GUIWindow::Update);
+        gui_window_type.set_function("update", &GUIWindow::Update);
 
-        gui_window_type.set_function("start_frame", &View::GUIWindow::CreateNewFrame);
-        gui_window_type.set_function("end_frame", &View::GUIWindow::EndFrame);
+        gui_window_type.set_function("start_frame", &GUIWindow::CreateNewFrame);
+        gui_window_type.set_function("end_frame", &GUIWindow::EndFrame);
 
-        gui_window_type.set_function("get_fps", &View::GUIWindow::GetFramesPerSecond);
+        gui_window_type.set_function("get_fps", &GUIWindow::GetFramesPerSecond);
 
-        gui_window_type.set_function("add_text", &View::GUIWindow::AddText);
-        gui_window_type.set_function("add_button", &View::GUIWindow::AddButton);
-        gui_window_type.set_function("add_checkbox", &View::GUIWindow::AddCheckbox);
+        gui_window_type.set_function("add_text", &GUIWindow::AddText);
+        gui_window_type.set_function("add_button", &GUIWindow::AddButton);
+        gui_window_type.set_function("add_checkbox", &GUIWindow::AddCheckbox);
 
-        gui_window_type.set_function("add_image",
-                                     [](const View::GUIWindow* GUI, const std::string& path, const float width,
-                                        const float height, const bool centerX, const bool centerY) {
-                                         const auto& tex = AssetLoader::GetTexture(path, false, false);
-                                         const unsigned int texID = tex->GetID();
+        gui_window_type.set_function("add_image", [](const GUIWindow* GUI, const std::string& path, const float width,
+                                                     const float height, const bool centerX, const bool centerY) {
+            const auto& tex = AssetLoader::GetTexture(path, false, false);
+            const unsigned int texID = tex->GetID();
 
-                                         GUI->AddImage(texID, {width, height}, centerX, centerY);
-                                     });
+            GUI->AddImage(texID, {width, height}, centerX, centerY);
+        });
 
-        gui_window_type.set_function("add_integer_slider", &View::GUIWindow::AddIntSlider);
-        gui_window_type.set_function("add_float_slider", &View::GUIWindow::AddFloatSlider);
+        gui_window_type.set_function("add_integer_slider", &GUIWindow::AddIntSlider);
+        gui_window_type.set_function("add_float_slider", &GUIWindow::AddFloatSlider);
 
-        gui_window_type.set_function("add_vector_integer_slider", &View::GUIWindow::AddVecIntSlider);
-        gui_window_type.set_function("add_vector_float_slider", &View::GUIWindow::AddVecFloatSlider);
+        gui_window_type.set_function("add_vector_integer_slider", &GUIWindow::AddVecIntSlider);
+        gui_window_type.set_function("add_vector_float_slider", &GUIWindow::AddVecFloatSlider);
 
-        gui_window_type.set_function("same_line", &View::GUIWindow::SameLine);
+        gui_window_type.set_function("same_line", &GUIWindow::SameLine);
 
-        gui_window_type.set_function("change_background_colour", &View::GUIWindow::WindowBackgroundStyle);
-        gui_window_type.set_function("change_background_rounding", &View::GUIWindow::WindowRoundingStyle);
+        gui_window_type.set_function("change_background_colour", &GUIWindow::WindowBackgroundStyle);
+        gui_window_type.set_function("change_background_rounding", &GUIWindow::WindowRoundingStyle);
 
-        gui_window_type.set_function("end_window", &View::GUIWindow::EndWindowCreation);
+        gui_window_type.set_function("end_window", &GUIWindow::EndWindowCreation);
     }
 
     void RegisterRigidBody(sol::state& lua)

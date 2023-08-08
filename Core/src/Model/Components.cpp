@@ -1,9 +1,9 @@
 #include "Components.hpp"
 
-#include <Controller/AssetLoader/AssetLoader.hpp>
-#include <Controller/Scene.hpp>
+#include "AssetLoader/include/AssetLoader.hpp"
+#include "SceneManager/include/Scene.hpp"
 
-namespace Vakol::Model::Components
+namespace Vakol::Components
 {
     rp3d::Vector3 to_rp3d(const Math::Vec3& v)
     {
@@ -51,7 +51,7 @@ namespace Vakol::Model::Components
 
     Drawable::Drawable(std::string&& file) : name(std::move(file)) // WOW! EFFICIENT!
     {
-        model_ptr = Controller::AssetLoader::GetModel(name, 1.0f, false, true).first;
+        model_ptr = AssetLoader::GetModel(name, 1.0f, false, true).first;
     }
 
     TagType::TagType(uint8_t type) : type(static_cast<ENTITY_TYPE>(type)){};
@@ -207,4 +207,4 @@ namespace Vakol::Model::Components
         return id < other.id;
     }
 
-} // namespace Vakol::Model::Components
+} // namespace Vakol::Components

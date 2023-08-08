@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Math/Math.hpp>
+#include "Math/include/Math.hpp"
 #include <Model/Assets/Mesh.hpp>
 
 namespace Vakol::Model

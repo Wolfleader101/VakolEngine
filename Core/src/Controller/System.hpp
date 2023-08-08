@@ -1,14 +1,14 @@
 #pragma once
 
+#include "Physics/include/ScenePhysics.hpp"
 #include <Controller/EntityList.hpp>
-#include <Controller/Physics/ScenePhysics.hpp>
 #include <Model/Components.hpp>
 
-#include "Controller/Terrain.hpp"
-#include "Scene.hpp"
-#include "View/Renderer/Renderer.hpp"
+#include "Rendering/include/Renderer.hpp"
+#include "SceneManager/include/Scene.hpp"
+#include <Controller/Terrain.hpp>
 
-namespace Vakol::Controller
+namespace Vakol
 {
 
     class Scene;
@@ -45,7 +45,7 @@ namespace Vakol::Controller
          * @param time The time information for the update.
          * @param renderer The shared pointer to the renderer.
          */
-        static void Drawable_Update(const Time& time, const std::shared_ptr<View::Renderer>& renderer);
+        static void Drawable_Update(const Time& time, const std::shared_ptr<Renderer>& renderer);
 
         /**
          * @brief Prepare the scripting system for deserialization.
@@ -61,7 +61,7 @@ namespace Vakol::Controller
          *
          * @param ent The entity to initialize.
          */
-        static void Physics_InitEntity(const Model::Entity& ent);
+        static void Physics_InitEntity(const Entity& ent);
 
         /**
          * @brief Initialize the physics system.
@@ -85,7 +85,7 @@ namespace Vakol::Controller
          *
          * @param ter The terrain to add.
          */
-        static void Physics_AddTerrain(const Terrain& ter);
+        static void Physics_AddTerrain(const Controller::Terrain& ter);
 
         /**
          * @brief Initialize the terrain system.
@@ -113,4 +113,4 @@ namespace Vakol::Controller
          */
         static EntityList* Entlist;
     };
-} // namespace Vakol::Controller
+} // namespace Vakol

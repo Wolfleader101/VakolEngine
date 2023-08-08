@@ -1,14 +1,7 @@
-add_subdirectory(AssetLoader)
 add_subdirectory(Events)
-add_subdirectory(Physics)
 
 SET(CONTROLLER
-
-
 src/Controller/Singleton.hpp
-
-src/Controller/Application.hpp
-src/Controller/Application.cpp
 
 src/Controller/Animator.hpp
 src/Controller/Animator.cpp
@@ -27,10 +20,6 @@ src/Controller/EntityList.cpp
 src/Controller/System.hpp
 src/Controller/System.cpp
 
-
-src/Controller/Scene.hpp
-src/Controller/Scene.cpp
-
 src/Controller/Input.hpp
 src/Controller/Input.cpp
 
@@ -39,11 +28,6 @@ src/Controller/Terrain.cpp
 
 src/Controller/SolSerialize.hpp
 src/Controller/SolSerialize.cpp
-
-
-
-${PHYSICS}
 ${EVENTS}
-${ASSETLOADER}
 
 PARENT_SCOPE)

@@ -1,4 +1,4 @@
-#include "ScriptEngine.hpp"
+#include "include/ScriptEngine.hpp"
 
 #include "Controller/Logger.hpp"
 #include "LuaAccess.hpp"

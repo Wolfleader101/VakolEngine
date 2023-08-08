@@ -1,10 +1,10 @@
 #include "Skybox.hpp"
 
-#include <Math/Math.hpp>
 #include <glad/glad.h>
-
-#include <Controller/AssetLoader/TextureLoader.hpp>
 #include <vector>
+
+#include "AssetLoader/include/TextureLoader.hpp"
+#include "Math/include/Math.hpp"
 
 // Keep in this order
 std::vector skybox_faces = {"coreAssets/textures/skybox/imported/ambientCG/right.jpg",

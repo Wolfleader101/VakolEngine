@@ -17,7 +17,7 @@ add_library (${PROJECT_NAME} STATIC ${SOURCES} "include/Vakol/core.hpp" "lib/gla
 
 add_subdirectory(lib)
 
-target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/)
+target_include_directories(${PROJECT_NAME} PRIVATE ${GLOBAL_INCLUDE_DIRS})
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/)
 
 target_link_libraries(${PROJECT_NAME} PUBLIC

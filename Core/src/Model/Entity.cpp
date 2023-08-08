@@ -2,10 +2,10 @@
 
 #include <Model/Components.hpp>
 
-namespace Vakol::Model
+namespace Vakol
 {
 
-    Entity::Entity(entt::entity handle, Controller::EntityList* EM) : m_entityHandle(handle), m_EntityList(EM)
+    Entity::Entity(entt::entity handle, EntityList* EM) : m_entityHandle(handle), m_EntityList(EM)
     {
 
         this->AddComponent<Components::Tag>();
@@ -35,4 +35,4 @@ namespace Vakol::Model
         return m_entityHandle != entt::null && m_EntityList != nullptr;
     }
 
-} // namespace Vakol::Model
+} // namespace Vakol

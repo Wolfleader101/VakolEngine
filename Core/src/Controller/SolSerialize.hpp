@@ -6,7 +6,7 @@
 #include <cereal/types/unordered_map.hpp>
 #include <cereal/types/variant.hpp>
 
-#include "Math/Math.hpp"
+#include "Math/include/Math.hpp"
 
 namespace Vakol::Controller
 {

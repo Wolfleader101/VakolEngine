@@ -1,16 +1,41 @@
 add_subdirectory(Model)
-add_subdirectory(View)
 add_subdirectory(Controller)
 add_subdirectory(Scripting)
 add_subdirectory(Math)
 add_subdirectory(SceneManager)
+add_subdirectory(Application)
+add_subdirectory(AssetLoader)
+add_subdirectory(Physics)
+add_subdirectory(Window)
+add_subdirectory(GUI)
+add_subdirectory(Rendering)
 
 SET(SOURCES
 ${MODEL}
 ${VIEW}
 ${CONTROLLER}
-${SCRIPTING}
-${MATH}
-${SCENE_MANAGER}
+${APPLICATION_SRC}
+${ASSET_LOADER_SRC}
+${PHYSICS_SRC}
+${WINDOW_SRC}
+${GUI_SRC}
+${RENDERING_SRC}
+${SCRIPTING_SRC}
+${MATH_SRC}
+${SCENE_MANAGER_SRC}
 src/core.cpp
 PARENT_SCOPE)
+
+SET(GLOBAL_INCLUDE_DIRS
+    ${CMAKE_CURRENT_SOURCE_DIR}/
+    ${SCRIPTING_INCLUDE_DIR}
+    ${PHYSICS_INCLUDE_DIR}
+    ${MATH_INCLUDE_DIR}
+    ${SCENE_MANAGER_INCLUDE_DIR}
+    ${WINDOW_INCLUDE_DIR}
+    ${GUI_INCLUDE_DIR}
+    ${APPLICATION_INCLUDE_DIR}
+    ${ASSET_LOADER_INCLUDE_DIR}
+    ${RENDERING_SRC}
+    PARENT_SCOPE
+)
