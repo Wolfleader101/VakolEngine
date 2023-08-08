@@ -1,6 +1,7 @@
 #pragma once
 
-#include <glm/fwd.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 namespace Vakol::Math
 {
@@ -8,7 +9,7 @@ namespace Vakol::Math
     using Vec2 = glm::vec2;
 
     using Vec3 = glm::vec3;
-    
+
     // struct Vec3
     // {
     //     union {
@@ -139,9 +140,19 @@ namespace Vakol::Math
     float Remap(const float iMin, const float iMax, const float oMin, const float oMax, const float v);
 
     float DegToRad(const float deg);
+    Vec3 DegToRad(const Vec3& vec);
+
     float RadToDeg(const float rad);
+    Vec3 RadToDeg(const Vec3& vec);
 
     Mat4 Perspective(float fovy, float aspect, float zNear, float zFar);
+
+    const float* AsArray(const Vec2& v);
+    const float* AsArray(const Vec3& v);
+    const float* AsArray(const Vec4& v);
+    const float* AsArray(const Mat3& m);
+    const float* AsArray(const Mat4& m);
+    const float* AsArray(const Quat& q);
 } // namespace Vakol::Math
 
 /**

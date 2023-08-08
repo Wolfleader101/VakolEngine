@@ -1,8 +1,6 @@
 #include "Math.hpp"
 
-#include <glm/glm.hpp>
-#include <glm/gtc/quaternion.hpp>
-
+#include <glm/gtc/type_ptr.hpp>
 namespace Vakol::Math
 {
 
@@ -206,13 +204,48 @@ namespace Vakol::Math
         return glm::radians(deg);
     }
 
+    Vec3 DegToRad(const Vec3& vec)
+    {
+        return glm::radians(vec);
+    }
+
     float RadToDeg(const float rad)
     {
         return glm::degrees(rad);
     }
 
+    Vec3 RadToDeg(const Vec3& vec)
+    {
+        return glm::degrees(vec);
+    }
+
     Mat4 Perspective(float fovy, float aspect, float zNear, float zFar)
     {
-        glm::perspective(fovy, aspect, zNear, zFar);
+        return glm::perspective(fovy, aspect, zNear, zFar);
+    }
+
+    const float* AsArray(const Vec2& v)
+    {
+        return glm::value_ptr(v);
+    }
+    const float* AsArray(const Vec3& v)
+    {
+        return glm::value_ptr(v);
+    }
+    const float* AsArray(const Vec4& v)
+    {
+        return glm::value_ptr(v);
+    }
+    const float* AsArray(const Mat3& m)
+    {
+        return glm::value_ptr(m);
+    }
+    const float* AsArray(const Mat4& m)
+    {
+        return glm::value_ptr(m);
+    }
+    const float* AsArray(const Quat& q)
+    {
+        return glm::value_ptr(q);
     }
 } // namespace Vakol::Math

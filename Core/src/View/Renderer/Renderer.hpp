@@ -4,6 +4,8 @@
 #include <View/Window/Window.hpp>
 #include <memory>
 
+#include <Math/Math.hpp>
+
 #include "Controller/Camera.hpp"
 
 namespace Vakol::Model::Components
@@ -15,11 +17,6 @@ namespace Vakol::Model::Components
 namespace Vakol::Model::Assets
 {
     class Animation;
-}
-
-namespace Vakol::Math
-{
-    struct Vec4;
 }
 
 namespace Vakol::View

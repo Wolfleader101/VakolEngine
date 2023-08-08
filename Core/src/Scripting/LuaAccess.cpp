@@ -15,9 +15,9 @@
 #include "View/GUI/GUIWindow.hpp"
 #include <Math/Math.hpp>
 
-std::vector<Math::Mat4> create_mat4_vector(const size_t reserve)
+std::vector<Vakol::Math::Mat4> create_mat4_vector(const size_t reserve)
 {
-    std::vector<Math::Mat4> vector;
+    std::vector<Vakol::Math::Mat4> vector;
 
     vector.reserve(reserve);
 

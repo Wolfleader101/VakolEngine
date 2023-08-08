@@ -133,7 +133,7 @@ namespace Vakol::View
 
         shader->SetMat4("MODEL_MATRIX", translation_matrix * rotation_matrix * scale_matrix);
 
-        shader->SetMat4v("BONE_TRANSFORMS", animation.numTransforms(), value_ptr(animation.transform()));
+        shader->SetMat4v("BONE_TRANSFORMS", animation.numTransforms(), Math::AsArray(animation.transform()));
 
         shader->Bind();
         for (int i = 0; i < model->nMeshes(); ++i)
@@ -209,9 +209,9 @@ namespace Vakol::View
 
         // at index 0, with an offset of 0 (since PV_MATRIX is the only element in the buffer), with a size of a 4x4
         // matrix, set PV_MATRIX
-        SetBufferSubData(0, 0, sizeof(Math::Mat4), glm::value_ptr(PROJECTION));
-        SetBufferSubData(0, sizeof(Math::Mat4), sizeof(Math::Mat4), value_ptr(VIEW));
-        SetBufferSubData(0, 2 * sizeof(Math::Mat4), sizeof(Math::Mat4), value_ptr(PROJECTION * VIEW));
+        SetBufferSubData(0, 0, sizeof(Math::Mat4), Math::AsArray(PROJECTION));
+        SetBufferSubData(0, sizeof(Math::Mat4), sizeof(Math::Mat4), Math::AsArray(VIEW));
+        SetBufferSubData(0, 2 * sizeof(Math::Mat4), sizeof(Math::Mat4), Math::AsArray(PROJECTION * VIEW));
     }
 
     void GLRenderer::Update([[maybe_unused]] const int index) const

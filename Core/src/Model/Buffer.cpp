@@ -3,7 +3,6 @@
 #include <glad/glad.h>
 
 #include <Controller/Logger.hpp>
-#include <Math/Math.hpp>
 
 static int s_hitcount = 0;
 

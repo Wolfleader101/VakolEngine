@@ -2,12 +2,8 @@
 
 #include <memory>
 
+#include <Math/Math.hpp>
 #include <Model/Shader.hpp>
-
-namespace Vakol::Math
-{
-    struct Mat4;
-}
 
 namespace Vakol::Model
 {

@@ -1,9 +1,6 @@
 #pragma once
 
-namespace Vakol::Math
-{
-    struct Vec4;
-}
+#include <Math/Math.hpp>
 namespace Vakol::Model
 {
     struct ATTACHMENT

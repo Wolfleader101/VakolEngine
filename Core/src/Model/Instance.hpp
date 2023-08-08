@@ -1,10 +1,8 @@
 #pragma once
 
+#include <Math/Math.hpp>
 #include <Model/Assets/Mesh.hpp>
 
-namespace Vakol::Math{
-    struct Mat4;
-}
 namespace Vakol::Model
 {
     using Assets::Mesh;

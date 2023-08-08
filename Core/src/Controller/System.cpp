@@ -11,22 +11,22 @@
 
 static std::set<std::pair<std::string, int>> s_animation_set;
 
-Math::Vec3 to_glm(const rp3d::Vector3& v)
+Vakol::Math::Vec3 to_glm(const rp3d::Vector3& v)
 {
     return {v.x, v.y, v.z};
 }
 
-Math::Quat to_glm(const rp3d::Quaternion& q)
+Vakol::Math::Quat to_glm(const rp3d::Quaternion& q)
 {
-    return Math::Quat(static_cast<float>(q.w), static_cast<float>(q.x), static_cast<float>(q.y),
-                      static_cast<float>(q.z));
+    return Vakol::Math::Quat(static_cast<float>(q.w), static_cast<float>(q.x), static_cast<float>(q.y),
+                             static_cast<float>(q.z));
 }
 
-rp3d::Vector3 to_rp3d(const Math::Vec3& v)
+rp3d::Vector3 to_rp3d(const Vakol::Math::Vec3& v)
 {
     return {v.x, v.y, v.z};
 }
-rp3d::Quaternion to_rp3d(const Math::Quat& q)
+rp3d::Quaternion to_rp3d(const Vakol::Math::Quat& q)
 {
     return {q.x, q.y, q.z, q.w};
 }
