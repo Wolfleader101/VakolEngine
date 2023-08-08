@@ -13,7 +13,7 @@
 namespace Vakol::Controller
 {
     Scene::Scene(const std::string& name, LuaScript& script, const std::shared_ptr<Physics::ScenePhysics>& SP)
-        : scenePhysics(SP), m_script(std::move(script)), m_name(name), m_cam(glm::vec3(0.0f, 0.0f, 2.0f))
+        : scenePhysics(SP), m_script(std::move(script)), m_name(name), m_cam(Math::Vec3(0.0f, 0.0f, 2.0f))
     {
     }
 

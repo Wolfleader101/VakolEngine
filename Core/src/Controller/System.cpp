@@ -6,25 +6,27 @@
 #include <Controller/Physics/PhysicsPool.hpp>
 #include <Controller/Scene.hpp>
 #include <Model/Components.hpp>
-#include <glm/gtc/quaternion.hpp>
+
+#include <Math/Math.hpp>
 
 static std::set<std::pair<std::string, int>> s_animation_set;
 
-glm::vec3 to_glm(const rp3d::Vector3& v)
+Math::Vec3 to_glm(const rp3d::Vector3& v)
 {
     return {v.x, v.y, v.z};
-}
-glm::quat to_glm(const rp3d::Quaternion& q)
-{
-    return glm::quat(static_cast<float>(q.w), static_cast<float>(q.x), static_cast<float>(q.y),
-                     static_cast<float>(q.z));
 }
 
-rp3d::Vector3 to_rp3d(const glm::vec3& v)
+Math::Quat to_glm(const rp3d::Quaternion& q)
+{
+    return Math::Quat(static_cast<float>(q.w), static_cast<float>(q.x), static_cast<float>(q.y),
+                      static_cast<float>(q.z));
+}
+
+rp3d::Vector3 to_rp3d(const Math::Vec3& v)
 {
     return {v.x, v.y, v.z};
 }
-rp3d::Quaternion to_rp3d(const glm::quat& q)
+rp3d::Quaternion to_rp3d(const Math::Quat& q)
 {
     return {q.x, q.y, q.z, q.w};
 }
@@ -85,7 +87,7 @@ namespace Vakol::Controller
             [&](Model::Components::Transform& transform, const Model::Components::Drawable& drawable) {
                 auto euler_rads = glm::radians(transform.eulerAngles);
 
-                transform.rot = glm::quat(euler_rads);
+                transform.rot = Math::Quat(euler_rads);
 
                 if (!drawable.active)
                     return;

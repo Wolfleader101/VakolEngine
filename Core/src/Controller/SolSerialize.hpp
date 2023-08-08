@@ -21,7 +21,7 @@ namespace Vakol::Controller
         /**
          * @brief The map storing the data in the Lua table.
          */
-        std::unordered_map<std::string, std::variant<SolTableData, std::string, float, int, bool, glm::vec3>> data;
+        std::unordered_map<std::string, std::variant<SolTableData, std::string, float, int, bool, Math::Vec3>> data;
 
         /**
          * @brief Serialize the SolTableData.

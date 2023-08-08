@@ -1,6 +1,6 @@
 #pragma once
 
-#include <glm/glm.hpp>
+#include <glm/fwd.hpp>
 
 namespace Vakol::Math
 {
@@ -8,10 +8,12 @@ namespace Vakol::Math
     using Vec2 = glm::vec2;
 
     using Vec3 = glm::vec3;
+    using Vec4 = glm::vec4;
     using Point = Vec3;
 
     using Mat3 = glm::mat3;
     using Mat4 = glm::mat4;
+    using Quat = glm::quat;
 
     float Dot(const Vec2& a, const Vec2& b);
     float Dot(const Vec3& a, const Vec3& b);

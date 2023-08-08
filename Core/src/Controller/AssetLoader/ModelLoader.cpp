@@ -7,6 +7,7 @@
 #include <Controller/AssetLoader/FileLoader.hpp>
 #include <Controller/AssetLoader/TextureLoader.hpp>
 #include <Controller/Logger.hpp>
+#include <Math/Math.hpp>
 #include <Model/Assets/Animation/Animation.hpp>
 #include <Model/Assets/Animation/Keyframe.hpp>
 #include <assimp/Importer.hpp>
@@ -17,6 +18,7 @@
 using Vakol::Model::Vertex;
 
 using namespace Vakol::Model::Assets;
+using namespace Vakol::Math;
 
 namespace Vakol::Controller
 {
@@ -24,25 +26,25 @@ namespace Vakol::Controller
                                                    aiProcess_CalcTangentSpace | aiProcess_FlipUVs |
                                                    aiProcess_LimitBoneWeights | aiProcess_GlobalScale;
 
-    static glm::mat4 to_glm(const aiMatrix4x4& m)
+    static Mat4 to_glm(const aiMatrix4x4& m)
     {
-        glm::vec4 c1{m.a1, m.b1, m.c1, m.d1};
-        glm::vec4 c2{m.a2, m.b2, m.c2, m.d2};
-        glm::vec4 c3{m.a3, m.b3, m.c3, m.d3};
-        glm::vec4 c4{m.a4, m.b4, m.c4, m.d4};
+        Vec4 c1{m.a1, m.b1, m.c1, m.d1};
+        Vec4 c2{m.a2, m.b2, m.c2, m.d2};
+        Vec4 c3{m.a3, m.b3, m.c3, m.d3};
+        Vec4 c4{m.a4, m.b4, m.c4, m.d4};
 
         return {c1, c2, c3, c4};
     }
 
-    static glm::quat to_glm(aiQuaternion& v)
+    static Quat to_glm(aiQuaternion& v)
     {
         return {v.w, v.x, v.y, v.z};
     }
-    static glm::vec3 to_glm(aiColor3D& v)
+    static Vec3 to_glm(aiColor3D& v)
     {
         return {v.r, v.g, v.b};
     }
-    static glm::vec3 to_glm(aiVector3D& v)
+    static Vec3 to_glm(aiVector3D& v)
     {
         return {v.x, v.y, v.z};
     }

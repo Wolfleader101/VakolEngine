@@ -1,7 +1,6 @@
 #include "Math.hpp"
 
 #include <glm/glm.hpp>
-#include <glm/gtc/noise.hpp>
 #include <glm/gtc/quaternion.hpp>
 
 namespace Vakol::Math
@@ -145,14 +144,14 @@ namespace Vakol::Math
 
     Point MultiplyPoint(const Point& point, const Mat4& mat)
     {
-        glm::vec4 tempPoint(point, 1.0f);
+        Math::Vec4 tempPoint(point, 1.0f);
         tempPoint = mat * tempPoint;
         return Point(tempPoint);
     }
 
     Vec3 MultiplyVector(const Vec3& vec, const Mat4& mat)
     {
-        glm::vec4 temp(vec, 0.0f);
+        Math::Vec4 temp(vec, 0.0f);
         temp = mat * temp;
         return Vec3(temp);
     }
