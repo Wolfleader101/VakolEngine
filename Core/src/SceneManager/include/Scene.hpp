@@ -3,13 +3,13 @@
 #include <memory>
 
 #include "Controller/Camera.hpp"
-#include "Controller/EntityList.hpp"
+#include "ECS/include/EntityList.hpp"
 #include "Controller/Terrain.hpp"
-#include "Controller/Time.hpp"
-#include "Model/Entity.hpp"
+#include "ECS/include/Entity.hpp"
 #include "Physics/include/ScenePhysics.hpp"
 #include "Rendering/include/Renderer.hpp"
 #include "Scripting/include/ScriptTypes.hpp"
+#include "Time/include/Time.hpp"
 
 namespace Vakol
 {

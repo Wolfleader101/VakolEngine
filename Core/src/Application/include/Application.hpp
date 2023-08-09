@@ -5,11 +5,11 @@
 #include "Controller/Events/KeyEvent.hpp"
 #include "Controller/Events/WindowEvent.hpp"
 #include "Controller/Input.hpp"
-#include "Controller/Time.hpp"
 #include "GUI/include/GUIWindow.hpp"
-#include "Model/Entity.hpp"
+#include "ECS/include/Entity.hpp"
 #include "Model/GameConfig.hpp"
 #include "Rendering/include/Renderer.hpp"
+#include "Time/include/Time.hpp"
 #include "Window/include/Window.hpp"
 
 #include "SceneManager/include/Scene.hpp"

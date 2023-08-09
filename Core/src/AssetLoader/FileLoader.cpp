@@ -7,7 +7,7 @@
 #include <iostream>
 #include <stb_image.h>
 
-#include "Controller/Logger.hpp"
+#include "Logger/include/Logger.hpp"
 
 std::string LoadFile(const std::string& path)
 {

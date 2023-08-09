@@ -1,6 +1,6 @@
 #include "include/PhysicsPool.hpp"
 
-#include "Controller/Logger.hpp"
+#include "Logger/include/Logger.hpp"
 #include "include/ScenePhysics.hpp"
 
 namespace Vakol::Physics

@@ -1,6 +1,6 @@
 #include "include/RendererFactory.hpp"
 
-#include "Controller/Logger.hpp"
+#include "Logger/include/Logger.hpp"
 #include "include/GLRenderer.hpp"
 
 namespace Vakol

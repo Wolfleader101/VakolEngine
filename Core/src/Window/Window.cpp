@@ -3,7 +3,7 @@
 #include <Controller/Events/KeyEvent.hpp>
 #include <Controller/Events/MouseEvent.hpp>
 #include <Controller/Events/WindowEvent.hpp>
-#include <Controller/Logger.hpp>
+#include <Logger/include/Logger.hpp>
 #include <iostream>
 
 using namespace Vakol::Controller;

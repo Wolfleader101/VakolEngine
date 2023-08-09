@@ -7,7 +7,7 @@
 #include "include/AssetLoader.hpp"
 #include "include/FileLoader.hpp"
 #include "include/TextureLoader.hpp"
-#include <Controller/Logger.hpp>
+#include <Logger/include/Logger.hpp>
 #include <Model/Assets/Animation/Animation.hpp>
 #include <Model/Assets/Animation/Keyframe.hpp>
 #include <assimp/Importer.hpp>

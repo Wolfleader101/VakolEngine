@@ -3,7 +3,7 @@
 #include "spdlog/fmt/ostr.h"
 #include "spdlog/spdlog.h"
 
-namespace Vakol::Controller
+namespace Vakol
 {
     /**
      * @class Logger
@@ -70,10 +70,10 @@ namespace Vakol::Controller
          */
         static std::shared_ptr<spdlog::logger> s_script_logger;
     };
-} // namespace Vakol::Controller
+} // namespace Vakol
 
-#define VK_TRACE(...) ::Vakol::Controller::Logger::GetLogger()->trace(__VA_ARGS__)
-#define VK_INFO(...) ::Vakol::Controller::Logger::GetLogger()->info(__VA_ARGS__)
-#define VK_WARN(...) ::Vakol::Controller::Logger::GetLogger()->warn(__VA_ARGS__)
-#define VK_ERROR(...) ::Vakol::Controller::Logger::GetLogger()->error(__VA_ARGS__)
-#define VK_CRITICAL(...) ::Vakol::Controller::Logger::GetLogger()->critical(__VA_ARGS__)
+#define VK_TRACE(...) ::Vakol::Logger::GetLogger()->trace(__VA_ARGS__)
+#define VK_INFO(...) ::Vakol::Logger::GetLogger()->info(__VA_ARGS__)
+#define VK_WARN(...) ::Vakol::Logger::GetLogger()->warn(__VA_ARGS__)
+#define VK_ERROR(...) ::Vakol::Logger::GetLogger()->error(__VA_ARGS__)
+#define VK_CRITICAL(...) ::Vakol::Logger::GetLogger()->critical(__VA_ARGS__)

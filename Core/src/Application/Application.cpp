@@ -1,12 +1,12 @@
 #include "Application.hpp"
 
 #include "AssetLoader/include/AssetLoader.hpp"
-#include "Controller/System.hpp"
+#include "ECS/include/System.hpp"
 #include "Model/Components.hpp"
 #include "Physics/include/PhysicsPool.hpp"
 #include "Rendering/include/RendererFactory.hpp"
 
-#include "Controller/Logger.hpp"
+#include "Logger/include/Logger.hpp"
 
 namespace Vakol
 {

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Physics/include/ScenePhysics.hpp"
-#include <Controller/EntityList.hpp>
+#include <ECS/include/EntityList.hpp>
 #include <Model/Components.hpp>
 
 #include "Rendering/include/Renderer.hpp"

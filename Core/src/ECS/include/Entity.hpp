@@ -1,11 +1,12 @@
 #pragma once
 
-#include <Controller/EntityList.hpp>
-#include <Controller/Logger.hpp>
 #include <cereal/archives/json.hpp>
 #include <entt/entt.hpp>
 #include <functional>
 #include <string>
+
+#include "EntityList.hpp"
+#include "Logger/include/Logger.hpp"
 
 namespace Vakol
 {

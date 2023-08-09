@@ -2,9 +2,9 @@
 
 #include <reactphysics3d/reactphysics3d.h>
 
+#include "Time/include/Time.hpp"
 #include <Controller/Camera.hpp>
 #include <Controller/Terrain.hpp>
-#include <Controller/Time.hpp>
 #include <Rendering/include/DebugRenderer.hpp>
 
 namespace Vakol

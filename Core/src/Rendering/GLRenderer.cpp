@@ -2,7 +2,7 @@
 
 #include <glad/glad.h>
 
-#include <Controller/Logger.hpp>
+#include <Logger/include/Logger.hpp>
 #include <Model/Components.hpp>
 #include <memory>
 #include <vector>

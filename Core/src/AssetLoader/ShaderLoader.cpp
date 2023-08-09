@@ -3,7 +3,7 @@
 #include <glad/glad.h>
 
 #include "include/FileLoader.hpp"
-#include <Controller/Logger.hpp>
+#include <Logger/include/Logger.hpp>
 #include <iostream>
 #include <vector>
 

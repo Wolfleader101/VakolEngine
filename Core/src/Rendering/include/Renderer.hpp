@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "Controller/Time.hpp"
+#include "Time/include/Time.hpp"
 #include "Window/include/Window.hpp"
 
 #include "Math/include/Math.hpp"

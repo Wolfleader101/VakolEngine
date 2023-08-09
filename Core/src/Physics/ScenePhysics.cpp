@@ -3,8 +3,8 @@
 #include <glad/glad.h>
 
 #include "AssetLoader/include/AssetLoader.hpp"
-#include "Controller/Logger.hpp"
-#include "Controller/System.hpp"
+#include "Logger/include/Logger.hpp"
+#include "ECS/include/System.hpp"
 #include "Controller/Terrain.hpp"
 #include "include/PhysicsPool.hpp"
 

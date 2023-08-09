@@ -1,8 +1,8 @@
-#include "Logger.hpp"
+#include "include/Logger.hpp"
 
 #include "spdlog/sinks/stdout_color_sinks.h"
 
-namespace Vakol::Controller
+namespace Vakol
 {
     std::shared_ptr<spdlog::logger> Logger::s_logger;
     std::shared_ptr<spdlog::logger> Logger::s_script_logger;
@@ -43,4 +43,4 @@ namespace Vakol::Controller
     {
         s_script_logger->critical(args);
     }
-} // namespace Vakol::Controller
+} // namespace Vakol

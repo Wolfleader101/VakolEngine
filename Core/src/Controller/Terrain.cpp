@@ -1,7 +1,7 @@
 #include "Terrain.hpp"
 
 #include "AssetLoader/include/FileLoader.hpp"
-#include <Controller/Logger.hpp>
+#include <Logger/include/Logger.hpp>
 #include <algorithm>
 #include <cstdlib>
 #include <iostream>

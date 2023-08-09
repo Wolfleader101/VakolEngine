@@ -8,7 +8,7 @@ namespace Vakol
 {
     void Run()
     {
-        Controller::Logger::Init();
+        Logger::Init();
 
         Controller::Singleton<Application>::GetInstance().Init();
 

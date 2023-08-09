@@ -9,6 +9,9 @@ add_subdirectory(Physics)
 add_subdirectory(Window)
 add_subdirectory(GUI)
 add_subdirectory(Rendering)
+add_subdirectory(Time)
+add_subdirectory(Logger)
+add_subdirectory(ECS)
 
 SET(SOURCES
 ${MODEL}
@@ -23,6 +26,9 @@ ${RENDERING_SRC}
 ${SCRIPTING_SRC}
 ${MATH_SRC}
 ${SCENE_MANAGER_SRC}
+${TIME_SRC}
+${LOGGER_SRC}
+${ECS_SRC}
 src/core.cpp
 PARENT_SCOPE)
 
@@ -36,6 +42,9 @@ SET(GLOBAL_INCLUDE_DIRS
     ${GUI_INCLUDE_DIR}
     ${APPLICATION_INCLUDE_DIR}
     ${ASSET_LOADER_INCLUDE_DIR}
-    ${RENDERING_SRC}
+    ${RENDERING_INCLUDE_DIR}
+    ${TIME_INCLUDE_DIR}
+    ${LOGGER_INCLUDE_DIR}
+    ${ECS_INCLUDE_DIR}
     PARENT_SCOPE
 )

@@ -6,19 +6,8 @@ src/Controller/Singleton.hpp
 src/Controller/Animator.hpp
 src/Controller/Animator.cpp
 
-src/Controller/Logger.hpp
-src/Controller/Logger.cpp
-
-src/Controller/Time.hpp
-
 src/Controller/Camera.hpp
 src/Controller/Camera.cpp
-
-src/Controller/EntityList.hpp
-src/Controller/EntityList.cpp
-
-src/Controller/System.hpp
-src/Controller/System.cpp
 
 src/Controller/Input.hpp
 src/Controller/Input.cpp

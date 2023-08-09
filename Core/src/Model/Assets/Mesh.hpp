@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Controller/Logger.hpp>
+#include <Logger/include/Logger.hpp>
 #include <Model/Assets/Material.hpp>
 #include <Model/VertexArray.hpp>
 #include <memory>

@@ -1,12 +1,12 @@
-#include "EntityList.hpp"
+#include "include/EntityList.hpp"
 
 #include <assert.h>
-
-#include <Controller/Logger.hpp>
-#include <Controller/System.hpp>
-#include <Model/Components.hpp>
-#include <Model/Entity.hpp>
 #include <cereal/cereal.hpp>
+
+#include "Logger/include/Logger.hpp"
+#include "Model/Components.hpp"
+#include "ECS/include/Entity.hpp"
+#include "include/System.hpp"
 
 using namespace Vakol::Model;
 

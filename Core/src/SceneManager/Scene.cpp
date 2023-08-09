@@ -5,10 +5,10 @@
 
 #include "Controller/Camera.hpp"
 #include "Model/Components.hpp"
-#include "Model/Entity.hpp"
+#include "ECS/include/Entity.hpp"
 
 #include "Controller/SolSerialize.hpp"
-#include "Controller/System.hpp"
+#include "ECS/include/System.hpp"
 
 namespace Vakol
 {

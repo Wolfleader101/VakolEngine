@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Controller/Logger.hpp>
+#include <Logger/include/Logger.hpp>
 #include <utility>
 #include <vector>
 

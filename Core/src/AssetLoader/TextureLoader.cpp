@@ -3,7 +3,7 @@
 #include <glad/glad.h>
 
 #include "include/FileLoader.hpp"
-#include <Controller/Logger.hpp>
+#include <Logger/include/Logger.hpp>
 
 unsigned int LoadGLTexture(std::vector<const char*>&&, bool, bool);
 unsigned int LoadGLTexture(std::string&, bool, bool, bool);

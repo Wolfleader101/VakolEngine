@@ -2,7 +2,7 @@
 
 #include <glad/glad.h>
 
-#include <Controller/Logger.hpp>
+#include <Logger/include/Logger.hpp>
 #include <iostream>
 
 #define VERBOSE_FLOAT_DEBUG 0
