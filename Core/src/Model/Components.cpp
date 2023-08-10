@@ -5,16 +5,17 @@
 
 namespace Vakol::Model::Components
 {
-    rp3d::Vector3 to_rp3d(const glm::vec3& v)
+    rp3d::Vector3 to_rp3d(const Math::Vec3& v)
     {
         return {v.x, v.y, v.z};
     }
-    rp3d::Quaternion to_rp3d(const glm::quat& q)
+
+    rp3d::Quaternion to_rp3d(const Math::Quat& q)
     {
         return {q.x, q.y, q.z, q.w};
     }
 
-    Transform::Transform(const glm::vec3& pos, const glm::quat& rot, const glm::vec3& scale)
+    Transform::Transform(const Math::Vec3& pos, const Math::Quat& rot, const Math::Vec3& scale)
         : pos(pos), rot(rot), scale(scale)
     {
     }
@@ -82,17 +83,17 @@ namespace Vakol::Model::Components
         RigidBodyPtr->setType(static_cast<rp3d::BodyType>(Type));
     }
 
-    void RigidBody::SetVelocity(const glm::vec3& vel) const
+    void RigidBody::SetVelocity(const Math::Vec3& vel) const
     {
         RigidBodyPtr->setLinearVelocity(rp3d::Vector3(vel.x, vel.y, vel.z));
     }
 
-    void RigidBody::SetAngularVelocity(const glm::vec3& vel) const
+    void RigidBody::SetAngularVelocity(const Math::Vec3& vel) const
     {
         RigidBodyPtr->setAngularVelocity(rp3d::Vector3(vel.x, vel.y, vel.z));
     }
 
-    void RigidBody::ApplyForce(const glm::vec3& force) const
+    void RigidBody::ApplyForce(const Math::Vec3& force) const
     {
         RigidBodyPtr->applyWorldForceAtCenterOfMass(rp3d::Vector3(force.x, force.y, force.z));
     }
@@ -123,20 +124,20 @@ namespace Vakol::Model::Components
     }
 
     // THIS HAS BEEN MODIFIED BY ME (CALEB)
-    glm::mat4 to_rp3d_mat4(const Transform& transform)
+    Math::Mat4 to_rp3d_mat4(const Transform& transform)
     {
-        glm::mat4 mat(1.0f);
-        mat = glm::translate(mat, transform.pos);
-        mat = glm::scale(mat, transform.scale);
-        mat = glm::rotate(mat, transform.rot.x, glm::vec3(1.0f, 0.0f, 0.0f));
-        mat = glm::rotate(mat, transform.rot.y, glm::vec3(0.0f, 1.0f, 0.0f));
-        mat = glm::rotate(mat, transform.rot.z, glm::vec3(0.0f, 0.0f, 1.0f));
+        Math::Mat4 mat(1.0f);
+        mat = Math::Translate(mat, transform.pos);
+        mat = Math::Scale(mat, transform.scale);
+        mat = Math::Rotate(mat, transform.rot.x, Math::Vec3(1.0f, 0.0f, 0.0f));
+        mat = Math::Rotate(mat, transform.rot.y, Math::Vec3(0.0f, 1.0f, 0.0f));
+        mat = Math::Rotate(mat, transform.rot.z, Math::Vec3(0.0f, 0.0f, 1.0f));
         return mat;
     }
 
-    rp3d::Vector3 transformVertex(const glm::mat4& matrix, const rp3d::Vector3& vertex)
+    rp3d::Vector3 transformVertex(const Math::Mat4& matrix, const rp3d::Vector3& vertex)
     {
-        glm::vec4 glmVertex(vertex.x, vertex.y, vertex.z, 1.0f);
+        Math::Vec4 glmVertex(vertex.x, vertex.y, vertex.z, 1.0f);
         glmVertex = matrix * glmVertex;
 
         return {glmVertex.x, glmVertex.y, glmVertex.z};
@@ -149,7 +150,7 @@ namespace Vakol::Model::Components
         rp3d::Vector3& max = bounds.max;
         rp3d::Vector3& min = bounds.min;
 
-        const glm::mat4 transformMat = to_rp3d_mat4(transform);
+        const Math::Mat4 transformMat = to_rp3d_mat4(transform);
 
         auto& vertices = model.model_ptr->meshes().begin()->vertices();
 

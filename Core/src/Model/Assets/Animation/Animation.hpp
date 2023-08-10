@@ -27,9 +27,9 @@ namespace Vakol::Model::Assets
          * @param duration The duration of the animation.
          * @param tps The ticks per second of the animation.
          */
-        Animation(const glm::mat4& root_inverse, std::vector<AnimationNode>&& nodes, const unsigned int bone_count,
+        Animation(const Math::Mat4& root_inverse, std::vector<AnimationNode>&& nodes, const unsigned int bone_count,
                   const double duration, const double tps)
-            : global_inverse(root_inverse), m_transforms(MAX_BONE_COUNT, glm::mat4(1.0f)), m_nodes(std::move(nodes)),
+            : global_inverse(root_inverse), m_transforms(MAX_BONE_COUNT, Math::Mat4(1.0f)), m_nodes(std::move(nodes)),
               bone_count(bone_count), duration(duration), ticks_per_second(tps)
         {
             if (bone_count > MAX_BONE_COUNT)
@@ -62,8 +62,9 @@ namespace Vakol::Model::Assets
                     bone ? bone->interpolate_frames_at(current_time)
                          : node_transform; // Interpolate the transform based on the bone or node animation
                 const auto& parent_transform =
-                    parent >= 0 ? m_nodes.at(parent).bone_transform
-                                : glm::mat4(1.0f); // Get the parent's transform or use the identity matrix if no parent
+                    parent >= 0
+                        ? m_nodes.at(parent).bone_transform
+                        : Math::Mat4(1.0f); // Get the parent's transform or use the identity matrix if no parent
 
                 bone_transform =
                     parent_transform *
@@ -90,7 +91,7 @@ namespace Vakol::Model::Assets
          *
          * @return The vector of bone transforms.
          */
-        [[nodiscard]] const std::vector<glm::mat4>& transforms() const
+        [[nodiscard]] const std::vector<Math::Mat4>& transforms() const
         {
             return m_transforms;
         }
@@ -100,7 +101,7 @@ namespace Vakol::Model::Assets
          *
          * @return The transform matrix.
          */
-        [[nodiscard]] const glm::mat4& transform() const
+        [[nodiscard]] const Math::Mat4& transform() const
         {
             return m_transforms.at(0);
         }
@@ -174,8 +175,8 @@ namespace Vakol::Model::Assets
         }
 
       private:
-        glm::mat4 global_inverse{};
-        std::vector<glm::mat4> m_transforms;
+        Math::Mat4 global_inverse{};
+        std::vector<Math::Mat4> m_transforms;
         std::vector<AnimationNode> m_nodes;
 
         [[maybe_unused]] unsigned int bone_count = 0;

@@ -4,7 +4,6 @@
 
 #include <Controller/Physics/ScenePhysics.hpp>
 #include <crossguid/guid.hpp>
-#include <glm/glm.hpp>
 #include <memory>
 #include <string>
 
@@ -13,6 +12,7 @@
 #include "Entity.hpp"
 #include "Model/Assets/Model.hpp"
 #include "Scripting/ScriptTypes.hpp"
+#include <Math/Math.hpp>
 
 namespace Vakol::Model::Components
 {
@@ -44,15 +44,15 @@ namespace Vakol::Model::Components
          * @param rot rotation
          * @param scale
          */
-        Transform(const glm::vec3& pos, const glm::quat& rot, const glm::vec3& scale);
+        Transform(const Math::Vec3& pos, const Math::Quat& rot, const Math::Vec3& scale);
 
-        glm::vec3 pos = glm::vec3(0.0f, 0.0f, 0.0f); /**< XYZ position */
+        Math::Vec3 pos = Math::Vec3(0.0f, 0.0f, 0.0f); /**< XYZ position */
 
-        glm::vec3 eulerAngles = glm::vec3(0.0f, 0.0f, 0.0f);
+        Math::Vec3 eulerAngles = Math::Vec3(0.0f, 0.0f, 0.0f);
 
-        glm::quat rot = glm::quat(1.0f, 0.0f, 0.0f, 0.0f); /**< WXYZ rotation */
+        Math::Quat rot = Math::Quat(1.0f, 0.0f, 0.0f, 0.0f); /**< WXYZ rotation */
 
-        glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f); /**< XYZ scale */
+        Math::Vec3 scale = Math::Vec3(1.0f, 1.0f, 1.0f); /**< XYZ scale */
 
         template <class Archive>
         void serialize(Archive& ar)
@@ -419,12 +419,12 @@ namespace Vakol::Model::Components
          * @brief Sets the velocity for the rigid body.
          * @param vel The velocity to be set.
          */
-        void SetVelocity(const glm::vec3& vel) const;
+        void SetVelocity(const Math::Vec3& vel) const;
         /**
          * @brief Sets the angular velocity for the rigid body.
          * @param vel The angular velocity to be set.
          */
-        void SetAngularVelocity(const glm::vec3& vel) const;
+        void SetAngularVelocity(const Math::Vec3& vel) const;
         /**
          * @brief Sets the linear dampening for the rigid body.
          * @param damp The linear dampening factor to be set.
@@ -435,7 +435,7 @@ namespace Vakol::Model::Components
          * @param damp The angular dampening factor to be set.
          */
         void SetAngularDamp(float damp) const;
-        void ApplyForce(const glm::vec3& force) const;
+        void ApplyForce(const Math::Vec3& force) const;
 
         std::shared_ptr<ScenePhysics> owningWorld = nullptr; ///< Shared pointer to the world owning the rigid body.
         rp3d::RigidBody* RigidBodyPtr = nullptr;             ///< Pointer to the rigid body.

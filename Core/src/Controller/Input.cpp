@@ -65,7 +65,7 @@ namespace Vakol::Controller
 
     bool Input::OnMouseMoved(MouseMovedEvent& ev)
     {
-        m_mousePos = glm::vec2(ev.GetX(), ev.GetY());
+        m_mousePos = Math::Vec2(ev.GetX(), ev.GetY());
 
         m_deltaMousePos.x = m_mousePos.x - m_prevMousePos.x;
         m_deltaMousePos.y = m_prevMousePos.y - m_mousePos.y;

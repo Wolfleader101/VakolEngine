@@ -1,11 +1,10 @@
 #pragma once
 
 #include <Controller/Logger.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 #include <optional>
 #include <vector>
 
-#include "glm/gtc/quaternion.hpp"
+#include <Math/Math.hpp>
 
 namespace Vakol::Model::Assets
 {
@@ -14,7 +13,7 @@ namespace Vakol::Model::Assets
      */
     struct KeyPosition
     {
-        glm::vec3 position{};    /**< The position value. */
+        Math::Vec3 position{};   /**< The position value. */
         double timestamp = 0.0f; /**< The timestamp of the key position. */
     };
 
@@ -23,7 +22,7 @@ namespace Vakol::Model::Assets
      */
     struct KeyScale
     {
-        glm::vec3 scale{};       /**< The scale value. */
+        Math::Vec3 scale{};      /**< The scale value. */
         double timestamp = 0.0f; /**< The timestamp of the key scale. */
     };
 
@@ -32,7 +31,7 @@ namespace Vakol::Model::Assets
      */
     struct KeyRotation
     {
-        glm::quat rotation{};    /**< The rotation value. */
+        Math::Quat rotation{};   /**< The rotation value. */
         double timestamp = 0.0f; /**< The timestamp of the key rotation. */
     };
 
@@ -41,8 +40,8 @@ namespace Vakol::Model::Assets
      */
     struct KeyFrame
     {
-        int index = -1;                     /**< The index of the key frame. */
-        glm::mat4 offset = glm::mat4(1.0f); /**< The offset matrix of the key frame. */
+        int index = -1;                       /**< The index of the key frame. */
+        Math::Mat4 offset = Math::Mat4(1.0f); /**< The offset matrix of the key frame. */
 
         std::vector<KeyPosition> positions; /**< The key positions of the key frame. */
         std::vector<KeyScale> scales;       /**< The key scales of the key frame. */
@@ -59,11 +58,11 @@ namespace Vakol::Model::Assets
          * @param time The time to interpolate the frames at.
          * @return The interpolated transformation matrix.
          */
-        glm::mat4 interpolate_frames_at(const double time)
+        Math::Mat4 interpolate_frames_at(const double time)
         {
-            const glm::mat4 translation = interpolate_position(time);
-            const glm::mat4 rotation = interpolate_rotation(time);
-            const glm::mat4 scale = interpolate_scaling(time);
+            const Math::Mat4 translation = interpolate_position(time);
+            const Math::Mat4 rotation = interpolate_rotation(time);
+            const Math::Mat4 scale = interpolate_scaling(time);
 
             prev_time = time;
 
@@ -281,7 +280,7 @@ namespace Vakol::Model::Assets
          * @param time The time to interpolate the position at.
          * @return The interpolated transformation matrix for the position.
          */
-        glm::mat4 interpolate_position(const double time)
+        Math::Mat4 interpolate_position(const double time)
         {
             const int p0 = UpdateFrameIndex(positions, time, prev_position_index, prev_time);
 
@@ -293,7 +292,7 @@ namespace Vakol::Model::Assets
             const double scale_factor = GetScaleFactor(timestamp, next.timestamp, time);
             const auto& target_position = mix(position, next.position, scale_factor);
 
-            return translate(glm::mat4(1.0f), target_position);
+            return Math::Translate(Math::Mat4(1.0f), target_position);
         }
 
         /**
@@ -302,7 +301,7 @@ namespace Vakol::Model::Assets
          * @param time The time to interpolate the rotation at.
          * @return The interpolated transformation matrix for the rotation.
          */
-        glm::mat4 interpolate_rotation(const double time)
+        Math::Mat4 interpolate_rotation(const double time)
         {
             const int p0 = UpdateFrameIndex(rotations, time, prev_rotation_index, prev_time);
 
@@ -313,8 +312,8 @@ namespace Vakol::Model::Assets
 
             const double scale_factor = GetScaleFactor(first.timestamp, next.timestamp, time);
 
-            glm::quat target_rotation =
-                glm::normalize(glm::slerp(first.rotation, next.rotation, static_cast<float>(scale_factor)));
+            Math::Quat target_rotation =
+                Math::Normalized(Math::Slerp(first.rotation, next.rotation, static_cast<float>(scale_factor)));
 
             return mat4_cast(target_rotation);
         }
@@ -325,7 +324,7 @@ namespace Vakol::Model::Assets
          * @param time The time to interpolate the scaling at.
          * @return The interpolated transformation matrix for the scaling.
          */
-        glm::mat4 interpolate_scaling(const double time)
+        Math::Mat4 interpolate_scaling(const double time)
         {
             const int p0 = UpdateFrameIndex(scales, time, prev_scale_index, prev_time);
 
@@ -337,7 +336,7 @@ namespace Vakol::Model::Assets
             const double scale_factor = GetScaleFactor(timestamp, next.timestamp, time);
             const auto& target_scale = mix(scale, next.scale, scale_factor);
 
-            return glm::scale(glm::mat4(1.0f), target_scale);
+            return Math::Scale(Math::Mat4(1.0f), target_scale);
         }
     };
 
@@ -347,9 +346,9 @@ namespace Vakol::Model::Assets
     struct AnimationNode
     {
         std::optional<KeyFrame> bone; /**< The optional key frame representing a bone. */
-        glm::mat4 bone_transform{};   /**< The bone transformation matrix. */
+        Math::Mat4 bone_transform{};  /**< The bone transformation matrix. */
 
-        int parent = -1;            /**< The index of the parent node. */
-        glm::mat4 node_transform{}; /**< The node transformation matrix. */
+        int parent = -1;             /**< The index of the parent node. */
+        Math::Mat4 node_transform{}; /**< The node transformation matrix. */
     };
 } // namespace Vakol::Model::Assets

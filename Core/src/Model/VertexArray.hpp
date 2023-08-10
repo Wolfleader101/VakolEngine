@@ -1,7 +1,6 @@
 #pragma once
 
-#include <glm/vec2.hpp>
-#include <glm/vec3.hpp>
+#include <Math/Math.hpp>
 #include <vector>
 
 #define USE_TRIANGLE_PATCHES 0
@@ -21,11 +20,11 @@ namespace Vakol::Model
      */
     struct Vertex
     {
-        glm::vec3 position;  ///< Position of the vertex.
-        glm::vec3 normal;    ///< Normal of the vertex.
-        glm::vec2 uv;        ///< Texture coordinates of the vertex.
-        glm::vec3 tangent;   ///< Tangent of the vertex.
-        glm::vec3 bitangent; ///< Bitangent of the vertex.
+        Math::Vec3 position;  ///< Position of the vertex.
+        Math::Vec3 normal;    ///< Normal of the vertex.
+        Math::Vec2 uv;        ///< Texture coordinates of the vertex.
+        Math::Vec3 tangent;   ///< Tangent of the vertex.
+        Math::Vec3 bitangent; ///< Bitangent of the vertex.
 
         int bone_ids[MAX_BONE_INFLUENCE];       ///< Array of bone IDs affecting the vertex.
         float bone_weights[MAX_BONE_INFLUENCE]; ///< Array of weights of the bones affecting the vertex.

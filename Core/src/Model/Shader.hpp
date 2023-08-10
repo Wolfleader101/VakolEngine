@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Controller/AssetLoader/ShaderLoader.hpp>
-#include <glm/glm.hpp>
+#include <Math/Math.hpp>
 #include <string>
 
 using Vakol::Controller::LoadShader;
@@ -76,40 +76,40 @@ namespace Vakol::Model
         /**
          * @brief Function to set a vec2 uniform in the shader.
          * @param name Name of the uniform.
-         * @param value glm::vec2 value to set.
+         * @param value Math::Vec2 value to set.
          */
-        void SetVec2(const char* name, const glm::vec2& value) const;
+        void SetVec2(const char* name, const Math::Vec2& value) const;
         void SetVec2(const char* name, float x, float y) const;
 
         /**
          * @brief Function to set a vec3 uniform in the shader.
          * @param name Name of the uniform.
-         * @param value glm::vec3 value to set.
+         * @param value Math::Vec3 value to set.
          */
-        void SetVec3(const char* name, const glm::vec3& value) const;
+        void SetVec3(const char* name, const Math::Vec3& value) const;
         void SetVec3(const char* name, float x, float y, float z) const;
 
         /**
          * @brief Function to set a vec4 uniform in the shader.
          * @param name Name of the uniform.
-         * @param value glm::vec4 value to set.
+         * @param value Math::Vec4 value to set.
          */
-        void SetVec4(const char* name, const glm::vec4& value) const;
+        void SetVec4(const char* name, const Math::Vec4& value) const;
         void SetVec4(const char* name, float x, float y, float z, float w) const;
 
         /**
          * @brief Function to set a mat3 uniform in the shader.
          * @param name Name of the uniform.
-         * @param value glm::mat3 value to set.
+         * @param value Math::Mat3 value to set.
          */
-        void SetMat3(const char* name, const glm::mat3& value) const;
+        void SetMat3(const char* name, const Math::Mat3& value) const;
 
         /**
          * @brief Function to set a mat4 uniform in the shader.
          * @param name Name of the uniform.
-         * @param value glm::mat4 value to set.
+         * @param value Math::Mat4 value to set.
          */
-        void SetMat4(const char* name, const glm::mat4& value) const;
+        void SetMat4(const char* name, const Math::Mat4& value) const;
         void SetMat4v(const char* name, int count, const void* data) const;
 
       private:

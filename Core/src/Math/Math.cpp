@@ -1,5 +1,6 @@
 #include "Math.hpp"
 
+#include <glm/gtc/type_ptr.hpp>
 namespace Vakol::Math
 {
     float Dot(const Vec2& a, const Vec2& b)
@@ -146,14 +147,14 @@ namespace Vakol::Math
 
     Point MultiplyPoint(const Point& point, const Mat4& mat)
     {
-        glm::vec4 tempPoint(point, 1.0f);
+        Math::Vec4 tempPoint(point, 1.0f);
         tempPoint = mat * tempPoint;
         return Point(tempPoint);
     }
 
     Vec3 MultiplyVector(const Vec3& vec, const Mat4& mat)
     {
-        glm::vec4 temp(vec, 0.0f);
+        Math::Vec4 temp(vec, 0.0f);
         temp = mat * temp;
         return Vec3(temp);
     }
@@ -183,4 +184,104 @@ namespace Vakol::Math
     {
         return glm::inverse(mat);
     }
+
+    float Lerp(const float a, const float b, const float t)
+    {
+        return (1.0f - t) * a + b * t;
+    }
+
+    /// return a fraction 't' (between 0 and 1) based on the given value
+    float InverseLerp(const float a, const float b, const float v)
+    {
+        return (v - a) / (b - a);
+    }
+
+    /// takes a value within a given input range into a given output range
+    float Remap(const float iMin, const float iMax, const float oMin, const float oMax, const float v)
+    {
+        float t = InverseLerp(iMin, iMax, v);
+
+        return Lerp(oMin, oMax, t);
+    }
+
+    float DegToRad(const float deg)
+    {
+        return glm::radians(deg);
+    }
+
+    Vec3 DegToRad(const Vec3& vec)
+    {
+        return glm::radians(vec);
+    }
+
+    float RadToDeg(const float rad)
+    {
+        return glm::degrees(rad);
+    }
+
+    Vec3 RadToDeg(const Vec3& vec)
+    {
+        return glm::degrees(vec);
+    }
+
+    Mat4 Perspective(float fovy, float aspect, float zNear, float zFar)
+    {
+        return glm::perspective(fovy, aspect, zNear, zFar);
+    }
+
+    const float* AsArray(const Vec2& v)
+    {
+        return glm::value_ptr(v);
+    }
+    const float* AsArray(const Vec3& v)
+    {
+        return glm::value_ptr(v);
+    }
+    const float* AsArray(const Vec4& v)
+    {
+        return glm::value_ptr(v);
+    }
+    const float* AsArray(const Mat3& m)
+    {
+        return glm::value_ptr(m);
+    }
+    const float* AsArray(const Mat4& m)
+    {
+        return glm::value_ptr(m);
+    }
+    const float* AsArray(const Quat& q)
+    {
+        return glm::value_ptr(q);
+    }
+
+    float Cos(float val)
+    {
+        return glm::cos(val);
+    }
+
+    Mat4 Translate(const Mat4& mat, const Vec3& vec)
+    {
+        return glm::translate(mat, vec);
+    }
+
+    Mat4 Scale(const Mat4& mat, const Vec3& vec)
+    {
+        return glm::scale(mat, vec);
+    }
+
+    Mat4 Rotate(const Mat4& mat, float angle, const Vec3& axis)
+    {
+        return glm::rotate(mat, angle, axis);
+    }
+
+    Quat Slerp(const Quat& x, const Quat& y, float a)
+    {
+        return glm::slerp(x, y, a);
+    }
+
+    Quat Normalized(const Quat& x)
+    {
+        return glm::normalize(x);
+    }
+
 } // namespace Vakol::Math

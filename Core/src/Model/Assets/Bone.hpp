@@ -5,8 +5,7 @@
 
 #include <Controller/Logger.hpp>
 
-#include <glm/mat4x4.hpp>
-
+#include <Math/Math.hpp>
 namespace Vakol::Model::Assets
 {
     /**
@@ -14,8 +13,8 @@ namespace Vakol::Model::Assets
      */
     struct Bone
     {
-        int index = -1;   /**< The index of the bone. */
-        glm::mat4 offset; /**< The inverse-bind matrix or offset matrix of the bone. */
+        int index = -1;    /**< The index of the bone. */
+        Math::Mat4 offset; /**< The inverse-bind matrix or offset matrix of the bone. */
     };
 
     /**
@@ -34,7 +33,7 @@ namespace Vakol::Model::Assets
          * @param bone_to_model The bone-to-model transformation matrix.
          * @return The index of the added bone.
          */
-        int add_new_bone(std::string&& name, const glm::mat4& bone_to_model)
+        int add_new_bone(std::string&& name, const Math::Mat4& bone_to_model)
         {
             // Insert the new bone into the map
             auto [itr, inserted] = name_to_info.insert(std::make_pair(std::move(name), Bone{-1, bone_to_model}));

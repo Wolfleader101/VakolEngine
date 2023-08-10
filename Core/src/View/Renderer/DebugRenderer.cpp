@@ -52,7 +52,7 @@ namespace Vakol::View
         m_rp3dRenderer = nullptr;
     }
 
-    void DebugRenderer::GetDebugColor(const uint32_t& color, glm::vec3& outColor) const
+    void DebugRenderer::GetDebugColor(const uint32_t& color, Math::Vec3& outColor) const
     {
         const uint32_t colorValue = color;
 
@@ -63,12 +63,12 @@ namespace Vakol::View
 
     void DebugRenderer::GetTriangles()
     {
-        glm::vec3 color;
+        Math::Vec3 color;
         PhysicsDebugVertex tempVert{};
 
         for (auto& tri : m_rp3dRenderer->getTriangles())
         {
-            glm::vec3 xyz;
+            Math::Vec3 xyz;
             // v1
             GetDebugColor(tri.color1, color);
 
@@ -106,11 +106,11 @@ namespace Vakol::View
 
     void DebugRenderer::GetLines()
     {
-        glm::vec3 color;
+        Math::Vec3 color;
 
         for (auto& line : m_rp3dRenderer->getLines())
         {
-            glm::vec3 xyz;
+            Math::Vec3 xyz;
             // v1
             GetDebugColor(line.color1, color);
 

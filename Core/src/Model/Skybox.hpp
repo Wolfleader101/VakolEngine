@@ -2,6 +2,7 @@
 
 #include <memory>
 
+#include <Math/Math.hpp>
 #include <Model/Shader.hpp>
 
 namespace Vakol::Model
@@ -26,7 +27,7 @@ namespace Vakol::Model
          * @param projection Projection matrix.
          * @param view View matrix.
          */
-        void Draw(const glm::mat4& projection, const glm::mat4& view) const;
+        void Draw(const Math::Mat4& projection, const Math::Mat4& view) const;
 
       private:
         std::shared_ptr<Shader> shader = nullptr; ///< Pointer to the shader.
