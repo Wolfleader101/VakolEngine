@@ -11,15 +11,15 @@ namespace Vakol::Rendering::OpenGL
     {
         unsigned int ebo = 0;
 
-        glGenVertexArrays(1, &command.vao);
-        glGenBuffers(1, &command.vbo);
+        glGenVertexArrays(1, &command.vertexArray);
+        glGenBuffers(1, &command.vertexBuffer);
 
         if (command.nIndices > 0)
             glGenBuffers(1, &ebo);
 
-        glBindVertexArray(command.vao);
+        glBindVertexArray(command.vertexArray);
 
-        glBindBuffer(GL_ARRAY_BUFFER, command.vbo);
+        glBindBuffer(GL_ARRAY_BUFFER, command.vertexBuffer);
         glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(command.nVertices * sizeof(Vertex)), vertexData, GL_STATIC_DRAW);
 
         if (command.nIndices > 0) 
@@ -46,4 +46,15 @@ namespace Vakol::Rendering::OpenGL
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
     }
+
+    void BindVertexArray(const unsigned vertexArray)
+    {
+        glBindVertexArray(vertexArray);
+    }
+
+    void UnbindVertexArray()
+    {
+        glBindVertexArray(0);
+    }
+
 }

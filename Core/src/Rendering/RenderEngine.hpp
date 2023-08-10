@@ -25,7 +25,8 @@ namespace Vakol::Rendering
         static void Draw();
         static void PostDraw();
 
-        static void SubmitModel(Assets::Model& model); // Submit a user-defined model to renderer. Converted into low-level render components.
+        static void GenerateModel(const char* path, float scale = 1.0f);
+        static void GenerateSphere();
     private:
         /**
          * \brief Submit data to rendering api of user's choosing.
@@ -35,6 +36,10 @@ namespace Vakol::Rendering
         template <typename T>
         static void SubmitVertexData(T&& data);
 
+        template <typename T>
+        static void SubmitShaderData(T&& data);
+
+        static void SubmitModel(Assets::Model& model); // Submit a user-defined model to renderer. Converted into low-level render components.
         static void SubmitMesh(Assets::Mesh& mesh);
     };
 
@@ -42,6 +47,12 @@ namespace Vakol::Rendering
     void RenderEngine::SubmitVertexData(T&& data)
     {
         RenderAPI::GenerateVertexCommand(std::forward<T>(data));
+    }
+
+    template <typename T>
+    void RenderEngine::SubmitShaderData(T&& data)
+    {
+        RenderAPI::GenerateShaderCommand(std::forward<T>(data));   
     }
 
     std::shared_ptr<RenderEngine> CreateRenderEngine(const std::string& API, const std::shared_ptr<View::Window>& window);

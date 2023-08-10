@@ -2,9 +2,11 @@
 
 #include "Assets/Model.hpp"
 
-#include <View/Window/Window.hpp>
+#include "View/Window/Window.hpp"
 
-#include <Controller/Logger.hpp>
+#include "Assets/Importer/ShaderImporter.hpp"
+#include "Assets/Importer/ModelImporter.hpp"
+#include "Controller/Logger.hpp"
 
 namespace Vakol::Rendering
 {
@@ -18,12 +20,33 @@ namespace Vakol::Rendering
 
     void RenderEngine::Draw()
     {
-
+        RenderAPI::BeginDraw();
+        RenderAPI::EndDraw();
     }
 
     void RenderEngine::PostDraw()
     {
         
+    }
+
+    void RenderEngine::GenerateSphere()
+    {
+        bool success = true;
+
+        auto shader = Assets::Importer::ImportShader("coreAssets/shaders/super_basic.prog", success);
+
+        if (success)
+            SubmitShaderData(std::move(shader));
+
+        auto model = Assets::Importer::ImportModel("coreAssets/models/sphere.obj", 1.0f);
+        SubmitModel(model);
+    }
+
+    void RenderEngine::GenerateModel(const char* path, const float scale)
+    {
+        auto model = Assets::Importer::ImportModel(path, scale);
+
+        SubmitModel(model);
     }
 
     void RenderEngine::SubmitModel(Assets::Model& model)
@@ -47,7 +70,7 @@ namespace Vakol::Rendering
         SubmitVertexData(std::move(vertexArray));
     }
 
-    std::shared_ptr<RenderEngine> CreateRenderEngine(const std::string& API, const std::shared_ptr<View::Window>& window)
+    std::shared_ptr<RenderEngine> CreateRenderEngine([[maybe_unused]] const std::string& API, const std::shared_ptr<View::Window>& window)
     {
         return std::make_shared<RenderEngine>();
     }

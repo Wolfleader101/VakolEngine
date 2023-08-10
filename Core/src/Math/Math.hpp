@@ -19,6 +19,9 @@ namespace Vakol::Math {
 
     using Quaternion = glm::quat;
 
+    float Radians(float degrees);
+    float Degrees(float radians);
+
     float Dot(const Vec2& a, const Vec2& b);
     float Dot(const Vec3& a, const Vec3& b);
 
@@ -46,6 +49,8 @@ namespace Vakol::Math {
     Vec3 Perpendicular(const Vec3& len, const Vec3& dir);
 
     Mat4 Translation(const Vec3& pos);
+    Mat4 Scale(const Vec3& scale);
+
     Mat3 Cut(const Mat4& mat, int row, int col);
 
     // assumes its degrees

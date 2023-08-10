@@ -16,7 +16,8 @@ namespace Vakol::Rendering::Assets
         bool wireframe = false;  // determine whether to draw the material in wireframe
     };
 
-    struct Material {
+    struct Material
+    {
         const char* name = nullptr;  // The name of the material
 
         const char* shader = nullptr;  // The path of the material shader

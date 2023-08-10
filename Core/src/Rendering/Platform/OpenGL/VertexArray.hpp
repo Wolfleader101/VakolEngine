@@ -7,6 +7,8 @@ namespace Vakol::Rendering {
 
 namespace Vakol::Rendering::OpenGL
 {
-
     void GenerateVertexArray(const void* vertexData, const void* indexData, VertexCommand& command);
+
+    void BindVertexArray(unsigned int vertexArray);
+    void UnbindVertexArray();
 }  // namespace Vakol::Rendering::OpenGL

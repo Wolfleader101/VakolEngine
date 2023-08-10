@@ -7,8 +7,8 @@ namespace Vakol::Rendering
         int nVertices = 0;
         int nIndices = 0;
 
-        unsigned int vao = 0u;
-        unsigned int vbo = 0u;
+        unsigned int vertexArray = 0u;
+        unsigned int vertexBuffer = 0u;
     };
 
     struct ShaderCommand

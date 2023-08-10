@@ -3,6 +3,8 @@
 #include "RenderData.hpp"
 #include "RenderCommand.hpp"
 
+#include "Assets/Shader.hpp"
+
 #include "Platform/OpenGL/common.h"
 
 #include "Controller/Logger.hpp"
@@ -37,12 +39,16 @@ namespace Vakol::Rendering
                 break;
         }
 
-        m_vertexQueue.AddToQueue(command);
+        m_vertexQueue.Emplace(command);
     }
 
-    void RenderAPI::GenerateShaderCommand(Shader&& shader)
+    void RenderAPI::GenerateShaderCommand(Assets::Shader&& shader)
     {
         ShaderCommand command;
+
+        command.program = OpenGL::GenerateShaderProgram(std::move(shader.sources));
+
+        m_shaderQueue.Emplace(command);
     }
 
     void RenderAPI::GenerateTextureCommand(Texture&& texture)
@@ -96,9 +102,47 @@ namespace Vakol::Rendering
         }
     }
 
-    Math::Mat4& RenderAPI::GetTransformMatrix(Transform& transform)
+    void RenderAPI::BeginDraw()
+    {
+        const auto [nVertices, nIndices, vertexArray, vertexBuffer] = m_vertexQueue.Front();
+        const auto& [program] = m_shaderQueue.Front();
+
+        OpenGL::BindShaderProgram(program);
+
+        OpenGL::BindVertexArray(vertexArray);
+        OpenGL::DrawElements(nIndices);
+    }
+
+    void RenderAPI::EndDraw()
+    {
+        OpenGL::UnbindVertexArray();
+
+        OpenGL::UnbindShaderProgram();
+    }
+
+    Math::Mat4 RenderAPI::GetProjectionMatrix()
+    {
+        return Math::Projection
+    }
+
+    Math::Mat4 RenderAPI::GetViewMatrix()
+    {
+        
+    }
+
+    Math::Mat4 RenderAPI::GetTransformMatrix(Transform& transform)
     {
         auto transform_matrix = Math::Mat4(1.0f);
+
+        transform_matrix = translate(transform_matrix, transform.position);
+
+        transform.m_rotation = Math::Quaternion(radians(transform.rotation));
+
+        const auto rotation_matrix = mat4_cast(transform.m_rotation);
+
+        transform_matrix = scale(transform_matrix, transform.scale);
+
+        return transform_matrix * rotation_matrix;
     }
 
 }

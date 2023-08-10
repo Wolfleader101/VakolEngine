@@ -2,7 +2,7 @@
 
 #include "../Model.hpp"
 
-namespace Vakol::Assets::Importer
+namespace Vakol::Rendering::Assets::Importer
 {
-    Rendering::Assets::Model ImportModel(const char* path, float scale);
+    Model ImportModel(const char* path, float scale);
 }

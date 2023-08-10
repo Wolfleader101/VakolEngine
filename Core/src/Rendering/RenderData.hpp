@@ -41,11 +41,6 @@ namespace Vakol::Rendering
         std::vector<unsigned int> indices;
     };
 
-    struct Shader
-    {
-        const char* path = nullptr;
-    };
-
     struct Texture
     {
         const char* path = nullptr;

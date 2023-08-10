@@ -2,7 +2,6 @@
 
 namespace Vakol::Math
 {
-
     float Dot(const Vec2& a, const Vec2& b)
     {
         return a.x * b.x + a.y * b.y;
@@ -114,6 +113,12 @@ namespace Vakol::Math
     {
         return Mat4(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, pos.x, pos.y, pos.z, 1.0f);
     }
+
+    Mat4 Scale(const Vec3& scale)
+    {
+        return Mat4(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, scale.x, scale.y, scale.z, 1.0f);
+    }
+
     Mat4 XRotation(float angle)
     {
         angle = glm::radians(angle);

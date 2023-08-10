@@ -4,12 +4,17 @@
 
 #include "Math/Math.hpp"
 
+namespace Vakol::Rendering::Assets
+{
+    struct Shader;
+}
+
 namespace Vakol::Rendering
 {
     constexpr int BIT(const int x) { return 1 << x; }
 
     struct VertexArray;
-    struct Shader;
+
     struct Texture;
 
     struct VertexCommand;
@@ -32,11 +37,17 @@ namespace Vakol::Rendering
         static void ClearColor(const float color[]);
         static void Clear(unsigned int mask);
 
+        static void BeginDraw();
+        static void EndDraw();
+
         // transform / model matrix
-        static Math::Mat4& GetTransformMatrix(Transform& transform);
+        static Math::Mat4 GetTransformMatrix(Transform& transform);
+
+        static Math::Mat4 GetProjectionMatrix();
+        static Math::Mat4 GetViewMatrix();
 
         static void GenerateVertexCommand(VertexArray&& vertexArray);
-        static void GenerateShaderCommand(Shader&& shader);
+        static void GenerateShaderCommand(Assets::Shader&& shader);
         static void GenerateTextureCommand(Texture&& texture);
     private:
         static RenderQueue<VertexCommand>  m_vertexQueue;

@@ -22,7 +22,7 @@ constexpr unsigned int ASSIMP_LOADER_OPTIONS =
     aiProcess_FindInvalidData | aiProcess_GlobalScale;
 
 
-namespace Vakol::Assets::Importer
+namespace Vakol::Rendering::Assets::Importer
 {
     /*Helper Functions*/
     static void Vec3(const aiVector3D& in, Math::Vec3& out);

@@ -18,7 +18,7 @@ namespace Vakol::Rendering::Assets
     {
         const char* name = nullptr;
 
-        std::vector<Rendering::Vertex> vertices;
+        std::vector<Vertex> vertices;
         std::vector<unsigned int> indices;
 
         Bounds bounds{};

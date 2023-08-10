@@ -59,8 +59,8 @@ namespace Vakol::Controller
 
         LuaScript mainScript = m_scriptEngine.CreateScript("scripts/main.lua");
 
-        auto model = Assets::Importer::ImportModel("coreAssets/models/cube.obj", 1.0f);
-        Rendering::RenderEngine::SubmitModel(model);
+        //Rendering::RenderEngine::GenerateModel("coreAssets/models/cube.obj", 1.0f);
+        Rendering::RenderEngine::GenerateSphere();
 
         m_running = true;
     }
@@ -155,7 +155,7 @@ namespace Vakol::Controller
             AssetLoader::shader_path = shader_dir.value();
         }
 
-        GameConfig cfg = {name.value(), window_width.value(), window_height.value(), renderer_type.value()};
+        Model::GameConfig cfg = {name.value(), window_width.value(), window_height.value(), renderer_type.value()};
 
         return cfg;
     }
