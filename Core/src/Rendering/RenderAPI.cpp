@@ -3,6 +3,8 @@
 #include "RenderData.hpp"
 #include "RenderCommand.hpp"
 
+#include "ShaderLibrary.hpp"
+
 #include "Assets/Shader.hpp"
 
 #include "Platform/OpenGL/common.h"
@@ -47,6 +49,7 @@ namespace Vakol::Rendering
         ShaderCommand command;
 
         command.program = OpenGL::GenerateShaderProgram(std::move(shader.sources));
+        ShaderLibrary::GetShaderUniforms(command.program);
 
         m_shaderQueue.Emplace(command);
     }
@@ -111,6 +114,8 @@ namespace Vakol::Rendering
 
         OpenGL::BindVertexArray(vertexArray);
         OpenGL::DrawElements(nIndices);
+
+        ShaderLibrary::SetMat4(program, "PV_MATRIX", false, GetProjectionMatrix() * GetViewMatrix(Math::Vec3(0.0f, 0.0f, -5.0f)));
     }
 
     void RenderAPI::EndDraw()
@@ -122,12 +127,12 @@ namespace Vakol::Rendering
 
     Math::Mat4 RenderAPI::GetProjectionMatrix()
     {
-        return Math::Projection
+        return Math::Perspective(Math::Radians(45.0f), static_cast<float>(m_settings.width) / static_cast<float>(m_settings.height), 0.01f, 1000.0f);
     }
 
-    Math::Mat4 RenderAPI::GetViewMatrix()
+    Math::Mat4 RenderAPI::GetViewMatrix(const Math::Vec3& position, const Math::Vec3& lookDirection, const Math::Vec3& up)
     {
-        
+        return Math::LookAt(position, lookDirection, up);
     }
 
     Math::Mat4 RenderAPI::GetTransformMatrix(Transform& transform)

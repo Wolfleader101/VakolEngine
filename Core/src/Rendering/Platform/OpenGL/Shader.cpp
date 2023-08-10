@@ -3,6 +3,7 @@
 #include <glad/glad.h>
 
 #include "Controller/Logger.hpp"
+#include "Rendering/RenderData.hpp"
 
 std::string ToString(unsigned int shader);
 
@@ -135,6 +136,41 @@ namespace Vakol::Rendering::OpenGL
     void UnbindShaderProgram()
     {
         glUseProgram(0);
+    }
+
+    void GetUniforms(const unsigned int shader, std::unordered_map<std::string, Uniform>& uniforms)
+    {
+        GLint uniformCount = 0;
+
+        glGetProgramiv(shader, GL_ACTIVE_UNIFORMS, &uniformCount);
+
+        if (uniformCount != 0)
+        {
+            GLint max_name_len = 0;
+            GLsizei length = 0;
+            GLsizei count = 0;
+            GLenum  type = GL_NONE;
+
+            glGetProgramiv(shader, GL_ACTIVE_UNIFORM_MAX_LENGTH, &max_name_len);
+
+            const auto uniformName = std::make_unique<char[]>(max_name_len);
+
+            for (GLint i = 0; i < uniformCount; ++i)
+            {
+                glGetActiveUniform(shader, i, max_name_len, &length, &count, &type, uniformName.get());
+
+                Uniform info = {};
+                info.location = glGetUniformLocation(shader, uniformName.get());
+                info.count = count;
+
+                uniforms.emplace(std::make_pair(std::string(uniformName.get(), length), info));
+            }
+        }
+    }
+
+    void SetMat4(const int location, const int count, const char* name, const bool transpose, const float* value)
+    {
+        glUniformMatrix4fv(location, count, transpose, value);
     }
 
 }

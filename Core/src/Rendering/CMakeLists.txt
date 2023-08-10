@@ -19,4 +19,7 @@ src/Rendering/RenderData.hpp
 
 src/Rendering/RenderQueue.hpp
 
+src/Rendering/ShaderLibrary.hpp
+src/Rendering/ShaderLibrary.cpp
+
 PARENT_SCOPE)

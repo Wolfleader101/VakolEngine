@@ -1,5 +1,6 @@
 #pragma once
 
+
 namespace Vakol::Rendering
 {
     struct VertexCommand

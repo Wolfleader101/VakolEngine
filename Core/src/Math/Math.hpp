@@ -157,14 +157,17 @@ namespace Vakol::Math {
     float RadToDeg(const float rad);
     Vec3 RadToDeg(const Vec3& vec);
 
-    Mat4 Perspective(float fovy, float aspect, float zNear, float zFar);
+    Mat4 Perspective(float fovY, float aspect, float zNear, float zFar);
+    Mat4 Orthographic(float left, float right, float bottom, float top);
 
-    const float* AsArray(const Vec2& v);
-    const float* AsArray(const Vec3& v);
-    const float* AsArray(const Vec4& v);
-    const float* AsArray(const Mat3& m);
-    const float* AsArray(const Mat4& m);
-    const float* AsArray(const Quat& q);
+    Mat4 LookAt(const Vec3& eye, const Vec3& center, const Vec3& up);
+
+    const float* ToArray(const Vec2& v);
+    const float* ToArray(const Vec3& v);
+    const float* ToArray(const Vec4& v);
+    const float* ToArray(const Mat3& m);
+    const float* ToArray(const Mat4& m);
+    const float* ToArray(const Quat& q);
 
     float Cos(float val);
 

@@ -41,6 +41,12 @@ namespace Vakol::Rendering
         std::vector<unsigned int> indices;
     };
 
+    struct Uniform
+    {
+        int location;
+        int count; // number of locations the uniform variable takes up in memory.
+    };
+
     struct Texture
     {
         const char* path = nullptr;
