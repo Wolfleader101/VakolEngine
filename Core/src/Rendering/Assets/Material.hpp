@@ -20,8 +20,6 @@ namespace Vakol::Rendering::Assets
     {
         const char* name = nullptr;  // The name of the material
 
-        const char* shader = nullptr;  // The path of the material shader
-
         MaterialProperties properties;  // the properties that make up a material
     };
 }

@@ -6,7 +6,24 @@
 
 namespace Vakol::Rendering
 {
+    std::unordered_map<std::string, unsigned int> ShaderLibrary::m_shaders;
     std::map<unsigned int, std::unordered_map<std::string, Uniform>> ShaderLibrary::m_uniforms;
+
+    void ShaderLibrary::AddShader(const char* path, const unsigned int shader)
+    {
+        if (m_shaders.find(path) == m_shaders.end())
+            m_shaders[path] = shader;
+    }
+
+    unsigned int ShaderLibrary::GetShader(const std::string& path)
+    {
+        if (m_shaders.find(path) != m_shaders.end())
+            return m_shaders.at(path);
+
+        VK_ERROR("Unable to find shader!");
+
+        return 0u;
+    }
 
     void ShaderLibrary::GetShaderUniforms(const unsigned int shader)
     {

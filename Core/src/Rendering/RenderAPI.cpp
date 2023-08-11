@@ -51,6 +51,8 @@ namespace Vakol::Rendering
         command.program = OpenGL::GenerateShaderProgram(std::move(shader.sources));
         ShaderLibrary::GetShaderUniforms(command.program);
 
+        ShaderLibrary::AddShader(shader.path.c_str(), command.program);
+
         m_shaderQueue.Emplace(command);
     }
 

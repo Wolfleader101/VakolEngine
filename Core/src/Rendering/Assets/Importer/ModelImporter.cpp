@@ -12,6 +12,8 @@
 
 #include "Rendering/RenderData.hpp"
 
+#include "Rendering/MaterialLibrary.hpp"
+
 #include "Math/Math.hpp"
 
 using namespace Vakol::Rendering::Assets;
@@ -122,8 +124,11 @@ namespace Vakol::Rendering::Assets::Importer
 
         Material material;
 
-        for (auto i = 0u; i < count; ++i) 
+        for (auto i = 0u; i < count; ++i)
+        {
             ProcessMaterial(in[i], material);
+            MaterialLibrary::AddMaterial(material);
+        }
     }
 
     void ProcessMesh(aiMesh* const& in, Mesh& mesh)
@@ -144,8 +149,6 @@ namespace Vakol::Rendering::Assets::Importer
         }
 
         ExtractVertices(in, mesh);
-
-        VK_TRACE("Material Index: {0}", in->mMaterialIndex);
     }
 
     void ProcessMaterial(aiMaterial* const& in, Material& material)
@@ -221,13 +224,13 @@ namespace Vakol::Rendering::Assets::Importer
 
     void ExtractEmbeddedTextures(const unsigned int count, aiTexture** const& in)
     {
-        Rendering::Texture texture;
+        Texture texture;
 
         for (auto i = 0u; i < count; ++i) 
             ProcessEmbeddedTexture(in[i], texture);
     }
 
-    void ProcessEmbeddedTexture(aiTexture* const& in, Rendering::Texture& texture)
+    void ProcessEmbeddedTexture(aiTexture* const& in, Texture& texture)
     {
         texture.path = in->mFilename.C_Str();
 

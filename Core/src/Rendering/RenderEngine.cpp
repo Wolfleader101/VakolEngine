@@ -1,5 +1,8 @@
 #include "RenderEngine.hpp"
 
+#include "MaterialLibrary.hpp"
+#include "ShaderLibrary.hpp"
+
 #include "Assets/Model.hpp"
 
 #include "View/Window/Window.hpp"
@@ -21,6 +24,9 @@ namespace Vakol::Rendering
     void RenderEngine::Draw()
     {
         RenderAPI::BeginDraw();
+
+        MaterialLibrary::SetColor(ShaderLibrary::GetShader("coreAssets/shaders/super_basic.prog"), Math::Vec4(1.0f, 0.0f, 0.0f, 1.0f));
+
         RenderAPI::EndDraw();
     }
 

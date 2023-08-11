@@ -27,6 +27,7 @@ namespace Vakol::Rendering::Assets::Importer
                 paths.emplace_back("");
         }
 
+        shader.path = path;
         success = GetShaderSources(std::move(paths), shader);
 
         return shader;

@@ -7,6 +7,7 @@ namespace Vakol::Rendering::Assets
 {
     struct Shader
     {
+        std::string path;
         std::vector<std::string> sources;
     };
 }

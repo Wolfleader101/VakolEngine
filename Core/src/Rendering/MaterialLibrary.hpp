@@ -1,6 +1,10 @@
 #pragma once
 
+#include <unordered_map>
+
 #include "Math/Math.hpp"
+
+#include <string>
 
 namespace Vakol::Rendering::Assets
 {
@@ -17,5 +21,6 @@ namespace Vakol::Rendering
         static void SetColor(unsigned int shader, const Math::Vec4& color);
         static void SetShininess(unsigned int shader, float shininess);
     private:
+        static std::unordered_map<std::string, Assets::Material> m_materials;
     };
 }
