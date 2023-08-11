@@ -13,11 +13,12 @@
 
 namespace Vakol::Rendering
 {
-    RenderQueue<VertexCommand>  RenderAPI::m_vertexQueue;
-    RenderQueue<ShaderCommand>  RenderAPI::m_shaderQueue;
+    RenderQueue<std::pair<VertexCommand, ShaderCommand>> RenderAPI::m_drawQueue;
     RenderQueue<TextureCommand> RenderAPI::m_textureQueue;
 
     RenderSettings RenderAPI::m_settings;
+
+    Transform transform = {Math::Vec3(0.0f, 0.0f, 0.0f), Math::Vec3(0.0f, -35.0f, 0.0f), Math::Vec3(1.0f) };
 
     void RenderAPI::GenerateVertexCommand(VertexArray&& vertexArray)
     {
@@ -41,7 +42,7 @@ namespace Vakol::Rendering
                 break;
         }
 
-        m_vertexQueue.Emplace(command);
+        m_.Emplace(command);
 
         std::vector<Vertex>().swap(vertexArray.vertices);
         std::vector<unsigned int>().swap(vertexArray.indices);
@@ -112,15 +113,22 @@ namespace Vakol::Rendering
 
     void RenderAPI::BeginDraw()
     {
-        const auto [nVertices, nIndices, vertexArray, vertexBuffer] = m_vertexQueue.Front();
-        const auto& [program] = m_shaderQueue.Front();
+        for (const auto& [vertexArray, shader] : m_drawQueue)
+        {
+            
+        }
+
+
+        const auto [nVertices, nIndices, vertexArray, vertexBuffer] = m_vertexQueue.Back();
+        const auto& [program] = m_shaderQueue.Back();
 
         OpenGL::BindShaderProgram(program);
 
         OpenGL::BindVertexArray(vertexArray);
-        OpenGL::DrawLineArrays(nVertices);
+        OpenGL::DrawTriangleElements(nIndices);
 
         ShaderLibrary::SetMat4(program, "PV_MATRIX", false, GetProjectionMatrix() * GetViewMatrix(Math::Vec3(0.0f, 0.0f, -5.0f)));
+        ShaderLibrary::SetMat4(program, "MODEL_MATRIX", false, GetModelMatrix(transform));
     }
 
     void RenderAPI::EndDraw()

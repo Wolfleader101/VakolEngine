@@ -60,8 +60,9 @@ namespace Vakol::Controller
         LuaScript mainScript = m_scriptEngine.CreateScript("scripts/main.lua");
 
         //Rendering::RenderEngine::GenerateModel("coreAssets/models/cube.obj", 1.0f);
-        //Rendering::RenderEngine::GenerateSphere();
-        Rendering::RenderEngine::GenerateLine(Math::Vec3(0.0f), Math::Vec3(-5.0f, 0.0f, 0.0f));
+
+        Rendering::RenderEngine::GenerateSphere();
+        Rendering::RenderEngine::GenerateCube();
 
         m_running = true;
     }
