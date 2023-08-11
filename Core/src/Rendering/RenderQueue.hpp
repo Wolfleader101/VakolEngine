@@ -1,24 +1,54 @@
 #pragma once
 
-#include <entt/entt.hpp>
+#include <queue>
 
 namespace Vakol::Rendering
 {
-    class RenderCommand;
-
+    template <class T>
     class RenderQueue
     {
     public:
-        RenderCommand CreateCommand();
+        void Emplace(T& item);
+        void Push(T& item);
 
-        void Clear();
+        void Pop();
 
-        [[nodiscard]] bool Empty() const;
+        const T& Front() const;
+        const T& Back() const;
 
     private:
-        entt::registry m_registry;
-
-        friend class RenderCommand;
+        std::vector<T> m_queue;
     };
+
+    template <class T>
+    void RenderQueue<T>::Push(T& item)
+    {
+        m_queue.push_backs(item);
+    }
+
+    template <class T>
+    void RenderQueue<T>::Emplace(T& item)
+    {
+        m_queue.emplace_back(item);
+    }
+
+    template <class T>
+    void RenderQueue<T>::Pop()
+    {
+        m_queue.pop_back();
+    }
+
+    template <class T>
+    const T& RenderQueue<T>::Front() const
+    {
+        return m_queue.front();   
+    }
+
+    template <class T>
+    const T& RenderQueue<T>::Back() const
+    {
+        return m_queue.back();
+    }
+
 }
 

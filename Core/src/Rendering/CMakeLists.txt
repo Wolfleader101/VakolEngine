@@ -17,7 +17,6 @@ src/Rendering/RenderCommand.hpp
 
 src/Rendering/RenderData.hpp
 
-src/Rendering/RenderQueue.cpp
 src/Rendering/RenderQueue.hpp
 
 src/Rendering/ShaderLibrary.hpp

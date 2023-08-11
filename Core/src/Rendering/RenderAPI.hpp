@@ -50,7 +50,8 @@ namespace Vakol::Rendering
         static void GenerateShaderCommand(Assets::Shader&& shader);
         static void GenerateTextureCommand(Texture&& texture);
     private:
-        static RenderQueue<std::pair<VertexCommand, ShaderCommand>> m_drawQueue;
+        static RenderQueue<VertexCommand>  m_vertexQueue;
+        static RenderQueue<ShaderCommand>  m_shaderQueue;
         static RenderQueue<TextureCommand> m_textureQueue;
 
         static RenderSettings m_settings;

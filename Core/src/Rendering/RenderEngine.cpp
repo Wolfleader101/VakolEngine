@@ -25,7 +25,7 @@ namespace Vakol::Rendering
     {
         RenderAPI::BeginDraw();
 
-        MaterialLibrary::SetColor(ShaderLibrary::GetShader("coreAssets/shaders/default.program"), Math::Vec4(1.0f, 1.0f, 1.0f, 1.0f));
+        MaterialLibrary::SetColor(ShaderLibrary::GetShader("coreAssets/shaders/primitive.prog"), Math::Vec4(1.0f, 1.0f, 1.0f, 1.0f));
 
         RenderAPI::EndDraw();
     }
@@ -35,10 +35,21 @@ namespace Vakol::Rendering
         
     }
 
+    void RenderEngine::GenerateLine(const Math::Vec3& start, const Math::Vec3& end)
+    {
+        bool success = true;
+        auto shader = Assets::Importer::ImportShader("coreAssets/shaders/primitive.prog", success);
+
+        if (success)
+            SubmitShaderData(std::move(shader));
+
+        RenderAPI::GenerateVertexArrayFromLine(start, end);
+    }
+
     void RenderEngine::GenerateSphere(const float scale)
     {
         bool success = true;
-        auto shader = Assets::Importer::ImportShader("coreAssets/shaders/default.program", success);
+        auto shader = Assets::Importer::ImportShader("coreAssets/shaders/primitive.prog", success);
 
         if (success)
             SubmitShaderData(std::move(shader));
@@ -52,12 +63,12 @@ namespace Vakol::Rendering
     void RenderEngine::GenerateCube(const float scale)
     {
         bool success = true;
-        auto shader = Assets::Importer::ImportShader("coreAssets/shaders/default.program", success);
+        auto shader = Assets::Importer::ImportShader("coreAssets/shaders/primitive.prog", success);
 
         if (success)
             SubmitShaderData(std::move(shader));
 
-        auto model = Assets::Importer::ImportModel("coreAssets/models/cube.obj", scale, success);
+        auto model = Assets::Importer::ImportModel("coreAssets/model/cube.obj", scale, success);
 
         if (success)
             SubmitModel(model);
