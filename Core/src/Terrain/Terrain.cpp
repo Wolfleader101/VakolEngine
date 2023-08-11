@@ -1,10 +1,11 @@
 #include "Terrain/Terrain.hpp"
 
-#include "AssetLoader/FileLoader.hpp"
-#include <Logger/Logger.hpp>
 #include <algorithm>
 #include <cstdlib>
 #include <iostream>
+
+#include "AssetLoader/FileLoader.hpp"
+#include "Logger/Logger.hpp"
 
 namespace Vakol
 {

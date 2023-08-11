@@ -1,11 +1,11 @@
 #include "AssetLoader/ShaderLoader.hpp"
 
 #include <glad/glad.h>
-
-#include "AssetLoader/FileLoader.hpp"
-#include <Logger/Logger.hpp>
 #include <iostream>
 #include <vector>
+
+#include "AssetLoader/FileLoader.hpp"
+#include "Logger/Logger.hpp"
 
 unsigned int LoadShader(const std::string&, const std::string&, const std::string&, const std::string&,
                         const std::string&);

@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Rendering/Assets/Animation/Keyframe.hpp>
-#include <Rendering/Assets/Bone.hpp>
+#include "Rendering/Assets/Animation/Keyframe.hpp"
+#include "Rendering/Assets/Bone.hpp"
 
 namespace Vakol::Assets
 {

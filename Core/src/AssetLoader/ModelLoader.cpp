@@ -1,18 +1,18 @@
 #include "AssetLoader/ModelLoader.hpp"
 
+#include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
+#include <iostream>
+#include <stack>
 
 #include "AssetLoader/AssetLoader.hpp"
 #include "AssetLoader/FileLoader.hpp"
 #include "AssetLoader/TextureLoader.hpp"
+#include "Logger/Logger.hpp"
 #include "Math/Math.hpp"
-#include <Logger/Logger.hpp>
-#include <Rendering/Assets/Animation/Animation.hpp>
-#include <Rendering/Assets/Animation/Keyframe.hpp>
-#include <assimp/Importer.hpp>
-#include <iostream>
-#include <stack>
+#include "Rendering/Assets/Animation/Animation.hpp"
+#include "Rendering/Assets/Animation/Keyframe.hpp"
 
 using Vakol::Vertex;
 

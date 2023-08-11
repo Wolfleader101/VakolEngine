@@ -1,9 +1,10 @@
 #pragma once
 
-#include <Rendering/Assets/Model.hpp>
 #include <memory>
 #include <string>
 #include <vector>
+
+#include "Rendering/Assets/Model.hpp"
 
 namespace Vakol
 {
@@ -168,8 +169,8 @@ namespace Vakol
          * @param maxHeight The maximum height for the terrain.
          * @return The loaded fault formation terrain mesh.
          */
-        Assets::Mesh load_fault_formation_mesh(int size, int iterations, float filter, bool random,
-                                                      int minHeight, int maxHeight);
+        Assets::Mesh load_fault_formation_mesh(int size, int iterations, float filter, bool random, int minHeight,
+                                               int maxHeight);
 
         /**
          * @struct Point

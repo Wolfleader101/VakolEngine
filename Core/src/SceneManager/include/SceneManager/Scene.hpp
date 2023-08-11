@@ -3,12 +3,12 @@
 #include <memory>
 
 #include "Camera/Camera.hpp"
-#include "ECS/EntityList.hpp"
-#include "Terrain/Terrain.hpp"
 #include "ECS/Entity.hpp"
+#include "ECS/EntityList.hpp"
 #include "Physics/ScenePhysics.hpp"
 #include "Rendering/Renderer.hpp"
 #include "Scripting/ScriptTypes.hpp"
+#include "Terrain/Terrain.hpp"
 #include "Time/Time.hpp"
 
 namespace Vakol

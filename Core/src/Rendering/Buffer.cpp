@@ -2,7 +2,7 @@
 
 #include <glad/glad.h>
 
-#include <Logger/Logger.hpp>
+#include "Logger/Logger.hpp"
 
 static int s_hitcount = 0;
 

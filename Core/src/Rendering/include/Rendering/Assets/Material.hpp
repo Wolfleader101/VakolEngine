@@ -1,11 +1,11 @@
 #pragma once
 
-#include <Logger/Logger.hpp>
 #include <utility>
 #include <vector>
 
-#include "Texture.hpp"
+#include "Logger/Logger.hpp"
 #include "Math/Math.hpp"
+#include "Texture.hpp"
 
 namespace Vakol::Assets
 {

@@ -3,7 +3,7 @@
 #include <map>
 #include <string>
 
-#include <Logger/Logger.hpp>
+#include "Logger/Logger.hpp"
 
 #include "Math/Math.hpp"
 namespace Vakol::Assets

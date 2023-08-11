@@ -2,8 +2,9 @@
 
 #include <glad/glad.h>
 
-#include <Logger/Logger.hpp>
 #include <iostream>
+
+#include "Logger/Logger.hpp"
 
 #define VERBOSE_FLOAT_DEBUG 0
 #define VERBOSE_VERTEX_DEBUG 0

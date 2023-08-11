@@ -9,8 +9,8 @@
 #include "Animation/Animator.hpp"
 #include "Entity.hpp"
 #include "Math/Math.hpp"
-#include "Rendering/Assets/Model.hpp"
 #include "Physics/ScenePhysics.hpp"
+#include "Rendering/Assets/Model.hpp"
 #include "Scripting/ScriptTypes.hpp"
 #include "Serialisation/SolSerialize.hpp"
 
