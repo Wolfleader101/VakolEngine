@@ -1,7 +1,7 @@
-#include "Shader.hpp"
+#include "include/Shader.hpp"
 
 #include <glad/glad.h>
-namespace Vakol::Model
+namespace Vakol
 {
     Shader::~Shader()
     {
@@ -102,4 +102,4 @@ namespace Vakol::Model
                            static_cast<const float*>(data));
         Unbind();
     }
-} // namespace Vakol::Model
+} // namespace Vakol

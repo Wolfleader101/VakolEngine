@@ -3,7 +3,7 @@
 #include "include/ModelLoader.hpp"
 #include "include/TextureLoader.hpp"
 
-using namespace Vakol::Model::Assets;
+using namespace Vakol::Assets;
 
 namespace Vakol
 {
@@ -12,10 +12,10 @@ namespace Vakol
     std::string AssetLoader::shader_path = "assets/shaders/";
 
     std::unordered_map<std::string, std::shared_ptr<Texture>> AssetLoader::m_TextureMap;
-    std::unordered_map<std::string, std::pair<std::shared_ptr<Model::Assets::Model>, std::shared_ptr<Animator>>>
+    std::unordered_map<std::string, std::pair<std::shared_ptr<Assets::Model>, std::shared_ptr<Animator>>>
         AssetLoader::m_ModelMap;
     std::unordered_map<std::string, std::shared_ptr<Animator>> AssetLoader::m_AnimatorMap;
-    std::unordered_map<std::string, std::shared_ptr<Model::Shader>> AssetLoader::m_ShaderMap;
+    std::unordered_map<std::string, std::shared_ptr<Shader>> AssetLoader::m_ShaderMap;
     std::unordered_map<std::string, std::shared_ptr<Terrain>> AssetLoader::m_TerrainMap;
 
     std::shared_ptr<Texture> AssetLoader::GetTexture(const std::string& file, const int size, const bool gamma,
@@ -104,12 +104,12 @@ namespace Vakol
         return ret;
     }
 
-    Model::Assets::Animation AssetLoader::GetAnimation(const std::string& attached_model, const int state)
+    Assets::Animation AssetLoader::GetAnimation(const std::string& attached_model, const int state)
     {
         return GetAnimator(attached_model)->get(state);
     }
 
-    std::pair<std::shared_ptr<Model::Assets::Model>, std::shared_ptr<Animator>> AssetLoader::GetModel(
+    std::pair<std::shared_ptr<Assets::Model>, std::shared_ptr<Animator>> AssetLoader::GetModel(
         const std::string& file, const float scale, const bool animated, const bool backfaceCull)
     {
         bool instance;
@@ -150,13 +150,13 @@ namespace Vakol
         return ret;
     }
 
-    std::shared_ptr<Model::Shader> AssetLoader::GetShader(const std::string& file)
+    std::shared_ptr<Shader> AssetLoader::GetShader(const std::string& file)
     {
-        std::shared_ptr<Model::Shader> ret;
+        std::shared_ptr<Shader> ret;
 
         if (const auto itr = m_ShaderMap.find(file); itr == m_ShaderMap.end())
         {
-            ret = std::make_shared<Model::Shader>(file);
+            ret = std::make_shared<Shader>(file);
 
             if (ret->GetID() == 0)
                 return nullptr; // if shader didn't load

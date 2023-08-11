@@ -1,12 +1,12 @@
 #pragma once
 
+#include "Components.hpp"
+#include "EntityList.hpp"
 #include "Physics/include/ScenePhysics.hpp"
-#include <ECS/include/EntityList.hpp>
-#include <Model/Components.hpp>
 
 #include "Rendering/include/Renderer.hpp"
 #include "SceneManager/include/Scene.hpp"
-#include <Terrain/include/Terrain.hpp>
+#include "Terrain/include/Terrain.hpp"
 
 namespace Vakol
 {

@@ -2,17 +2,13 @@
 
 #include <memory>
 
-#include "ECS/include/Entity.hpp"
 #include "GUI/include/GUIWindow.hpp"
 #include "Input/include/Input.hpp"
-#include "Model/GameConfig.hpp"
 #include "Rendering/include/Renderer.hpp"
 #include "Time/include/Time.hpp"
 #include "Window/include/Events/KeyEvent.hpp"
 #include "Window/include/Events/WindowEvent.hpp"
 #include "Window/include/Window.hpp"
-
-#include "SceneManager/include/Scene.hpp"
 
 #include "SceneManager/include/SceneManager.hpp"
 
@@ -20,6 +16,8 @@
 
 namespace Vakol
 {
+
+    struct GameConfig;
 
     /**
      * @class Application
@@ -185,7 +183,7 @@ namespace Vakol
          *
          * @return std::optional<GameConfig> return the config
          */
-        std::optional<Model::GameConfig> LoadConfig();
+        std::optional<GameConfig> LoadConfig();
 
         /**
          * @brief the window of the application

@@ -3,10 +3,10 @@
 #include <reactphysics3d/reactphysics3d.h>
 
 #include "AssetLoader/include/AssetLoader.hpp"
-#include "Model/Components.hpp"
 #include "Physics/include/PhysicsPool.hpp"
 #include "Physics/include/ScenePhysics.hpp"
 #include "SceneManager/include/Scene.hpp"
+#include "include/Components.hpp"
 
 #include "Math/include/Math.hpp"
 

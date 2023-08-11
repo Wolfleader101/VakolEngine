@@ -7,7 +7,7 @@
 
 using Vakol::LoadShader;
 
-namespace Vakol::Model
+namespace Vakol
 {
     /**
      * @brief Class representing a Shader.
@@ -116,4 +116,4 @@ namespace Vakol::Model
       private:
         unsigned int m_ID = 0; ///< ID of the Shader.
     };
-} // namespace Vakol::Model
+} // namespace Vakol

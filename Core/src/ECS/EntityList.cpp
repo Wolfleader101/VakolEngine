@@ -5,10 +5,10 @@
 
 #include "ECS/include/Entity.hpp"
 #include "Logger/include/Logger.hpp"
-#include "Model/Components.hpp"
+#include "include/Components.hpp"
 #include "include/System.hpp"
 
-using namespace Vakol::Model;
+using namespace Vakol;
 
 namespace Vakol
 {

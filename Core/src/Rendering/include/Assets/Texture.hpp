@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace Vakol::Model::Assets
+namespace Vakol::Assets
 {
     /**
      * @brief Class representing a texture.
@@ -55,4 +55,4 @@ namespace Vakol::Model::Assets
       private:
         unsigned int m_ID = 0; /**< The ID of the texture. */
     };
-} // namespace Vakol::Model::Assets
+} // namespace Vakol::Assets

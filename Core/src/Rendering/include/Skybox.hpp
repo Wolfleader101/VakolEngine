@@ -3,9 +3,9 @@
 #include <memory>
 
 #include "Math/include/Math.hpp"
-#include <Model/Shader.hpp>
+#include "Shader.hpp"
 
-namespace Vakol::Model
+namespace Vakol
 {
     /**
      * @brief Struct representing a Skybox.
@@ -33,4 +33,4 @@ namespace Vakol::Model
         std::shared_ptr<Shader> shader = nullptr; ///< Pointer to the shader.
         unsigned int CUBEMAP_ID = 0;              ///< ID of the cubemap texture.
     };
-} // namespace Vakol::Model
+} // namespace Vakol

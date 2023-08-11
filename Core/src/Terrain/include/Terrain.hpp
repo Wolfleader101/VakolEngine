@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Model/Assets/Model.hpp>
+#include <Rendering/include/Assets/Model.hpp>
 #include <memory>
 #include <string>
 #include <vector>
@@ -29,9 +29,9 @@ namespace Vakol
          *
          * @param mesh The mesh to set.
          */
-        void SetModel(Model::Assets::Mesh&& mesh)
+        void SetModel(Assets::Mesh&& mesh)
         {
-            this->m_model = std::make_shared<Model::Assets::Model>(mesh);
+            this->m_model = std::make_shared<Assets::Model>(mesh);
         }
 
         /**
@@ -39,9 +39,9 @@ namespace Vakol
          *
          * @param model The model to set.
          */
-        void SetModel(Model::Assets::Model&& model)
+        void SetModel(Assets::Model&& model)
         {
-            this->m_model = std::make_shared<Model::Assets::Model>(std::move(model));
+            this->m_model = std::make_shared<Assets::Model>(std::move(model));
         }
 
         /**
@@ -49,7 +49,7 @@ namespace Vakol
          *
          * @return The shared pointer to the model.
          */
-        const std::shared_ptr<Model::Assets::Model>& GetModel() const
+        const std::shared_ptr<Assets::Model>& GetModel() const
         {
             return this->m_model;
         }
@@ -95,14 +95,14 @@ namespace Vakol
          *
          * @return The loaded height map mesh.
          */
-        Model::Assets::Mesh load_height_map_mesh() const;
+        Assets::Mesh load_height_map_mesh() const;
 
         /**
          * @brief Load a CLOD (Continuous Level of Detail) terrain mesh.
          *
          * @return The loaded CLOD terrain mesh.
          */
-        Model::Assets::Mesh load_clod_terrain_mesh() const;
+        Assets::Mesh load_clod_terrain_mesh() const;
 
         /**
          * @brief Get the height map data.
@@ -168,7 +168,7 @@ namespace Vakol
          * @param maxHeight The maximum height for the terrain.
          * @return The loaded fault formation terrain mesh.
          */
-        Model::Assets::Mesh load_fault_formation_mesh(int size, int iterations, float filter, bool random,
+        Assets::Mesh load_fault_formation_mesh(int size, int iterations, float filter, bool random,
                                                       int minHeight, int maxHeight);
 
         /**
@@ -249,7 +249,7 @@ namespace Vakol
         /**
          * @brief The shared pointer to the terrain model.
          */
-        std::shared_ptr<Model::Assets::Model> m_model;
+        std::shared_ptr<Assets::Model> m_model;
 
         /**
          * @brief The size of the terrain.

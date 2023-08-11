@@ -4,9 +4,9 @@
 #include <unordered_map>
 
 #include "Animation/include/Animator.hpp"
-#include "Model/Assets/Model.hpp"
-#include "Model/Assets/Texture.hpp"
-#include "Model/Shader.hpp"
+#include "Rendering/include/Assets/Model.hpp"
+#include "Rendering/include/Assets/Texture.hpp"
+#include "Rendering/include/Shader.hpp"
 
 #include "Terrain/include/Terrain.hpp"
 
@@ -41,29 +41,32 @@ namespace Vakol
          * @param gamma Flag indicating whether gamma correction should be applied.
          * @param flip Flag indicating whether the texture should be flipped vertically.
          * @param data Pointer to additional data for embedded textures.
-         * @return std::shared_ptr<Model::Assets::Texture> A shared pointer to the loaded texture.
+         * @return std::shared_ptr<Assets::Texture> A shared pointer to the loaded texture.
          */
-        static std::shared_ptr<Model::Assets::Texture> GetTexture(const std::string& file, int size, bool gamma,
-                                                                  bool flip, const void* data); // embedded textures
-        static std::shared_ptr<Model::Assets::Texture> GetTexture(const std::string& file, bool gamma,
-                                                                  bool flip);               // regular textures
-        static std::shared_ptr<Model::Assets::Texture> GetTexture(const std::string& file); // raw textures
+        static std::shared_ptr<Assets::Texture> GetTexture(const std::string& file, int size, bool gamma, bool flip,
+                                                           const void* data); // embedded textures
+        static std::shared_ptr<Assets::Texture> GetTexture(const std::string& file, bool gamma,
+                                                           bool flip);               // regular textures
+        static std::shared_ptr<Assets::Texture> GetTexture(const std::string& file); // raw textures
 
-        static Model::Assets::Animation GetAnimation(const std::string& file, const int state);
+        static Assets::Animation GetAnimation(const std::string& file, const int state);
         static std::shared_ptr<Animator> GetAnimator(const std::string& file);
 
-        static std::pair<std::shared_ptr<Model::Assets::Model>, std::shared_ptr<Animator>> GetModel(
-            const std::string& file, float scale, bool animated, bool backfaceCull, bool& instance);
-        static std::pair<std::shared_ptr<Model::Assets::Model>, std::shared_ptr<Animator>> GetModel(
-            const std::string& file, float scale, bool animated, bool backfaceCull);
+        static std::pair<std::shared_ptr<Assets::Model>, std::shared_ptr<Animator>> GetModel(const std::string& file,
+                                                                                             float scale, bool animated,
+                                                                                             bool backfaceCull,
+                                                                                             bool& instance);
+        static std::pair<std::shared_ptr<Assets::Model>, std::shared_ptr<Animator>> GetModel(const std::string& file,
+                                                                                             float scale, bool animated,
+                                                                                             bool backfaceCull);
 
         /**
          * @brief Get a shader.
          *
          * @param file The file path of the shader.
-         * @return std::shared_ptr<Model::Shader> A shared pointer to the loaded shader.
+         * @return std::shared_ptr<Shader> A shared pointer to the loaded shader.
          */
-        static std::shared_ptr<Model::Shader> GetShader(const std::string& file);
+        static std::shared_ptr<Shader> GetShader(const std::string& file);
 
         /**
          * @brief Get a terrain with specified parameters.
@@ -89,12 +92,11 @@ namespace Vakol
         /**
          * @brief Map storing loaded textures.
          */
-        static std::unordered_map<std::string, std::shared_ptr<Model::Assets::Texture>> m_TextureMap;
-        static std::unordered_map<std::string,
-                                  std::pair<std::shared_ptr<Model::Assets::Model>, std::shared_ptr<Animator>>>
+        static std::unordered_map<std::string, std::shared_ptr<Assets::Texture>> m_TextureMap;
+        static std::unordered_map<std::string, std::pair<std::shared_ptr<Assets::Model>, std::shared_ptr<Animator>>>
             m_ModelMap;
         static std::unordered_map<std::string, std::shared_ptr<Animator>> m_AnimatorMap;
-        static std::unordered_map<std::string, std::shared_ptr<Model::Shader>> m_ShaderMap;
+        static std::unordered_map<std::string, std::shared_ptr<Shader>> m_ShaderMap;
 
         /**
          * @brief Map storing loaded terrains.

@@ -8,15 +8,15 @@
 #include "include/FileLoader.hpp"
 #include "include/TextureLoader.hpp"
 #include <Logger/include/Logger.hpp>
-#include <Model/Assets/Animation/Animation.hpp>
-#include <Model/Assets/Animation/Keyframe.hpp>
+#include <Rendering/include/Assets/Animation/Animation.hpp>
+#include <Rendering/include/Assets/Animation/Keyframe.hpp>
 #include <assimp/Importer.hpp>
 #include <iostream>
 #include <stack>
 
-using Vakol::Model::Vertex;
+using Vakol::Vertex;
 
-using namespace Vakol::Model::Assets;
+using namespace Vakol::Assets;
 using namespace Vakol::Math;
 
 namespace Vakol

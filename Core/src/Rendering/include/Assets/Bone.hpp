@@ -6,7 +6,7 @@
 #include <Logger/include/Logger.hpp>
 
 #include "Math/include/Math.hpp"
-namespace Vakol::Model::Assets
+namespace Vakol::Assets
 {
     /**
      * @brief Struct representing a bone in an animation.
@@ -66,4 +66,4 @@ namespace Vakol::Model::Assets
             return itr != name_to_info.end() ? &itr->second : nullptr;
         }
     };
-} // namespace Vakol::Model::Assets
+} // namespace Vakol::Assets

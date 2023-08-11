@@ -1,11 +1,11 @@
 #include "include/GLRenderer.hpp"
 
 #include <glad/glad.h>
-
-#include <Logger/include/Logger.hpp>
-#include <Model/Components.hpp>
 #include <memory>
 #include <vector>
+
+#include "ECS/include/Components.hpp"
+#include "Logger/include/Logger.hpp"
 
 /*
 Distance	Constant	Linear	Quadratic
@@ -104,7 +104,7 @@ namespace Vakol
     }
 
     void GLRenderer::DrawAnimated(const Components::Transform& transform, const Components::Drawable& drawable,
-                                  const Model::Assets::Animation& animation) const
+                                  const Assets::Animation& animation) const
     {
         const auto& model = drawable.model_ptr;
         if (model == nullptr)

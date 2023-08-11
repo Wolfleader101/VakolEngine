@@ -6,8 +6,8 @@
 #include <memory>
 #include <vector>
 
-#include "Model/Shader.hpp"
 #include "Renderer.hpp"
+#include "Shader.hpp"
 
 namespace Vakol::Physics
 {
@@ -19,7 +19,7 @@ namespace Vakol::Physics
 
 namespace Vakol
 {
-    using Shader = Model::Shader;
+    using Shader = Shader;
 
     /**
      * @brief DebugRenderer class used for rendering debugging information

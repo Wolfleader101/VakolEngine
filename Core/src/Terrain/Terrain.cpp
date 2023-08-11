@@ -58,7 +58,7 @@ namespace Vakol
         data = nullptr;
     }
 
-    Model::Assets::Mesh Terrain::load_height_map_mesh() const
+    Assets::Mesh Terrain::load_height_map_mesh() const
     {
         std::vector<float> vertices;
 
@@ -101,7 +101,7 @@ namespace Vakol
         return {vertices, indices, 5 * sizeof(float)};
     }
 
-    Model::Assets::Mesh Terrain::load_fault_formation_mesh(const int size, const int iterations, const float filter,
+    Assets::Mesh Terrain::load_fault_formation_mesh(const int size, const int iterations, const float filter,
                                                            const bool random, const int minHeight, const int maxHeight)
     {
         Point p1, p2;
@@ -177,7 +177,7 @@ namespace Vakol
         return {vertices, indices, 5 * sizeof(float)};
     }
 
-    Model::Assets::Mesh Terrain::load_clod_terrain_mesh() const
+    Assets::Mesh Terrain::load_clod_terrain_mesh() const
     {
         std::vector<float> vertices;
         std::vector<unsigned int> indices;
@@ -190,7 +190,7 @@ namespace Vakol
         {
             for (int j = 0; j < size; ++j)
             {
-                for (int k = 0; k < Model::NUM_PATCH_PTS; ++k)
+                for (int k = 0; k < NUM_PATCH_PTS; ++k)
                 {
                     const auto x =
                         -m_size / 2.0f + m_size * static_cast<float>(i * 3 + k % 2) / static_cast<float>(size);

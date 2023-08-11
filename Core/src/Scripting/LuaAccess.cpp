@@ -4,14 +4,14 @@
 
 #include "AssetLoader/include/AssetLoader.hpp"
 #include "AssetLoader/include/TextureLoader.hpp"
+#include "ECS/include/Components.hpp"
 #include "ECS/include/System.hpp"
 #include "GUI/include/GUIWindow.hpp"
 #include "Input/include/Input.hpp"
 #include "Logger/include/Logger.hpp"
 #include "Math/include/Math.hpp"
-#include "Model/Assets/Material.hpp"
-#include "Model/Components.hpp"
-#include "Model/Instance.hpp"
+#include "Rendering/include/Assets/Material.hpp"
+#include "Rendering/include/Instance.hpp"
 #include "Terrain/include/Terrain.hpp"
 #include "include/ScriptEngine.hpp"
 
@@ -23,8 +23,6 @@ std::vector<Vakol::Math::Mat4> create_mat4_vector(const size_t reserve)
 
     return vector;
 }
-
-using namespace Vakol::Model;
 
 namespace Vakol
 {

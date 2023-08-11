@@ -1,9 +1,9 @@
-#include "Instance.hpp"
+#include "include/Instance.hpp"
 
 #include "Math/include/Math.hpp"
 #include <glad/glad.h>
 
-namespace Vakol::Model
+namespace Vakol
 {
     void CreateInstances(const std::vector<Mesh>& meshes, const std::vector<Math::Mat4>& matrices, const int amount,
                          const int start_index)
@@ -59,4 +59,4 @@ namespace Vakol::Model
             glBindVertexArray(0);
         }
     }
-} // namespace Vakol::Model
+} // namespace Vakol

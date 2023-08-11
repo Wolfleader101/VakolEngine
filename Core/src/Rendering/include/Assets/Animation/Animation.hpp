@@ -1,9 +1,9 @@
 #pragma once
 
-#include <Model/Assets/Animation/Keyframe.hpp>
-#include <Model/Assets/Bone.hpp>
+#include <Rendering/include/Assets/Animation/Keyframe.hpp>
+#include <Rendering/include/Assets/Bone.hpp>
 
-namespace Vakol::Model::Assets
+namespace Vakol::Assets
 {
     /**
      * @brief Class representing an animation.
@@ -185,4 +185,4 @@ namespace Vakol::Model::Assets
         double duration = 0.0f;
         double ticks_per_second = 0.0f;
     };
-} // namespace Vakol::Model::Assets
+} // namespace Vakol::Assets

@@ -1,4 +1,4 @@
-#include "VertexArray.hpp"
+#include "include/VertexArray.hpp"
 
 #include <glad/glad.h>
 
@@ -8,7 +8,7 @@
 #define VERBOSE_FLOAT_DEBUG 0
 #define VERBOSE_VERTEX_DEBUG 0
 
-namespace Vakol::Model
+namespace Vakol
 {
     std::vector<Vertex> Convert(std::vector<float>& arr, const size_t size)
     {
@@ -295,4 +295,4 @@ namespace Vakol::Model
     {
         glBindVertexArray(0);
     }
-} // namespace Vakol::Model
+} // namespace Vakol

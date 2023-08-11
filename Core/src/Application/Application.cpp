@@ -2,25 +2,24 @@
 
 #include "AssetLoader/include/AssetLoader.hpp"
 #include "ECS/include/System.hpp"
-#include "Model/Components.hpp"
 #include "Physics/include/PhysicsPool.hpp"
 #include "Rendering/include/RendererFactory.hpp"
 
+#include "GameConfig.hpp"
 #include "Logger/include/Logger.hpp"
-
 namespace Vakol
 {
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
     Application::Application()
-        : m_window(nullptr), m_renderer(nullptr), m_running(false), m_input(), m_scriptEngine(),
+        : m_window(nullptr), m_renderer(nullptr), m_running(false), m_scriptEngine(), m_input(),
           m_sceneManager(m_scriptEngine){};
 
     void Application::Init()
     {
         RegisterLua();
 
-        auto config = LoadConfig();
+        std::optional<GameConfig> config = LoadConfig();
 
         if (!config)
         {
@@ -84,7 +83,7 @@ namespace Vakol
         // });
     }
 
-    std::optional<Model::GameConfig> Application::LoadConfig()
+    std::optional<GameConfig> Application::LoadConfig()
     {
         VK_INFO("Loading game_config.lua...");
 
@@ -144,7 +143,7 @@ namespace Vakol
             AssetLoader::shader_path = shader_dir.value();
         }
 
-        Model::GameConfig cfg = {name.value(), window_width.value(), window_height.value(), renderer_type.value()};
+        GameConfig cfg = {name.value(), window_width.value(), window_height.value(), renderer_type.value()};
 
         return cfg;
     }

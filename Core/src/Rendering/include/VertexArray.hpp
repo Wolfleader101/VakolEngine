@@ -5,7 +5,7 @@
 
 #define USE_TRIANGLE_PATCHES 0
 
-namespace Vakol::Model
+namespace Vakol
 {
     constexpr int MAX_BONE_INFLUENCE = 4;
 
@@ -235,4 +235,4 @@ namespace Vakol::Model
         std::vector<Vertex> vertices;      ///< Vector of vertices.
         std::vector<unsigned int> indices; ///< Vector of indices.
     };
-} // namespace Vakol::Model
+} // namespace Vakol

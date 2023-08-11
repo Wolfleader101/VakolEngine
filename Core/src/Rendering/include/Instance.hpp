@@ -1,9 +1,9 @@
 #pragma once
 
 #include "Math/include/Math.hpp"
-#include <Model/Assets/Mesh.hpp>
+#include <Rendering/include/Assets/Mesh.hpp>
 
-namespace Vakol::Model
+namespace Vakol
 {
     using Assets::Mesh;
 
@@ -16,4 +16,4 @@ namespace Vakol::Model
      */
     void CreateInstances(const std::vector<Mesh>& meshes, const std::vector<Math::Mat4>& matrices, int amount,
                          int start_index = 3);
-} // namespace Vakol::Model
+} // namespace Vakol

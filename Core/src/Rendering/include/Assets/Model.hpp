@@ -3,9 +3,9 @@
 #include <memory>
 
 #include "Mesh.hpp"
-#include "Model/Shader.hpp"
+#include "Rendering/include/Shader.hpp"
 
-namespace Vakol::Model::Assets
+namespace Vakol::Assets
 {
     /**
      * @brief Class representing a model.
@@ -152,4 +152,4 @@ namespace Vakol::Model::Assets
         bool m_cullBackface = true;                 /**< Flag indicating if backface culling is enabled. */
     };
 
-} // namespace Vakol::Model::Assets
+} // namespace Vakol::Assets

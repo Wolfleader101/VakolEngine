@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Math/include/Math.hpp"
-namespace Vakol::Model
+namespace Vakol
 {
     struct ATTACHMENT
     {
@@ -261,4 +261,4 @@ namespace Vakol::Model
 
         bool hasDepth = false;
     };
-} // namespace Vakol::Model
+} // namespace Vakol

@@ -6,7 +6,7 @@
 
 #include "Math/include/Math.hpp"
 
-namespace Vakol::Model::Assets
+namespace Vakol::Assets
 {
     /**
      * @brief Struct representing a key position in an animation.
@@ -290,7 +290,7 @@ namespace Vakol::Model::Assets
             const auto& next = positions.at(p0 + 1);
 
             const double scale_factor = GetScaleFactor(timestamp, next.timestamp, time);
-            const auto& target_position = mix(position, next.position, scale_factor);
+            const auto& target_position = glm::mix(position, next.position, scale_factor);
 
             return Math::Translate(Math::Mat4(1.0f), target_position);
         }
@@ -307,8 +307,8 @@ namespace Vakol::Model::Assets
 
             prev_rotation_index = p0;
 
-            const Vakol::Model::Assets::KeyRotation& first = rotations.at(p0);
-            const Vakol::Model::Assets::KeyRotation& next = rotations.at(p0 + 1);
+            const Vakol::Assets::KeyRotation& first = rotations.at(p0);
+            const Vakol::Assets::KeyRotation& next = rotations.at(p0 + 1);
 
             const double scale_factor = GetScaleFactor(first.timestamp, next.timestamp, time);
 
@@ -334,7 +334,7 @@ namespace Vakol::Model::Assets
             const auto& next = scales.at(p0 + 1);
 
             const double scale_factor = GetScaleFactor(timestamp, next.timestamp, time);
-            const auto& target_scale = mix(scale, next.scale, scale_factor);
+            const auto& target_scale = glm::mix(scale, next.scale, scale_factor);
 
             return Math::Scale(Math::Mat4(1.0f), target_scale);
         }
@@ -351,4 +351,4 @@ namespace Vakol::Model::Assets
         int parent = -1;             /**< The index of the parent node. */
         Math::Mat4 node_transform{}; /**< The node transformation matrix. */
     };
-} // namespace Vakol::Model::Assets
+} // namespace Vakol::Assets

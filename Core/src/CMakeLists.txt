@@ -7,7 +7,6 @@ add_subdirectory(GUI)
 add_subdirectory(Input)
 add_subdirectory(Logger)
 add_subdirectory(Math)
-add_subdirectory(Model)
 add_subdirectory(Physics)
 add_subdirectory(Rendering)
 add_subdirectory(SceneManager)
@@ -28,7 +27,6 @@ ${GUI_SRC}
 ${INPUT_SRC}
 ${LOGGER_SRC}
 ${MATH_SRC}
-${MODEL}
 ${PHYSICS_SRC}
 ${RENDERING_SRC}
 ${SCENE_MANAGER_SRC}
@@ -52,7 +50,6 @@ SET(GLOBAL_INCLUDE_DIRS
     ${INPUT_INCLUDE_DIR}
     ${LOGGER_INCLUDE_DIR}
     ${MATH_INCLUDE_DIR}
-    ${MODEL_INCLUDE_DIR}
     ${PHYSICS_INCLUDE_DIR}
     ${RENDERING_INCLUDE_DIR}
     ${SCENE_MANAGER_INCLUDE_DIR}

@@ -7,7 +7,7 @@
 #include "Texture.hpp"
 #include "Math/include/Math.hpp"
 
-namespace Vakol::Model::Assets
+namespace Vakol::Assets
 {
     /**
      * @brief Struct representing the material specifications.
@@ -183,4 +183,4 @@ namespace Vakol::Model::Assets
         MaterialSpec m_spec;             /**< The material specifications. */
         std::vector<Texture> m_textures; /**< The textures associated with the material. */
     };
-} // namespace Vakol::Model::Assets
+} // namespace Vakol::Assets

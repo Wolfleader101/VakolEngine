@@ -1,7 +1,8 @@
 #pragma once
 
-#include <Model/Assets/Animation/Animation.hpp>
 #include <vector>
+
+#include "Rendering/include/Assets/Animation/Animation.hpp"
 
 namespace Vakol
 {
@@ -21,7 +22,7 @@ namespace Vakol
          *
          * @param animations The vector of animations.
          */
-        explicit Animator(std::vector<Model::Assets::Animation>& animations) : m_animations(std::move(animations))
+        explicit Animator(std::vector<Assets::Animation>& animations) : m_animations(std::move(animations))
         {
         }
 
@@ -64,9 +65,9 @@ namespace Vakol
          * @brief Get a constant reference to a specific animation.
          *
          * @param state The animation state.
-         * @return const Model::Assets::Animation& The reference to the animation.
+         * @return const Assets::Animation& The reference to the animation.
          */
-        [[nodiscard]] const Model::Assets::Animation& c_get(const int state) const
+        [[nodiscard]] const Assets::Animation& c_get(const int state) const
         {
             return m_animations.at(state);
         }
@@ -75,9 +76,9 @@ namespace Vakol
          * @brief Get a copy of a specific animation.
          *
          * @param state The animation state.
-         * @return Model::Assets::Animation A copy of the animation.
+         * @return Assets::Animation A copy of the animation.
          */
-        [[nodiscard]] Model::Assets::Animation get(const int state) const
+        [[nodiscard]] Assets::Animation get(const int state) const
         {
             return m_animations.at(state);
         }
@@ -86,6 +87,6 @@ namespace Vakol
         /**
          * @brief Vector storing animations.
          */
-        std::vector<Model::Assets::Animation> m_animations;
+        std::vector<Assets::Animation> m_animations;
     };
 } // namespace Vakol

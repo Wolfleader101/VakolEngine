@@ -1,11 +1,12 @@
 #pragma once
 
-#include <Logger/include/Logger.hpp>
-#include <Model/Assets/Material.hpp>
-#include <Model/VertexArray.hpp>
 #include <memory>
 
-namespace Vakol::Model::Assets
+#include "Logger/include/Logger.hpp"
+#include "Material.hpp"
+#include "Rendering/include/VertexArray.hpp"
+
+namespace Vakol::Assets
 {
     /**
      * @brief Class representing a mesh.
@@ -189,4 +190,4 @@ namespace Vakol::Model::Assets
         std::shared_ptr<VertexArray> m_vertex_array; /**< The vertex array of the mesh. */
         std::shared_ptr<Material> m_material;        /**< The material of the mesh. */
     };
-} // namespace Vakol::Model::Assets
+} // namespace Vakol::Assets

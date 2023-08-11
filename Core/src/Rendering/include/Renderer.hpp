@@ -15,7 +15,7 @@ namespace Vakol::Components
     struct Transform;
 } // namespace Vakol::Components
 
-namespace Vakol::Model::Assets
+namespace Vakol::Assets
 {
     class Animation;
 }
@@ -48,7 +48,7 @@ namespace Vakol
          * @param animation animation asset of the model
          */
         virtual void DrawAnimated(const Components::Transform& transform, const Components::Drawable& drawable,
-                                  const Model::Assets::Animation& animation) const = 0;
+                                  const Assets::Animation& animation) const = 0;
 
         /**
          * @brief Draw a model without animation

@@ -3,7 +3,7 @@
 #include <string>
 
 #include "Animation/include/Animator.hpp"
-#include "Model/Assets/Model.hpp"
+#include "Rendering/include/Assets/Model.hpp"
 
 namespace Vakol
 {
@@ -13,7 +13,7 @@ namespace Vakol
      * @param path The file path of the model.
      * @param scale The scale factor for the model.
      * @param animated Flag indicating whether the model is animated.
-     * @return std::pair<Model::Assets::Model, Animator> A pair of the loaded model and animator.
+     * @return std::pair<Assets::Model, Animator> A pair of the loaded model and animator.
      */
-    std::pair<Model::Assets::Model, Animator> LoadModel(const std::string& path, float scale, bool animated);
+    std::pair<Assets::Model, Animator> LoadModel(const std::string& path, float scale, bool animated);
 } // namespace Vakol

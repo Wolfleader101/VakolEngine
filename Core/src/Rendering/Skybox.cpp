@@ -1,4 +1,4 @@
-#include "Skybox.hpp"
+#include "include/Skybox.hpp"
 
 #include <glad/glad.h>
 #include <vector>
@@ -36,7 +36,7 @@ float skybox_vertices[] = {
 
 unsigned int SKYBOX_VAO, SKYBOX_VBO;
 
-namespace Vakol::Model
+namespace Vakol
 {
     void Skybox::Init()
     {
@@ -81,4 +81,4 @@ namespace Vakol::Model
         shader->Unbind();
     }
 
-} // namespace Vakol::Model
+} // namespace Vakol

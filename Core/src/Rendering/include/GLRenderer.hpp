@@ -1,17 +1,13 @@
 #pragma once
 
-#include <Model/Buffer.hpp>
-#include <Model/Skybox.hpp>
+#include "Buffer.hpp"
+#include "Skybox.hpp"
 
 #include "Math/include/Math.hpp"
 #include "Renderer.hpp"
 
 namespace Vakol
 {
-    using Model::Buffer;
-    using Model::FrameBuffer;
-    using Model::Skybox;
-
     /**
      * @brief GLRenderer class derived from Renderer, for rendering in OpenGL
      */
@@ -100,7 +96,7 @@ namespace Vakol
          * @param animation animation asset of the model
          */
         void DrawAnimated(const Components::Transform& transform, const Components::Drawable& drawable,
-                          const Model::Assets::Animation& animation) const override;
+                          const Assets::Animation& animation) const override;
 
         /**
          * @brief Draw a model without animation

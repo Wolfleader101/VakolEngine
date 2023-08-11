@@ -1,4 +1,4 @@
-#include "Components.hpp"
+#include "include/Components.hpp"
 
 #include "AssetLoader/include/AssetLoader.hpp"
 #include "SceneManager/include/Scene.hpp"

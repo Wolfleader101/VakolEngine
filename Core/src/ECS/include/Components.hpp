@@ -7,9 +7,9 @@
 #include <string>
 
 #include "Animation/include/Animator.hpp"
-#include "ECS/include/Entity.hpp"
+#include "Entity.hpp"
 #include "Math/include/Math.hpp"
-#include "Model/Assets/Model.hpp"
+#include "Rendering/include/Assets/Model.hpp"
 #include "Physics/include/ScenePhysics.hpp"
 #include "Scripting/include/ScriptTypes.hpp"
 #include "Serialisation/include/SolSerialize.hpp"
@@ -103,7 +103,7 @@ namespace Vakol::Components
          * \param state The state of the animation.
          * \return A constant reference to the animation.
          */
-        const Model::Assets::Animation& c_animation(const int state) const
+        const Assets::Animation& c_animation(const int state) const
         {
             return animator_ptr->c_get(state);
         }
@@ -113,7 +113,7 @@ namespace Vakol::Components
          * \param state The state of the animation.
          * \return A copy of the animation.
          */
-        Model::Assets::Animation animation(const int state) const
+        Assets::Animation animation(const int state) const
         {
             return animator_ptr->get(state);
         }
@@ -347,7 +347,7 @@ namespace Vakol::Components
         bool instance = false;    ///< Boolean indicating if the entity is an instance.
         bool active = true;       ///< Boolean indicating if the entity is active.
 
-        std::shared_ptr<Model::Assets::Model> model_ptr; ///< Shared pointer to the model of the entity.
+        std::shared_ptr<Assets::Model> model_ptr; ///< Shared pointer to the model of the entity.
 
         /**
          * @brief Serializes the drawable entity.

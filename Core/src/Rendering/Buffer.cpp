@@ -6,7 +6,7 @@
 
 static int s_hitcount = 0;
 
-namespace Vakol::Model
+namespace Vakol
 {
     Buffer::Buffer(const unsigned int type, const int size, const unsigned int binding, const void* data,
                    const unsigned int usage)
@@ -184,4 +184,4 @@ namespace Vakol::Model
         RenderBufferStorage(internalformat, width, height);
         AttachRenderBuffer(attachment);
     }
-} // namespace Vakol::Model
+} // namespace Vakol
