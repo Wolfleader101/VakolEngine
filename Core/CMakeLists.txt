@@ -13,7 +13,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_subdirectory(src)
 
 # Add source to this project's executable.
-add_library (${PROJECT_NAME} STATIC ${SOURCES} "include/Vakol/core.hpp" "lib/glad/src/glad.c")
+add_library (${PROJECT_NAME} STATIC ${SOURCES})
 
 add_subdirectory(lib)
 

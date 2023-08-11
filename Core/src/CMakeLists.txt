@@ -1,65 +1,66 @@
-add_subdirectory(Model)
-add_subdirectory(Scripting)
-add_subdirectory(Math)
-add_subdirectory(SceneManager)
+add_subdirectory(Animation)
 add_subdirectory(Application)
 add_subdirectory(AssetLoader)
-add_subdirectory(Physics)
-add_subdirectory(Window)
-add_subdirectory(GUI)
-add_subdirectory(Rendering)
-add_subdirectory(Time)
-add_subdirectory(Logger)
-add_subdirectory(ECS)
-add_subdirectory(Animation)
 add_subdirectory(Camera)
+add_subdirectory(ECS)
+add_subdirectory(GUI)
 add_subdirectory(Input)
+add_subdirectory(Logger)
+add_subdirectory(Math)
+add_subdirectory(Model)
+add_subdirectory(Physics)
+add_subdirectory(Rendering)
+add_subdirectory(SceneManager)
+add_subdirectory(Scripting)
 add_subdirectory(Serialisation)
 add_subdirectory(Terrain)
+add_subdirectory(Time)
 add_subdirectory(Utils)
+add_subdirectory(Window)
 
 SET(SOURCES
-${MODEL}
+${ANIMATION_SRC}
 ${APPLICATION_SRC}
 ${ASSET_LOADER_SRC}
-${PHYSICS_SRC}
-${WINDOW_SRC}
-${GUI_SRC}
-${RENDERING_SRC}
-${SCRIPTING_SRC}
-${MATH_SRC}
-${SCENE_MANAGER_SRC}
-${TIME_SRC}
-${LOGGER_SRC}
-${ECS_SRC}
-${ANIMATION_SRC}
 ${CAMERA_SRC}
+${ECS_SRC}
+${GUI_SRC}
 ${INPUT_SRC}
+${LOGGER_SRC}
+${MATH_SRC}
+${MODEL}
+${PHYSICS_SRC}
+${RENDERING_SRC}
+${SCENE_MANAGER_SRC}
+${SCRIPTING_SRC}
 ${SERIALISATION_SRC}
 ${TERRAIN_SRC}
+${TIME_SRC}
 ${UTILS_SRC}
+${WINDOW_SRC}
 src/core.cpp
 PARENT_SCOPE)
 
 SET(GLOBAL_INCLUDE_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/
-    ${SCRIPTING_INCLUDE_DIR}
-    ${PHYSICS_INCLUDE_DIR}
-    ${MATH_INCLUDE_DIR}
-    ${SCENE_MANAGER_INCLUDE_DIR}
-    ${WINDOW_INCLUDE_DIR}
-    ${GUI_INCLUDE_DIR}
+    ${ANIMATION_INCLUDE_DIR}
     ${APPLICATION_INCLUDE_DIR}
     ${ASSET_LOADER_INCLUDE_DIR}
-    ${RENDERING_INCLUDE_DIR}
-    ${TIME_INCLUDE_DIR}
-    ${LOGGER_INCLUDE_DIR}
-    ${ECS_INCLUDE_DIR}
-    ${ANIMATION_INCLUDE_DIR}
     ${CAMERA_INCLUDE_DIR}
+    ${ECS_INCLUDE_DIR}
+    ${GUI_INCLUDE_DIR}
     ${INPUT_INCLUDE_DIR}
+    ${LOGGER_INCLUDE_DIR}
+    ${MATH_INCLUDE_DIR}
+    ${MODEL_INCLUDE_DIR}
+    ${PHYSICS_INCLUDE_DIR}
+    ${RENDERING_INCLUDE_DIR}
+    ${SCENE_MANAGER_INCLUDE_DIR}
+    ${SCRIPTING_INCLUDE_DIR}
     ${SERIALISATION_INCLUDE_DIR}
     ${TERRAIN_INCLUDE_DIR}
+    ${TIME_INCLUDE_DIR}
     ${UTILS_INCLUDE_DIR}
+    ${WINDOW_INCLUDE_DIR}
     PARENT_SCOPE
 )
