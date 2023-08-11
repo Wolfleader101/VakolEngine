@@ -25,8 +25,6 @@ namespace Vakol::Rendering
         static void Draw();
         static void PostDraw();
 
-        static void GenerateLine(const Math::Vec3& start, const Math::Vec3& end);
-
         static void GenerateModel(const char* path, float scale = 1.0f);
         static void GenerateSphere(float scale = 1.0f);
         static void GenerateCube(float scale = 1.0f);

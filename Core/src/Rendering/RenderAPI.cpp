@@ -19,6 +19,11 @@ namespace Vakol::Rendering
 
     RenderSettings RenderAPI::m_settings;
 
+    Transform transform
+    {
+        Math::Vec3(0.0f), Math::Vec3(0.0f, 0.0f, 0.0f), Math::Vec3(1.0f)
+    };
+
     void RenderAPI::GenerateVertexCommand(VertexArray&& vertexArray)
     {
         VertexCommand command;
@@ -118,9 +123,10 @@ namespace Vakol::Rendering
         OpenGL::BindShaderProgram(program);
 
         OpenGL::BindVertexArray(vertexArray);
-        OpenGL::DrawLineArrays(nVertices);
+        OpenGL::DrawTriangleElements(nIndices);
 
         ShaderLibrary::SetMat4(program, "PV_MATRIX", false, GetProjectionMatrix() * GetViewMatrix(Math::Vec3(0.0f, 0.0f, -5.0f)));
+        ShaderLibrary::SetMat4(program, "MODEL_MATRIX", false, GetModelMatrix(transform));
     }
 
     void RenderAPI::EndDraw()
