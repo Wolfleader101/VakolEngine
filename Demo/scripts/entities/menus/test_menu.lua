@@ -41,7 +41,7 @@ function init()
 end
 
 function update()
-    start_menu();
+    --start_menu();
     
     if (Input:get_key_down(KEYS["KEY_1"])) then
         -- toggle_skybox();

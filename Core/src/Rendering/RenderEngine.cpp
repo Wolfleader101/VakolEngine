@@ -25,7 +25,7 @@ namespace Vakol::Rendering
     {
         RenderAPI::BeginDraw();
 
-        MaterialLibrary::SetColor(ShaderLibrary::GetShader("coreAssets/shaders/super_basic.prog"), Math::Vec4(1.0f, 0.0f, 0.0f, 1.0f));
+        MaterialLibrary::SetColor(ShaderLibrary::GetShader("coreAssets/shaders/primitive.prog"), Math::Vec4(1.0f, 1.0f, 1.0f, 1.0f));
 
         RenderAPI::EndDraw();
     }
@@ -35,24 +35,52 @@ namespace Vakol::Rendering
         
     }
 
-    void RenderEngine::GenerateSphere()
+    void RenderEngine::GenerateLine(const Math::Vec3& start, const Math::Vec3& end)
     {
         bool success = true;
-
-        auto shader = Assets::Importer::ImportShader("coreAssets/shaders/super_basic.prog", success);
+        auto shader = Assets::Importer::ImportShader("coreAssets/shaders/primitive.prog", success);
 
         if (success)
             SubmitShaderData(std::move(shader));
 
-        auto model = Assets::Importer::ImportModel("coreAssets/models/sphere.obj", 1.0f);
-        SubmitModel(model);
+        RenderAPI::GenerateVertexArrayFromLine(start, end);
+    }
+
+    void RenderEngine::GenerateSphere(const float scale)
+    {
+        bool success = true;
+        auto shader = Assets::Importer::ImportShader("coreAssets/shaders/primitive.prog", success);
+
+        if (success)
+            SubmitShaderData(std::move(shader));
+
+        auto model = Assets::Importer::ImportModel("coreAssets/models/sphere.obj", scale, success);
+
+        if (success)
+            SubmitModel(model);
+    }
+
+    void RenderEngine::GenerateCube(const float scale)
+    {
+        bool success = true;
+        auto shader = Assets::Importer::ImportShader("coreAssets/shaders/primitive.prog", success);
+
+        if (success)
+            SubmitShaderData(std::move(shader));
+
+        auto model = Assets::Importer::ImportModel("coreAssets/model/cube.obj", scale, success);
+
+        if (success)
+            SubmitModel(model);
     }
 
     void RenderEngine::GenerateModel(const char* path, const float scale)
     {
-        auto model = Assets::Importer::ImportModel(path, scale);
+        bool success = true;
+        auto model = Assets::Importer::ImportModel(path, scale, success);
 
-        SubmitModel(model);
+        if (success)
+            SubmitModel(model);
     }
 
     void RenderEngine::SubmitModel(Assets::Model& model)

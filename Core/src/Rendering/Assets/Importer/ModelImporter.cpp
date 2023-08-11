@@ -59,7 +59,7 @@ namespace Vakol::Rendering::Assets::Importer
 
     static void ExtractChannels(unsigned int count, aiNodeAnim** const& in);
 
-    Model ImportModel(const char* path, const float scale)
+    Model ImportModel(const char* path, const float scale, bool& success)
     {
         auto importer = Assimp::Importer{};
 
@@ -75,10 +75,14 @@ namespace Vakol::Rendering::Assets::Importer
         {
             VK_ERROR("ASSIMP ERROR: {0}", importer.GetErrorString());
 
+            success = false;
+
             return model;
         }
 
         ProcessModel(*scene, model);
+
+        success = true;
 
         return model;
     }

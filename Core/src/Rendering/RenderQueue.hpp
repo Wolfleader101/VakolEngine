@@ -17,25 +17,25 @@ namespace Vakol::Rendering
         const T& Back() const;
 
     private:
-        std::queue<T> m_queue;
+        std::vector<T> m_queue;
     };
 
     template <class T>
     void RenderQueue<T>::Push(T& item)
     {
-        m_queue.push(item);
+        m_queue.push_backs(item);
     }
 
     template <class T>
     void RenderQueue<T>::Emplace(T& item)
     {
-        m_queue.emplace(item);
+        m_queue.emplace_back(item);
     }
 
     template <class T>
     void RenderQueue<T>::Pop()
     {
-        m_queue.pop();
+        m_queue.pop_back();
     }
 
     template <class T>

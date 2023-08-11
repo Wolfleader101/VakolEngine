@@ -42,6 +42,9 @@ namespace Vakol::Rendering
         }
 
         m_vertexQueue.Emplace(command);
+
+        std::vector<Vertex>().swap(vertexArray.vertices);
+        std::vector<unsigned int>().swap(vertexArray.indices);
     }
 
     void RenderAPI::GenerateShaderCommand(Assets::Shader&& shader)
@@ -115,7 +118,7 @@ namespace Vakol::Rendering
         OpenGL::BindShaderProgram(program);
 
         OpenGL::BindVertexArray(vertexArray);
-        OpenGL::DrawElements(nIndices);
+        OpenGL::DrawLineArrays(nVertices);
 
         ShaderLibrary::SetMat4(program, "PV_MATRIX", false, GetProjectionMatrix() * GetViewMatrix(Math::Vec3(0.0f, 0.0f, -5.0f)));
     }
@@ -151,5 +154,4 @@ namespace Vakol::Rendering
 
         return transform_matrix * rotation_matrix;
     }
-
 }
