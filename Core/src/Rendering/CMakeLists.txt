@@ -22,4 +22,7 @@ src/Rendering/RenderQueue.hpp
 src/Rendering/ShaderLibrary.hpp
 src/Rendering/ShaderLibrary.cpp
 
+src/Rendering/MaterialLibrary.hpp
+src/Rendering/MaterialLibrary.cpp
+
 PARENT_SCOPE)

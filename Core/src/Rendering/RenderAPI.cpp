@@ -135,7 +135,7 @@ namespace Vakol::Rendering
         return Math::LookAt(position, lookDirection, up);
     }
 
-    Math::Mat4 RenderAPI::GetTransformMatrix(Transform& transform)
+    Math::Mat4 RenderAPI::GetModelMatrix(Transform& transform)
     {
         auto transform_matrix = Math::Mat4(1.0f);
 
