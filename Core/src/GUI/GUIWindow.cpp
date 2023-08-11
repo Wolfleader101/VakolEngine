@@ -1,9 +1,9 @@
-#include "GUIWindow.hpp"
+#include "GUI/GUIWindow.hpp"
 
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 
-#include <Logger/include/Logger.hpp>
+#include <Logger/Logger.hpp>
 
 namespace Vakol
 {

@@ -1,8 +1,8 @@
-#include "Buffer.hpp"
+#include "Rendering/Buffer.hpp"
 
 #include <glad/glad.h>
 
-#include <Logger/include/Logger.hpp>
+#include <Logger/Logger.hpp>
 
 static int s_hitcount = 0;
 

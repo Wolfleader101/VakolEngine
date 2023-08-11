@@ -2,18 +2,18 @@
 
 #include <memory>
 
-#include "AssetLoader/include/AssetLoader.hpp"
-#include "AssetLoader/include/TextureLoader.hpp"
-#include "ECS/include/Components.hpp"
-#include "ECS/include/System.hpp"
-#include "GUI/include/GUIWindow.hpp"
-#include "Input/include/Input.hpp"
-#include "Logger/include/Logger.hpp"
-#include "Math/include/Math.hpp"
-#include "Rendering/include/Assets/Material.hpp"
-#include "Rendering/include/Instance.hpp"
-#include "Terrain/include/Terrain.hpp"
-#include "include/ScriptEngine.hpp"
+#include "AssetLoader/AssetLoader.hpp"
+#include "AssetLoader/TextureLoader.hpp"
+#include "ECS/Components.hpp"
+#include "ECS/System.hpp"
+#include "GUI/GUIWindow.hpp"
+#include "Input/Input.hpp"
+#include "Logger/Logger.hpp"
+#include "Math/Math.hpp"
+#include "Rendering/Assets/Material.hpp"
+#include "Rendering/Instance.hpp"
+#include "Scripting/ScriptEngine.hpp"
+#include "Terrain/Terrain.hpp"
 
 std::vector<Vakol::Math::Mat4> create_mat4_vector(const size_t reserve)
 {

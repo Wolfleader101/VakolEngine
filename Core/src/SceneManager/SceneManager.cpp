@@ -1,9 +1,9 @@
-#include "SceneManager.hpp"
+#include "SceneManager/SceneManager.hpp"
 
 #include <memory>
 
-#include "Physics/include/PhysicsPool.hpp"
-#include "Physics/include/ScenePhysics.hpp"
+#include "Physics/PhysicsPool.hpp"
+#include "Physics/ScenePhysics.hpp"
 
 namespace Vakol
 {

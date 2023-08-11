@@ -1,14 +1,14 @@
-#include "System.hpp"
+#include "ECS/System.hpp"
 
 #include <reactphysics3d/reactphysics3d.h>
 
-#include "AssetLoader/include/AssetLoader.hpp"
-#include "Physics/include/PhysicsPool.hpp"
-#include "Physics/include/ScenePhysics.hpp"
-#include "SceneManager/include/Scene.hpp"
-#include "include/Components.hpp"
+#include "AssetLoader/AssetLoader.hpp"
+#include "ECS/Components.hpp"
+#include "Physics/PhysicsPool.hpp"
+#include "Physics/ScenePhysics.hpp"
+#include "SceneManager/Scene.hpp"
 
-#include "Math/include/Math.hpp"
+#include "Math/Math.hpp"
 
 static std::set<std::pair<std::string, int>> s_animation_set;
 

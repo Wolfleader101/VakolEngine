@@ -1,7 +1,7 @@
-#include "Terrain.hpp"
+#include "Terrain/Terrain.hpp"
 
-#include "AssetLoader/include/FileLoader.hpp"
-#include <Logger/include/Logger.hpp>
+#include "AssetLoader/FileLoader.hpp"
+#include <Logger/Logger.hpp>
 #include <algorithm>
 #include <cstdlib>
 #include <iostream>
@@ -102,7 +102,7 @@ namespace Vakol
     }
 
     Assets::Mesh Terrain::load_fault_formation_mesh(const int size, const int iterations, const float filter,
-                                                           const bool random, const int minHeight, const int maxHeight)
+                                                    const bool random, const int minHeight, const int maxHeight)
     {
         Point p1, p2;
 

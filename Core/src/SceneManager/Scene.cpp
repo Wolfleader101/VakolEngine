@@ -1,14 +1,15 @@
-#include "include/Scene.hpp"
+#include "SceneManager/Scene.hpp"
+
 #include <algorithm>
 #include <cereal/archives/json.hpp>
 #include <filesystem>
 
-#include "Camera/include/Camera.hpp"
-#include "ECS/include/Components.hpp"
-#include "ECS/include/Entity.hpp"
+#include "Camera/Camera.hpp"
+#include "ECS/Components.hpp"
+#include "ECS/Entity.hpp"
 
-#include "ECS/include/System.hpp"
-#include "Serialisation/include/SolSerialize.hpp"
+#include "ECS/System.hpp"
+#include "Serialisation/SolSerialize.hpp"
 
 namespace Vakol
 {

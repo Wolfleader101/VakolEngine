@@ -1,15 +1,15 @@
-#include "include/ModelLoader.hpp"
+#include "AssetLoader/ModelLoader.hpp"
 
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 
-#include "Math/include/Math.hpp"
-#include "include/AssetLoader.hpp"
-#include "include/FileLoader.hpp"
-#include "include/TextureLoader.hpp"
-#include <Logger/include/Logger.hpp>
-#include <Rendering/include/Assets/Animation/Animation.hpp>
-#include <Rendering/include/Assets/Animation/Keyframe.hpp>
+#include "AssetLoader/AssetLoader.hpp"
+#include "AssetLoader/FileLoader.hpp"
+#include "AssetLoader/TextureLoader.hpp"
+#include "Math/Math.hpp"
+#include <Logger/Logger.hpp>
+#include <Rendering/Assets/Animation/Animation.hpp>
+#include <Rendering/Assets/Animation/Keyframe.hpp>
 #include <assimp/Importer.hpp>
 #include <iostream>
 #include <stack>

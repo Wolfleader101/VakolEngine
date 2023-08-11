@@ -1,12 +1,12 @@
-#include "include/ScenePhysics.hpp"
+#include "Physics/ScenePhysics.hpp"
 
 #include <glad/glad.h>
 
-#include "AssetLoader/include/AssetLoader.hpp"
-#include "Logger/include/Logger.hpp"
-#include "ECS/include/System.hpp"
-#include "Terrain/include/Terrain.hpp"
-#include "include/PhysicsPool.hpp"
+#include "AssetLoader/AssetLoader.hpp"
+#include "ECS/System.hpp"
+#include "Logger/Logger.hpp"
+#include "Physics/PhysicsPool.hpp"
+#include "Terrain/Terrain.hpp"
 
 namespace Vakol::Physics
 {

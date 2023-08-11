@@ -1,12 +1,12 @@
-#include "include/EntityList.hpp"
+#include "ECS/EntityList.hpp"
 
 #include <assert.h>
 #include <cereal/cereal.hpp>
 
-#include "ECS/include/Entity.hpp"
-#include "Logger/include/Logger.hpp"
-#include "include/Components.hpp"
-#include "include/System.hpp"
+#include "ECS/Components.hpp"
+#include "ECS/Entity.hpp"
+#include "ECS/System.hpp"
+#include "Logger/Logger.hpp"
 
 using namespace Vakol;
 

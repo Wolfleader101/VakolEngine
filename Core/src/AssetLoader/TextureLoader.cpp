@@ -1,9 +1,9 @@
-#include "include/TextureLoader.hpp"
+#include "AssetLoader/TextureLoader.hpp"
 
 #include <glad/glad.h>
 
-#include "include/FileLoader.hpp"
-#include <Logger/include/Logger.hpp>
+#include "AssetLoader/FileLoader.hpp"
+#include <Logger/Logger.hpp>
 
 unsigned int LoadGLTexture(std::vector<const char*>&&, bool, bool);
 unsigned int LoadGLTexture(std::string&, bool, bool, bool);

@@ -1,13 +1,12 @@
 #define STB_IMAGE_IMPLEMENTATION
-
-#include "FileLoader.hpp"
+#include "AssetLoader/FileLoader.hpp"
 
 #include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <stb_image.h>
 
-#include "Logger/include/Logger.hpp"
+#include "Logger/Logger.hpp"
 
 std::string LoadFile(const std::string& path)
 {

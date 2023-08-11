@@ -1,12 +1,12 @@
-#include "Application.hpp"
+#include "Application/Application.hpp"
 
-#include "AssetLoader/include/AssetLoader.hpp"
-#include "ECS/include/System.hpp"
-#include "Physics/include/PhysicsPool.hpp"
-#include "Rendering/include/RendererFactory.hpp"
+#include "AssetLoader/AssetLoader.hpp"
+#include "ECS/System.hpp"
+#include "Physics/PhysicsPool.hpp"
+#include "Rendering/RendererFactory.hpp"
 
 #include "GameConfig.hpp"
-#include "Logger/include/Logger.hpp"
+#include "Logger/Logger.hpp"
 namespace Vakol
 {
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)

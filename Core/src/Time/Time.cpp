@@ -1,6 +1,6 @@
 
-#include "include/Time.hpp"
-#include "Window/include/Window.hpp"
+#include "Time/Time.hpp"
+#include "Window/Window.hpp"
 
 namespace Vakol
 {

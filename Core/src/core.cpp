@@ -1,7 +1,7 @@
 #include "../include/Vakol/core.hpp"
 
-#include "Application/include/Application.hpp"
-#include "Utils/include/Singleton.hpp"
+#include "Application/Application.hpp"
+#include "Utils/Singleton.hpp"
 #include <iostream>
 
 namespace Vakol

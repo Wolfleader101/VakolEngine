@@ -1,9 +1,9 @@
-#include "include/ShaderLoader.hpp"
+#include "AssetLoader/ShaderLoader.hpp"
 
 #include <glad/glad.h>
 
-#include "include/FileLoader.hpp"
-#include <Logger/include/Logger.hpp>
+#include "AssetLoader/FileLoader.hpp"
+#include <Logger/Logger.hpp>
 #include <iostream>
 #include <vector>
 

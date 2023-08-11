@@ -1,8 +1,8 @@
-#include "include/VertexArray.hpp"
+#include "Rendering/VertexArray.hpp"
 
 #include <glad/glad.h>
 
-#include <Logger/include/Logger.hpp>
+#include <Logger/Logger.hpp>
 #include <iostream>
 
 #define VERBOSE_FLOAT_DEBUG 0

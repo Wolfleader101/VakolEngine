@@ -1,6 +1,6 @@
-#include "include/Instance.hpp"
+#include "Rendering/Instance.hpp"
 
-#include "Math/include/Math.hpp"
+#include "Math/Math.hpp"
 #include <glad/glad.h>
 
 namespace Vakol

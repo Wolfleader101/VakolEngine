@@ -1,9 +1,9 @@
-#include "include/Camera.hpp"
+#include "Camera/Camera.hpp"
 
 #include <GLFW/glfw3.h>
 
-#include "Logger/include/Logger.hpp"
-#include "Math/include/Math.hpp"
+#include "Logger/Logger.hpp"
+#include "Math/Math.hpp"
 
 constexpr Vakol::Math::Vec3 WORLD_FORWARD = Vakol::Math::Vec3(0.0f, 0.0f, -1.0f);
 constexpr Vakol::Math::Vec3 WORLD_UP = Vakol::Math::Vec3(0.0f, 1.0f, 0.0f);

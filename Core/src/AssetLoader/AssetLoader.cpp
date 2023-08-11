@@ -1,7 +1,7 @@
-#include "include/AssetLoader.hpp"
+#include "AssetLoader/AssetLoader.hpp"
 
-#include "include/ModelLoader.hpp"
-#include "include/TextureLoader.hpp"
+#include "AssetLoader/ModelLoader.hpp"
+#include "AssetLoader/TextureLoader.hpp"
 
 using namespace Vakol::Assets;
 
@@ -109,8 +109,10 @@ namespace Vakol
         return GetAnimator(attached_model)->get(state);
     }
 
-    std::pair<std::shared_ptr<Assets::Model>, std::shared_ptr<Animator>> AssetLoader::GetModel(
-        const std::string& file, const float scale, const bool animated, const bool backfaceCull)
+    std::pair<std::shared_ptr<Assets::Model>, std::shared_ptr<Animator>> AssetLoader::GetModel(const std::string& file,
+                                                                                               const float scale,
+                                                                                               const bool animated,
+                                                                                               const bool backfaceCull)
     {
         bool instance;
 

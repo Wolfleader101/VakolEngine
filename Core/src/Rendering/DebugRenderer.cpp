@@ -1,9 +1,9 @@
-#include "include/DebugRenderer.hpp"
+#include "Rendering/DebugRenderer.hpp"
 
 #include <glad/glad.h>
 #include <reactphysics3d/reactphysics3d.h>
 
-#include "AssetLoader/include/AssetLoader.hpp"
+#include "AssetLoader/AssetLoader.hpp"
 
 namespace Vakol
 {

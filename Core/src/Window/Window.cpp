@@ -1,11 +1,11 @@
-#include "include/Window.hpp"
+#include "Window/Window.hpp"
 
 #include <iostream>
 
-#include "Logger/include/Logger.hpp"
-#include "include/Events/KeyEvent.hpp"
-#include "include/Events/MouseEvent.hpp"
-#include "include/Events/WindowEvent.hpp"
+#include "Logger/Logger.hpp"
+#include "Window/Events/KeyEvent.hpp"
+#include "Window/Events/MouseEvent.hpp"
+#include "Window/Events/WindowEvent.hpp"
 
 using namespace Vakol;
 

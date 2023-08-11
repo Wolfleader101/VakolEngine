@@ -1,7 +1,7 @@
-#include "include/RendererFactory.hpp"
+#include "Rendering/RendererFactory.hpp"
 
-#include "Logger/include/Logger.hpp"
-#include "include/GLRenderer.hpp"
+#include "Logger/Logger.hpp"
+#include "Rendering/GLRenderer.hpp"
 
 namespace Vakol
 {

@@ -1,11 +1,11 @@
-#include "include/GLRenderer.hpp"
+#include "Rendering/GLRenderer.hpp"
 
 #include <glad/glad.h>
 #include <memory>
 #include <vector>
 
-#include "ECS/include/Components.hpp"
-#include "Logger/include/Logger.hpp"
+#include "ECS/Components.hpp"
+#include "Logger/Logger.hpp"
 
 /*
 Distance	Constant	Linear	Quadratic

@@ -1,4 +1,4 @@
-#include "include/Shader.hpp"
+#include "Rendering/Shader.hpp"
 
 #include <glad/glad.h>
 namespace Vakol
