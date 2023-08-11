@@ -51,7 +51,7 @@ namespace Vakol::Assets
          *
          * @return The ID of the mesh.
          */
-        [[nodiscard]] unsigned int GetId() const
+        unsigned int GetId() const
         {
             return this->m_vertex_array->GetId();
         }
@@ -83,7 +83,7 @@ namespace Vakol::Assets
          *
          * @return The material.
          */
-        [[nodiscard]] const std::shared_ptr<Material>& GetMaterial() const
+        const std::shared_ptr<Material>& GetMaterial() const
         {
             return this->m_material;
         }
@@ -93,7 +93,7 @@ namespace Vakol::Assets
          *
          * @return The constant reference to the vertices.
          */
-        [[nodiscard]] const std::vector<Vertex>& c_vertices() const
+        const std::vector<Vertex>& c_vertices() const
         {
             return this->m_vertex_array->GetConstVertices();
         }
@@ -103,7 +103,7 @@ namespace Vakol::Assets
          *
          * @return The reference to the vertices.
          */
-        [[nodiscard]] std::vector<Vertex>& vertices() const
+        std::vector<Vertex>& vertices() const
         {
             return this->m_vertex_array->GetVertices();
         }
@@ -113,7 +113,7 @@ namespace Vakol::Assets
          *
          * @return The constant reference to the indices.
          */
-        [[nodiscard]] const std::vector<unsigned int>& indices() const
+        const std::vector<unsigned int>& indices() const
         {
             return this->m_vertex_array->GetIndices();
         }
@@ -123,7 +123,7 @@ namespace Vakol::Assets
          *
          * @return The number of vertices.
          */
-        [[nodiscard]] int nVertices() const
+        int nVertices() const
         {
             return this->m_vertex_array->GetVertexCount();
         }
@@ -133,7 +133,7 @@ namespace Vakol::Assets
          *
          * @return The number of indices.
          */
-        [[nodiscard]] int nIndices() const
+        int nIndices() const
         {
             return this->m_vertex_array->GetIndexCount();
         }

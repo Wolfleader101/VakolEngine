@@ -136,7 +136,7 @@ namespace Vakol
          * \brief Retrieves the ID of the buffer.
          * \return The buffer ID.
          */
-        [[nodiscard]] unsigned int GetID() const
+        unsigned int GetID() const
         {
             return ID;
         }
@@ -222,7 +222,7 @@ namespace Vakol
          * \brief Retrieves the ID of the frame buffer.
          * \return The frame buffer ID.
          */
-        [[nodiscard]] unsigned int GetID() const
+        unsigned int GetID() const
         {
             return ID;
         }
@@ -231,7 +231,7 @@ namespace Vakol
          * \brief Retrieves the ID of the color attachment.
          * \return The color attachment ID.
          */
-        [[nodiscard]] unsigned int GetColorAttachmentID() const
+        unsigned int GetColorAttachmentID() const
         {
             return m_ColorAttachmentID;
         }
@@ -240,7 +240,7 @@ namespace Vakol
          * \brief Checks if the frame buffer has a depth attachment.
          * \return True if the frame buffer has a depth attachment, false otherwise.
          */
-        [[nodiscard]] bool HasDepth() const
+        bool HasDepth() const
         {
             return hasDepth;
         }

@@ -135,7 +135,7 @@ namespace Vakol
          * @brief Gets the Vertex Array's ID.
          * @return ID of the Vertex Array.
          */
-        [[nodiscard]] unsigned int GetId() const
+        unsigned int GetId() const
         {
             return this->ID;
         }
@@ -144,7 +144,7 @@ namespace Vakol
          * @brief Gets the Vertex Count.
          * @return Number of vertices.
          */
-        [[nodiscard]] int GetVertexCount() const
+        int GetVertexCount() const
         {
             return this->n_vertices;
         }
@@ -153,7 +153,7 @@ namespace Vakol
          * @brief Gets the Index Count.
          * @return Number of indices.
          */
-        [[nodiscard]] int GetIndexCount() const
+        int GetIndexCount() const
         {
             return this->n_indices;
         }
@@ -176,20 +176,20 @@ namespace Vakol
             this->indices = std::move(in_indices);
         }
 
-        [[nodiscard]] const std::vector<Vertex>& GetConstVertices() const
+        const std::vector<Vertex>& GetConstVertices() const
         {
             return this->vertices;
         }
-        [[nodiscard]] std::vector<Vertex>& GetVertices()
+        std::vector<Vertex>& GetVertices()
         {
             return this->vertices;
         }
 
-        [[nodiscard]] const std::vector<unsigned int>& GetConstIndices() const
+        const std::vector<unsigned int>& GetConstIndices() const
         {
             return this->indices;
         }
-        [[nodiscard]] std::vector<unsigned int>& GetIndices()
+        std::vector<unsigned int>& GetIndices()
         {
             return this->indices;
         }

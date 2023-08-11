@@ -43,7 +43,7 @@ namespace Vakol
          * @brief Check if DebugRenderer is enabled
          * @return bool indicating if DebugRenderer is enabled
          */
-        [[nodiscard]] bool IsEnabled() const;
+        bool IsEnabled() const;
 
         /**
          * @brief Perform an update on the DebugRenderer

@@ -62,7 +62,7 @@ namespace Vakol::Assets
          * @param index The index of the texture.
          * @return The ID of the texture.
          */
-        [[nodiscard]] unsigned int GetTexture(const int index) const
+        unsigned int GetTexture(const int index) const
         {
             if (GetTextureCount() <= index)
             {
@@ -78,7 +78,7 @@ namespace Vakol::Assets
          *
          * @return The vector of textures.
          */
-        [[nodiscard]] const std::vector<Texture>& GetTextures() const
+        const std::vector<Texture>& GetTextures() const
         {
             return this->m_textures;
         }
@@ -88,7 +88,7 @@ namespace Vakol::Assets
          *
          * @return The number of textures.
          */
-        [[nodiscard]] int GetTextureCount() const
+        int GetTextureCount() const
         {
             return static_cast<int>(this->m_textures.size());
         }
@@ -144,7 +144,7 @@ namespace Vakol::Assets
          *
          * @return The ambient color.
          */
-        [[nodiscard]] Math::Vec3 GetAmbientColor() const
+        Math::Vec3 GetAmbientColor() const
         {
             return this->m_spec.AMBIENT;
         }
@@ -154,7 +154,7 @@ namespace Vakol::Assets
          *
          * @return The diffuse color.
          */
-        [[nodiscard]] Math::Vec3 GetDiffuseColor() const
+        Math::Vec3 GetDiffuseColor() const
         {
             return this->m_spec.DIFFUSE;
         }
@@ -164,7 +164,7 @@ namespace Vakol::Assets
          *
          * @return The specular color.
          */
-        [[nodiscard]] Math::Vec3 GetSpecularColor() const
+        Math::Vec3 GetSpecularColor() const
         {
             return this->m_spec.SPECULAR;
         }
@@ -174,7 +174,7 @@ namespace Vakol::Assets
          *
          * @return The shininess factor.
          */
-        [[nodiscard]] float GetShininess() const
+        float GetShininess() const
         {
             return this->m_spec.SHININESS;
         }

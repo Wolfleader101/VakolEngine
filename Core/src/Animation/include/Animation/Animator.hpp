@@ -67,7 +67,7 @@ namespace Vakol
          * @param state The animation state.
          * @return const Assets::Animation& The reference to the animation.
          */
-        [[nodiscard]] const Assets::Animation& c_get(const int state) const
+        const Assets::Animation& c_get(const int state) const
         {
             return m_animations.at(state);
         }
@@ -78,7 +78,7 @@ namespace Vakol
          * @param state The animation state.
          * @return Assets::Animation A copy of the animation.
          */
-        [[nodiscard]] Assets::Animation get(const int state) const
+        Assets::Animation get(const int state) const
         {
             return m_animations.at(state);
         }

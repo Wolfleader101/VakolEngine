@@ -91,7 +91,7 @@ namespace Vakol::Assets
          *
          * @return The vector of bone transforms.
          */
-        [[nodiscard]] const std::vector<Math::Mat4>& transforms() const
+        const std::vector<Math::Mat4>& transforms() const
         {
             return m_transforms;
         }
@@ -101,7 +101,7 @@ namespace Vakol::Assets
          *
          * @return The transform matrix.
          */
-        [[nodiscard]] const Math::Mat4& transform() const
+        const Math::Mat4& transform() const
         {
             return m_transforms.at(0);
         }

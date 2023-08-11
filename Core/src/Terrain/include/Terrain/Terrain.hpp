@@ -142,7 +142,7 @@ namespace Vakol
          *
          * @return The minimum height.
          */
-        [[nodiscard]] float GetMinHeight() const
+        float GetMinHeight() const
         {
             return static_cast<float>(this->m_min_height);
         }
@@ -152,7 +152,7 @@ namespace Vakol
          *
          * @return The maximum height.
          */
-        [[nodiscard]] float GetMaxHeight() const
+        float GetMaxHeight() const
         {
             return static_cast<float>(this->m_max_height);
         }

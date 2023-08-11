@@ -69,7 +69,7 @@ namespace Vakol::Assets
          *
          * @return True if backface culling is enabled, false otherwise.
          */
-        [[nodiscard]] bool cullBackface() const
+        bool cullBackface() const
         {
             return m_cullBackface;
         }
@@ -99,7 +99,7 @@ namespace Vakol::Assets
          *
          * @return The constant reference to the shader.
          */
-        [[nodiscard]] const std::shared_ptr<Shader>& c_shader() const
+        const std::shared_ptr<Shader>& c_shader() const
         {
             return m_shader;
         }
@@ -110,7 +110,7 @@ namespace Vakol::Assets
          * @param index The index of the mesh.
          * @return The mesh.
          */
-        [[nodiscard]] const Mesh& mesh(const int index = 0) const
+        const Mesh& mesh(const int index = 0) const
         {
             return m_meshes.at(index);
         }
@@ -120,7 +120,7 @@ namespace Vakol::Assets
          *
          * @return The constant reference to the vector of meshes.
          */
-        [[nodiscard]] const std::vector<Mesh>& c_meshes() const
+        const std::vector<Mesh>& c_meshes() const
         {
             return m_meshes;
         }
@@ -130,7 +130,7 @@ namespace Vakol::Assets
          *
          * @return The reference to the vector of meshes.
          */
-        [[nodiscard]] std::vector<Mesh>& meshes()
+        std::vector<Mesh>& meshes()
         {
             return m_meshes;
         }
@@ -140,7 +140,7 @@ namespace Vakol::Assets
          *
          * @return The number of meshes.
          */
-        [[nodiscard]] int nMeshes() const
+        int nMeshes() const
         {
             return static_cast<int>(m_meshes.size());
         }

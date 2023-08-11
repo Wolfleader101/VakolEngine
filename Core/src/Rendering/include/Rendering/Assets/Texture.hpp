@@ -45,7 +45,7 @@ namespace Vakol::Assets
          *
          * @return The ID of the texture.
          */
-        [[nodiscard]] unsigned int GetID() const
+        unsigned int GetID() const
         {
             return this->m_ID;
         }

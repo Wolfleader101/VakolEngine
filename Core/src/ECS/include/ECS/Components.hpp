@@ -93,7 +93,7 @@ namespace Vakol::Components
             animator_ptr->Update(delta_time);
         }
 
-        [[nodiscard]] int nAnimations() const
+        int nAnimations() const
         {
             return animator_ptr->nAnimations();
         }
@@ -186,7 +186,7 @@ namespace Vakol::Components
          * @brief Returns bool indicating if string is empty
          *
          */
-        [[nodiscard]] bool IsEmpty() const
+        bool IsEmpty() const
         {
             return tag.empty();
         }
