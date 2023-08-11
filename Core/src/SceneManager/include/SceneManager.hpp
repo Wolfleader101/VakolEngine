@@ -5,7 +5,7 @@
 
 namespace Vakol
 {
-    // using Scene = Controller::Scene;
+    // using Scene = Scene;
     /**
      * @class SceneManager
      *

@@ -1,6 +1,6 @@
 #include "SolSerialize.hpp"
 
-namespace Vakol::Controller
+namespace Vakol
 {
 
     // std::function<void(const sol::table&, SolTableData&)> recursiveSolToMap = [&](const sol::table& table,
@@ -47,4 +47,4 @@ namespace Vakol::Controller
     //     }
     // }
 
-} // namespace Vakol::Controller
+} // namespace Vakol

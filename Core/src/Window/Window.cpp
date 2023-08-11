@@ -1,12 +1,13 @@
-#include "Window.hpp"
+#include "include/Window.hpp"
 
-#include <Controller/Events/KeyEvent.hpp>
-#include <Controller/Events/MouseEvent.hpp>
-#include <Controller/Events/WindowEvent.hpp>
-#include <Logger/include/Logger.hpp>
 #include <iostream>
 
-using namespace Vakol::Controller;
+#include "Logger/include/Logger.hpp"
+#include "include/Events/KeyEvent.hpp"
+#include "include/Events/MouseEvent.hpp"
+#include "include/Events/WindowEvent.hpp"
+
+using namespace Vakol;
 
 void APIENTRY DebugOutput(const unsigned int source, const unsigned int type, const unsigned int id,
                           const unsigned int severity, [[maybe_unused]] int length, const char* message,

@@ -113,7 +113,7 @@ namespace Vakol
          * @brief Update data in the renderer based on a camera
          * @param camera the camera to update data from
          */
-        void UpdateData(const Controller::Camera& camera) override;
+        void UpdateData(const Camera& camera) override;
 
         /**
          * @brief Perform update at index

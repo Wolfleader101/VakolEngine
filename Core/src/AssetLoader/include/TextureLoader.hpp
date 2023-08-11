@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-namespace Vakol::Controller
+namespace Vakol
 {
     /**
      * @brief Load a texture from multiple faces.
@@ -43,4 +43,4 @@ namespace Vakol::Controller
      * @return unsigned int The ID of the loaded texture.
      */
     unsigned int LoadRawTexture(std::string& path);
-} // namespace Vakol::Controller
+} // namespace Vakol

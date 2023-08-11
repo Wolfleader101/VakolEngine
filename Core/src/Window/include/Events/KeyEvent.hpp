@@ -4,7 +4,7 @@
 
 #include <sstream>
 
-namespace Vakol::Controller
+namespace Vakol
 {
     /**
      * @class KeyEvent
@@ -109,4 +109,4 @@ namespace Vakol::Controller
 
         EVENT_CLASS_TYPE(KeyReleased)
     };
-} // namespace Vakol::Controller
+} // namespace Vakol

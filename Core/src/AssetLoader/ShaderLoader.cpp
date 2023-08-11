@@ -13,7 +13,7 @@ unsigned int LoadShader(const std::string&, const std::string&, const std::strin
 unsigned int CompileGLShader(std::string&&, std::string&&, std::string&&, std::string&&, std::string&&);
 int CheckCompileErrors(const unsigned int, const std::string&);
 
-namespace Vakol::Controller
+namespace Vakol
 {
     unsigned int LoadShader(const std::string& path)
     {
@@ -33,7 +33,7 @@ namespace Vakol::Controller
 
         return ::LoadShader(shaders[0], shaders[1], shaders[2], shaders[3], shaders[4]);
     }
-} // namespace Vakol::Controller
+} // namespace Vakol
 
 unsigned int LoadShader(const std::string& vPath, const std::string& fPath, const std::string& gPath,
                         const std::string& tcPath, const std::string& tePath)

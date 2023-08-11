@@ -3,11 +3,11 @@
 #include <cereal/archives/json.hpp>
 #include <filesystem>
 
-#include "Controller/Camera.hpp"
+#include "Camera/include/Camera.hpp"
 #include "Model/Components.hpp"
 #include "ECS/include/Entity.hpp"
 
-#include "Controller/SolSerialize.hpp"
+#include "Serialisation/include/SolSerialize.hpp"
 #include "ECS/include/System.hpp"
 
 namespace Vakol

@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-namespace Vakol::Controller
+namespace Vakol
 {
 
     enum class TerrainType
@@ -296,4 +296,4 @@ namespace Vakol::Controller
      * @return The loaded CLOD terrain.
      */
     Terrain LoadCLODTerrain(std::string&& path, float min, float max);
-} // namespace Vakol::Controller
+} // namespace Vakol

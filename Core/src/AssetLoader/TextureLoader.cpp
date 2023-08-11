@@ -9,7 +9,7 @@ unsigned int LoadGLTexture(std::vector<const char*>&&, bool, bool);
 unsigned int LoadGLTexture(std::string&, bool, bool, bool);
 unsigned int LoadGLTexture(int, bool, bool, const void*);
 
-namespace Vakol::Controller
+namespace Vakol
 {
     unsigned int LoadTexture(std::vector<const char*>&& faces, const bool gamma, const bool flip)
     {
@@ -28,7 +28,7 @@ namespace Vakol::Controller
     {
         return ::LoadGLTexture(path, true, false, false);
     }
-} // namespace Vakol::Controller
+} // namespace Vakol
 
 // loads a cubemap texture from 6 individual texture faces
 // order:

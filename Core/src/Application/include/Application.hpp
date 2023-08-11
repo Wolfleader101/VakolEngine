@@ -2,14 +2,14 @@
 
 #include <memory>
 
-#include "Controller/Events/KeyEvent.hpp"
-#include "Controller/Events/WindowEvent.hpp"
-#include "Controller/Input.hpp"
-#include "GUI/include/GUIWindow.hpp"
 #include "ECS/include/Entity.hpp"
+#include "GUI/include/GUIWindow.hpp"
+#include "Input/include/Input.hpp"
 #include "Model/GameConfig.hpp"
 #include "Rendering/include/Renderer.hpp"
 #include "Time/include/Time.hpp"
+#include "Window/include/Events/KeyEvent.hpp"
+#include "Window/include/Events/WindowEvent.hpp"
 #include "Window/include/Window.hpp"
 
 #include "SceneManager/include/Scene.hpp"
@@ -55,7 +55,7 @@ namespace Vakol
          * @brief handle window events
          * @param ev event to handle
          */
-        void OnEvent(Controller::Event& ev);
+        void OnEvent(Event& ev);
 
         /**
          * @brief check if application is still running
@@ -108,7 +108,7 @@ namespace Vakol
          *
          * @return const Input& The input information.
          */
-        const Controller::Input& GetInput() const
+        const Input& GetInput() const
         {
             return m_input;
         }
@@ -131,7 +131,7 @@ namespace Vakol
          * @param ev event of windowClose
          * @return true if it was sucessful
          */
-        bool OnWindowClose(Controller::WindowCloseEvent& ev);
+        bool OnWindowClose(WindowCloseEvent& ev);
 
         /**
          * @brief Handle the window resize event.
@@ -139,14 +139,14 @@ namespace Vakol
          * @param ev The WindowResizeEvent.
          * @return bool True if the event was handled, false otherwise.
          */
-        bool OnWindowResize(const Controller::WindowResizeEvent& ev) const;
+        bool OnWindowResize(const WindowResizeEvent& ev) const;
 
         /**
          * @brief on keyboard press event
          * @param kev on key pressed event
          * @return true if successful
          */
-        bool OnKeyPressed(Controller::KeyPressedEvent& kev);
+        bool OnKeyPressed(KeyPressedEvent& kev);
 
         /**
          * @brief Handle the key released event.
@@ -154,7 +154,7 @@ namespace Vakol
          * @param kev The KeyReleasedEvent.
          * @return bool True if the event was handled, false otherwise.
          */
-        bool OnKeyReleased(Controller::KeyReleasedEvent& kev);
+        bool OnKeyReleased(KeyReleasedEvent& kev);
 
         /**
          * @brief Handle the mouse moved event.
@@ -162,7 +162,7 @@ namespace Vakol
          * @param ev The MouseMovedEvent.
          * @return bool True if the event was handled, false otherwise.
          */
-        bool OnMouseMoved(Controller::MouseMovedEvent& ev);
+        bool OnMouseMoved(MouseMovedEvent& ev);
 
         /**
          * @brief Handle the mouse button pressed event.
@@ -170,7 +170,7 @@ namespace Vakol
          * @param mev The MouseButtonPressedEvent.
          * @return bool True if the event was handled, false otherwise.
          */
-        bool OnMouseButtonPressed(Controller::MouseButtonPressedEvent& mev);
+        bool OnMouseButtonPressed(MouseButtonPressedEvent& mev);
 
         /**
          * @brief Handle the mouse button released event.
@@ -178,7 +178,7 @@ namespace Vakol
          * @param mev The MouseButtonReleasedEvent.
          * @return bool True if the event was handled, false otherwise.
          */
-        bool OnMouseButtonReleased(Controller::MouseButtonReleasedEvent& mev);
+        bool OnMouseButtonReleased(MouseButtonReleasedEvent& mev);
 
         /**
          * @brief load the game config
@@ -227,6 +227,6 @@ namespace Vakol
         /**
          * @brief the input data of the engine
          */
-        Controller::Input m_input;
+        Input m_input;
     };
 } // namespace Vakol

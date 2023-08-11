@@ -2,11 +2,11 @@
 
 #include <unordered_map>
 
-#include "Events/KeyEvent.hpp"
-#include "Events/MouseEvent.hpp"
 #include "Math/include/Math.hpp"
+#include "Window/include/Events/KeyEvent.hpp"
+#include "Window/include/Events/MouseEvent.hpp"
 
-namespace Vakol::Controller
+namespace Vakol
 {
 
     /**
@@ -224,4 +224,4 @@ namespace Vakol::Controller
          */
         std::unordered_map<KEY, KeyState> m_keyStates;
     };
-} // namespace Vakol::Controller
+} // namespace Vakol

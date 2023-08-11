@@ -5,7 +5,7 @@
 #include "AssetLoader/include/AssetLoader.hpp"
 #include "Logger/include/Logger.hpp"
 #include "ECS/include/System.hpp"
-#include "Controller/Terrain.hpp"
+#include "Terrain/include/Terrain.hpp"
 #include "include/PhysicsPool.hpp"
 
 namespace Vakol::Physics

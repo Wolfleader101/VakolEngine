@@ -1,16 +1,14 @@
 #pragma once
 
-#include <Controller/Animator.hpp>
-#include <Model/Assets/Model.hpp>
-#include <Model/Assets/Texture.hpp>
-#include <Model/Shader.hpp>
 #include <memory>
 #include <unordered_map>
 
-#include "Controller/Terrain.hpp"
+#include "Animation/include/Animator.hpp"
+#include "Model/Assets/Model.hpp"
+#include "Model/Assets/Texture.hpp"
+#include "Model/Shader.hpp"
 
-// TODO remove
-using namespace Vakol::Controller;
+#include "Terrain/include/Terrain.hpp"
 
 namespace Vakol
 {

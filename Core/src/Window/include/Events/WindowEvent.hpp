@@ -4,7 +4,7 @@
 
 #include "Event.hpp"
 
-namespace Vakol::Controller
+namespace Vakol
 {
     /**
      * @class WindowResizeEvent
@@ -77,4 +77,4 @@ namespace Vakol::Controller
         EVENT_CLASS_TYPE(WindowClose)
         EVENT_CLASS_CATEGORY(EventCategoryApplication)
     };
-} // namespace Vakol::Controller
+} // namespace Vakol

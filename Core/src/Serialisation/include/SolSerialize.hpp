@@ -8,7 +8,7 @@
 
 #include "Math/include/Math.hpp"
 
-namespace Vakol::Controller
+namespace Vakol
 {
 
     /**
@@ -53,4 +53,4 @@ namespace Vakol::Controller
      */
     // void ConvertMapToSol(std::shared_ptr<LuaState> lua, const SolTableData& solTableData, sol::table& table);
 
-} // namespace Vakol::Controller
+} // namespace Vakol

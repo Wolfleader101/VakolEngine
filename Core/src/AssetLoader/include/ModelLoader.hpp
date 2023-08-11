@@ -2,10 +2,10 @@
 
 #include <string>
 
-#include "Controller/Animator.hpp"
+#include "Animation/include/Animator.hpp"
 #include "Model/Assets/Model.hpp"
 
-namespace Vakol::Controller
+namespace Vakol
 {
     /**
      * @brief Load a model with specified parameters.
@@ -16,4 +16,4 @@ namespace Vakol::Controller
      * @return std::pair<Model::Assets::Model, Animator> A pair of the loaded model and animator.
      */
     std::pair<Model::Assets::Model, Animator> LoadModel(const std::string& path, float scale, bool animated);
-} // namespace Vakol::Controller
+} // namespace Vakol

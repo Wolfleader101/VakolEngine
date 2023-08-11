@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Vakol::Controller
+namespace Vakol
 {
     /**
      * @class Singleton
@@ -44,4 +44,4 @@ namespace Vakol::Controller
          */
         Singleton() = default;
     };
-} // namespace Vakol::Controller
+} // namespace Vakol

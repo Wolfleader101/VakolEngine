@@ -2,9 +2,9 @@
 
 #include <memory>
 
-#include "Controller/Camera.hpp"
+#include "Camera/include/Camera.hpp"
 #include "ECS/include/EntityList.hpp"
-#include "Controller/Terrain.hpp"
+#include "Terrain/include/Terrain.hpp"
 #include "ECS/include/Entity.hpp"
 #include "Physics/include/ScenePhysics.hpp"
 #include "Rendering/include/Renderer.hpp"
@@ -102,7 +102,7 @@ namespace Vakol
          *
          * @return Camera& The reference to the camera.
          */
-        Controller::Camera& GetCamera()
+        Camera& GetCamera()
         {
             return m_cam;
         }
@@ -160,7 +160,7 @@ namespace Vakol
         /**
          * @brief The camera of the scene.
          */
-        Controller::Camera m_cam;
+        Camera m_cam;
 
         /**
          * @brief The entity list of the scene.

@@ -7,7 +7,7 @@
 
 #include "Math/include/Math.hpp"
 
-#include "Controller/Camera.hpp"
+#include "Camera/include/Camera.hpp"
 
 namespace Vakol::Components
 {
@@ -61,7 +61,7 @@ namespace Vakol
          * @brief Update data in the renderer based on a camera
          * @param camera the camera to update data from
          */
-        virtual void UpdateData(const Controller::Camera& camera) = 0;
+        virtual void UpdateData(const Camera& camera) = 0;
 
         /**
          * @brief Perform update at index

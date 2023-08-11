@@ -200,7 +200,7 @@ namespace Vakol
         shader->Unbind();
     }
 
-    void GLRenderer::UpdateData(const Controller::Camera& camera)
+    void GLRenderer::UpdateData(const Camera& camera)
     {
         PROJECTION = camera.GetMatrix(PROJECTION_MATRIX);
         VIEW = camera.GetMatrix(VIEW_MATRIX);

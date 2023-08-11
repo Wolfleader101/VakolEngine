@@ -6,7 +6,7 @@
 
 #include "Rendering/include/Renderer.hpp"
 #include "SceneManager/include/Scene.hpp"
-#include <Controller/Terrain.hpp>
+#include <Terrain/include/Terrain.hpp>
 
 namespace Vakol
 {
@@ -85,7 +85,7 @@ namespace Vakol
          *
          * @param ter The terrain to add.
          */
-        static void Physics_AddTerrain(const Controller::Terrain& ter);
+        static void Physics_AddTerrain(const Terrain& ter);
 
         /**
          * @brief Initialize the terrain system.

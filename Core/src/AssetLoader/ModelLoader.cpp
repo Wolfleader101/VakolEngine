@@ -19,7 +19,7 @@ using Vakol::Model::Vertex;
 using namespace Vakol::Model::Assets;
 using namespace Vakol::Math;
 
-namespace Vakol::Controller
+namespace Vakol
 {
     constexpr unsigned int ASSIMP_LOADER_OPTIONS = aiProcess_Triangulate | aiProcess_GenSmoothNormals |
                                                    aiProcess_CalcTangentSpace | aiProcess_FlipUVs |
@@ -458,4 +458,4 @@ namespace Vakol::Controller
 
         return animations;
     }
-} // namespace Vakol::Controller
+} // namespace Vakol

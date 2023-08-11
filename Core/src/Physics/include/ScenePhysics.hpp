@@ -2,10 +2,10 @@
 
 #include <reactphysics3d/reactphysics3d.h>
 
+#include "Camera/include/Camera.hpp"
+#include "Rendering/include/DebugRenderer.hpp"
+#include "Terrain/include/Terrain.hpp"
 #include "Time/include/Time.hpp"
-#include <Controller/Camera.hpp>
-#include <Controller/Terrain.hpp>
-#include <Rendering/include/DebugRenderer.hpp>
 
 namespace Vakol
 {
@@ -59,7 +59,7 @@ namespace Vakol::Physics
          *
          * @param terrain The terrain to add.
          */
-        void AddTerrain(const Controller::Terrain& terrain);
+        void AddTerrain(const Terrain& terrain);
 
         /**
          * @brief Custom collision callback class.

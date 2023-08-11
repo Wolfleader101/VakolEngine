@@ -7,7 +7,7 @@
 constexpr unsigned char PROJECTION_MATRIX = 0x0;
 constexpr unsigned char VIEW_MATRIX = 0x1;
 
-namespace Vakol::Controller
+namespace Vakol
 {
     /**
      * @brief Class representing a Camera.
@@ -219,4 +219,4 @@ namespace Vakol::Controller
          */
         float rightDir = 0.0f;
     };
-} // namespace Vakol::Controller
+} // namespace Vakol

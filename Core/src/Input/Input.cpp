@@ -1,6 +1,6 @@
 #include "Input.hpp"
 
-namespace Vakol::Controller
+namespace Vakol
 {
     bool Input::OnKeyPressed(KeyPressedEvent& kev)
     {
@@ -108,4 +108,4 @@ namespace Vakol::Controller
             }
         }
     }
-} // namespace Vakol::Controller
+} // namespace Vakol

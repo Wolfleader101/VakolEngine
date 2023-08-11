@@ -6,13 +6,13 @@
 #include <memory>
 #include <string>
 
-#include "Controller/Animator.hpp"
-#include "Controller/SolSerialize.hpp"
-#include "Entity.hpp"
+#include "Animation/include/Animator.hpp"
+#include "ECS/include/Entity.hpp"
 #include "Math/include/Math.hpp"
 #include "Model/Assets/Model.hpp"
 #include "Physics/include/ScenePhysics.hpp"
 #include "Scripting/include/ScriptTypes.hpp"
+#include "Serialisation/include/SolSerialize.hpp"
 
 namespace Vakol::Components
 {
@@ -70,7 +70,7 @@ namespace Vakol::Components
     /**
      * @brief Animator component
      */
-    struct Animator
+    struct AnimatorComp
     {
         std::string attached_model; /**< The attached model name. */
 
@@ -122,7 +122,7 @@ namespace Vakol::Components
          * \brief Sets the animator using a shared pointer.
          * \param animator The shared pointer to the animator.
          */
-        void set(const std::shared_ptr<Controller::Animator>& animator)
+        void set(const std::shared_ptr<Animator>& animator)
         {
             animator_ptr = animator;
         }
@@ -131,9 +131,9 @@ namespace Vakol::Components
          * \brief Sets the animator using a non-const reference.
          * \param animator The animator object.
          */
-        void set(const Controller::Animator& animator)
+        void set(const Animator& animator)
         {
-            animator_ptr = std::make_shared<Controller::Animator>(animator);
+            animator_ptr = std::make_shared<Animator>(animator);
         }
 
         /**
@@ -148,7 +148,7 @@ namespace Vakol::Components
             // ar(cereal::make_nvp("State Table",state));
         }
 
-        std::shared_ptr<Controller::Animator> animator_ptr = nullptr; /**< The pointer to the animator object. */
+        std::shared_ptr<Animator> animator_ptr = nullptr; /**< The pointer to the animator object. */
     };
 
     /**
@@ -259,7 +259,7 @@ namespace Vakol::Components
         // table of FSM states
         LuaTable states;
 
-        // Controller::SolTableData data;  ///< The data to be saved or loaded.
+        // SolTableData data;  ///< The data to be saved or loaded.
 
         /**
          * @brief Adds a new state to the FSM.
@@ -294,8 +294,8 @@ namespace Vakol::Components
         {
             // ar(cereal::make_nvp("Current State", currentState));
 
-            // Controller::SolTableData temp;
-            // Controller::ConvertSolToMap(states, temp);
+            // SolTableData temp;
+            // ConvertSolToMap(states, temp);
 
             // ar(temp);
         }
@@ -568,9 +568,9 @@ namespace Vakol::Components
     /**
      * @brief Struct representing a Terrain.
      */
-    struct Terrain
+    struct TerrainComp
     {
-        std::shared_ptr<Controller::Terrain> terrain_ptr; ///< Shared pointer to the terrain.
+        std::shared_ptr<Terrain> terrain_ptr; ///< Shared pointer to the terrain.
 
         std::string name; ///< Name of the terrain.
         std::string path; ///< Path to the terrain.

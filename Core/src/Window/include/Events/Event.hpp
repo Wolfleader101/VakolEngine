@@ -3,7 +3,7 @@
 #include <functional>
 #include <string>
 
-namespace Vakol::Controller
+namespace Vakol
 {
 #define BIT(x) (1 << x)
 
@@ -157,4 +157,4 @@ namespace Vakol::Controller
     {
         return os << e.ToString();
     }
-} // namespace Vakol::Controller
+} // namespace Vakol

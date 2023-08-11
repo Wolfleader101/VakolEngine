@@ -56,7 +56,7 @@ namespace Vakol::Model
         glBindVertexArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-        CUBEMAP_ID = Controller::LoadTexture(std::move(skybox_faces), false, false);
+        CUBEMAP_ID = LoadTexture(std::move(skybox_faces), false, false);
     }
 
     void Skybox::Draw(const Math::Mat4& projection, const Math::Mat4& view) const

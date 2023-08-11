@@ -4,7 +4,7 @@
 
 #include "Event.hpp"
 
-namespace Vakol::Controller
+namespace Vakol
 {
     /**
      * @class MouseMovedEvent
@@ -202,4 +202,4 @@ namespace Vakol::Controller
 
         EVENT_CLASS_TYPE(MouseButtonReleased)
     };
-} // namespace Vakol::Controller
+} // namespace Vakol

@@ -3,9 +3,9 @@
 #include <assert.h>
 #include <cereal/cereal.hpp>
 
+#include "ECS/include/Entity.hpp"
 #include "Logger/include/Logger.hpp"
 #include "Model/Components.hpp"
-#include "ECS/include/Entity.hpp"
 #include "include/System.hpp"
 
 using namespace Vakol::Model;
@@ -95,20 +95,20 @@ namespace Vakol
     void EntityList::Serialize(const std::string& file) const
     {
         privateSerialize<cereal::JSONOutputArchive, Components::Transform, Components::Tag, Components::GUID,
-                         Components::Drawable, Components::Animator, Components::Animation, Components::RigidBody,
-                         Components::Collider, Components::Terrain>(file);
+                         Components::Drawable, Components::AnimatorComp, Components::Animation, Components::RigidBody,
+                         Components::Collider, Components::TerrainComp>(file);
 
-        /*privateSerialize<cereal::JSONOutputArchive, Transform, Tag, Script, GUID, Drawable, Components::Animator,
+        /*privateSerialize<cereal::JSONOutputArchive, Transform, Tag, Script, GUID, Drawable, Components::AnimatorComp,
                          Animation>(file);*/
     }
 
     void EntityList::Deserialize(const std::string& file)
     {
         privateDeserialize<cereal::JSONInputArchive, Components::Transform, Components::Tag, Components::GUID,
-                           Components::Drawable, Components::Animator, Components::Animation, Components::RigidBody,
-                           Components::Collider, Components::Terrain>(file);
+                           Components::Drawable, Components::AnimatorComp, Components::Animation, Components::RigidBody,
+                           Components::Collider, Components::TerrainComp>(file);
 
-        /*privateDeserialize<cereal::JSONInputArchive, Transform, Tag, Script, GUID, Drawable, Components::Animator,
+        /*privateDeserialize<cereal::JSONInputArchive, Transform, Tag, Script, GUID, Drawable, Components::AnimatorComp,
                            Animation>(file);*/
     }
 

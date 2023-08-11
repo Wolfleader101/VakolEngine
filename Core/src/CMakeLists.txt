@@ -1,5 +1,4 @@
 add_subdirectory(Model)
-add_subdirectory(Controller)
 add_subdirectory(Scripting)
 add_subdirectory(Math)
 add_subdirectory(SceneManager)
@@ -12,11 +11,15 @@ add_subdirectory(Rendering)
 add_subdirectory(Time)
 add_subdirectory(Logger)
 add_subdirectory(ECS)
+add_subdirectory(Animation)
+add_subdirectory(Camera)
+add_subdirectory(Input)
+add_subdirectory(Serialisation)
+add_subdirectory(Terrain)
+add_subdirectory(Utils)
 
 SET(SOURCES
 ${MODEL}
-${VIEW}
-${CONTROLLER}
 ${APPLICATION_SRC}
 ${ASSET_LOADER_SRC}
 ${PHYSICS_SRC}
@@ -29,6 +32,12 @@ ${SCENE_MANAGER_SRC}
 ${TIME_SRC}
 ${LOGGER_SRC}
 ${ECS_SRC}
+${ANIMATION_SRC}
+${CAMERA_SRC}
+${INPUT_SRC}
+${SERIALISATION_SRC}
+${TERRAIN_SRC}
+${UTILS_SRC}
 src/core.cpp
 PARENT_SCOPE)
 
@@ -46,5 +55,11 @@ SET(GLOBAL_INCLUDE_DIRS
     ${TIME_INCLUDE_DIR}
     ${LOGGER_INCLUDE_DIR}
     ${ECS_INCLUDE_DIR}
+    ${ANIMATION_INCLUDE_DIR}
+    ${CAMERA_INCLUDE_DIR}
+    ${INPUT_INCLUDE_DIR}
+    ${SERIALISATION_INCLUDE_DIR}
+    ${TERRAIN_INCLUDE_DIR}
+    ${UTILS_INCLUDE_DIR}
     PARENT_SCOPE
 )

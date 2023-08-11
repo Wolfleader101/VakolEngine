@@ -3,7 +3,7 @@
 #include <Model/Assets/Animation/Animation.hpp>
 #include <vector>
 
-namespace Vakol::Controller
+namespace Vakol
 {
     /**
      * @brief Class representing an Animator.
@@ -88,4 +88,4 @@ namespace Vakol::Controller
          */
         std::vector<Model::Assets::Animation> m_animations;
     };
-} // namespace Vakol::Controller
+} // namespace Vakol

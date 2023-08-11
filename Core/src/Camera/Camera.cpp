@@ -1,14 +1,14 @@
-#include "Camera.hpp"
+#include "include/Camera.hpp"
 
 #include <GLFW/glfw3.h>
 
-#include "Logger.hpp"
+#include "Logger/include/Logger.hpp"
 #include "Math/include/Math.hpp"
 
 constexpr Vakol::Math::Vec3 WORLD_FORWARD = Vakol::Math::Vec3(0.0f, 0.0f, -1.0f);
 constexpr Vakol::Math::Vec3 WORLD_UP = Vakol::Math::Vec3(0.0f, 1.0f, 0.0f);
 
-namespace Vakol::Controller
+namespace Vakol
 {
 
     Camera::Camera(const Math::Vec3& position) : forward(WORLD_FORWARD), up(WORLD_UP)
@@ -53,4 +53,4 @@ namespace Vakol::Controller
         this->PROJECTION = Math::Perspective(Math::DegToRad(this->fov), this->aspect, this->near, this->far);
         this->VIEW = lookAt(position, position + forward, up);
     }
-} // namespace Vakol::Controller
+} // namespace Vakol

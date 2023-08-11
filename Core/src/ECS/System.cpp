@@ -55,29 +55,32 @@ namespace Vakol
                         .first;
         });
 
-        m_registry->group<Components::Drawable, Components::Animator>().each([&](auto& drawable, auto& animator) {
-            if (!animator.animator_ptr)
-            {
-                animator.animator_ptr =
-                    AssetLoader::GetModel(drawable.name, drawable.scale, drawable.animated, drawable.backfaceCull)
-                        .second;
-            }
-        });
+        m_registry->group<Components::Drawable, Components::AnimatorComp>().each(
+            [&](Components::Drawable& drawable, Components::AnimatorComp& animator) {
+                if (!animator.animator_ptr)
+                {
+                    animator.animator_ptr =
+                        AssetLoader::GetModel(drawable.name, drawable.scale, drawable.animated, drawable.backfaceCull)
+                            .second;
+                }
+            });
     }
 
     void System::Terrain_Init()
     {
-        m_registry->view<Components::Drawable, Components::Terrain>().each([&](auto& drawable, auto& terrainComp) {
-            std::shared_ptr<Terrain> terrain = AssetLoader::GetTerrain(terrainComp.name);
+        m_registry->view<Components::Drawable, Components::TerrainComp>().each(
+            [&](Components::Drawable& drawable, Components::TerrainComp& terrainComp) {
+                std::shared_ptr<Terrain> terrain = AssetLoader::GetTerrain(terrainComp.name);
 
-            if (!terrain)
-            {
-                terrain = AssetLoader::GetTerrain(terrainComp.name, terrainComp.path, terrainComp.min, terrainComp.max);
-            }
+                if (!terrain)
+                {
+                    terrain =
+                        AssetLoader::GetTerrain(terrainComp.name, terrainComp.path, terrainComp.min, terrainComp.max);
+                }
 
-            drawable.model_ptr = terrain->GetModel();
-            terrainComp.terrain_ptr = terrain;
-        });
+                drawable.model_ptr = terrain->GetModel();
+                terrainComp.terrain_ptr = terrain;
+            });
     }
 
     void System::Drawable_Update(const Time& time, const std::shared_ptr<Renderer>& renderer)

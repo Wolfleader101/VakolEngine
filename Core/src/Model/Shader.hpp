@@ -5,7 +5,7 @@
 #include "AssetLoader/include/ShaderLoader.hpp"
 #include "Math/include/Math.hpp"
 
-using Vakol::Controller::LoadShader;
+using Vakol::LoadShader;
 
 namespace Vakol::Model
 {

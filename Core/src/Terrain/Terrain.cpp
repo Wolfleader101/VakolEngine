@@ -6,7 +6,7 @@
 #include <cstdlib>
 #include <iostream>
 
-namespace Vakol::Controller
+namespace Vakol
 {
     Terrain LoadHeightMapTerrain(std::string&& path, const float min, const float max)
     {
@@ -345,4 +345,4 @@ namespace Vakol::Controller
         NormalizeValues(m_height_map, m_size);
     }
 
-} // namespace Vakol::Controller
+} // namespace Vakol

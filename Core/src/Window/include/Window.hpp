@@ -6,7 +6,7 @@
 
 #include "GLFW/glfw3.h"
 
-namespace Vakol::Controller
+namespace Vakol
 {
     class Event;
 }
@@ -21,7 +21,7 @@ namespace Vakol
     class Window
     {
       public:
-        using EventCallbackFn = std::function<void(Controller::Event&)>;
+        using EventCallbackFn = std::function<void(Event&)>;
 
         /**
          * @brief window constructor
