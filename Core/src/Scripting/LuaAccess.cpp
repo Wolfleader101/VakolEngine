@@ -2,18 +2,18 @@
 
 #include <memory>
 
-#include "Controller/AssetLoader/AssetLoader.hpp"
-#include "Controller/AssetLoader/TextureLoader.hpp"
-#include "Controller/Input.hpp"
-#include "Controller/Logger.hpp"
-#include "Controller/System.hpp"
-#include "Controller/Terrain.hpp"
-#include "Model/Assets/Material.hpp"
-#include "Model/Components.hpp"
-#include "Model/Instance.hpp"
+#include "AssetLoader/AssetLoader.hpp"
+#include "AssetLoader/TextureLoader.hpp"
+#include "ECS/Components.hpp"
+#include "ECS/System.hpp"
+#include "GUI/GUIWindow.hpp"
+#include "Input/Input.hpp"
+#include "Logger/Logger.hpp"
+#include "Math/Math.hpp"
+#include "Rendering/Assets/Material.hpp"
+#include "Rendering/Instance.hpp"
 #include "Scripting/ScriptEngine.hpp"
-#include "View/GUI/GUIWindow.hpp"
-#include <Math/Math.hpp>
+#include "Terrain/Terrain.hpp"
 
 std::vector<Vakol::Math::Mat4> create_mat4_vector(const size_t reserve)
 {
@@ -23,10 +23,6 @@ std::vector<Vakol::Math::Mat4> create_mat4_vector(const size_t reserve)
 
     return vector;
 }
-
-using namespace Vakol::Controller;
-using namespace Vakol::Model;
-using namespace Vakol::Model::Components;
 
 namespace Vakol
 {
@@ -337,27 +333,27 @@ namespace Vakol
     {
         auto entity_type = lua.new_usertype<Entity>("Entity");
 
-        entity_type.set_function("get_tag", [](Entity* ent) { return ent->GetComponent<Tag>().tag; });
-        entity_type.set_function("get_transform", &Entity::GetComponent<Transform>);
-        entity_type.set_function("get_fsm", &Entity::GetComponent<FSM>);
+        entity_type.set_function("get_tag", [](Entity* ent) { return ent->GetComponent<Components::Tag>().tag; });
+        entity_type.set_function("get_transform", &Entity::GetComponent<Components::Transform>);
+        entity_type.set_function("get_fsm", &Entity::GetComponent<Components::FSM>);
 
         entity_type.set_function("create_height_map_terrain",
                                  [](Entity* ent, Scene& scene, std::string&& path, const float min, const float max) {
-                                     if (!ent->HasComponent<Drawable>())
-                                         ent->AddComponent<Drawable>();
-                                     if (ent->HasComponent<Components::Terrain>())
-                                         ent->RemoveComponent<Components::Terrain>();
+                                     if (!ent->HasComponent<Components::Drawable>())
+                                         ent->AddComponent<Components::Drawable>();
+                                     if (ent->HasComponent<Components::TerrainComp>())
+                                         ent->RemoveComponent<Components::TerrainComp>();
 
-                                     ent->AddComponent<Components::Terrain>();
+                                     ent->AddComponent<Components::TerrainComp>();
 
                                      const auto& name = scene.getName();
 
-                                     std::shared_ptr<Controller::Terrain> terrain = AssetLoader::GetTerrain(name);
+                                     std::shared_ptr<Terrain> terrain = AssetLoader::GetTerrain(name);
 
                                      if (terrain == nullptr)
                                          terrain = AssetLoader::GetTerrain(name, path, min, max);
 
-                                     auto& terrain_comp = ent->GetComponent<Components::Terrain>();
+                                     auto& terrain_comp = ent->GetComponent<Components::TerrainComp>();
 
                                      terrain_comp.terrain_ptr = terrain;
                                      terrain_comp.min = min;
@@ -374,7 +370,7 @@ namespace Vakol
 
                                          model->mesh().SetNumTrisPerStrip(terrain->GetSize() / 1 * 2 - 2);
 
-                                         Drawable& drawable = ent->GetComponent<Drawable>();
+                                         Components::Drawable& drawable = ent->GetComponent<Components::Drawable>();
                                          drawable.model_ptr = model;
                                      }
 
@@ -382,14 +378,14 @@ namespace Vakol
                                  });
 
         entity_type.set_function("get_terrain", [](const Entity* ent) {
-            if (ent->HasComponent<Components::Terrain>())
-                return ent->GetComponent<Components::Terrain>().terrain_ptr;
+            if (ent->HasComponent<Components::TerrainComp>())
+                return ent->GetComponent<Components::TerrainComp>().terrain_ptr;
         });
 
         entity_type.set_function("add_model", [](Entity* ent, const std::string& path, const float scale = 1.0f,
                                                  const bool animated = false, const bool backfaceCull = true) {
-            if (!ent->HasComponent<Drawable>())
-                ent->AddComponent<Drawable>();
+            if (!ent->HasComponent<Components::Drawable>())
+                ent->AddComponent<Components::Drawable>();
 
             auto instance = false;
 
@@ -397,7 +393,7 @@ namespace Vakol
 
             if (model)
             {
-                auto& draw = ent->GetComponent<Drawable>();
+                auto& draw = ent->GetComponent<Components::Drawable>();
 
                 draw.model_ptr = model;
                 draw.name = path;
@@ -413,10 +409,10 @@ namespace Vakol
 
                     if (!instance)
                     {
-                        if (!ent->HasComponent<Components::Animator>())
-                            ent->AddComponent<Components::Animator>();
+                        if (!ent->HasComponent<Components::AnimatorComp>())
+                            ent->AddComponent<Components::AnimatorComp>();
 
-                        auto& _animator = ent->GetComponent<Components::Animator>();
+                        auto& _animator = ent->GetComponent<Components::AnimatorComp>();
 
                         _animator.attached_model = draw.name;
                         _animator.set(animator);
@@ -431,30 +427,30 @@ namespace Vakol
         });
 
         entity_type.set_function("set_backface_culling", [](const Entity* ent, const bool cull) {
-            if (!ent->HasComponent<Drawable>())
+            if (!ent->HasComponent<Components::Drawable>())
                 VK_ERROR("Cannot set backface culling without a drawable component!");
 
-            ent->GetComponent<Drawable>().backfaceCull = cull;
+            ent->GetComponent<Components::Drawable>().backfaceCull = cull;
         });
 
         entity_type.set_function("get_model", [](const Entity* ent) {
-            if (ent->HasComponent<Drawable>())
-                return ent->GetComponent<Drawable>().model_ptr;
+            if (ent->HasComponent<Components::Drawable>())
+                return ent->GetComponent<Components::Drawable>().model_ptr;
         });
 
         entity_type.set_function("active_model", [](const Entity* ent, bool active) {
-            if (ent->HasComponent<Drawable>())
-                ent->GetComponent<Drawable>().active = active;
+            if (ent->HasComponent<Components::Drawable>())
+                ent->GetComponent<Components::Drawable>().active = active;
         });
 
         entity_type.set_function("set_shader", [](const Entity* ent, const std::string& path) {
-            if (!ent->HasComponent<Drawable>())
+            if (!ent->HasComponent<Components::Drawable>())
             {
                 VK_ERROR("Drawable Component is needed to set shader!");
                 return;
             }
 
-            const auto& model = ent->GetComponent<Drawable>().model_ptr;
+            const auto& model = ent->GetComponent<Components::Drawable>().model_ptr;
             const auto& shader = AssetLoader::GetShader(path);
 
             model->set_shader(shader);
@@ -462,25 +458,25 @@ namespace Vakol
 
         entity_type.set_function("add_texture", [](const Entity* ent, const int mesh_index, const std::string& path,
                                                    const bool gamma, const bool flip) {
-            if (!ent->HasComponent<Drawable>())
+            if (!ent->HasComponent<Components::Drawable>())
             {
                 VK_ERROR("Drawable component is needed to add texture to material!");
                 return;
             }
 
-            const auto& model = ent->GetComponent<Drawable>().model_ptr;
+            const auto& model = ent->GetComponent<Components::Drawable>().model_ptr;
             model->mesh(mesh_index).GetMaterial()->AddTexture(*AssetLoader::GetTexture(path, gamma, flip));
         });
 
         entity_type.set_function("add_raw_texture",
                                  [](const Entity* ent, const int mesh_index, const std::string& path) {
-                                     if (!ent->HasComponent<Drawable>())
+                                     if (!ent->HasComponent<Components::Drawable>())
                                      {
                                          VK_ERROR("Drawable component is needed to add texture to material!");
                                          return;
                                      }
 
-                                     const auto& model = ent->GetComponent<Drawable>().model_ptr;
+                                     const auto& model = ent->GetComponent<Components::Drawable>().model_ptr;
                                      model->mesh(mesh_index).GetMaterial()->AddTexture(*AssetLoader::GetTexture(path));
                                  });
 
@@ -526,43 +522,43 @@ namespace Vakol
             // System::Physics_InitEntity(*ent);
         });
 
-        entity_type.set_function("add_rigid", [](Entity* ent) -> RigidBody& {
-            if (!ent->HasComponent<RigidBody>())
-                ent->AddComponent<RigidBody>();
+        entity_type.set_function("add_rigid", [](Entity* ent) -> Components::RigidBody& {
+            if (!ent->HasComponent<Components::RigidBody>())
+                ent->AddComponent<Components::RigidBody>();
 
-            return ent->GetComponent<RigidBody>();
+            return ent->GetComponent<Components::RigidBody>();
         });
 
-        entity_type.set_function("get_rigid", [](const Entity* ent) -> RigidBody& {
-            if (ent->HasComponent<RigidBody>())
-                return ent->GetComponent<RigidBody>();
+        entity_type.set_function("get_rigid", [](const Entity* ent) -> Components::RigidBody& {
+            if (ent->HasComponent<Components::RigidBody>())
+                return ent->GetComponent<Components::RigidBody>();
 
             VK_CRITICAL("No rigid body component found on entity");
             assert(0);
         });
 
-        entity_type.set_function("add_collider", [](Entity* ent) -> Collider& {
-            if (!ent->HasComponent<Collider>())
-                ent->AddComponent<Collider>();
-            return ent->GetComponent<Collider>();
+        entity_type.set_function("add_collider", [](Entity* ent) -> Components::Collider& {
+            if (!ent->HasComponent<Components::Collider>())
+                ent->AddComponent<Components::Collider>();
+            return ent->GetComponent<Components::Collider>();
         });
 
-        entity_type.set_function("get_collider", [](const Entity* ent) -> Collider& {
-            if (ent->HasComponent<Collider>())
-                return ent->GetComponent<Collider>();
+        entity_type.set_function("get_collider", [](const Entity* ent) -> Components::Collider& {
+            if (ent->HasComponent<Components::Collider>())
+                return ent->GetComponent<Components::Collider>();
 
             VK_CRITICAL("No collider component found on entity");
             assert(0);
         });
 
         entity_type.set_function("get_bounds_from_model", [](const Entity* ent) -> void {
-            if (ent->HasComponent<Drawable, Collider>())
+            if (ent->HasComponent<Components::Drawable, Components::Collider>())
             {
-                const auto& model = ent->GetComponent<Drawable>();
+                const auto& model = ent->GetComponent<Components::Drawable>();
 
-                auto& collider = ent->GetComponent<Collider>();
+                auto& collider = ent->GetComponent<Components::Collider>();
 
-                collider.bounds = GetBounds(model, ent->GetComponent<Transform>());
+                collider.bounds = GetBounds(model, ent->GetComponent<Components::Transform>());
             }
             else
             {
@@ -572,40 +568,41 @@ namespace Vakol
         });
 
         // TODO remove FSM component
-        entity_type.set_function("add_fsm", [&](Entity* ent) -> FSM& {
-            if (!ent->HasComponent<FSM>())
-                ent->AddComponent<FSM>(lua.create_table());
-            return ent->GetComponent<FSM>();
+        entity_type.set_function("add_fsm", [&](Entity* ent) -> Components::FSM& {
+            if (!ent->HasComponent<Components::FSM>())
+                ent->AddComponent<Components::FSM>(lua.create_table());
+            return ent->GetComponent<Components::FSM>();
         });
     }
 
     void RegisterTransform(sol::state& lua)
     {
-        auto transform_type = lua.new_usertype<Transform>("Transform");
+        auto transform_type = lua.new_usertype<Components::Transform>("Transform");
 
-        transform_type["pos"] = &Transform::pos;
-        transform_type["rot"] = &Transform::eulerAngles;
-        transform_type["scale"] = &Transform::scale;
+        transform_type["pos"] = &Components::Transform::pos;
+        transform_type["rot"] = &Components::Transform::eulerAngles;
+        transform_type["scale"] = &Components::Transform::scale;
     }
 
     void RegisterTerrain(sol::state& lua)
     {
-        auto terrain_type = lua.new_usertype<Controller::Terrain>("Terrain");
+        auto terrain_type = lua.new_usertype<Terrain>("Terrain");
 
-        terrain_type.set_function("get_height", &Controller::Terrain::GetHeight);
-        terrain_type.set_function("get_size", &Controller::Terrain::GetSize);
-        terrain_type.set_function("get_model", &Controller::Terrain::GetModel);
+        terrain_type.set_function("get_height", &Terrain::GetHeight);
+        terrain_type.set_function("get_size", &Terrain::GetSize);
+        terrain_type.set_function("get_model", &Terrain::GetModel);
     }
 
     void RegisterFSM(sol::state& lua)
     {
-        auto fsm_type = lua.new_usertype<FSM>("FSM");
-        fsm_type.set_function("get_state", &FSM::GetState);
-        fsm_type.set_function("change_state", &FSM::ChangeState);
-        fsm_type.set_function("add_state", [](FSM* self, std::string stateName, sol::protected_function callback) {
-            self->AddState(stateName, callback);
-        });
-        fsm_type.set_function("update", &FSM::Update);
+        auto fsm_type = lua.new_usertype<Components::FSM>("FSM");
+        fsm_type.set_function("get_state", &Components::FSM::GetState);
+        fsm_type.set_function("change_state", &Components::FSM::ChangeState);
+        fsm_type.set_function("add_state",
+                              [](Components::FSM* self, std::string stateName, sol::protected_function callback) {
+                                  self->AddState(stateName, callback);
+                              });
+        fsm_type.set_function("update", &Components::FSM::Update);
     }
 
     void RegisterCamera(sol::state& lua)
@@ -652,13 +649,13 @@ namespace Vakol
         scene_type.set_function("get_entity", &Scene::GetEntity);
 
         scene_type.set_function("add_terrain_physics", [](Scene* scene, const Entity ent) {
-            if (!ent.HasComponent<Components::Terrain>())
+            if (!ent.HasComponent<Components::TerrainComp>())
             {
                 VK_WARN("Entity does not have a terrain component. Can't add physics");
                 return;
             }
 
-            const auto& terrain = ent.GetComponent<Components::Terrain>();
+            const auto& terrain = ent.GetComponent<Components::TerrainComp>();
 
             // TODO remove this
             //  System::BindScene(*scene);
@@ -679,119 +676,129 @@ namespace Vakol
 
     void RegisterGUIWindow(sol::state& lua)
     {
-        auto gui_window_type = lua.new_usertype<View::GUIWindow>("GUI");
+        auto gui_window_type = lua.new_usertype<GUIWindow>("GUI");
 
-        gui_window_type.set_function("get_display_window_width", &View::GUIWindow::DisplayWindowWidth);
-        gui_window_type.set_function("get_display_window_height", &View::GUIWindow::DisplayWindowHeight);
+        gui_window_type.set_function("get_display_window_width", &GUIWindow::DisplayWindowWidth);
+        gui_window_type.set_function("get_display_window_height", &GUIWindow::DisplayWindowHeight);
 
-        gui_window_type.set_function("start_window", &View::GUIWindow::StartWindowCreation);
+        gui_window_type.set_function("start_window", &GUIWindow::StartWindowCreation);
 
-        gui_window_type.set_function("update", &View::GUIWindow::Update);
+        gui_window_type.set_function("update", &GUIWindow::Update);
 
-        gui_window_type.set_function("start_frame", &View::GUIWindow::CreateNewFrame);
-        gui_window_type.set_function("end_frame", &View::GUIWindow::EndFrame);
+        gui_window_type.set_function("start_frame", &GUIWindow::CreateNewFrame);
+        gui_window_type.set_function("end_frame", &GUIWindow::EndFrame);
 
-        gui_window_type.set_function("get_fps", &View::GUIWindow::GetFramesPerSecond);
+        gui_window_type.set_function("get_fps", &GUIWindow::GetFramesPerSecond);
 
-        gui_window_type.set_function("add_text", &View::GUIWindow::AddText);
-        gui_window_type.set_function("add_button", &View::GUIWindow::AddButton);
-        gui_window_type.set_function("add_checkbox", &View::GUIWindow::AddCheckbox);
+        gui_window_type.set_function("add_text", &GUIWindow::AddText);
+        gui_window_type.set_function("add_button", &GUIWindow::AddButton);
+        gui_window_type.set_function("add_checkbox", &GUIWindow::AddCheckbox);
 
-        gui_window_type.set_function("add_image",
-                                     [](const View::GUIWindow* GUI, const std::string& path, const float width,
-                                        const float height, const bool centerX, const bool centerY) {
-                                         const auto& tex = AssetLoader::GetTexture(path, false, false);
-                                         const unsigned int texID = tex->GetID();
+        gui_window_type.set_function("add_image", [](const GUIWindow* GUI, const std::string& path, const float width,
+                                                     const float height, const bool centerX, const bool centerY) {
+            const auto& tex = AssetLoader::GetTexture(path, false, false);
+            const unsigned int texID = tex->GetID();
 
-                                         GUI->AddImage(texID, {width, height}, centerX, centerY);
-                                     });
+            GUI->AddImage(texID, {width, height}, centerX, centerY);
+        });
 
-        gui_window_type.set_function("add_integer_slider", &View::GUIWindow::AddIntSlider);
-        gui_window_type.set_function("add_float_slider", &View::GUIWindow::AddFloatSlider);
+        gui_window_type.set_function("add_integer_slider", &GUIWindow::AddIntSlider);
+        gui_window_type.set_function("add_float_slider", &GUIWindow::AddFloatSlider);
 
-        gui_window_type.set_function("add_vector_integer_slider", &View::GUIWindow::AddVecIntSlider);
-        gui_window_type.set_function("add_vector_float_slider", &View::GUIWindow::AddVecFloatSlider);
+        gui_window_type.set_function("add_vector_integer_slider", &GUIWindow::AddVecIntSlider);
+        gui_window_type.set_function("add_vector_float_slider", &GUIWindow::AddVecFloatSlider);
 
-        gui_window_type.set_function("same_line", &View::GUIWindow::SameLine);
+        gui_window_type.set_function("same_line", &GUIWindow::SameLine);
 
-        gui_window_type.set_function("change_background_colour", &View::GUIWindow::WindowBackgroundStyle);
-        gui_window_type.set_function("change_background_rounding", &View::GUIWindow::WindowRoundingStyle);
+        gui_window_type.set_function("change_background_colour", &GUIWindow::WindowBackgroundStyle);
+        gui_window_type.set_function("change_background_rounding", &GUIWindow::WindowRoundingStyle);
 
-        gui_window_type.set_function("end_window", &View::GUIWindow::EndWindowCreation);
+        gui_window_type.set_function("end_window", &GUIWindow::EndWindowCreation);
     }
 
     void RegisterRigidBody(sol::state& lua)
     {
-        auto rigidType = lua.new_usertype<RigidBody>("RigidBody");
+        auto rigidType = lua.new_usertype<Components::RigidBody>("RigidBody");
 
-        rigidType["use_transform"] = &RigidBody::use_transform;
-        rigidType["is_colliding"] = &RigidBody::is_colliding;
+        rigidType["use_transform"] = &Components::RigidBody::use_transform;
+        rigidType["is_colliding"] = &Components::RigidBody::is_colliding;
 
-        lua["BodyType"] =
-            lua.create_table_with("Static", RigidBody::BODY_TYPE::STATIC, "Kinematic", RigidBody::BODY_TYPE::KINEMATIC,
-                                  "Dynamic", RigidBody::BODY_TYPE::DYNAMIC);
+        lua["BodyType"] = lua.create_table_with("Static", Components::RigidBody::BODY_TYPE::STATIC, "Kinematic",
+                                                Components::RigidBody::BODY_TYPE::KINEMATIC, "Dynamic",
+                                                Components::RigidBody::BODY_TYPE::DYNAMIC);
 
-        rigidType["BodyType"] = &RigidBody::Type;
+        rigidType["BodyType"] = &Components::RigidBody::Type;
 
-        auto rigidDataType = lua.new_usertype<RigidBody::RigidData>("RigidData");
+        auto rigidDataType = lua.new_usertype<Components::RigidBody::RigidData>("RigidData");
 
-        rigidDataType["mass"] = &RigidBody::RigidData::mass;
-        rigidDataType["gravity"] = &RigidBody::RigidData::grav;
-        rigidDataType["linear_damp"] = &RigidBody::RigidData::LDamp;
-        rigidDataType["angular_damp"] = &RigidBody::RigidData::ADamp;
-
-        rigidType.set_function("set_data",
-                               [](RigidBody* rigid, const RigidBody::RigidData& data) { rigid->SetRigidData(data); });
-
-        rigidType.set_function("toggle_gravity", [](RigidBody* rigid) { rigid->ToggleGravity(); });
+        rigidDataType["mass"] = &Components::RigidBody::RigidData::mass;
+        rigidDataType["gravity"] = &Components::RigidBody::RigidData::grav;
+        rigidDataType["linear_damp"] = &Components::RigidBody::RigidData::LDamp;
+        rigidDataType["angular_damp"] = &Components::RigidBody::RigidData::ADamp;
 
         rigidType.set_function("set_data",
-                               [](RigidBody* rigid, const RigidBody::RigidData& data) { rigid->SetRigidData(data); });
+                               [](Components::RigidBody* rigid, const Components::RigidBody::RigidData& data) {
+                                   rigid->SetRigidData(data);
+                               });
 
-        rigidType.set_function("toggle_gravity", [](RigidBody* rigid) { rigid->ToggleGravity(); });
+        rigidType.set_function("toggle_gravity", [](Components::RigidBody* rigid) { rigid->ToggleGravity(); });
+
+        rigidType.set_function("set_data",
+                               [](Components::RigidBody* rigid, const Components::RigidBody::RigidData& data) {
+                                   rigid->SetRigidData(data);
+                               });
+
+        rigidType.set_function("toggle_gravity", [](Components::RigidBody* rigid) { rigid->ToggleGravity(); });
 
         rigidType.set_function("set_body_type",
-                               [](RigidBody* rigid, const RigidBody::BODY_TYPE type) { rigid->SetBodyType(type); });
+                               [](Components::RigidBody* rigid, const Components::RigidBody::BODY_TYPE type) {
+                                   rigid->SetBodyType(type);
+                               });
 
-        rigidType.set_function("set_velocity",
-                               [](const RigidBody* rigid, const Math::Vec3& vel) { rigid->SetVelocity(vel); });
+        rigidType.set_function(
+            "set_velocity", [](const Components::RigidBody* rigid, const Math::Vec3& vel) { rigid->SetVelocity(vel); });
 
-        rigidType.set_function("set_angular_velocity",
-                               [](const RigidBody* rigid, const Math::Vec3& vel) { rigid->SetAngularVelocity(vel); });
+        rigidType.set_function("set_angular_velocity", [](const Components::RigidBody* rigid, const Math::Vec3& vel) {
+            rigid->SetAngularVelocity(vel);
+        });
 
-        rigidType.set_function("set_linear_damp",
-                               [](const RigidBody* rigid, const float damp) { rigid->SetLinearDamp(damp); });
+        rigidType.set_function("set_linear_damp", [](const Components::RigidBody* rigid, const float damp) {
+            rigid->SetLinearDamp(damp);
+        });
 
-        rigidType.set_function("set_angular_damp",
-                               [](const RigidBody* rigid, const float damp) { rigid->SetAngularDamp(damp); });
+        rigidType.set_function("set_angular_damp", [](const Components::RigidBody* rigid, const float damp) {
+            rigid->SetAngularDamp(damp);
+        });
 
         rigidType.set_function("apply_force",
-                               [](RigidBody* rigid, const Math::Vec3& force) { rigid->ApplyForce(force); });
+                               [](Components::RigidBody* rigid, const Math::Vec3& force) { rigid->ApplyForce(force); });
     }
 
     void RegisterCollider(sol::state& lua)
     {
-        auto colliderType = lua.new_usertype<Collider>("Collider");
+        auto colliderType = lua.new_usertype<Components::Collider>("Collider");
 
-        lua["Shape"] =
-            lua.create_table_with("Box", Collider::ShapeName::BOX, "Sphere", Collider::ShapeName::SPHERE, "Capsule",
-                                  Collider::ShapeName::CAPSULE, "TriangleMesh", Collider::ShapeName::TRIANGLE_MESH);
+        lua["Shape"] = lua.create_table_with(
+            "Box", Components::Collider::ShapeName::BOX, "Sphere", Components::Collider::ShapeName::SPHERE, "Capsule",
+            Components::Collider::ShapeName::CAPSULE, "TriangleMesh", Components::Collider::ShapeName::TRIANGLE_MESH);
 
-        colliderType["Shape"] = &Collider::ShapeName;
+        colliderType["Shape"] = &Components::Collider::ShapeName;
 
-        auto ColliderBoundsType = lua.new_usertype<Collider::Bounds>("ColliderBounds");
+        auto ColliderBoundsType = lua.new_usertype<Components::Collider::Bounds>("ColliderBounds");
 
-        ColliderBoundsType["min"] = &Collider::Bounds::min;
-        ColliderBoundsType["max"] = &Collider::Bounds::max;
-        ColliderBoundsType["size"] = &Collider::Bounds::size;
-        ColliderBoundsType["center"] = &Collider::Bounds::center;
-        ColliderBoundsType["extents"] = &Collider::Bounds::extents;
-        ColliderBoundsType["radius"] = &Collider::Bounds::radius;
+        ColliderBoundsType["min"] = &Components::Collider::Bounds::min;
+        ColliderBoundsType["max"] = &Components::Collider::Bounds::max;
+        ColliderBoundsType["size"] = &Components::Collider::Bounds::size;
+        ColliderBoundsType["center"] = &Components::Collider::Bounds::center;
+        ColliderBoundsType["extents"] = &Components::Collider::Bounds::extents;
+        ColliderBoundsType["radius"] = &Components::Collider::Bounds::radius;
 
-        colliderType["bounds"] = &Collider::bounds;
+        colliderType["bounds"] = &Components::Collider::bounds;
 
-        colliderType.set_function(
-            "set_bounds", [](Collider* collider, const Collider::Bounds& bounds) { collider->SetBounds(bounds); });
+        colliderType.set_function("set_bounds",
+                                  [](Components::Collider* collider, const Components::Collider::Bounds& bounds) {
+                                      collider->SetBounds(bounds);
+                                  });
     }
 
     // TODO remove this later, just used for rp3d vec

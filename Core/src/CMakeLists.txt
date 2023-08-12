@@ -1,16 +1,62 @@
-add_subdirectory(Model)
-add_subdirectory(View)
-add_subdirectory(Controller)
-add_subdirectory(Scripting)
+add_subdirectory(Animation)
+add_subdirectory(Application)
+add_subdirectory(AssetLoader)
+add_subdirectory(Camera)
+add_subdirectory(ECS)
+add_subdirectory(GUI)
+add_subdirectory(Input)
+add_subdirectory(Logger)
 add_subdirectory(Math)
+add_subdirectory(Physics)
+add_subdirectory(Rendering)
 add_subdirectory(SceneManager)
+add_subdirectory(Scripting)
+add_subdirectory(Serialisation)
+add_subdirectory(Terrain)
+add_subdirectory(Time)
+add_subdirectory(Utils)
+add_subdirectory(Window)
 
 SET(SOURCES
-${MODEL}
-${VIEW}
-${CONTROLLER}
-${SCRIPTING}
-${MATH}
-${SCENE_MANAGER}
+${ANIMATION_SRC}
+${APPLICATION_SRC}
+${ASSET_LOADER_SRC}
+${CAMERA_SRC}
+${ECS_SRC}
+${GUI_SRC}
+${INPUT_SRC}
+${LOGGER_SRC}
+${MATH_SRC}
+${PHYSICS_SRC}
+${RENDERING_SRC}
+${SCENE_MANAGER_SRC}
+${SCRIPTING_SRC}
+${SERIALISATION_SRC}
+${TERRAIN_SRC}
+${TIME_SRC}
+${UTILS_SRC}
+${WINDOW_SRC}
 src/core.cpp
 PARENT_SCOPE)
+
+SET(GLOBAL_INCLUDE_DIRS
+    ${ANIMATION_INCLUDE_DIR}
+    ${APPLICATION_INCLUDE_DIR}
+    ${ASSET_LOADER_INCLUDE_DIR}
+    ${CAMERA_INCLUDE_DIR}
+    ${ECS_INCLUDE_DIR}
+    ${GUI_INCLUDE_DIR}
+    ${INPUT_INCLUDE_DIR}
+    ${LOGGER_INCLUDE_DIR}
+    ${MATH_INCLUDE_DIR}
+    ${PHYSICS_INCLUDE_DIR}
+    ${RENDERING_INCLUDE_DIR}
+    ${SCENE_MANAGER_INCLUDE_DIR}
+    ${SCRIPTING_INCLUDE_DIR}
+    ${SERIALISATION_INCLUDE_DIR}
+    ${TERRAIN_INCLUDE_DIR}
+    ${TIME_INCLUDE_DIR}
+    ${UTILS_INCLUDE_DIR}
+    ${WINDOW_INCLUDE_DIR}
+    PARENT_SCOPE
+)
