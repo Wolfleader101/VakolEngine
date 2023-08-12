@@ -14,4 +14,4 @@ namespace Vakol
         rp3dVec3["z"] = &rp3d::Vector3::z;
     }
 
-}
+} // namespace Vakol

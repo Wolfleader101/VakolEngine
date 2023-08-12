@@ -33,4 +33,4 @@ namespace Vakol
             "KEY_LEFT_SHIFT", Input::KEY::KEY_LEFT_SHIFT, "KEY_ESC", Input::KEY::KEY_ESCAPE);
     }
 
-}
+} // namespace Vakol

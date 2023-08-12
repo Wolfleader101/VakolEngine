@@ -12,4 +12,4 @@ namespace Vakol
         time_type["prev_time"] = &Time::prevTime;
         time_type["fps"] = &Time::fps;
     }
-}
+} // namespace Vakol
