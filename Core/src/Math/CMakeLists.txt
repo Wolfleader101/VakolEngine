@@ -1,9 +1,4 @@
-SET(MATH_SRC
-    ${CMAKE_CURRENT_SOURCE_DIR}/Math.cpp
-    PARENT_SCOPE
-)
-
-SET(MATH_INCLUDE_DIR
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
-    PARENT_SCOPE
-)
+SET(MATH
+src/Math/Math.hpp
+src/Math/Math.cpp
+PARENT_SCOPE)

@@ -1,6 +1,6 @@
-#include "Scripting/ScriptEngine.hpp"
+#include "ScriptEngine.hpp"
 
-#include "Logger/Logger.hpp"
+#include "Controller/Logger.hpp"
 #include "LuaAccess.hpp"
 
 static std::string getStatusString(const sol::call_status status)

@@ -1,12 +1,14 @@
-#include "SceneManager/SceneManager.hpp"
+#include "SceneManager.hpp"
 
 #include <memory>
 
-#include "Physics/PhysicsPool.hpp"
-#include "Physics/ScenePhysics.hpp"
+#include "Controller/Physics/PhysicsPool.hpp"
+#include "Controller/Physics/ScenePhysics.hpp"
 
 namespace Vakol
 {
+    using Scene = Controller::Scene;
+
     SceneManager::SceneManager(ScriptEngine& scriptEngine) : m_scriptEngine(scriptEngine)
     {
     }
@@ -53,9 +55,9 @@ namespace Vakol
             VK_ERROR("Scene with name: {0} already exists. Skipping...", name);
 
         auto script = m_scriptEngine.CreateScript("scripts/" + scriptName);
-        m_scenes.emplace(
-            name, new Scene(name, script,
-                            std::make_shared<Physics::ScenePhysics>(Physics::PhysicsPool::CreatePhysicsWorld())));
+        m_scenes.emplace(name, new Scene(name, script,
+                                         std::make_shared<Controller::Physics::ScenePhysics>(
+                                             Controller::Physics::PhysicsPool::CreatePhysicsWorld())));
 
         if (m_scenes.size() == 1)
             m_activeScene = m_scenes.at(name);

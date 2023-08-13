@@ -1,4 +1,4 @@
-#include "Math/Math.hpp"
+#include "Math.hpp"
 
 #include <glm/gtc/type_ptr.hpp>
 namespace Vakol::Math
