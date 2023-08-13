@@ -12,6 +12,9 @@ src/Rendering/Platform/OpenGL/VertexArray.cpp
 src/Rendering/Platform/OpenGL/Shader.hpp
 src/Rendering/Platform/OpenGL/Shader.cpp
 
+src/Rendering/Platform/OpenGL/Texture.hpp
+src/Rendering/Platform/OpenGL/Texture.cpp
+
 src/Rendering/Platform/OpenGL/common.h
 
 PARENT_SCOPE)

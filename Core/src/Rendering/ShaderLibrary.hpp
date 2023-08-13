@@ -13,8 +13,8 @@ namespace Vakol::Rendering
     class ShaderLibrary
     {
     public:
-        static void AddShader(const std::string& path, unsigned int shader);
-        static unsigned int GetShader(const std::string& path);
+        static void AddShader(const std::string& ID, unsigned int shader);
+        static unsigned int GetShader(const std::string& ID);
 
         static void GetShaderUniforms(unsigned int shader);
 

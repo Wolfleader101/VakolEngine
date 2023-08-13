@@ -20,7 +20,8 @@ namespace Vakol::Rendering::Assets
     {
         const char* name = nullptr;  // The name of the material
 
-        std::string shader = "coreAssets/shaders/default.program";
+        std::string ID = "null";
+        std::string shaderID = "null";
 
         MaterialProperties properties;  // the properties that make up a material
     };

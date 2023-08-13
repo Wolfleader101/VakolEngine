@@ -7,6 +7,7 @@ ${IMPORTER}
 src/Rendering/Assets/Model.hpp
 src/Rendering/Assets/Mesh.hpp
 src/Rendering/Assets/Camera.hpp
+src/Rendering/Assets/Texture.hpp
 src/Rendering/Assets/Material.hpp
 src/Rendering/Assets/Animation.hpp
 src/Rendering/Assets/Shader.hpp

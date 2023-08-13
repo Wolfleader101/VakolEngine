@@ -18,9 +18,13 @@ namespace Vakol::Rendering
     public:
         static void AddMaterial(const Assets::Material& material);
 
-        static void SetColor(unsigned int shader, const Math::Vec4& color);
-        static void SetShininess(unsigned int shader, float shininess);
+        static void AddTexture(const Assets::Material& material, const std::string& texturePath, unsigned int texture);
+        static unsigned int GetTexture(const Assets::Material& material, const std::string& texturePath);
+
+        static void SetColor(const Assets::Material& material, const Math::Vec4& color);
+        static void SetShininess(const Assets::Material& material, float shininess);
     private:
         static std::unordered_map<std::string, Assets::Material> m_materials;
+        static std::unordered_map<std::pair<std::string, std::string>, unsigned int> m_textures;
     };
 }

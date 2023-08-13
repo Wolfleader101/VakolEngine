@@ -9,15 +9,15 @@
 
 #include "../Material.hpp"
 #include "../Animation.hpp"
+#include "../Texture.hpp"
 
 #include "Rendering/RenderData.hpp"
-
 #include "Rendering/MaterialLibrary.hpp"
+#include "Rendering/RenderCommand.hpp"
 
 #include "Math/Math.hpp"
 
 #include <iostream>
-
 #include <stack>
 
 using namespace Vakol::Rendering::Assets;
@@ -55,11 +55,11 @@ namespace Vakol::Rendering::Assets::Importer
     static void ProcessMaterial(aiMaterial* const& in, Material& material);
 
     /*Material Textures*/
-    static void ExtractMaterialTextures(aiTextureType type, aiMaterial* const& in);
+    static void ExtractMaterialTextures(const Material& material, aiTextureType type, aiMaterial* const& in);
 
     /*Embedded Textures*/
     static void ExtractEmbeddedTextures(unsigned int count, aiTexture** const& in);
-    static void ProcessEmbeddedTexture(aiTexture* const& in, Rendering::Texture& texture);
+    static void ProcessEmbeddedTexture(aiTexture* const& in, Texture& texture);
 
     /*Animations*/
     static void ExtractAnimations(unsigned int count, aiAnimation** const& in);
@@ -167,11 +167,14 @@ namespace Vakol::Rendering::Assets::Importer
 
         if (in->HasBones())
             ExtractBones(in->mNumBones, in->mBones, mesh.bones);
+
+        VK_TRACE("Material Index: {0}", in->mMaterialIndex);
     }
 
     void ProcessMaterial(aiMaterial* const& in, Material& material)
     {
         material.name = in->GetName().C_Str();
+        material.ID = GenerateID();
 
         aiColor3D ambient_color, diffuse_color, specular_color, emission_color;
 
@@ -189,15 +192,15 @@ namespace Vakol::Rendering::Assets::Importer
         Vec3(specular_color, material.properties.specular_color);
         Vec3(emission_color, material.properties.emissive_color);
 
-        ExtractMaterialTextures(aiTextureType_DIFFUSE, in);
-        ExtractMaterialTextures(aiTextureType_SPECULAR, in);
-        ExtractMaterialTextures(aiTextureType_AMBIENT, in);
-        ExtractMaterialTextures(aiTextureType_EMISSIVE, in);
-        ExtractMaterialTextures(aiTextureType_HEIGHT, in);
-        ExtractMaterialTextures(aiTextureType_NORMALS, in);
+        ExtractMaterialTextures(material, aiTextureType_DIFFUSE, in);
+        ExtractMaterialTextures(material, aiTextureType_SPECULAR, in);
+        ExtractMaterialTextures(material, aiTextureType_AMBIENT, in);
+        ExtractMaterialTextures(material, aiTextureType_EMISSIVE, in);
+        ExtractMaterialTextures(material, aiTextureType_HEIGHT, in);
+        ExtractMaterialTextures(material, aiTextureType_NORMALS, in);
     }
 
-    void ExtractMaterialTextures(const aiTextureType type, aiMaterial* const& in)
+    void ExtractMaterialTextures(const Material& material, const aiTextureType type, aiMaterial* const& in)
     {
         const auto count = in->GetTextureCount(type);
 
@@ -206,9 +209,11 @@ namespace Vakol::Rendering::Assets::Importer
 
         aiString str;
 
-        for (auto i = 0u; i < count; ++i) {
-            if (in->GetTexture(type, i, &str) == AI_SUCCESS) {
-                // Add texture to Asset loader
+        for (auto i = 0u; i < count; ++i)
+        {
+            if (in->GetTexture(type, i, &str) == AI_SUCCESS) 
+            {
+                MaterialLibrary::AddTexture()
             }
         }
     }

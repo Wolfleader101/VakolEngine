@@ -60,8 +60,9 @@ namespace Vakol::Rendering
         ShaderLibrary::AddShader(drawable.shaderID, program);
     }
 
-    void RenderAPI::GenerateTexture(Texture&& texture)
+    void RenderAPI::GenerateTexture(Texture&& texture, Drawable& drawable)
     {
+
     }
     
     void RenderAPI::ClearColor(const float color[])
