@@ -16,17 +16,23 @@
 
 #include "Math/Math.hpp"
 
+#include <iostream>
+
+#include <stack>
+
 using namespace Vakol::Rendering::Assets;
 
-constexpr unsigned int ASSIMP_LOADER_OPTIONS =
+constexpr int ASSIMP_LOADER_OPTIONS =
     aiProcess_Triangulate | aiProcess_CalcTangentSpace | aiProcess_GenBoundingBoxes | aiProcess_JoinIdenticalVertices |
     aiProcess_ImproveCacheLocality | aiProcess_SplitLargeMeshes | aiProcess_ValidateDataStructure |
-    aiProcess_FindInvalidData | aiProcess_GlobalScale;
+    aiProcess_FindInvalidData | aiProcess_GlobalScale | aiProcess_PopulateArmatureData;
 
 
 namespace Vakol::Rendering::Assets::Importer
 {
     /*Helper Functions*/
+    static void Mat4(const aiMatrix4x4& in, Math::Mat4& out);
+    static void Quaternion(const aiQuaternion& in, Math::Quaternion& out);
     static void Vec3(const aiVector3D& in, Math::Vec3& out);
     static void Vec3(const aiColor3D& in, Math::Vec3& out);
     static void Vec2(const aiVector3D& in, Math::Vec2& out);
@@ -40,10 +46,12 @@ namespace Vakol::Rendering::Assets::Importer
 
     /*Mesh Internals*/
     static void ExtractVertices(aiMesh* const& in, Mesh& mesh);
-    //static void ExtractBones();
+
+    static void ExtractBones(unsigned int count, aiBone** const& in, std::vector<Bone>& bones);
+    static void ProcessBone(aiBone* const& in, Bone& bone);
 
     /*Materials*/
-    static void ExtractMaterials(unsigned int count, aiMaterial** const& in);
+    static void ExtractMaterials(unsigned int count, aiMaterial** const& in, std::vector<Material>& materials);
     static void ProcessMaterial(aiMaterial* const& in, Material& material);
 
     /*Material Textures*/
@@ -57,7 +65,8 @@ namespace Vakol::Rendering::Assets::Importer
     static void ExtractAnimations(unsigned int count, aiAnimation** const& in);
     static void ProcessAnimation(aiAnimation* const& in, Animation& animation);
 
-    static void ExtractChannels(unsigned int count, aiNodeAnim** const& in);
+    static void ExtractChannels(unsigned int count, aiNodeAnim** const& in, std::vector<Channel>& channels);
+    static void ProcessChannel(aiNodeAnim* const& in, Channel& channel);
 
     Model ImportModel(const char* path, const float scale, bool& success)
     {
@@ -80,7 +89,12 @@ namespace Vakol::Rendering::Assets::Importer
             return model;
         }
 
+        std::cout << std::endl;
+        VK_TRACE("Stats for Model: {0}", path);
+
         ProcessModel(*scene, model);
+
+        std::cout << std::endl;
 
         success = true;
 
@@ -97,7 +111,7 @@ namespace Vakol::Rendering::Assets::Importer
             VK_WARN("Model has no meshes!");
 
         if (scene.HasMaterials())
-            ExtractMaterials(scene.mNumMaterials, scene.mMaterials);
+            ExtractMaterials(scene.mNumMaterials, scene.mMaterials, model.materials);
         else
             VK_WARN("Model has no materials!");
 
@@ -110,27 +124,24 @@ namespace Vakol::Rendering::Assets::Importer
 
     void ExtractMeshes(const unsigned int count, aiMesh** const& in, std::vector<Mesh>& meshes)
     {
-        VK_TRACE("Mesh Count: {0}", count);
-
         Mesh mesh;
 
         for (auto i = 0u; i < count; ++i) 
         {
             ProcessMesh(in[i], mesh);
-
             meshes.emplace_back(mesh);
         }
     }
 
-    void ExtractMaterials(const unsigned int count, aiMaterial** const& in)
+    void ExtractMaterials(const unsigned int count, aiMaterial** const& in, std::vector<Material>& materials)
     {
-        VK_TRACE("Material Count: {0}", count);
-
         Material material;
 
         for (auto i = 0u; i < count; ++i)
         {
             ProcessMaterial(in[i], material);
+            materials.emplace_back(material);
+
             MaterialLibrary::AddMaterial(material);
         }
     }
@@ -153,6 +164,9 @@ namespace Vakol::Rendering::Assets::Importer
         }
 
         ExtractVertices(in, mesh);
+
+        if (in->HasBones())
+            ExtractBones(in->mNumBones, in->mBones, mesh.bones);
     }
 
     void ProcessMaterial(aiMaterial* const& in, Material& material)
@@ -201,7 +215,7 @@ namespace Vakol::Rendering::Assets::Importer
 
     void ExtractVertices(aiMesh* const& in, Mesh& mesh)
     {
-        Rendering::Vertex vertex{};
+        Vertex vertex{};
 
         mesh.vertices.reserve(in->mNumVertices);
 
@@ -244,25 +258,95 @@ namespace Vakol::Rendering::Assets::Importer
 
     void ExtractAnimations(const unsigned int count, aiAnimation** const& in)
     {
-        VK_TRACE("Animation Count: {0}", count);
-
-
         Animation animation;
 
-        for (auto i = 0u; i < count; ++i) 
+        for (auto i = 0u; i < count; ++i)
             ProcessAnimation(in[i], animation);
     }
 
     void ProcessAnimation(aiAnimation* const& in, Animation& animation)
     {
-        //in->mNumChannels
+        animation.name = in->mName.C_Str();
+
+        animation.duration = in->mDuration;
+        animation.ticksPerSecond = in->mTicksPerSecond;
+
+        ExtractChannels(in->mNumChannels, in->mChannels, animation.channels);
     }
 
-    void ExtractChannels(const unsigned int count, aiNodeAnim** const& in)
+    void ExtractBones(const unsigned int count, aiBone** const& in, std::vector<Bone>& bones)
     {
-        
+        Bone bone;
+
+        ProcessBone(in[0], bone);
     }
 
+    void ProcessBone(aiBone* const& in, Bone& bone)
+    {
+        const auto& root = in->mNode;
+
+        if (root == nullptr)
+        {
+            VK_ERROR("Root bone node is nullptr");
+            return;
+        }
+
+        std::stack<aiNode*> stack;
+        stack.emplace(root);
+    }
+
+    void ExtractChannels(const unsigned int count, aiNodeAnim** const& in, std::vector<Channel>& channels)
+    {
+        Channel channel;
+
+        for (auto i = 0u; i < count; ++i)
+        {
+            ProcessChannel(in[i], channel);
+            channels.emplace_back(channel);
+        }
+    }
+
+    void ProcessChannel(aiNodeAnim* const& in, Channel& channel)
+    {
+        channel.name = in->mNodeName.C_Str();
+
+        channel.positions.reserve(in->mNumPositionKeys);
+        Channel::Position position {};
+
+        for (auto i = 0u; i < in->mNumPositionKeys; ++i)
+        {
+            Vec3(in->mPositionKeys[i].mValue, position.position);
+            position.timestamp = in->mPositionKeys[i].mTime;
+        }
+
+        channel.rotations.reserve(in->mNumRotationKeys);
+        Channel::Rotation rotation {};
+
+        for (auto i = 0u; i < in->mNumRotationKeys; ++i)
+        {
+            Quaternion(in->mRotationKeys[i].mValue, rotation.rotation);
+            rotation.timestamp = in->mRotationKeys[i].mTime;
+        }
+
+        channel.scales.reserve(in->mNumScalingKeys);
+        Channel::Scale scale {};
+
+        for (auto i = 0u; i < in->mNumScalingKeys; ++i)
+        {
+            Vec3(in->mScalingKeys[i].mValue, scale.scale);
+            scale.timestamp = in->mScalingKeys[i].mTime;
+        }
+    }
+
+    void Mat4(const aiMatrix4x4& in, Math::Mat4& out)
+    {
+        out = Math::Mat4(in.a1, in.b1, in.c1, in.d1,
+                         in.a2, in.b2, in.c2, in.d2,
+                         in.a3, in.b3, in.c3, in.d3,
+                         in.a4, in.b4, in.c4, in.d4);    
+    }
+
+    void Quaternion(const aiQuaternion& in, Math::Quaternion& out) { out = Math::Quaternion(in.w, in.x, in.y, in.z); }
     void Vec3(const aiVector3D& in, Math::Vec3& out) { out = Math::Vec3(in.x, in.y, in.z); }
     void Vec3(const aiColor3D& in, Math::Vec3& out)  { out = Math::Vec3(in.r, in.g, in.b); }
     void Vec2(const aiVector3D& in, Math::Vec2& out) { out = Math::Vec2(in.x, in.y); }

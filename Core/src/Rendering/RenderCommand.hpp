@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 
 namespace Vakol::Rendering
 {
@@ -12,13 +13,5 @@ namespace Vakol::Rendering
         unsigned int vertexBuffer = 0u;
     };
 
-    struct ShaderCommand
-    {
-        unsigned int program = 0u;  // the shader program id
-    };
-
-    struct TextureCommand
-    {
-        unsigned int texture = 0u;  // the texture id
-    };
+    [[nodiscard]] std::string GenerateID();
 }

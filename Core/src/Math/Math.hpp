@@ -35,6 +35,8 @@ namespace Vakol::Math {
     using Quaternion = glm::quat;
 
     float Radians(float degrees);
+    Vec3 Radians(const Vec3& quaternion);
+
     float Degrees(float radians);
 
     float Dot(const Vec2& a, const Vec2& b);
@@ -81,6 +83,8 @@ namespace Vakol::Math {
     Vec3 MultiplyVector(const Vec3& vec, const Mat4& mat);
 
     Mat4 Inverse(const Mat4& mat);
+
+    Mat4 Mat4Cast(const Quaternion& quaternion);
 
     struct Line
     {

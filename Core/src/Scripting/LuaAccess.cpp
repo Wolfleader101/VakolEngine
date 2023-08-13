@@ -15,6 +15,11 @@
 #include "View/GUI/GUIWindow.hpp"
 #include <Math/Math.hpp>
 
+#include "Rendering/RenderEngine.hpp"
+#include "Rendering/RenderData.hpp"
+#include "Rendering/Assets/ModelLibrary.hpp"
+#include "Rendering/Assets/Model.hpp"
+
 std::vector<Vakol::Math::Mat4> create_mat4_vector(const size_t reserve)
 {
     std::vector<Vakol::Math::Mat4> vector;
@@ -384,6 +389,20 @@ namespace Vakol
         entity_type.set_function("get_terrain", [](const Entity* ent) {
             if (ent->HasComponent<Components::Terrain>())
                 return ent->GetComponent<Components::Terrain>().terrain_ptr;
+        });
+
+        entity_type.set_function("generate_model", [](Entity* ent, const std::string& path, const float scale = 1.0f) {
+
+            if (!ent->HasComponent<Rendering::Drawable>())
+                ent->AddComponent<Rendering::Drawable>();
+
+            auto model = Rendering::Assets::ModelLibrary::GetModel(path, scale);
+            auto& drawable = ent->GetComponent<Rendering::Drawable>();
+
+            VK_TRACE("Number of meshes: {0}", model.meshes.size());
+            VK_TRACE("Number of materials: {0}", model.materials.size());
+
+            Rendering::RenderEngine::GenerateModel(model, drawable);
         });
 
         entity_type.set_function("add_model", [](Entity* ent, const std::string& path, const float scale = 1.0f,

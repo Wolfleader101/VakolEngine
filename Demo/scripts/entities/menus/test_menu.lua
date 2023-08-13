@@ -24,9 +24,9 @@ function start_menu()
 
     GUI:add_text("---- MENU ----", true, false, 2.0, 1.0, 1.0, 1.0, 1.0);
 
-    --GUI:add_text("1 - Enter Sandbox", true, false, 2.0, 1.0, 1.0, 1.0, 1.0);
+    GUI:add_text("1 - Enter Sandbox", true, false, 2.0, 1.0, 1.0, 1.0, 1.0);
 
-    --GUI:add_text(" ", true, false, 2.0, 1.0, 1.0, 1.0, 1.0);
+    GUI:add_text(" ", true, false, 2.0, 1.0, 1.0, 1.0, 1.0);
 
     GUI:add_text("ESC - Exit", true, false, 2.0, 1.0, 1.0, 1.0, 1.0);
 
@@ -41,12 +41,12 @@ function init()
 end
 
 function update()
-    --start_menu();
+    start_menu();
     
     if (Input:get_key_down(KEYS["KEY_1"])) then
         -- toggle_skybox();
         print("CHANGING SCENE")
-        change_scene("sandbox");
+        change_scene("render_test");
         -- toggle_wireframe();
     end
 

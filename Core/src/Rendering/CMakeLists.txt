@@ -14,10 +14,9 @@ src/Rendering/RenderEngine.hpp
 src/Rendering/RenderEngine.cpp
 
 src/Rendering/RenderCommand.hpp
+src/Rendering/RenderCommand.cpp
 
 src/Rendering/RenderData.hpp
-
-src/Rendering/RenderQueue.hpp
 
 src/Rendering/ShaderLibrary.hpp
 src/Rendering/ShaderLibrary.cpp

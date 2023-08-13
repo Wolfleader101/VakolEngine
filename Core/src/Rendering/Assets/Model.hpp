@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Mesh.hpp"
+#include "Material.hpp"
 
 namespace Vakol::Rendering::Assets
 {
@@ -9,5 +10,6 @@ namespace Vakol::Rendering::Assets
         const char* name = nullptr;
 
         std::vector<Mesh> meshes;
+        std::vector<Material> materials;
     };
 }

@@ -9,6 +9,9 @@
 
 #include <Math/Math.hpp>
 
+#include <Rendering/RenderData.hpp>
+#include <Rendering/RenderEngine.hpp>
+
 static std::set<std::pair<std::string, int>> s_animation_set;
 
 Vakol::Math::Vec3 to_glm(const rp3d::Vector3& v)
@@ -83,34 +86,42 @@ namespace Vakol::Controller
 
     void System::Drawable_Update(const Time& time, const std::shared_ptr<View::Renderer>& renderer)
     {
-        m_registry->view<Model::Components::Transform, Model::Components::Drawable>().each(
-            [&](Model::Components::Transform& transform, const Model::Components::Drawable& drawable) {
-                auto euler_rads = Math::DegToRad(transform.eulerAngles);
+        m_registry->view<Model::Components::Transform, Rendering::Drawable>().each(
+            [&](Model::Components::Transform& transform, const Rendering::Drawable& drawable) {
 
-                transform.rot = Math::Quat(euler_rads);
+                Rendering::RenderEngine::Draw(transform, drawable);
 
-                if (!drawable.active)
-                    return;
-
-                if (!drawable.animated)
-                    renderer->Draw(transform, drawable);
             });
 
-        for (const auto& [model, state] : s_animation_set)
-            AssetLoader::GetAnimator(model)->Update(state, time.deltaTime);
 
-        m_registry->view<Model::Components::Transform, Model::Components::Drawable, Model::Components::Animation>()
-            .each([&](const auto& transform, const Model::Components::Drawable& drawable,
-                      const Model::Components::Animation& animation) {
-                if (!drawable.active)
-                    return;
+        //m_registry->view<Model::Components::Transform, Model::Components::Drawable>().each(
+        //    [&](Model::Components::Transform& transform, const Model::Components::Drawable& drawable) {
+        //        auto euler_rads = Math::DegToRad(transform.eulerAngles);
 
-                s_animation_set.emplace(std::make_pair(animation.attached_model, animation.state));
+        //        transform.rot = Math::Quat(euler_rads);
 
-                const auto& loadedAnim = AssetLoader::GetAnimation(animation.attached_model, animation.state);
+        //        if (!drawable.active)
+        //            return;
 
-                renderer->DrawAnimated(transform, drawable, loadedAnim);
-            });
+        //        if (!drawable.animated)
+        //            renderer->Draw(transform, drawable);
+        //    });
+
+        //for (const auto& [model, state] : s_animation_set)
+        //    AssetLoader::GetAnimator(model)->Update(state, time.deltaTime);
+
+        //m_registry->view<Model::Components::Transform, Model::Components::Drawable, Model::Components::Animation>()
+        //    .each([&](const auto& transform, const Model::Components::Drawable& drawable,
+        //              const Model::Components::Animation& animation) {
+        //        if (!drawable.active)
+        //            return;
+
+        //        s_animation_set.emplace(std::make_pair(animation.attached_model, animation.state));
+
+        //        const auto& loadedAnim = AssetLoader::GetAnimation(animation.attached_model, animation.state);
+
+        //        renderer->DrawAnimated(transform, drawable, loadedAnim);
+        //    });
     }
 
     void System::Physics_Init()

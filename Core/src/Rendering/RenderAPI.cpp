@@ -10,18 +10,20 @@
 #include "Platform/OpenGL/common.h"
 
 #include "Controller/Logger.hpp"
+#include "Model/Components.hpp"
 
 namespace Vakol::Rendering
 {
-    RenderQueue<VertexCommand>  RenderAPI::m_vertexQueue;
-    RenderQueue<ShaderCommand>  RenderAPI::m_shaderQueue;
-    RenderQueue<TextureCommand> RenderAPI::m_textureQueue;
+    std::map<std::string, VertexCommand> RenderAPI::m_vertexLibrary;
 
     RenderSettings RenderAPI::m_settings;
 
-    void RenderAPI::GenerateVertexCommand(VertexArray&& vertexArray)
+    void RenderAPI::GenerateVertexCommand(VertexArray&& vertexArray, Drawable& drawable)
     {
         VertexCommand command;
+
+        drawable.vertexArrayID = GenerateID();
+        VK_TRACE("Vertex Array ID: {0}", drawable.vertexArrayID);
 
         command.nVertices = static_cast<int>(vertexArray.vertices.size());
         command.nIndices = static_cast<int>(vertexArray.indices.size());
@@ -41,27 +43,25 @@ namespace Vakol::Rendering
                 break;
         }
 
-        m_vertexQueue.Emplace(command);
+        m_vertexLibrary.emplace(drawable.vertexArrayID, command);
 
         std::vector<Vertex>().swap(vertexArray.vertices);
         std::vector<unsigned int>().swap(vertexArray.indices);
     }
 
-    void RenderAPI::GenerateShaderCommand(Assets::Shader&& shader)
+    void RenderAPI::GenerateShader(Assets::Shader&& shader, Drawable& drawable)
     {
-        ShaderCommand command;
+        drawable.shaderID = GenerateID();
+        VK_TRACE("SHADER ID: {0}", drawable.shaderID);
 
-        command.program = OpenGL::GenerateShaderProgram(std::move(shader.sources));
-        ShaderLibrary::GetShaderUniforms(command.program);
+        const unsigned int program = OpenGL::GenerateShaderProgram(std::move(shader.sources));
+        ShaderLibrary::GetShaderUniforms(program);
 
-        ShaderLibrary::AddShader(shader.path.c_str(), command.program);
-
-        m_shaderQueue.Emplace(command);
+        ShaderLibrary::AddShader(drawable.shaderID, program);
     }
 
-    void RenderAPI::GenerateTextureCommand(Texture&& texture)
+    void RenderAPI::GenerateTexture(Texture&& texture)
     {
-        TextureCommand command;
     }
     
     void RenderAPI::ClearColor(const float color[])
@@ -110,10 +110,10 @@ namespace Vakol::Rendering
         }
     }
 
-    void RenderAPI::BeginDraw()
+    void RenderAPI::BeginDraw(const std::string& vertexID, const std::string& shaderID)
     {
-        const auto [nVertices, nIndices, vertexArray, vertexBuffer] = m_vertexQueue.Front();
-        const auto& [program] = m_shaderQueue.Front();
+        const auto& [nVertices, nIndices, vertexArray, vertexBuffer] = m_vertexLibrary.at(vertexID);
+        const auto program = ShaderLibrary::GetShader(shaderID);
 
         OpenGL::BindShaderProgram(program);
 
@@ -121,7 +121,6 @@ namespace Vakol::Rendering
         OpenGL::DrawTriangleElements(nIndices);
 
         ShaderLibrary::SetMat4(program, "PV_MATRIX", false, GetProjectionMatrix() * GetViewMatrix(Math::Vec3(0.0f, 0.0f, -5.0f)));
-        // ShaderLibrary::SetMat4(program, "MODEL_MATRIX", false, GetModelMatrix(transform));
     }
 
     void RenderAPI::EndDraw()
@@ -141,17 +140,17 @@ namespace Vakol::Rendering
         return Math::LookAt(position, lookDirection, up);
     }
 
-    Math::Mat4 RenderAPI::GetModelMatrix(Transform& transform)
+    Math::Mat4 RenderAPI::GetModelMatrix(Model::Components::Transform& transform)
     {
         auto transform_matrix = Math::Mat4(1.0f);
 
-        transform_matrix = translate(transform_matrix, transform.position);
+        transform_matrix = Math::Translate(transform_matrix, transform.pos);
 
-        transform.m_rotation = Math::Quaternion(radians(transform.rotation));
+        transform.rot = Math::Quaternion(Math::Radians(transform.eulerAngles));
 
-        const auto rotation_matrix = mat4_cast(transform.m_rotation);
+        const auto rotation_matrix = Math::Mat4Cast(transform.rot);
 
-        transform_matrix = scale(transform_matrix, transform.scale);
+        transform_matrix = Math::Scale(transform_matrix, transform.scale);
 
         return transform_matrix * rotation_matrix;
     }

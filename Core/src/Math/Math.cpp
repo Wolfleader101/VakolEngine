@@ -12,6 +12,11 @@ namespace Vakol::Math
         return a.x * b.x + a.y * b.y + a.z * b.z;
     }
 
+    Vec3 Radians(const Vec3& v)
+    {
+        return glm::radians(v);
+    }
+
     float Radians(const float degrees)
     {
         return glm::radians(degrees);
@@ -118,6 +123,11 @@ namespace Vakol::Math
     Ray FromPoints(const Point& from, const Point& to)
     {
         return Ray(from, Normalized(to - from));
+    }
+
+    Mat4 Mat4Cast(const Quaternion& quaternion)
+    {
+        return glm::mat4_cast(quaternion);
     }
 
     Mat4 Translation(const Vec3& pos)

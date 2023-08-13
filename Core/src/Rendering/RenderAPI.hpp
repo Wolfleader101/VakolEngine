@@ -1,12 +1,18 @@
 #pragma once
 
-#include "RenderQueue.hpp"
-
 #include "Math/Math.hpp"
+
+#include <map>
+#include <string>
 
 namespace Vakol::Rendering::Assets
 {
     struct Shader;
+}
+
+namespace Vakol::Model::Components
+{
+    struct Transform;
 }
 
 namespace Vakol::Rendering
@@ -21,7 +27,7 @@ namespace Vakol::Rendering
     struct ShaderCommand;
     struct TextureCommand;
 
-    struct Transform;
+    struct Drawable;
 
     enum VK_RENDER_API_HINT { OPENGL, VULKAN, DIRECT3D, METAL };
     enum VK_BUFFER_HINT { VK_COLOR_BUFFER = BIT(0), VK_DEPTH_BUFFER = BIT(1), VK_STENCIL_BUFFER = BIT(2) };
@@ -39,20 +45,18 @@ namespace Vakol::Rendering
         static void ClearColor(const float color[]);
         static void Clear(unsigned int mask);
 
-        static void BeginDraw();
+        static void BeginDraw(const std::string& vertexID, const std::string& shaderID);
         static void EndDraw();
 
         static Math::Mat4 GetProjectionMatrix();
         static Math::Mat4 GetViewMatrix(const Math::Vec3& position, const Math::Vec3& lookDirection = Math::Vec3(0.0f, 0.0f, -1.0f), const Math::Vec3& up = Math::Vec3(0.0f, 1.0f, 0.0f));
-        static Math::Mat4 GetModelMatrix(Transform& transform);
+        static Math::Mat4 GetModelMatrix(Model::Components::Transform& transform);
 
-        static void GenerateVertexCommand(VertexArray&& vertexArray);
-        static void GenerateShaderCommand(Assets::Shader&& shader);
-        static void GenerateTextureCommand(Texture&& texture);
+        static void GenerateVertexCommand(VertexArray&& vertexArray, Drawable& drawable);
+        static void GenerateShader(Assets::Shader&& shader, Drawable& drawable);
+        static void GenerateTexture(Texture&& texture);
     private:
-        static RenderQueue<VertexCommand>  m_vertexQueue;
-        static RenderQueue<ShaderCommand>  m_shaderQueue;
-        static RenderQueue<TextureCommand> m_textureQueue;
+        static std::map<std::string, VertexCommand> m_vertexLibrary;
 
         static RenderSettings m_settings;
     };

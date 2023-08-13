@@ -59,9 +59,6 @@ namespace Vakol::Controller
 
         LuaScript mainScript = m_scriptEngine.CreateScript("scripts/main.lua");
 
-        //Rendering::RenderEngine::GenerateModel("coreAssets/models/cube.obj", 1.0f);
-        Rendering::RenderEngine::GenerateSphere();
-
         m_running = true;
     }
 
@@ -189,7 +186,6 @@ namespace Vakol::Controller
             // Compute the time interpolation factor
             // float alpha = m_time.accumulator / m_time.tickRate;
 
-            m_renderEngine->Draw();
             //m_renderer->UpdateData(activeScene.GetCamera());
 
             activeScene.GetEntityList().GetRegistry().view<LuaScript>().each(

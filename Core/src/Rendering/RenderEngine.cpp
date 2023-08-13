@@ -8,11 +8,16 @@
 #include "View/Window/Window.hpp"
 
 #include "Assets/Importer/ShaderImporter.hpp"
-#include "Assets/Importer/ModelImporter.hpp"
+#include "Assets/ModelLibrary.hpp"
+
 #include "Controller/Logger.hpp"
+
+#include "Model/Components.hpp"
 
 namespace Vakol::Rendering
 {
+    const std::string DEFAULT_SHADER_PATH = "coreAssets/shaders/default.program";
+
     void RenderEngine::PreDraw()
     {
         constexpr float color[] = {0.45f, 0.6f, 0.75f};
@@ -21,11 +26,11 @@ namespace Vakol::Rendering
         RenderAPI::Clear(VK_COLOR_BUFFER | VK_DEPTH_BUFFER);
     }
 
-    void RenderEngine::Draw()
+    void RenderEngine::Draw(Model::Components::Transform& transform, const Drawable& drawable)
     {
-        RenderAPI::BeginDraw();
+        RenderAPI::BeginDraw(drawable.vertexArrayID, drawable.shaderID);
 
-        MaterialLibrary::SetColor(ShaderLibrary::GetShader("coreAssets/shaders/default.program"), Math::Vec4(1.0f, 1.0f, 1.0f, 1.0f));
+        ShaderLibrary::SetMat4(ShaderLibrary::GetShader(drawable.shaderID), "MODEL_MATRIX", false, RenderAPI::GetModelMatrix(transform));
 
         RenderAPI::EndDraw();
     }
@@ -35,52 +40,54 @@ namespace Vakol::Rendering
         
     }
 
-    void RenderEngine::GenerateSphere(const float scale)
+    void RenderEngine::GenerateSphere(const float scale, Drawable& drawable)
     {
         bool success = true;
-        auto shader = Assets::Importer::ImportShader("coreAssets/shaders/default.program", success);
+        auto shader = Assets::Importer::ImportShader(DEFAULT_SHADER_PATH, success);
 
         if (success)
-            SubmitShaderData(std::move(shader));
+            SubmitShaderData(std::move(shader), drawable);
 
-        auto model = Assets::Importer::ImportModel("coreAssets/models/sphere.obj", scale, success);
+        auto model = Assets::ModelLibrary::GetModel("coreAssets/models/sphere.obj", scale);
 
         if (success)
-            SubmitModel(model);
+            SubmitModel(model, drawable);
     }
 
-    void RenderEngine::GenerateCube(const float scale)
+    void RenderEngine::GenerateCube(const float scale, Drawable& drawable)
     {
         bool success = true;
-        auto shader = Assets::Importer::ImportShader("coreAssets/shaders/default.program", success);
+        auto shader = Assets::Importer::ImportShader(DEFAULT_SHADER_PATH, success);
 
         if (success)
-            SubmitShaderData(std::move(shader));
+            SubmitShaderData(std::move(shader), drawable);
 
-        auto model = Assets::Importer::ImportModel("coreAssets/models/cube.obj", scale, success);
+        auto model = Assets::ModelLibrary::GetModel("coreAssets/models/cube.obj", scale);
 
         if (success)
-            SubmitModel(model);
+            SubmitModel(model, drawable);
     }
 
-    void RenderEngine::GenerateModel(const char* path, const float scale)
+    void RenderEngine::GenerateModel(Assets::Model& model, Drawable& drawable)
     {
         bool success = true;
-        auto model = Assets::Importer::ImportModel(path, scale, success);
+        auto shader = Assets::Importer::ImportShader(DEFAULT_SHADER_PATH, success);
 
         if (success)
-            SubmitModel(model);
+            SubmitShaderData(std::move(shader), drawable);
+
+        SubmitModel(model, drawable);
     }
 
-    void RenderEngine::SubmitModel(Assets::Model& model)
+    void RenderEngine::SubmitModel(Assets::Model& model, Drawable& drawable)
     {
         for (auto& mesh : model.meshes) 
         {
-            SubmitMesh(mesh);
+            SubmitMesh(mesh, drawable);
         }
     }
 
-    void RenderEngine::SubmitMesh(Assets::Mesh& mesh)
+    void RenderEngine::SubmitMesh(Assets::Mesh& mesh, Drawable& drawable)
     {
         VertexArray vertexArray;
         
@@ -90,7 +97,7 @@ namespace Vakol::Rendering
         // swap vector with an empty vector to de-allocate the memory taken by the vector
         std::vector<unsigned int>().swap(mesh.indices);
 
-        SubmitVertexData(std::move(vertexArray));
+        SubmitVertexData(std::move(vertexArray), drawable);
     }
 
     std::shared_ptr<RenderEngine> CreateRenderEngine([[maybe_unused]] const std::string& API, const std::shared_ptr<View::Window>& window)

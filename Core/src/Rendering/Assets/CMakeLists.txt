@@ -11,4 +11,7 @@ src/Rendering/Assets/Material.hpp
 src/Rendering/Assets/Animation.hpp
 src/Rendering/Assets/Shader.hpp
 
+src/Rendering/Assets/ModelLibrary.hpp
+src/Rendering/Assets/ModelLibrary.cpp
+
 PARENT_SCOPE)
