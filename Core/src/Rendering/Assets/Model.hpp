@@ -1,15 +1,13 @@
 #pragma once
 
 #include "Mesh.hpp"
-#include "Material.hpp"
 
 namespace Vakol::Rendering::Assets
 {
     struct Model
     {
-        const char* name = nullptr;
+        std::string name;
 
         std::vector<Mesh> meshes;
-        std::vector<Material> materials;
     };
 }

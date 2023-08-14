@@ -31,15 +31,22 @@ namespace Vakol::Rendering
             m_uniforms[shader].emplace();
 
         OpenGL::GetUniforms(shader, m_uniforms.at(shader));
+
+        SetInt(shader, "material.texture_diffuse", 0);
+        SetInt(shader, "material.texture_specular", 1);
+        SetInt(shader, "material.texture_ambient", 2);
+        SetInt(shader, "material.texture_emission", 3);
+        SetInt(shader, "material.texture_height", 4);
+        SetInt(shader, "material.texture_normal", 5);
     }
 
-    void ShaderLibrary::SetMat4(const unsigned int shader, const char* name, const bool transpose, const Math::Mat4& value)
+    void ShaderLibrary::SetInt(const unsigned int shader, const char* name, const int value)
     {
         if (UniformExists(shader, name))
         {
             const auto& [location, count] = GetUniform(shader, name);
 
-            OpenGL::SetMat4(location, count, name, transpose, Math::ToArray(value));
+            OpenGL::SetInt(location, value);
         }
     }
 
@@ -70,6 +77,16 @@ namespace Vakol::Rendering
             const auto& [location, count] = GetUniform(shader, name);
 
             OpenGL::SetVec4(location, count, Math::ToArray(value));
+        }
+    }
+
+    void ShaderLibrary::SetMat4(const unsigned int shader, const char* name, const bool transpose, const Math::Mat4& value)
+    {
+        if (UniformExists(shader, name))
+        {
+            const auto& [location, count] = GetUniform(shader, name);
+
+            OpenGL::SetMat4(location, count, name, transpose, Math::ToArray(value));
         }
     }
 

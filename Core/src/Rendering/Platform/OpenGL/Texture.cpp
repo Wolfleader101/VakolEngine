@@ -1,12 +1,17 @@
 #include "Texture.hpp"
 
+#include "Controller/Logger.hpp"
+
 #include <glad/glad.h>
 
 namespace Vakol::Rendering::OpenGL
 {
-    unsigned int GenerateTexture(const int width, const int height, const unsigned char*& pixels)
+    unsigned int GenerateTexture(const int width, const int height, const unsigned char* pixels)
     {
         unsigned int texture;
+
+        if (width <= 0 || height <= 0)
+            return 0u;
 
         glGenTextures(1, &texture);
         glBindTexture(GL_TEXTURE_2D, texture);
@@ -24,7 +29,17 @@ namespace Vakol::Rendering::OpenGL
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 
-        return 0u;
+        return texture;
+    }
+
+    void SetActiveTexture(const int slot)
+    {
+        glActiveTexture(GL_TEXTURE0 + slot);
+    }
+
+    void BindTexture(const unsigned int texture)
+    {
+        glBindTexture(GL_TEXTURE_2D, texture);
     }
 
 }

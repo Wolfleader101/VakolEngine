@@ -4,3 +4,4 @@
 #include "VertexArray.hpp"
 #include "Shader.hpp"
 #include "Renderer.hpp"
+#include "Texture.hpp"

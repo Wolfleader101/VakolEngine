@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Texture.hpp"
+
 namespace Vakol::Rendering::Assets
 {
     struct MaterialProperties
@@ -18,10 +20,12 @@ namespace Vakol::Rendering::Assets
 
     struct Material
     {
-        const char* name = nullptr;  // The name of the material
+        std::string name;  // The name of the material
 
         std::string ID = "null";
         std::string shaderID = "null";
+
+        std::vector<Texture> textures;
 
         MaterialProperties properties;  // the properties that make up a material
     };

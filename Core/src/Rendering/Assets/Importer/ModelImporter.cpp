@@ -12,8 +12,6 @@
 #include "../Texture.hpp"
 
 #include "Rendering/RenderData.hpp"
-#include "Rendering/MaterialLibrary.hpp"
-#include "Rendering/RenderCommand.hpp"
 
 #include "Math/Math.hpp"
 
@@ -51,11 +49,11 @@ namespace Vakol::Rendering::Assets::Importer
     static void ProcessBone(aiBone* const& in, Bone& bone);
 
     /*Materials*/
-    static void ExtractMaterials(unsigned int count, aiMaterial** const& in, std::vector<Material>& materials);
+    static void ExtractMaterials(unsigned int count, aiMaterial** const& in, std::vector<Mesh>& meshes);
     static void ProcessMaterial(aiMaterial* const& in, Material& material);
 
     /*Material Textures*/
-    static void ExtractMaterialTextures(const Material& material, aiTextureType type, aiMaterial* const& in);
+    static void ExtractMaterialTextures(aiTextureType type, aiMaterial* const& in, std::vector<Texture>& textures);
 
     /*Embedded Textures*/
     static void ExtractEmbeddedTextures(unsigned int count, aiTexture** const& in);
@@ -111,7 +109,7 @@ namespace Vakol::Rendering::Assets::Importer
             VK_WARN("Model has no meshes!");
 
         if (scene.HasMaterials())
-            ExtractMaterials(scene.mNumMaterials, scene.mMaterials, model.materials);
+            ExtractMaterials(scene.mNumMaterials, scene.mMaterials, model.meshes);
         else
             VK_WARN("Model has no materials!");
 
@@ -133,16 +131,16 @@ namespace Vakol::Rendering::Assets::Importer
         }
     }
 
-    void ExtractMaterials(const unsigned int count, aiMaterial** const& in, std::vector<Material>& materials)
+    void ExtractMaterials(const unsigned int count, aiMaterial** const& in, std::vector<Mesh>& meshes)
     {
         Material material;
 
         for (auto i = 0u; i < count; ++i)
         {
             ProcessMaterial(in[i], material);
-            materials.emplace_back(material);
 
-            MaterialLibrary::AddMaterial(material);
+            for (auto& mesh : meshes)
+                mesh.material = std::make_shared<Material>(material);
         }
     }
 
@@ -174,7 +172,6 @@ namespace Vakol::Rendering::Assets::Importer
     void ProcessMaterial(aiMaterial* const& in, Material& material)
     {
         material.name = in->GetName().C_Str();
-        material.ID = GenerateID();
 
         aiColor3D ambient_color, diffuse_color, specular_color, emission_color;
 
@@ -192,20 +189,22 @@ namespace Vakol::Rendering::Assets::Importer
         Vec3(specular_color, material.properties.specular_color);
         Vec3(emission_color, material.properties.emissive_color);
 
-        ExtractMaterialTextures(material, aiTextureType_DIFFUSE, in);
-        ExtractMaterialTextures(material, aiTextureType_SPECULAR, in);
-        ExtractMaterialTextures(material, aiTextureType_AMBIENT, in);
-        ExtractMaterialTextures(material, aiTextureType_EMISSIVE, in);
-        ExtractMaterialTextures(material, aiTextureType_HEIGHT, in);
-        ExtractMaterialTextures(material, aiTextureType_NORMALS, in);
+        ExtractMaterialTextures(aiTextureType_DIFFUSE, in, material.textures);
+        ExtractMaterialTextures(aiTextureType_SPECULAR, in, material.textures);
+        ExtractMaterialTextures(aiTextureType_AMBIENT, in, material.textures);
+        ExtractMaterialTextures(aiTextureType_EMISSIVE, in, material.textures);
+        ExtractMaterialTextures(aiTextureType_HEIGHT, in, material.textures);
+        ExtractMaterialTextures(aiTextureType_NORMALS, in, material.textures);
     }
 
-    void ExtractMaterialTextures(const Material& material, const aiTextureType type, aiMaterial* const& in)
+    void ExtractMaterialTextures(const aiTextureType type, aiMaterial* const& in, std::vector<Texture>& textures)
     {
         const auto count = in->GetTextureCount(type);
 
         if (count == 0)
             return;
+
+        Texture texture;
 
         aiString str;
 
@@ -213,7 +212,10 @@ namespace Vakol::Rendering::Assets::Importer
         {
             if (in->GetTexture(type, i, &str) == AI_SUCCESS) 
             {
-                MaterialLibrary::AddTexture()
+                texture.path = str.C_Str();
+                texture.type = static_cast<VK_TEXTURE_TYPE>(type);
+
+                textures.emplace_back(texture);
             }
         }
     }

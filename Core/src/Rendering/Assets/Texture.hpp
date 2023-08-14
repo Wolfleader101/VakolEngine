@@ -1,22 +1,54 @@
 #pragma once
 
-enum VK_TEXTURE_TYPE
+#include <string>
+
+namespace Vakol::Rendering::Assets
 {
-    VK_TEXTURE_NONE,
-    VK_TEXTURE_AMBIENT,
-    VK_TEXTURE_DIFFUSE,
-    VK_TEXTURE_SPECULAR,
-    VK_TEXTURE_NORMAL,
-    VK_TEXTURE_EMISSION
-};
 
-struct Texture
-{
-    const char* path = nullptr;
+    enum VK_TEXTURE_TYPE
+    {
+        VK_TEXTURE_NONE,
+        VK_TEXTURE_DIFFUSE,
+        VK_TEXTURE_SPECULAR,
+        VK_TEXTURE_AMBIENT,
+        VK_TEXTURE_EMISSION,
+        VK_TEXTURE_HEIGHT,
+        VK_TEXTURE_NORMAL
+    };
 
-    int width = 0;
-    int height = 0;
-    int bpp = 0; // bytes-per-pixel (number of color channels in an image) R = 1, RG = 2, RGB = 3, RGBA = 4
+    inline std::string ToString(const VK_TEXTURE_TYPE type)
+    {
+        switch (type)
+        {
+        case VK_TEXTURE_NONE:
+            return "NONE";
+        case VK_TEXTURE_DIFFUSE:
+            return "DIFFUSE";
+        case VK_TEXTURE_SPECULAR:
+            return "SPECULAR";
+        case VK_TEXTURE_AMBIENT:
+            return "AMBIENT";
+        case VK_TEXTURE_EMISSION:
+            return "EMISSION";
+        case VK_TEXTURE_HEIGHT:
+            return "HEIGHT";
+        case VK_TEXTURE_NORMAL:
+            return "NORMAL";
+        }
 
-    VK_TEXTURE_TYPE type = VK_TEXTURE_NONE;
-};
+        return "UNKNOWN";
+    }
+
+    struct Texture
+    {
+        std::string path;
+
+        unsigned int ID = 0;
+
+        int width = 0;
+        int height = 0;
+        int channels = 0; // bytes-per-pixel (number of color channels in an image) R = 1, RG = 2, RGB = 3, RGBA = 4
+
+        VK_TEXTURE_TYPE type = VK_TEXTURE_NONE;
+    };
+}

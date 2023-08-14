@@ -1,5 +1,6 @@
 #include "RenderAPI.hpp"
 
+#include "MaterialLibrary.hpp"
 #include "RenderData.hpp"
 #include "RenderCommand.hpp"
 
@@ -11,6 +12,8 @@
 
 #include "Controller/Logger.hpp"
 #include "Model/Components.hpp"
+
+#include "Assets/Importer/TextureImporter.hpp"
 
 namespace Vakol::Rendering
 {
@@ -52,7 +55,7 @@ namespace Vakol::Rendering
     void RenderAPI::GenerateShader(Assets::Shader&& shader, Drawable& drawable)
     {
         drawable.shaderID = GenerateID();
-        VK_TRACE("SHADER ID: {0}", drawable.shaderID);
+        VK_TRACE("Shader ID: {0}", drawable.shaderID);
 
         const unsigned int program = OpenGL::GenerateShaderProgram(std::move(shader.sources));
         ShaderLibrary::GetShaderUniforms(program);
@@ -60,9 +63,13 @@ namespace Vakol::Rendering
         ShaderLibrary::AddShader(drawable.shaderID, program);
     }
 
-    void RenderAPI::GenerateTexture(Texture&& texture, Drawable& drawable)
+    unsigned int RenderAPI::GenerateTexture(Assets::Texture& texture, const Drawable& drawable)
     {
+        unsigned char* pixels = nullptr;
 
+        Assets::Importer::ImportTexture(texture.path, texture.width, texture.height, texture.channels, pixels);
+
+        return OpenGL::GenerateTexture(texture.width, texture.height, pixels);
     }
     
     void RenderAPI::ClearColor(const float color[])
@@ -111,12 +118,18 @@ namespace Vakol::Rendering
         }
     }
 
-    void RenderAPI::BeginDraw(const std::string& vertexID, const std::string& shaderID)
+    void RenderAPI::BeginDraw(const std::string& vertexID, const std::string& shaderID, const std::string& materialID)
     {
         const auto& [nVertices, nIndices, vertexArray, vertexBuffer] = m_vertexLibrary.at(vertexID);
         const auto program = ShaderLibrary::GetShader(shaderID);
 
         OpenGL::BindShaderProgram(program);
+
+        for (const auto& texture : MaterialLibrary::GetTextures(materialID))
+        {
+            OpenGL::SetActiveTexture(0);
+            OpenGL::BindTexture(texture.ID);
+        }
 
         OpenGL::BindVertexArray(vertexArray);
         OpenGL::DrawTriangleElements(nIndices);

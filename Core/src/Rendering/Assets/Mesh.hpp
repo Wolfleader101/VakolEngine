@@ -1,10 +1,12 @@
 #pragma once
 
-#include <Math/Math.hpp>
+#include "Math/Math.hpp"
 
 #include "Rendering/RenderData.hpp"
+#include "Material.hpp"
 
 #include <vector>
+#include <memory>
 
 namespace Vakol::Rendering::Assets
 {
@@ -16,7 +18,7 @@ namespace Vakol::Rendering::Assets
 
     struct Bone
     {
-        const char* name = nullptr;
+        std::string name;
 
         Math::Mat4 offset {};
 
@@ -31,13 +33,15 @@ namespace Vakol::Rendering::Assets
 
     struct Mesh
     {
-        const char* name = nullptr;
+        std::string name;
 
         std::vector<Vertex> vertices;
         std::vector<unsigned int> indices;
 
         std::vector<Bone> bones;
 
-        Bounds bounds{};
+        std::shared_ptr<Material> material = nullptr;
+
+        Bounds bounds {};
     };
 }

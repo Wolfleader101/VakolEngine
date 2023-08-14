@@ -8,6 +8,7 @@
 namespace Vakol::Rendering::Assets
 {
     struct Shader;
+    struct Texture;
 }
 
 namespace Vakol::Model::Components
@@ -20,8 +21,6 @@ namespace Vakol::Rendering
     constexpr int BIT(const int x) { return 1 << x; }
 
     struct VertexArray;
-
-    struct Texture;
 
     struct VertexCommand;
     struct ShaderCommand;
@@ -45,7 +44,7 @@ namespace Vakol::Rendering
         static void ClearColor(const float color[]);
         static void Clear(unsigned int mask);
 
-        static void BeginDraw(const std::string& vertexID, const std::string& shaderID);
+        static void BeginDraw(const std::string& vertexID, const std::string& shaderID, const std::string& materialID);
         static void EndDraw();
 
         static Math::Mat4 GetProjectionMatrix();
@@ -54,7 +53,7 @@ namespace Vakol::Rendering
 
         static void GenerateVertexCommand(VertexArray&& vertexArray, Drawable& drawable);
         static void GenerateShader(Assets::Shader&& shader, Drawable& drawable);
-        static void GenerateTexture(Texture&& texture, Drawable& drawable);
+        static unsigned int GenerateTexture(Assets::Texture& texture, const Drawable& drawable);
     private:
         static std::map<std::string, VertexCommand> m_vertexLibrary;
 

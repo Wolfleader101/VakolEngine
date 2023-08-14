@@ -1,6 +1,7 @@
 #include "RenderEngine.hpp"
 
 #include "MaterialLibrary.hpp"
+#include "RenderCommand.hpp"
 #include "ShaderLibrary.hpp"
 
 #include "Assets/Model.hpp"
@@ -28,8 +29,9 @@ namespace Vakol::Rendering
 
     void RenderEngine::Draw(Model::Components::Transform& transform, const Drawable& drawable)
     {
-        RenderAPI::BeginDraw(drawable.vertexArrayID, drawable.shaderID);
+        RenderAPI::BeginDraw(drawable.vertexArrayID, drawable.shaderID, drawable.materialID);
 
+        MaterialLibrary::SetupMaterial(MaterialLibrary::GetMaterial(drawable.materialID));
         ShaderLibrary::SetMat4(ShaderLibrary::GetShader(drawable.shaderID), "MODEL_MATRIX", false, RenderAPI::GetModelMatrix(transform));
 
         RenderAPI::EndDraw();
@@ -77,6 +79,26 @@ namespace Vakol::Rendering
             SubmitShaderData(std::move(shader), drawable);
 
         SubmitModel(model, drawable);
+
+        for (auto& mesh : model.meshes)
+        {
+            auto& material = mesh.material;
+
+            material->ID = GenerateID();
+            material->shaderID = drawable.shaderID;
+
+            MaterialLibrary::AddMaterial(*material);
+
+            drawable.materialID = material->ID;
+
+            for (auto& texture : material->textures)
+            {
+                texture.ID = RenderAPI::GenerateTexture(texture, drawable);
+
+                if (texture.ID != 0)
+                    MaterialLibrary::AddTexture(material->ID, texture);
+            }
+        }
     }
 
     void RenderEngine::SubmitModel(Assets::Model& model, Drawable& drawable)

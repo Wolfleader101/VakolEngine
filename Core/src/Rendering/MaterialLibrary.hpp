@@ -9,6 +9,7 @@
 namespace Vakol::Rendering::Assets
 {
     struct Material;
+    struct Texture;
 }
 
 namespace Vakol::Rendering
@@ -16,15 +17,19 @@ namespace Vakol::Rendering
     class MaterialLibrary
     {
     public:
+        static void SetupMaterial(const Assets::Material& material);
+
         static void AddMaterial(const Assets::Material& material);
+        static Assets::Material& GetMaterial(const std::string& materialID);
 
-        static void AddTexture(const Assets::Material& material, const std::string& texturePath, unsigned int texture);
-        static unsigned int GetTexture(const Assets::Material& material, const std::string& texturePath);
+        static void AddTexture(const std::string& materialID, const Assets::Texture& texture);
 
-        static void SetColor(const Assets::Material& material, const Math::Vec4& color);
-        static void SetShininess(const Assets::Material& material, float shininess);
+        static std::vector<Assets::Texture>& GetTextures(const std::string& materialID);
+
+        static void SetColor(const std::string& materialID, const Math::Vec4& color);
+        static void SetShininess(const std::string& materialID, float shininess);
     private:
         static std::unordered_map<std::string, Assets::Material> m_materials;
-        static std::unordered_map<std::pair<std::string, std::string>, unsigned int> m_textures;
+        static std::unordered_map<std::string, std::vector<Assets::Texture>> m_textures;
     };
 }

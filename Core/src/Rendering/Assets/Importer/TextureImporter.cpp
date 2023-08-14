@@ -1,16 +1,22 @@
 #include "TextureImporter.hpp"
 
+#include "Controller/AssetLoader/FileLoader.hpp"
 #include "Controller/Logger.hpp"
 
 #include <stb_image.h>
 
 namespace Vakol::Rendering::Assets::Importer
 {
-    Texture ImportTexture(const std::string& path, unsigned char*& pixels)
+    void ImportTexture(const std::string& path, int& width, int& height, int& channels, unsigned char*& pixels)
     {
-        Texture texture;
+        if (!FileExists(path))
+        {
+            VK_ERROR("Could not find texture file at path: {0}", path);
 
-        pixels = stbi_load(path.c_str(), &texture.width, &texture.height, &texture.bpp, 0);
+            return;
+        }
+
+        pixels = stbi_load(path.c_str(), &width, &height, &channels, 0);
 
         if (!pixels)
         {
@@ -19,8 +25,18 @@ namespace Vakol::Rendering::Assets::Importer
             stbi_image_free(pixels);
             pixels = nullptr;
         }
-
-        return texture;
     }
 
+    void ImportTexture(const unsigned char*& buffer, const int length, int& width, int& height, int& channels, unsigned char*& pixels)
+    {
+        pixels = stbi_load_from_memory(buffer, length, &width, &height, &channels, 0);
+
+        if (!pixels)
+        {
+            VK_ERROR("Unabled to import embedded texture");
+
+            stbi_image_free(pixels);
+            pixels = nullptr;
+        }
+    }
 }

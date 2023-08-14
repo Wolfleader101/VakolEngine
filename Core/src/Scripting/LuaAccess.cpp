@@ -399,9 +399,6 @@ namespace Vakol
             auto model = Rendering::Assets::ModelLibrary::GetModel(path, scale);
             auto& drawable = ent->GetComponent<Rendering::Drawable>();
 
-            VK_TRACE("Number of meshes: {0}", model.meshes.size());
-            VK_TRACE("Number of materials: {0}", model.materials.size());
-
             Rendering::RenderEngine::GenerateModel(model, drawable);
         });
 
