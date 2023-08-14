@@ -27,13 +27,13 @@ namespace Vakol::Rendering::Assets::Importer
         }
     }
 
-    void ImportTexture(const unsigned char*& buffer, const int length, int& width, int& height, int& channels, unsigned char*& pixels)
+    void ImportTexture(const void* data, const int length, int& width, int& height, int& channels, unsigned char*& pixels)
     {
-        pixels = stbi_load_from_memory(buffer, length, &width, &height, &channels, 0);
+        pixels = stbi_load_from_memory(static_cast<const stbi_uc* const>(data), length, &width, &height, &channels, 0);
 
         if (!pixels)
         {
-            VK_ERROR("Unabled to import embedded texture");
+            VK_ERROR("Unable to import embedded texture");
 
             stbi_image_free(pixels);
             pixels = nullptr;

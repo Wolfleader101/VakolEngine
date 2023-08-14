@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <memory>
 
 namespace Vakol::Rendering::Assets
 {
@@ -47,7 +48,10 @@ namespace Vakol::Rendering::Assets
 
         int width = 0;
         int height = 0;
+
         int channels = 0; // bytes-per-pixel (number of color channels in an image) R = 1, RG = 2, RGB = 3, RGBA = 4
+
+        bool embedded = false;
 
         VK_TEXTURE_TYPE type = VK_TEXTURE_NONE;
     };

@@ -43,9 +43,7 @@ namespace Vakol::Controller
 
         m_renderEngine = Rendering::CreateRenderEngine(config.value().rendererType, m_window);
 
-        if (!m_renderer && m_renderEngine)
-            VK_WARN("renderer is nullptr!");
-        else if (!m_renderer && !m_renderEngine) 
+        if (!m_renderer && !m_renderEngine) 
         {
             VK_ERROR("Both renderers are nullptr!");
             return;

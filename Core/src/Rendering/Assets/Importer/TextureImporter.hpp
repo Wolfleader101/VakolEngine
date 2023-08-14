@@ -7,5 +7,5 @@
 namespace Vakol::Rendering::Assets::Importer
 {
     void ImportTexture(const std::string& path, int& width, int& height, int& channels, unsigned char*& pixels);
-    void ImportTexture(const unsigned char*& buffer, int length, int& width, int& height, int& channels, unsigned char*& pixels); // memory location of embedded data
+    void ImportTexture(const void* data, int length, int& width, int& height, int& channels, unsigned char*& pixels); // memory location of embedded data
 }

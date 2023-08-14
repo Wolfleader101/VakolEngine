@@ -25,6 +25,7 @@ namespace Vakol::Rendering
         static void AddTexture(const std::string& materialID, const Assets::Texture& texture);
 
         static std::vector<Assets::Texture>& GetTextures(const std::string& materialID);
+        static int GetTextureCount(const std::string& materialID);
 
         static void SetColor(const std::string& materialID, const Math::Vec4& color);
         static void SetShininess(const std::string& materialID, float shininess);

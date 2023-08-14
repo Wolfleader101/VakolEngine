@@ -31,13 +31,6 @@ namespace Vakol::Rendering
             m_uniforms[shader].emplace();
 
         OpenGL::GetUniforms(shader, m_uniforms.at(shader));
-
-        SetInt(shader, "material.texture_diffuse", 0);
-        SetInt(shader, "material.texture_specular", 1);
-        SetInt(shader, "material.texture_ambient", 2);
-        SetInt(shader, "material.texture_emission", 3);
-        SetInt(shader, "material.texture_height", 4);
-        SetInt(shader, "material.texture_normal", 5);
     }
 
     void ShaderLibrary::SetInt(const unsigned int shader, const char* name, const int value)

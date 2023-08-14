@@ -21,7 +21,7 @@ namespace Vakol::Rendering
         if (m_materials.find(material.ID) == m_materials.end())
         {
             m_materials[material.ID] = material;
-            m_textures[material.ID].emplace_back();
+            m_textures.emplace();
         }
     }
 
@@ -40,6 +40,12 @@ namespace Vakol::Rendering
     {
         if (m_textures.find(materialID) != m_textures.end())
             return m_textures.at(materialID);
+    }
+
+    int MaterialLibrary::GetTextureCount(const std::string& materialID)
+    {
+        if (m_textures.find(materialID) != m_textures.end())
+            return m_textures.at(materialID).size();
     }
 
     void MaterialLibrary::SetColor(const std::string& materialID, const Math::Vec4& color)

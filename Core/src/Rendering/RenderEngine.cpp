@@ -93,7 +93,8 @@ namespace Vakol::Rendering
 
             for (auto& texture : material->textures)
             {
-                texture.ID = RenderAPI::GenerateTexture(texture, drawable);
+                if (texture.ID == 0)
+                    texture.ID = RenderAPI::GenerateTexture(texture, drawable);
 
                 if (texture.ID != 0)
                     MaterialLibrary::AddTexture(material->ID, texture);
@@ -124,6 +125,8 @@ namespace Vakol::Rendering
 
     std::shared_ptr<RenderEngine> CreateRenderEngine([[maybe_unused]] const std::string& API, const std::shared_ptr<View::Window>& window)
     {
+        RenderAPI::EnableDepth();
+
         return std::make_shared<RenderEngine>();
     }
 

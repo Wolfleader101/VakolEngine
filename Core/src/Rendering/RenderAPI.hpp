@@ -41,6 +41,8 @@ namespace Vakol::Rendering
     class RenderAPI
     {
     public:
+        static void EnableDepth();
+
         static void ClearColor(const float color[]);
         static void Clear(unsigned int mask);
 
@@ -58,6 +60,8 @@ namespace Vakol::Rendering
         static std::map<std::string, VertexCommand> m_vertexLibrary;
 
         static RenderSettings m_settings;
+
+        static void DefaultShaderSetup(const std::string& shaderID);
     };
 }
 

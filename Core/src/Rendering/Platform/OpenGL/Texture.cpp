@@ -6,7 +6,7 @@
 
 namespace Vakol::Rendering::OpenGL
 {
-    unsigned int GenerateTexture(const int width, const int height, const unsigned char* pixels)
+    unsigned int GenerateTexture(const int width, const int height, const int channels, const unsigned char* pixels)
     {
         unsigned int texture;
 
@@ -16,8 +16,11 @@ namespace Vakol::Rendering::OpenGL
         glGenTextures(1, &texture);
         glBindTexture(GL_TEXTURE_2D, texture);
 
-        glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, width, height);
-        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+        const GLenum internal_format = channels > 3 ? GL_RGBA8 : GL_RGB8;
+        const GLenum format = channels > 3 ? GL_RGBA : GL_RGB;
+
+        glTexStorage2D(GL_TEXTURE_2D, 1, internal_format, width, height);
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, format, GL_UNSIGNED_BYTE, pixels);
 
         delete[] pixels;
         pixels = nullptr;

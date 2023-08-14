@@ -1,9 +1,9 @@
 function init()
 
     scene:create_entity("Player", "entities/test/noclip.lua");
-    scene:create_entity("Sphere", "entities/test/sphere.lua")
+    --scene:create_entity("Sphere", "entities/test/sphere.lua")
     scene:create_entity("Bear", "entities/test/bear.lua")
-    scene:create_entity("Cube", "entities/test/cube.lua")
+    --scene:create_entity("Cube", "entities/test/cube.lua")
 
 end
 

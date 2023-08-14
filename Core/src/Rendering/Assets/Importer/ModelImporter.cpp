@@ -14,6 +14,9 @@
 #include "Rendering/RenderData.hpp"
 
 #include "Math/Math.hpp"
+#include "TextureImporter.hpp"
+#include "Rendering/RenderAPI.hpp"
+#include "Rendering/Platform/OpenGL/Texture.hpp"
 
 #include <iostream>
 #include <stack>
@@ -36,7 +39,7 @@ namespace Vakol::Rendering::Assets::Importer
     static void Vec2(const aiVector3D& in, Math::Vec2& out);
 
     /*Model*/
-    static void ProcessModel(const aiScene& scene, Model& model);
+    static void ProcessModel(const aiScene* const& scene, Model& model);
 
     /*Meshes*/
     static void ExtractMeshes(unsigned int count, aiMesh** const& in, std::vector<Mesh>& meshes);
@@ -49,15 +52,10 @@ namespace Vakol::Rendering::Assets::Importer
     static void ProcessBone(aiBone* const& in, Bone& bone);
 
     /*Materials*/
-    static void ExtractMaterials(unsigned int count, aiMaterial** const& in, std::vector<Mesh>& meshes);
-    static void ProcessMaterial(aiMaterial* const& in, Material& material);
+    static void ExtractMaterials(const aiScene* const& scene, unsigned int count, aiMaterial** const& in, std::vector<Mesh>& meshes);
+    static void ProcessMaterial(const aiScene* const& scene, aiMaterial* const& in, Material& material);
 
-    /*Material Textures*/
-    static void ExtractMaterialTextures(aiTextureType type, aiMaterial* const& in, std::vector<Texture>& textures);
-
-    /*Embedded Textures*/
-    static void ExtractEmbeddedTextures(unsigned int count, aiTexture** const& in);
-    static void ProcessEmbeddedTexture(aiTexture* const& in, Texture& texture);
+    static void ExtractTextures(const aiScene* const& scene, aiTextureType type, aiMaterial* const& in, std::vector<Texture>& textures);
 
     /*Animations*/
     static void ExtractAnimations(unsigned int count, aiAnimation** const& in);
@@ -90,7 +88,7 @@ namespace Vakol::Rendering::Assets::Importer
         std::cout << std::endl;
         VK_TRACE("Stats for Model: {0}", path);
 
-        ProcessModel(*scene, model);
+        ProcessModel(scene, model);
 
         std::cout << std::endl;
 
@@ -99,25 +97,22 @@ namespace Vakol::Rendering::Assets::Importer
         return model;
     }
 
-    void ProcessModel(const aiScene& scene, Model& model)
+    void ProcessModel(const aiScene* const& scene, Model& model)
     {
-        model.name = scene.mName.C_Str();
+        model.name = scene->mName.C_Str();
 
-        if (scene.HasMeshes())
-            ExtractMeshes(scene.mNumMeshes, scene.mMeshes, model.meshes);
+        if (scene->HasMeshes())
+            ExtractMeshes(scene->mNumMeshes, scene->mMeshes, model.meshes);
         else
             VK_WARN("Model has no meshes!");
 
-        if (scene.HasMaterials())
-            ExtractMaterials(scene.mNumMaterials, scene.mMaterials, model.meshes);
+        if (scene->HasMaterials())
+            ExtractMaterials(scene, scene->mNumMaterials, scene->mMaterials, model.meshes);
         else
             VK_WARN("Model has no materials!");
 
-        if (scene.HasTextures()) 
-            ExtractEmbeddedTextures(scene.mNumTextures, scene.mTextures);
-
-        if (scene.HasAnimations()) 
-            ExtractAnimations(scene.mNumAnimations, scene.mAnimations);
+        if (scene->HasAnimations()) 
+            ExtractAnimations(scene->mNumAnimations, scene->mAnimations);
     }
 
     void ExtractMeshes(const unsigned int count, aiMesh** const& in, std::vector<Mesh>& meshes)
@@ -131,13 +126,13 @@ namespace Vakol::Rendering::Assets::Importer
         }
     }
 
-    void ExtractMaterials(const unsigned int count, aiMaterial** const& in, std::vector<Mesh>& meshes)
+    void ExtractMaterials(const aiScene* const& scene, const unsigned int count, aiMaterial** const& in, std::vector<Mesh>& meshes)
     {
         Material material;
 
         for (auto i = 0u; i < count; ++i)
         {
-            ProcessMaterial(in[i], material);
+            ProcessMaterial(scene, in[i], material);
 
             for (auto& mesh : meshes)
                 mesh.material = std::make_shared<Material>(material);
@@ -169,7 +164,7 @@ namespace Vakol::Rendering::Assets::Importer
         VK_TRACE("Material Index: {0}", in->mMaterialIndex);
     }
 
-    void ProcessMaterial(aiMaterial* const& in, Material& material)
+    void ProcessMaterial(const aiScene* const& scene, aiMaterial* const& in, Material& material)
     {
         material.name = in->GetName().C_Str();
 
@@ -189,15 +184,15 @@ namespace Vakol::Rendering::Assets::Importer
         Vec3(specular_color, material.properties.specular_color);
         Vec3(emission_color, material.properties.emissive_color);
 
-        ExtractMaterialTextures(aiTextureType_DIFFUSE, in, material.textures);
-        ExtractMaterialTextures(aiTextureType_SPECULAR, in, material.textures);
-        ExtractMaterialTextures(aiTextureType_AMBIENT, in, material.textures);
-        ExtractMaterialTextures(aiTextureType_EMISSIVE, in, material.textures);
-        ExtractMaterialTextures(aiTextureType_HEIGHT, in, material.textures);
-        ExtractMaterialTextures(aiTextureType_NORMALS, in, material.textures);
+        ExtractTextures(scene, aiTextureType_DIFFUSE, in, material.textures);
+        ExtractTextures(scene, aiTextureType_SPECULAR, in, material.textures);
+        ExtractTextures(scene, aiTextureType_AMBIENT, in, material.textures);
+        ExtractTextures(scene, aiTextureType_EMISSIVE, in, material.textures);
+        ExtractTextures(scene, aiTextureType_HEIGHT, in, material.textures);
+        ExtractTextures(scene, aiTextureType_NORMALS, in, material.textures);
     }
 
-    void ExtractMaterialTextures(const aiTextureType type, aiMaterial* const& in, std::vector<Texture>& textures)
+    void ExtractTextures(const aiScene* const& scene, const aiTextureType type, aiMaterial* const& in, std::vector<Texture>& textures)
     {
         const auto count = in->GetTextureCount(type);
 
@@ -208,12 +203,23 @@ namespace Vakol::Rendering::Assets::Importer
 
         aiString str;
 
+        unsigned char* pixels = nullptr;
+
         for (auto i = 0u; i < count; ++i)
         {
             if (in->GetTexture(type, i, &str) == AI_SUCCESS) 
             {
                 texture.path = str.C_Str();
                 texture.type = static_cast<VK_TEXTURE_TYPE>(type);
+
+                if (const auto& embedTexture = scene->GetEmbeddedTexture(str.C_Str()))
+                {
+                    texture.embedded = true;
+
+                    ImportTexture(embedTexture->pcData, static_cast<int>(embedTexture->mWidth), texture.width, texture.height, texture.channels, pixels);
+
+                    texture.ID = OpenGL::GenerateTexture(texture.width, texture.height, texture.channels, pixels);
+                }
 
                 textures.emplace_back(texture);
             }
@@ -245,22 +251,6 @@ namespace Vakol::Rendering::Assets::Importer
 
         for (auto i = 0u; i < in->mNumFaces; ++i)
             mesh.indices.insert(mesh.indices.end(), in->mFaces[i].mIndices,in->mFaces[i].mIndices + in->mFaces[i].mNumIndices);
-    }
-
-    void ExtractEmbeddedTextures(const unsigned int count, aiTexture** const& in)
-    {
-        Texture texture;
-
-        for (auto i = 0u; i < count; ++i) 
-            ProcessEmbeddedTexture(in[i], texture);
-    }
-
-    void ProcessEmbeddedTexture(aiTexture* const& in, Texture& texture)
-    {
-        texture.path = in->mFilename.C_Str();
-
-        texture.width = static_cast<int>(in->mWidth);
-        texture.height = static_cast<int>(in->mHeight);
     }
 
     void ExtractAnimations(const unsigned int count, aiAnimation** const& in)

@@ -65,12 +65,37 @@ namespace Vakol::Rendering
 
     unsigned int RenderAPI::GenerateTexture(Assets::Texture& texture, const Drawable& drawable)
     {
-        unsigned char* pixels = nullptr;
+        if (!texture.embedded)
+        {
+            unsigned char* pixels = nullptr;
 
-        Assets::Importer::ImportTexture(texture.path, texture.width, texture.height, texture.channels, pixels);
+            Assets::Importer::ImportTexture(texture.path, texture.width, texture.height, texture.channels, pixels);
 
-        return OpenGL::GenerateTexture(texture.width, texture.height, pixels);
+            return OpenGL::GenerateTexture(texture.width, texture.height, texture.channels, pixels);
+        }
+
+        return 0u;
     }
+
+    void RenderAPI::EnableDepth()
+    {
+        switch (m_settings.API)
+        {
+        case OPENGL:
+            OpenGL::EnableDepth();
+            break;
+        case VULKAN:
+            VK_TRACE("Vulkan rendering has not been implemented yet.");
+            break;
+        case DIRECT3D:
+            VK_TRACE("Direct3D rendering has not been implemented yet.");
+            break;
+        case METAL:
+            VK_TRACE("Metal rendering has not been implemented yet.");
+            break;
+        }
+    }
+
     
     void RenderAPI::ClearColor(const float color[])
     {
@@ -125,9 +150,11 @@ namespace Vakol::Rendering
 
         OpenGL::BindShaderProgram(program);
 
+        DefaultShaderSetup(shaderID);
+
         for (const auto& texture : MaterialLibrary::GetTextures(materialID))
         {
-            OpenGL::SetActiveTexture(0);
+            OpenGL::SetActiveTexture(texture.type - 1);
             OpenGL::BindTexture(texture.ID);
         }
 
@@ -142,6 +169,16 @@ namespace Vakol::Rendering
         OpenGL::UnbindVertexArray();
 
         OpenGL::UnbindShaderProgram();
+    }
+
+    void RenderAPI::DefaultShaderSetup(const std::string& shaderID)
+    {
+        ShaderLibrary::SetInt(ShaderLibrary::GetShader(shaderID), "material.diffuse_map", Assets::VK_TEXTURE_DIFFUSE - 1);
+        ShaderLibrary::SetInt(ShaderLibrary::GetShader(shaderID), "material.specular_map", Assets::VK_TEXTURE_SPECULAR - 1);
+        ShaderLibrary::SetInt(ShaderLibrary::GetShader(shaderID), "material.ambient_map", Assets::VK_TEXTURE_AMBIENT - 1);
+        ShaderLibrary::SetInt(ShaderLibrary::GetShader(shaderID), "material.emission_map", Assets::VK_TEXTURE_EMISSION - 1);
+        ShaderLibrary::SetInt(ShaderLibrary::GetShader(shaderID), "material.height_map", Assets::VK_TEXTURE_HEIGHT - 1);
+        ShaderLibrary::SetInt(ShaderLibrary::GetShader(shaderID), "material.normal_map", Assets::VK_TEXTURE_NORMAL - 1);
     }
 
     Math::Mat4 RenderAPI::GetProjectionMatrix()
