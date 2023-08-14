@@ -86,6 +86,7 @@ namespace Vakol::Rendering::Assets::Importer
         }
 
         std::cout << std::endl;
+
         VK_TRACE("Stats for Model: {0}", path);
 
         ProcessModel(scene, model);
@@ -238,6 +239,7 @@ namespace Vakol::Rendering::Assets::Importer
             if (in->HasNormals()) Vec3(in->mNormals[i], vertex.normal);
 
             if (in->HasTextureCoords(0)) {
+
                 Vec2(in->mTextureCoords[0][i], vertex.uv);
 
                 if (in->HasTangentsAndBitangents()) {
@@ -249,8 +251,17 @@ namespace Vakol::Rendering::Assets::Importer
             mesh.vertices.emplace_back(vertex);
         }
 
-        for (auto i = 0u; i < in->mNumFaces; ++i)
-            mesh.indices.insert(mesh.indices.end(), in->mFaces[i].mIndices,in->mFaces[i].mIndices + in->mFaces[i].mNumIndices);
+        mesh.indices.reserve(static_cast<size_t>(in->mNumFaces) * 3);
+
+        for (unsigned int i = 0; i < in->mNumFaces; ++i)
+        {
+            const auto face = in->mFaces[i];
+
+            for (unsigned int j = 0; j < face.mNumIndices; ++j)
+                mesh.indices.emplace_back(face.mIndices[j]);
+        }
+
+            //mesh.indices.insert(mesh.indices.end(), in->mFaces[i].mIndices,in->mFaces[i].mIndices + in->mFaces[i].mNumIndices);
     }
 
     void ExtractAnimations(const unsigned int count, aiAnimation** const& in)

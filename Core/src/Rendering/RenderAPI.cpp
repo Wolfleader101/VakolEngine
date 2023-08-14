@@ -152,11 +152,11 @@ namespace Vakol::Rendering
 
         DefaultShaderSetup(shaderID);
 
-        for (const auto& texture : MaterialLibrary::GetTextures(materialID))
-        {
-            OpenGL::SetActiveTexture(texture.type - 1);
-            OpenGL::BindTexture(texture.ID);
-        }
+        //for (const auto& texture : MaterialLibrary::GetTextures(materialID))
+        //{
+        //    OpenGL::SetActiveTexture(texture.type - 1);
+        //    OpenGL::BindTexture(texture.ID);
+        //}
 
         OpenGL::BindVertexArray(vertexArray);
         OpenGL::DrawTriangleElements(nIndices);

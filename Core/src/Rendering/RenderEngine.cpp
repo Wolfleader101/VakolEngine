@@ -48,7 +48,7 @@ namespace Vakol::Rendering
         auto shader = Assets::Importer::ImportShader(DEFAULT_SHADER_PATH, success);
 
         if (success)
-            SubmitShaderData(std::move(shader), drawable);
+            RenderAPI::GenerateShader(std::move(shader), drawable);
 
         auto model = Assets::ModelLibrary::GetModel("coreAssets/models/sphere.obj", scale);
 
@@ -62,7 +62,7 @@ namespace Vakol::Rendering
         auto shader = Assets::Importer::ImportShader(DEFAULT_SHADER_PATH, success);
 
         if (success)
-            SubmitShaderData(std::move(shader), drawable);
+            RenderAPI::GenerateShader(std::move(shader), drawable);
 
         auto model = Assets::ModelLibrary::GetModel("coreAssets/models/cube.obj", scale);
 
@@ -76,7 +76,7 @@ namespace Vakol::Rendering
         auto shader = Assets::Importer::ImportShader(DEFAULT_SHADER_PATH, success);
 
         if (success)
-            SubmitShaderData(std::move(shader), drawable);
+            RenderAPI::GenerateShader(std::move(shader), drawable);
 
         SubmitModel(model, drawable);
 
@@ -120,7 +120,7 @@ namespace Vakol::Rendering
         // swap vector with an empty vector to de-allocate the memory taken by the vector
         std::vector<unsigned int>().swap(mesh.indices);
 
-        SubmitVertexData(std::move(vertexArray), drawable);
+        RenderAPI::GenerateVertexCommand(std::move(vertexArray), drawable);
     }
 
     std::shared_ptr<RenderEngine> CreateRenderEngine([[maybe_unused]] const std::string& API, const std::shared_ptr<View::Window>& window)

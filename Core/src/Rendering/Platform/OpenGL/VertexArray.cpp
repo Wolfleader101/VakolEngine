@@ -7,7 +7,7 @@
 
 namespace Vakol::Rendering::OpenGL
 {
-    void GenerateVertexArray(const void* vertexData, const void* indexData, Rendering::VertexCommand& command)
+    void GenerateVertexArray(const void* vertexData, const void* indexData, VertexCommand& command)
     {
         unsigned int ebo = 0;
 
