@@ -17,16 +17,13 @@
 
 namespace Vakol::Rendering
 {
-    std::map<std::string, VertexCommand> RenderAPI::m_vertexLibrary;
+    std::map<std::string, std::vector<VertexCommand>> RenderAPI::m_vertexLibrary;
 
     RenderSettings RenderAPI::m_settings;
 
-    void RenderAPI::GenerateVertexCommand(VertexArray&& vertexArray, Drawable& drawable)
+    void RenderAPI::GenerateVertexCommand(VertexArray&& vertexArray, const Drawable& drawable)
     {
         VertexCommand command;
-
-        drawable.vertexArrayID = GenerateID();
-        VK_TRACE("Vertex Array ID: {0}", drawable.vertexArrayID);
 
         command.nVertices = static_cast<int>(vertexArray.vertices.size());
         command.nIndices = static_cast<int>(vertexArray.indices.size());
@@ -46,10 +43,17 @@ namespace Vakol::Rendering
                 break;
         }
 
-        m_vertexLibrary.emplace(drawable.vertexArrayID, command);
+        m_vertexLibrary[drawable.vertexArrayID].emplace_back(command);
+
+        VK_TRACE(m_vertexLibrary.at(drawable.vertexArrayID).size());
 
         std::vector<Vertex>().swap(vertexArray.vertices);
         std::vector<unsigned int>().swap(vertexArray.indices);
+    }
+
+    void RenderAPI::PrepareVertexArray()
+    {
+        m_vertexLibrary.emplace();
     }
 
     void RenderAPI::GenerateShader(Assets::Shader&& shader, Drawable& drawable)
@@ -96,7 +100,6 @@ namespace Vakol::Rendering
         }
     }
 
-    
     void RenderAPI::ClearColor(const float color[])
     {
         switch (m_settings.API) 
@@ -145,21 +148,23 @@ namespace Vakol::Rendering
 
     void RenderAPI::BeginDraw(const std::string& vertexID, const std::string& shaderID, const std::string& materialID)
     {
-        const auto& [nVertices, nIndices, vertexArray, vertexBuffer] = m_vertexLibrary.at(vertexID);
         const auto program = ShaderLibrary::GetShader(shaderID);
 
         OpenGL::BindShaderProgram(program);
 
         DefaultShaderSetup(shaderID);
 
-        //for (const auto& texture : MaterialLibrary::GetTextures(materialID))
-        //{
-        //    OpenGL::SetActiveTexture(texture.type - 1);
-        //    OpenGL::BindTexture(texture.ID);
-        //}
+        for (const auto& texture : MaterialLibrary::GetTextures(materialID))
+        {
+            OpenGL::SetActiveTexture(texture.type - 1);
+            OpenGL::BindTexture(texture.ID);
+        }
 
-        OpenGL::BindVertexArray(vertexArray);
-        OpenGL::DrawTriangleElements(nIndices);
+        for (const auto& vertexArray : m_vertexLibrary.at(vertexID))
+        {
+            OpenGL::BindVertexArray(vertexArray.vertexArray);
+            OpenGL::DrawTriangleElements(vertexArray.nIndices);
+        }
 
         ShaderLibrary::SetMat4(program, "PV_MATRIX", false, GetProjectionMatrix() * GetViewMatrix(Math::Vec3(0.0f, 0.0f, -5.0f)));
     }

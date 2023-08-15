@@ -78,6 +78,8 @@ namespace Vakol::Rendering
         if (success)
             RenderAPI::GenerateShader(std::move(shader), drawable);
 
+        drawable.vertexArrayID = GenerateID();
+
         SubmitModel(model, drawable);
 
         for (auto& mesh : model.meshes)
@@ -104,6 +106,8 @@ namespace Vakol::Rendering
 
     void RenderEngine::SubmitModel(Assets::Model& model, Drawable& drawable)
     {
+        RenderAPI::PrepareVertexArray();
+
         for (auto& mesh : model.meshes) 
         {
             SubmitMesh(mesh, drawable);

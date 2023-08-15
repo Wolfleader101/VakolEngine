@@ -5,6 +5,8 @@
 #include <vector>
 #include <string>
 
+constexpr int MAX_BONE_INFLUENCE = 4;
+
 namespace Vakol::Rendering
 {
     struct Vertex
@@ -14,6 +16,9 @@ namespace Vakol::Rendering
         Math::Vec2 uv;
         Math::Vec3 tangent;
         Math::Vec3 bitangent;
+
+        int boneIDs[MAX_BONE_INFLUENCE];       ///< Array of bone IDs affecting the vertex.
+        float boneWeights[MAX_BONE_INFLUENCE]; ///< Array of weights of the bones affecting the vertex.
     };
 
     struct Drawable

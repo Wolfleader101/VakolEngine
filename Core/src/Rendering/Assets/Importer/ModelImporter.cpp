@@ -24,9 +24,9 @@
 using namespace Vakol::Rendering::Assets;
 
 constexpr int ASSIMP_LOADER_OPTIONS =
-    aiProcess_Triangulate | aiProcess_CalcTangentSpace | aiProcess_GenBoundingBoxes | aiProcess_JoinIdenticalVertices |
-    aiProcess_ImproveCacheLocality | aiProcess_SplitLargeMeshes | aiProcess_ValidateDataStructure |
-    aiProcess_FindInvalidData | aiProcess_GlobalScale | aiProcess_PopulateArmatureData;
+aiProcess_Triangulate | aiProcess_CalcTangentSpace | aiProcess_GenBoundingBoxes | aiProcess_JoinIdenticalVertices |
+aiProcess_ImproveCacheLocality | aiProcess_SplitLargeMeshes | aiProcess_ValidateDataStructure |
+aiProcess_FindInvalidData | aiProcess_GlobalScale | aiProcess_PopulateArmatureData | aiProcess_FlipUVs;
 
 
 namespace Vakol::Rendering::Assets::Importer
@@ -38,12 +38,8 @@ namespace Vakol::Rendering::Assets::Importer
     static void Vec3(const aiColor3D& in, Math::Vec3& out);
     static void Vec2(const aiVector3D& in, Math::Vec2& out);
 
-    /*Model*/
-    static void ProcessModel(const aiScene* const& scene, Model& model);
-
-    /*Meshes*/
-    static void ExtractMeshes(unsigned int count, aiMesh** const& in, std::vector<Mesh>& meshes);
-    static void ProcessMesh(aiMesh* const& in, Mesh& mesh);
+    static Math::Vec3 ToGLM(const aiVector3D& v);
+    static Math::Vec3 ToGLM(const aiColor3D& v);
 
     /*Mesh Internals*/
     static void ExtractVertices(aiMesh* const& in, Mesh& mesh);
@@ -51,18 +47,24 @@ namespace Vakol::Rendering::Assets::Importer
     static void ExtractBones(unsigned int count, aiBone** const& in, std::vector<Bone>& bones);
     static void ProcessBone(aiBone* const& in, Bone& bone);
 
-    /*Materials*/
-    static void ExtractMaterials(const aiScene* const& scene, unsigned int count, aiMaterial** const& in, std::vector<Mesh>& meshes);
-    static void ProcessMaterial(const aiScene* const& scene, aiMaterial* const& in, Material& material);
-
-    static void ExtractTextures(const aiScene* const& scene, aiTextureType type, aiMaterial* const& in, std::vector<Texture>& textures);
-
     /*Animations*/
     static void ExtractAnimations(unsigned int count, aiAnimation** const& in);
     static void ProcessAnimation(aiAnimation* const& in, Animation& animation);
 
     static void ExtractChannels(unsigned int count, aiNodeAnim** const& in, std::vector<Channel>& channels);
     static void ProcessChannel(aiNodeAnim* const& in, Channel& channel);
+
+    /*Old Importer*/
+
+    static void extract_meshes(const aiScene& scene, std::vector<Mesh>& meshes);
+    static Mesh process_mesh(const aiScene& scene, const aiMesh& mesh);
+
+    static Material process_material(const aiScene& scene, const aiMaterial* material);
+
+    static std::vector<Vertex> extract_vertices(const aiMesh& mesh);
+    static std::vector<unsigned int> extract_indices(const aiMesh& mesh);
+
+    static std::vector<Texture> extract_textures(const aiScene& scene, const aiMaterial* material, aiTextureType type);
 
     Model ImportModel(const char* path, const float scale, bool& success)
     {
@@ -89,7 +91,7 @@ namespace Vakol::Rendering::Assets::Importer
 
         VK_TRACE("Stats for Model: {0}", path);
 
-        ProcessModel(scene, model);
+        extract_meshes(*scene, model.meshes);
 
         std::cout << std::endl;
 
@@ -98,122 +100,97 @@ namespace Vakol::Rendering::Assets::Importer
         return model;
     }
 
-    void ProcessModel(const aiScene* const& scene, Model& model)
+    void extract_meshes(const aiScene& scene, std::vector<Mesh>& meshes)
     {
-        model.name = scene->mName.C_Str();
-
-        if (scene->HasMeshes())
-            ExtractMeshes(scene->mNumMeshes, scene->mMeshes, model.meshes);
-        else
-            VK_WARN("Model has no meshes!");
-
-        if (scene->HasMaterials())
-            ExtractMaterials(scene, scene->mNumMaterials, scene->mMaterials, model.meshes);
-        else
-            VK_WARN("Model has no materials!");
-
-        if (scene->HasAnimations()) 
-            ExtractAnimations(scene->mNumAnimations, scene->mAnimations);
-    }
-
-    void ExtractMeshes(const unsigned int count, aiMesh** const& in, std::vector<Mesh>& meshes)
-    {
-        Mesh mesh;
-
-        for (auto i = 0u; i < count; ++i) 
+        // Fetch meshes in current node
+        for (unsigned int i = 0; i < scene.mNumMeshes; ++i)
         {
-            ProcessMesh(in[i], mesh);
-            meshes.emplace_back(mesh);
+            const auto& mesh = *scene.mMeshes[i];
+
+            meshes.emplace_back(process_mesh(scene, mesh));
         }
     }
 
-    void ExtractMaterials(const aiScene* const& scene, const unsigned int count, aiMaterial** const& in, std::vector<Mesh>& meshes)
+    Mesh process_mesh(const aiScene& scene, const aiMesh& mesh)
     {
-        Material material;
+        const auto& vertices = extract_vertices(mesh);
+        const auto& indices = extract_indices(mesh);
 
-        for (auto i = 0u; i < count; ++i)
+        const auto& material = process_material(scene, scene.mMaterials[mesh.mMaterialIndex]);
+
+        return {mesh.mName.C_Str(), vertices, indices, std::vector<Bone>(), std::make_shared<Material>(material)};
+    }
+
+    std::vector<Vertex> extract_vertices(const aiMesh& mesh)
+    {
+        std::vector<Vertex> vertices;
+
+        vertices.reserve(mesh.mNumVertices);
+
+        for (unsigned int i = 0; i < mesh.mNumVertices; ++i)
         {
-            ProcessMaterial(scene, in[i], material);
+            Vertex vertex{};
 
-            for (auto& mesh : meshes)
-                mesh.material = std::make_shared<Material>(material);
-        }
-    }
+            vertex.position = ToGLM(mesh.mVertices[i]);
+            vertex.normal = ToGLM(mesh.mNormals[i]);
 
-    void ProcessMesh(aiMesh* const& in, Mesh& mesh)
-    {
-        mesh.name = in->mName.C_Str();
+            if (mesh.HasTextureCoords(0))
+            {
+                vertex.uv = ToGLM(mesh.mTextureCoords[0][i]);
+                if (mesh.HasTangentsAndBitangents())
+                {
+                    vertex.tangent = ToGLM(mesh.mTangents[i]);
+                    vertex.bitangent = ToGLM(mesh.mBitangents[i]);
+                }
+            }
 
-        Vec3(in->mAABB.mMin, mesh.bounds.min);
-        Vec3(in->mAABB.mMax, mesh.bounds.max);
+            std::fill(std::begin(vertex.boneIDs), std::end(vertex.boneIDs), -1);
+            std::fill(std::begin(vertex.boneWeights), std::end(vertex.boneWeights), 0.0f);
 
-        if (!in->HasPositions()) {
-            VK_ERROR("ASSIMP was unable to detect any vertices on the mesh.");
-            return;
-        }
-
-        if (!in->HasFaces()) {
-            VK_ERROR("ASSIMP was unable to detect any faces (triangles) on the mesh.");
-            return;
+            vertices.emplace_back(vertex);
         }
 
-        ExtractVertices(in, mesh);
-
-        if (in->HasBones())
-            ExtractBones(in->mNumBones, in->mBones, mesh.bones);
-
-        VK_TRACE("Material Index: {0}", in->mMaterialIndex);
+        return vertices;
     }
 
-    void ProcessMaterial(const aiScene* const& scene, aiMaterial* const& in, Material& material)
+    std::vector<unsigned int> extract_indices(const aiMesh& mesh)
     {
-        material.name = in->GetName().C_Str();
+        std::vector<unsigned int> indices;
 
-        aiColor3D ambient_color, diffuse_color, specular_color, emission_color;
+        indices.reserve(static_cast<size_t>(mesh.mNumFaces) * 3);
 
-        in->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse_color);
-        in->Get(AI_MATKEY_COLOR_AMBIENT, ambient_color);
-        in->Get(AI_MATKEY_COLOR_SPECULAR, specular_color);
-        in->Get(AI_MATKEY_COLOR_EMISSIVE, emission_color);
+        for (unsigned int i = 0; i < mesh.mNumFaces; ++i)
+        {
+            const auto face = mesh.mFaces[i];
 
-        in->Get(AI_MATKEY_SHININESS, material.properties.shininess);
-        in->Get(AI_MATKEY_EMISSIVE_INTENSITY, material.properties.intensity);
-        in->Get(AI_MATKEY_ENABLE_WIREFRAME, material.properties.wireframe);
+            for (unsigned int j = 0; j < face.mNumIndices; ++j)
+                indices.push_back(face.mIndices[j]);
+        }
 
-        Vec3(diffuse_color, material.properties.diffuse_color);
-        Vec3(ambient_color, material.properties.ambient_color);
-        Vec3(specular_color, material.properties.specular_color);
-        Vec3(emission_color, material.properties.emissive_color);
-
-        ExtractTextures(scene, aiTextureType_DIFFUSE, in, material.textures);
-        ExtractTextures(scene, aiTextureType_SPECULAR, in, material.textures);
-        ExtractTextures(scene, aiTextureType_AMBIENT, in, material.textures);
-        ExtractTextures(scene, aiTextureType_EMISSIVE, in, material.textures);
-        ExtractTextures(scene, aiTextureType_HEIGHT, in, material.textures);
-        ExtractTextures(scene, aiTextureType_NORMALS, in, material.textures);
+        return indices;
     }
 
-    void ExtractTextures(const aiScene* const& scene, const aiTextureType type, aiMaterial* const& in, std::vector<Texture>& textures)
+    std::vector<Texture> extract_textures(const aiScene& scene, const aiMaterial* material, const aiTextureType type)
     {
-        const auto count = in->GetTextureCount(type);
+        std::vector<Texture> textures;
 
-        if (count == 0)
-            return;
+        const auto count = material->GetTextureCount(type);
 
-        Texture texture;
-
-        aiString str;
+        textures.reserve(count);
 
         unsigned char* pixels = nullptr;
 
-        for (auto i = 0u; i < count; ++i)
+        for (unsigned int i = 0; i < count; ++i)
         {
-            if (in->GetTexture(type, i, &str) == AI_SUCCESS) 
+            auto imported_path = aiString{};
+            auto&& texture = Texture{};
+
+            if (material->GetTexture(type, i, &imported_path) == AI_SUCCESS)
             {
-                texture.path = str.C_Str();
+                texture.path = imported_path.C_Str();
                 texture.type = static_cast<VK_TEXTURE_TYPE>(type);
 
-                if (const auto& embedTexture = scene->GetEmbeddedTexture(str.C_Str()))
+                if (const auto& embedTexture = scene.GetEmbeddedTexture(imported_path.C_Str()))
                 {
                     texture.embedded = true;
 
@@ -222,46 +199,48 @@ namespace Vakol::Rendering::Assets::Importer
                     texture.ID = OpenGL::GenerateTexture(texture.width, texture.height, texture.channels, pixels);
                 }
 
-                textures.emplace_back(texture);
+                textures.emplace_back(std::move(texture));
             }
         }
+
+        return textures;
     }
 
-    void ExtractVertices(aiMesh* const& in, Mesh& mesh)
+    Material process_material(const aiScene& scene, const aiMaterial* material)
     {
-        Vertex vertex{};
+        std::vector<Texture> textures;
 
-        mesh.vertices.reserve(in->mNumVertices);
+        MaterialProperties properties;
 
-        for (auto i = 0u; i < in->mNumVertices; ++i) {
-            Vec3(in->mVertices[i], vertex.position);
+        material->Get(AI_MATKEY_COLOR_AMBIENT, properties.ambient_color);
+        material->Get(AI_MATKEY_COLOR_DIFFUSE, properties.diffuse_color);
+        material->Get(AI_MATKEY_COLOR_SPECULAR, properties.specular_color);
+        material->Get(AI_MATKEY_COLOR_EMISSIVE, properties.emissive_color);
+        material->Get(AI_MATKEY_SHININESS, properties.shininess);
+        material->Get(AI_MATKEY_EMISSIVE_INTENSITY, properties.intensity);
+        material->Get(AI_MATKEY_ENABLE_WIREFRAME, properties.wireframe);
 
-            if (in->HasNormals()) Vec3(in->mNormals[i], vertex.normal);
+        auto&& diffuse_maps = extract_textures(scene, material,  aiTextureType_DIFFUSE);
+        auto&& specular_maps = extract_textures(scene, material, aiTextureType_SPECULAR);
+        auto&& ambient_maps = extract_textures(scene, material,  aiTextureType_AMBIENT);
+        auto&& height_maps = extract_textures(scene, material,   aiTextureType_HEIGHT);
+        auto&& emission_maps = extract_textures(scene, material, aiTextureType_EMISSIVE);
+        auto&& normal_maps = extract_textures(scene, material,   aiTextureType_NORMALS);
 
-            if (in->HasTextureCoords(0)) {
+        textures.insert(textures.end(), std::make_move_iterator(diffuse_maps.begin()),
+                        std::make_move_iterator(diffuse_maps.end()));
+        textures.insert(textures.end(), std::make_move_iterator(specular_maps.begin()),
+                        std::make_move_iterator(specular_maps.end()));
+        textures.insert(textures.end(), std::make_move_iterator(ambient_maps.begin()),
+                        std::make_move_iterator(ambient_maps.end()));
+        textures.insert(textures.end(), std::make_move_iterator(height_maps.begin()),
+                        std::make_move_iterator(height_maps.end()));
+        textures.insert(textures.end(), std::make_move_iterator(emission_maps.begin()),
+                        std::make_move_iterator(emission_maps.end()));
+        textures.insert(textures.end(), std::make_move_iterator(normal_maps.begin()),
+                        std::make_move_iterator(normal_maps.end()));
 
-                Vec2(in->mTextureCoords[0][i], vertex.uv);
-
-                if (in->HasTangentsAndBitangents()) {
-                    Vec3(in->mTangents[i], vertex.tangent);
-                    Vec3(in->mBitangents[i], vertex.bitangent);
-                }
-            }
-
-            mesh.vertices.emplace_back(vertex);
-        }
-
-        mesh.indices.reserve(static_cast<size_t>(in->mNumFaces) * 3);
-
-        for (unsigned int i = 0; i < in->mNumFaces; ++i)
-        {
-            const auto face = in->mFaces[i];
-
-            for (unsigned int j = 0; j < face.mNumIndices; ++j)
-                mesh.indices.emplace_back(face.mIndices[j]);
-        }
-
-            //mesh.indices.insert(mesh.indices.end(), in->mFaces[i].mIndices,in->mFaces[i].mIndices + in->mFaces[i].mNumIndices);
+        return {material->GetName().C_Str(), "null", "null", std::move(textures), properties };
     }
 
     void ExtractAnimations(const unsigned int count, aiAnimation** const& in)
@@ -358,4 +337,14 @@ namespace Vakol::Rendering::Assets::Importer
     void Vec3(const aiVector3D& in, Math::Vec3& out) { out = Math::Vec3(in.x, in.y, in.z); }
     void Vec3(const aiColor3D& in, Math::Vec3& out)  { out = Math::Vec3(in.r, in.g, in.b); }
     void Vec2(const aiVector3D& in, Math::Vec2& out) { out = Math::Vec2(in.x, in.y); }
+
+    Math::Vec3 ToGLM(const aiColor3D& v)
+    {
+        return {v.r, v.g, v.b};
+    }
+
+    Math::Vec3 ToGLM(const aiVector3D& v)
+    {
+        return {v.x, v.y, v.z};
+    }
 }

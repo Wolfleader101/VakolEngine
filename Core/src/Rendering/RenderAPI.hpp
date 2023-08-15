@@ -3,6 +3,7 @@
 #include "Math/Math.hpp"
 
 #include <map>
+#include <vector>
 #include <string>
 
 namespace Vakol::Rendering::Assets
@@ -49,15 +50,17 @@ namespace Vakol::Rendering
         static void BeginDraw(const std::string& vertexID, const std::string& shaderID, const std::string& materialID);
         static void EndDraw();
 
+        static void PrepareVertexArray();
+
         static Math::Mat4 GetProjectionMatrix();
         static Math::Mat4 GetViewMatrix(const Math::Vec3& position, const Math::Vec3& lookDirection = Math::Vec3(0.0f, 0.0f, -1.0f), const Math::Vec3& up = Math::Vec3(0.0f, 1.0f, 0.0f));
         static Math::Mat4 GetModelMatrix(Model::Components::Transform& transform);
 
-        static void GenerateVertexCommand(VertexArray&& vertexArray, Drawable& drawable);
+        static void GenerateVertexCommand(VertexArray&& vertexArray, const Drawable& drawable);
         static void GenerateShader(Assets::Shader&& shader, Drawable& drawable);
         static unsigned int GenerateTexture(Assets::Texture& texture, const Drawable& drawable);
     private:
-        static std::map<std::string, VertexCommand> m_vertexLibrary;
+        static std::map<std::string, std::vector<VertexCommand>> m_vertexLibrary;
 
         static RenderSettings m_settings;
 
