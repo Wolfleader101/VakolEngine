@@ -36,7 +36,6 @@ namespace Vakol::Rendering::OpenGL
 
     void SetUniformBufferSubData(const unsigned int buffer, const int offset, const int size, const void* data)
     {
-        
     }
 
-}
+} // namespace Vakol::Rendering::OpenGL

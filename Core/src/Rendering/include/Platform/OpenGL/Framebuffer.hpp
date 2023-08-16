@@ -10,4 +10,4 @@ namespace Vakol::Rendering::OpenGL
     void ClearColor(const float color[]);
     void ClearColor(float r, float g, float b, float a = 1.0f);
     void Clear(unsigned int mask);
-}
+} // namespace Vakol::Rendering::OpenGL

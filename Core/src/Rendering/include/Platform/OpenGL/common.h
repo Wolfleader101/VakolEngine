@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Framebuffer.hpp"
-#include "VertexArray.hpp"
-#include "Shader.hpp"
 #include "Renderer.hpp"
+#include "Shader.hpp"
 #include "Texture.hpp"
+#include "VertexArray.hpp"

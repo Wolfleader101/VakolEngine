@@ -1,7 +1,7 @@
 #pragma once
 
-
-namespace Vakol::Rendering {
+namespace Vakol::Rendering
+{
     struct VertexCommand;
 }
 
@@ -11,4 +11,4 @@ namespace Vakol::Rendering::OpenGL
 
     void BindVertexArray(unsigned int vertexArray);
     void UnbindVertexArray();
-}  // namespace Vakol::Rendering::OpenGL
+} // namespace Vakol::Rendering::OpenGL

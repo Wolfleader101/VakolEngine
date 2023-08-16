@@ -27,7 +27,7 @@ namespace Vakol::Rendering
         RenderAPI::Clear(VK_COLOR_BUFFER | VK_DEPTH_BUFFER);
     }
 
-    void RenderEngine::Draw(const Camera& camera, Components::Transform & transform, const Drawable& drawable)
+    void RenderEngine::Draw(const Camera& camera, Components::Transform& transform, const Drawable& drawable)
     {
         RenderAPI::BeginDraw(drawable.vertexArrayID, drawable.shaderID, drawable.materialID);
 
@@ -35,14 +35,14 @@ namespace Vakol::Rendering
 
         ShaderLibrary::SetMat4(ShaderLibrary::GetShader(drawable.shaderID), "PV_MATRIX", false,
                                camera.GetMatrix(PROJECTION_MATRIX) * camera.GetMatrix(VIEW_MATRIX));
-        ShaderLibrary::SetMat4(ShaderLibrary::GetShader(drawable.shaderID), "MODEL_MATRIX", false, RenderAPI::GetModelMatrix(transform));
+        ShaderLibrary::SetMat4(ShaderLibrary::GetShader(drawable.shaderID), "MODEL_MATRIX", false,
+                               RenderAPI::GetModelMatrix(transform));
 
         RenderAPI::EndDraw();
     }
 
     void RenderEngine::PostDraw()
     {
-        
     }
 
     void RenderEngine::GenerateSphere(const float scale, Drawable& drawable)
@@ -123,7 +123,7 @@ namespace Vakol::Rendering
     {
         RenderAPI::PrepareVertexArray();
 
-        for (auto& mesh : model.meshes) 
+        for (auto& mesh : model.meshes)
         {
             SubmitMesh(mesh, drawable);
         }
@@ -132,7 +132,7 @@ namespace Vakol::Rendering
     void RenderEngine::SubmitMesh(Assets::Mesh& mesh, const Drawable& drawable)
     {
         VertexArray vertexArray;
-        
+
         vertexArray.vertices = mesh.vertices;
         vertexArray.indices = mesh.indices;
 
@@ -142,7 +142,8 @@ namespace Vakol::Rendering
         RenderAPI::GenerateVertexCommand(std::move(vertexArray), drawable);
     }
 
-    std::shared_ptr<RenderEngine> CreateRenderEngine([[maybe_unused]] const std::string& API, const std::shared_ptr<Window>& window)
+    std::shared_ptr<RenderEngine> CreateRenderEngine([[maybe_unused]] const std::string& API,
+                                                     const std::shared_ptr<Window>& window)
     {
         RenderAPI::EnableDepth();
 
@@ -151,4 +152,4 @@ namespace Vakol::Rendering
         return std::make_shared<RenderEngine>();
     }
 
-}
+} // namespace Vakol::Rendering

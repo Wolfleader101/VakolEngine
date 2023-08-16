@@ -1,7 +1,7 @@
 #include "Rendering/Assets/ShaderImporter.hpp"
 
-#include "Logger/Logger.hpp"
 #include "AssetLoader/FileLoader.hpp"
+#include "Logger/Logger.hpp"
 
 #include "Rendering/Assets/Shader.hpp"
 
@@ -75,4 +75,4 @@ namespace Vakol::Rendering::Assets
 
         return true;
     }
-}
+} // namespace Vakol::Rendering::Assets

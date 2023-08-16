@@ -45,4 +45,4 @@ namespace Vakol::Rendering::OpenGL
         glBindTexture(GL_TEXTURE_2D, texture);
     }
 
-}
+} // namespace Vakol::Rendering::OpenGL

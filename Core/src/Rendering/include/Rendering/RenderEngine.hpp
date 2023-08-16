@@ -9,7 +9,7 @@ namespace Vakol
 {
     class Window;
     class Camera;
-}
+} // namespace Vakol
 
 namespace Vakol::Components
 {
@@ -22,13 +22,13 @@ namespace Vakol::Rendering
     {
         struct Model;
         struct Mesh;
-    }
+    } // namespace Assets
 
     struct Drawable;
 
     class RenderEngine
     {
-    public:
+      public:
         static void PreDraw();
         static void Draw(const Camera& camera, Components::Transform& transform, const Drawable& drawable);
         static void PostDraw();
@@ -37,11 +37,13 @@ namespace Vakol::Rendering
 
         static void GenerateSphere(float scale, Drawable& drawable);
         static void GenerateCube(float scale, Drawable& drawable);
-    private:
 
-        static void SubmitModel(Assets::Model& model, const Drawable& drawable); // Submit a user-defined model to renderer. Converted into low-level render components.
+      private:
+        static void SubmitModel(Assets::Model& model,
+                                const Drawable& drawable); // Submit a user-defined model to renderer. Converted into
+                                                           // low-level render components.
         static void SubmitMesh(Assets::Mesh& mesh, const Drawable& drawable);
     };
 
     std::shared_ptr<RenderEngine> CreateRenderEngine(const std::string& API, const std::shared_ptr<Window>& window);
-}
+} // namespace Vakol::Rendering

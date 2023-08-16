@@ -1,8 +1,8 @@
 #pragma once
 
 #include <string>
-#include <vector>
 #include <unordered_map>
+#include <vector>
 
 struct Uniform;
 
@@ -23,4 +23,4 @@ namespace Vakol::Rendering::OpenGL
 
     void SetVec3(int location, int count, const float* value);
     void SetVec4(int location, int count, const float* value);
-}
+} // namespace Vakol::Rendering::OpenGL

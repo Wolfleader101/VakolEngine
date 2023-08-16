@@ -32,4 +32,4 @@ namespace Vakol::Rendering::OpenGL
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
 
-}
+} // namespace Vakol::Rendering::OpenGL

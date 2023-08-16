@@ -1,8 +1,8 @@
 #include "include/Rendering/RenderAPI.hpp"
 
 #include "include/Rendering/MaterialLibrary.hpp"
-#include "include/Rendering/RenderData.hpp"
 #include "include/Rendering/RenderCommand.hpp"
+#include "include/Rendering/RenderData.hpp"
 
 #include "include/Rendering/ShaderLibrary.hpp"
 
@@ -10,8 +10,8 @@
 
 #include "Platform/OpenGL/common.h"
 
-#include "Logger/Logger.hpp"
 #include "ECS/Components.hpp"
+#include "Logger/Logger.hpp"
 
 #include "include/Rendering/Assets/TextureImporter.hpp"
 
@@ -29,7 +29,7 @@ namespace Vakol::Rendering
 
         DefaultShaderSetup(shaderID);
 
-        std::vector<Assets::Texture> textures {};
+        std::vector<Assets::Texture> textures{};
 
         if (const auto valid = MaterialLibrary::GetTextures(materialID, textures); valid)
         {
@@ -61,19 +61,20 @@ namespace Vakol::Rendering
         command.nVertices = static_cast<int>(vertexArray.vertices.size());
         command.nIndices = static_cast<int>(vertexArray.indices.size());
 
-        switch (m_settings.API) {
-            case OPENGL:
-                OpenGL::GenerateVertexArray(vertexArray.vertices.data(), vertexArray.indices.data(), command);
-                break;
-            case VULKAN:
-                VK_TRACE("Vulkan rendering has not been implemented yet.");
-                break;
-            case DIRECT3D:
-                VK_TRACE("Direct3D rendering has not been implemented yet.");
-                break;
-            case METAL:
-                VK_TRACE("Metal rendering has not been implemented yet.");
-                break;
+        switch (m_settings.API)
+        {
+        case OPENGL:
+            OpenGL::GenerateVertexArray(vertexArray.vertices.data(), vertexArray.indices.data(), command);
+            break;
+        case VULKAN:
+            VK_TRACE("Vulkan rendering has not been implemented yet.");
+            break;
+        case DIRECT3D:
+            VK_TRACE("Direct3D rendering has not been implemented yet.");
+            break;
+        case METAL:
+            VK_TRACE("Metal rendering has not been implemented yet.");
+            break;
         }
 
         m_vertexLibrary[drawable.vertexArrayID].emplace_back(command);
@@ -133,47 +134,46 @@ namespace Vakol::Rendering
 
     void RenderAPI::ClearColor(const float color[])
     {
-        switch (m_settings.API) 
+        switch (m_settings.API)
         {
-            case OPENGL:
-                OpenGL::ClearColor(color);
-                break;
-            case VULKAN:
-                VK_TRACE("Vulkan rendering has not been implemented yet.");
-                break;
-            case DIRECT3D:
-                VK_TRACE("Direct3D rendering has not been implemented yet.");
-                break;
-            case METAL:
-                VK_TRACE("Metal rendering has not been implemented yet.");
-                break;
+        case OPENGL:
+            OpenGL::ClearColor(color);
+            break;
+        case VULKAN:
+            VK_TRACE("Vulkan rendering has not been implemented yet.");
+            break;
+        case DIRECT3D:
+            VK_TRACE("Direct3D rendering has not been implemented yet.");
+            break;
+        case METAL:
+            VK_TRACE("Metal rendering has not been implemented yet.");
+            break;
         }
     }
 
     void RenderAPI::Clear(const unsigned int mask)
     {
-        switch (m_settings.API) 
+        switch (m_settings.API)
         {
-            case OPENGL: 
-            {
-                if (mask == VK_COLOR_BUFFER)
-                    OpenGL::Clear(OpenGL::COLOR_BUFFER_BIT());
-                else if (mask == VK_DEPTH_BUFFER)
-                    OpenGL::Clear(OpenGL::DEPTH_BUFFER_BIT());
-                else if (mask == (VK_COLOR_BUFFER | VK_DEPTH_BUFFER))
-                    OpenGL::Clear(OpenGL::COLOR_BUFFER_BIT() | OpenGL::DEPTH_BUFFER_BIT());
+        case OPENGL: {
+            if (mask == VK_COLOR_BUFFER)
+                OpenGL::Clear(OpenGL::COLOR_BUFFER_BIT());
+            else if (mask == VK_DEPTH_BUFFER)
+                OpenGL::Clear(OpenGL::DEPTH_BUFFER_BIT());
+            else if (mask == (VK_COLOR_BUFFER | VK_DEPTH_BUFFER))
+                OpenGL::Clear(OpenGL::COLOR_BUFFER_BIT() | OpenGL::DEPTH_BUFFER_BIT());
 
-                break;    
-            }
-            case VULKAN:
-                VK_TRACE("Vulkan rendering has not been implemented yet.");
-                break;
-            case DIRECT3D:
-                VK_TRACE("Direct3D rendering has not been implemented yet.");
-                break;
-            case METAL:
-                VK_TRACE("Metal rendering has not been implemented yet.");
-                break;
+            break;
+        }
+        case VULKAN:
+            VK_TRACE("Vulkan rendering has not been implemented yet.");
+            break;
+        case DIRECT3D:
+            VK_TRACE("Direct3D rendering has not been implemented yet.");
+            break;
+        case METAL:
+            VK_TRACE("Metal rendering has not been implemented yet.");
+            break;
         }
     }
 
@@ -201,4 +201,4 @@ namespace Vakol::Rendering
 
         return transform_matrix * rotation_matrix;
     }
-}
+} // namespace Vakol::Rendering

@@ -20,34 +20,41 @@ namespace Vakol::Rendering::OpenGL
         glBindVertexArray(command.vertexArray);
 
         glBindBuffer(GL_ARRAY_BUFFER, command.vertexBuffer);
-        glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(command.nVertices * sizeof(Vertex)), vertexData, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(command.nVertices * sizeof(Vertex)), vertexData,
+                     GL_STATIC_DRAW);
 
-        if (command.nIndices > 0) 
+        if (command.nIndices > 0)
         {
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-            glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLsizeiptr>(command.nIndices * sizeof(unsigned int)), indexData, GL_STATIC_DRAW);
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLsizeiptr>(command.nIndices * sizeof(unsigned int)),
+                         indexData, GL_STATIC_DRAW);
         }
 
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), nullptr);
 
         glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<const void*>(offsetof(Vertex, normal)));
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                              reinterpret_cast<const void*>(offsetof(Vertex, normal)));
 
         glEnableVertexAttribArray(2);
-        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<const void*>(offsetof(Vertex, uv)));
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                              reinterpret_cast<const void*>(offsetof(Vertex, uv)));
 
         glEnableVertexAttribArray(3);
-        glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<const void*>(offsetof(Vertex, tangent)));
+        glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                              reinterpret_cast<const void*>(offsetof(Vertex, tangent)));
 
         glEnableVertexAttribArray(4);
-        glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<const void*>(offsetof(Vertex, bitangent)));
+        glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                              reinterpret_cast<const void*>(offsetof(Vertex, bitangent)));
 
         glEnableVertexAttribArray(5);
         glVertexAttribIPointer(5, 4, GL_INT, sizeof(Vertex), reinterpret_cast<const void*>(offsetof(Vertex, boneIDs)));
 
         glEnableVertexAttribArray(6);
-        glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<const void*>(offsetof(Vertex, boneWeights)));
+        glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                              reinterpret_cast<const void*>(offsetof(Vertex, boneWeights)));
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
@@ -63,4 +70,4 @@ namespace Vakol::Rendering::OpenGL
         glBindVertexArray(0);
     }
 
-}
+} // namespace Vakol::Rendering::OpenGL

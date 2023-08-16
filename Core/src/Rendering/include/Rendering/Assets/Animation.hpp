@@ -30,7 +30,7 @@ namespace Vakol::Rendering::Assets
 
         std::vector<Position> positions;
         std::vector<Rotation> rotations;
-        std::vector<Scale>    scales;
+        std::vector<Scale> scales;
     };
 
     struct Animation
@@ -42,4 +42,4 @@ namespace Vakol::Rendering::Assets
 
         std::vector<Channel> channels;
     };
-}
+} // namespace Vakol::Rendering::Assets

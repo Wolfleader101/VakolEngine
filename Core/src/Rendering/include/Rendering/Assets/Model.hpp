@@ -10,4 +10,4 @@ namespace Vakol::Rendering::Assets
 
         std::vector<Mesh> meshes;
     };
-}
+} // namespace Vakol::Rendering::Assets

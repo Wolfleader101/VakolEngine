@@ -11,4 +11,4 @@ namespace Vakol::Rendering::Assets
     float fov = 0.0f;
     float near = 0.0f;
     float far = 0.0f;
-}
+} // namespace Vakol::Rendering::Assets

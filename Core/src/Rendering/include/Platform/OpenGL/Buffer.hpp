@@ -12,4 +12,4 @@ namespace Vakol::Rendering::OpenGL
 
     void SetUniformBufferData(unsigned int buffer, int size, const void* data);
     void SetUniformBufferSubData(unsigned int buffer, int offset, int size, const void* data);
-}
+} // namespace Vakol::Rendering::OpenGL

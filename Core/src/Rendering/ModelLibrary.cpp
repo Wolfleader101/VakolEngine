@@ -31,4 +31,4 @@ namespace Vakol::Rendering
         return m_models.at(path);
     }
 
-}
+} // namespace Vakol::Rendering

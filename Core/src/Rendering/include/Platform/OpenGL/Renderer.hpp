@@ -14,4 +14,4 @@ namespace Vakol::Rendering::OpenGL
     void DrawLineElements(int nIndices, const void* offset = nullptr);
 
     void SetWireframe(bool enabled);
-}
+} // namespace Vakol::Rendering::OpenGL

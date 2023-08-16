@@ -14,4 +14,4 @@ namespace Vakol::Rendering
     };
 
     [[nodiscard]] std::string GenerateID();
-}
+} // namespace Vakol::Rendering

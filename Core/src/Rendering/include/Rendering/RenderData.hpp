@@ -2,8 +2,8 @@
 
 #include <Math/Math.hpp>
 
-#include <vector>
 #include <string>
+#include <vector>
 
 constexpr int MAX_BONE_INFLUENCE = 4;
 
@@ -45,4 +45,4 @@ namespace Vakol::Rendering
         unsigned int id;
         unsigned int binding;
     };
-}
+} // namespace Vakol::Rendering

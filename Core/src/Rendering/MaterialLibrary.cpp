@@ -1,8 +1,8 @@
 #include "include/Rendering/MaterialLibrary.hpp"
 
-#include "include/Rendering/ShaderLibrary.hpp"
-#include "include/Rendering/Assets/Material.hpp"
 #include "Logger/Logger.hpp"
+#include "include/Rendering/Assets/Material.hpp"
+#include "include/Rendering/ShaderLibrary.hpp"
 
 namespace Vakol::Rendering
 {
@@ -11,9 +11,12 @@ namespace Vakol::Rendering
 
     void MaterialLibrary::SetupMaterial(const Assets::Material& material)
     {
-        ShaderLibrary::SetVec3(ShaderLibrary::GetShader(material.shaderID), "material.ambient_color",  material.properties.ambient_color);
-        ShaderLibrary::SetVec3(ShaderLibrary::GetShader(material.shaderID), "material.diffuse_color",  material.properties.diffuse_color);
-        ShaderLibrary::SetVec3(ShaderLibrary::GetShader(material.shaderID), "material.specular_color", material.properties.specular_color);
+        ShaderLibrary::SetVec3(ShaderLibrary::GetShader(material.shaderID), "material.ambient_color",
+                               material.properties.ambient_color);
+        ShaderLibrary::SetVec3(ShaderLibrary::GetShader(material.shaderID), "material.diffuse_color",
+                               material.properties.diffuse_color);
+        ShaderLibrary::SetVec3(ShaderLibrary::GetShader(material.shaderID), "material.specular_color",
+                               material.properties.specular_color);
     }
 
     void MaterialLibrary::AddMaterial(const Assets::Material& material)
@@ -40,7 +43,7 @@ namespace Vakol::Rendering
     {
         if (m_textures.find(materialID) != m_textures.end())
         {
-           textures = m_textures.at(materialID);
+            textures = m_textures.at(materialID);
 
             return true;
         }
@@ -61,6 +64,7 @@ namespace Vakol::Rendering
 
     void MaterialLibrary::SetShininess(const std::string& materialID, const float shininess)
     {
-        ShaderLibrary::SetFloat(ShaderLibrary::GetShader(GetMaterial(materialID).shaderID), "material.shininess", shininess);
+        ShaderLibrary::SetFloat(ShaderLibrary::GetShader(GetMaterial(materialID).shaderID), "material.shininess",
+                                shininess);
     }
-}
+} // namespace Vakol::Rendering

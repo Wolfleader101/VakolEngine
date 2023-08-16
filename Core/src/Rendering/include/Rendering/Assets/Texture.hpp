@@ -1,7 +1,7 @@
 #pragma once
 
-#include <string>
 #include <memory>
+#include <string>
 
 namespace Vakol::Rendering::Assets
 {
@@ -55,4 +55,4 @@ namespace Vakol::Rendering::Assets
 
         VK_TEXTURE_TYPE type = VK_TEXTURE_NONE;
     };
-}
+} // namespace Vakol::Rendering::Assets

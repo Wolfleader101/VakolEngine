@@ -27,7 +27,8 @@ namespace Vakol::Rendering::Assets
         }
     }
 
-    void ImportTexture(const void* data, const int length, int& width, int& height, int& channels, unsigned char*& pixels)
+    void ImportTexture(const void* data, const int length, int& width, int& height, int& channels,
+                       unsigned char*& pixels)
     {
         pixels = stbi_load_from_memory(static_cast<const stbi_uc* const>(data), length, &width, &height, &channels, 0);
 
@@ -39,4 +40,4 @@ namespace Vakol::Rendering::Assets
             pixels = nullptr;
         }
     }
-}
+} // namespace Vakol::Rendering::Assets

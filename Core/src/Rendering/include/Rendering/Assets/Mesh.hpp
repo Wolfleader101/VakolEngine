@@ -2,11 +2,11 @@
 
 #include "Math/Math.hpp"
 
-#include "Rendering/RenderData.hpp"
 #include "Material.hpp"
+#include "Rendering/RenderData.hpp"
 
-#include <vector>
 #include <memory>
+#include <vector>
 
 namespace Vakol::Rendering::Assets
 {
@@ -20,7 +20,7 @@ namespace Vakol::Rendering::Assets
     {
         std::string name;
 
-        Math::Mat4 offset {};
+        Math::Mat4 offset{};
 
         struct Weight
         {
@@ -42,6 +42,6 @@ namespace Vakol::Rendering::Assets
 
         std::shared_ptr<Material> material = nullptr;
 
-        Bounds bounds {};
+        Bounds bounds{};
     };
-}
+} // namespace Vakol::Rendering::Assets

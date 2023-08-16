@@ -1,8 +1,8 @@
 #pragma once
 
 #include <map>
-#include <unordered_map>
 #include <string>
+#include <unordered_map>
 
 #include "Math/Math.hpp"
 
@@ -13,7 +13,7 @@ namespace Vakol::Rendering
 
     class ShaderLibrary
     {
-    public:
+      public:
         static void AddShader(const std::string& ID, unsigned int shader);
         static void CreateUniformBuffer(const char* uBufferName, int size, unsigned int binding);
 
@@ -31,7 +31,8 @@ namespace Vakol::Rendering
 
         static void SetUniformBufferData(const char* name, int size, const void* data);
         static void SetUniformBufferSubData(const char* name, int offset, int size, const void* data);
-    private:
+
+      private:
         static std::unordered_map<std::string, unsigned int> m_shaders;
         static std::map<unsigned int, std::unordered_map<std::string, Uniform>> m_uniforms;
         static std::unordered_map<std::string, UniformBuffer> m_uniformBuffers;
@@ -44,4 +45,4 @@ namespace Vakol::Rendering
         static bool UniformExists(unsigned int shader, const char* name);
         static bool UniformBufferExists(const char* name);
     };
-}
+} // namespace Vakol::Rendering

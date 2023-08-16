@@ -1,7 +1,7 @@
 #pragma once
 
-#include <unordered_map>
 #include <string>
+#include <unordered_map>
 
 namespace Vakol::Rendering::Assets
 {
@@ -13,9 +13,10 @@ namespace Vakol::Rendering
 
     class ModelLibrary
     {
-    public:
+      public:
         static Assets::Model GetModel(const std::string& path, float scale = 1.0f);
-    private:
+
+      private:
         static std::unordered_map<std::string, Assets::Model> m_models;
     };
-}
+} // namespace Vakol::Rendering

@@ -10,13 +10,13 @@ namespace Vakol::Rendering::Assets
 {
     struct Material;
     struct Texture;
-}
+} // namespace Vakol::Rendering::Assets
 
 namespace Vakol::Rendering
 {
     class MaterialLibrary
     {
-    public:
+      public:
         static void SetupMaterial(const Assets::Material& material);
 
         static void AddMaterial(const Assets::Material& material);
@@ -29,8 +29,9 @@ namespace Vakol::Rendering
 
         static void SetColor(const std::string& materialID, const Math::Vec4& color);
         static void SetShininess(const std::string& materialID, float shininess);
-    private:
+
+      private:
         static std::unordered_map<std::string, Assets::Material> m_materials;
         static std::unordered_map<std::string, std::vector<Assets::Texture>> m_textures;
     };
-}
+} // namespace Vakol::Rendering

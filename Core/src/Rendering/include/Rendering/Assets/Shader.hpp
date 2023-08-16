@@ -10,4 +10,4 @@ namespace Vakol::Rendering::Assets
         std::string path;
         std::vector<std::string> sources;
     };
-}
+} // namespace Vakol::Rendering::Assets

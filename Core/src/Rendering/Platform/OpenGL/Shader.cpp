@@ -12,7 +12,7 @@ namespace Vakol::Rendering::OpenGL
     unsigned int GenerateShader(const char* source, unsigned int type);
     int CheckCompileErrors(unsigned int shader, unsigned int type);
 
-	unsigned int GenerateShaderProgram(std::vector<std::string>&& sources)
+    unsigned int GenerateShaderProgram(std::vector<std::string>&& sources)
     {
         const auto vertex = GenerateShader(sources[0].c_str(), GL_VERTEX_SHADER);
 
@@ -32,9 +32,11 @@ namespace Vakol::Rendering::OpenGL
         const auto fragment = GenerateShader(sources[4].c_str(), GL_FRAGMENT_SHADER);
 
         // Program Setup
-        auto AttachShader = [](const unsigned int shaderProgram, const unsigned int shader) -> void { glAttachShader(shaderProgram, shader); };
+        auto AttachShader = [](const unsigned int shaderProgram, const unsigned int shader) -> void {
+            glAttachShader(shaderProgram, shader);
+        };
         auto DeleteShader = [](const unsigned int shader) -> void { glDeleteShader(shader); };
-        auto LinkProgram =  [](const unsigned int shaderProgram) -> void { glLinkProgram(shaderProgram); };
+        auto LinkProgram = [](const unsigned int shaderProgram) -> void { glLinkProgram(shaderProgram); };
 
         /*CREATE PROGRAM*/
         const auto program = glCreateProgram();
@@ -47,14 +49,14 @@ namespace Vakol::Rendering::OpenGL
             AttachShader(program, geometry);
         }
 
-	    if (tessControl != 0)
-	    {
+        if (tessControl != 0)
+        {
             AttachShader(program, tessControl);
-	    }
+        }
 
         if (tessEval != 0)
         {
-	        AttachShader(program, tessEval);
+            AttachShader(program, tessEval);
         }
 
         AttachShader(program, fragment);
@@ -70,12 +72,12 @@ namespace Vakol::Rendering::OpenGL
             DeleteShader(geometry);
         }
 
-	    if (tessControl != 0)
-	    {
+        if (tessControl != 0)
+        {
             DeleteShader(tessControl);
-	    }
+        }
 
-	    if (tessEval != 0)
+        if (tessEval != 0)
         {
             DeleteShader(tessEval);
         }
@@ -86,8 +88,8 @@ namespace Vakol::Rendering::OpenGL
     }
 
     unsigned int GenerateShader(const char* source, const unsigned int type)
-	{
-	    const auto shader = glCreateShader(type);
+    {
+        const auto shader = glCreateShader(type);
 
         glShaderSource(shader, 1, &source, nullptr);
         glCompileShader(shader);
@@ -95,7 +97,7 @@ namespace Vakol::Rendering::OpenGL
         CheckCompileErrors(shader, type);
 
         return shader;
-	}
+    }
 
     int CheckCompileErrors(const unsigned int shader, const unsigned int type)
     {
@@ -149,7 +151,7 @@ namespace Vakol::Rendering::OpenGL
             GLint max_name_len = 0;
             GLsizei length = 0;
             GLsizei count = 0;
-            GLenum  type = GL_NONE;
+            GLenum type = GL_NONE;
 
             glGetProgramiv(shader, GL_ACTIVE_UNIFORM_MAX_LENGTH, &max_name_len);
 
@@ -179,26 +181,26 @@ namespace Vakol::Rendering::OpenGL
     }
 
     void SetFloat(const int location, const float value)
-	{
+    {
         glUniform1f(location, value);
-	}
+    }
 
     void SetInt(const int location, const int value)
-	{
+    {
         glUniform1i(location, value);
-	}
+    }
 
     void SetVec3(const int location, const int count, const float* value)
-	{
+    {
         glUniform3fv(location, count, value);
-	}
+    }
 
     void SetVec4(const int location, const int count, const float* value)
-	{
+    {
         glUniform4fv(location, count, value);
-	}
+    }
 
-}
+} // namespace Vakol::Rendering::OpenGL
 
 std::string ToString(const unsigned int shader)
 {

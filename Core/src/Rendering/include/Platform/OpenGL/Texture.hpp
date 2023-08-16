@@ -6,4 +6,4 @@ namespace Vakol::Rendering::OpenGL
 
     void SetActiveTexture(int slot);
     void BindTexture(unsigned int texture);
-}
+} // namespace Vakol::Rendering::OpenGL

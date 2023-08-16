@@ -9,4 +9,4 @@ namespace Vakol::Rendering
         return xg::newGuid().str();
     }
 
-}
+} // namespace Vakol::Rendering

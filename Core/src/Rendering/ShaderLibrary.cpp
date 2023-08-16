@@ -1,10 +1,10 @@
 #include "include/Rendering/ShaderLibrary.hpp"
 
-#include "Platform/OpenGL/Shader.hpp"
 #include "Platform/OpenGL/Buffer.hpp"
+#include "Platform/OpenGL/Shader.hpp"
 
-#include "include/Rendering/RenderData.hpp"
 #include "Logger/Logger.hpp"
+#include "include/Rendering/RenderData.hpp"
 
 namespace Vakol::Rendering
 {
@@ -15,7 +15,7 @@ namespace Vakol::Rendering
 
     void ShaderLibrary::CreateUniformBuffer(const char* uBufferName, const int size, const unsigned int binding)
     {
-        UniformBuffer uniform_buffer {};
+        UniformBuffer uniform_buffer{};
 
         OpenGL::GenBuffers(uniform_buffer.id);
 
@@ -102,7 +102,8 @@ namespace Vakol::Rendering
         }
     }
 
-    void ShaderLibrary::SetMat4(const unsigned int shader, const char* name, const bool transpose, const Math::Mat4& value)
+    void ShaderLibrary::SetMat4(const unsigned int shader, const char* name, const bool transpose,
+                                const Math::Mat4& value)
     {
         if (UniformExists(shader, name))
         {
@@ -151,4 +152,4 @@ namespace Vakol::Rendering
     {
         return m_uniformBuffers.find(name) != m_uniformBuffers.end();
     }
-}
+} // namespace Vakol::Rendering
