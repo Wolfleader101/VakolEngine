@@ -46,7 +46,7 @@ function update()
     if (Input:get_key_down(KEYS["KEY_1"])) then
         -- toggle_skybox();
         print("CHANGING SCENE")
-        change_scene("render_test");
+        change_scene("sandbox");
         -- toggle_wireframe();
     end
 
