@@ -200,13 +200,13 @@ namespace Vakol
 
                 const auto mesh_ptr = Physics::PhysicsPool::m_Common.createTriangleMesh();
 
-                //for (auto& mesh : draw.model_ptr->meshes())
+                // for (auto& mesh : draw.model_ptr->meshes())
                 //{
-                //    const auto tri_array = new rp3d::TriangleVertexArray(
-                //        mesh.nVertices(), mesh.vertices().data(), sizeof(float) * 3, mesh.nIndices() / 3,
-                //        mesh.indices().data(), sizeof(unsigned int) * 3,
-                //        rp3d::TriangleVertexArray::VertexDataType::VERTEX_FLOAT_TYPE,
-                //        rp3d::TriangleVertexArray::IndexDataType::INDEX_INTEGER_TYPE);
+                //     const auto tri_array = new rp3d::TriangleVertexArray(
+                //         mesh.nVertices(), mesh.vertices().data(), sizeof(float) * 3, mesh.nIndices() / 3,
+                //         mesh.indices().data(), sizeof(unsigned int) * 3,
+                //         rp3d::TriangleVertexArray::VertexDataType::VERTEX_FLOAT_TYPE,
+                //         rp3d::TriangleVertexArray::IndexDataType::INDEX_INTEGER_TYPE);
 
                 //    mesh_ptr->addSubpart(tri_array);
                 //};
@@ -229,9 +229,9 @@ namespace Vakol
         rigid.initialized = true;
     };
 
-    //void System::Physics_AddTerrain(const Terrain& ter)
+    // void System::Physics_AddTerrain(const Terrain& ter)
     //{
-    //    m_SP->AddTerrain(ter);
-    //}
+    //     m_SP->AddTerrain(ter);
+    // }
 
 } // namespace Vakol

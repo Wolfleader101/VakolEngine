@@ -15,8 +15,7 @@ namespace Vakol
         entity_type.set_function("get_transform", &Entity::GetComponent<Components::Transform>);
         entity_type.set_function("get_fsm", &Entity::GetComponent<Components::FSM>);
 
-        entity_type.set_function("generate_model", [](Entity* ent, const std::string& path, const float scale = 1.0f) 
-        {
+        entity_type.set_function("generate_model", [](Entity* ent, const std::string& path, const float scale = 1.0f) {
             if (!ent->HasComponent<Rendering::Drawable>())
                 ent->AddComponent<Rendering::Drawable>();
 
@@ -61,10 +60,10 @@ namespace Vakol
             assert(0);
         });
 
-        //entity_type.set_function("get_bounds_from_model", [](const Entity* ent) -> void {
-        //    if (ent->HasComponent<Rendering::Drawable, Components::Collider>())
-        //    {
-        //        const auto& model = ent->GetComponent<Rendering::Drawable>();
+        // entity_type.set_function("get_bounds_from_model", [](const Entity* ent) -> void {
+        //     if (ent->HasComponent<Rendering::Drawable, Components::Collider>())
+        //     {
+        //         const auto& model = ent->GetComponent<Rendering::Drawable>();
 
         //        auto& collider = ent->GetComponent<Components::Collider>();
 

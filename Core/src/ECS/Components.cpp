@@ -137,9 +137,9 @@ namespace Vakol::Components
         return {glmVertex.x, glmVertex.y, glmVertex.z};
     }
 
-    //Collider::Bounds GetBounds(const Rendering::Drawable& model, const Transform& transform)
+    // Collider::Bounds GetBounds(const Rendering::Drawable& model, const Transform& transform)
     //{
-    //    //Collider::Bounds bounds;
+    //     //Collider::Bounds bounds;
 
     //    //rp3d::Vector3& max = bounds.max;
     //    //rp3d::Vector3& min = bounds.min;

@@ -137,7 +137,8 @@ namespace Vakol::Math
 
     Mat4 Scale(const Vec3& scale)
     {
-        return Mat4(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, scale.x, scale.y, scale.z, 1.0f);
+        return Mat4(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, scale.x, scale.y, scale.z,
+                    1.0f);
     }
 
     Mat4 XRotation(float angle)

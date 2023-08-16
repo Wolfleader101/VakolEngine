@@ -15,10 +15,10 @@
 #include "View/GUI/GUIWindow.hpp"
 #include <Math/Math.hpp>
 
-#include "Rendering/RenderEngine.hpp"
-#include "Rendering/RenderData.hpp"
-#include "Rendering/Assets/ModelLibrary.hpp"
 #include "Rendering/Assets/Model.hpp"
+#include "Rendering/Assets/ModelLibrary.hpp"
+#include "Rendering/RenderData.hpp"
+#include "Rendering/RenderEngine.hpp"
 
 std::vector<Vakol::Math::Mat4> create_mat4_vector(const size_t reserve)
 {
@@ -392,7 +392,6 @@ namespace Vakol
         });
 
         entity_type.set_function("generate_model", [](Entity* ent, const std::string& path, const float scale = 1.0f) {
-
             if (!ent->HasComponent<Rendering::Drawable>())
                 ent->AddComponent<Rendering::Drawable>();
 
