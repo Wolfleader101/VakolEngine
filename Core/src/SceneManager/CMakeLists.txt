@@ -1,5 +1,10 @@
+SET(SCENE_MANAGER_SRC
+    ${CMAKE_CURRENT_SOURCE_DIR}/SceneManager.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Scene.cpp
+    PARENT_SCOPE
+)
 
-SET(SCENE_MANAGER
-    src/SceneManager/SceneManager.hpp
-    src/SceneManager/SceneManager.cpp
-PARENT_SCOPE)
+SET(SCENE_MANAGER_INCLUDE_DIR
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    PARENT_SCOPE
+)

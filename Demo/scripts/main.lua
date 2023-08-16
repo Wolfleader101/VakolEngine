@@ -23,7 +23,6 @@
 -- endScreen:set_active(false);
 
 add_scene("test menu", "scenes/start_scene.lua");
-add_scene("sandbox", "scenes/sandbox.lua");
---add_scene("render_test", "scenes/render_test.lua");
 
+add_scene("sandbox", "scenes/sandbox.lua");
 
