@@ -2,6 +2,8 @@
 
 #include "Texture.hpp"
 
+#include <vector>
+
 namespace Vakol::Rendering::Assets
 {
     struct MaterialProperties
