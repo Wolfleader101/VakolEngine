@@ -1,9 +1,8 @@
-#include "Math/Math.hpp"
+#include "include/Math/Math.hpp"
 
 #include <glm/gtc/type_ptr.hpp>
 namespace Vakol::Math
 {
-
     float Dot(const Vec2& a, const Vec2& b)
     {
         return a.x * b.x + a.y * b.y;
@@ -11,6 +10,21 @@ namespace Vakol::Math
     float Dot(const Vec3& a, const Vec3& b)
     {
         return a.x * b.x + a.y * b.y + a.z * b.z;
+    }
+
+    Vec3 Radians(const Vec3& v)
+    {
+        return glm::radians(v);
+    }
+
+    float Radians(const float degrees)
+    {
+        return glm::radians(degrees);
+    }
+
+    float Degrees(const float radians)
+    {
+        return glm::degrees(radians);
     }
 
     float Magnitude(const Vec2& v)
@@ -111,10 +125,21 @@ namespace Vakol::Math
         return Ray(from, Normalized(to - from));
     }
 
+    Mat4 Mat4Cast(const Quaternion& quaternion)
+    {
+        return glm::mat4_cast(quaternion);
+    }
+
     Mat4 Translation(const Vec3& pos)
     {
         return Mat4(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, pos.x, pos.y, pos.z, 1.0f);
     }
+
+    Mat4 Scale(const Vec3& scale)
+    {
+        return Mat4(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, scale.x, scale.y, scale.z, 1.0f);
+    }
+
     Mat4 XRotation(float angle)
     {
         angle = glm::radians(angle);
@@ -219,32 +244,42 @@ namespace Vakol::Math
         return glm::degrees(vec);
     }
 
-    Mat4 Perspective(float fovy, float aspect, float zNear, float zFar)
+    Mat4 Perspective(const float fovY, const float aspect, const float zNear, const float zFar)
     {
-        return glm::perspective(fovy, aspect, zNear, zFar);
+        return glm::perspective(fovY, aspect, zNear, zFar);
     }
 
-    const float* AsArray(const Vec2& v)
+    Mat4 Orthographic(const float left, const float right, const float bottom, const float top)
+    {
+        return glm::ortho(left, right, bottom, top);
+    }
+
+    Mat4 LookAt(const Vec3& eye, const Vec3& center, const Vec3& up)
+    {
+        return glm::lookAt(eye, center, up);
+    }
+
+    const float* ToArray(const Vec2& v)
     {
         return glm::value_ptr(v);
     }
-    const float* AsArray(const Vec3& v)
+    const float* ToArray(const Vec3& v)
     {
         return glm::value_ptr(v);
     }
-    const float* AsArray(const Vec4& v)
+    const float* ToArray(const Vec4& v)
     {
         return glm::value_ptr(v);
     }
-    const float* AsArray(const Mat3& m)
+    const float* ToArray(const Mat3& m)
     {
         return glm::value_ptr(m);
     }
-    const float* AsArray(const Mat4& m)
+    const float* ToArray(const Mat4& m)
     {
         return glm::value_ptr(m);
     }
-    const float* AsArray(const Quat& q)
+    const float* ToArray(const Quat& q)
     {
         return glm::value_ptr(q);
     }

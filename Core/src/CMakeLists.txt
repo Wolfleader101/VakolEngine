@@ -1,4 +1,3 @@
-add_subdirectory(Animation)
 add_subdirectory(Application)
 add_subdirectory(AssetLoader)
 add_subdirectory(Camera)
@@ -12,13 +11,11 @@ add_subdirectory(Rendering)
 add_subdirectory(SceneManager)
 add_subdirectory(Scripting)
 add_subdirectory(Serialisation)
-add_subdirectory(Terrain)
 add_subdirectory(Time)
 add_subdirectory(Utils)
 add_subdirectory(Window)
 
 SET(SOURCES
-${ANIMATION_SRC}
 ${APPLICATION_SRC}
 ${ASSET_LOADER_SRC}
 ${CAMERA_SRC}
@@ -32,7 +29,6 @@ ${RENDERING_SRC}
 ${SCENE_MANAGER_SRC}
 ${SCRIPTING_SRC}
 ${SERIALISATION_SRC}
-${TERRAIN_SRC}
 ${TIME_SRC}
 ${UTILS_SRC}
 ${WINDOW_SRC}
@@ -40,7 +36,6 @@ src/core.cpp
 PARENT_SCOPE)
 
 SET(GLOBAL_INCLUDE_DIRS
-    ${ANIMATION_INCLUDE_DIR}
     ${APPLICATION_INCLUDE_DIR}
     ${ASSET_LOADER_INCLUDE_DIR}
     ${CAMERA_INCLUDE_DIR}
@@ -54,7 +49,6 @@ SET(GLOBAL_INCLUDE_DIRS
     ${SCENE_MANAGER_INCLUDE_DIR}
     ${SCRIPTING_INCLUDE_DIR}
     ${SERIALISATION_INCLUDE_DIR}
-    ${TERRAIN_INCLUDE_DIR}
     ${TIME_INCLUDE_DIR}
     ${UTILS_INCLUDE_DIR}
     ${WINDOW_INCLUDE_DIR}

@@ -1,12 +1,15 @@
+add_subdirectory(Platform)
+
 SET(RENDERING_SRC
-    ${CMAKE_CURRENT_SOURCE_DIR}/GLRenderer.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/RendererFactory.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/DebugRenderer.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/Buffer.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/Instance.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/Shader.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/Skybox.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/VertexArray.cpp
+    ${PLATFORM}    
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/RenderAPI.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/RenderCommand.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/RenderEngine.cpp
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/MaterialLibrary.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/ShaderLibrary.cpp
+
     PARENT_SCOPE
 )
 

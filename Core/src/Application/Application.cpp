@@ -1,18 +1,19 @@
 #include "Application/Application.hpp"
 
-#include "AssetLoader/AssetLoader.hpp"
 #include "ECS/System.hpp"
 #include "Physics/PhysicsPool.hpp"
-#include "Rendering/RendererFactory.hpp"
 
 #include "GameConfig.hpp"
 #include "Logger/Logger.hpp"
+
+#include "Rendering/RenderEngine.hpp"
+
 namespace Vakol
 {
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
     Application::Application()
-        : m_window(nullptr), m_renderer(nullptr), m_running(false), m_scriptEngine(), m_input(),
+        : m_window(nullptr), m_running(false), m_scriptEngine(), m_input(),
           m_sceneManager(m_scriptEngine){};
 
     void Application::Init()
@@ -35,10 +36,11 @@ namespace Vakol
             return;
         }
 
-        m_renderer = CreateRenderer(config.value().rendererType, m_window);
+        m_renderer = Rendering::CreateRenderEngine(config.value().rendererType, m_window);
 
         if (m_renderer == nullptr)
         {
+            VK_ERROR("Renderer is nullptr");
             return;
         }
 
@@ -70,10 +72,10 @@ namespace Vakol
 
         m_scriptEngine.SetGlobalFunction("set_active_mouse", &Application::SetActiveMouse, this);
 
-        m_scriptEngine.SetGlobalFunction("toggle_wireframe", &Renderer::ToggleWireframe, m_renderer);
-        m_scriptEngine.SetGlobalFunction("toggle_skybox", &Renderer::ToggleSkybox, m_renderer);
-        m_scriptEngine.SetGlobalFunction("set_wireframe", &Renderer::SetWireframe, m_renderer);
-        m_scriptEngine.SetGlobalFunction("set_skybox", &Renderer::SetSkybox, m_renderer);
+        //m_scriptEngine.SetGlobalFunction("toggle_wireframe", &Renderer::ToggleWireframe, m_renderer);
+        //m_scriptEngine.SetGlobalFunction("toggle_skybox", &Renderer::ToggleSkybox, m_renderer);
+        //m_scriptEngine.SetGlobalFunction("set_wireframe", &Renderer::SetWireframe, m_renderer);
+        //m_scriptEngine.SetGlobalFunction("set_skybox", &Renderer::SetSkybox, m_renderer);
 
         // lua.set_function("clear_color_v", [&](const Math::Vec4& color) { renderer->ClearColor(color); });
 
@@ -118,29 +120,29 @@ namespace Vakol
 
         if (sol::optional<std::string> model_dir = config["model_dir"]; !model_dir)
         {
-            VK_WARN("CONFIG WARNING: No Model Directory Set, Using Default {0}", AssetLoader::model_path);
+            //VK_WARN("CONFIG WARNING: No Model Directory Set, Using Default {0}", AssetLoader::model_path);
         }
         else
         {
-            AssetLoader::model_path = model_dir.value();
+            //AssetLoader::model_path = model_dir.value();
         }
 
         if (sol::optional<std::string> texture_dir = config["texture_dir"]; !texture_dir)
         {
-            VK_WARN("CONFIG WARNING: No Texture Directory Set, Using Default {0}", AssetLoader::texture_path);
+            //VK_WARN("CONFIG WARNING: No Texture Directory Set, Using Default {0}", AssetLoader::texture_path);
         }
         else
         {
-            AssetLoader::texture_path = texture_dir.value();
+            //AssetLoader::texture_path = texture_dir.value();
         }
 
         if (sol::optional<std::string> shader_dir = config["shader_dir"]; !shader_dir)
         {
-            VK_WARN("CONFIG WARNING: No Shader Directory Set, Using Default {0}", AssetLoader::shader_path);
+            //VK_WARN("CONFIG WARNING: No Shader Directory Set, Using Default {0}", AssetLoader::shader_path);
         }
         else
         {
-            AssetLoader::shader_path = shader_dir.value();
+            //AssetLoader::shader_path = shader_dir.value();
         }
 
         GameConfig cfg = {name.value(), window_width.value(), window_height.value(), renderer_type.value()};
@@ -156,7 +158,7 @@ namespace Vakol
             m_time.accumulator += m_time.deltaTime;
 
             m_gui.CreateNewFrame();
-            m_renderer->Update();
+            m_renderer->PreDraw();
 
             m_sceneManager.Update();
 
@@ -176,7 +178,7 @@ namespace Vakol
             // Compute the time interpolation factor
             // float alpha = m_time.accumulator / m_time.tickRate;
 
-            m_renderer->UpdateData(activeScene.GetCamera());
+            //m_renderer->UpdateData(activeScene.GetCamera());
 
             activeScene.GetEntityList().GetRegistry().view<LuaScript>().each(
                 [&](auto& script) { m_scriptEngine.UpdateScript(script); });
@@ -184,9 +186,9 @@ namespace Vakol
             m_scriptEngine.UpdateScript(activeScene.GetScript());
 
             System::BindScene(activeScene); // is here temporarily until this is replaced/removed
-            activeScene.Update(m_time, m_renderer);
+            activeScene.Update(m_time);
 
-            m_renderer->LateUpdate();
+            m_renderer->PostDraw();
 
             m_gui.Update();
             m_input.Update();
@@ -230,9 +232,6 @@ namespace Vakol
 
     bool Application::OnKeyPressed(KeyPressedEvent& kev)
     {
-        if (kev.GetKeyCode() == GLFW_KEY_K)
-            m_renderer->ToggleWireframe();
-
         m_input.OnKeyPressed(kev);
 
         return true;

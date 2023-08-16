@@ -1,6 +1,5 @@
 #include "ECS/Components.hpp"
 
-#include "AssetLoader/AssetLoader.hpp"
 #include "SceneManager/Scene.hpp"
 
 namespace Vakol::Components
@@ -47,11 +46,6 @@ namespace Vakol::Components
         // Call the callback for the current state
         const LuaFunction callback = states[currentState];
         callback();
-    }
-
-    Drawable::Drawable(std::string&& file) : name(std::move(file)) // WOW! EFFICIENT!
-    {
-        model_ptr = AssetLoader::GetModel(name, 1.0f, false, true).first;
     }
 
     TagType::TagType(uint8_t type) : type(static_cast<ENTITY_TYPE>(type)){};
@@ -143,49 +137,49 @@ namespace Vakol::Components
         return {glmVertex.x, glmVertex.y, glmVertex.z};
     }
 
-    Collider::Bounds GetBounds(const Drawable& model, const Transform& transform)
-    {
-        Collider::Bounds bounds;
+    //Collider::Bounds GetBounds(const Rendering::Drawable& model, const Transform& transform)
+    //{
+    //    //Collider::Bounds bounds;
 
-        rp3d::Vector3& max = bounds.max;
-        rp3d::Vector3& min = bounds.min;
+    //    //rp3d::Vector3& max = bounds.max;
+    //    //rp3d::Vector3& min = bounds.min;
 
-        const Math::Mat4 transformMat = to_rp3d_mat4(transform);
+    //    //const Math::Mat4 transformMat = to_rp3d_mat4(transform);
 
-        auto& vertices = model.model_ptr->meshes().begin()->vertices();
+    //    //auto& vertices = model.meshes().begin()->vertices();
 
-        if (vertices.size() < 3)
-        {
-            VK_CRITICAL("Collider::Bounds::GetBounds() - Insufficient vertices data");
-            return bounds;
-        }
+    //    //if (vertices.size() < 3)
+    //    //{
+    //    //    VK_CRITICAL("Collider::Bounds::GetBounds() - Insufficient vertices data");
+    //    //    return bounds;
+    //    //}
 
-        const auto& position = vertices.begin()->position;
+    //    //const auto& position = vertices.begin()->position;
 
-        const rp3d::Vector3 transformedPosition =
-            transformVertex(transformMat, rp3d::Vector3(position.x, position.y, position.z));
+    //    //const rp3d::Vector3 transformedPosition =
+    //    //    transformVertex(transformMat, rp3d::Vector3(position.x, position.y, position.z));
 
-        max = min = transformedPosition;
+    //    //max = min = transformedPosition;
 
-        for (const auto& msh : model.model_ptr->c_meshes())
-        {
-            vertices = msh.c_vertices();
+    //    //for (const auto& msh : model.model_ptr->c_meshes())
+    //    //{
+    //    //    vertices = msh.c_vertices();
 
-            for (const auto& vertex : vertices)
-            {
-                const auto temp = transformVertex(transformMat, to_rp3d(vertex.position));
-                max = rp3d::Vector3::max(max, temp);
-                min = rp3d::Vector3::min(min, temp);
-            }
-        }
+    //    //    for (const auto& vertex : vertices)
+    //    //    {
+    //    //        const auto temp = transformVertex(transformMat, to_rp3d(vertex.position));
+    //    //        max = rp3d::Vector3::max(max, temp);
+    //    //        min = rp3d::Vector3::min(min, temp);
+    //    //    }
+    //    //}
 
-        bounds.center = (max + min) / 2.0f;
-        bounds.extents = (max - min) / 2.0f;
-        bounds.size = bounds.extents * 2;
-        bounds.radius = bounds.extents.length() / 2.0f;
+    //    //bounds.center = (max + min) / 2.0f;
+    //    //bounds.extents = (max - min) / 2.0f;
+    //    //bounds.size = bounds.extents * 2;
+    //    //bounds.radius = bounds.extents.length() / 2.0f;
 
-        return bounds;
-    }
+    //    //return bounds;
+    //}
 
     void GUID::GenNewGUID()
     {

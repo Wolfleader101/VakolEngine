@@ -6,9 +6,7 @@
 #include "ECS/Entity.hpp"
 #include "ECS/EntityList.hpp"
 #include "Physics/ScenePhysics.hpp"
-#include "Rendering/Renderer.hpp"
 #include "Scripting/ScriptTypes.hpp"
-#include "Terrain/Terrain.hpp"
 #include "Time/Time.hpp"
 
 namespace Vakol
@@ -53,15 +51,13 @@ namespace Vakol
          * @brief Update the scene.
          *
          * @param time The time information for the update.
-         * @param renderer The shared pointer to the renderer.
          */
-        void Update(const Time& time, const std::shared_ptr<Renderer>& renderer);
+        void Update(const Time& time);
 
         /**
          * @brief Create a new entity in the scene.
          *
          * @param tag The tag of the entity.
-         * @param sname The name of the script associated with the entity.
          * @return Entity The created entity.
          */
         Entity CreateEntity(const std::string& tag);

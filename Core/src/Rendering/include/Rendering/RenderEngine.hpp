@@ -5,17 +5,13 @@
 #include <memory>
 #include <string>
 
-namespace Vakol::Controller
+namespace Vakol
 {
+    class Window;
     class Camera;
 }
 
-namespace Vakol::View
-{
-    class Window;
-}
-
-namespace Vakol::Model::Components
+namespace Vakol::Components
 {
     struct Transform;
 }
@@ -34,7 +30,7 @@ namespace Vakol::Rendering
     {
     public:
         static void PreDraw();
-        static void Draw(const Controller::Camera& camera, Model::Components::Transform& transform, const Drawable& drawable);
+        static void Draw(const Camera& camera, Components::Transform& transform, const Drawable& drawable);
         static void PostDraw();
 
         static void GenerateModel(Assets::Model& model, Drawable& drawable);
@@ -47,5 +43,5 @@ namespace Vakol::Rendering
         static void SubmitMesh(Assets::Mesh& mesh, const Drawable& drawable);
     };
 
-    std::shared_ptr<RenderEngine> CreateRenderEngine(const std::string& API, const std::shared_ptr<View::Window>& window);
+    std::shared_ptr<RenderEngine> CreateRenderEngine(const std::string& API, const std::shared_ptr<Window>& window);
 }

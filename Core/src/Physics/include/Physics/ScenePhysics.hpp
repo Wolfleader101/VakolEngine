@@ -3,8 +3,6 @@
 #include <reactphysics3d/reactphysics3d.h>
 
 #include "Camera/Camera.hpp"
-#include "Rendering/DebugRenderer.hpp"
-#include "Terrain/Terrain.hpp"
 #include "Time/Time.hpp"
 
 namespace Vakol
@@ -54,12 +52,12 @@ namespace Vakol::Physics
          */
         bool IsDebugEnabled() const;
 
-        /**
-         * @brief Add a terrain to the physics scene.
-         *
-         * @param terrain The terrain to add.
-         */
-        void AddTerrain(const Terrain& terrain);
+        ///**
+        // * @brief Add a terrain to the physics scene.
+        // *
+        // * @param terrain The terrain to add.
+        // */
+        //void AddTerrain(const Terrain& terrain);
 
         /**
          * @brief Custom collision callback class.
@@ -95,7 +93,7 @@ namespace Vakol::Physics
          * @brief Debug renderer for physics.
          *
          */
-        DebugRenderer m_DebugRenderer;
+        //DebugRenderer m_DebugRenderer;
 
         friend class PhysicsPool;
         friend class System;

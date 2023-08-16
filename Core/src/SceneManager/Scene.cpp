@@ -45,11 +45,11 @@ namespace Vakol
         m_entityList.RemoveEntity(entity);
     }
 
-    void Scene::Update(const Time& time, const std::shared_ptr<Renderer>& renderer)
+    void Scene::Update(const Time& time)
     {
         scenePhysics->Update(time);
 
-        System::Drawable_Update(time, renderer);
+        System::Drawable_Update(m_cam, time);
 
         m_cam.Update();
     }

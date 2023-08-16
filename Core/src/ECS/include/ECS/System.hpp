@@ -4,9 +4,7 @@
 #include "EntityList.hpp"
 #include "Physics/ScenePhysics.hpp"
 
-#include "Rendering/Renderer.hpp"
 #include "SceneManager/Scene.hpp"
-#include "Terrain/Terrain.hpp"
 
 namespace Vakol
 {
@@ -42,10 +40,10 @@ namespace Vakol
         /**
          * @brief Update the drawable system.
          *
+         * @param camera
          * @param time The time information for the update.
-         * @param renderer The shared pointer to the renderer.
          */
-        static void Drawable_Update(const Time& time, const std::shared_ptr<Renderer>& renderer);
+        static void Drawable_Update(const Camera& camera, const Time& time);
 
         /**
          * @brief Prepare the scripting system for deserialization.
@@ -85,7 +83,7 @@ namespace Vakol
          *
          * @param ter The terrain to add.
          */
-        static void Physics_AddTerrain(const Terrain& ter);
+        //static void Physics_AddTerrain(const Terrain& ter);
 
         /**
          * @brief Initialize the terrain system.

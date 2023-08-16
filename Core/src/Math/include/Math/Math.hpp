@@ -3,8 +3,12 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 
-namespace Vakol::Math
-{
+#pragma warning(push)
+#pragma warning(disable:4201)
+#include <glm/gtc/quaternion.hpp>
+#pragma warning(pop)
+
+namespace Vakol::Math {
     //! glm usage is currently just here for backwards compatability reasons
     using Vec2 = glm::vec2;
 
@@ -27,6 +31,13 @@ namespace Vakol::Math
     using Mat3 = glm::mat3;
     using Mat4 = glm::mat4;
     using Quat = glm::quat;
+
+    using Quaternion = glm::quat;
+
+    float Radians(float degrees);
+    Vec3 Radians(const Vec3& quaternion);
+
+    float Degrees(float radians);
 
     float Dot(const Vec2& a, const Vec2& b);
     float Dot(const Vec3& a, const Vec3& b);
@@ -55,6 +66,8 @@ namespace Vakol::Math
     Vec3 Perpendicular(const Vec3& len, const Vec3& dir);
 
     Mat4 Translation(const Vec3& pos);
+    Mat4 Scale(const Vec3& scale);
+
     Mat3 Cut(const Mat4& mat, int row, int col);
 
     // assumes its degrees
@@ -70,6 +83,8 @@ namespace Vakol::Math
     Vec3 MultiplyVector(const Vec3& vec, const Mat4& mat);
 
     Mat4 Inverse(const Mat4& mat);
+
+    Mat4 Mat4Cast(const Quaternion& quaternion);
 
     struct Line
     {
@@ -146,14 +161,17 @@ namespace Vakol::Math
     float RadToDeg(const float rad);
     Vec3 RadToDeg(const Vec3& vec);
 
-    Mat4 Perspective(float fovy, float aspect, float zNear, float zFar);
+    Mat4 Perspective(float fovY, float aspect, float zNear, float zFar);
+    Mat4 Orthographic(float left, float right, float bottom, float top);
 
-    const float* AsArray(const Vec2& v);
-    const float* AsArray(const Vec3& v);
-    const float* AsArray(const Vec4& v);
-    const float* AsArray(const Mat3& m);
-    const float* AsArray(const Mat4& m);
-    const float* AsArray(const Quat& q);
+    Mat4 LookAt(const Vec3& eye, const Vec3& center, const Vec3& up);
+
+    const float* ToArray(const Vec2& v);
+    const float* ToArray(const Vec3& v);
+    const float* ToArray(const Vec4& v);
+    const float* ToArray(const Mat3& m);
+    const float* ToArray(const Mat4& m);
+    const float* ToArray(const Quat& q);
 
     float Cos(float val);
 

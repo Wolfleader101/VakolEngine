@@ -1,10 +1,10 @@
-#include "ShaderLibrary.hpp"
+#include "include/Rendering/ShaderLibrary.hpp"
 
 #include "Platform/OpenGL/Shader.hpp"
 #include "Platform/OpenGL/Buffer.hpp"
 
-#include "RenderData.hpp"
-#include "Controller/Logger.hpp"
+#include "include/Rendering/RenderData.hpp"
+#include "Logger/Logger.hpp"
 
 namespace Vakol::Rendering
 {

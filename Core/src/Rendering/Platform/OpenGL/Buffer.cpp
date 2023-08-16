@@ -1,4 +1,4 @@
-#include "Buffer.hpp"
+#include "Platform/OpenGL/Buffer.hpp"
 
 #include <glad/glad.h>
 

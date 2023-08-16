@@ -1,19 +1,19 @@
-#include "RenderEngine.hpp"
+#include "include/Rendering/RenderEngine.hpp"
 
-#include "MaterialLibrary.hpp"
-#include "RenderCommand.hpp"
-#include "ShaderLibrary.hpp"
+#include "include/Rendering/MaterialLibrary.hpp"
+#include "include/Rendering/RenderCommand.hpp"
+#include "include/Rendering/ShaderLibrary.hpp"
 
-#include "Assets/Model.hpp"
+#include "include/Rendering/Assets/Model.hpp"
 
-#include "View/Window/Window.hpp"
+#include "Window/Window.hpp"
 
-#include "Assets/Importer/ShaderImporter.hpp"
-#include "Assets/ModelLibrary.hpp"
+#include "include/Rendering/Assets/Importer/ShaderImporter.hpp"
+#include "include/Rendering/Assets/ModelLibrary.hpp"
 
-#include "Controller/Logger.hpp"
+#include "Logger/Logger.hpp"
 
-#include "Model/Components.hpp"
+#include "ECS/Components.hpp"
 
 namespace Vakol::Rendering
 {
@@ -27,7 +27,7 @@ namespace Vakol::Rendering
         RenderAPI::Clear(VK_COLOR_BUFFER | VK_DEPTH_BUFFER);
     }
 
-    void RenderEngine::Draw(const Controller::Camera& camera, Model::Components::Transform & transform, const Drawable& drawable)
+    void RenderEngine::Draw(const Camera& camera, Components::Transform & transform, const Drawable& drawable)
     {
         RenderAPI::BeginDraw(drawable.vertexArrayID, drawable.shaderID, drawable.materialID);
 
@@ -142,7 +142,7 @@ namespace Vakol::Rendering
         RenderAPI::GenerateVertexCommand(std::move(vertexArray), drawable);
     }
 
-    std::shared_ptr<RenderEngine> CreateRenderEngine([[maybe_unused]] const std::string& API, const std::shared_ptr<View::Window>& window)
+    std::shared_ptr<RenderEngine> CreateRenderEngine([[maybe_unused]] const std::string& API, const std::shared_ptr<Window>& window)
     {
         RenderAPI::EnableDepth();
 

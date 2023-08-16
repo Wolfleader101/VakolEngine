@@ -1,6 +1,6 @@
-#include "Texture.hpp"
+#include "Platform/OpenGL/Texture.hpp"
 
-#include "Controller/Logger.hpp"
+#include "Logger/Logger.hpp"
 
 #include <glad/glad.h>
 

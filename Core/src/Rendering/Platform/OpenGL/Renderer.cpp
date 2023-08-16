@@ -1,4 +1,4 @@
-#include "Renderer.hpp"
+#include "Platform/OpenGL/Renderer.hpp"
 
 #include <glad/glad.h>
 

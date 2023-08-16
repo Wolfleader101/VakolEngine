@@ -12,15 +12,13 @@ namespace Vakol::Rendering::Assets
     struct Texture;
 }
 
-namespace Vakol::Model::Components
+namespace Vakol::Components
 {
     struct Transform;
 }
 
 namespace Vakol::Rendering
 {
-    constexpr int BIT(const int x) { return 1 << x; }
-
     struct VertexArray;
 
     struct VertexCommand;
@@ -30,7 +28,7 @@ namespace Vakol::Rendering
     struct Drawable;
 
     enum VK_RENDER_API_HINT { OPENGL, VULKAN, DIRECT3D, METAL };
-    enum VK_BUFFER_HINT { VK_COLOR_BUFFER = BIT(0), VK_DEPTH_BUFFER = BIT(1), VK_STENCIL_BUFFER = BIT(2) };
+    enum VK_BUFFER_HINT { VK_COLOR_BUFFER = 1, VK_DEPTH_BUFFER = 2, VK_STENCIL_BUFFER = 4 };
 
     struct RenderSettings
     {
@@ -52,7 +50,7 @@ namespace Vakol::Rendering
 
         static void PrepareVertexArray();
 
-        static Math::Mat4 GetModelMatrix(Model::Components::Transform& transform);
+        static Math::Mat4 GetModelMatrix(Components::Transform& transform);
 
         static void GenerateVertexCommand(VertexArray&& vertexArray, const Drawable& drawable);
         static void GenerateShader(Assets::Shader&& shader, Drawable& drawable);

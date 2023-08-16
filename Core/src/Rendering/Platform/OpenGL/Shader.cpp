@@ -1,8 +1,8 @@
-#include "Shader.hpp"
+#include "Rendering/Assets/Shader.hpp"
 
 #include <glad/glad.h>
 
-#include "Controller/Logger.hpp"
+#include "Logger/Logger.hpp"
 #include "Rendering/RenderData.hpp"
 
 std::string ToString(unsigned int shader);

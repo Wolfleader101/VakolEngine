@@ -1,19 +1,19 @@
-#include "RenderAPI.hpp"
+#include "include/Rendering/RenderAPI.hpp"
 
-#include "MaterialLibrary.hpp"
-#include "RenderData.hpp"
-#include "RenderCommand.hpp"
+#include "include/Rendering/MaterialLibrary.hpp"
+#include "include/Rendering/RenderData.hpp"
+#include "include/Rendering/RenderCommand.hpp"
 
-#include "ShaderLibrary.hpp"
+#include "include/Rendering/ShaderLibrary.hpp"
 
-#include "Assets/Shader.hpp"
+#include "include/Rendering/Assets/Shader.hpp"
 
 #include "Platform/OpenGL/common.h"
 
-#include "Controller/Logger.hpp"
-#include "Model/Components.hpp"
+#include "Logger/Logger.hpp"
+#include "ECS/Components.hpp"
 
-#include "Assets/Importer/TextureImporter.hpp"
+#include "include/Rendering/Assets/Importer/TextureImporter.hpp"
 
 namespace Vakol::Rendering
 {
@@ -187,7 +187,7 @@ namespace Vakol::Rendering
         ShaderLibrary::SetInt(ShaderLibrary::GetShader(shaderID), "material.normal_map", Assets::VK_TEXTURE_NORMAL);
     }
 
-    Math::Mat4 RenderAPI::GetModelMatrix(Model::Components::Transform& transform)
+    Math::Mat4 RenderAPI::GetModelMatrix(Components::Transform& transform)
     {
         auto transform_matrix = Math::Mat4(1.0f);
 
