@@ -184,7 +184,7 @@ namespace Vakol::Controller
             // Compute the time interpolation factor
             // float alpha = m_time.accumulator / m_time.tickRate;
 
-            //m_renderer->UpdateData(activeScene.GetCamera());
+                //m_renderer->UpdateData(activeScene.GetCamera());
 
             activeScene.GetEntityList().GetRegistry().view<LuaScript>().each(
                 [&](auto& script) { m_scriptEngine.UpdateScript(script); });

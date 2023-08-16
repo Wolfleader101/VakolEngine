@@ -5,6 +5,11 @@
 #include <memory>
 #include <string>
 
+namespace Vakol::Controller
+{
+    class Camera;
+}
+
 namespace Vakol::View
 {
     class Window;
@@ -29,7 +34,7 @@ namespace Vakol::Rendering
     {
     public:
         static void PreDraw();
-        static void Draw(Model::Components::Transform& transform, const Drawable& drawable);
+        static void Draw(const Controller::Camera& camera, Model::Components::Transform& transform, const Drawable& drawable);
         static void PostDraw();
 
         static void GenerateModel(Assets::Model& model, Drawable& drawable);
@@ -38,8 +43,8 @@ namespace Vakol::Rendering
         static void GenerateCube(float scale, Drawable& drawable);
     private:
 
-        static void SubmitModel(Assets::Model& model, Drawable& drawable); // Submit a user-defined model to renderer. Converted into low-level render components.
-        static void SubmitMesh(Assets::Mesh& mesh, Drawable& drawable);
+        static void SubmitModel(Assets::Model& model, const Drawable& drawable); // Submit a user-defined model to renderer. Converted into low-level render components.
+        static void SubmitMesh(Assets::Mesh& mesh, const Drawable& drawable);
     };
 
     std::shared_ptr<RenderEngine> CreateRenderEngine(const std::string& API, const std::shared_ptr<View::Window>& window);

@@ -39,4 +39,10 @@ namespace Vakol::Rendering
         int location;
         int count; // number of locations the uniform variable takes up in memory.
     };
+
+    struct UniformBuffer
+    {
+        unsigned int id;
+        unsigned int binding;
+    };
 }

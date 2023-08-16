@@ -27,11 +27,14 @@ namespace Vakol::Rendering
         RenderAPI::Clear(VK_COLOR_BUFFER | VK_DEPTH_BUFFER);
     }
 
-    void RenderEngine::Draw(Model::Components::Transform& transform, const Drawable& drawable)
+    void RenderEngine::Draw(const Controller::Camera& camera, Model::Components::Transform & transform, const Drawable& drawable)
     {
         RenderAPI::BeginDraw(drawable.vertexArrayID, drawable.shaderID, drawable.materialID);
 
         MaterialLibrary::SetupMaterial(MaterialLibrary::GetMaterial(drawable.materialID));
+
+        ShaderLibrary::SetMat4(ShaderLibrary::GetShader(drawable.shaderID), "PV_MATRIX", false,
+                               camera.GetMatrix(PROJECTION_MATRIX) * camera.GetMatrix(VIEW_MATRIX));
         ShaderLibrary::SetMat4(ShaderLibrary::GetShader(drawable.shaderID), "MODEL_MATRIX", false, RenderAPI::GetModelMatrix(transform));
 
         RenderAPI::EndDraw();
@@ -116,7 +119,7 @@ namespace Vakol::Rendering
         }
     }
 
-    void RenderEngine::SubmitModel(Assets::Model& model, Drawable& drawable)
+    void RenderEngine::SubmitModel(Assets::Model& model, const Drawable& drawable)
     {
         RenderAPI::PrepareVertexArray();
 
@@ -126,7 +129,7 @@ namespace Vakol::Rendering
         }
     }
 
-    void RenderEngine::SubmitMesh(Assets::Mesh& mesh, Drawable& drawable)
+    void RenderEngine::SubmitMesh(Assets::Mesh& mesh, const Drawable& drawable)
     {
         VertexArray vertexArray;
         
@@ -142,6 +145,8 @@ namespace Vakol::Rendering
     std::shared_ptr<RenderEngine> CreateRenderEngine([[maybe_unused]] const std::string& API, const std::shared_ptr<View::Window>& window)
     {
         RenderAPI::EnableDepth();
+
+        ShaderLibrary::CreateUniformBuffer("Matrices", 2 * sizeof(Math::Mat4), 1);
 
         return std::make_shared<RenderEngine>();
     }

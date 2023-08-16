@@ -42,10 +42,11 @@ namespace Vakol::Controller
         /**
          * @brief Update the drawable system.
          *
+         * @param camera
          * @param time The time information for the update.
          * @param renderer The shared pointer to the renderer.
          */
-        static void Drawable_Update(const Time& time, const std::shared_ptr<View::Renderer>& renderer);
+        static void Drawable_Update(const Camera& camera, const Time& time, const std::shared_ptr<View::Renderer>& renderer);
 
         /**
          * @brief Prepare the scripting system for deserialization.

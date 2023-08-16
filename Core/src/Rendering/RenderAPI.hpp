@@ -52,8 +52,6 @@ namespace Vakol::Rendering
 
         static void PrepareVertexArray();
 
-        static Math::Mat4 GetProjectionMatrix();
-        static Math::Mat4 GetViewMatrix(const Math::Vec3& position, const Math::Vec3& lookDirection = Math::Vec3(0.0f, 0.0f, -1.0f), const Math::Vec3& up = Math::Vec3(0.0f, 1.0f, 0.0f));
         static Math::Mat4 GetModelMatrix(Model::Components::Transform& transform);
 
         static void GenerateVertexCommand(VertexArray&& vertexArray, const Drawable& drawable);

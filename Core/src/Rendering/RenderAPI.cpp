@@ -45,9 +45,6 @@ namespace Vakol::Rendering
             OpenGL::BindVertexArray(vertexArray.vertexArray);
             OpenGL::DrawTriangleElements(vertexArray.nIndices);
         }
-
-        ShaderLibrary::SetMat4(program, "PV_MATRIX", false,
-                               GetProjectionMatrix() * GetViewMatrix(Math::Vec3(0.0f, 0.0f, -5.0f)));
     }
 
     void RenderAPI::EndDraw()
@@ -188,16 +185,6 @@ namespace Vakol::Rendering
         ShaderLibrary::SetInt(ShaderLibrary::GetShader(shaderID), "material.emission_map", Assets::VK_TEXTURE_EMISSION);
         ShaderLibrary::SetInt(ShaderLibrary::GetShader(shaderID), "material.height_map", Assets::VK_TEXTURE_HEIGHT);
         ShaderLibrary::SetInt(ShaderLibrary::GetShader(shaderID), "material.normal_map", Assets::VK_TEXTURE_NORMAL);
-    }
-
-    Math::Mat4 RenderAPI::GetProjectionMatrix()
-    {
-        return Math::Perspective(Math::Radians(45.0f), static_cast<float>(m_settings.width) / static_cast<float>(m_settings.height), 0.01f, 1000.0f);
-    }
-
-    Math::Mat4 RenderAPI::GetViewMatrix(const Math::Vec3& position, const Math::Vec3& lookDirection, const Math::Vec3& up)
-    {
-        return Math::LookAt(position, lookDirection, up);
     }
 
     Math::Mat4 RenderAPI::GetModelMatrix(Model::Components::Transform& transform)

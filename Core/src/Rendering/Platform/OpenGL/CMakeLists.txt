@@ -15,6 +15,9 @@ src/Rendering/Platform/OpenGL/Shader.cpp
 src/Rendering/Platform/OpenGL/Texture.hpp
 src/Rendering/Platform/OpenGL/Texture.cpp
 
+src/Rendering/Platform/OpenGL/Buffer.hpp
+src/Rendering/Platform/OpenGL/Buffer.cpp
+
 src/Rendering/Platform/OpenGL/common.h
 
 PARENT_SCOPE)

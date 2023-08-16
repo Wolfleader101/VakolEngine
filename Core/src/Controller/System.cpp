@@ -84,12 +84,12 @@ namespace Vakol::Controller
         });
     }
 
-    void System::Drawable_Update(const Time& time, const std::shared_ptr<View::Renderer>& renderer)
+    void System::Drawable_Update(const Camera& camera, const Time& time, const std::shared_ptr<View::Renderer>& renderer)
     {
         m_registry->view<Model::Components::Transform, Rendering::Drawable>().each(
             [&](Model::Components::Transform& transform, const Rendering::Drawable& drawable) {
 
-                Rendering::RenderEngine::Draw(transform, drawable);
+                Rendering::RenderEngine::Draw(camera, transform, drawable);
 
             });
 
