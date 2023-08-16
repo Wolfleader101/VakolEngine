@@ -93,8 +93,20 @@ namespace Vakol::Rendering
 
             drawable.materialID = material->ID;
 
+            if (material->textures.empty())
+            {
+                Assets::Texture texture;
+
+                texture.path = "coreAssets/textures/white.png";
+                texture.type = Assets::VK_TEXTURE_DIFFUSE;
+
+                material->textures.emplace_back(texture);
+            }
+
             for (auto& texture : material->textures)
             {
+                VK_TRACE(texture.path);
+
                 if (texture.ID == 0)
                     texture.ID = RenderAPI::GenerateTexture(texture, drawable);
 

@@ -9,20 +9,22 @@ struct Material
 	vec3 ambient_color;
 	vec3 diffuse_color;
 	vec3 specular_color;
+	vec3 emissive_color;
 
     sampler2D diffuse_map;
     sampler2D specular_map;
-    sampler2D normal_map;
+	sampler2D ambient_map;
     sampler2D emission_map;
+	sampler2D height_map;
+    sampler2D normal_map;
 };
 
 uniform Material material;
 
 void main()
 {
-	vec4 ambient = vec4(material.ambient_color, 1.0);
-	vec4 diffuse = vec4(material.diffuse_color, 1.0);
-	vec4 specular = vec4(material.specular_color, 1.0);
+	vec4 diffuse = texture(material.diffuse_map, TexCoords);
+	vec4 normal = texture(material.normal_map, TexCoords);
 
-	FragColor = texture(material.diffuse_map, TexCoords);
+	FragColor = diffuse;
 }

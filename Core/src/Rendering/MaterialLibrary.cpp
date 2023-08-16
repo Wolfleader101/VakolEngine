@@ -36,10 +36,16 @@ namespace Vakol::Rendering
         m_textures[materialID].emplace_back(texture);
     }
 
-    std::vector<Assets::Texture>& MaterialLibrary::GetTextures(const std::string& materialID)
+    bool MaterialLibrary::GetTextures(const std::string& materialID, std::vector<Assets::Texture>& textures)
     {
         if (m_textures.find(materialID) != m_textures.end())
-            return m_textures.at(materialID);
+        {
+           textures = m_textures.at(materialID);
+
+            return true;
+        }
+
+        return false;
     }
 
     int MaterialLibrary::GetTextureCount(const std::string& materialID)

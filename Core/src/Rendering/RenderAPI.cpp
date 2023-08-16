@@ -21,6 +21,42 @@ namespace Vakol::Rendering
 
     RenderSettings RenderAPI::m_settings;
 
+    void RenderAPI::BeginDraw(const std::string& vertexID, const std::string& shaderID, const std::string& materialID)
+    {
+        const auto program = ShaderLibrary::GetShader(shaderID);
+
+        OpenGL::BindShaderProgram(program);
+
+        DefaultShaderSetup(shaderID);
+
+        std::vector<Assets::Texture> textures {};
+
+        if (const auto valid = MaterialLibrary::GetTextures(materialID, textures); valid)
+        {
+            for (const auto& texture : textures)
+            {
+                OpenGL::SetActiveTexture(texture.type);
+                OpenGL::BindTexture(texture.ID);
+            }
+        }
+
+        for (const auto& vertexArray : m_vertexLibrary.at(vertexID))
+        {
+            OpenGL::BindVertexArray(vertexArray.vertexArray);
+            OpenGL::DrawTriangleElements(vertexArray.nIndices);
+        }
+
+        ShaderLibrary::SetMat4(program, "PV_MATRIX", false,
+                               GetProjectionMatrix() * GetViewMatrix(Math::Vec3(0.0f, 0.0f, -5.0f)));
+    }
+
+    void RenderAPI::EndDraw()
+    {
+        OpenGL::UnbindVertexArray();
+
+        OpenGL::UnbindShaderProgram();
+    }
+
     void RenderAPI::GenerateVertexCommand(VertexArray&& vertexArray, const Drawable& drawable)
     {
         VertexCommand command;
@@ -44,8 +80,6 @@ namespace Vakol::Rendering
         }
 
         m_vertexLibrary[drawable.vertexArrayID].emplace_back(command);
-
-        VK_TRACE(m_vertexLibrary.at(drawable.vertexArrayID).size());
 
         std::vector<Vertex>().swap(vertexArray.vertices);
         std::vector<unsigned int>().swap(vertexArray.indices);
@@ -146,44 +180,14 @@ namespace Vakol::Rendering
         }
     }
 
-    void RenderAPI::BeginDraw(const std::string& vertexID, const std::string& shaderID, const std::string& materialID)
-    {
-        const auto program = ShaderLibrary::GetShader(shaderID);
-
-        OpenGL::BindShaderProgram(program);
-
-        DefaultShaderSetup(shaderID);
-
-        for (const auto& texture : MaterialLibrary::GetTextures(materialID))
-        {
-            OpenGL::SetActiveTexture(texture.type - 1);
-            OpenGL::BindTexture(texture.ID);
-        }
-
-        for (const auto& vertexArray : m_vertexLibrary.at(vertexID))
-        {
-            OpenGL::BindVertexArray(vertexArray.vertexArray);
-            OpenGL::DrawTriangleElements(vertexArray.nIndices);
-        }
-
-        ShaderLibrary::SetMat4(program, "PV_MATRIX", false, GetProjectionMatrix() * GetViewMatrix(Math::Vec3(0.0f, 0.0f, -5.0f)));
-    }
-
-    void RenderAPI::EndDraw()
-    {
-        OpenGL::UnbindVertexArray();
-
-        OpenGL::UnbindShaderProgram();
-    }
-
     void RenderAPI::DefaultShaderSetup(const std::string& shaderID)
     {
-        ShaderLibrary::SetInt(ShaderLibrary::GetShader(shaderID), "material.diffuse_map", Assets::VK_TEXTURE_DIFFUSE - 1);
-        ShaderLibrary::SetInt(ShaderLibrary::GetShader(shaderID), "material.specular_map", Assets::VK_TEXTURE_SPECULAR - 1);
-        ShaderLibrary::SetInt(ShaderLibrary::GetShader(shaderID), "material.ambient_map", Assets::VK_TEXTURE_AMBIENT - 1);
-        ShaderLibrary::SetInt(ShaderLibrary::GetShader(shaderID), "material.emission_map", Assets::VK_TEXTURE_EMISSION - 1);
-        ShaderLibrary::SetInt(ShaderLibrary::GetShader(shaderID), "material.height_map", Assets::VK_TEXTURE_HEIGHT - 1);
-        ShaderLibrary::SetInt(ShaderLibrary::GetShader(shaderID), "material.normal_map", Assets::VK_TEXTURE_NORMAL - 1);
+        ShaderLibrary::SetInt(ShaderLibrary::GetShader(shaderID), "material.diffuse_map", Assets::VK_TEXTURE_DIFFUSE);
+        ShaderLibrary::SetInt(ShaderLibrary::GetShader(shaderID), "material.specular_map", Assets::VK_TEXTURE_SPECULAR);
+        ShaderLibrary::SetInt(ShaderLibrary::GetShader(shaderID), "material.ambient_map", Assets::VK_TEXTURE_AMBIENT);
+        ShaderLibrary::SetInt(ShaderLibrary::GetShader(shaderID), "material.emission_map", Assets::VK_TEXTURE_EMISSION);
+        ShaderLibrary::SetInt(ShaderLibrary::GetShader(shaderID), "material.height_map", Assets::VK_TEXTURE_HEIGHT);
+        ShaderLibrary::SetInt(ShaderLibrary::GetShader(shaderID), "material.normal_map", Assets::VK_TEXTURE_NORMAL);
     }
 
     Math::Mat4 RenderAPI::GetProjectionMatrix()
