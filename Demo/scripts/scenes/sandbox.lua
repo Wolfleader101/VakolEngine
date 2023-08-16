@@ -1,11 +1,11 @@
 function init()
-    print("sss");
     scene:create_entity("Player", "entities/player/noclip.lua")
-    scene:create_entity("terrain", "entities/terrain/sandboxTerrain.lua");
 
-    for i = 1, 20, 1 do   
-    scene:create_entity("Bear", "entities/agents/sandboxbear.lua")
-    end
+    scene:create_entity("Bear", "entities/test/bear.lua")
+
+    --for i = 1, 20, 1 do   
+    --    scene:create_entity("Bear", "entities/agents/sandboxbear.lua")
+    --end
 end
 
 function update()

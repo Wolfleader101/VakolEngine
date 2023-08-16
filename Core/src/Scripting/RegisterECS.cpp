@@ -1,6 +1,8 @@
 #include "ECS/Components.hpp"
 #include "ECS/Entity.hpp"
 #include "LuaAccess.hpp"
+#include "Rendering/ModelLibrary.hpp"
+#include "Rendering/RenderEngine.hpp"
 #include "SceneManager/Scene.hpp"
 
 namespace Vakol
@@ -12,6 +14,17 @@ namespace Vakol
         entity_type.set_function("get_tag", [](Entity* ent) { return ent->GetComponent<Components::Tag>().tag; });
         entity_type.set_function("get_transform", &Entity::GetComponent<Components::Transform>);
         entity_type.set_function("get_fsm", &Entity::GetComponent<Components::FSM>);
+
+        entity_type.set_function("generate_model", [](Entity* ent, const std::string& path, const float scale = 1.0f) 
+        {
+            if (!ent->HasComponent<Rendering::Drawable>())
+                ent->AddComponent<Rendering::Drawable>();
+
+            auto model = Rendering::ModelLibrary::GetModel(path, scale);
+            auto& drawable = ent->GetComponent<Rendering::Drawable>();
+
+            Rendering::RenderEngine::GenerateModel(model, drawable);
+        });
 
         entity_type.set_function("physics_init", [](const Entity* ent, Scene& scene) {
             VK_CRITICAL("Physics init is deprecated!");
@@ -48,21 +61,21 @@ namespace Vakol
             assert(0);
         });
 
-        entity_type.set_function("get_bounds_from_model", [](const Entity* ent) -> void {
-            if (ent->HasComponent<Rendering::Drawable, Components::Collider>())
-            {
-                const auto& model = ent->GetComponent<Rendering::Drawable>();
+        //entity_type.set_function("get_bounds_from_model", [](const Entity* ent) -> void {
+        //    if (ent->HasComponent<Rendering::Drawable, Components::Collider>())
+        //    {
+        //        const auto& model = ent->GetComponent<Rendering::Drawable>();
 
-                auto& collider = ent->GetComponent<Components::Collider>();
+        //        auto& collider = ent->GetComponent<Components::Collider>();
 
-                collider.bounds = GetBounds(model, ent->GetComponent<Components::Transform>());
-            }
-            else
-            {
-                VK_CRITICAL("drawable and collider must be present to get bounds from");
-                assert(0);
-            }
-        });
+        //        collider.bounds = GetBounds(model, ent->GetComponent<Components::Transform>());
+        //    }
+        //    else
+        //    {
+        //        VK_CRITICAL("drawable and collider must be present to get bounds from");
+        //        assert(0);
+        //    }
+        //});
 
         // TODO remove FSM component
         entity_type.set_function("add_fsm", [&](Entity* ent) -> Components::FSM& {

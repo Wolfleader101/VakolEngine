@@ -13,7 +13,7 @@
 #include "Logger/Logger.hpp"
 #include "ECS/Components.hpp"
 
-#include "include/Rendering/Assets/Importer/TextureImporter.hpp"
+#include "include/Rendering/Assets/TextureImporter.hpp"
 
 namespace Vakol::Rendering
 {
@@ -104,7 +104,7 @@ namespace Vakol::Rendering
         {
             unsigned char* pixels = nullptr;
 
-            Assets::Importer::ImportTexture(texture.path, texture.width, texture.height, texture.channels, pixels);
+            Assets::ImportTexture(texture.path, texture.width, texture.height, texture.channels, pixels);
 
             return OpenGL::GenerateTexture(texture.width, texture.height, texture.channels, pixels);
         }

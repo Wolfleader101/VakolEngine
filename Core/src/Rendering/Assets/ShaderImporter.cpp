@@ -1,11 +1,13 @@
-#include "ShaderImporter.hpp"
+#include "Rendering/Assets/ShaderImporter.hpp"
 
-#include "Controller/Logger.hpp"
-#include "Controller/AssetLoader/FileLoader.hpp"
+#include "Logger/Logger.hpp"
+#include "AssetLoader/FileLoader.hpp"
+
+#include "Rendering/Assets/Shader.hpp"
 
 #include <vector>
 
-namespace Vakol::Rendering::Assets::Importer
+namespace Vakol::Rendering::Assets
 {
     bool GetShaderSources(std::vector<std::string>&& paths, Shader& shader);
 

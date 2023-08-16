@@ -12,6 +12,7 @@ namespace Vakol
 
     void RegisterModel(sol::state& lua)
     {
+
     }
 
     void RegisterMesh(sol::state& lua)

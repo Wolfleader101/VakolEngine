@@ -1,22 +1,22 @@
-#include "ModelImporter.hpp"
+#include "Rendering/Assets/ModelImporter.hpp"
 
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 #include <assimp/Importer.hpp>
 
-#include "Controller/AssetLoader/FileLoader.hpp"
-#include "Controller/Logger.hpp"
+#include "AssetLoader/FileLoader.hpp"
+#include "Logger/Logger.hpp"
 
-#include "../Material.hpp"
-#include "../Animation.hpp"
-#include "../Texture.hpp"
+#include "Rendering/Assets/Material.hpp"
+#include "Rendering/Assets/Animation.hpp"
+#include "Rendering/Assets/Texture.hpp"
 
 #include "Rendering/RenderData.hpp"
 
 #include "Math/Math.hpp"
-#include "TextureImporter.hpp"
+#include "Rendering/Assets/TextureImporter.hpp"
 #include "Rendering/RenderAPI.hpp"
-#include "Rendering/Platform/OpenGL/Texture.hpp"
+#include "Platform/OpenGL/Texture.hpp"
 
 #include <iostream>
 #include <stack>
@@ -29,7 +29,7 @@ aiProcess_ImproveCacheLocality | aiProcess_SplitLargeMeshes | aiProcess_Validate
 aiProcess_FindInvalidData | aiProcess_GlobalScale | aiProcess_PopulateArmatureData | aiProcess_FlipUVs;
 
 
-namespace Vakol::Rendering::Assets::Importer
+namespace Vakol::Rendering::Assets
 {
     /*Helper Functions*/
     static void Mat4(const aiMatrix4x4& in, Math::Mat4& out);

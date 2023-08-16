@@ -8,8 +8,8 @@
 
 #include "Window/Window.hpp"
 
-#include "include/Rendering/Assets/Importer/ShaderImporter.hpp"
-#include "include/Rendering/Assets/ModelLibrary.hpp"
+#include "include/Rendering/Assets/ShaderImporter.hpp"
+#include "include/Rendering/ModelLibrary.hpp"
 
 #include "Logger/Logger.hpp"
 
@@ -48,12 +48,12 @@ namespace Vakol::Rendering
     void RenderEngine::GenerateSphere(const float scale, Drawable& drawable)
     {
         bool success = true;
-        auto shader = Assets::Importer::ImportShader(DEFAULT_SHADER_PATH, success);
+        auto shader = Assets::ImportShader(DEFAULT_SHADER_PATH, success);
 
         if (success)
             RenderAPI::GenerateShader(std::move(shader), drawable);
 
-        auto model = Assets::ModelLibrary::GetModel("coreAssets/models/sphere.obj", scale);
+        auto model = ModelLibrary::GetModel("coreAssets/models/sphere.obj", scale);
 
         if (success)
             SubmitModel(model, drawable);
@@ -62,12 +62,12 @@ namespace Vakol::Rendering
     void RenderEngine::GenerateCube(const float scale, Drawable& drawable)
     {
         bool success = true;
-        auto shader = Assets::Importer::ImportShader(DEFAULT_SHADER_PATH, success);
+        auto shader = Assets::ImportShader(DEFAULT_SHADER_PATH, success);
 
         if (success)
             RenderAPI::GenerateShader(std::move(shader), drawable);
 
-        auto model = Assets::ModelLibrary::GetModel("coreAssets/models/cube.obj", scale);
+        auto model = ModelLibrary::GetModel("coreAssets/models/cube.obj", scale);
 
         if (success)
             SubmitModel(model, drawable);
@@ -76,7 +76,7 @@ namespace Vakol::Rendering
     void RenderEngine::GenerateModel(Assets::Model& model, Drawable& drawable)
     {
         bool success = true;
-        auto shader = Assets::Importer::ImportShader(DEFAULT_SHADER_PATH, success);
+        auto shader = Assets::ImportShader(DEFAULT_SHADER_PATH, success);
 
         if (success)
             RenderAPI::GenerateShader(std::move(shader), drawable);
