@@ -57,7 +57,7 @@ namespace Vakol::Physics
         // *
         // * @param terrain The terrain to add.
         // */
-        //void AddTerrain(const Terrain& terrain);
+        // void AddTerrain(const Terrain& terrain);
 
         /**
          * @brief Custom collision callback class.
@@ -93,7 +93,7 @@ namespace Vakol::Physics
          * @brief Debug renderer for physics.
          *
          */
-        //DebugRenderer m_DebugRenderer;
+        // DebugRenderer m_DebugRenderer;
 
         friend class PhysicsPool;
         friend class System;

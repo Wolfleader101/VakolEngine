@@ -4,11 +4,12 @@
 #include <glm/gtc/quaternion.hpp>
 
 #pragma warning(push)
-#pragma warning(disable:4201)
+#pragma warning(disable : 4201)
 #include <glm/gtc/quaternion.hpp>
 #pragma warning(pop)
 
-namespace Vakol::Math {
+namespace Vakol::Math
+{
     //! glm usage is currently just here for backwards compatability reasons
     using Vec2 = glm::vec2;
 

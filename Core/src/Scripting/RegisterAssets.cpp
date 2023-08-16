@@ -12,7 +12,6 @@ namespace Vakol
 
     void RegisterModel(sol::state& lua)
     {
-
     }
 
     void RegisterMesh(sol::state& lua)
@@ -25,7 +24,6 @@ namespace Vakol
 
     void RegisterShader(sol::state& lua)
     {
-
     }
 
 } // namespace Vakol

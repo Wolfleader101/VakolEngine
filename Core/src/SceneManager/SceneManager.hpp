@@ -1,7 +1,7 @@
 #pragma once
 
-#include "include/SceneManager/Scene.hpp"
 #include "Scripting/ScriptEngine.hpp"
+#include "include/SceneManager/Scene.hpp"
 
 namespace Vakol
 {
