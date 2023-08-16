@@ -2,7 +2,7 @@ function init()
     scene:create_entity("Player", "entities/player/noclip.lua")
     --scene:create_entity("terrain", "entities/terrain/sandboxTerrain.lua");
     
-    scene:create_entity("Monster", "entities/test/monster.lua")
+    scene:create_entity("Monster", "entities/test/bear.lua")
 
     --for i = 1, 20, 1 do   
         --scene:create_entity("Bear", "entities/agents/sandboxbear.lua")

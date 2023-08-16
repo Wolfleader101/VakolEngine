@@ -38,14 +38,20 @@ namespace Vakol::Rendering::Assets::Importer
     static void Vec3(const aiColor3D& in, Math::Vec3& out);
     static void Vec2(const aiVector3D& in, Math::Vec2& out);
 
-    static Math::Vec3 ToGLM(const aiVector3D& v);
-    static Math::Vec3 ToGLM(const aiColor3D& v);
+    static void ExtractMeshes(const aiScene& scene, std::vector<Mesh>& meshes);
+    static Mesh ProcessMesh(const aiScene& scene, const aiMesh& mesh);
 
     /*Mesh Internals*/
-    static void ExtractVertices(aiMesh* const& in, Mesh& mesh);
+    static void ExtractVertices(const aiMesh& mesh, std::vector<Vertex>& vertices, std::vector<unsigned int>& indices);
 
     static void ExtractBones(unsigned int count, aiBone** const& in, std::vector<Bone>& bones);
     static void ProcessBone(aiBone* const& in, Bone& bone);
+
+    /*Material*/
+    static Material ProcessMaterial(const aiScene& scene, const aiMaterial* material);
+
+    /*Material Internals*/
+    static std::vector<Texture> ExtractTextures(const aiScene& scene, const aiMaterial* material, aiTextureType type);
 
     /*Animations*/
     static void ExtractAnimations(unsigned int count, aiAnimation** const& in);
@@ -54,17 +60,8 @@ namespace Vakol::Rendering::Assets::Importer
     static void ExtractChannels(unsigned int count, aiNodeAnim** const& in, std::vector<Channel>& channels);
     static void ProcessChannel(aiNodeAnim* const& in, Channel& channel);
 
-    /*Old Importer*/
 
-    static void extract_meshes(const aiScene& scene, std::vector<Mesh>& meshes);
-    static Mesh process_mesh(const aiScene& scene, const aiMesh& mesh);
 
-    static Material process_material(const aiScene& scene, const aiMaterial* material);
-
-    static std::vector<Vertex> extract_vertices(const aiMesh& mesh);
-    static std::vector<unsigned int> extract_indices(const aiMesh& mesh);
-
-    static std::vector<Texture> extract_textures(const aiScene& scene, const aiMaterial* material, aiTextureType type);
 
     Model ImportModel(const char* path, const float scale, bool& success)
     {
@@ -91,7 +88,7 @@ namespace Vakol::Rendering::Assets::Importer
 
         VK_TRACE("Stats for Model: {0}", path);
 
-        extract_meshes(*scene, model.meshes);
+        ExtractMeshes(*scene, model.meshes);
 
         std::cout << std::endl;
 
@@ -100,47 +97,48 @@ namespace Vakol::Rendering::Assets::Importer
         return model;
     }
 
-    void extract_meshes(const aiScene& scene, std::vector<Mesh>& meshes)
+    void ExtractMeshes(const aiScene& scene, std::vector<Mesh>& meshes)
     {
         // Fetch meshes in current node
         for (unsigned int i = 0; i < scene.mNumMeshes; ++i)
         {
             const auto& mesh = *scene.mMeshes[i];
 
-            meshes.emplace_back(process_mesh(scene, mesh));
+            meshes.emplace_back(ProcessMesh(scene, mesh));
         }
     }
 
-    Mesh process_mesh(const aiScene& scene, const aiMesh& mesh)
-    {
-        const auto& vertices = extract_vertices(mesh);
-        const auto& indices = extract_indices(mesh);
-
-        const auto& material = process_material(scene, scene.mMaterials[mesh.mMaterialIndex]);
-
-        return {mesh.mName.C_Str(), vertices, indices, std::vector<Bone>(), std::make_shared<Material>(material)};
-    }
-
-    std::vector<Vertex> extract_vertices(const aiMesh& mesh)
+    Mesh ProcessMesh(const aiScene& scene, const aiMesh& mesh)
     {
         std::vector<Vertex> vertices;
+        std::vector<unsigned int> indices;
 
+        ExtractVertices(mesh, vertices, indices);
+
+        const auto& material = ProcessMaterial(scene, scene.mMaterials[mesh.mMaterialIndex]);
+
+        return {mesh.mName.C_Str(), std::move(vertices), std::move(indices), std::vector<Bone>(), std::make_shared<Material>(material)};
+    }
+
+    void ExtractVertices(const aiMesh& mesh, std::vector<Vertex>& vertices, std::vector<unsigned int>& indices)
+    {
         vertices.reserve(mesh.mNumVertices);
 
         for (unsigned int i = 0; i < mesh.mNumVertices; ++i)
         {
             Vertex vertex{};
 
-            vertex.position = ToGLM(mesh.mVertices[i]);
-            vertex.normal = ToGLM(mesh.mNormals[i]);
+            Vec3(mesh.mVertices[i], vertex.position);
+            Vec3(mesh.mNormals[i], vertex.normal);
 
             if (mesh.HasTextureCoords(0))
             {
-                vertex.uv = ToGLM(mesh.mTextureCoords[0][i]);
+                Vec2(mesh.mTextureCoords[0][i], vertex.uv);
+
                 if (mesh.HasTangentsAndBitangents())
                 {
-                    vertex.tangent = ToGLM(mesh.mTangents[i]);
-                    vertex.bitangent = ToGLM(mesh.mBitangents[i]);
+                    Vec3(mesh.mTangents[i], vertex.tangent);
+                    Vec3(mesh.mBitangents[i], vertex.bitangent);
                 }
             }
 
@@ -150,27 +148,11 @@ namespace Vakol::Rendering::Assets::Importer
             vertices.emplace_back(vertex);
         }
 
-        return vertices;
+        for (auto i = 0u; i < mesh.mNumFaces; ++i)
+            indices.insert(indices.end(), mesh.mFaces[i].mIndices, mesh.mFaces[i].mIndices + mesh.mFaces[i].mNumIndices);
     }
 
-    std::vector<unsigned int> extract_indices(const aiMesh& mesh)
-    {
-        std::vector<unsigned int> indices;
-
-        indices.reserve(static_cast<size_t>(mesh.mNumFaces) * 3);
-
-        for (unsigned int i = 0; i < mesh.mNumFaces; ++i)
-        {
-            const auto face = mesh.mFaces[i];
-
-            for (unsigned int j = 0; j < face.mNumIndices; ++j)
-                indices.push_back(face.mIndices[j]);
-        }
-
-        return indices;
-    }
-
-    std::vector<Texture> extract_textures(const aiScene& scene, const aiMaterial* material, const aiTextureType type)
+    std::vector<Texture> ExtractTextures(const aiScene& scene, const aiMaterial* material, const aiTextureType type)
     {
         std::vector<Texture> textures;
 
@@ -206,7 +188,7 @@ namespace Vakol::Rendering::Assets::Importer
         return textures;
     }
 
-    Material process_material(const aiScene& scene, const aiMaterial* material)
+    Material ProcessMaterial(const aiScene& scene, const aiMaterial* material)
     {
         std::vector<Texture> textures;
 
@@ -220,12 +202,12 @@ namespace Vakol::Rendering::Assets::Importer
         material->Get(AI_MATKEY_EMISSIVE_INTENSITY, properties.intensity);
         material->Get(AI_MATKEY_ENABLE_WIREFRAME, properties.wireframe);
 
-        auto&& diffuse_maps = extract_textures(scene, material,  aiTextureType_DIFFUSE);
-        auto&& specular_maps = extract_textures(scene, material, aiTextureType_SPECULAR);
-        auto&& ambient_maps = extract_textures(scene, material,  aiTextureType_AMBIENT);
-        auto&& height_maps = extract_textures(scene, material,   aiTextureType_HEIGHT);
-        auto&& emission_maps = extract_textures(scene, material, aiTextureType_EMISSIVE);
-        auto&& normal_maps = extract_textures(scene, material,   aiTextureType_NORMALS);
+        auto&& diffuse_maps  =  ExtractTextures(scene, material,  aiTextureType_DIFFUSE);
+        auto&& specular_maps =  ExtractTextures(scene, material, aiTextureType_SPECULAR);
+        auto&& ambient_maps  =  ExtractTextures(scene, material, aiTextureType_AMBIENT);
+        auto&& height_maps   =  ExtractTextures(scene, material, aiTextureType_HEIGHT);
+        auto&& emission_maps =  ExtractTextures(scene, material, aiTextureType_EMISSIVE);
+        auto&& normal_maps   =  ExtractTextures(scene, material, aiTextureType_NORMALS);
 
         textures.insert(textures.end(), std::make_move_iterator(diffuse_maps.begin()),
                         std::make_move_iterator(diffuse_maps.end()));
@@ -337,14 +319,4 @@ namespace Vakol::Rendering::Assets::Importer
     void Vec3(const aiVector3D& in, Math::Vec3& out) { out = Math::Vec3(in.x, in.y, in.z); }
     void Vec3(const aiColor3D& in, Math::Vec3& out)  { out = Math::Vec3(in.r, in.g, in.b); }
     void Vec2(const aiVector3D& in, Math::Vec2& out) { out = Math::Vec2(in.x, in.y); }
-
-    Math::Vec3 ToGLM(const aiColor3D& v)
-    {
-        return {v.r, v.g, v.b};
-    }
-
-    Math::Vec3 ToGLM(const aiVector3D& v)
-    {
-        return {v.x, v.y, v.z};
-    }
 }
