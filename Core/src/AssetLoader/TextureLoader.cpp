@@ -40,4 +40,4 @@ namespace Vakol
             pixels = nullptr;
         }
     }
-} // namespace Vakol::Rendering::Assets
+} // namespace Vakol

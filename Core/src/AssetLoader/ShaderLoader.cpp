@@ -75,4 +75,4 @@ namespace Vakol
 
         return true;
     }
-} // namespace Vakol::Rendering::Assets
+} // namespace Vakol
