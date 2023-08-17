@@ -54,14 +54,6 @@ namespace Vakol
     {
     }
 
-    void System::Drawable_Update(const Camera& camera, const Time& time)
-    {
-        m_registry->view<Components::Transform, Rendering::Drawable>().each(
-            [&](Components::Transform& transform, const Rendering::Drawable& drawable) {
-                Rendering::RenderEngine::Draw(camera, transform, drawable);
-            });
-    }
-
     void System::Physics_Init()
     {
         const auto view = m_registry->view<Components::RigidBody>();

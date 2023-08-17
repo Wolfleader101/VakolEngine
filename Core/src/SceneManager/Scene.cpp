@@ -49,8 +49,6 @@ namespace Vakol
     {
         scenePhysics->Update(time);
 
-        System::Drawable_Update(m_cam, time);
-
         m_cam.Update();
     }
 

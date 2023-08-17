@@ -187,6 +187,12 @@ namespace Vakol
             m_scriptEngine.UpdateScript(activeScene.GetScript());
 
             System::BindScene(activeScene); // is here temporarily until this is replaced/removed
+
+            activeScene.GetEntityList().GetRegistry().view<Components::Transform, Rendering::Drawable>().each(
+                [&](Components::Transform& transform, const Rendering::Drawable& drawable) {
+                    Rendering::RenderEngine::Draw(activeScene.GetCamera(), transform, drawable);
+                });
+
             activeScene.Update(m_time);
 
             m_renderer->PostDraw();
