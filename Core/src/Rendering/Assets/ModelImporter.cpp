@@ -14,7 +14,7 @@
 #include "Rendering/RenderData.hpp"
 
 #include "Math/Math.hpp"
-#include "Platform/OpenGL/Texture.hpp"
+#include "Rendering/Platform/OpenGL/Texture.hpp"
 #include "Rendering/Assets/TextureImporter.hpp"
 #include "Rendering/RenderAPI.hpp"
 
@@ -32,7 +32,7 @@ namespace Vakol::Rendering::Assets
 {
     /*Helper Functions*/
     static void Mat4(const aiMatrix4x4& in, Math::Mat4& out);
-    static void Quaternion(const aiQuaternion& in, Math::Quaternion& out);
+    static void Quaternion(const aiQuaternion& in, Math::Quat& out);
     static void Vec3(const aiVector3D& in, Math::Vec3& out);
     static void Vec3(const aiColor3D& in, Math::Vec3& out);
     static void Vec2(const aiVector3D& in, Math::Vec2& out);
@@ -313,9 +313,9 @@ namespace Vakol::Rendering::Assets
                          in.b4, in.c4, in.d4);
     }
 
-    void Quaternion(const aiQuaternion& in, Math::Quaternion& out)
+    void Quaternion(const aiQuaternion& in, Math::Quat& out)
     {
-        out = Math::Quaternion(in.w, in.x, in.y, in.z);
+        out = Math::Quat(in.w, in.x, in.y, in.z);
     }
     void Vec3(const aiVector3D& in, Math::Vec3& out)
     {

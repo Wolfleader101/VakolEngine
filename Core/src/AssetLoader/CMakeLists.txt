@@ -1,4 +1,5 @@
 SET(ASSET_LOADER_SRC
+    ${CMAKE_CURRENT_SOURCE_DIR}/AssetLoader.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/FileLoader.cpp
     PARENT_SCOPE
 )

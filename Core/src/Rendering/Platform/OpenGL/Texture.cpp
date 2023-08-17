@@ -1,4 +1,4 @@
-#include "Platform/OpenGL/Texture.hpp"
+#include "Rendering/Platform/OpenGL/Texture.hpp"
 
 #include "Logger/Logger.hpp"
 

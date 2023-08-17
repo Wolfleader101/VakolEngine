@@ -1,9 +1,10 @@
 #include "ECS/Components.hpp"
 #include "ECS/Entity.hpp"
 #include "LuaAccess.hpp"
+#include "SceneManager/Scene.hpp"
+
 #include "Rendering/ModelLibrary.hpp"
 #include "Rendering/RenderEngine.hpp"
-#include "SceneManager/Scene.hpp"
 
 namespace Vakol
 {
@@ -60,6 +61,7 @@ namespace Vakol
             assert(0);
         });
 
+        /* Changed by Caleb */
         // entity_type.set_function("get_bounds_from_model", [](const Entity* ent) -> void {
         //     if (ent->HasComponent<Rendering::Drawable, Components::Collider>())
         //     {

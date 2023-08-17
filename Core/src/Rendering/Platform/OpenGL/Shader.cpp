@@ -12,7 +12,7 @@ namespace Vakol::Rendering::OpenGL
     unsigned int GenerateShader(const char* source, unsigned int type);
     int CheckCompileErrors(unsigned int shader, unsigned int type);
 
-    unsigned int GenerateShaderProgram(std::vector<std::string>&& sources)
+    unsigned int GenerateShaderProgram(const std::vector<std::string>& sources)
     {
         const auto vertex = GenerateShader(sources[0].c_str(), GL_VERTEX_SHADER);
 
@@ -31,58 +31,51 @@ namespace Vakol::Rendering::OpenGL
 
         const auto fragment = GenerateShader(sources[4].c_str(), GL_FRAGMENT_SHADER);
 
-        // Program Setup
-        auto AttachShader = [](const unsigned int shaderProgram, const unsigned int shader) -> void {
-            glAttachShader(shaderProgram, shader);
-        };
-        auto DeleteShader = [](const unsigned int shader) -> void { glDeleteShader(shader); };
-        auto LinkProgram = [](const unsigned int shaderProgram) -> void { glLinkProgram(shaderProgram); };
-
         /*CREATE PROGRAM*/
         const auto program = glCreateProgram();
 
         /*ATTACH SHADERS*/
-        AttachShader(program, vertex);
+        glAttachShader(program, vertex);
 
         if (geometry != 0)
         {
-            AttachShader(program, geometry);
+            glAttachShader(program, geometry);
         }
 
         if (tessControl != 0)
         {
-            AttachShader(program, tessControl);
+            glAttachShader(program, tessControl);
         }
 
         if (tessEval != 0)
         {
-            AttachShader(program, tessEval);
+            glAttachShader(program, tessEval);
         }
 
-        AttachShader(program, fragment);
+        glAttachShader(program, fragment);
 
         /*LINK PROGRAM*/
-        LinkProgram(program);
+        glLinkProgram(program);
 
         /*DELETE SHADERS*/
-        DeleteShader(vertex);
+        glDeleteShader(vertex);
 
         if (geometry != 0)
         {
-            DeleteShader(geometry);
+            glDeleteShader(geometry);
         }
 
         if (tessControl != 0)
         {
-            DeleteShader(tessControl);
+            glDeleteShader(tessControl);
         }
 
         if (tessEval != 0)
         {
-            DeleteShader(tessEval);
+            glDeleteShader(tessEval);
         }
 
-        DeleteShader(fragment);
+        glDeleteShader(fragment);
 
         return program;
     }

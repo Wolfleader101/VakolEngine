@@ -1,19 +1,19 @@
-#include "include/Rendering/RenderAPI.hpp"
+#include "Rendering/RenderAPI.hpp"
 
-#include "include/Rendering/MaterialLibrary.hpp"
-#include "include/Rendering/RenderCommand.hpp"
-#include "include/Rendering/RenderData.hpp"
+#include "Rendering/MaterialLibrary.hpp"
+#include "Rendering/RenderCommand.hpp"
+#include "Rendering/RenderData.hpp"
 
-#include "include/Rendering/ShaderLibrary.hpp"
+#include "Rendering/ShaderLibrary.hpp"
 
-#include "include/Rendering/Assets/Shader.hpp"
+#include "Rendering/Assets/Shader.hpp"
 
-#include "Platform/OpenGL/common.h"
+#include "Rendering/Platform/OpenGL/common.h"
 
 #include "ECS/Components.hpp"
 #include "Logger/Logger.hpp"
 
-#include "include/Rendering/Assets/TextureImporter.hpp"
+#include "Rendering/Assets/TextureImporter.hpp"
 
 namespace Vakol::Rendering
 {
@@ -93,7 +93,7 @@ namespace Vakol::Rendering
         drawable.shaderID = GenerateID();
         VK_TRACE("Shader ID: {0}", drawable.shaderID);
 
-        const unsigned int program = OpenGL::GenerateShaderProgram(std::move(shader.sources));
+        const unsigned int program = OpenGL::GenerateShaderProgram(shader.sources);
         ShaderLibrary::GetShaderUniforms(program);
 
         ShaderLibrary::AddShader(drawable.shaderID, program);
@@ -193,7 +193,7 @@ namespace Vakol::Rendering
 
         transform_matrix = Math::Translate(transform_matrix, transform.pos);
 
-        transform.rot = Math::Quaternion(Math::Radians(transform.eulerAngles));
+        transform.rot = Math::Quat(Math::Radians(transform.eulerAngles));
 
         const auto rotation_matrix = Math::Mat4Cast(transform.rot);
 

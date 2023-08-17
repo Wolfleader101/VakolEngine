@@ -53,7 +53,7 @@ namespace Vakol::Rendering
       public:
         static void EnableDepth();
 
-        static void ClearColor(const float color[]);
+        static void ClearColor(const float color[4]);
         static void Clear(unsigned int mask);
 
         static void BeginDraw(const std::string& vertexID, const std::string& shaderID, const std::string& materialID);

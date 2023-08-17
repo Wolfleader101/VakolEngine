@@ -33,6 +33,21 @@ namespace Vakol
         scene_type.set_function("get_camera", &Scene::GetCamera);
         scene_type.set_function("get_entity", &Scene::GetEntity);
 
+        // scene_type.set_function("add_terrain_physics", [](Scene* scene, const Entity ent) {
+        //     if (!ent.HasComponent<Components::TerrainComp>())
+        //     {
+        //         VK_WARN("Entity does not have a terrain component. Can't add physics");
+        //         return;
+        //     }
+
+        //    const auto& terrain = ent.GetComponent<Components::TerrainComp>();
+
+        //    // TODO remove this
+        //    //  System::BindScene(*scene);
+
+        //    // System::Physics_AddTerrain(*terrain.terrain_ptr);
+        //});
+
         scene_type.set_function("enable_debug",
                                 [](Scene* scene, const bool enable) { scene->scenePhysics->EnableDebug(enable); });
 

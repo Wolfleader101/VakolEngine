@@ -1,4 +1,4 @@
-#include "Platform/OpenGL/Framebuffer.hpp"
+#include "Rendering/Platform/OpenGL/Framebuffer.hpp"
 
 #include <glad/glad.h>
 
@@ -18,7 +18,7 @@ namespace Vakol::Rendering::OpenGL
         glEnable(GL_DEPTH_TEST);
     }
 
-    void ClearColor(const float color[])
+    void ClearColor(const float color[4])
     {
         glClearColor(color[0], color[1], color[2], color[3]);
     }

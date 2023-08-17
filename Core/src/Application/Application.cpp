@@ -8,12 +8,14 @@
 
 #include "Rendering/RenderEngine.hpp"
 
+#include "AssetLoader/AssetLoader.hpp"
+
 namespace Vakol
 {
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
     Application::Application()
-        : m_window(nullptr), m_running(false), m_scriptEngine(), m_input(), m_sceneManager(m_scriptEngine){};
+        : m_window(nullptr), m_scriptEngine(), m_sceneManager(m_scriptEngine), m_running(false), m_input(){};
 
     void Application::Init()
     {
@@ -119,29 +121,29 @@ namespace Vakol
 
         if (sol::optional<std::string> model_dir = config["model_dir"]; !model_dir)
         {
-            // VK_WARN("CONFIG WARNING: No Model Directory Set, Using Default {0}", AssetLoader::model_path);
+            VK_WARN("CONFIG WARNING: No Model Directory Set, Using Default {0}", AssetLoader::model_path);
         }
         else
         {
-            // AssetLoader::model_path = model_dir.value();
+            AssetLoader::model_path = model_dir.value();
         }
 
         if (sol::optional<std::string> texture_dir = config["texture_dir"]; !texture_dir)
         {
-            // VK_WARN("CONFIG WARNING: No Texture Directory Set, Using Default {0}", AssetLoader::texture_path);
+            VK_WARN("CONFIG WARNING: No Texture Directory Set, Using Default {0}", AssetLoader::texture_path);
         }
         else
         {
-            // AssetLoader::texture_path = texture_dir.value();
+            AssetLoader::texture_path = texture_dir.value();
         }
 
         if (sol::optional<std::string> shader_dir = config["shader_dir"]; !shader_dir)
         {
-            // VK_WARN("CONFIG WARNING: No Shader Directory Set, Using Default {0}", AssetLoader::shader_path);
+            VK_WARN("CONFIG WARNING: No Shader Directory Set, Using Default {0}", AssetLoader::shader_path);
         }
         else
         {
-            // AssetLoader::shader_path = shader_dir.value();
+            AssetLoader::shader_path = shader_dir.value();
         }
 
         GameConfig cfg = {name.value(), window_width.value(), window_height.value(), renderer_type.value()};
@@ -219,6 +221,7 @@ namespace Vakol
     bool Application::OnWindowClose([[maybe_unused]] WindowCloseEvent& ev)
     {
         m_running = false;
+
         return true;
     }
 

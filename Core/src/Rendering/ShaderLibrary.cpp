@@ -1,10 +1,10 @@
-#include "include/Rendering/ShaderLibrary.hpp"
+#include "Rendering/ShaderLibrary.hpp"
 
-#include "Platform/OpenGL/Buffer.hpp"
-#include "Platform/OpenGL/Shader.hpp"
+#include "Rendering/Platform/OpenGL/Buffer.hpp"
+#include "Rendering/Platform/OpenGL/Shader.hpp"
 
 #include "Logger/Logger.hpp"
-#include "include/Rendering/RenderData.hpp"
+#include "Rendering/RenderData.hpp"
 
 namespace Vakol::Rendering
 {
@@ -88,7 +88,7 @@ namespace Vakol::Rendering
         {
             const auto& [location, count] = GetUniform(shader, name);
 
-            OpenGL::SetVec3(location, count, Math::ToArray(value));
+            OpenGL::SetVec3(location, count, Math::AsArray(value));
         }
     }
 
@@ -98,7 +98,7 @@ namespace Vakol::Rendering
         {
             const auto& [location, count] = GetUniform(shader, name);
 
-            OpenGL::SetVec4(location, count, Math::ToArray(value));
+            OpenGL::SetVec4(location, count, Math::AsArray(value));
         }
     }
 
@@ -109,7 +109,7 @@ namespace Vakol::Rendering
         {
             const auto& [location, count] = GetUniform(shader, name);
 
-            OpenGL::SetMat4(location, count, name, transpose, Math::ToArray(value));
+            OpenGL::SetMat4(location, count, name, transpose, Math::AsArray(value));
         }
     }
 

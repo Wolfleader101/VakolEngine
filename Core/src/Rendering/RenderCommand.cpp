@@ -1,4 +1,4 @@
-#include "include/Rendering/RenderCommand.hpp"
+#include "Rendering/RenderCommand.hpp"
 
 #include <crossguid/guid.hpp>
 

@@ -8,7 +8,7 @@ struct Uniform;
 
 namespace Vakol::Rendering::OpenGL
 {
-    unsigned int GenerateShaderProgram(std::vector<std::string>&& sources);
+    unsigned int GenerateShaderProgram(const std::vector<std::string>& sources);
 
     void BindShaderProgram(unsigned int program);
     void UnbindShaderProgram();

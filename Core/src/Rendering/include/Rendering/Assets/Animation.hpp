@@ -18,7 +18,7 @@ namespace Vakol::Rendering::Assets
 
         struct Rotation
         {
-            Math::Quaternion rotation;
+            Math::Quat rotation;
             double timestamp;
         };
 

@@ -42,15 +42,15 @@ namespace Vakol
     {
         Math::Vec3 front;
 
-        front.x = cos(Math::DegToRad(yaw)) * cos(Math::DegToRad(pitch));
-        front.y = sin(Math::DegToRad(pitch));
-        front.z = sin(Math::DegToRad(yaw)) * cos(Math::DegToRad(pitch));
+        front.x = cos(Math::Radians(yaw)) * cos(Math::Radians(pitch));
+        front.y = sin(Math::Radians(pitch));
+        front.z = sin(Math::Radians(yaw)) * cos(Math::Radians(pitch));
 
         this->forward = normalize(front);
         this->right = normalize(cross(this->forward, WORLD_UP));
         this->up = normalize(cross(this->right, this->forward));
 
-        this->PROJECTION = Math::Perspective(Math::DegToRad(this->fov), this->aspect, this->near, this->far);
+        this->PROJECTION = Math::Perspective(Math::Radians(this->fov), this->aspect, this->near, this->far);
         this->VIEW = lookAt(position, position + forward, up);
     }
 } // namespace Vakol

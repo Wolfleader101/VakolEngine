@@ -1,15 +1,15 @@
-#include "include/Rendering/RenderEngine.hpp"
+#include "Rendering/RenderEngine.hpp"
 
-#include "include/Rendering/MaterialLibrary.hpp"
-#include "include/Rendering/RenderCommand.hpp"
-#include "include/Rendering/ShaderLibrary.hpp"
+#include "Rendering/MaterialLibrary.hpp"
+#include "Rendering/RenderCommand.hpp"
+#include "Rendering/ShaderLibrary.hpp"
 
-#include "include/Rendering/Assets/Model.hpp"
+#include "Rendering/Assets/Model.hpp"
 
 #include "Window/Window.hpp"
 
-#include "include/Rendering/Assets/ShaderImporter.hpp"
-#include "include/Rendering/ModelLibrary.hpp"
+#include "Rendering/Assets/ShaderImporter.hpp"
+#include "Rendering/ModelLibrary.hpp"
 
 #include "Logger/Logger.hpp"
 

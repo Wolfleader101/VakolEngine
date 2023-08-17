@@ -1,5 +1,3 @@
-#pragma once
-
 #include "ECS/Components.hpp"
 #include "LuaAccess.hpp"
 

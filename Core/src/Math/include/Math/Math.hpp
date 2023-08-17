@@ -1,12 +1,8 @@
 #pragma once
 
 #include <glm/glm.hpp>
-#include <glm/gtc/quaternion.hpp>
 
-#pragma warning(push)
-#pragma warning(disable : 4201)
 #include <glm/gtc/quaternion.hpp>
-#pragma warning(pop)
 
 namespace Vakol::Math
 {
@@ -33,10 +29,8 @@ namespace Vakol::Math
     using Mat4 = glm::mat4;
     using Quat = glm::quat;
 
-    using Quaternion = glm::quat;
-
     float Radians(float degrees);
-    Vec3 Radians(const Vec3& quaternion);
+    Vec3 Radians(const Vec3& v);
 
     float Degrees(float radians);
 
@@ -85,7 +79,7 @@ namespace Vakol::Math
 
     Mat4 Inverse(const Mat4& mat);
 
-    Mat4 Mat4Cast(const Quaternion& quaternion);
+    Mat4 Mat4Cast(const Quat& quaternion);
 
     struct Line
     {
@@ -156,23 +150,17 @@ namespace Vakol::Math
      */
     float Remap(const float iMin, const float iMax, const float oMin, const float oMax, const float v);
 
-    float DegToRad(const float deg);
-    Vec3 DegToRad(const Vec3& vec);
-
-    float RadToDeg(const float rad);
-    Vec3 RadToDeg(const Vec3& vec);
-
     Mat4 Perspective(float fovY, float aspect, float zNear, float zFar);
     Mat4 Orthographic(float left, float right, float bottom, float top);
 
     Mat4 LookAt(const Vec3& eye, const Vec3& center, const Vec3& up);
 
-    const float* ToArray(const Vec2& v);
-    const float* ToArray(const Vec3& v);
-    const float* ToArray(const Vec4& v);
-    const float* ToArray(const Mat3& m);
-    const float* ToArray(const Mat4& m);
-    const float* ToArray(const Quat& q);
+    const float* AsArray(const Vec2& v);
+    const float* AsArray(const Vec3& v);
+    const float* AsArray(const Vec4& v);
+    const float* AsArray(const Mat3& m);
+    const float* AsArray(const Mat4& m);
+    const float* AsArray(const Quat& q);
 
     float Cos(float val);
 

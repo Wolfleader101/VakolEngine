@@ -1,8 +1,8 @@
-#include "include/Rendering/MaterialLibrary.hpp"
+#include "Rendering/MaterialLibrary.hpp"
 
 #include "Logger/Logger.hpp"
-#include "include/Rendering/Assets/Material.hpp"
-#include "include/Rendering/ShaderLibrary.hpp"
+#include "Rendering/Assets/Material.hpp"
+#include "Rendering/ShaderLibrary.hpp"
 
 namespace Vakol::Rendering
 {

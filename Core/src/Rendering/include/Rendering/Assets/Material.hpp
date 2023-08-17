@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Texture.hpp"
+#include "Math/Math.hpp"
 
 #include <vector>
 
@@ -8,10 +9,10 @@ namespace Vakol::Rendering::Assets
 {
     struct MaterialProperties
     {
-        glm::vec3 ambient_color = glm::vec3(0.0f);
-        glm::vec3 diffuse_color = glm::vec3(0.0f);
-        glm::vec3 specular_color = glm::vec3(0.0f);
-        glm::vec3 emissive_color = glm::vec3(0.0f);
+        Math::Vec3 ambient_color = Math::Vec3(0.0f);
+        Math::Vec3 diffuse_color = Math::Vec3(0.0f);
+        Math::Vec3 specular_color = Math::Vec3(0.0f);
+        Math::Vec3 emissive_color = Math::Vec3(0.0f);
 
         float intensity = 0.0f;  // the intensity of the emmisive texture/color
         float shininess = 32.0f; // the specular exponent (used for Phong shading)
