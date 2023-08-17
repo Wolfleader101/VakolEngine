@@ -152,4 +152,4 @@ namespace Vakol
     {
         return m_uniformBuffers.find(name) != m_uniformBuffers.end();
     }
-} // namespace Vakol::Rendering
+} // namespace Vakol

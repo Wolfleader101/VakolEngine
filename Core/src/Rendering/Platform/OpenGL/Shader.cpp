@@ -12,24 +12,24 @@ namespace Vakol::Rendering::OpenGL
     unsigned int GenerateShader(const char* source, unsigned int type);
     int CheckCompileErrors(unsigned int shader, unsigned int type);
 
-    unsigned int GenerateShaderProgram(const std::vector<std::string>& sources)
+    unsigned int GenerateShaderProgram(const std::string& vertSrc, const std::string& geomSrc, const std::string& tscSrc, const std::string& tseSrc, const std::string& fragSrc)
     {
-        const auto vertex = GenerateShader(sources[0].c_str(), GL_VERTEX_SHADER);
+        const auto vertex = GenerateShader(vertSrc.c_str(), GL_VERTEX_SHADER);
 
         unsigned int geometry = 0u;
         unsigned int tessControl = 0u;
         unsigned int tessEval = 0u;
 
-        if (!sources[1].empty())
-            geometry = GenerateShader(sources[1].c_str(), GL_GEOMETRY_SHADER);
+        if (!geomSrc.empty())
+            geometry = GenerateShader(geomSrc.c_str(), GL_GEOMETRY_SHADER);
 
-        if (!sources[2].empty())
-            tessControl = GenerateShader(sources[2].c_str(), GL_TESS_CONTROL_SHADER);
+        if (!tscSrc.empty())
+            tessControl = GenerateShader(tscSrc.c_str(), GL_TESS_CONTROL_SHADER);
 
-        if (!sources[3].empty())
-            tessEval = GenerateShader(sources[3].c_str(), GL_TESS_EVALUATION_SHADER);
+        if (!tseSrc.empty())
+            tessEval = GenerateShader(tseSrc.c_str(), GL_TESS_EVALUATION_SHADER);
 
-        const auto fragment = GenerateShader(sources[4].c_str(), GL_FRAGMENT_SHADER);
+        const auto fragment = GenerateShader(fragSrc.c_str(), GL_FRAGMENT_SHADER);
 
         /*CREATE PROGRAM*/
         const auto program = glCreateProgram();

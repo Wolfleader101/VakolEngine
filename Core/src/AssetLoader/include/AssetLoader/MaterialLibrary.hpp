@@ -17,7 +17,7 @@ namespace Vakol
     class MaterialLibrary
     {
       public:
-        void SetupMaterial(const Rendering::Assets::Material& material);
+        static void SetupMaterial(const Rendering::Assets::Material& material);
 
         void AddMaterial(const Rendering::Assets::Material& material);
         Rendering::Assets::Material& GetMaterial(const std::string& materialID);

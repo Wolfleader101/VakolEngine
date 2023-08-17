@@ -24,6 +24,15 @@ namespace Vakol
             }
 
             VK_ERROR("Unable to get model at path {0}", path);
+
+            const auto& error = ImportModel("coreAssets/models/error.obj", scale, success);
+
+            if (success)
+            {
+                m_models[path] = error;
+
+                return m_models.at(path);
+            }
         }
 
         return m_models.at(path);

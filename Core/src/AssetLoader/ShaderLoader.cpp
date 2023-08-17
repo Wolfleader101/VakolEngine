@@ -71,7 +71,11 @@ namespace Vakol
 
         sources.emplace_back(LoadFile(paths[4]));
 
-        shader.sources = std::move(sources);
+        shader.vertSrc = std::move(sources[0]);
+        shader.geomSrc = std::move(sources[1]);
+        shader.tscSrc = std::move(sources[2]);
+        shader.tseSrc = std::move(sources[3]);
+        shader.fragSrc = std::move(sources[4]);
 
         return true;
     }

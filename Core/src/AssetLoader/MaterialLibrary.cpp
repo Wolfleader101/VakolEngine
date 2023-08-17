@@ -65,4 +65,4 @@ namespace Vakol
         ShaderLibrary::SetFloat(ShaderLibrary::GetShader(GetMaterial(materialID).shaderID), "material.shininess",
                                 shininess);
     }
-} // namespace Vakol::Rendering
+} // namespace Vakol

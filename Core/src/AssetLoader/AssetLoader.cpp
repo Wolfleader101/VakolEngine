@@ -16,7 +16,7 @@ namespace Vakol
 
     Rendering::Assets::Material& AssetLoader::GetMaterial(const std::string& materialID)
     {
-        return m_materialLibrary.GetMaterial(materialID);   
+        return m_materialLibrary.GetMaterial(materialID);
     }
 
     void AssetLoader::AddTexture(const std::string& materialID, const Rendering::Assets::Texture& texture)
@@ -27,6 +27,8 @@ namespace Vakol
     void AssetLoader::AddMaterial(const Rendering::Assets::Material& material)
     {
         m_materialLibrary.AddMaterial(material);
+
+        MaterialLibrary::SetupMaterial(material);
     }
 
     bool AssetLoader::GetTextures(const std::string& materialID, std::vector<Rendering::Assets::Texture>& textures)

@@ -2,13 +2,13 @@
 
 #include <string>
 #include <unordered_map>
-#include <vector>
 
 struct Uniform;
 
 namespace Vakol::Rendering::OpenGL
 {
-    unsigned int GenerateShaderProgram(const std::vector<std::string>& sources);
+    unsigned int GenerateShaderProgram(const std::string& vertSrc, const std::string& geomSrc, const std::string& tscSrc,
+                                       const std::string& tseSrc,  const std::string& fragSrc);
 
     void BindShaderProgram(unsigned int program);
     void UnbindShaderProgram();
