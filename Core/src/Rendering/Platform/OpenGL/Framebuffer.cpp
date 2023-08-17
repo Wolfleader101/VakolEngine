@@ -18,10 +18,6 @@ namespace Vakol::Rendering::OpenGL
         glEnable(GL_DEPTH_TEST);
     }
 
-    void ClearColor(const float color[4])
-    {
-        glClearColor(color[0], color[1], color[2], color[3]);
-    }
     void ClearColor(const float r, const float g, const float b, const float a)
     {
         glClearColor(r, g, b, a);

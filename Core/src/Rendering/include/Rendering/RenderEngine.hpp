@@ -29,6 +29,8 @@ namespace Vakol::Rendering
     class RenderEngine
     {
       public:
+        static void Init(int width, int height, const std::string& API);
+
         static void PreDraw();
         static void Draw(const Camera& camera, Components::Transform& transform, const Drawable& drawable);
         static void PostDraw();

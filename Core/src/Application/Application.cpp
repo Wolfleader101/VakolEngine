@@ -37,15 +37,10 @@ namespace Vakol
             return;
         }
 
-        m_renderer = Rendering::CreateRenderEngine(config.value().rendererType, m_window);
-
-        if (m_renderer == nullptr)
-        {
-            VK_ERROR("Renderer is nullptr");
-            return;
-        }
-
         m_window->SetEventCallback([this](auto&& PH1) { OnEvent(std::forward<decltype(PH1)>(PH1)); });
+
+        Rendering::RenderEngine::Init(config.value().windowWidth, config.value().windowHeight,
+                                      config.value().rendererType);
 
         m_gui.Init(m_window);
 
@@ -159,7 +154,7 @@ namespace Vakol
             m_time.accumulator += m_time.deltaTime;
 
             m_gui.CreateNewFrame();
-            m_renderer->PreDraw();
+            Rendering::RenderEngine::PreDraw();
 
             m_sceneManager.Update();
 
@@ -179,8 +174,6 @@ namespace Vakol
             // Compute the time interpolation factor
             // float alpha = m_time.accumulator / m_time.tickRate;
 
-            // m_renderer->UpdateData(activeScene.GetCamera());
-
             activeScene.GetEntityList().GetRegistry().view<LuaScript>().each(
                 [&](auto& script) { m_scriptEngine.UpdateScript(script); });
 
@@ -195,7 +188,7 @@ namespace Vakol
 
             activeScene.Update(m_time);
 
-            m_renderer->PostDraw();
+            Rendering::RenderEngine::PostDraw();
 
             m_gui.Update();
             m_input.Update();

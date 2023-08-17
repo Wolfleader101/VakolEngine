@@ -19,11 +19,20 @@ namespace Vakol::Rendering
 {
     const std::string DEFAULT_SHADER_PATH = "coreAssets/shaders/default.program";
 
+    void RenderEngine::Init(const int width, const int height, const std::string& API)
+    {
+        RenderAPI::SetupConfig(width, height, API);
+
+        RenderAPI::EnableDepth();
+
+        ShaderLibrary::CreateUniformBuffer("Matrices", 2 * sizeof(Math::Mat4), 1);
+    }
+
     void RenderEngine::PreDraw()
     {
         constexpr float color[] = {0.45f, 0.6f, 0.75f};
 
-        RenderAPI::ClearColor(color);
+        RenderAPI::ClearColor(color[0], color[1], color[2]);
         RenderAPI::Clear(VK_COLOR_BUFFER | VK_DEPTH_BUFFER);
     }
 
@@ -140,16 +149,6 @@ namespace Vakol::Rendering
         std::vector<unsigned int>().swap(mesh.indices);
 
         RenderAPI::GenerateVertexCommand(std::move(vertexArray), drawable);
-    }
-
-    std::shared_ptr<RenderEngine> CreateRenderEngine([[maybe_unused]] const std::string& API,
-                                                     const std::shared_ptr<Window>& window)
-    {
-        RenderAPI::EnableDepth();
-
-        ShaderLibrary::CreateUniformBuffer("Matrices", 2 * sizeof(Math::Mat4), 1);
-
-        return std::make_shared<RenderEngine>();
     }
 
 } // namespace Vakol::Rendering

@@ -27,13 +27,6 @@ namespace Vakol::Rendering
 
     struct Drawable;
 
-    enum VK_RENDER_API_HINT
-    {
-        OPENGL,
-        VULKAN,
-        DIRECT3D,
-        METAL
-    };
     enum VK_BUFFER_HINT
     {
         VK_COLOR_BUFFER = 1,
@@ -41,19 +34,22 @@ namespace Vakol::Rendering
         VK_STENCIL_BUFFER = 4
     };
 
-    struct RenderSettings
+    struct RenderConfig
     {
-        VK_RENDER_API_HINT API = OPENGL;
-        int width = 1920;
-        int height = 1080;
+        std::string API = "OPENGL";
+
+        int width = 800;
+        int height = 600;
     };
 
     class RenderAPI
     {
       public:
+        static void SetupConfig(int width, int height, const std::string& API);
+
         static void EnableDepth();
 
-        static void ClearColor(const float color[4]);
+        static void ClearColor(float r, float g, float b, float a = 1.0f);
         static void Clear(unsigned int mask);
 
         static void BeginDraw(const std::string& vertexID, const std::string& shaderID, const std::string& materialID);
@@ -70,7 +66,7 @@ namespace Vakol::Rendering
       private:
         static std::map<std::string, std::vector<VertexCommand>> m_vertexLibrary;
 
-        static RenderSettings m_settings;
+        static RenderConfig m_config;
 
         static void DefaultShaderSetup(const std::string& shaderID);
     };

@@ -192,11 +192,6 @@ namespace Vakol
         std::shared_ptr<Window> m_window;
 
         /**
-         * @brief the the renderer of the application
-         */
-        std::shared_ptr<Rendering::RenderEngine> m_renderer;
-
-        /**
          * @brief the time data of engine
          */
         Time m_time;
