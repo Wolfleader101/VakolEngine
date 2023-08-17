@@ -7,9 +7,6 @@
 
 namespace Vakol
 {
-    std::unordered_map<std::string, Rendering::Assets::Material> MaterialLibrary::m_materials;
-    std::unordered_map<std::string, std::vector<Rendering::Assets::Texture>> MaterialLibrary::m_textures;
-
     void MaterialLibrary::SetupMaterial(const Rendering::Assets::Material& material)
     {
         ShaderLibrary::SetVec3(ShaderLibrary::GetShader(material.shaderID), "material.ambient_color",
@@ -55,7 +52,7 @@ namespace Vakol
     int MaterialLibrary::GetTextureCount(const std::string& materialID)
     {
         if (m_textures.find(materialID) != m_textures.end())
-            return m_textures.at(materialID).size();
+            return static_cast<int>(m_textures.at(materialID).size());
     }
 
     void MaterialLibrary::SetColor(const std::string& materialID, const Math::Vec4& color)

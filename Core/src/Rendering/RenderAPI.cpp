@@ -1,6 +1,6 @@
 #include "Rendering/RenderAPI.hpp"
 
-#include "AssetLoader/MaterialLibrary.hpp"
+#include "AssetLoader/AssetLoader.hpp"
 #include "Rendering/RenderCommand.hpp"
 #include "Rendering/RenderData.hpp"
 
@@ -39,7 +39,7 @@ namespace Vakol::Rendering
 
         std::vector<Assets::Texture> textures{};
 
-        if (const auto valid = MaterialLibrary::GetTextures(materialID, textures); valid)
+        if (const auto valid = AssetLoader::GetTextures(materialID, textures); valid)
         {
             for (const auto& texture : textures)
             {

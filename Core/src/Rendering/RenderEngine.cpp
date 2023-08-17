@@ -1,8 +1,8 @@
 #include "Rendering/RenderEngine.hpp"
 
 #include "AssetLoader/MaterialLibrary.hpp"
-#include "Rendering/RenderCommand.hpp"
 #include "AssetLoader/ShaderLibrary.hpp"
+#include "Rendering/RenderCommand.hpp"
 
 #include "Rendering/Assets/Model.hpp"
 
@@ -41,10 +41,9 @@ namespace Vakol::Rendering
     {
         RenderAPI::BeginDraw(drawable.vertexArrayID, drawable.shaderID, drawable.materialID);
 
-        MaterialLibrary::SetupMaterial(MaterialLibrary::GetMaterial(drawable.materialID));
-
         ShaderLibrary::SetMat4(ShaderLibrary::GetShader(drawable.shaderID), "PV_MATRIX", false,
                                camera.GetMatrix(PROJECTION_MATRIX) * camera.GetMatrix(VIEW_MATRIX));
+
         ShaderLibrary::SetMat4(ShaderLibrary::GetShader(drawable.shaderID), "MODEL_MATRIX", false,
                                RenderAPI::GetModelMatrix(transform));
 
@@ -102,7 +101,7 @@ namespace Vakol::Rendering
             material->ID = GenerateID();
             material->shaderID = drawable.shaderID;
 
-            MaterialLibrary::AddMaterial(*material);
+            AssetLoader::AddMaterial(*material);
 
             drawable.materialID = material->ID;
 
@@ -124,7 +123,7 @@ namespace Vakol::Rendering
                     texture.ID = RenderAPI::GenerateTexture(texture, drawable);
 
                 if (texture.ID != 0)
-                    MaterialLibrary::AddTexture(material->ID, texture);
+                    AssetLoader::AddTexture(material->ID, texture);
             }
         }
     }
