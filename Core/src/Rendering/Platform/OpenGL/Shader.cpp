@@ -12,7 +12,8 @@ namespace Vakol::Rendering::OpenGL
     unsigned int GenerateShader(const char* source, unsigned int type);
     int CheckCompileErrors(unsigned int shader, unsigned int type);
 
-    unsigned int GenerateShaderProgram(const std::string& vertSrc, const std::string& geomSrc, const std::string& tscSrc, const std::string& tseSrc, const std::string& fragSrc)
+    unsigned int GenerateShaderProgram(const std::string& vertSrc, const std::string& geomSrc,
+                                       const std::string& tscSrc, const std::string& tseSrc, const std::string& fragSrc)
     {
         const auto vertex = GenerateShader(vertSrc.c_str(), GL_VERTEX_SHADER);
 

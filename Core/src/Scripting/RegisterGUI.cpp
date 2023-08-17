@@ -25,14 +25,12 @@ namespace Vakol
         gui_window_type.set_function("add_button", &GUIWindow::AddButton);
         gui_window_type.set_function("add_checkbox", &GUIWindow::AddCheckbox);
 
-        // gui_window_type.set_function("add_image", [](const GUIWindow* GUI, const std::string& path, const float
-        // width,
-        //                                              const float height, const bool centerX, const bool centerY) {
-        //     const auto& tex = AssetLoader::GetTexture(path, false, false);
-        //     const unsigned int texID = tex->GetID();
+        gui_window_type.set_function("add_image", [](const GUIWindow* GUI, const std::string& path, const float width,
+                                                     const float height, const bool centerX, const bool centerY) {
+            const auto texID = AssetLoader::GetTexture(path).ID;
 
-        //    GUI->AddImage(texID, {width, height}, centerX, centerY);
-        //});
+            GUI->AddImage(texID, {width, height}, centerX, centerY);
+        });
 
         gui_window_type.set_function("add_integer_slider", &GUIWindow::AddIntSlider);
         gui_window_type.set_function("add_float_slider", &GUIWindow::AddFloatSlider);

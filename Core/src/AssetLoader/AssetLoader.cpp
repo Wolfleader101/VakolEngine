@@ -1,5 +1,8 @@
 #include "AssetLoader/AssetLoader.hpp"
 
+#include "AssetLoader/TextureLoader.hpp"
+#include "Rendering/Platform/OpenGL/Texture.hpp"
+
 namespace Vakol
 {
     std::string AssetLoader::model_path = "assets/models/";
@@ -9,6 +12,8 @@ namespace Vakol
     ModelLibrary AssetLoader::m_modelLibrary;
     MaterialLibrary AssetLoader::m_materialLibrary;
 
+    std::unordered_map<std::string, Rendering::Assets::Texture> AssetLoader::m_textures;
+
     Rendering::Assets::Model& AssetLoader::GetModel(const std::string& path, const float scale)
     {
         return m_modelLibrary.GetModel(path, scale);
@@ -17,6 +22,25 @@ namespace Vakol
     Rendering::Assets::Material& AssetLoader::GetMaterial(const std::string& materialID)
     {
         return m_materialLibrary.GetMaterial(materialID);
+    }
+
+    Rendering::Assets::Texture& AssetLoader::GetTexture(const std::string& path)
+    {
+        if (m_textures.find(path) == m_textures.end())
+        {
+            Rendering::Assets::Texture texture;
+
+            unsigned char* pixels = nullptr;
+
+            ImportTexture(path, texture.width, texture.height, texture.channels, pixels);
+            texture.ID = Rendering::OpenGL::GenerateTexture(texture.width, texture.height, texture.channels, pixels);
+
+            m_textures[path] = std::move(texture);
+
+            return m_textures.at(path);
+        }
+
+        return m_textures.at(path);
     }
 
     void AssetLoader::AddTexture(const std::string& materialID, const Rendering::Assets::Texture& texture)

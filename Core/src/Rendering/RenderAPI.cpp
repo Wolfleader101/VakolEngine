@@ -102,7 +102,8 @@ namespace Vakol::Rendering
         drawable.shaderID = GenerateID();
         VK_TRACE("Shader ID: {0}", drawable.shaderID);
 
-        const unsigned int program = OpenGL::GenerateShaderProgram(shader.vertSrc, shader.geomSrc, shader.tscSrc, shader.tseSrc, shader.fragSrc);
+        const unsigned int program =
+            OpenGL::GenerateShaderProgram(shader.vertSrc, shader.geomSrc, shader.tscSrc, shader.tseSrc, shader.fragSrc);
         ShaderLibrary::GetShaderUniforms(program);
 
         ShaderLibrary::AddShader(drawable.shaderID, program);

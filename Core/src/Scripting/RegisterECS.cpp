@@ -1,7 +1,7 @@
+#include "AssetLoader/AssetLoader.hpp"
 #include "ECS/Components.hpp"
 #include "ECS/Entity.hpp"
 #include "LuaAccess.hpp"
-#include "AssetLoader/AssetLoader.hpp"
 #include "SceneManager/Scene.hpp"
 
 #include "Rendering/RenderEngine.hpp"

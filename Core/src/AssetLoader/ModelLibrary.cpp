@@ -38,4 +38,4 @@ namespace Vakol
         return m_models.at(path);
     }
 
-} // namespace Vakol::Rendering
+} // namespace Vakol

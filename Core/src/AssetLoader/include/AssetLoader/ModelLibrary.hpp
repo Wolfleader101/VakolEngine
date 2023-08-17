@@ -19,4 +19,4 @@ namespace Vakol
       private:
         std::unordered_map<std::string, Rendering::Assets::Model> m_models;
     };
-} // namespace Vakol::Rendering
+} // namespace Vakol
