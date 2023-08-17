@@ -1,3 +1,4 @@
+#include "AssetLoader/AssetLoader.hpp"
 #include "LuaAccess.hpp"
 
 #include "GUI/GUIWindow.hpp"

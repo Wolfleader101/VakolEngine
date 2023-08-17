@@ -1,4 +1,4 @@
-#include "Rendering/ShaderLibrary.hpp"
+#include "AssetLoader/ShaderLibrary.hpp"
 
 #include "Rendering/Platform/OpenGL/Buffer.hpp"
 #include "Rendering/Platform/OpenGL/Shader.hpp"
@@ -6,24 +6,24 @@
 #include "Logger/Logger.hpp"
 #include "Rendering/RenderData.hpp"
 
-namespace Vakol::Rendering
+namespace Vakol
 {
     std::unordered_map<std::string, unsigned int> ShaderLibrary::m_shaders;
 
-    std::map<unsigned int, std::unordered_map<std::string, Uniform>> ShaderLibrary::m_uniforms;
-    std::unordered_map<std::string, UniformBuffer> ShaderLibrary::m_uniformBuffers;
+    std::map<unsigned int, std::unordered_map<std::string, Rendering::Uniform>> ShaderLibrary::m_uniforms;
+    std::unordered_map<std::string, Rendering::UniformBuffer> ShaderLibrary::m_uniformBuffers;
 
     void ShaderLibrary::CreateUniformBuffer(const char* uBufferName, const int size, const unsigned int binding)
     {
-        UniformBuffer uniform_buffer{};
+        Rendering::UniformBuffer uniform_buffer{};
 
-        OpenGL::GenBuffers(uniform_buffer.id);
+        Rendering::OpenGL::GenBuffers(uniform_buffer.id);
 
-        OpenGL::BindUniformBuffer(uniform_buffer.id);
-        OpenGL::SetUniformBufferData(uniform_buffer.id, size, nullptr);
-        OpenGL::UnbindUniformBuffer();
+        Rendering::OpenGL::BindUniformBuffer(uniform_buffer.id);
+        Rendering::OpenGL::SetUniformBufferData(uniform_buffer.id, size, nullptr);
+        Rendering::OpenGL::UnbindUniformBuffer();
 
-        OpenGL::BindUniformBufferRange(binding, uniform_buffer.id, 0, size);
+        Rendering::OpenGL::BindUniformBufferRange(binding, uniform_buffer.id, 0, size);
 
         uniform_buffer.binding = binding;
 
@@ -36,7 +36,7 @@ namespace Vakol::Rendering
             m_shaders[ID] = shader;
     }
 
-    void ShaderLibrary::AddUniformBuffer(const std::string& uBufferName, const UniformBuffer& uBuffer)
+    void ShaderLibrary::AddUniformBuffer(const std::string& uBufferName, const Rendering::UniformBuffer& uBuffer)
     {
         if (m_uniformBuffers.find(uBufferName) == m_uniformBuffers.end())
             m_uniformBuffers[uBufferName] = uBuffer;
@@ -59,7 +59,7 @@ namespace Vakol::Rendering
             m_uniforms[shader].emplace();
         }
 
-        OpenGL::GetUniforms(shader, m_uniforms.at(shader));
+        Rendering::OpenGL::GetUniforms(shader, m_uniforms.at(shader));
     }
 
     void ShaderLibrary::SetInt(const unsigned int shader, const char* name, const int value)
@@ -68,7 +68,7 @@ namespace Vakol::Rendering
         {
             const auto& [location, count] = GetUniform(shader, name);
 
-            OpenGL::SetInt(location, value);
+            Rendering::OpenGL::SetInt(location, value);
         }
     }
 
@@ -78,7 +78,7 @@ namespace Vakol::Rendering
         {
             const auto& [location, count] = GetUniform(shader, name);
 
-            OpenGL::SetFloat(location, value);
+            Rendering::OpenGL::SetFloat(location, value);
         }
     }
 
@@ -88,7 +88,7 @@ namespace Vakol::Rendering
         {
             const auto& [location, count] = GetUniform(shader, name);
 
-            OpenGL::SetVec3(location, count, Math::AsArray(value));
+            Rendering::OpenGL::SetVec3(location, count, Math::AsArray(value));
         }
     }
 
@@ -98,7 +98,7 @@ namespace Vakol::Rendering
         {
             const auto& [location, count] = GetUniform(shader, name);
 
-            OpenGL::SetVec4(location, count, Math::AsArray(value));
+            Rendering::OpenGL::SetVec4(location, count, Math::AsArray(value));
         }
     }
 
@@ -109,7 +109,7 @@ namespace Vakol::Rendering
         {
             const auto& [location, count] = GetUniform(shader, name);
 
-            OpenGL::SetMat4(location, count, name, transpose, Math::AsArray(value));
+            Rendering::OpenGL::SetMat4(location, count, name, transpose, Math::AsArray(value));
         }
     }
 
@@ -119,7 +119,7 @@ namespace Vakol::Rendering
         {
             const auto& [id, binding] = GetUniformBuffer(name);
 
-            OpenGL::SetUniformBufferData(id, size, data);
+            Rendering::OpenGL::SetUniformBufferData(id, size, data);
         }
     }
 
@@ -129,16 +129,16 @@ namespace Vakol::Rendering
         {
             const auto& [id, binding] = GetUniformBuffer(name);
 
-            OpenGL::SetUniformBufferSubData(id, offset, size, data);
+            Rendering::OpenGL::SetUniformBufferSubData(id, offset, size, data);
         }
     }
 
-    Uniform ShaderLibrary::GetUniform(const unsigned int shader, const char* name)
+    Rendering::Uniform ShaderLibrary::GetUniform(const unsigned int shader, const char* name)
     {
         return m_uniforms.at(shader).at(name);
     }
 
-    UniformBuffer ShaderLibrary::GetUniformBuffer(const char* name)
+    Rendering::UniformBuffer ShaderLibrary::GetUniformBuffer(const char* name)
     {
         return m_uniformBuffers.at(name);
     }

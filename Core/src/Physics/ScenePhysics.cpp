@@ -63,28 +63,6 @@ namespace Vakol::Physics
         return false;
     }
 
-    // void ScenePhysics::AddTerrain(const Terrain& terr)
-    //{
-    //     auto& HeightData = terr.GetHeightMap();
-    //     const unsigned size = terr.GetSize();
-
-    //    // get the min and max from height data
-    //    float minH = std::min_element(HeightData.begin(), HeightData.end())[0];
-    //    float maxH = std::max_element(HeightData.begin(), HeightData.end())[0];
-
-    //    rp3d::HeightFieldShape* height = PhysicsPool::m_Common.createHeightFieldShape(
-    //        size, size, minH, maxH, HeightData.data(), rp3d::HeightFieldShape::HeightDataType::HEIGHT_FLOAT_TYPE, 1,
-    //        1);
-
-    //    // auto& vertexData = terr.GetStaticVertices();
-
-    //    const auto trans = rp3d::Transform::identity();
-    //    m_Terrain = m_World->createRigidBody(trans);
-    //    m_Terrain->setType(rp3d::BodyType::STATIC);
-
-    //    m_Terrain->addCollider(height, trans);
-    //}
-
     void ScenePhysics::MyCollisionCallback::onContact(const rp3d::CollisionCallback::CallbackData& callbackData)
     {
         for (unsigned int i = 0; i < callbackData.getNbContactPairs(); i++)

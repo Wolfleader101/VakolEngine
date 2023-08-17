@@ -29,8 +29,11 @@ namespace Vakol::Math
     using Mat4 = glm::mat4;
     using Quat = glm::quat;
 
-    float Radians(float degrees);
-    Vec3 Radians(const Vec3& v);
+    float Deg2Rads(float degrees);
+    float Rad2Deg(float rad);
+
+    Vec3 Deg2Rads(const Vec3& v);
+    Vec3 Rad2Deg(const Vec3& v);
 
     float Degrees(float radians);
 

@@ -45,15 +45,6 @@ namespace Vakol
         Entlist = &scene.GetEntityList();
     }
 
-    void System::Drawable_Init()
-    {
-        Terrain_Init();
-    }
-
-    void System::Terrain_Init()
-    {
-    }
-
     void System::Physics_Init()
     {
         const auto view = m_registry->view<Components::RigidBody>();
@@ -220,10 +211,5 @@ namespace Vakol
 
         rigid.initialized = true;
     };
-
-    // void System::Physics_AddTerrain(const Terrain& ter)
-    //{
-    //     m_SP->AddTerrain(ter);
-    // }
 
 } // namespace Vakol

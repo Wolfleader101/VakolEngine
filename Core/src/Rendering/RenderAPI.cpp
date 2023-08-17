@@ -1,10 +1,10 @@
 #include "Rendering/RenderAPI.hpp"
 
-#include "Rendering/MaterialLibrary.hpp"
+#include "AssetLoader/MaterialLibrary.hpp"
 #include "Rendering/RenderCommand.hpp"
 #include "Rendering/RenderData.hpp"
 
-#include "Rendering/ShaderLibrary.hpp"
+#include "AssetLoader/ShaderLibrary.hpp"
 
 #include "Rendering/Assets/Shader.hpp"
 
@@ -203,7 +203,7 @@ namespace Vakol::Rendering
 
         transform_matrix = Math::Translate(transform_matrix, transform.pos);
 
-        transform.rot = Math::Quat(Math::Radians(transform.eulerAngles));
+        transform.rot = Math::Quat(Math::Deg2Rads(transform.eulerAngles));
 
         const auto rotation_matrix = Math::Mat4Cast(transform.rot);
 

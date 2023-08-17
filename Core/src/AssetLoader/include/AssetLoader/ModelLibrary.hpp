@@ -8,15 +8,15 @@ namespace Vakol::Rendering::Assets
     struct Model;
 }
 
-namespace Vakol::Rendering
+namespace Vakol
 {
 
     class ModelLibrary
     {
       public:
-        static Assets::Model& GetModel(const std::string& path, float scale = 1.0f);
+        Rendering::Assets::Model& GetModel(const std::string& path, float scale);
 
       private:
-        static std::unordered_map<std::string, Assets::Model> m_models;
+        std::unordered_map<std::string, Rendering::Assets::Model> m_models;
     };
 } // namespace Vakol::Rendering

@@ -10,7 +10,10 @@ namespace Vakol::Rendering
 {
     struct Uniform;
     struct UniformBuffer;
+} // namespace Vakol::Rendering
 
+namespace Vakol
+{
     class ShaderLibrary
     {
       public:
@@ -34,15 +37,15 @@ namespace Vakol::Rendering
 
       private:
         static std::unordered_map<std::string, unsigned int> m_shaders;
-        static std::map<unsigned int, std::unordered_map<std::string, Uniform>> m_uniforms;
-        static std::unordered_map<std::string, UniformBuffer> m_uniformBuffers;
+        static std::map<unsigned int, std::unordered_map<std::string, Rendering::Uniform>> m_uniforms;
+        static std::unordered_map<std::string, Rendering::UniformBuffer> m_uniformBuffers;
 
-        static void AddUniformBuffer(const std::string& uBufferName, const UniformBuffer& uBuffer);
+        static void AddUniformBuffer(const std::string& uBufferName, const Rendering::UniformBuffer& uBuffer);
 
-        static Uniform GetUniform(unsigned int shader, const char* name);
-        static UniformBuffer GetUniformBuffer(const char* name);
+        static Rendering::Uniform GetUniform(unsigned int shader, const char* name);
+        static Rendering::UniformBuffer GetUniformBuffer(const char* name);
 
         static bool UniformExists(unsigned int shader, const char* name);
         static bool UniformBufferExists(const char* name);
     };
-} // namespace Vakol::Rendering
+} // namespace Vakol

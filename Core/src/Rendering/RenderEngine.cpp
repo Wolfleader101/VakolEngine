@@ -1,15 +1,16 @@
 #include "Rendering/RenderEngine.hpp"
 
-#include "Rendering/MaterialLibrary.hpp"
+#include "AssetLoader/MaterialLibrary.hpp"
 #include "Rendering/RenderCommand.hpp"
-#include "Rendering/ShaderLibrary.hpp"
+#include "AssetLoader/ShaderLibrary.hpp"
 
 #include "Rendering/Assets/Model.hpp"
 
 #include "Window/Window.hpp"
 
 #include "AssetLoader/ShaderLoader.hpp"
-#include "Rendering/ModelLibrary.hpp"
+
+#include "AssetLoader/AssetLoader.hpp"
 
 #include "Logger/Logger.hpp"
 
@@ -62,7 +63,7 @@ namespace Vakol::Rendering
         if (success)
             RenderAPI::GenerateShader(std::move(shader), drawable);
 
-        auto model = ModelLibrary::GetModel("coreAssets/models/sphere.obj", scale);
+        auto model = AssetLoader::GetModel("coreAssets/models/sphere.obj", scale);
 
         if (success)
             SubmitModel(model, drawable);
@@ -76,7 +77,7 @@ namespace Vakol::Rendering
         if (success)
             RenderAPI::GenerateShader(std::move(shader), drawable);
 
-        auto model = ModelLibrary::GetModel("coreAssets/models/cube.obj", scale);
+        auto model = AssetLoader::GetModel("coreAssets/models/cube.obj", scale);
 
         if (success)
             SubmitModel(model, drawable);

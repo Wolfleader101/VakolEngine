@@ -1,9 +1,9 @@
 #include "ECS/Components.hpp"
 #include "ECS/Entity.hpp"
 #include "LuaAccess.hpp"
+#include "AssetLoader/AssetLoader.hpp"
 #include "SceneManager/Scene.hpp"
 
-#include "Rendering/ModelLibrary.hpp"
 #include "Rendering/RenderEngine.hpp"
 
 namespace Vakol
@@ -20,7 +20,7 @@ namespace Vakol
             if (!ent->HasComponent<Rendering::Drawable>())
                 ent->AddComponent<Rendering::Drawable>();
 
-            auto model = Rendering::ModelLibrary::GetModel(path, scale);
+            auto model = AssetLoader::GetModel(path, scale);
             auto& drawable = ent->GetComponent<Rendering::Drawable>();
 
             Rendering::RenderEngine::GenerateModel(model, drawable);

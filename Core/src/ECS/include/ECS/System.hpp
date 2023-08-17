@@ -33,19 +33,6 @@ namespace Vakol
         // will make it more intuitive to find names of funcs
 
         /**
-         * @brief Initialize the drawable system.
-         */
-        static void Drawable_Init();
-
-        /**
-         * @brief Update the drawable system.
-         *
-         * @param camera
-         * @param time The time information for the update.
-         */
-        static void Drawable_Update(const Camera& camera, const Time& time);
-
-        /**
          * @brief Prepare the scripting system for deserialization.
          *
          * @param lua The shared pointer to the Lua state.
@@ -77,23 +64,6 @@ namespace Vakol
          * @brief Prepare the physics system for serialization.
          */
         static void Physics_SerializationPrep();
-
-        /**
-         * @brief Add a terrain to the physics system.
-         *
-         * @param ter The terrain to add.
-         */
-        // static void Physics_AddTerrain(const Terrain& ter);
-
-        /**
-         * @brief Initialize the terrain system.
-         */
-        static void Terrain_Init();
-
-        /**
-         * @brief Initialize the finite state machine (FSM) system.
-         */
-        static void FSM_Init();
 
       private:
         /**

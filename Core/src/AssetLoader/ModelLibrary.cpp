@@ -1,4 +1,4 @@
-#include "Rendering/ModelLibrary.hpp"
+#include "AssetLoader/ModelLibrary.hpp"
 
 #include "AssetLoader/ModelLoader.hpp"
 
@@ -6,11 +6,9 @@
 
 #include "Logger/Logger.hpp"
 
-namespace Vakol::Rendering
+namespace Vakol
 {
-    std::unordered_map<std::string, Assets::Model> ModelLibrary::m_models;
-
-    Assets::Model& ModelLibrary::GetModel(const std::string& path, const float scale)
+    Rendering::Assets::Model& ModelLibrary::GetModel(const std::string& path, const float scale)
     {
         if (m_models.find(path) == m_models.end())
         {

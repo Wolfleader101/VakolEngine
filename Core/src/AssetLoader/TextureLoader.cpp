@@ -1,3 +1,5 @@
+#define STB_IMAGE_IMPLEMENTATION
+
 #include "AssetLoader/TextureLoader.hpp"
 
 #include "AssetLoader/FileLoader.hpp"

@@ -52,13 +52,6 @@ namespace Vakol::Physics
          */
         bool IsDebugEnabled() const;
 
-        ///**
-        // * @brief Add a terrain to the physics scene.
-        // *
-        // * @param terrain The terrain to add.
-        // */
-        // void AddTerrain(const Terrain& terrain);
-
         /**
          * @brief Custom collision callback class.
          */
