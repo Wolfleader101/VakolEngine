@@ -1,5 +1,6 @@
 add_subdirectory(Application)
 add_subdirectory(AssetLoader)
+add_subdirectory(Animation)
 add_subdirectory(Camera)
 add_subdirectory(ECS)
 add_subdirectory(GUI)
@@ -18,6 +19,7 @@ add_subdirectory(Window)
 SET(SOURCES
 ${APPLICATION_SRC}
 ${ASSET_LOADER_SRC}
+${ANIMATION_SRC}
 ${CAMERA_SRC}
 ${ECS_SRC}
 ${GUI_SRC}
@@ -38,6 +40,7 @@ PARENT_SCOPE)
 SET(GLOBAL_INCLUDE_DIRS
     ${APPLICATION_INCLUDE_DIR}
     ${ASSET_LOADER_INCLUDE_DIR}
+    ${ANIMATION_INCLUDE_DIR}
     ${CAMERA_INCLUDE_DIR}
     ${ECS_INCLUDE_DIR}
     ${GUI_INCLUDE_DIR}

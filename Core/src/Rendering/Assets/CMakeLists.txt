@@ -1,7 +1,0 @@
-set(ASSETS 
-
-${CMAKE_CURRENT_SOURCE_DIR}/ModelImporter.cpp
-${CMAKE_CURRENT_SOURCE_DIR}/ShaderImporter.cpp
-${CMAKE_CURRENT_SOURCE_DIR}/TextureImporter.cpp
-
-PARENT_SCOPE)

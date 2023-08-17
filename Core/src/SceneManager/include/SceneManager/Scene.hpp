@@ -11,7 +11,6 @@
 
 namespace Vakol
 {
-
     /**
      * @class Scene
      *
@@ -26,7 +25,6 @@ namespace Vakol
          * @param name The name of the scene.
          * @param script The Lua script associated with the scene.
          * @param SP The shared pointer to the ScenePhysics object.
-         * @param active Whether the scene is active or not.
          */
         Scene(const std::string& name, LuaScript& script, const std::shared_ptr<Physics::ScenePhysics>& SP);
 

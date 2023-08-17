@@ -1,11 +1,11 @@
-#include "Rendering/Assets/TextureImporter.hpp"
+#include "AssetLoader/TextureLoader.hpp"
 
 #include "AssetLoader/FileLoader.hpp"
 #include "Logger/Logger.hpp"
 
 #include <stb_image.h>
 
-namespace Vakol::Rendering::Assets
+namespace Vakol
 {
     void ImportTexture(const std::string& path, int& width, int& height, int& channels, unsigned char*& pixels)
     {

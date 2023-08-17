@@ -8,7 +8,7 @@
 
 #include "Window/Window.hpp"
 
-#include "Rendering/Assets/ShaderImporter.hpp"
+#include "AssetLoader/ShaderLoader.hpp"
 #include "Rendering/ModelLibrary.hpp"
 
 #include "Logger/Logger.hpp"
@@ -48,7 +48,7 @@ namespace Vakol::Rendering
     void RenderEngine::GenerateSphere(const float scale, Drawable& drawable)
     {
         bool success = true;
-        auto shader = Assets::ImportShader(DEFAULT_SHADER_PATH, success);
+        auto shader = ImportShader(DEFAULT_SHADER_PATH, success);
 
         if (success)
             RenderAPI::GenerateShader(std::move(shader), drawable);
@@ -62,7 +62,7 @@ namespace Vakol::Rendering
     void RenderEngine::GenerateCube(const float scale, Drawable& drawable)
     {
         bool success = true;
-        auto shader = Assets::ImportShader(DEFAULT_SHADER_PATH, success);
+        auto shader = ImportShader(DEFAULT_SHADER_PATH, success);
 
         if (success)
             RenderAPI::GenerateShader(std::move(shader), drawable);
@@ -76,7 +76,7 @@ namespace Vakol::Rendering
     void RenderEngine::GenerateModel(Assets::Model& model, Drawable& drawable)
     {
         bool success = true;
-        auto shader = Assets::ImportShader(DEFAULT_SHADER_PATH, success);
+        auto shader = ImportShader(DEFAULT_SHADER_PATH, success);
 
         if (success)
             RenderAPI::GenerateShader(std::move(shader), drawable);

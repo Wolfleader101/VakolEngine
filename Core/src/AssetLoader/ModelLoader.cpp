@@ -1,4 +1,4 @@
-#include "Rendering/Assets/ModelImporter.hpp"
+#include "AssetLoader/ModelLoader.hpp"
 
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
@@ -15,8 +15,9 @@
 
 #include "Math/Math.hpp"
 #include "Rendering/Platform/OpenGL/Texture.hpp"
-#include "Rendering/Assets/TextureImporter.hpp"
 #include "Rendering/RenderAPI.hpp"
+
+#include "AssetLoader/TextureLoader.hpp"
 
 #include <iostream>
 #include <stack>
@@ -28,7 +29,7 @@ constexpr int ASSIMP_LOADER_OPTIONS =
     aiProcess_ImproveCacheLocality | aiProcess_SplitLargeMeshes | aiProcess_ValidateDataStructure |
     aiProcess_FindInvalidData | aiProcess_GlobalScale | aiProcess_PopulateArmatureData | aiProcess_FlipUVs;
 
-namespace Vakol::Rendering::Assets
+namespace Vakol
 {
     /*Helper Functions*/
     static void Mat4(const aiMatrix4x4& in, Math::Mat4& out);
@@ -41,10 +42,11 @@ namespace Vakol::Rendering::Assets
     static Mesh ProcessMesh(const aiScene& scene, const aiMesh& mesh);
 
     /*Mesh Internals*/
-    static void ExtractVertices(const aiMesh& mesh, std::vector<Vertex>& vertices, std::vector<unsigned int>& indices);
+    static void ExtractVertices(const aiMesh& mesh, std::vector<Rendering::Vertex>& vertices,
+                                std::vector<unsigned int>& indices);
 
-    static void ExtractBones(unsigned int count, aiBone** const& in, std::vector<Bone>& bones);
-    static void ProcessBone(aiBone* const& in, Bone& bone);
+    // static void ExtractBones(unsigned int count, aiBone** const& in, std::vector<Bone>& bones);
+    // static void ProcessBone(aiBone* const& in, Bone& bone);
 
     /*Material*/
     static Material ProcessMaterial(const aiScene& scene, const aiMaterial* material);
@@ -53,11 +55,11 @@ namespace Vakol::Rendering::Assets
     static std::vector<Texture> ExtractTextures(const aiScene& scene, const aiMaterial* material, aiTextureType type);
 
     /*Animations*/
-    static void ExtractAnimations(unsigned int count, aiAnimation** const& in);
-    static void ProcessAnimation(aiAnimation* const& in, Animation& animation);
+    // static void ExtractAnimations(unsigned int count, aiAnimation** const& in);
+    // static void ProcessAnimation(aiAnimation* const& in, Animation& animation);
 
-    static void ExtractChannels(unsigned int count, aiNodeAnim** const& in, std::vector<Channel>& channels);
-    static void ProcessChannel(aiNodeAnim* const& in, Channel& channel);
+    // static void ExtractChannels(unsigned int count, aiNodeAnim** const& in, std::vector<Channel>& channels);
+    // static void ProcessChannel(aiNodeAnim* const& in, Channel& channel);
 
     Model ImportModel(const char* path, const float scale, bool& success)
     {
@@ -107,7 +109,7 @@ namespace Vakol::Rendering::Assets
 
     Mesh ProcessMesh(const aiScene& scene, const aiMesh& mesh)
     {
-        std::vector<Vertex> vertices;
+        std::vector<Rendering::Vertex> vertices;
         std::vector<unsigned int> indices;
 
         ExtractVertices(mesh, vertices, indices);
@@ -118,13 +120,14 @@ namespace Vakol::Rendering::Assets
                 std::make_shared<Material>(material)};
     }
 
-    void ExtractVertices(const aiMesh& mesh, std::vector<Vertex>& vertices, std::vector<unsigned int>& indices)
+    void ExtractVertices(const aiMesh& mesh, std::vector<Rendering::Vertex>& vertices,
+                         std::vector<unsigned int>& indices)
     {
         vertices.reserve(mesh.mNumVertices);
 
         for (unsigned int i = 0; i < mesh.mNumVertices; ++i)
         {
-            Vertex vertex{};
+            Rendering::Vertex vertex{};
 
             Vec3(mesh.mVertices[i], vertex.position);
             Vec3(mesh.mNormals[i], vertex.normal);
@@ -178,7 +181,8 @@ namespace Vakol::Rendering::Assets
                     ImportTexture(embedTexture->pcData, static_cast<int>(embedTexture->mWidth), texture.width,
                                   texture.height, texture.channels, pixels);
 
-                    texture.ID = OpenGL::GenerateTexture(texture.width, texture.height, texture.channels, pixels);
+                    texture.ID =
+                        Rendering::OpenGL::GenerateTexture(texture.width, texture.height, texture.channels, pixels);
                 }
 
                 textures.emplace_back(std::move(texture));
@@ -225,55 +229,55 @@ namespace Vakol::Rendering::Assets
         return {material->GetName().C_Str(), "null", "null", std::move(textures), properties};
     }
 
-    void ExtractAnimations(const unsigned int count, aiAnimation** const& in)
-    {
-        Animation animation;
+    // void ExtractAnimations(const unsigned int count, aiAnimation** const& in)
+    //{
+    //     Animation animation;
 
-        for (auto i = 0u; i < count; ++i)
-            ProcessAnimation(in[i], animation);
-    }
+    //    //for (auto i = 0u; i < count; ++i)
+    //    //    ProcessAnimation(in[i], animation);
+    //}
 
-    void ProcessAnimation(aiAnimation* const& in, Animation& animation)
-    {
-        animation.name = in->mName.C_Str();
+    // void ProcessAnimation(aiAnimation* const& in, Animation& animation)
+    //{
+    //     animation.name = in->mName.C_Str();
 
-        animation.duration = in->mDuration;
-        animation.ticksPerSecond = in->mTicksPerSecond;
+    //    animation.duration = in->mDuration;
+    //    animation.ticksPerSecond = in->mTicksPerSecond;
 
-        ExtractChannels(in->mNumChannels, in->mChannels, animation.channels);
-    }
+    //    //ExtractChannels(in->mNumChannels, in->mChannels, animation.channels);
+    //}
 
-    void ExtractBones(const unsigned int count, aiBone** const& in, std::vector<Bone>& bones)
-    {
-        Bone bone;
+    // void ExtractBones(const unsigned int count, aiBone** const& in, std::vector<Bone>& bones)
+    //{
+    //     Bone bone;
 
-        ProcessBone(in[0], bone);
-    }
+    //    ProcessBone(in[0], bone);
+    //}
 
-    void ProcessBone(aiBone* const& in, Bone& bone)
-    {
-        const auto& root = in->mNode;
+    // void ProcessBone(aiBone* const& in, Bone& bone)
+    //{
+    //     const auto& root = in->mNode;
 
-        if (root == nullptr)
-        {
-            VK_ERROR("Root bone node is nullptr");
-            return;
-        }
+    //    if (root == nullptr)
+    //    {
+    //        VK_ERROR("Root bone node is nullptr");
+    //        return;
+    //    }
 
-        std::stack<aiNode*> stack;
-        stack.emplace(root);
-    }
+    //    std::stack<aiNode*> stack;
+    //    stack.emplace(root);
+    //}
 
-    void ExtractChannels(const unsigned int count, aiNodeAnim** const& in, std::vector<Channel>& channels)
-    {
-        Channel channel;
+    // void ExtractChannels(const unsigned int count, aiNodeAnim** const& in, std::vector<Channel>& channels)
+    //{
+    //     Channel channel;
 
-        for (auto i = 0u; i < count; ++i)
-        {
-            ProcessChannel(in[i], channel);
-            channels.emplace_back(channel);
-        }
-    }
+    //    for (auto i = 0u; i < count; ++i)
+    //    {
+    //        ProcessChannel(in[i], channel);
+    //        channels.emplace_back(channel);
+    //    }
+    //}
 
     void ProcessChannel(aiNodeAnim* const& in, Channel& channel)
     {
@@ -329,4 +333,4 @@ namespace Vakol::Rendering::Assets
     {
         out = Math::Vec2(in.x, in.y);
     }
-} // namespace Vakol::Rendering::Assets
+} // namespace Vakol

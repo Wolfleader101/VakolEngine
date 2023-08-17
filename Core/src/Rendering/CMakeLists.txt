@@ -1,5 +1,4 @@
 add_subdirectory(Platform)
-add_subdirectory(Assets)
 
 SET(RENDERING_SRC
     ${PLATFORM}    

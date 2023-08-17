@@ -1,4 +1,4 @@
-#include "Rendering/Assets/ShaderImporter.hpp"
+#include "AssetLoader/ShaderLoader.hpp"
 
 #include "AssetLoader/FileLoader.hpp"
 #include "Logger/Logger.hpp"
@@ -7,13 +7,13 @@
 
 #include <vector>
 
-namespace Vakol::Rendering::Assets
+namespace Vakol
 {
-    bool GetShaderSources(std::vector<std::string>&& paths, Shader& shader);
+    bool GetShaderSources(std::vector<std::string>&& paths, Rendering::Assets::Shader& shader);
 
-    Shader ImportShader(const std::string& path, bool& success)
+    Rendering::Assets::Shader ImportShader(const std::string& path, bool& success)
     {
-        Shader shader;
+        Rendering::Assets::Shader shader;
 
         std::vector<std::string> paths;
 
@@ -35,7 +35,7 @@ namespace Vakol::Rendering::Assets
         return shader;
     }
 
-    bool GetShaderSources(std::vector<std::string>&& paths, Shader& shader)
+    bool GetShaderSources(std::vector<std::string>&& paths, Rendering::Assets::Shader& shader)
     {
         std::vector<std::string> sources;
 

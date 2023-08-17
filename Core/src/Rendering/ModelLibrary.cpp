@@ -1,6 +1,6 @@
 #include "Rendering/ModelLibrary.hpp"
 
-#include "Rendering/Assets/ModelImporter.hpp"
+#include "AssetLoader/ModelLoader.hpp"
 
 #include "Rendering/Assets/Model.hpp"
 
@@ -16,7 +16,7 @@ namespace Vakol::Rendering
         {
             bool success = true;
 
-            const auto& model = Assets::ImportModel(path.c_str(), scale, success);
+            const auto& model = ImportModel(path.c_str(), scale, success);
 
             if (success)
             {
