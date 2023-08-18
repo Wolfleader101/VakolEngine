@@ -23,6 +23,8 @@ namespace Vakol::Rendering
 
     struct Drawable
     {
+        bool active = true;
+
         std::string vertexArrayID = "null";
         std::string shaderID = "null";
         std::string materialID = "null";

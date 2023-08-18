@@ -100,7 +100,7 @@ namespace Vakol::Rendering
     void RenderAPI::GenerateShader(Assets::Shader&& shader, Drawable& drawable)
     {
         drawable.shaderID = GenerateID();
-        VK_TRACE("Shader ID: {0}", drawable.shaderID);
+        // VK_TRACE("Shader ID: {0}", drawable.shaderID);
 
         const unsigned int program =
             OpenGL::GenerateShaderProgram(shader.vertSrc, shader.geomSrc, shader.tscSrc, shader.tseSrc, shader.fragSrc);
@@ -204,7 +204,7 @@ namespace Vakol::Rendering
 
         transform_matrix = Math::Translate(transform_matrix, transform.pos);
 
-        transform.rot = Math::Quat(Math::Deg2Rads(transform.eulerAngles));
+        transform.rot = Math::Quat(Math::DegToRad(transform.eulerAngles));
 
         const auto rotation_matrix = Math::Mat4Cast(transform.rot);
 

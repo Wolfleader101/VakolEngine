@@ -16,7 +16,7 @@ namespace Vakol
         entity_type.set_function("get_transform", &Entity::GetComponent<Components::Transform>);
         entity_type.set_function("get_fsm", &Entity::GetComponent<Components::FSM>);
 
-        entity_type.set_function("generate_model", [](Entity* ent, const std::string& path, const float scale = 1.0f) {
+        entity_type.set_function("add_model", [](Entity* ent, const std::string& path, const float scale = 1.0f) {
             if (!ent->HasComponent<Rendering::Drawable>())
                 ent->AddComponent<Rendering::Drawable>();
 
@@ -24,6 +24,29 @@ namespace Vakol
             auto& drawable = ent->GetComponent<Rendering::Drawable>();
 
             Rendering::RenderEngine::GenerateModel(model, drawable);
+        });
+
+        entity_type.set_function("add_texture", [](const Entity* ent, const std::string& path) {
+            if (!ent->HasComponent<Rendering::Drawable>())
+            {
+                VK_WARN("No Drawable component found on entity!");
+                return;
+            }
+
+            AssetLoader::AddTexture(ent->GetComponent<Rendering::Drawable>().materialID, AssetLoader::GetTexture(path));
+        });
+
+        entity_type.set_function("set_vec3v", [](const Entity* ent, const char* name, Math::Vec3& value) 
+        {
+            if (!ent->HasComponent<Rendering::Drawable>())
+            {
+                return;
+            }
+        });
+
+        entity_type.set_function("active_model", [](const Entity* ent, const bool active) {
+            if (ent->HasComponent<Rendering::Drawable>())
+                ent->GetComponent<Rendering::Drawable>().active = active;
         });
 
         entity_type.set_function("physics_init", [](const Entity* ent, Scene& scene) {

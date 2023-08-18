@@ -7,7 +7,7 @@ function init()
 
 
         scene.globals.player = {
-        pos = Vector3.new(0.0, 0.0, 0.0)
+        pos = Vector3.new(0.0, 1.0, 0.0)
         }
     scene.globals.player.pos = entity:get_transform().pos;
 end
@@ -51,7 +51,7 @@ function update()
     --    new_pos.y = (scene.globals.terrain.terr:get_height(new_pos.x / terr_scale.x, new_pos.z / terr_scale.z) * terr_scale.y) + 0.5;
     --end
 
-    entity:get_transform().pos = Vector3.new(new_pos.x, new_pos.y - 0.70, new_pos.z);
+    entity:get_transform().pos = Vector3.new(new_pos.x, new_pos.y, new_pos.z);
 
     camera:set_pos(new_pos.x, new_pos.y, new_pos.z);
 

@@ -30,10 +30,14 @@ namespace Vakol
         {
             Rendering::Assets::Texture texture;
 
+            texture.path = path;
+
             unsigned char* pixels = nullptr;
 
             ImportTexture(path, texture.width, texture.height, texture.channels, pixels);
+
             texture.ID = Rendering::OpenGL::GenerateTexture(texture.width, texture.height, texture.channels, pixels);
+            texture.type = Rendering::Assets::VK_TEXTURE_DIFFUSE;
 
             m_textures[path] = std::move(texture);
 

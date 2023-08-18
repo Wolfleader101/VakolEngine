@@ -13,24 +13,24 @@ namespace Vakol::Math
         return a.x * b.x + a.y * b.y + a.z * b.z;
     }
 
-    Vec3 Deg2Rads(const Vec3& v)
+    float DegToRad(const float deg)
     {
-        return glm::radians(v);
+        return glm::radians(deg);
     }
 
-    Vec3 Rad2Deg(const Vec3& v)
+    Vec3 DegToRad(const Vec3& vec)
     {
-        return glm::degrees(v);
+        return glm::radians(vec);
     }
 
-    float Deg2Rads(const float degrees)
+    float RadToDeg(const float rad)
     {
-        return glm::radians(degrees);
+        return glm::degrees(rad);
     }
 
-    float Rad2Deg(const float radians)
+    Vec3 RadToDeg(const Vec3& vec)
     {
-        return glm::degrees(radians);
+        return glm::degrees(vec);
     }
 
     float Magnitude(const Vec2& v)

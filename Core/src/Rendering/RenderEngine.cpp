@@ -117,8 +117,6 @@ namespace Vakol::Rendering
 
             for (auto& texture : material->textures)
             {
-                VK_TRACE(texture.path);
-
                 if (texture.ID == 0)
                     texture.ID = RenderAPI::GenerateTexture(texture, drawable);
 

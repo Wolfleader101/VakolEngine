@@ -182,8 +182,10 @@ namespace Vakol
             System::BindScene(activeScene); // is here temporarily until this is replaced/removed
 
             activeScene.GetEntityList().GetRegistry().view<Components::Transform, Rendering::Drawable>().each(
-                [&](Components::Transform& transform, const Rendering::Drawable& drawable) {
-                    Rendering::RenderEngine::Draw(activeScene.GetCamera(), transform, drawable);
+                [&](Components::Transform& transform, const Rendering::Drawable& drawable) 
+                {
+                    if (drawable.active)
+                        Rendering::RenderEngine::Draw(activeScene.GetCamera(), transform, drawable);
                 });
 
             activeScene.Update(m_time);

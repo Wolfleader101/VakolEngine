@@ -29,13 +29,11 @@ namespace Vakol::Math
     using Mat4 = glm::mat4;
     using Quat = glm::quat;
 
-    float Deg2Rads(float degrees);
-    float Rad2Deg(float rad);
+    float DegToRad(const float deg);
+    Vec3 DegToRad(const Vec3& vec);
 
-    Vec3 Deg2Rads(const Vec3& v);
-    Vec3 Rad2Deg(const Vec3& v);
-
-    float Degrees(float radians);
+    float RadToDeg(const float rad);
+    Vec3 RadToDeg(const Vec3& vec);
 
     float Dot(const Vec2& a, const Vec2& b);
     float Dot(const Vec3& a, const Vec3& b);
