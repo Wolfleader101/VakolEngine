@@ -3,9 +3,9 @@
 #include "Camera/Camera.hpp"
 #include "ECS/Entity.hpp"
 #include "ECS/EntityList.hpp"
+#include "Physics/PhysicsScene.hpp"
 #include "Scripting/ScriptTypes.hpp"
 #include "Time/Time.hpp"
-
 namespace Vakol
 {
     /**
@@ -21,8 +21,9 @@ namespace Vakol
          *
          * @param name The name of the scene.
          * @param script The Lua script associated with the scene.
+         * @param physicsScene The physics scene associated with the scene.
          */
-        Scene(const std::string& name, LuaScript& script);
+        Scene(const std::string& name, LuaScript& script, PhysicsScene& physicsScene);
 
         Scene(const Scene& other) = delete;
         Scene(Scene&& other) = default;
@@ -116,12 +117,19 @@ namespace Vakol
         /**
          * @brief Get the Script object
          *
-         * @return LuaScript&
+         * @return LuaScript& to get
          */
         LuaScript& GetScript()
         {
             return m_script;
         }
+
+        /**
+         * @brief Get the Physics Scene object
+         *
+         * @return PhysicsScene& to get
+         */
+        PhysicsScene& GetPhysicsScene();
 
       private:
         /**
@@ -144,5 +152,11 @@ namespace Vakol
          * @brief The entity list of the scene.
          */
         EntityList m_entityList;
+
+        /**
+         * @brief physics scene for a scene
+         *
+         */
+        PhysicsScene& m_physicsScene;
     };
 } // namespace Vakol

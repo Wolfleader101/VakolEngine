@@ -12,8 +12,8 @@
 
 namespace Vakol
 {
-    Scene::Scene(const std::string& name, LuaScript& script)
-        : m_script(std::move(script)), m_name(name), m_cam(Math::Vec3(0.0f, 0.0f, 2.0f))
+    Scene::Scene(const std::string& name, LuaScript& script, PhysicsScene& physicsScene)
+        : m_script(std::move(script)), m_physicsScene(physicsScene), m_name(name), m_cam(Math::Vec3(0.0f, 0.0f, 2.0f))
     {
     }
 
@@ -54,6 +54,11 @@ namespace Vakol
         });
 
         return std::make_shared<Entity>(ent);
+    }
+
+    PhysicsScene& Scene::GetPhysicsScene()
+    {
+        return m_physicsScene;
     }
 
     namespace fs = std::filesystem;

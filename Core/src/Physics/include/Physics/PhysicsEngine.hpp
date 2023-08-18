@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <vector>
 
 #include "PhysicsTypes.hpp"
@@ -27,7 +28,7 @@ namespace Vakol
         double GetTimeStep() const;
 
       private:
-        std::vector<PhysicsScene> m_scenes;
+        std::vector<std::unique_ptr<PhysicsScene>> m_scenes;
 
         double m_timeStep = 1.0 / 60.0;
 

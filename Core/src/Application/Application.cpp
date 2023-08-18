@@ -13,7 +13,8 @@ namespace Vakol
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
     Application::Application()
-        : m_window(nullptr), m_scriptEngine(), m_sceneManager(m_scriptEngine), m_running(false), m_input(){};
+        : m_window(nullptr), m_scriptEngine(), m_sceneManager(m_scriptEngine, m_physicsEngine), m_running(false),
+          m_input(){};
 
     void Application::Init()
     {
@@ -146,6 +147,7 @@ namespace Vakol
 
     void Application::Run()
     {
+        double physicsAccumulator = 0.0;
         while (m_running)
         {
             m_time.Update();
@@ -157,6 +159,29 @@ namespace Vakol
             m_sceneManager.Update();
 
             Scene& activeScene = m_sceneManager.GetActiveScene();
+
+            // Add the time difference in the accumulator
+            physicsAccumulator += m_time.deltaTime;
+
+            // While there is enough accumulated time take one or several physics steps
+            while (physicsAccumulator >= m_physicsEngine.GetTimeStep())
+            {
+                // apply forces
+                activeScene.GetEntityList().Iterate<RigidBody>([&](auto& rb) { m_physicsEngine.ApplyForces(rb); });
+
+                // detect collisions
+                m_physicsEngine.DetectCollisions(activeScene.GetPhysicsScene());
+
+                // resolve collisions
+                activeScene.GetEntityList().Iterate<RigidBody>(
+                    [&](auto& rb) { m_physicsEngine.ResolveCollisions(rb); });
+
+                // Decrease the accumulated time
+                physicsAccumulator -= m_physicsEngine.GetTimeStep();
+
+                // Compute the time interpolation factor
+                //     double factor = physicsAccumulator / m_timestep;
+            }
 
             while (m_time.accumulator >= m_time.tickRate)
             {
