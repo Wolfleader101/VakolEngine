@@ -42,7 +42,8 @@ namespace Vakol
 
         static Rendering::Assets::Material& GetMaterial(const std::string& materialID);
 
-        static Rendering::Assets::Texture& GetTexture(const std::string& path);
+        static Rendering::Assets::Texture& GetTexture(const std::string& path, Rendering::Assets::VK_TEXTURE_TYPE type = Rendering::Assets::VK_TEXTURE_DIFFUSE);
+        static Rendering::Assets::Texture& GetTexture(const std::string& path, Rendering::Assets::VK_TEXTURE_TYPE type, int size, const void* buffer);
 
         /**
          * \brief dd

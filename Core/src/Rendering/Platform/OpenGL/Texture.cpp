@@ -10,20 +10,14 @@ namespace Vakol::Rendering::OpenGL
     {
         unsigned int texture;
 
-        if (width <= 0 || height <= 0)
-            return 0u;
-
         glGenTextures(1, &texture);
         glBindTexture(GL_TEXTURE_2D, texture);
 
-        const GLenum internal_format = channels > 3 ? GL_RGBA8 : GL_RGB8;
-        const GLenum format = channels > 3 ? GL_RGBA : GL_RGB;
+        const GLenum internal_format = channels == 1 ? GL_R8 : channels > 3 ? GL_RGBA8 : GL_RGB8;
+        const GLenum format = channels == 1 ? GL_RED : channels > 3 ? GL_RGBA : GL_RGB;
 
         glTexStorage2D(GL_TEXTURE_2D, 1, internal_format, width, height);
         glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, format, GL_UNSIGNED_BYTE, pixels);
-
-        delete[] pixels;
-        pixels = nullptr;
 
         glGenerateMipmap(GL_TEXTURE_2D);
 
@@ -31,6 +25,11 @@ namespace Vakol::Rendering::OpenGL
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+
+        delete[] pixels;
+        pixels = nullptr;
+
+        glBindTexture(GL_TEXTURE_2D, 0);
 
         return texture;
     }

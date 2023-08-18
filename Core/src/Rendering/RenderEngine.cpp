@@ -39,7 +39,7 @@ namespace Vakol::Rendering
 
     void RenderEngine::Draw(const Camera& camera, Components::Transform& transform, const Drawable& drawable)
     {
-        RenderAPI::BeginDraw(drawable.vertexArrayID, drawable.shaderID, drawable.materialID);
+        RenderAPI::BeginDraw(drawable.vertexArrayID, drawable.shaderID, drawable.materials);
 
         ShaderLibrary::SetMat4(ShaderLibrary::GetShader(drawable.shaderID), "PV_MATRIX", false,
                                camera.GetMatrix(PROJECTION_MATRIX) * camera.GetMatrix(VIEW_MATRIX));
@@ -103,7 +103,7 @@ namespace Vakol::Rendering
 
             AssetLoader::AddMaterial(*material);
 
-            drawable.materialID = material->ID;
+            drawable.materials.emplace_back(material->ID);
 
             if (material->textures.empty())
             {

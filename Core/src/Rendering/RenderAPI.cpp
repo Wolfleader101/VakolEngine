@@ -29,7 +29,7 @@ namespace Vakol::Rendering
         m_config.API = API;
     }
 
-    void RenderAPI::BeginDraw(const std::string& vertexID, const std::string& shaderID, const std::string& materialID)
+    void RenderAPI::BeginDraw(const std::string& vertexID, const std::string& shaderID, const std::vector<std::string>& materials)
     {
         const auto program = ShaderLibrary::GetShader(shaderID);
 
@@ -39,12 +39,15 @@ namespace Vakol::Rendering
 
         std::vector<Assets::Texture> textures{};
 
-        if (const auto valid = AssetLoader::GetTextures(materialID, textures); valid)
+        for (const auto& materialID : materials)
         {
-            for (const auto& texture : textures)
+            if (const auto valid = AssetLoader::GetTextures(materialID, textures); valid)
             {
-                OpenGL::SetActiveTexture(texture.type);
-                OpenGL::BindTexture(texture.ID);
+                for (int i = 0; i < textures.size(); ++i)
+                {
+                    OpenGL::SetActiveTexture(i);
+                    OpenGL::BindTexture(textures.at(i).ID);
+                }
             }
         }
 

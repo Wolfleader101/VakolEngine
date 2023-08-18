@@ -24,20 +24,44 @@ namespace Vakol
         return m_materialLibrary.GetMaterial(materialID);
     }
 
-    Rendering::Assets::Texture& AssetLoader::GetTexture(const std::string& path)
+    Rendering::Assets::Texture& AssetLoader::GetTexture(const std::string& path, const Rendering::Assets::VK_TEXTURE_TYPE type)
     {
         if (m_textures.find(path) == m_textures.end())
         {
             Rendering::Assets::Texture texture;
 
             texture.path = path;
+            texture.type = type;
 
             unsigned char* pixels = nullptr;
 
             ImportTexture(path, texture.width, texture.height, texture.channels, pixels);
 
             texture.ID = Rendering::OpenGL::GenerateTexture(texture.width, texture.height, texture.channels, pixels);
-            texture.type = Rendering::Assets::VK_TEXTURE_DIFFUSE;
+
+            m_textures[path] = std::move(texture);
+
+            return m_textures.at(path);
+        }
+
+        return m_textures.at(path);
+    }
+
+    Rendering::Assets::Texture& AssetLoader::GetTexture(const std::string& path, const Rendering::Assets::VK_TEXTURE_TYPE type, const int size, const void* buffer)
+    {
+        if (m_textures.find(path) == m_textures.end())
+        {
+            Rendering::Assets::Texture texture;
+
+            texture.path = path;
+            texture.type = type;
+            texture.embedded = true;
+
+            unsigned char* pixels = nullptr;
+
+            ImportTexture(buffer, size, texture.width, texture.height, texture.channels, pixels);
+
+            texture.ID = Rendering::OpenGL::GenerateTexture(texture.width, texture.height, texture.channels, pixels);
 
             m_textures[path] = std::move(texture);
 
