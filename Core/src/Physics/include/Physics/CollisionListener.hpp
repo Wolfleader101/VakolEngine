@@ -6,9 +6,19 @@
 
 namespace Vakol
 {
+
+    /**
+     * @brief Collision listener class.
+     *
+     */
     class CollisionListener : public rp3d::EventListener
     {
       public:
+        /**
+         * @brief On Contact event.
+         *
+         * @param data from react physics
+         */
         virtual void onContact(const rp3d::CollisionCallback::CallbackData& data) override;
     };
-}
+} // namespace Vakol

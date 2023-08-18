@@ -8,6 +8,10 @@
 namespace Vakol
 {
 
+    /**
+     * @brief Rigidbody types
+     *
+     */
     enum class BodyType
     {
         Static,
@@ -15,10 +19,18 @@ namespace Vakol
         Dynamic
     };
 
+    /**
+     * @brief Collision data of rigidbody
+     *
+     */
     struct CollisionData
     {
     };
 
+    /**
+     * @brief Rigidbody object
+     *
+     */
     struct RigidBody
     {
         BodyType type;
