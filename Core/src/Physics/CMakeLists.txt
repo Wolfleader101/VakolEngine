@@ -1,6 +1,4 @@
 SET(PHYSICS_SRC
-    ${CMAKE_CURRENT_SOURCE_DIR}/PhysicsPool.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/ScenePhysics.cpp
     PARENT_SCOPE
 )
 

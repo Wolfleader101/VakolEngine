@@ -2,7 +2,6 @@ SET(ECS_SRC
     ${CMAKE_CURRENT_SOURCE_DIR}/Entity.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/EntityList.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Components.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/System.cpp
     PARENT_SCOPE
 )
 

@@ -1,11 +1,8 @@
 #pragma once
 
-#include <memory>
-
 #include "Camera/Camera.hpp"
 #include "ECS/Entity.hpp"
 #include "ECS/EntityList.hpp"
-#include "Physics/ScenePhysics.hpp"
 #include "Scripting/ScriptTypes.hpp"
 #include "Time/Time.hpp"
 
@@ -24,9 +21,8 @@ namespace Vakol
          *
          * @param name The name of the scene.
          * @param script The Lua script associated with the scene.
-         * @param SP The shared pointer to the ScenePhysics object.
          */
-        Scene(const std::string& name, LuaScript& script, const std::shared_ptr<Physics::ScenePhysics>& SP);
+        Scene(const std::string& name, LuaScript& script);
 
         Scene(const Scene& other) = delete;
         Scene(Scene&& other) = default;
@@ -44,13 +40,6 @@ namespace Vakol
          * @param newName The new name of the scene.
          */
         void setName(const std::string& newName);
-
-        /**
-         * @brief Update the scene.
-         *
-         * @param time The time information for the update.
-         */
-        void Update(const Time& time);
 
         /**
          * @brief Create a new entity in the scene.
@@ -85,11 +74,6 @@ namespace Vakol
          * @brief Whether the scene has been initialized or not.
          */
         bool initialized = false;
-
-        /**
-         * @brief The shared pointer to the ScenePhysics object.
-         */
-        std::shared_ptr<Physics::ScenePhysics> scenePhysics;
 
         /**
          * @brief Get the camera of the scene.

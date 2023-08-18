@@ -5,7 +5,6 @@
 
 #include "ECS/Components.hpp"
 #include "ECS/Entity.hpp"
-#include "ECS/System.hpp"
 #include "Logger/Logger.hpp"
 
 using namespace Vakol;
@@ -94,8 +93,7 @@ namespace Vakol
 
     void EntityList::Serialize(const std::string& file) const
     {
-        privateSerialize<cereal::JSONOutputArchive, Components::Transform, Components::Tag, Components::GUID,
-                         Components::RigidBody, Components::Collider>(file);
+        privateSerialize<cereal::JSONOutputArchive, Components::Transform, Components::Tag, Components::GUID>(file);
 
         /*privateSerialize<cereal::JSONOutputArchive, Transform, Tag, Script, GUID, Drawable, Components::AnimatorComp,
                          Animation>(file);*/
@@ -103,8 +101,7 @@ namespace Vakol
 
     void EntityList::Deserialize(const std::string& file)
     {
-        privateDeserialize<cereal::JSONInputArchive, Components::Transform, Components::Tag, Components::GUID,
-                           Components::RigidBody, Components::Collider>(file);
+        privateDeserialize<cereal::JSONInputArchive, Components::Transform, Components::Tag, Components::GUID>(file);
 
         /*privateDeserialize<cereal::JSONInputArchive, Transform, Tag, Script, GUID, Drawable, Components::AnimatorComp,
                            Animation>(file);*/
