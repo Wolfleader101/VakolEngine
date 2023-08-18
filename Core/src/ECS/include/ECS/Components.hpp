@@ -6,7 +6,6 @@
 #include <memory>
 #include <string>
 
-#include "Animation/Animator.hpp"
 #include "Entity.hpp"
 #include "Math/Math.hpp"
 #include "Physics/ScenePhysics.hpp"
@@ -64,112 +63,6 @@ namespace Vakol::Components
 
                cereal::make_nvp("scale.x", scale.x), cereal::make_nvp("scale.y", scale.y),
                cereal::make_nvp("scale.z", scale.z));
-        }
-    };
-
-    /**
-     * @brief Animator component
-     */
-    struct AnimatorComp
-    {
-        std::string attached_model; /**< The attached model name. */
-
-        /**
-         * \brief Updates the animator with the specified state and delta time.
-         * \param state The state of the animator.
-         * \param delta_time The elapsed time since the last update.
-         */
-        void Update(const int state, const float delta_time)
-        {
-            animator_ptr->Update(state, delta_time);
-        }
-
-        /**
-         * \brief Updates the animator with the specified delta time.
-         * \param delta_time The elapsed time since the last update.
-         */
-        void Update(const float delta_time)
-        {
-            animator_ptr->Update(delta_time);
-        }
-
-        int nAnimations() const
-        {
-            return animator_ptr->nAnimations();
-        }
-
-        /**
-         * \brief Retrieves a constant reference to the animation for the specified state.
-         * \param state The state of the animation.
-         * \return A constant reference to the animation.
-         */
-        const Assets::Animation& c_animation(const int state) const
-        {
-            return animator_ptr->c_get(state);
-        }
-
-        /**
-         * \brief Retrieves a copy of the animation for the specified state.
-         * \param state The state of the animation.
-         * \return A copy of the animation.
-         */
-        Assets::Animation animation(const int state) const
-        {
-            return animator_ptr->get(state);
-        }
-
-        /**
-         * \brief Sets the animator using a shared pointer.
-         * \param animator The shared pointer to the animator.
-         */
-        void set(const std::shared_ptr<Animator>& animator)
-        {
-            animator_ptr = animator;
-        }
-
-        /**
-         * \brief Sets the animator using a non-const reference.
-         * \param animator The animator object.
-         */
-        void set(const Animator& animator)
-        {
-            animator_ptr = std::make_shared<Animator>(animator);
-        }
-
-        /**
-         * \brief Serializes the Animator object.
-         * \tparam Archive The archive type.
-         * \param ar The archive.
-         */
-        template <class Archive>
-        void serialize(Archive& ar)
-        {
-            ar(cereal::make_nvp("attached_model", attached_model));
-            // ar(cereal::make_nvp("State Table",state));
-        }
-
-        std::shared_ptr<Animator> animator_ptr = nullptr; /**< The pointer to the animator object. */
-    };
-
-    /**
-     * @struct Animation
-     * @brief Represents an animation.
-     */
-    struct Animation
-    {
-        int state = 0;              /**< The state of the animation. */
-        std::string attached_model; /**< The attached model name. */
-
-        /**
-         * @brief Serializes the Animation object.
-         * @tparam Archive The archive type.
-         * @param ar The archive.
-         */
-        template <class Archive>
-        void serialize(Archive& ar)
-        {
-            ar(cereal::make_nvp("state", state));
-            ar(cereal::make_nvp("attached_model", attached_model));
         }
     };
 
@@ -311,55 +204,6 @@ namespace Vakol::Components
 
             // data.data.clear();
             // ar(data);
-        }
-    };
-
-    /**
-     * @brief Struct representing a drawable entity.
-     */
-    struct Drawable
-    {
-        /**
-         * @brief Default constructor for the Drawable struct.
-         */
-        Drawable() = default;
-
-        /**
-         * @brief Overloaded constructor that initializes a Drawable with a file path.
-         * @param file The file path to the drawable entity.
-         */
-        explicit Drawable(std::string&& file);
-
-        /**
-         * @brief Overloaded constructor that initializes a Drawable with detailed information.
-         * @param file The file path to the drawable entity.
-         * @param scale The scale of the drawable entity.
-         * @param animated Boolean representing if the entity is animated.
-         * @param backfaceCull Boolean representing if backface culling is enabled.
-         */
-        Drawable(const std::string& file, float scale, bool animated, bool backfaceCull);
-
-        std::string name; ///< Name of the drawable entity. Used for serialization.
-
-        float scale = 1.0f;       ///< The scale of the drawable entity.
-        bool animated = false;    ///< Boolean indicating if the entity is animated.
-        bool backfaceCull = true; ///< Boolean indicating if backface culling is enabled.
-        bool instance = false;    ///< Boolean indicating if the entity is an instance.
-        bool active = true;       ///< Boolean indicating if the entity is active.
-
-        std::shared_ptr<Assets::Model> model_ptr; ///< Shared pointer to the model of the entity.
-
-        /**
-         * @brief Serializes the drawable entity.
-         * @param ar Archive to serialize the data to.
-         */
-        template <class Archive>
-        void serialize(Archive& ar)
-        {
-            ar(cereal::make_nvp("Model", name));
-            ar(cereal::make_nvp("Import Scale", scale));
-            ar(cereal::make_nvp("Animated", animated));
-            ar(cereal::make_nvp("Back Face Culling", backfaceCull));
         }
     };
 
@@ -563,33 +407,7 @@ namespace Vakol::Components
      * @param transform Reference to the Transform.
      * @return Bounds of the collider.
      */
-    Collider::Bounds GetBounds(const Drawable& model, const Transform& transform);
-
-    /**
-     * @brief Struct representing a Terrain.
-     */
-    struct TerrainComp
-    {
-        std::shared_ptr<Terrain> terrain_ptr; ///< Shared pointer to the terrain.
-
-        std::string name; ///< Name of the terrain.
-        std::string path; ///< Path to the terrain.
-        float min;        ///< Minimum value for the terrain.
-        float max;        ///< Maximum value for the terrain.
-
-        /**
-         * @brief Serializes the terrain.
-         * @param ar Archive to serialize the data to.
-         */
-        template <class Archive>
-        void serialize(Archive& ar)
-        {
-            ar(cereal::make_nvp("Name", name));
-            ar(cereal::make_nvp("Path", path));
-            ar(cereal::make_nvp("Min", min));
-            ar(cereal::make_nvp("Max", max));
-        }
-    };
+    Collider::Bounds GetBounds(const Rendering::Drawable& model, const Transform& transform);
 
     /**
      * @brief Struct representing a Globally Unique Identifier (GUID).

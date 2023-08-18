@@ -1,9 +1,7 @@
 #include "AssetLoader/AssetLoader.hpp"
 
-#include "AssetLoader/ModelLoader.hpp"
 #include "AssetLoader/TextureLoader.hpp"
-
-using namespace Vakol::Assets;
+#include "Rendering/Platform/OpenGL/Texture.hpp"
 
 namespace Vakol
 {
@@ -11,193 +9,59 @@ namespace Vakol
     std::string AssetLoader::texture_path = "assets/textures/";
     std::string AssetLoader::shader_path = "assets/shaders/";
 
-    std::unordered_map<std::string, std::shared_ptr<Texture>> AssetLoader::m_TextureMap;
-    std::unordered_map<std::string, std::pair<std::shared_ptr<Assets::Model>, std::shared_ptr<Animator>>>
-        AssetLoader::m_ModelMap;
-    std::unordered_map<std::string, std::shared_ptr<Animator>> AssetLoader::m_AnimatorMap;
-    std::unordered_map<std::string, std::shared_ptr<Shader>> AssetLoader::m_ShaderMap;
-    std::unordered_map<std::string, std::shared_ptr<Terrain>> AssetLoader::m_TerrainMap;
+    ModelLibrary AssetLoader::m_modelLibrary;
+    MaterialLibrary AssetLoader::m_materialLibrary;
 
-    std::shared_ptr<Texture> AssetLoader::GetTexture(const std::string& file, const int size, const bool gamma,
-                                                     const bool flip, const void* data)
+    std::unordered_map<std::string, Rendering::Assets::Texture> AssetLoader::m_textures;
+
+    Rendering::Assets::Model& AssetLoader::GetModel(const std::string& path, const float scale)
     {
-        auto ret = std::make_shared<Texture>();
-
-        if (const auto itr = m_TextureMap.find(file); itr == m_TextureMap.end())
-        {
-            Texture texture{};
-
-            texture.SetID(LoadTexture(size, gamma, flip, data));
-
-            if (texture.GetID() == 0)
-                return nullptr; // if texture didn't load
-
-            *ret = texture;
-
-            m_TextureMap[file] = ret;
-        }
-        else
-            ret = m_TextureMap[file];
-
-        return ret;
+        return m_modelLibrary.GetModel(path, scale);
     }
 
-    std::shared_ptr<Texture> AssetLoader::GetTexture(const std::string& file, const bool gamma, const bool flip)
+    Rendering::Assets::Material& AssetLoader::GetMaterial(const std::string& materialID)
     {
-        auto ret = std::make_shared<Texture>();
-
-        if (const auto itr = m_TextureMap.find(file); itr == m_TextureMap.end())
-        {
-            Texture texture{};
-            texture.path = file;
-
-            texture.SetID(LoadTexture(texture.path, gamma, flip));
-
-            if (texture.GetID() == 0)
-                return nullptr; // if texture didn't load
-
-            *ret = texture;
-
-            m_TextureMap[file] = ret;
-        }
-        else
-            ret = m_TextureMap[file];
-
-        return ret;
+        return m_materialLibrary.GetMaterial(materialID);
     }
 
-    std::shared_ptr<Texture> AssetLoader::GetTexture(const std::string& file)
+    Rendering::Assets::Texture& AssetLoader::GetTexture(const std::string& path)
     {
-        auto ret = std::make_shared<Texture>();
-
-        if (const auto itr = m_TextureMap.find(file); itr == m_TextureMap.end())
+        if (m_textures.find(path) == m_textures.end())
         {
-            Texture texture{};
-            texture.path = file;
+            Rendering::Assets::Texture texture;
 
-            texture.SetID(LoadRawTexture(texture.path));
+            texture.path = path;
 
-            if (texture.GetID() == 0)
-                return nullptr; // if texture didn't load
+            unsigned char* pixels = nullptr;
 
-            *ret = texture;
+            ImportTexture(path, texture.width, texture.height, texture.channels, pixels);
 
-            m_TextureMap[file] = ret;
-        }
-        else
-            ret = m_TextureMap[file];
+            texture.ID = Rendering::OpenGL::GenerateTexture(texture.width, texture.height, texture.channels, pixels);
+            texture.type = Rendering::Assets::VK_TEXTURE_DIFFUSE;
 
-        return ret;
-    }
+            m_textures[path] = std::move(texture);
 
-    std::shared_ptr<Animator> AssetLoader::GetAnimator(const std::string& file)
-    {
-        std::shared_ptr<Animator> ret = nullptr;
-
-        if (const auto itr = m_AnimatorMap.find(file); itr == m_AnimatorMap.end())
-        {
-            VK_WARN("No Animator attached to the model {0}", file);
-        }
-        else
-            ret = m_AnimatorMap[file];
-
-        return ret;
-    }
-
-    Assets::Animation AssetLoader::GetAnimation(const std::string& attached_model, const int state)
-    {
-        return GetAnimator(attached_model)->get(state);
-    }
-
-    std::pair<std::shared_ptr<Assets::Model>, std::shared_ptr<Animator>> AssetLoader::GetModel(const std::string& file,
-                                                                                               const float scale,
-                                                                                               const bool animated,
-                                                                                               const bool backfaceCull)
-    {
-        bool instance;
-
-        return AssetLoader::GetModel(file, scale, animated, backfaceCull, instance);
-    }
-
-    std::pair<std::shared_ptr<::Model>, std::shared_ptr<Animator>> AssetLoader::GetModel(
-        const std::string& file, const float scale, const bool animated, const bool backfaceCull, bool& instance)
-    {
-        std::pair<std::shared_ptr<::Model>, std::shared_ptr<Animator>> ret;
-
-        if (const auto itr = m_ModelMap.find(file); itr == m_ModelMap.end())
-        {
-            auto&& [model, animator] = LoadModel(file, scale, animated);
-
-            ret.first = std::make_shared<::Model>(model);
-            ret.second = std::make_shared<Animator>(animator);
-
-            m_AnimatorMap[file] = ret.second;
-
-            if (ret.first->meshes().empty())
-                VK_ERROR("no meshes found in model!");
-
-            m_ModelMap[file] = ret;
-
-            instance = false;
-        }
-        else
-        {
-            ret = m_ModelMap[file];
-
-            instance = true;
+            return m_textures.at(path);
         }
 
-        ret.first->SetCullBackface(backfaceCull);
-
-        return ret;
+        return m_textures.at(path);
     }
 
-    std::shared_ptr<Shader> AssetLoader::GetShader(const std::string& file)
+    void AssetLoader::AddTexture(const std::string& materialID, const Rendering::Assets::Texture& texture)
     {
-        std::shared_ptr<Shader> ret;
-
-        if (const auto itr = m_ShaderMap.find(file); itr == m_ShaderMap.end())
-        {
-            ret = std::make_shared<Shader>(file);
-
-            if (ret->GetID() == 0)
-                return nullptr; // if shader didn't load
-
-            m_ShaderMap[file] = ret;
-        }
-        else
-        {
-            ret = m_ShaderMap[file];
-        }
-        return ret;
+        m_materialLibrary.AddTexture(materialID, texture);
     }
 
-    std::shared_ptr<Terrain> AssetLoader::GetTerrain(const std::string& name, const std::string& heightmap, float min,
-                                                     float max)
+    void AssetLoader::AddMaterial(const Rendering::Assets::Material& material)
     {
-        std::shared_ptr<Terrain> ret;
+        m_materialLibrary.AddMaterial(material);
 
-        if (const auto itr = m_TerrainMap.find(name); itr == m_TerrainMap.end())
-        {
-            ret = std::make_shared<Terrain>(LoadHeightMapTerrain(std::string(heightmap), min, max));
-
-            if (!ret->GetSize())
-                return nullptr; // if terrain didn't load
-
-            m_TerrainMap[name] = ret;
-        }
-        else
-        {
-            ret = m_TerrainMap[name];
-        }
-        return ret;
+        MaterialLibrary::SetupMaterial(material);
     }
 
-    std::shared_ptr<Terrain> AssetLoader::GetTerrain(const std::string& name)
+    bool AssetLoader::GetTextures(const std::string& materialID, std::vector<Rendering::Assets::Texture>& textures)
     {
-        if (const auto itr = m_TerrainMap.find(name); itr != m_TerrainMap.end())
-            return itr->second;
-        else
-            return nullptr;
+        return m_materialLibrary.GetTextures(materialID, textures);
     }
+
 } // namespace Vakol

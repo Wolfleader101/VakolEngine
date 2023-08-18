@@ -1,58 +1,58 @@
 #pragma once
 
+#include <memory>
 #include <string>
 
-namespace Vakol::Assets
+namespace Vakol::Rendering::Assets
 {
-    /**
-     * @brief Class representing a texture.
-     */
-    class Texture
+
+    enum VK_TEXTURE_TYPE
     {
-      public:
-        Texture() = default;
-
-        /**
-         * @brief Constructs a Texture object with the given path.
-         *
-         * @param path The path to the texture.
-         */
-        explicit Texture(std::string&& path) : path(std::move(path))
-        {
-        }
-
-        /**
-         * @brief Constructs a Texture object with the given path.
-         *
-         * @param path The path to the texture.
-         */
-        explicit Texture(std::string& path) : path(std::move(path))
-        {
-        }
-
-        /**
-         * @brief Sets the ID of the texture.
-         *
-         * @param id The ID of the texture.
-         */
-        void SetID(const unsigned int id)
-        {
-            this->m_ID = id;
-        }
-
-        /**
-         * @brief Gets the ID of the texture.
-         *
-         * @return The ID of the texture.
-         */
-        unsigned int GetID() const
-        {
-            return this->m_ID;
-        }
-
-        std::string path; /**< The path to the texture. */
-
-      private:
-        unsigned int m_ID = 0; /**< The ID of the texture. */
+        VK_TEXTURE_NONE,
+        VK_TEXTURE_DIFFUSE,
+        VK_TEXTURE_SPECULAR,
+        VK_TEXTURE_AMBIENT,
+        VK_TEXTURE_EMISSION,
+        VK_TEXTURE_HEIGHT,
+        VK_TEXTURE_NORMAL
     };
-} // namespace Vakol::Assets
+
+    inline std::string ToString(const VK_TEXTURE_TYPE type)
+    {
+        switch (type)
+        {
+        case VK_TEXTURE_NONE:
+            return "NONE";
+        case VK_TEXTURE_DIFFUSE:
+            return "DIFFUSE";
+        case VK_TEXTURE_SPECULAR:
+            return "SPECULAR";
+        case VK_TEXTURE_AMBIENT:
+            return "AMBIENT";
+        case VK_TEXTURE_EMISSION:
+            return "EMISSION";
+        case VK_TEXTURE_HEIGHT:
+            return "HEIGHT";
+        case VK_TEXTURE_NORMAL:
+            return "NORMAL";
+        }
+
+        return "UNKNOWN";
+    }
+
+    struct Texture
+    {
+        std::string path;
+
+        unsigned int ID = 0;
+
+        int width = 0;
+        int height = 0;
+
+        int channels = 0; // bytes-per-pixel (number of color channels in an image) R = 1, RG = 2, RGB = 3, RGBA = 4
+
+        bool embedded = false;
+
+        VK_TEXTURE_TYPE type = VK_TEXTURE_NONE;
+    };
+} // namespace Vakol::Rendering::Assets

@@ -4,7 +4,6 @@
 
 #include "GUI/GUIWindow.hpp"
 #include "Input/Input.hpp"
-#include "Rendering/Renderer.hpp"
 #include "Time/Time.hpp"
 #include "Window/Events/KeyEvent.hpp"
 #include "Window/Events/WindowEvent.hpp"
@@ -13,6 +12,8 @@
 #include "SceneManager/SceneManager.hpp"
 
 #include "Scripting/ScriptEngine.hpp"
+
+#include "Rendering/RenderEngine.hpp"
 
 namespace Vakol
 {
@@ -194,11 +195,6 @@ namespace Vakol
          * @brief the time data of engine
          */
         Time m_time;
-
-        /**
-         * @brief the renderer instance of the class
-         */
-        std::shared_ptr<Renderer> m_renderer;
 
         /**
          * @brief Script engine instance

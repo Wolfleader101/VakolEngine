@@ -1,5 +1,3 @@
-#pragma once
-
 #include "ECS/Components.hpp"
 #include "LuaAccess.hpp"
 
@@ -16,11 +14,6 @@ namespace Vakol
 
     void RegisterTerrain(sol::state& lua)
     {
-        auto terrain_type = lua.new_usertype<Terrain>("Terrain");
-
-        terrain_type.set_function("get_height", &Terrain::GetHeight);
-        terrain_type.set_function("get_size", &Terrain::GetSize);
-        terrain_type.set_function("get_model", &Terrain::GetModel);
     }
 
     void RegisterFSM(sol::state& lua)

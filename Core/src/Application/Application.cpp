@@ -1,19 +1,21 @@
 #include "Application/Application.hpp"
 
-#include "AssetLoader/AssetLoader.hpp"
 #include "ECS/System.hpp"
 #include "Physics/PhysicsPool.hpp"
-#include "Rendering/RendererFactory.hpp"
 
 #include "GameConfig.hpp"
 #include "Logger/Logger.hpp"
+
+#include "Rendering/RenderEngine.hpp"
+
+#include "AssetLoader/AssetLoader.hpp"
+
 namespace Vakol
 {
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
     Application::Application()
-        : m_window(nullptr), m_renderer(nullptr), m_running(false), m_scriptEngine(), m_input(),
-          m_sceneManager(m_scriptEngine){};
+        : m_window(nullptr), m_scriptEngine(), m_sceneManager(m_scriptEngine), m_running(false), m_input(){};
 
     void Application::Init()
     {
@@ -35,14 +37,10 @@ namespace Vakol
             return;
         }
 
-        m_renderer = CreateRenderer(config.value().rendererType, m_window);
-
-        if (m_renderer == nullptr)
-        {
-            return;
-        }
-
         m_window->SetEventCallback([this](auto&& PH1) { OnEvent(std::forward<decltype(PH1)>(PH1)); });
+
+        Rendering::RenderEngine::Init(config.value().windowWidth, config.value().windowHeight,
+                                      config.value().rendererType);
 
         m_gui.Init(m_window);
 
@@ -70,10 +68,10 @@ namespace Vakol
 
         m_scriptEngine.SetGlobalFunction("set_active_mouse", &Application::SetActiveMouse, this);
 
-        m_scriptEngine.SetGlobalFunction("toggle_wireframe", &Renderer::ToggleWireframe, m_renderer);
-        m_scriptEngine.SetGlobalFunction("toggle_skybox", &Renderer::ToggleSkybox, m_renderer);
-        m_scriptEngine.SetGlobalFunction("set_wireframe", &Renderer::SetWireframe, m_renderer);
-        m_scriptEngine.SetGlobalFunction("set_skybox", &Renderer::SetSkybox, m_renderer);
+        // m_scriptEngine.SetGlobalFunction("toggle_wireframe", &Renderer::ToggleWireframe, m_renderer);
+        // m_scriptEngine.SetGlobalFunction("toggle_skybox", &Renderer::ToggleSkybox, m_renderer);
+        // m_scriptEngine.SetGlobalFunction("set_wireframe", &Renderer::SetWireframe, m_renderer);
+        // m_scriptEngine.SetGlobalFunction("set_skybox", &Renderer::SetSkybox, m_renderer);
 
         // lua.set_function("clear_color_v", [&](const Math::Vec4& color) { renderer->ClearColor(color); });
 
@@ -156,7 +154,7 @@ namespace Vakol
             m_time.accumulator += m_time.deltaTime;
 
             m_gui.CreateNewFrame();
-            m_renderer->Update();
+            Rendering::RenderEngine::PreDraw();
 
             m_sceneManager.Update();
 
@@ -176,17 +174,22 @@ namespace Vakol
             // Compute the time interpolation factor
             // float alpha = m_time.accumulator / m_time.tickRate;
 
-            m_renderer->UpdateData(activeScene.GetCamera());
-
             activeScene.GetEntityList().GetRegistry().view<LuaScript>().each(
                 [&](auto& script) { m_scriptEngine.UpdateScript(script); });
 
             m_scriptEngine.UpdateScript(activeScene.GetScript());
 
             System::BindScene(activeScene); // is here temporarily until this is replaced/removed
-            activeScene.Update(m_time, m_renderer);
 
-            m_renderer->LateUpdate();
+            activeScene.GetEntityList().GetRegistry().view<Components::Transform, Rendering::Drawable>().each(
+                [&](Components::Transform& transform, const Rendering::Drawable& drawable) {
+                    if (drawable.active)
+                        Rendering::RenderEngine::Draw(activeScene.GetCamera(), transform, drawable);
+                });
+
+            activeScene.Update(m_time);
+
+            Rendering::RenderEngine::PostDraw();
 
             m_gui.Update();
             m_input.Update();
@@ -218,6 +221,7 @@ namespace Vakol
     bool Application::OnWindowClose([[maybe_unused]] WindowCloseEvent& ev)
     {
         m_running = false;
+
         return true;
     }
 
@@ -230,9 +234,6 @@ namespace Vakol
 
     bool Application::OnKeyPressed(KeyPressedEvent& kev)
     {
-        if (kev.GetKeyCode() == GLFW_KEY_K)
-            m_renderer->ToggleWireframe();
-
         m_input.OnKeyPressed(kev);
 
         return true;

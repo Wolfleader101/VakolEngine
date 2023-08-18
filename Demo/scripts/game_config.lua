@@ -4,5 +4,5 @@ game_config = {
         w = 1920,
         h = 1080,
     },
-    renderer = "gl"
+    renderer = "OPENGL"
 }

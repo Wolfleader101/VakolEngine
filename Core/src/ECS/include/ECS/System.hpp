@@ -4,9 +4,7 @@
 #include "EntityList.hpp"
 #include "Physics/ScenePhysics.hpp"
 
-#include "Rendering/Renderer.hpp"
 #include "SceneManager/Scene.hpp"
-#include "Terrain/Terrain.hpp"
 
 namespace Vakol
 {
@@ -33,19 +31,6 @@ namespace Vakol
         // -- READ --
         // if you add a function use the convention Type_Action()
         // will make it more intuitive to find names of funcs
-
-        /**
-         * @brief Initialize the drawable system.
-         */
-        static void Drawable_Init();
-
-        /**
-         * @brief Update the drawable system.
-         *
-         * @param time The time information for the update.
-         * @param renderer The shared pointer to the renderer.
-         */
-        static void Drawable_Update(const Time& time, const std::shared_ptr<Renderer>& renderer);
 
         /**
          * @brief Prepare the scripting system for deserialization.
@@ -79,23 +64,6 @@ namespace Vakol
          * @brief Prepare the physics system for serialization.
          */
         static void Physics_SerializationPrep();
-
-        /**
-         * @brief Add a terrain to the physics system.
-         *
-         * @param ter The terrain to add.
-         */
-        static void Physics_AddTerrain(const Terrain& ter);
-
-        /**
-         * @brief Initialize the terrain system.
-         */
-        static void Terrain_Init();
-
-        /**
-         * @brief Initialize the finite state machine (FSM) system.
-         */
-        static void FSM_Init();
 
       private:
         /**

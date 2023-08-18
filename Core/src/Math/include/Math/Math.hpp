@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
+
 #include <glm/gtc/quaternion.hpp>
 
 namespace Vakol::Math
@@ -27,6 +28,12 @@ namespace Vakol::Math
     using Mat3 = glm::mat3;
     using Mat4 = glm::mat4;
     using Quat = glm::quat;
+
+    float DegToRad(const float deg);
+    Vec3 DegToRad(const Vec3& vec);
+
+    float RadToDeg(const float rad);
+    Vec3 RadToDeg(const Vec3& vec);
 
     float Dot(const Vec2& a, const Vec2& b);
     float Dot(const Vec3& a, const Vec3& b);
@@ -55,6 +62,8 @@ namespace Vakol::Math
     Vec3 Perpendicular(const Vec3& len, const Vec3& dir);
 
     Mat4 Translation(const Vec3& pos);
+    Mat4 Scale(const Vec3& scale);
+
     Mat3 Cut(const Mat4& mat, int row, int col);
 
     // assumes its degrees
@@ -70,6 +79,8 @@ namespace Vakol::Math
     Vec3 MultiplyVector(const Vec3& vec, const Mat4& mat);
 
     Mat4 Inverse(const Mat4& mat);
+
+    Mat4 Mat4Cast(const Quat& quaternion);
 
     struct Line
     {
@@ -140,13 +151,10 @@ namespace Vakol::Math
      */
     float Remap(const float iMin, const float iMax, const float oMin, const float oMax, const float v);
 
-    float DegToRad(const float deg);
-    Vec3 DegToRad(const Vec3& vec);
+    Mat4 Perspective(float fovY, float aspect, float zNear, float zFar);
+    Mat4 Orthographic(float left, float right, float bottom, float top);
 
-    float RadToDeg(const float rad);
-    Vec3 RadToDeg(const Vec3& vec);
-
-    Mat4 Perspective(float fovy, float aspect, float zNear, float zFar);
+    Mat4 LookAt(const Vec3& eye, const Vec3& center, const Vec3& up);
 
     const float* AsArray(const Vec2& v);
     const float* AsArray(const Vec3& v);
