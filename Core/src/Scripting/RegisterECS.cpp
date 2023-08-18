@@ -36,8 +36,7 @@ namespace Vakol
             AssetLoader::AddTexture(ent->GetComponent<Rendering::Drawable>().materialID, AssetLoader::GetTexture(path));
         });
 
-        entity_type.set_function("set_vec3v", [](const Entity* ent, const char* name, Math::Vec3& value) 
-        {
+        entity_type.set_function("set_vec3v", [](const Entity* ent, const char* name, Math::Vec3& value) {
             if (!ent->HasComponent<Rendering::Drawable>())
             {
                 return;
