@@ -6,6 +6,7 @@
 #include "Rendering/RenderEngine.hpp"
 
 #include "AssetLoader/AssetLoader.hpp"
+#include "ECS/Components.hpp"
 
 namespace Vakol
 {
@@ -159,7 +160,7 @@ namespace Vakol
 
             while (m_time.accumulator >= m_time.tickRate)
             {
-                activeScene.GetEntityList().GetRegistry().view<LuaScript>().each(
+                activeScene.GetEntityList().Iterate<LuaScript>(
                     [&](auto& script) { m_scriptEngine.TickScript(script); });
 
                 m_scriptEngine.TickScript(activeScene.GetScript());
@@ -171,12 +172,11 @@ namespace Vakol
             // Compute the time interpolation factor
             // float alpha = m_time.accumulator / m_time.tickRate;
 
-            activeScene.GetEntityList().GetRegistry().view<LuaScript>().each(
-                [&](auto& script) { m_scriptEngine.UpdateScript(script); });
+            activeScene.GetEntityList().Iterate<LuaScript>([&](auto& script) { m_scriptEngine.UpdateScript(script); });
 
             m_scriptEngine.UpdateScript(activeScene.GetScript());
 
-            activeScene.GetEntityList().GetRegistry().view<Components::Transform, Rendering::Drawable>().each(
+            activeScene.GetEntityList().Iterate<Components::Transform, Rendering::Drawable>(
                 [&](Components::Transform& transform, const Rendering::Drawable& drawable) {
                     if (drawable.active)
                         Rendering::RenderEngine::Draw(activeScene.GetCamera(), transform, drawable);
