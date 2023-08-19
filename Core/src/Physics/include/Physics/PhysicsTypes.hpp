@@ -50,6 +50,31 @@ namespace Vakol
         std::shared_ptr<CollisionData> collisionData;
     };
 
+    struct AABBCollider
+    {
+        rp3d::BoxShape* shape;
+    };
+
+    struct SphereCollider
+    {
+        rp3d::SphereShape* shape;
+    };
+
+    struct CapsuleCollider
+    {
+        rp3d::CapsuleShape* shape;
+    };
+
+    struct TriangleCollider
+    {
+        rp3d::TriangleShape* shape;
+    };
+
+    struct MeshCollider
+    {
+        rp3d::ConcaveMeshShape* shape;
+    };
+
     //     /**
     //  * @brief Struct representing a Collider.
     //  */

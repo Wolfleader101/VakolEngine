@@ -11,7 +11,7 @@ namespace Vakol
 
     PhysicsScene& PhysicsEngine::CreateScene()
     {
-        rp3d::PhysicsWorld* newWorld = m_rp_common.createPhysicsWorld();
+        rp3d::PhysicsWorld* newWorld = m_rpCommon.createPhysicsWorld();
         PhysicsScene newScene(newWorld);
 
         std::unique_ptr<Vakol::PhysicsScene> newScenePtr = std::make_unique<PhysicsScene>(newScene);
@@ -30,9 +30,76 @@ namespace Vakol
 
         if (it != m_scenes.end())
         {
-            m_rp_common.destroyPhysicsWorld(it->get()->m_world);
+            m_rpCommon.destroyPhysicsWorld(it->get()->m_world);
             m_scenes.erase(it);
         }
+    }
+
+    AABBCollider PhysicsEngine::CreateAABBCollider(Math::Vec3& halfExtents)
+    {
+        AABBCollider collider;
+        collider.shape = m_rpCommon.createBoxShape(
+            rp3d::Vector3((double)halfExtents.x, (double)halfExtents.y, (double)halfExtents.z));
+        return collider;
+    }
+
+    SphereCollider PhysicsEngine::CreateSphereCollider(double radius)
+    {
+        SphereCollider collider;
+        collider.shape = m_rpCommon.createSphereShape(radius);
+        return collider;
+    }
+
+    CapsuleCollider PhysicsEngine::CreateCapsuleCollider(double radius, double height)
+    {
+        CapsuleCollider collider;
+        collider.shape = m_rpCommon.createCapsuleShape(radius, height);
+        return collider;
+    }
+
+    MeshCollider PhysicsEngine::CreateMeshCollider(std::vector<Math::Point>& vertices,
+                                                   std::vector<unsigned int>& indices)
+    {
+        MeshCollider collider;
+
+        rp3d::TriangleVertexArray* triangleArray = new rp3d::TriangleVertexArray(
+            vertices.size(),      // number of vertices
+            vertices.data(),      // start of vertex data
+            sizeof(Math::Point),  // stride of vertex data
+            indices.size() / 3ul, // number of triangles, assuming 3 indices per triangle
+            indices.data(),       // start of index data
+            sizeof(unsigned int), // stride of index data
+            rp3d::TriangleVertexArray::VertexDataType::VERTEX_FLOAT_TYPE, // vertex data type
+            rp3d::TriangleVertexArray::IndexDataType::INDEX_INTEGER_TYPE  // index data type
+        );
+
+        rp3d::TriangleMesh* triangleMesh = m_rpCommon.createTriangleMesh();
+
+        triangleMesh->addSubpart(triangleArray);
+
+        collider.shape = m_rpCommon.createConcaveMeshShape(triangleMesh);
+
+        return collider;
+    }
+
+    void PhysicsEngine::AttachCollider(RigidBody& rb, AABBCollider& collider)
+    {
+        rb.collisionBody->addCollider(collider.shape, rp3d::Transform::identity());
+    }
+
+    void PhysicsEngine::AttachCollider(RigidBody& rb, SphereCollider& collider)
+    {
+        rb.collisionBody->addCollider(collider.shape, rp3d::Transform::identity());
+    }
+
+    void PhysicsEngine::AttachCollider(RigidBody& rb, CapsuleCollider& collider)
+    {
+        rb.collisionBody->addCollider(collider.shape, rp3d::Transform::identity());
+    }
+
+    void PhysicsEngine::AttachCollider(RigidBody& rb, MeshCollider& collider)
+    {
+        rb.collisionBody->addCollider(collider.shape, rp3d::Transform::identity());
     }
 
     void PhysicsEngine::ApplyForces(RigidBody& rb)

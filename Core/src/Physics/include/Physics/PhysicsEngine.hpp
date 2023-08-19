@@ -40,6 +40,72 @@ namespace Vakol
         void DestroyScene(PhysicsScene& scene);
 
         /**
+         * @brief create an AABB collider
+         *
+         * @param halfExtents of AABB
+         * @return AABBCollider created
+         */
+        AABBCollider CreateAABBCollider(Math::Vec3& halfExtents);
+
+        /**
+         * @brief Create a Sphere Collider object
+         *
+         * @param radius of sphere
+         * @return SphereCollider
+         */
+        SphereCollider CreateSphereCollider(double radius);
+
+        /**
+         * @brief Create a Capsule Collider object
+         *
+         * @param radius of capsule
+         * @param height of capsule
+         * @return CapsuleCollider
+         */
+        CapsuleCollider CreateCapsuleCollider(double radius, double height);
+
+        /**
+         * @brief Create a Mesh Collider object
+         *
+         * @param vertices vertices of mesh
+         * @param indices indices of mesh
+         * @return MeshCollider
+         */
+        MeshCollider CreateMeshCollider(std::vector<Math::Point>& vertices, std::vector<unsigned int>& indices);
+
+        /**
+         * @brief Attach a collider to a rigidbody
+         *
+         * @param rb body to attach too
+         * @param collider to attach
+         */
+        void AttachCollider(RigidBody& rb, AABBCollider& collider);
+
+        /**
+         * @brief Attach a collider to a rigidbody
+         *
+         * @param rb body to attach too
+         * @param collider to attach
+         */
+        void AttachCollider(RigidBody& rb, SphereCollider& collider);
+
+        /**
+         * @brief Attach a collider to a rigidbody
+         *
+         * @param rb body to attach too
+         * @param collider to attach
+         */
+        void AttachCollider(RigidBody& rb, CapsuleCollider& collider);
+
+        /**
+         * @brief Attach a collider to a rigidbody
+         *
+         * @param rb body to attach too
+         * @param collider to attach
+         */
+        void AttachCollider(RigidBody& rb, MeshCollider& collider);
+
+        /**
          * @brief Apply forces to a rigidbody
          *
          * @param rb to apply forces
@@ -91,7 +157,7 @@ namespace Vakol
          * @brief react physics common object
          *
          */
-        rp3d::PhysicsCommon m_rp_common;
+        rp3d::PhysicsCommon m_rpCommon;
     };
 
 } // namespace Vakol
