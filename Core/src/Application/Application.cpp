@@ -160,6 +160,12 @@ namespace Vakol
 
             m_sceneManager.Update();
 
+            // fix before pr
+            for (const auto& iter : m_layers)
+            {
+                iter->OnUpdate();
+            }
+
             Scene& activeScene = m_sceneManager.GetActiveScene();
 
             while (m_time.accumulator >= m_time.tickRate)
@@ -270,4 +276,20 @@ namespace Vakol
     {
         return m_running;
     }
+
+    void Application::PushLayer(const std::shared_ptr<Layer> layer)
+    {
+        if (layer)
+        {
+            layer->OnAttach(&m_sceneManager);
+            m_layers.emplace_front(std::move(layer));
+        }
+    }
+
+    void Application::PopLayer()
+    {
+        if (!m_layers.empty())
+            m_layers.pop_front();
+    }
+
 } // namespace Vakol
