@@ -225,6 +225,11 @@ namespace Vakol
     {
         EventDispatcher dispatcher(ev);
 
+        m_layerManager.OnEvent(ev); // go through layers before hitting application.
+
+        if (ev.Handled)
+            return;
+
         dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
         dispatcher.Dispatch<KeyPressedEvent>(BIND_EVENT_FN(OnKeyPressed));
         dispatcher.Dispatch<KeyReleasedEvent>(BIND_EVENT_FN(OnKeyReleased));

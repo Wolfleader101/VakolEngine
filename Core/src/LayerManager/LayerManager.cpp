@@ -2,18 +2,20 @@
 #include "Logger/Logger.hpp"
 #include "Utils/Layer.hpp"
 
+#include "Window/Events/Event.hpp"
+
 namespace Vakol
 {
 
     void LayerManager::PushLayer(std::shared_ptr<Layer> layer)
     {
-        m_layers.push_back(layer);
+        m_layers.push_front(layer);
     }
 
     void LayerManager::PopLayer()
     {
         if (!m_layers.empty())
-            m_layers.pop_back();
+            m_layers.pop_front();
     }
 
     void LayerManager::OnUpdate()
@@ -26,9 +28,12 @@ namespace Vakol
 
     void LayerManager::OnEvent(Event& event)
     {
-        for (auto& layer : m_layers)
+        auto it = m_layers.begin();
+
+        while (it != m_layers.end() && !event.Handled)
         {
-            layer->OnEvent(event);
+            (*it)->OnEvent(event);
+            it++;
         }
     }
 
