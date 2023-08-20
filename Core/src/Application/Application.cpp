@@ -158,11 +158,7 @@ namespace Vakol
 
             m_sceneManager.Update();
 
-            // fix before pr
-            for (const auto& iter : m_layers)
-            {
-                iter->OnUpdate();
-            }
+            m_layerManager.OnUpdate();
 
             Scene& activeScene = m_sceneManager.GetActiveScene();
 
@@ -197,7 +193,9 @@ namespace Vakol
 
             Rendering::RenderEngine::PostDraw();
 
+            m_layerManager.OnGUI();
             m_gui.Update();
+
             m_input.Update();
             m_window->OnUpdate();
         }
@@ -278,19 +276,19 @@ namespace Vakol
         return m_running;
     }
 
-    void Application::PushLayer(const std::shared_ptr<Layer> layer)
+    void Application::PushLayer(std::shared_ptr<Layer> layer)
     {
+
         if (layer)
         {
             layer->OnAttach(&m_sceneManager);
-            m_layers.emplace_front(std::move(layer));
+            m_layerManager.PushLayer(layer);
         }
     }
 
     void Application::PopLayer()
     {
-        if (!m_layers.empty())
-            m_layers.pop_front();
+        m_layerManager.PopLayer();
     }
 
 } // namespace Vakol

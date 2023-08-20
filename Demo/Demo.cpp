@@ -5,8 +5,9 @@
 
 int main()
 {
-    MyGUILayer layer = MyGUILayer();
-    Vakol::PushLayer(std::make_shared<MyGUILayer>(layer));
+
+    Vakol::PushLayer(std::make_shared<MyGUILayer>());
+
     Vakol::Run();
 
     return 0;

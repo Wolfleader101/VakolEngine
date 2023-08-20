@@ -10,6 +10,7 @@
 #include "Window/Events/WindowEvent.hpp"
 #include "Window/Window.hpp"
 
+#include "LayerManager/LayerManager.hpp"
 #include "Utils/Layer.hpp"
 
 #include "SceneManager/SceneManager.hpp"
@@ -214,11 +215,7 @@ namespace Vakol
          */
         SceneManager m_sceneManager;
 
-        /**
-         * @brief the layers of the application
-         *
-         */
-        std::deque<std::shared_ptr<Layer>> m_layers;
+        LayerManager m_layerManager;
 
         /**
          * @brief if the app should be running

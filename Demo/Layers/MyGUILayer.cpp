@@ -15,23 +15,6 @@ void MyGUILayer::OnDetach()
 void MyGUILayer::OnUpdate()
 {
     std::cout << "MyGUILayer::OnUpdate()" << std::endl;
-
-    // Start a new ImGui frame
-    ImGui::NewFrame();
-
-    // Begin a new window called "Test Window"
-    if (ImGui::Begin("Test Window"))
-    {
-        // Display some static text
-        ImGui::Text("Hello, world!");
-
-        // Create a button
-        if (ImGui::Button("Click Me"))
-        {
-            std::cout << "Button was clicked!" << std::endl;
-        }
-    }
-    ImGui::EndFrame(); // End of "Test Window"
 }
 
 void MyGUILayer::OnEvent(Vakol::Event& event)
@@ -40,6 +23,16 @@ void MyGUILayer::OnEvent(Vakol::Event& event)
 
 void MyGUILayer::OnGUI()
 {
+
+    // Begin a new window called "Test Window"
+    if (ImGui::Begin("Test Window"))
+    {
+        std::cout << "MyGUILayer::OnGUI()" << std::endl;
+        // Display some static text
+        ImGui::Text("Hello, world!");
+
+        ImGui::End(); // End of "Test Window"
+    }
 }
 
 void MyGUILayer::OnTick()
