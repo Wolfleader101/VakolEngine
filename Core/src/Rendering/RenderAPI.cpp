@@ -133,7 +133,8 @@ namespace Vakol::Rendering
         ShaderLibrary::AddShader(drawable.shaderID, program);
     }
 
-    unsigned int RenderAPI::GenerateTexture(const int width, const int height, const int channels, const unsigned char* pixels)
+    unsigned int RenderAPI::GenerateTexture(const int width, const int height, const int channels,
+                                            const unsigned char* pixels)
     {
         return OpenGL::GenerateTexture(width, height, channels, pixels);
     }

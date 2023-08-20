@@ -9,6 +9,19 @@
 #include "MaterialLibrary.hpp"
 #include "ModelLibrary.hpp"
 
+// Needed a custom hasher for unordered-map key of std::pair.
+struct PairHash
+{
+    template <class T1, class T2>
+    std::size_t operator()(const std::pair<T1, T2>& pair) const
+    {
+        const auto& v1 = std::hash<T1>{}(pair.first);
+        const auto& v2 = std::hash<T2>{}(pair.second);
+
+        return v1 ^ v2;
+    }
+};
+
 namespace Vakol
 {
     /**
@@ -42,8 +55,10 @@ namespace Vakol
 
         static Rendering::Assets::Material& GetMaterial(const std::string& materialID);
 
-        static Rendering::Assets::Texture& GetTexture(const std::string& path, unsigned int type = Rendering::Assets::VK_TEXTURE_DIFFUSE);
-        static Rendering::Assets::Texture& GetTexture(const std::string& path, unsigned int type, int size, const void* buffer);
+        static Rendering::Assets::Texture& GetTexture(const std::string& path,
+                                                      unsigned int type = Rendering::Assets::VK_TEXTURE_DIFFUSE);
+        static Rendering::Assets::Texture& GetTexture(const std::string& path, unsigned int type, int size,
+                                                      const void* buffer);
 
         /**
          * \brief dd
@@ -53,13 +68,15 @@ namespace Vakol
         static void AddTexture(const std::string& materialID, const Rendering::Assets::Texture& texture);
 
         /**
-         * \brief 
-         * \param materialID 
-         * \param src 
-         * \param dst
-         * \param type
+         * \brief
+         * \param materialID
+         * \param srcPath
+         * \param dstPath
+         * \param srcType
+         * \param dstType
          */
-        static void ReplaceTexture(const std::string& materialID, const std::string& src, const std::string& dst, const std::string& type);
+        static void ReplaceTexture(const std::string& materialID, const std::string& srcPath,
+                                   const std::string& dstPath, const std::string& type);
 
         /**
          * \brief
@@ -79,7 +96,7 @@ namespace Vakol
         static ModelLibrary m_modelLibrary;
         static MaterialLibrary m_materialLibrary;
 
-        static std::unordered_map<std::string, Rendering::Assets::Texture> m_textures;
+        static std::unordered_map<std::pair<std::string, unsigned int>, Rendering::Assets::Texture, PairHash> m_textures;
     };
 
 } // namespace Vakol

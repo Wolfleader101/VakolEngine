@@ -1,6 +1,7 @@
 #include "AssetLoader/AssetLoader.hpp"
 
 #include "AssetLoader/TextureLoader.hpp"
+#include "Logger/Logger.hpp"
 #include "Rendering/RenderAPI.hpp"
 
 namespace Vakol
@@ -12,7 +13,8 @@ namespace Vakol
     ModelLibrary AssetLoader::m_modelLibrary;
     MaterialLibrary AssetLoader::m_materialLibrary;
 
-    std::unordered_map<std::string, Rendering::Assets::Texture> AssetLoader::m_textures;
+    std::unordered_map<std::pair<std::string, unsigned int>, Rendering::Assets::Texture, PairHash>
+        AssetLoader::m_textures;
 
     Rendering::Assets::Model& AssetLoader::GetModel(const std::string& path, const float scale)
     {
@@ -26,7 +28,7 @@ namespace Vakol
 
     Rendering::Assets::Texture& AssetLoader::GetTexture(const std::string& path, const unsigned int type)
     {
-        if (m_textures.find(path) == m_textures.end())
+        if (m_textures.find(std::make_pair(path, type)) == m_textures.end())
         {
             Rendering::Assets::Texture texture;
 
@@ -38,18 +40,18 @@ namespace Vakol
             ImportTexture(path, texture.width, texture.height, texture.channels, pixels);
             texture.ID = Rendering::RenderAPI::GenerateTexture(texture.width, texture.height, texture.channels, pixels);
 
-            m_textures[path] = std::move(texture);
+            m_textures[std::make_pair(path, type)] = std::move(texture);
 
-            return m_textures.at(path);
+            return m_textures.at(std::make_pair(path, type));
         }
 
-        return m_textures.at(path);
+        return m_textures.at(std::make_pair(path, type));
     }
 
     Rendering::Assets::Texture& AssetLoader::GetTexture(const std::string& path, const unsigned int type,
                                                         const int size, const void* buffer)
     {
-        if (m_textures.find(path) == m_textures.end())
+        if (m_textures.find(std::make_pair(path, type)) == m_textures.end())
         {
             Rendering::Assets::Texture texture;
 
@@ -62,12 +64,12 @@ namespace Vakol
             ImportTexture(buffer, size, texture.width, texture.height, texture.channels, pixels);
             texture.ID = Rendering::RenderAPI::GenerateTexture(texture.width, texture.height, texture.channels, pixels);
 
-            m_textures[path] = std::move(texture);
+            m_textures[std::make_pair(path, type)] = std::move(texture);
 
-            return m_textures.at(path);
+            return m_textures.at(std::make_pair(path, type));
         }
 
-        return m_textures.at(path);
+        return m_textures.at(std::make_pair(path, type));
     }
 
     void AssetLoader::AddTexture(const std::string& materialID, const Rendering::Assets::Texture& texture)
@@ -75,10 +77,10 @@ namespace Vakol
         m_materialLibrary.AddTexture(materialID, texture);
     }
 
-    void AssetLoader::ReplaceTexture(const std::string& materialID, const std::string& src, const std::string& dst,
-                                     const std::string& type)
+    void AssetLoader::ReplaceTexture(const std::string& materialID, const std::string& srcPath,
+                                     const std::string& dstPath, const std::string& type)
     {
-        m_materialLibrary.ReplaceTexture(materialID, src, dst, Rendering::Assets::ToTextureType(type));
+        m_materialLibrary.ReplaceTexture(materialID, srcPath, dstPath, Rendering::Assets::ToTextureType(type));
     }
 
     void AssetLoader::AddMaterial(const Rendering::Assets::Material& material)

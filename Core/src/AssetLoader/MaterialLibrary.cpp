@@ -37,11 +37,13 @@ namespace Vakol
 
     void MaterialLibrary::AddTexture(const std::string& materialID, const Rendering::Assets::Texture& texture)
     {
+        VK_TRACE("TEXTURE PATH: {0} | TEXTURE TYPE: {1}", texture.path, Rendering::Assets::ToString(texture.type));
+
         m_textures[materialID].emplace_back(texture);
     }
 
-    void MaterialLibrary::ReplaceTexture(const std::string& materialID, const std::string& src, const std::string& dst,
-                                         const unsigned int type)
+    void MaterialLibrary::ReplaceTexture(const std::string& materialID, const std::string& srcPath,
+                                         const std::string& dstPath, const unsigned int type)
     {
         if (m_textures.find(materialID) != m_textures.end())
         {
@@ -49,8 +51,10 @@ namespace Vakol
 
             std::replace_if(
                 textures.begin(), textures.end(),
-                [&](const Rendering::Assets::Texture& texture) { return texture.path == src; },
-                AssetLoader::GetTexture(dst, type));
+                [&](const Rendering::Assets::Texture& texture) {
+                    return texture.path == srcPath && texture.type == type;
+                },
+                AssetLoader::GetTexture(dstPath, type));
         }
     }
 

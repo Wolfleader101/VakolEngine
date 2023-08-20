@@ -105,10 +105,13 @@ namespace Vakol::Rendering
 
             drawable.materialID = material->ID;
 
+            // if no textures attached to the material
             if (material->textures.empty())
             {
                 Assets::Texture texture;
 
+                // create set of white textures for each texture type (so textures from other models don't interfere)
+                // I'm sure there is a more elegant way, I'm sure Unity does something similar, maybe not.
                 // diffuse, specular, ambient, emissive, height, normal
                 for (int i = 0; i < 6; ++i)
                 {
@@ -121,7 +124,7 @@ namespace Vakol::Rendering
 
             for (auto& texture : material->textures)
             {
-                AssetLoader::AddTexture(material->ID, texture);
+                AssetLoader::AddTexture(material->ID, AssetLoader::GetTexture(texture.path, texture.type));
             }
         }
     }

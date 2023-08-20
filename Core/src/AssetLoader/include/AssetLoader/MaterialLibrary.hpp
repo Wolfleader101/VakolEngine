@@ -23,7 +23,8 @@ namespace Vakol
         Rendering::Assets::Material& GetMaterial(const std::string& materialID);
 
         void AddTexture(const std::string& materialID, const Rendering::Assets::Texture& texture);
-        void ReplaceTexture(const std::string& materialID, const std::string& src, const std::string& dst, unsigned int type);
+        void ReplaceTexture(const std::string& materialID, const std::string& srcPath, const std::string& dstPath,
+                            unsigned int type);
 
         bool GetTextures(const std::string& materialID, std::vector<Rendering::Assets::Texture>& textures);
         int GetTextureCount(const std::string& materialID);
