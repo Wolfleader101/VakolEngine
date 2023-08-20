@@ -65,6 +65,14 @@ void MyGUILayer::OnEvent(Vakol::Event& event) // toggle editor view
             event.Handled = true;
         }
     }
+
+    if (event.GetEventType() == Vakol::EventType::MouseMoved)
+    {
+        if (m_Show)
+        {
+            event.Handled = true;
+        }
+    }
 }
 
 void MyGUILayer::OnGUI()
