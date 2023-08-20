@@ -16,7 +16,7 @@ add_library(${PROJECT_NAME} STATIC ${SOURCES})
 add_subdirectory(lib)
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${GLOBAL_INCLUDE_DIRS})
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/ ${CMAKE_CURRENT_SOURCE_DIR}/src/Utils/include/)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/ ${GLOBAL_INCLUDE_DIRS})
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
     imgui
