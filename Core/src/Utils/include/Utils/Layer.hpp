@@ -16,7 +16,9 @@ namespace Vakol
          * @brief Construct a new Layer object
          *
          */
-        Layer() : m_SceneManager(nullptr){};
+        Layer() : m_SceneManager(nullptr)
+        {
+        }
 
         /**
          * @brief Destroy the Layer object
@@ -27,7 +29,7 @@ namespace Vakol
         /**
          * @brief Called when the layer is attached to the scene manager
          *
-         * @param SM
+         * @param SM scene manager to attach to
          */
         virtual void OnAttach(SceneManager* SM) = 0;
 
@@ -46,7 +48,7 @@ namespace Vakol
         /**
          * @brief Called when an event is triggered
          *
-         * @param event
+         * @param event to handle
          */
         virtual void OnEvent(Event& event) = 0;
 

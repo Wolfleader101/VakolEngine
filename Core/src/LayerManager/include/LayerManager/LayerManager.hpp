@@ -26,7 +26,7 @@ namespace Vakol
         /**
          * @brief Push a layer to the layer stack
          *
-         * @param layer
+         * @param layer to push
          */
         void PushLayer(std::shared_ptr<Layer> layer);
 
@@ -45,7 +45,7 @@ namespace Vakol
         /**
          * @brief Handle events
          *
-         * @param event
+         * @param event to handle
          */
         void OnEvent(Event& event);
 
