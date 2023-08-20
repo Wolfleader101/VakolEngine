@@ -8,6 +8,7 @@ add_subdirectory(Input)
 add_subdirectory(Logger)
 add_subdirectory(Math)
 add_subdirectory(Physics)
+add_subdirectory(Primitives)
 add_subdirectory(Rendering)
 add_subdirectory(SceneManager)
 add_subdirectory(Scripting)
@@ -27,6 +28,7 @@ ${INPUT_SRC}
 ${LOGGER_SRC}
 ${MATH_SRC}
 ${PHYSICS_SRC}
+${PRIMITIVES_SRC}
 ${RENDERING_SRC}
 ${SCENE_MANAGER_SRC}
 ${SCRIPTING_SRC}
@@ -48,6 +50,7 @@ SET(GLOBAL_INCLUDE_DIRS
     ${LOGGER_INCLUDE_DIR}
     ${MATH_INCLUDE_DIR}
     ${PHYSICS_INCLUDE_DIR}
+    ${PRIMITIVES_INCLUDE_DIR}
     ${RENDERING_INCLUDE_DIR}
     ${SCENE_MANAGER_INCLUDE_DIR}
     ${SCRIPTING_INCLUDE_DIR}
