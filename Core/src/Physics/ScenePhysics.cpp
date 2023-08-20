@@ -2,11 +2,9 @@
 
 #include <glad/glad.h>
 
-#include "AssetLoader/AssetLoader.hpp"
 #include "ECS/System.hpp"
 #include "Logger/Logger.hpp"
 #include "Physics/PhysicsPool.hpp"
-#include "Terrain/Terrain.hpp"
 
 namespace Vakol::Physics
 {
@@ -15,7 +13,7 @@ namespace Vakol::Physics
 
     ScenePhysics::ScenePhysics(rp3d::PhysicsWorld* newWorld) : m_Terrain(nullptr), m_World(newWorld)
     {
-        m_DebugRenderer = DebugRenderer(m_World);
+        // m_DebugRenderer = DebugRenderer(m_World); commented out
 
         m_World->setEventListener(&m_callback);
     };
@@ -47,42 +45,22 @@ namespace Vakol::Physics
         // call update on transforms
         System::Physics_UpdateTransforms(factor);
 
-        if (m_DebugRenderer.IsEnabled())
-        {
-            m_DebugRenderer.Update();
-            m_DebugRenderer.Draw();
-        }
+        // if (m_DebugRenderer.IsEnabled())
+        //{
+        //     m_DebugRenderer.Update();
+        //     m_DebugRenderer.Draw();
+        // }
     }
 
     void ScenePhysics::EnableDebug(bool enable)
     {
-        m_DebugRenderer.Enable(enable);
+        // m_DebugRenderer.Enable(enable);
     }
 
     bool ScenePhysics::IsDebugEnabled() const
     {
-        return m_DebugRenderer.IsEnabled();
-    }
-
-    void ScenePhysics::AddTerrain(const Terrain& terr)
-    {
-        auto& HeightData = terr.GetHeightMap();
-        const unsigned size = terr.GetSize();
-
-        // get the min and max from height data
-        float minH = std::min_element(HeightData.begin(), HeightData.end())[0];
-        float maxH = std::max_element(HeightData.begin(), HeightData.end())[0];
-
-        rp3d::HeightFieldShape* height = PhysicsPool::m_Common.createHeightFieldShape(
-            size, size, minH, maxH, HeightData.data(), rp3d::HeightFieldShape::HeightDataType::HEIGHT_FLOAT_TYPE, 1, 1);
-
-        // auto& vertexData = terr.GetStaticVertices();
-
-        const auto trans = rp3d::Transform::identity();
-        m_Terrain = m_World->createRigidBody(trans);
-        m_Terrain->setType(rp3d::BodyType::STATIC);
-
-        m_Terrain->addCollider(height, trans);
+        // return m_DebugRenderer.IsEnabled();
+        return false;
     }
 
     void ScenePhysics::MyCollisionCallback::onContact(const rp3d::CollisionCallback::CallbackData& callbackData)

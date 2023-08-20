@@ -1,6 +1,6 @@
+#include "AssetLoader/AssetLoader.hpp"
 #include "LuaAccess.hpp"
 
-#include "AssetLoader/AssetLoader.hpp"
 #include "GUI/GUIWindow.hpp"
 
 namespace Vakol
@@ -27,8 +27,7 @@ namespace Vakol
 
         gui_window_type.set_function("add_image", [](const GUIWindow* GUI, const std::string& path, const float width,
                                                      const float height, const bool centerX, const bool centerY) {
-            const auto& tex = AssetLoader::GetTexture(path, false, false);
-            const unsigned int texID = tex->GetID();
+            const auto texID = AssetLoader::GetTexture(path).ID;
 
             GUI->AddImage(texID, {width, height}, centerX, centerY);
         });

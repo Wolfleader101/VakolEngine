@@ -25,7 +25,7 @@ function setup_fsm()
     fsm = entity:add_fsm();
 
     fsm:add_state("eating", function()
-        entity:play_animation(ANIMATIONS.EAT);
+        --entity:play_animation(ANIMATIONS.EAT);
         -- entity:get_rigid():set_velocity(Vector3.new(0,0,0));
         if(fsm_wait(math.random(5,7))) then
             fsm:change_state("roaming")
@@ -36,7 +36,7 @@ function setup_fsm()
         trigger_nearby_bears(entity, 12.0);
         -- entity:get_rigid():set_velocity(Vector3.new(0,0,0));
     
-        entity:play_animation(ANIMATIONS.ATTACK);
+        --entity:play_animation(ANIMATIONS.ATTACK);
 
         if(fsm_wait(0.75)) then
             if player_distance() > enemyAttackAnimDistance then
@@ -46,7 +46,7 @@ function setup_fsm()
     end)
 
     fsm:add_state("idle", function()
-        entity:play_animation(ANIMATIONS.IDLE);
+        --entity:play_animation(ANIMATIONS.IDLE);
         -- entity:get_rigid():set_velocity(Vector3.new(0,0,0));
 
         if (fsm_wait(math.random(5, 7))) then
@@ -76,9 +76,9 @@ function setup_fsm()
             SPOTTED = false;
         end
         
-        if not stateChange then
-            entity:play_animation(ANIMATIONS.WALK);
-        end
+        --if not stateChange then
+        --    entity:play_animation(ANIMATIONS.WALK);
+        --end
 
         if (dir_wait(math.random(4,6))) then
             dir.x = math.random() * 2 - 1
@@ -105,7 +105,7 @@ function setup_fsm()
     end)
 
     fsm:add_state("running_towards", function()
-        entity:play_animation(ANIMATIONS.RUN);
+        --entity:play_animation(ANIMATIONS.RUN);
 
         local diff = scene.globals.player.pos - entity:get_transform().pos;
         dir = diff:normalize();
@@ -128,7 +128,7 @@ function setup_fsm()
     end)
 
     fsm:add_state("alerted", function()
-        entity:play_animation(ANIMATIONS.RUN);
+        --entity:play_animation(ANIMATIONS.RUN);
 
         local diff = scene.globals.player.pos - entity:get_transform().pos;
         dir = diff:normalize();
@@ -160,21 +160,9 @@ function init()
     dir:normalize();
 
     entity:get_transform().pos = Vector3.new(10, 0, 10);
+    entity:get_transform().rot = Vector3.new(-90, 0, 0);
 
-    local model = entity:add_model("assets/models/agents/bear.fbx", 0.25, true, true);
-    entity:set_shader("coreAssets/shaders/animation.prog");
-
-    local shader = model:get_shader();
-
-    shader:set_vec3v("light.direction", Vector3.new(math.rad(0.0), math.rad(0.0), math.rad(-90.0)));
-
-    shader:set_float("material.shininess", 32.0);
-    shader:set_vec3v("tint", Vector3.new(0.2, 0.65, 0.9));
-
-    shader:set_int("material.diffuse_map", 0);
-    shader:set_int("material.specular_map", 1);
-    shader:set_int("material.normal_map", 2);
-    shader:set_int("material.emission_map", 3);
+    entity:add_model("assets/models/agents/bear.fbx", 50.0);
 
    setup_fsm();
 end
@@ -242,7 +230,8 @@ function tick()
     end
     fsm:update()
 
-    local terr_scale = scene.globals.terrain.transform.scale;
-    pos.y = (scene.globals.terrain.terr:get_height(pos.x / terr_scale.x, pos.z / terr_scale.z) * terr_scale.y) + 0.03;
+    --local terr_scale = scene.globals.terrain.transform.scale;
+    --pos.y = (scene.globals.terrain.terr:get_height(pos.x / terr_scale.x, pos.z / terr_scale.z) * terr_scale.y) + 0.03;
+    pos.y = 0.0;
 
 end

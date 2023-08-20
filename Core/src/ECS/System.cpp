@@ -2,13 +2,13 @@
 
 #include <reactphysics3d/reactphysics3d.h>
 
-#include "AssetLoader/AssetLoader.hpp"
 #include "ECS/Components.hpp"
 #include "Physics/PhysicsPool.hpp"
 #include "Physics/ScenePhysics.hpp"
 #include "SceneManager/Scene.hpp"
 
 #include "Math/Math.hpp"
+#include "Rendering/RenderEngine.hpp"
 
 static std::set<std::pair<std::string, int>> s_animation_set;
 
@@ -43,75 +43,6 @@ namespace Vakol
         m_registry = &scene.GetEntityList().m_Registry;
         m_SP = scene.scenePhysics;
         Entlist = &scene.GetEntityList();
-    }
-
-    void System::Drawable_Init()
-    {
-        Terrain_Init();
-        m_registry->view<Components::Drawable>().each([&](auto& drawable) {
-            if (drawable.model_ptr == nullptr)
-                drawable.model_ptr =
-                    AssetLoader::GetModel(drawable.name, drawable.scale, drawable.animated, drawable.backfaceCull)
-                        .first;
-        });
-
-        m_registry->group<Components::Drawable, Components::AnimatorComp>().each(
-            [&](Components::Drawable& drawable, Components::AnimatorComp& animator) {
-                if (!animator.animator_ptr)
-                {
-                    animator.animator_ptr =
-                        AssetLoader::GetModel(drawable.name, drawable.scale, drawable.animated, drawable.backfaceCull)
-                            .second;
-                }
-            });
-    }
-
-    void System::Terrain_Init()
-    {
-        m_registry->view<Components::Drawable, Components::TerrainComp>().each(
-            [&](Components::Drawable& drawable, Components::TerrainComp& terrainComp) {
-                std::shared_ptr<Terrain> terrain = AssetLoader::GetTerrain(terrainComp.name);
-
-                if (!terrain)
-                {
-                    terrain =
-                        AssetLoader::GetTerrain(terrainComp.name, terrainComp.path, terrainComp.min, terrainComp.max);
-                }
-
-                drawable.model_ptr = terrain->GetModel();
-                terrainComp.terrain_ptr = terrain;
-            });
-    }
-
-    void System::Drawable_Update(const Time& time, const std::shared_ptr<Renderer>& renderer)
-    {
-        m_registry->view<Components::Transform, Components::Drawable>().each(
-            [&](Components::Transform& transform, const Components::Drawable& drawable) {
-                auto euler_rads = Math::DegToRad(transform.eulerAngles);
-
-                transform.rot = Math::Quat(euler_rads);
-
-                if (!drawable.active)
-                    return;
-
-                if (!drawable.animated)
-                    renderer->Draw(transform, drawable);
-            });
-
-        for (const auto& [model, state] : s_animation_set)
-            AssetLoader::GetAnimator(model)->Update(state, time.deltaTime);
-
-        m_registry->view<Components::Transform, Components::Drawable, Components::Animation>().each(
-            [&](const auto& transform, const Components::Drawable& drawable, const Components::Animation& animation) {
-                if (!drawable.active)
-                    return;
-
-                s_animation_set.emplace(std::make_pair(animation.attached_model, animation.state));
-
-                const auto& loadedAnim = AssetLoader::GetAnimation(animation.attached_model, animation.state);
-
-                renderer->DrawAnimated(transform, drawable, loadedAnim);
-            });
     }
 
     void System::Physics_Init()
@@ -242,26 +173,26 @@ namespace Vakol
             }
             else if (col.ShapeName == Components::Collider::ShapeName::TRIANGLE_MESH)
             {
-                if (!ent.HasComponent<Components::Drawable>())
+                if (!ent.HasComponent<Rendering::Drawable>())
                 {
                     VK_CRITICAL("Trying to add triangle mesh collider without providing model!");
                     assert(0);
                 }
 
-                const auto& draw = ent.GetComponent<Components::Drawable>();
+                const auto& draw = ent.GetComponent<Rendering::Drawable>();
 
                 const auto mesh_ptr = Physics::PhysicsPool::m_Common.createTriangleMesh();
 
-                for (auto& mesh : draw.model_ptr->meshes())
-                {
-                    const auto tri_array = new rp3d::TriangleVertexArray(
-                        mesh.nVertices(), mesh.vertices().data(), sizeof(float) * 3, mesh.nIndices() / 3,
-                        mesh.indices().data(), sizeof(unsigned int) * 3,
-                        rp3d::TriangleVertexArray::VertexDataType::VERTEX_FLOAT_TYPE,
-                        rp3d::TriangleVertexArray::IndexDataType::INDEX_INTEGER_TYPE);
+                // for (auto& mesh : draw.model_ptr->meshes())
+                //{
+                //     const auto tri_array = new rp3d::TriangleVertexArray(
+                //         mesh.nVertices(), mesh.vertices().data(), sizeof(float) * 3, mesh.nIndices() / 3,
+                //         mesh.indices().data(), sizeof(unsigned int) * 3,
+                //         rp3d::TriangleVertexArray::VertexDataType::VERTEX_FLOAT_TYPE,
+                //         rp3d::TriangleVertexArray::IndexDataType::INDEX_INTEGER_TYPE);
 
-                    mesh_ptr->addSubpart(tri_array);
-                };
+                //    mesh_ptr->addSubpart(tri_array);
+                //};
 
                 col.Shape = Physics::PhysicsPool::m_Common.createConcaveMeshShape(
                     mesh_ptr, rp3d::Vector3(trans.scale.x, trans.scale.y, trans.scale.z));
@@ -280,10 +211,5 @@ namespace Vakol
 
         rigid.initialized = true;
     };
-
-    void System::Physics_AddTerrain(const Terrain& ter)
-    {
-        m_SP->AddTerrain(ter);
-    }
 
 } // namespace Vakol

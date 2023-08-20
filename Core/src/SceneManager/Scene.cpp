@@ -45,11 +45,9 @@ namespace Vakol
         m_entityList.RemoveEntity(entity);
     }
 
-    void Scene::Update(const Time& time, const std::shared_ptr<Renderer>& renderer)
+    void Scene::Update(const Time& time)
     {
         scenePhysics->Update(time);
-
-        System::Drawable_Update(time, renderer);
 
         m_cam.Update();
     }
@@ -132,7 +130,6 @@ namespace Vakol
         m_entityList.Deserialize(folder + "/EntityList.json");
 
         System::BindScene(*this);
-        System::Drawable_Init();
         System::Physics_Init();
         // System::Script_Deserialize(lua, entityList, this);
 

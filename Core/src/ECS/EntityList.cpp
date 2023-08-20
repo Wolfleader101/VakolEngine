@@ -1,6 +1,6 @@
 #include "ECS/EntityList.hpp"
 
-#include <assert.h>
+#include <cassert>
 #include <cereal/cereal.hpp>
 
 #include "ECS/Components.hpp"
@@ -26,7 +26,7 @@ namespace Vakol
 
     Entity EntityList::CreateEntity(uint32_t SuggestedHandle)
     {
-        Entity newEntity = Entity(m_Registry.create((entt::entity)SuggestedHandle), this);
+        Entity newEntity = Entity(m_Registry.create(static_cast<entt::entity>(SuggestedHandle)), this);
 
         ActiveEntityList.push_back(newEntity);
 
@@ -42,14 +42,14 @@ namespace Vakol
         }
         Entity newEnt;
 
-        newEnt.m_entityHandle = (entt::entity)Handle;
+        newEnt.m_entityHandle = static_cast<entt::entity>(Handle);
         newEnt.m_EntityList = this;
         return newEnt;
     }
 
     void EntityList::RemoveEntity(uint32_t Handle)
     {
-        entt::entity ID = (entt::entity)Handle;
+        entt::entity ID = static_cast<entt::entity>(Handle);
 
         if (!CheckEntityExistence(Handle)) // ensuring the entity actually exists
         {
@@ -82,7 +82,7 @@ namespace Vakol
 
     bool EntityList::CheckEntityExistence(uint32_t Handle) const
     {
-        return m_Registry.valid((entt::entity)Handle);
+        return m_Registry.valid(static_cast<entt::entity>(Handle));
     }
 
     std::vector<Entity>& EntityList::GetEntityVec()
@@ -95,8 +95,7 @@ namespace Vakol
     void EntityList::Serialize(const std::string& file) const
     {
         privateSerialize<cereal::JSONOutputArchive, Components::Transform, Components::Tag, Components::GUID,
-                         Components::Drawable, Components::AnimatorComp, Components::Animation, Components::RigidBody,
-                         Components::Collider, Components::TerrainComp>(file);
+                         Components::RigidBody, Components::Collider>(file);
 
         /*privateSerialize<cereal::JSONOutputArchive, Transform, Tag, Script, GUID, Drawable, Components::AnimatorComp,
                          Animation>(file);*/
@@ -105,8 +104,7 @@ namespace Vakol
     void EntityList::Deserialize(const std::string& file)
     {
         privateDeserialize<cereal::JSONInputArchive, Components::Transform, Components::Tag, Components::GUID,
-                           Components::Drawable, Components::AnimatorComp, Components::Animation, Components::RigidBody,
-                           Components::Collider, Components::TerrainComp>(file);
+                           Components::RigidBody, Components::Collider>(file);
 
         /*privateDeserialize<cereal::JSONInputArchive, Transform, Tag, Script, GUID, Drawable, Components::AnimatorComp,
                            Animation>(file);*/

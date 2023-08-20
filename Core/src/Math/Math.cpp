@@ -1,9 +1,9 @@
 #include "Math/Math.hpp"
 
 #include <glm/gtc/type_ptr.hpp>
+
 namespace Vakol::Math
 {
-
     float Dot(const Vec2& a, const Vec2& b)
     {
         return a.x * b.x + a.y * b.y;
@@ -11,6 +11,26 @@ namespace Vakol::Math
     float Dot(const Vec3& a, const Vec3& b)
     {
         return a.x * b.x + a.y * b.y + a.z * b.z;
+    }
+
+    float DegToRad(const float deg)
+    {
+        return glm::radians(deg);
+    }
+
+    Vec3 DegToRad(const Vec3& vec)
+    {
+        return glm::radians(vec);
+    }
+
+    float RadToDeg(const float rad)
+    {
+        return glm::degrees(rad);
+    }
+
+    Vec3 RadToDeg(const Vec3& vec)
+    {
+        return glm::degrees(vec);
     }
 
     float Magnitude(const Vec2& v)
@@ -111,10 +131,22 @@ namespace Vakol::Math
         return Ray(from, Normalized(to - from));
     }
 
+    Mat4 Mat4Cast(const Quat& quaternion)
+    {
+        return glm::mat4_cast(quaternion);
+    }
+
     Mat4 Translation(const Vec3& pos)
     {
         return Mat4(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, pos.x, pos.y, pos.z, 1.0f);
     }
+
+    Mat4 Scale(const Vec3& scale)
+    {
+        return Mat4(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, scale.x, scale.y, scale.z,
+                    1.0f);
+    }
+
     Mat4 XRotation(float angle)
     {
         angle = glm::radians(angle);
@@ -199,29 +231,19 @@ namespace Vakol::Math
         return Lerp(oMin, oMax, t);
     }
 
-    float DegToRad(const float deg)
+    Mat4 Perspective(const float fovY, const float aspect, const float zNear, const float zFar)
     {
-        return glm::radians(deg);
+        return glm::perspective(fovY, aspect, zNear, zFar);
     }
 
-    Vec3 DegToRad(const Vec3& vec)
+    Mat4 Orthographic(const float left, const float right, const float bottom, const float top)
     {
-        return glm::radians(vec);
+        return glm::ortho(left, right, bottom, top);
     }
 
-    float RadToDeg(const float rad)
+    Mat4 LookAt(const Vec3& eye, const Vec3& center, const Vec3& up)
     {
-        return glm::degrees(rad);
-    }
-
-    Vec3 RadToDeg(const Vec3& vec)
-    {
-        return glm::degrees(vec);
-    }
-
-    Mat4 Perspective(float fovy, float aspect, float zNear, float zFar)
-    {
-        return glm::perspective(fovy, aspect, zNear, zFar);
+        return glm::lookAt(eye, center, up);
     }
 
     const float* AsArray(const Vec2& v)
