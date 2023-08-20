@@ -42,7 +42,7 @@ namespace Vakol::Rendering::Assets
 
     struct Texture
     {
-        std::string path;
+        std::string path = "undefined";
 
         unsigned int ID = 0;
 

@@ -29,32 +29,54 @@ namespace Vakol::Rendering
         m_config.API = API;
     }
 
-    void RenderAPI::BeginDraw(const std::string& vertexID, const std::string& shaderID, const std::vector<std::string>& materials)
+    void RenderAPI::BeginDraw(const std::string& vertexID, const std::string& shaderID, const std::string& materialID)
     {
         const auto program = ShaderLibrary::GetShader(shaderID);
 
         OpenGL::BindShaderProgram(program);
 
-        DefaultShaderSetup(shaderID);
-
         std::vector<Assets::Texture> textures{};
 
-        for (const auto& materialID : materials)
+        if (const auto valid = AssetLoader::GetTextures(materialID, textures); valid)
         {
-            if (const auto valid = AssetLoader::GetTextures(materialID, textures); valid)
+            for (const auto& texture : textures)
             {
-                for (int i = 0; i < textures.size(); ++i)
+                switch (texture.type)
                 {
-                    OpenGL::SetActiveTexture(i);
-                    OpenGL::BindTexture(textures.at(i).ID);
+                case Assets::VK_TEXTURE_NONE:
+                    break;
+                case Assets::VK_TEXTURE_DIFFUSE:
+                    OpenGL::SetActiveTexture(Assets::VK_TEXTURE_DIFFUSE);
+                    OpenGL::BindTexture(texture.ID);
+                    break;
+                case Assets::VK_TEXTURE_SPECULAR:
+                    OpenGL::SetActiveTexture(Assets::VK_TEXTURE_SPECULAR);
+                    OpenGL::BindTexture(texture.ID);
+                    break;
+                case Assets::VK_TEXTURE_AMBIENT:
+                    OpenGL::SetActiveTexture(Assets::VK_TEXTURE_AMBIENT);
+                    OpenGL::BindTexture(texture.ID);
+                    break;
+                case Assets::VK_TEXTURE_EMISSION:
+                    OpenGL::SetActiveTexture(Assets::VK_TEXTURE_EMISSION);
+                    OpenGL::BindTexture(texture.ID);
+                    break;
+                case Assets::VK_TEXTURE_HEIGHT:
+                    OpenGL::SetActiveTexture(Assets::VK_TEXTURE_HEIGHT);
+                    OpenGL::BindTexture(texture.ID);
+                    break;
+                case Assets::VK_TEXTURE_NORMAL:
+                    OpenGL::SetActiveTexture(Assets::VK_TEXTURE_NORMAL);
+                    OpenGL::BindTexture(texture.ID);
+                    break;
+                }
+
+                for (const auto& vertexArray : m_vertexLibrary.at(vertexID))
+                {
+                    OpenGL::BindVertexArray(vertexArray.vertexArray);
+                    OpenGL::DrawTriangleElements(vertexArray.nIndices);
                 }
             }
-        }
-
-        for (const auto& vertexArray : m_vertexLibrary.at(vertexID))
-        {
-            OpenGL::BindVertexArray(vertexArray.vertexArray);
-            OpenGL::DrawTriangleElements(vertexArray.nIndices);
         }
     }
 
@@ -103,7 +125,6 @@ namespace Vakol::Rendering
     void RenderAPI::GenerateShader(Assets::Shader&& shader, Drawable& drawable)
     {
         drawable.shaderID = GenerateID();
-        // VK_TRACE("Shader ID: {0}", drawable.shaderID);
 
         const unsigned int program =
             OpenGL::GenerateShaderProgram(shader.vertSrc, shader.geomSrc, shader.tscSrc, shader.tseSrc, shader.fragSrc);
@@ -189,16 +210,6 @@ namespace Vakol::Rendering
         {
             VK_WARN("Metal rendering has not been implemented yet.");
         }
-    }
-
-    void RenderAPI::DefaultShaderSetup(const std::string& shaderID)
-    {
-        ShaderLibrary::SetInt(ShaderLibrary::GetShader(shaderID), "material.diffuse_map", Assets::VK_TEXTURE_DIFFUSE);
-        ShaderLibrary::SetInt(ShaderLibrary::GetShader(shaderID), "material.specular_map", Assets::VK_TEXTURE_SPECULAR);
-        ShaderLibrary::SetInt(ShaderLibrary::GetShader(shaderID), "material.ambient_map", Assets::VK_TEXTURE_AMBIENT);
-        ShaderLibrary::SetInt(ShaderLibrary::GetShader(shaderID), "material.emission_map", Assets::VK_TEXTURE_EMISSION);
-        ShaderLibrary::SetInt(ShaderLibrary::GetShader(shaderID), "material.height_map", Assets::VK_TEXTURE_HEIGHT);
-        ShaderLibrary::SetInt(ShaderLibrary::GetShader(shaderID), "material.normal_map", Assets::VK_TEXTURE_NORMAL);
     }
 
     Math::Mat4 RenderAPI::GetModelMatrix(Components::Transform& transform)

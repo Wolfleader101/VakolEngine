@@ -34,7 +34,7 @@ namespace Vakol
             }
 
             // Assuming material at index-0
-            AssetLoader::AddTexture(ent->GetComponent<Rendering::Drawable>().materials.at(0), AssetLoader::GetTexture(path));
+            AssetLoader::AddTexture(ent->GetComponent<Rendering::Drawable>().materialID, AssetLoader::GetTexture(path));
         });
 
         entity_type.set_function("set_vec3v", [](const Entity* ent, const char* name, Math::Vec3& value) {

@@ -28,9 +28,7 @@ constexpr int ASSIMP_LOADER_OPTIONS =
     aiProcess_Triangulate | aiProcess_CalcTangentSpace | aiProcess_GenSmoothNormals | aiProcess_GenBoundingBoxes |
     aiProcess_JoinIdenticalVertices | aiProcess_ImproveCacheLocality | aiProcess_SplitLargeMeshes |
     aiProcess_ValidateDataStructure | aiProcess_FindInvalidData | aiProcess_GlobalScale |
-    aiProcess_PopulateArmatureData | aiProcess_FlipUVs | aiProcess_FindInstances | aiProcess_RemoveRedundantMaterials;
-
-static std::unordered_map<std::string, Texture> s_loadedTextures;
+    aiProcess_PopulateArmatureData | aiProcess_FlipUVs | aiProcess_RemoveRedundantMaterials;
 
 namespace Vakol
 {
@@ -76,6 +74,8 @@ namespace Vakol
             return VK_TEXTURE_HEIGHT;
         case aiTextureType_NORMALS:
             return VK_TEXTURE_AMBIENT;
+        case aiTextureType_UNKNOWN:
+            return VK_TEXTURE_NONE;
         default:
             break;
         }
@@ -199,39 +199,6 @@ namespace Vakol
                            mesh.mFaces[i].mIndices + mesh.mFaces[i].mNumIndices);
     }
 
-    std::vector<Texture> ExtractTextures(const aiScene& scene, const aiMaterial* material, const aiTextureType type)
-    {
-        std::vector<Texture> textures;
-
-        const auto count = material->GetTextureCount(type);
-
-        textures.reserve(count);
-
-        for (unsigned int i = 0; i < count; ++i)
-        {
-            auto imported_path = aiString{};
-            auto&& texture = Texture{};
-
-            if (material->GetTexture(type, i, &imported_path) == AI_SUCCESS)
-            {
-                texture.path = imported_path.C_Str();
-                texture.type = GetType(type);
-
-                if (const auto& embedded_texture = scene.GetEmbeddedTexture(imported_path.C_Str()))
-                {
-                    const auto size = static_cast<int>(embedded_texture->mWidth);
-
-                    texture = AssetLoader::GetTexture(embedded_texture->mFilename.C_Str(), GetType(type), size,
-                                                      embedded_texture->pcData);
-                }
-
-                textures.emplace_back(std::move(texture));
-            }
-        }
-
-        return textures;
-    }
-
     Material ProcessMaterial(const aiScene& scene, const aiMaterial* material)
     {
         std::vector<Texture> textures;
@@ -267,6 +234,42 @@ namespace Vakol
                         std::make_move_iterator(normal_maps.end()));
 
         return {material->GetName().C_Str(), "null", "null", std::move(textures), properties};
+    }
+
+    std::vector<Texture> ExtractTextures(const aiScene& scene, const aiMaterial* material, const aiTextureType type)
+    {
+        std::vector<Texture> textures;
+
+        const auto count = material->GetTextureCount(type);
+
+        textures.reserve(count);
+
+        for (unsigned int i = 0; i < count; ++i)
+        {
+            auto imported_path = aiString{};
+
+            if (material->GetTexture(type, i, &imported_path) == AI_SUCCESS)
+            {
+                auto&& texture = Texture{};
+
+                if (const auto& embedded_texture = scene.GetEmbeddedTexture(imported_path.C_Str()))
+                {
+                    const auto size = static_cast<int>(embedded_texture->mWidth);
+
+                    texture = AssetLoader::GetTexture(embedded_texture->mFilename.C_Str(), GetType(type), size,
+                                                      embedded_texture->pcData);
+                    textures.emplace_back(texture);
+                }
+                else
+                {
+                    texture = AssetLoader::GetTexture(imported_path.C_Str(), GetType(type));
+
+                    textures.emplace_back(texture);
+                }
+            }
+        }
+
+        return textures;
     }
 
     // void ExtractAnimations(const unsigned int count, aiAnimation** const& in)

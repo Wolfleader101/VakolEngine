@@ -60,6 +60,13 @@ namespace Vakol
         }
 
         Rendering::OpenGL::GetUniforms(shader, m_uniforms.at(shader));
+
+        SetInt(shader, "material.diffuse_map", 1);
+        SetInt(shader, "material.specular_map", 2);
+        SetInt(shader, "material.ambient_map", 3);
+        SetInt(shader, "material.emissive_map", 4);
+        SetInt(shader, "material.height_map", 5);
+        SetInt(shader, "material.normal_map", 6);
     }
 
     void ShaderLibrary::SetInt(const unsigned int shader, const char* name, const int value)
@@ -68,7 +75,9 @@ namespace Vakol
         {
             const auto& [location, count] = GetUniform(shader, name);
 
+            Rendering::OpenGL::BindShaderProgram(shader);
             Rendering::OpenGL::SetInt(location, value);
+            Rendering::OpenGL::UnbindShaderProgram();
         }
     }
 
@@ -78,7 +87,9 @@ namespace Vakol
         {
             const auto& [location, count] = GetUniform(shader, name);
 
+            Rendering::OpenGL::BindShaderProgram(shader);
             Rendering::OpenGL::SetFloat(location, value);
+            Rendering::OpenGL::UnbindShaderProgram();
         }
     }
 
@@ -88,7 +99,9 @@ namespace Vakol
         {
             const auto& [location, count] = GetUniform(shader, name);
 
+            Rendering::OpenGL::BindShaderProgram(shader);
             Rendering::OpenGL::SetVec3(location, count, Math::AsArray(value));
+            Rendering::OpenGL::UnbindShaderProgram();
         }
     }
 
@@ -98,7 +111,9 @@ namespace Vakol
         {
             const auto& [location, count] = GetUniform(shader, name);
 
+            Rendering::OpenGL::BindShaderProgram(shader);
             Rendering::OpenGL::SetVec4(location, count, Math::AsArray(value));
+            Rendering::OpenGL::UnbindShaderProgram();
         }
     }
 
@@ -109,7 +124,9 @@ namespace Vakol
         {
             const auto& [location, count] = GetUniform(shader, name);
 
+            Rendering::OpenGL::BindShaderProgram(shader);
             Rendering::OpenGL::SetMat4(location, count, name, transpose, Math::AsArray(value));
+            Rendering::OpenGL::UnbindShaderProgram();
         }
     }
 

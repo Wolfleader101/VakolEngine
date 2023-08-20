@@ -27,7 +27,7 @@ namespace Vakol::Rendering
 
         std::string vertexArrayID = "null";
         std::string shaderID = "null";
-        std::vector<std::string> materials;
+        std::string materialID;
     };
 
     struct VertexArray
