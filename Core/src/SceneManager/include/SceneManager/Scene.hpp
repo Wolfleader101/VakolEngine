@@ -1,14 +1,11 @@
 #pragma once
 
-#include <memory>
-
 #include "Camera/Camera.hpp"
 #include "ECS/Entity.hpp"
 #include "ECS/EntityList.hpp"
-#include "Physics/ScenePhysics.hpp"
+#include "Physics/PhysicsScene.hpp"
 #include "Scripting/ScriptTypes.hpp"
 #include "Time/Time.hpp"
-
 namespace Vakol
 {
     /**
@@ -24,9 +21,9 @@ namespace Vakol
          *
          * @param name The name of the scene.
          * @param script The Lua script associated with the scene.
-         * @param SP The shared pointer to the ScenePhysics object.
+         * @param physicsScene The physics scene associated with the scene.
          */
-        Scene(const std::string& name, LuaScript& script, const std::shared_ptr<Physics::ScenePhysics>& SP);
+        Scene(const std::string& name, LuaScript& script, PhysicsScene& physicsScene);
 
         Scene(const Scene& other) = delete;
         Scene(Scene&& other) = default;
@@ -44,13 +41,6 @@ namespace Vakol
          * @param newName The new name of the scene.
          */
         void setName(const std::string& newName);
-
-        /**
-         * @brief Update the scene.
-         *
-         * @param time The time information for the update.
-         */
-        void Update(const Time& time);
 
         /**
          * @brief Create a new entity in the scene.
@@ -85,11 +75,6 @@ namespace Vakol
          * @brief Whether the scene has been initialized or not.
          */
         bool initialized = false;
-
-        /**
-         * @brief The shared pointer to the ScenePhysics object.
-         */
-        std::shared_ptr<Physics::ScenePhysics> scenePhysics;
 
         /**
          * @brief Get the camera of the scene.
@@ -132,12 +117,19 @@ namespace Vakol
         /**
          * @brief Get the Script object
          *
-         * @return LuaScript&
+         * @return LuaScript& to get
          */
         LuaScript& GetScript()
         {
             return m_script;
         }
+
+        /**
+         * @brief Get the Physics Scene object
+         *
+         * @return PhysicsScene& to get
+         */
+        PhysicsScene& GetPhysicsScene();
 
       private:
         /**
@@ -160,5 +152,11 @@ namespace Vakol
          * @brief The entity list of the scene.
          */
         EntityList m_entityList;
+
+        /**
+         * @brief physics scene for a scene
+         *
+         */
+        PhysicsScene& m_physicsScene;
     };
 } // namespace Vakol

@@ -5,6 +5,10 @@
 
 #include "GUI/GUIWindow.hpp"
 #include "Input/Input.hpp"
+#include "Physics/PhysicsEngine.hpp"
+#include "Rendering/RenderEngine.hpp"
+#include "SceneManager/SceneManager.hpp"
+#include "Scripting/ScriptEngine.hpp"
 #include "Time/Time.hpp"
 #include "Window/Events/KeyEvent.hpp"
 #include "Window/Events/WindowEvent.hpp"
@@ -208,6 +212,12 @@ namespace Vakol
          *
          */
         ScriptEngine m_scriptEngine;
+
+        /**
+         * @brief physics engine instance
+         *
+         */
+        PhysicsEngine m_physicsEngine;
 
         /**
          * @brief Scene manager instance

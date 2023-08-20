@@ -92,9 +92,10 @@ namespace Vakol
          */
         void Deserialize(const std::string& file);
 
-        entt::registry& GetRegistry()
+        template <typename... Components, typename Func>
+        void Iterate(Func&& func)
         {
-            return m_Registry;
+            m_Registry.view<Components...>().each(std::forward<Func>(func));
         }
 
       private:
