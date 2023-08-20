@@ -40,6 +40,7 @@ namespace Vakol
         AABBCollider collider;
         collider.shape = m_rpCommon.createBoxShape(
             rp3d::Vector3((double)halfExtents.x, (double)halfExtents.y, (double)halfExtents.z));
+        collider.collider = nullptr;
         return collider;
     }
 
@@ -47,6 +48,7 @@ namespace Vakol
     {
         SphereCollider collider;
         collider.shape = m_rpCommon.createSphereShape(radius);
+        collider.collider = nullptr;
         return collider;
     }
 
@@ -54,6 +56,7 @@ namespace Vakol
     {
         CapsuleCollider collider;
         collider.shape = m_rpCommon.createCapsuleShape(radius, height);
+        collider.collider = nullptr;
         return collider;
     }
 
@@ -78,28 +81,29 @@ namespace Vakol
         triangleMesh->addSubpart(triangleArray);
 
         collider.shape = m_rpCommon.createConcaveMeshShape(triangleMesh);
+        collider.collider = nullptr;
 
         return collider;
     }
 
     void PhysicsEngine::AttachCollider(RigidBody& rb, AABBCollider& collider)
     {
-        rb.collisionBody->addCollider(collider.shape, rp3d::Transform::identity());
+        collider.collider = rb.collisionBody->addCollider(collider.shape, rp3d::Transform::identity());
     }
 
     void PhysicsEngine::AttachCollider(RigidBody& rb, SphereCollider& collider)
     {
-        rb.collisionBody->addCollider(collider.shape, rp3d::Transform::identity());
+        collider.collider = rb.collisionBody->addCollider(collider.shape, rp3d::Transform::identity());
     }
 
     void PhysicsEngine::AttachCollider(RigidBody& rb, CapsuleCollider& collider)
     {
-        rb.collisionBody->addCollider(collider.shape, rp3d::Transform::identity());
+        collider.collider = rb.collisionBody->addCollider(collider.shape, rp3d::Transform::identity());
     }
 
     void PhysicsEngine::AttachCollider(RigidBody& rb, MeshCollider& collider)
     {
-        rb.collisionBody->addCollider(collider.shape, rp3d::Transform::identity());
+        collider.collider = rb.collisionBody->addCollider(collider.shape, rp3d::Transform::identity());
     }
 
     void PhysicsEngine::ApplyForces(RigidBody& rb)
