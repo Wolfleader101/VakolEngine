@@ -192,6 +192,8 @@ namespace Vakol
 
                 m_scriptEngine.TickScript(activeScene.GetScript());
 
+                m_layerManager.OnTick();
+
                 // Decrease the accumulated time
                 m_time.accumulator -= m_time.tickRate;
             }
@@ -213,7 +215,6 @@ namespace Vakol
 
             Rendering::RenderEngine::PostDraw();
 
-            m_layerManager.OnGUI();
             m_gui.Update();
 
             m_input.Update();
@@ -313,6 +314,7 @@ namespace Vakol
 
     void Application::PopLayer()
     {
+
         m_layerManager.PopLayer();
     }
 

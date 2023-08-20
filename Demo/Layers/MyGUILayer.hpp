@@ -12,7 +12,6 @@ class MyGUILayer : public Vakol::Layer
     void OnDetach() override;
     void OnUpdate() override;
     void OnEvent(Vakol::Event& event) override;
-    void OnGUI() override;
     void OnTick() override;
 
   private:

@@ -51,12 +51,6 @@ namespace Vakol
         virtual void OnEvent(Event& event) = 0;
 
         /**
-         * @brief Called every frame after OnUpdate
-         *
-         */
-        virtual void OnGUI() = 0;
-
-        /**
          * @brief Called every tick
          *
          */

@@ -15,7 +15,10 @@ namespace Vakol
     void LayerManager::PopLayer()
     {
         if (!m_layers.empty())
+        {
+            m_layers.front()->OnDetach();
             m_layers.pop_front();
+        }
     }
 
     void LayerManager::OnUpdate()
@@ -34,14 +37,6 @@ namespace Vakol
         {
             (*it)->OnEvent(event);
             it++;
-        }
-    }
-
-    void LayerManager::OnGUI()
-    {
-        for (auto& layer : m_layers)
-        {
-            layer->OnGUI();
         }
     }
 

@@ -75,10 +75,6 @@ void MyGUILayer::OnEvent(Vakol::Event& event) // toggle editor view
     }
 }
 
-void MyGUILayer::OnGUI()
-{
-}
-
 void MyGUILayer::OnTick()
 {
 }

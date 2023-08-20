@@ -50,12 +50,6 @@ namespace Vakol
         void OnEvent(Event& event);
 
         /**
-         * @brief Handle GUI
-         *
-         */
-        void OnGUI();
-
-        /**
          * @brief Handle ticks
          *
          */
