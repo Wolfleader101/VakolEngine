@@ -42,8 +42,8 @@ namespace Vakol
 
         static Rendering::Assets::Material& GetMaterial(const std::string& materialID);
 
-        static Rendering::Assets::Texture& GetTexture(const std::string& path, Rendering::Assets::VK_TEXTURE_TYPE type = Rendering::Assets::VK_TEXTURE_DIFFUSE);
-        static Rendering::Assets::Texture& GetTexture(const std::string& path, Rendering::Assets::VK_TEXTURE_TYPE type, int size, const void* buffer);
+        static Rendering::Assets::Texture& GetTexture(const std::string& path, unsigned int type = Rendering::Assets::VK_TEXTURE_DIFFUSE);
+        static Rendering::Assets::Texture& GetTexture(const std::string& path, unsigned int type, int size, const void* buffer);
 
         /**
          * \brief dd
@@ -51,6 +51,15 @@ namespace Vakol
          * \param texture
          */
         static void AddTexture(const std::string& materialID, const Rendering::Assets::Texture& texture);
+
+        /**
+         * \brief 
+         * \param materialID 
+         * \param src 
+         * \param dst
+         * \param type
+         */
+        static void ReplaceTexture(const std::string& materialID, const std::string& src, const std::string& dst, const std::string& type);
 
         /**
          * \brief

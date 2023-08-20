@@ -15,12 +15,9 @@
 
 #include "Math/Math.hpp"
 
-#include "AssetLoader/TextureLoader.hpp"
-
 #include "AssetLoader/AssetLoader.hpp"
 
 #include <iostream>
-#include <stack>
 
 using namespace Vakol::Rendering::Assets;
 
@@ -58,7 +55,7 @@ namespace Vakol
         return {v.x, v.y, v.z};
     }
 
-    static VK_TEXTURE_TYPE GetType(const aiTextureType type)
+    static unsigned int GetTextureType(const aiTextureType type)
     {
         switch (type)
         {
@@ -73,7 +70,7 @@ namespace Vakol
         case aiTextureType_HEIGHT:
             return VK_TEXTURE_HEIGHT;
         case aiTextureType_NORMALS:
-            return VK_TEXTURE_AMBIENT;
+            return VK_TEXTURE_NORMAL;
         case aiTextureType_UNKNOWN:
             return VK_TEXTURE_NONE;
         default:
@@ -250,19 +247,21 @@ namespace Vakol
 
             if (material->GetTexture(type, i, &imported_path) == AI_SUCCESS)
             {
+                const std::string path = imported_path.C_Str();
+
                 auto&& texture = Texture{};
 
-                if (const auto& embedded_texture = scene.GetEmbeddedTexture(imported_path.C_Str()))
+                if (const auto& embedded_texture = scene.GetEmbeddedTexture(path.c_str()))
                 {
                     const auto size = static_cast<int>(embedded_texture->mWidth);
 
-                    texture = AssetLoader::GetTexture(embedded_texture->mFilename.C_Str(), GetType(type), size,
+                    texture = AssetLoader::GetTexture(embedded_texture->mFilename.C_Str(), GetTextureType(type), size,
                                                       embedded_texture->pcData);
                     textures.emplace_back(texture);
                 }
                 else
                 {
-                    texture = AssetLoader::GetTexture(imported_path.C_Str(), GetType(type));
+                    texture = AssetLoader::GetTexture(imported_path.C_Str(), GetTextureType(type));
 
                     textures.emplace_back(texture);
                 }

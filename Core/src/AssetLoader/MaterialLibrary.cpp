@@ -1,9 +1,12 @@
 #include "AssetLoader/MaterialLibrary.hpp"
 
+#include "AssetLoader/AssetLoader.hpp"
 #include "AssetLoader/ShaderLibrary.hpp"
 
 #include "Logger/Logger.hpp"
 #include "Rendering/Assets/Material.hpp"
+
+#include <algorithm>
 
 namespace Vakol
 {
@@ -35,6 +38,20 @@ namespace Vakol
     void MaterialLibrary::AddTexture(const std::string& materialID, const Rendering::Assets::Texture& texture)
     {
         m_textures[materialID].emplace_back(texture);
+    }
+
+    void MaterialLibrary::ReplaceTexture(const std::string& materialID, const std::string& src, const std::string& dst,
+                                         const unsigned int type)
+    {
+        if (m_textures.find(materialID) != m_textures.end())
+        {
+            auto& textures = m_textures.at(materialID);
+
+            std::replace_if(
+                textures.begin(), textures.end(),
+                [&](const Rendering::Assets::Texture& texture) { return texture.path == src; },
+                AssetLoader::GetTexture(dst, type));
+        }
     }
 
     bool MaterialLibrary::GetTextures(const std::string& materialID, std::vector<Rendering::Assets::Texture>& textures)

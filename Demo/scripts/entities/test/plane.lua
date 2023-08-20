@@ -5,8 +5,7 @@ function init()
 	entity:get_transform().pos = Vector3.new(0.0, -0.001, 0.0);
 	entity:get_transform().rot = Vector3.new(0.0, 0.0, 0.0);
 
-	entity:add_texture("assets/textures/grass.png");
-
+	entity:replace_texture("coreAssets/textures/white.png", "assets/textures/grass.png", "DIFFUSE");
 end
 
 function update()

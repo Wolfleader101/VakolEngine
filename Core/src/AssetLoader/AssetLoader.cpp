@@ -1,7 +1,7 @@
 #include "AssetLoader/AssetLoader.hpp"
 
 #include "AssetLoader/TextureLoader.hpp"
-#include "Rendering/Platform/OpenGL/Texture.hpp"
+#include "Rendering/RenderAPI.hpp"
 
 namespace Vakol
 {
@@ -24,7 +24,7 @@ namespace Vakol
         return m_materialLibrary.GetMaterial(materialID);
     }
 
-    Rendering::Assets::Texture& AssetLoader::GetTexture(const std::string& path, const Rendering::Assets::VK_TEXTURE_TYPE type)
+    Rendering::Assets::Texture& AssetLoader::GetTexture(const std::string& path, const unsigned int type)
     {
         if (m_textures.find(path) == m_textures.end())
         {
@@ -36,8 +36,7 @@ namespace Vakol
             unsigned char* pixels = nullptr;
 
             ImportTexture(path, texture.width, texture.height, texture.channels, pixels);
-
-            texture.ID = Rendering::OpenGL::GenerateTexture(texture.width, texture.height, texture.channels, pixels);
+            texture.ID = Rendering::RenderAPI::GenerateTexture(texture.width, texture.height, texture.channels, pixels);
 
             m_textures[path] = std::move(texture);
 
@@ -47,7 +46,8 @@ namespace Vakol
         return m_textures.at(path);
     }
 
-    Rendering::Assets::Texture& AssetLoader::GetTexture(const std::string& path, const Rendering::Assets::VK_TEXTURE_TYPE type, const int size, const void* buffer)
+    Rendering::Assets::Texture& AssetLoader::GetTexture(const std::string& path, const unsigned int type,
+                                                        const int size, const void* buffer)
     {
         if (m_textures.find(path) == m_textures.end())
         {
@@ -60,8 +60,7 @@ namespace Vakol
             unsigned char* pixels = nullptr;
 
             ImportTexture(buffer, size, texture.width, texture.height, texture.channels, pixels);
-
-            texture.ID = Rendering::OpenGL::GenerateTexture(texture.width, texture.height, texture.channels, pixels);
+            texture.ID = Rendering::RenderAPI::GenerateTexture(texture.width, texture.height, texture.channels, pixels);
 
             m_textures[path] = std::move(texture);
 
@@ -74,6 +73,12 @@ namespace Vakol
     void AssetLoader::AddTexture(const std::string& materialID, const Rendering::Assets::Texture& texture)
     {
         m_materialLibrary.AddTexture(materialID, texture);
+    }
+
+    void AssetLoader::ReplaceTexture(const std::string& materialID, const std::string& src, const std::string& dst,
+                                     const std::string& type)
+    {
+        m_materialLibrary.ReplaceTexture(materialID, src, dst, Rendering::Assets::ToTextureType(type));
     }
 
     void AssetLoader::AddMaterial(const Rendering::Assets::Material& material)

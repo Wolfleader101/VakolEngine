@@ -109,19 +109,19 @@ namespace Vakol::Rendering
             {
                 Assets::Texture texture;
 
-                texture.path = "coreAssets/textures/white.png";
-                texture.type = Assets::VK_TEXTURE_DIFFUSE;
+                // diffuse, specular, ambient, emissive, height, normal
+                for (int i = 0; i < 6; ++i)
+                {
+                    texture.path = "coreAssets/textures/white.png";
+                    texture.type = Assets::VK_TEXTURE_DIFFUSE + i;
 
-                material->textures.emplace_back(texture);
+                    material->textures.emplace_back(texture);
+                }
             }
 
             for (auto& texture : material->textures)
             {
-                if (texture.ID == 0)
-                    texture.ID = RenderAPI::GenerateTexture(texture, drawable);
-
-                if (texture.ID != 0)
-                    AssetLoader::AddTexture(material->ID, texture);
+                AssetLoader::AddTexture(material->ID, texture);
             }
         }
     }

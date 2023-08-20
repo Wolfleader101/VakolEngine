@@ -17,7 +17,7 @@ namespace Vakol::Rendering::Assets
         VK_TEXTURE_NORMAL
     };
 
-    inline std::string ToString(const VK_TEXTURE_TYPE type)
+    inline std::string ToString(const unsigned int type)
     {
         switch (type)
         {
@@ -40,6 +40,29 @@ namespace Vakol::Rendering::Assets
         return "UNKNOWN";
     }
 
+    inline VK_TEXTURE_TYPE ToTextureType(const std::string& type)
+    {
+        if (type == "DIFFUSE")
+            return VK_TEXTURE_DIFFUSE;
+
+        if (type == "SPECULAR")
+            return VK_TEXTURE_SPECULAR;
+
+        if (type == "AMBIENT")
+            return VK_TEXTURE_AMBIENT;
+
+        if (type == "EMISSION" || type == "EMISSIVE")
+            return VK_TEXTURE_EMISSION;
+
+        if (type == "HEIGHT")
+            return VK_TEXTURE_HEIGHT;
+
+        if (type == "NORMAL")
+            return VK_TEXTURE_NORMAL;
+
+        return VK_TEXTURE_NONE;
+    }
+
     struct Texture
     {
         std::string path = "undefined";
@@ -53,6 +76,6 @@ namespace Vakol::Rendering::Assets
 
         bool embedded = false;
 
-        VK_TEXTURE_TYPE type = VK_TEXTURE_NONE;
+        unsigned int type = VK_TEXTURE_NONE;
     };
 } // namespace Vakol::Rendering::Assets

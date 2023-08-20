@@ -133,18 +133,9 @@ namespace Vakol::Rendering
         ShaderLibrary::AddShader(drawable.shaderID, program);
     }
 
-    unsigned int RenderAPI::GenerateTexture(Assets::Texture& texture, const Drawable& drawable)
+    unsigned int RenderAPI::GenerateTexture(const int width, const int height, const int channels, const unsigned char* pixels)
     {
-        if (!texture.embedded)
-        {
-            unsigned char* pixels = nullptr;
-
-            ImportTexture(texture.path, texture.width, texture.height, texture.channels, pixels);
-
-            return OpenGL::GenerateTexture(texture.width, texture.height, texture.channels, pixels);
-        }
-
-        return 0u;
+        return OpenGL::GenerateTexture(width, height, channels, pixels);
     }
 
     void RenderAPI::EnableDepth()
