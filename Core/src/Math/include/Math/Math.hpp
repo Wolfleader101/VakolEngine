@@ -1,7 +1,8 @@
 #pragma once
 
-#include <glm/glm.hpp>
+#define M_PI 3.14159265358979323846 // Value of Pi
 
+#include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 
 namespace Vakol::Math
