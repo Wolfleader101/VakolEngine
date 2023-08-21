@@ -30,8 +30,33 @@ namespace Vakol
 				}
 				break;
 			default:
+                VK_ERROR("The primitive shape type is not valid!");
+
 				break;
 		}
+    }
+
+    void Primitives::Position(ShapeType type, Math::Vec3 inputPosition, std::string inputName)
+    {
+        // Switch between the different types of shapes
+        switch (type)
+        {
+            case SPHERE:
+                // Loop through all the spheres
+                for (unsigned i = 0; i < m_Spheres.size(); i++)
+                {
+                    // Check if the name of the current sphere is the same as the input name
+                    if (m_Spheres[i].GetName() == inputName)
+                    {
+                        m_Spheres[i].SetPosition(inputPosition); // Move the sphere to a new position
+                    }
+                }
+                break;
+            default:
+                VK_ERROR("The primitive shape type is not valid!");
+
+                break;
+        }
     }
 
     Primitives::~Primitives()

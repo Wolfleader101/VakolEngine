@@ -2,6 +2,7 @@
 
 #include "Math/Math.hpp"
 #include "Rendering/Assets/Mesh.hpp"
+#include "Rendering/RenderData.hpp"
 
 namespace Vakol
 {
@@ -13,11 +14,6 @@ namespace Vakol
     {
         public:
             /**
-            * @brief Construct a new Sphere object with default values
-            *
-            */
-            Sphere();
-            /**
             * @brief Construct a new Sphere object with a position, radius, stacks and sectors
             * @param inputPosition The position of the sphere
             * @param inputRadius The radius of the sphere
@@ -28,6 +24,35 @@ namespace Vakol
             */
             Sphere(Math::Vec3 inputPosition, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName);
             /**
+             * @brief A function which returns the name of the current sphere
+             *
+             */
+            std::string GetName();
+            /**
+             * @brief A function which scales the current sphere
+             * @param inputScale The new scale of the sphere
+             *
+             */
+            void SetScale(Math::Vec3 inputScale);
+            /**
+             * @brief A function which moves the sphere to a new position
+             * @param inputPosition The new position of the sphere
+             *
+             */
+            void SetPosition(Math::Vec3 inputPosition);
+            /**
+             * @brief A function which rotates the sphere to a new position
+             * @param inputRotation The new rotation of the sphere
+             *
+             */
+            void SetRotation(Math::Quat inputRotation);
+            /**
+            * @brief Destroy the Sphere object
+            *
+            */
+            ~Sphere();
+        private:
+            /**
             * @brief Generate the data for a 3D sphere
             * @param inputPosition The position of the sphere
             * @param inputRadius The radius of the sphere
@@ -37,22 +62,7 @@ namespace Vakol
             *
             */
             void GenerateData(Math::Vec3 inputPosition, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName);
-            /**
-             * @brief A function which returns the name of the current sphere
-             *
-             */
-            std::string GetName();
-            /**
-             * @brief A function which scales the current sphere
-             *
-             */
-            void SetScale(Math::Vec3 inputScale);
-            /**
-            * @brief Destroy the Sphere object
-            *
-            */
-            ~Sphere();
-        private:
+
             /**
             * @brief The position of the sphere
             *
@@ -91,5 +101,10 @@ namespace Vakol
              *
              */
             Rendering::Assets::Mesh mesh;
+            /**
+             * @brief The original vertices of the sphere before rotations
+             *
+             */
+            std::vector<Rendering::Vertex> originalVertices;
     };
 } // namespace Vakol

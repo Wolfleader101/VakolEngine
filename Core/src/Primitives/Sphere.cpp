@@ -2,17 +2,6 @@
 
 namespace Vakol
 {
-    Sphere::Sphere()
-    {
-        position = Math::Vec3(0.0f, 0.0f, 0.0f);
-        scale = Math::Vec3(1.0f, 1.0f, 1.0f);
-        rotation = Math::Quat(0.0f, 0.0f, 0.0f, 1.0f);
-        name = "DEFAULT_SPHERE_NAME";
-
-        stacks = 0;
-        sectors = 0;
-	}
-
     Sphere::Sphere(Math::Vec3 inputPosition, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName)
     {
         position = inputPosition; 
@@ -105,6 +94,8 @@ namespace Vakol
                 }
             }
         }
+
+        originalVertices = mesh.vertices;                                   // Store the original vertices
     }
 
     std::string Sphere::GetName()
@@ -114,16 +105,41 @@ namespace Vakol
 
     void Sphere::SetScale(Math::Vec3 inputScale)
     {
-		scale = inputScale;                                                 // Set the scale
-
         // Loop through all the vertices and scale them
+        for (size_t i = 0; i < originalVertices.size(); ++i)
+        {
+            mesh.vertices[i].position = originalVertices[i].position;       // Reset the vertices to the original vertices
+
+            mesh.vertices[i].position.x *= inputScale.x;
+            mesh.vertices[i].position.y *= inputScale.y;
+            mesh.vertices[i].position.z *= inputScale.z;
+        }
+
+        scale = inputScale;                                                 // Set the new scale variable
+	}
+
+    void Sphere::SetPosition(Math::Vec3 inputPosition)
+    {
+        // Calculate the translation vector
+        Math::Vec3 newPosition = inputPosition - position;
+
+        // Loop through all the vertices and reposition them
         for (Rendering::Vertex& vertex : mesh.vertices)
         {
-            vertex.position.x *= scale.x; 
-            vertex.position.y *= scale.y; 
-            vertex.position.z *= scale.z;
+            vertex.position += newPosition; // Add the translation
         }
-	}
+
+        position = inputPosition; // Set the new position variable
+    }
+
+    void Sphere::SetRotation(Math::Quat inputRotation)
+    {
+        // Apply the rotation to the original vertices and store the result in mesh.vertices
+        for (size_t i = 0; i < originalVertices.size(); ++i)
+        {
+            mesh.vertices[i].position = inputRotation * originalVertices[i].position; 
+        }
+    }
 
     Sphere::~Sphere()
     {

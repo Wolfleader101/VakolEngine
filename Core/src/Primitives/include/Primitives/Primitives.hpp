@@ -2,6 +2,7 @@
 
 #include "Math/Math.hpp"
 #include "Rendering/Assets/Mesh.hpp"
+#include "Logger/Logger.hpp"
 
 #include "Primitives/Sphere.hpp"
 
@@ -13,19 +14,6 @@ namespace Vakol
      */
     class Primitives
     {
-        /**
-         * @brief A struct for a 3D cube
-         *
-         */
-        struct Cube
-        {
-            Math::Vec3 position;            ///< The position of the cube
-			Math::Vec3 scale;               ///< The scale of the cube
-			Math::Quat rotation;            ///< The rotation of the cube
-
-			Rendering::Assets::Mesh mesh;   ///< The mesh object of the cube
-		};
-
         /**
          * @brief An enum for the different types of shapes
          *
@@ -54,22 +42,25 @@ namespace Vakol
             /**
              * @brief Scale a selected primitive shape
              * @param type The type of shape to scale
-             * @param inputScale The scale of the shape
+             * @param inputScale The new scale of the shape
              * @param inputName The name of the shape
              *
              */
             void Scale(ShapeType type, Math::Vec3 inputScale, std::string inputName);
+            /**
+             * @brief Position a selected primitive shape
+             * @param type The type of shape to scale
+             * @param inputPosition The new position of the shape
+             * @param inputName The name of the shape
+             *
+             */
+            void Position(ShapeType type, Math::Vec3 inputPosition, std::string inputName);
             /**
             * @brief Destroy the Primitives object
             *
             */
             ~Primitives();
         private:
-            /**
-            * @brief A vector of cube objects
-            *
-            */
-            std::vector<Cube> m_Cubes;
             /**
             * @brief A vector of sphere objects
             *
