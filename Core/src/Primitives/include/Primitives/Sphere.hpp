@@ -13,19 +13,28 @@ namespace Vakol
     {
         public:
             /**
-            * @brief Construct a new Sphere object
+            * @brief Construct a new Sphere object with default values
             *
             */
             Sphere();
             /**
-            * @brief Create a 3D Sphere object
-            * @param position The position of the sphere
-            * @param radius The radius of the sphere
-            * @param stacks The number of stacks (latitude) of the sphere
-            * @param sectors The number of sectors (longitude) of the sphere
+            * @brief Construct a new Sphere object with a position, radius, stacks and sectors
+            * @param inputPosition The position of the sphere
+            * @param inputRadius The radius of the sphere
+            * @param inputStacks The number of stacks (latitude) of the sphere
+            * @param inputSectors The number of sectors (longitude) of the sphere
             *
             */
-            void CreateSphere(Math::Vec3 position, double radius, unsigned stacks, unsigned sectors);
+            Sphere(Math::Vec3 inputPosition, double inputRadius, unsigned inputStacks, unsigned inputSectors);
+            /**
+            * @brief Generate the data for a 3D sphere
+            * @param inputPosition The position of the sphere
+            * @param inputRadius The radius of the sphere
+            * @param inputStacks The number of stacks (latitude) of the sphere
+            * @param inputSectors The number of sectors (longitude) of the sphere
+            *
+            */
+            void GenerateData(Math::Vec3 inputPosition, double inputRadius, unsigned inputStacks, unsigned inputSectors);
             /**
             * @brief Destroy the Sphere object
             *

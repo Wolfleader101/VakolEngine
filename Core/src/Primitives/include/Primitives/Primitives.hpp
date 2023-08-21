@@ -33,6 +33,15 @@ namespace Vakol
             */
             Primitives();
             /**
+            * @brief Create a 3D Sphere object
+            * @param inputPosition The position of the sphere
+            * @param inputRadius The radius of the sphere
+            * @param inputStacks The number of stacks (latitude) of the sphere
+            * @param inputSectors The number of sectors (longitude) of the sphere
+            *
+            */
+            void CreateSphere(Math::Vec3 inputPosition, double inputRadius, unsigned inputStacks, unsigned inputSectors);
+            /**
             * @brief Create a 3D Cube object
             * @param position The position of the cube
             * @param scale The scale of the cube
