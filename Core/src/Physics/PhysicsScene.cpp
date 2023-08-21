@@ -4,6 +4,7 @@
 
 namespace Vakol
 {
+    CollisionListener PhysicsScene::m_collisionListener;
 
     PhysicsScene::PhysicsScene(rp3d::PhysicsWorld* world) : m_world(world)
     {

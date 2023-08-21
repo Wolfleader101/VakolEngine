@@ -25,6 +25,9 @@ namespace Vakol
      */
     struct CollisionData
     {
+        Math::Vec3 normal;
+        Math::Vec3 worldPoint;
+        double penetrationDepth;
     };
 
     /**

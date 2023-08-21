@@ -3,7 +3,7 @@ function init()
 
     scene:create_entity("Plane", "entities/test/plane.lua")
 
-    for i = 1, 20, 1 do   
+    for i = 1, 20, 1 do
         scene:create_entity("Bear", "entities/agents/sandboxbear.lua")
     end
 end

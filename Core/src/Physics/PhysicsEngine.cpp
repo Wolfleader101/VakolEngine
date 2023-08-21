@@ -108,6 +108,32 @@ namespace Vakol
 
     void PhysicsEngine::ApplyForces(RigidBody& rb)
     {
+        if (rb.type == BodyType::Static)
+        {
+            return;
+        }
+
+        // linear velocity: V = u + at
+
+        Math::Vec3 gravity(0.0f, -9.8f, 0.0f);
+
+        Math::Vec3 dv = gravity * (float)m_timeStep;
+
+        rb.linearVelocity += dv;
+
+        // Get current position from transform
+
+        Math::Vec3 currentPosition(rb.collisionBody->getTransform().getPosition().x,
+                                   rb.collisionBody->getTransform().getPosition().y,
+                                   rb.collisionBody->getTransform().getPosition().z);
+
+        // Compute new position based on velocity and time step
+        Math::Vec3 newPosition = currentPosition + rb.linearVelocity * (float)m_timeStep;
+
+        // Update transform with new position
+        rb.collisionBody->setTransform(
+            rp3d::Transform(rp3d::Vector3((float)newPosition.x, (float)newPosition.y, (float)newPosition.z),
+                            rb.collisionBody->getTransform().getOrientation()));
     }
 
     void PhysicsEngine::DetectCollisions(PhysicsScene& scene)
@@ -117,6 +143,49 @@ namespace Vakol
 
     void PhysicsEngine::ResolveCollisions(RigidBody& rb)
     {
+        // Exit if there's no collision data or if the body is static
+        if (!rb.collisionData || rb.type == BodyType::Static)
+        {
+            return;
+        }
+
+        Math::Vec3 collisionNormal = rb.collisionData->normal;
+
+        // Calculate the velocity component along the collision normal
+        float velAlongNormal = Math::Dot(rb.linearVelocity, collisionNormal);
+
+        // If the velocity is away from the collision, do nothing
+        if (velAlongNormal > 0)
+        {
+            return;
+        }
+
+        // Add a restitution factor between 0 and 1
+        float restitution = 0.7f;
+
+        // Calculate the new reflected velocity
+        Math::Vec3 reflectedVelocity = rb.linearVelocity - (1.0f + restitution) * velAlongNormal * collisionNormal;
+
+        // Update the body's velocity
+        rb.linearVelocity = reflectedVelocity;
+
+        // Small distance to move along the collision normal to resolve overlap
+
+        // Calculate the new position based on the collision normal and small distance
+        Math::Vec3 currentPosition(rb.collisionBody->getTransform().getPosition().x,
+                                   rb.collisionBody->getTransform().getPosition().y,
+                                   rb.collisionBody->getTransform().getPosition().z);
+
+        Math::Vec3 newPosition = currentPosition + (float)(rb.collisionData->penetrationDepth + 1.0f) * collisionNormal;
+
+        // Update the transform with the new position
+        rb.collisionBody->setTransform(
+            rp3d::Transform(rp3d::Vector3((float)newPosition.x, (float)newPosition.y, (float)newPosition.z),
+                            rb.collisionBody->getTransform().getOrientation()));
+
+        rb.collisionData->penetrationDepth = 0.0f;
+        rb.collisionData->normal = Math::Vec3(0.0f, 0.0f, 0.0f);
+        rb.collisionData->worldPoint = Math::Vec3(0.0f, 0.0f, 0.0f);
     }
 
     void PhysicsEngine::SetTimeStep(double step)

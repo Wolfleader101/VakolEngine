@@ -148,6 +148,9 @@ namespace Vakol
     void Application::Run()
     {
         double physicsAccumulator = 0.0;
+
+        bool set = false;
+
         while (m_running)
         {
             m_time.Update();
@@ -161,6 +164,60 @@ namespace Vakol
             m_layerManager.OnUpdate();
 
             Scene& activeScene = m_sceneManager.GetActiveScene();
+            if (activeScene.getName() == "sandbox" && !set)
+            {
+                // BALL
+                {
+
+                    Entity ent = activeScene.CreateEntity("Ball");
+
+                    ent.AddComponent<Rendering::Drawable>();
+
+                    auto& model = AssetLoader::GetModel("coreAssets/models/sphere.obj", 1);
+                    auto& drawable = ent.GetComponent<Rendering::Drawable>();
+
+                    Rendering::RenderEngine::GenerateModel(model, drawable);
+
+                    auto& trans = ent.GetComponent<Components::Transform>();
+                    trans.pos = Math::Vec3(0.0f, 30.0f, 0.0f);
+
+                    RigidBody rb = activeScene.GetPhysicsScene().CreateRigidBody(trans.pos, trans.rot);
+
+                    SphereCollider collider = m_physicsEngine.CreateSphereCollider(1.0);
+                    m_physicsEngine.AttachCollider(rb, collider);
+
+                    ent.AddComponent<RigidBody>(rb);
+                    ent.AddComponent<SphereCollider>(collider);
+                }
+
+                // BOX
+                {
+
+                    Entity ent = activeScene.CreateEntity("Box");
+
+                    ent.AddComponent<Rendering::Drawable>();
+
+                    auto& model = AssetLoader::GetModel("coreAssets/models/cube.obj", 1);
+                    auto& drawable = ent.GetComponent<Rendering::Drawable>();
+
+                    Rendering::RenderEngine::GenerateModel(model, drawable);
+
+                    auto& trans = ent.GetComponent<Components::Transform>();
+                    trans.pos = Math::Vec3(0.0f, 5.0f, 0.0f);
+
+                    RigidBody rb = activeScene.GetPhysicsScene().CreateRigidBody(trans.pos, trans.rot);
+                    rb.type = BodyType::Static;
+
+                    Math::Vec3 halfExts(1.0f, 1.0f, 1.0f);
+                    AABBCollider collider = m_physicsEngine.CreateAABBCollider(halfExts);
+                    m_physicsEngine.AttachCollider(rb, collider);
+
+                    ent.AddComponent<RigidBody>(rb);
+                    ent.AddComponent<AABBCollider>(collider);
+                }
+
+                set = true;
+            }
 
             // Add the time difference in the accumulator
             physicsAccumulator += m_time.deltaTime;
@@ -169,20 +226,40 @@ namespace Vakol
             while (physicsAccumulator >= m_physicsEngine.GetTimeStep())
             {
                 // apply forces
-                activeScene.GetEntityList().Iterate<RigidBody>([&](auto& rb) { m_physicsEngine.ApplyForces(rb); });
+                activeScene.GetEntityList().Iterate<Components::Transform, RigidBody>(
+                    [&](Components::Transform& transform, RigidBody& rb) {
+                        if (rb.type == BodyType::Static)
+                            return;
+                        m_physicsEngine.ApplyForces(rb);
+
+                        // Get current position from transform
+                        Math::Vec3 currentPosition = transform.pos;
+
+                        // Compute new position based on velocity and time step
+                        Math::Vec3 newPosition =
+                            currentPosition + rb.linearVelocity * (float)m_physicsEngine.GetTimeStep();
+
+                        // Update transform with new position
+                        transform.pos = newPosition;
+                    });
 
                 // detect collisions
                 m_physicsEngine.DetectCollisions(activeScene.GetPhysicsScene());
 
                 // resolve collisions
-                activeScene.GetEntityList().Iterate<RigidBody>(
-                    [&](auto& rb) { m_physicsEngine.ResolveCollisions(rb); });
+                activeScene.GetEntityList().Iterate<Components::Transform, RigidBody>(
+                    [&](Components::Transform& transform, RigidBody& rb) {
+                        if (rb.type == BodyType::Static)
+                            return;
+                        m_physicsEngine.ResolveCollisions(rb);
+
+                        transform.pos = Math::Vec3(rb.collisionBody->getTransform().getPosition().x,
+                                                   rb.collisionBody->getTransform().getPosition().y,
+                                                   rb.collisionBody->getTransform().getPosition().z);
+                    });
 
                 // Decrease the accumulated time
                 physicsAccumulator -= m_physicsEngine.GetTimeStep();
-
-                // Compute the time interpolation factor
-                //     double factor = physicsAccumulator / m_timestep;
             }
 
             while (m_time.accumulator >= m_time.tickRate)
@@ -258,7 +335,6 @@ namespace Vakol
     bool Application::OnWindowResize(const WindowResizeEvent& ev) const
     {
         glViewport(0, 0, ev.GetWidth(), ev.GetHeight());
-
         return true;
     }
 
