@@ -26,18 +26,6 @@ namespace Vakol
             Rendering::RenderEngine::GenerateModel(model, drawable);
         });
 
-        entity_type.set_function(
-            "add_texture", [](const Entity* ent, const std::string& path, const std::string& type) {
-                if (!ent->HasComponent<Rendering::Drawable>())
-                {
-                    VK_WARN("No Drawable component found on entity!");
-                    return;
-                }
-
-                AssetLoader::AddTexture(ent->GetComponent<Rendering::Drawable>().materialID,
-                                        AssetLoader::GetTexture(path, Rendering::Assets::ToTextureType(type)));
-            });
-
         entity_type.set_function("replace_texture", [](const Entity* ent, const std::string& src,
                                                        const std::string& dst, const std::string& type) {
             if (!ent->HasComponent<Rendering::Drawable>())
@@ -47,15 +35,6 @@ namespace Vakol
             }
 
             std::vector<Rendering::Assets::Texture> textures;
-
-            AssetLoader::ReplaceTexture(ent->GetComponent<Rendering::Drawable>().materialID, src, dst, type);
-
-            AssetLoader::GetTextures(ent->GetComponent<Rendering::Drawable>().materialID, textures);
-
-            // for (const auto& texture : textures)
-            //{
-            //     VK_TRACE("PATH: {0} | TYPE: {1}", texture.path, Rendering::Assets::ToString(texture.type));
-            // }
         });
 
         entity_type.set_function("set_vec3v", [](const Entity* ent, const char* name, Math::Vec3& value) {

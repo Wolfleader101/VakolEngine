@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Rendering/Assets/Texture.hpp"
-
 #include <string>
 
 namespace Vakol

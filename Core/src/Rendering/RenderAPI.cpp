@@ -27,19 +27,19 @@ namespace Vakol::Rendering
         m_config.API = API;
     }
 
-    void RenderAPI::BeginDraw(const std::string& vertexID, const std::string& shaderID, const std::string& materialID)
+    void RenderAPI::BeginDraw(const std::string& modelID, const std::string& vertexID, const std::string& shaderID)
     {
-        const auto program = ShaderLibrary::GetShader(shaderID);
-
-        OpenGL::BindShaderProgram(program);
-
-        std::vector<Assets::Texture> textures{};
-
-        if (const auto valid = AssetLoader::GetTextures(materialID, textures); valid)
+        OpenGL::BindShaderProgram(AssetLoader::GetShader(shaderID));
+        
+        for (const auto& mesh : AssetLoader::GetMeshes(modelID))
         {
-            for (const auto& texture : textures)
+            const auto& material = mesh.material;
+
+            for (const auto& texture : material->textures)
             {
-                OpenGL::SetActiveTexture(texture.type);
+                //VK_TRACE("PATH: {0} | TYPE: {1} | ID: {2}", texture.path, Assets::ToString(texture.type), texture.ID);
+
+                OpenGL::SetActiveTexture(static_cast<int>(texture.type));
                 OpenGL::BindTexture(texture.ID);
             }
         }
@@ -99,9 +99,8 @@ namespace Vakol::Rendering
 
         const unsigned int program =
             OpenGL::GenerateShaderProgram(shader.vertSrc, shader.geomSrc, shader.tscSrc, shader.tseSrc, shader.fragSrc);
-        ShaderLibrary::GetShaderUniforms(program);
 
-        ShaderLibrary::AddShader(drawable.shaderID, program);
+        AssetLoader::AddShader(drawable.shaderID, program);
     }
 
     unsigned int RenderAPI::GenerateTexture(const int width, const int height, const int channels,

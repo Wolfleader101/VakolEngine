@@ -14,7 +14,7 @@ namespace Vakol
     class ModelLibrary
     {
       public:
-        Rendering::Assets::Model& GetModel(const std::string& path, float scale);
+        Rendering::Assets::Model& GetModel(const std::string& path, float scale = 1.0f);
 
       private:
         std::unordered_map<std::string, Rendering::Assets::Model> m_models;

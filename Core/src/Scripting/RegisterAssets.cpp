@@ -11,7 +11,7 @@ namespace Vakol
     void RegisterAssetLoader(sol::state& lua)
     {
         lua.set_function("load_texture", [](const std::string& path, const bool flip) {
-            if (const auto& texture = std::make_shared<Rendering::Assets::Texture>(AssetLoader::GetTexture(path));
+            if (const auto& texture = std::make_shared<Rendering::Assets::Texture>(AssetLoader::GetTexture(path, 0));
                 texture == nullptr)
             {
                 return false;

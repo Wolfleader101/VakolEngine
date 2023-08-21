@@ -1,6 +1,5 @@
 #include "Rendering/RenderEngine.hpp"
 
-#include "AssetLoader/MaterialLibrary.hpp"
 #include "AssetLoader/ShaderLibrary.hpp"
 #include "Rendering/RenderCommand.hpp"
 
@@ -23,8 +22,6 @@ namespace Vakol::Rendering
         RenderAPI::SetupConfig(width, height, API);
 
         RenderAPI::EnableDepth();
-
-        ShaderLibrary::CreateUniformBuffer("Matrices", 2 * sizeof(Math::Mat4), 1);
     }
 
     void RenderEngine::PreDraw()
@@ -37,13 +34,13 @@ namespace Vakol::Rendering
 
     void RenderEngine::Draw(const Camera& camera, Components::Transform& transform, const Drawable& drawable)
     {
-        RenderAPI::BeginDraw(drawable.vertexArrayID, drawable.shaderID, drawable.materialID);
+        RenderAPI::BeginDraw(drawable.modelID, drawable.vertexArrayID, drawable.shaderID);
 
-        ShaderLibrary::SetMat4(ShaderLibrary::GetShader(drawable.shaderID), "PV_MATRIX", false,
-                               camera.GetMatrix(PROJECTION_MATRIX) * camera.GetMatrix(VIEW_MATRIX));
+        AssetLoader::SetMat4(AssetLoader::GetShader(drawable.shaderID), "PV_MATRIX", false,
+                             camera.GetMatrix(PROJECTION_MATRIX) * camera.GetMatrix(VIEW_MATRIX));
 
-        ShaderLibrary::SetMat4(ShaderLibrary::GetShader(drawable.shaderID), "MODEL_MATRIX", false,
-                               RenderAPI::GetModelMatrix(transform));
+        AssetLoader::SetMat4(AssetLoader::GetShader(drawable.shaderID), "MODEL_MATRIX", false,
+                             RenderAPI::GetModelMatrix(transform));
 
         RenderAPI::EndDraw();
     }
@@ -88,67 +85,22 @@ namespace Vakol::Rendering
         if (success)
             RenderAPI::GenerateShader(std::move(shader), drawable);
 
+        drawable.modelID = model.path;
         drawable.vertexArrayID = GenerateID();
 
         SubmitModel(model, drawable);
 
         for (auto& mesh : model.meshes)
         {
-            auto& material = mesh.material;
+            const auto& material = mesh.material;
 
             material->ID = GenerateID();
             material->shaderID = drawable.shaderID;
 
-            AssetLoader::AddMaterial(*material);
-
-            drawable.materialID = material->ID;
-
-            // if no textures attached to the material
-            if (material->textures.empty())
-            {
-                Assets::Texture texture;
-
-                // create set of white textures for each texture type (so textures from other models don't interfere)
-                // I'm sure there is a more elegant way, I'm sure Unity does something similar, maybe not.
-                // diffuse, specular, ambient, emissive, height, normal
-                for (int i = 0; i < 6; ++i)
-                {
-                    texture.path = "coreAssets/textures/white.png";
-                    texture.type = Assets::VK_TEXTURE_DIFFUSE + i;
-
-                    material->textures.emplace_back(texture);
-                }
-            }
-            else
-            {
-                Assets::Texture fallback;
-
-                fallback.path = "coreAssets/textures/white.png";
-
-                std::vector<unsigned int> types;
-
-                for (const auto& texture : material->textures)
-                {
-                    types.emplace_back(texture.type);
-                }
-
-                for (unsigned int i = 0u; i < 6u; ++i)
-                {
-                    unsigned int target = Assets::VK_TEXTURE_DIFFUSE + i;
-
-                    if (!std::count(types.begin(), types.end(), target))
-                    {
-                        fallback.type = target;
-
-                        material->textures.emplace_back(fallback);
-                    }
-                }
-            }
-
-            for (auto& texture : material->textures)
-            {
-                AssetLoader::AddTexture(material->ID, AssetLoader::GetTexture(texture.path, texture.type));
-            }
+            //for (auto& texture : material->textures)
+            //{
+            //    AssetLoader::AddTexture(material->ID, AssetLoader::GetTexture(texture.path, texture.type));
+            //}
         }
     }
 

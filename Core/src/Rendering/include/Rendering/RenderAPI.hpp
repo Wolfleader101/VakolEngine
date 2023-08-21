@@ -52,7 +52,7 @@ namespace Vakol::Rendering
         static void ClearColor(float r, float g, float b, float a = 1.0f);
         static void Clear(unsigned int mask);
 
-        static void BeginDraw(const std::string& vertexID, const std::string& shaderID, const std::string& materialID);
+        static void BeginDraw(const std::string& modelID, const std::string& vertexID, const std::string& shaderID);
         static void EndDraw();
 
         static void PrepareVertexArray();

@@ -28,5 +28,5 @@ void main()
 	vec4 ambient = texture(material.ambient_map, TexCoords);
 	vec4 normal = texture(material.normal_map, TexCoords);
 
-	FragColor = normal;
+	FragColor = diffuse;
 }

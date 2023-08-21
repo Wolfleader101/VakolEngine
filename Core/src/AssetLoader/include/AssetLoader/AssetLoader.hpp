@@ -6,24 +6,17 @@
 #include "Rendering/Assets/Model.hpp"
 #include "Rendering/Assets/Texture.hpp"
 
-#include "MaterialLibrary.hpp"
 #include "ModelLibrary.hpp"
-
-// Needed a custom hasher for unordered-map key of std::pair.
-struct PairHash
-{
-    template <class T1, class T2>
-    std::size_t operator()(const std::pair<T1, T2>& pair) const
-    {
-        const auto& v1 = std::hash<T1>{}(pair.first);
-        const auto& v2 = std::hash<T2>{}(pair.second);
-
-        return v1 ^ v2;
-    }
-};
+#include "ShaderLibrary.hpp"
+#include "TextureLibrary.hpp"
 
 namespace Vakol
 {
+    namespace Rendering::Assets
+    {
+        struct Shader;
+    }
+
     /**
      * @brief AssetLoader class for loading game assets.
      */
@@ -45,58 +38,23 @@ namespace Vakol
          */
         static std::string shader_path;
 
-        /**
-         * \brief
-         * \param path
-         * \param scale
-         * \return
-         */
+        static void AddShader(const std::string& shaderID, unsigned int shader);
+
+        static void SetMat4(unsigned int shader, const char* name, bool transpose, const Math::Mat4& value);
+
         static Rendering::Assets::Model& GetModel(const std::string& path, float scale = 1.0f);
+        static const std::vector<Rendering::Assets::Mesh>& GetMeshes(const std::string& modelID);
 
-        static Rendering::Assets::Material& GetMaterial(const std::string& materialID);
+        static unsigned int GetShader(const std::string& shaderID);
 
-        static Rendering::Assets::Texture& GetTexture(const std::string& path,
-                                                      unsigned int type = Rendering::Assets::VK_TEXTURE_DIFFUSE);
+        static Rendering::Assets::Texture& GetTexture(const std::string& path, unsigned int type);
         static Rendering::Assets::Texture& GetTexture(const std::string& path, unsigned int type, int size,
-                                                      const void* buffer);
-
-        /**
-         * \brief dd
-         * \param materialID
-         * \param texture
-         */
-        static void AddTexture(const std::string& materialID, const Rendering::Assets::Texture& texture);
-
-        /**
-         * \brief
-         * \param materialID
-         * \param srcPath
-         * \param dstPath
-         * \param srcType
-         * \param dstType
-         */
-        static void ReplaceTexture(const std::string& materialID, const std::string& srcPath,
-                                   const std::string& dstPath, const std::string& type);
-
-        /**
-         * \brief
-         * \param material
-         */
-        static void AddMaterial(const Rendering::Assets::Material& material);
-
-        /**
-         * \brief dd
-         * \param materialID d
-         * \param textures dd
-         * \return bool true if valid, false if invalid
-         */
-        static bool GetTextures(const std::string& materialID, std::vector<Rendering::Assets::Texture>& textures);
+                                                      const void* data);
 
       private:
         static ModelLibrary m_modelLibrary;
-        static MaterialLibrary m_materialLibrary;
-
-        static std::unordered_map<std::pair<std::string, unsigned int>, Rendering::Assets::Texture, PairHash> m_textures;
+        static ShaderLibrary m_shaderLibrary;
+        static TextureLibrary m_textureLibrary;
     };
 
 } // namespace Vakol
