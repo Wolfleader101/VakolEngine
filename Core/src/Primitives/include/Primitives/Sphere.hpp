@@ -23,18 +23,30 @@ namespace Vakol
             * @param inputRadius The radius of the sphere
             * @param inputStacks The number of stacks (latitude) of the sphere
             * @param inputSectors The number of sectors (longitude) of the sphere
+            * @param inputName The name of the sphere
             *
             */
-            Sphere(Math::Vec3 inputPosition, double inputRadius, unsigned inputStacks, unsigned inputSectors);
+            Sphere(Math::Vec3 inputPosition, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName);
             /**
             * @brief Generate the data for a 3D sphere
             * @param inputPosition The position of the sphere
             * @param inputRadius The radius of the sphere
             * @param inputStacks The number of stacks (latitude) of the sphere
             * @param inputSectors The number of sectors (longitude) of the sphere
+            * @param inputName The name of the sphere
             *
             */
-            void GenerateData(Math::Vec3 inputPosition, double inputRadius, unsigned inputStacks, unsigned inputSectors);
+            void GenerateData(Math::Vec3 inputPosition, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName);
+            /**
+             * @brief A function which returns the name of the current sphere
+             *
+             */
+            std::string GetName();
+            /**
+             * @brief A function which scales the current sphere
+             *
+             */
+            void SetScale(Math::Vec3 inputScale);
             /**
             * @brief Destroy the Sphere object
             *
@@ -67,6 +79,12 @@ namespace Vakol
              *
              */
             unsigned sectors;
+
+            /**
+             * @brief The name of the sphere
+             *
+             */
+            std::string name;
 
             /**
              * @brief The mesh object of the sphere

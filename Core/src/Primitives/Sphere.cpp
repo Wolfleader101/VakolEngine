@@ -7,12 +7,13 @@ namespace Vakol
         position = Math::Vec3(0.0f, 0.0f, 0.0f);
         scale = Math::Vec3(1.0f, 1.0f, 1.0f);
         rotation = Math::Quat(0.0f, 0.0f, 0.0f, 1.0f);
+        name = "DEFAULT_SPHERE_NAME";
 
         stacks = 0;
         sectors = 0;
 	}
 
-    Sphere::Sphere(Math::Vec3 inputPosition, double inputRadius, unsigned inputStacks, unsigned inputSectors)
+    Sphere::Sphere(Math::Vec3 inputPosition, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName)
     {
         position = inputPosition; 
         scale = Math::Vec3(1.0f, 1.0f, 1.0f);
@@ -20,16 +21,18 @@ namespace Vakol
 
         stacks = inputStacks;
         sectors = inputSectors; 
+        name = inputName; 
 
-        GenerateData(inputPosition, inputRadius, inputStacks, inputSectors);
+        GenerateData(inputPosition, inputRadius, inputStacks, inputSectors, inputName);
     }
 
-    void Sphere::GenerateData(Math::Vec3 inputPosition, double inputRadius, unsigned inputStacks, unsigned inputSectors)
+    void Sphere::GenerateData(Math::Vec3 inputPosition, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName)
     {
         Rendering::Vertex tmpVertex;                                        // A temporary vertex object to store the data
 
         tmpVertex.bitangent = Math::Vec3(0.0f, 0.0f, 0.0f);                 // Set the bitangent to 0
         tmpVertex.tangent = Math::Vec3(0.0f, 0.0f, 0.0f);                   // Set the tangent to 0
+        name = inputName; 												    // Set the name of the sphere
 
         double x, y, z, xy;                                                 // Vertex Position
         double nx, ny, nz, lengthInv = 1.0f / inputRadius;                  // Vertex Normal
@@ -79,8 +82,8 @@ namespace Vakol
         // Generate the indices
         for (int i = 0; i < inputStacks; ++i)
         {
-            k1 = i * (inputSectors + 1); // beginning of current stack
-            k2 = k1 + inputSectors + 1;  // beginning of next stack
+            k1 = i * (inputSectors + 1);                                    // Beginning of current stack
+            k2 = k1 + inputSectors + 1;                                     // Beginning of next stack
 
             for (int j = 0; j < inputSectors; ++j, ++k1, ++k2)
             {
@@ -103,6 +106,24 @@ namespace Vakol
             }
         }
     }
+
+    std::string Sphere::GetName()
+    {
+		return name;
+	}
+
+    void Sphere::SetScale(Math::Vec3 inputScale)
+    {
+		scale = inputScale;                                                 // Set the scale
+
+        // Loop through all the vertices and scale them
+        for (Rendering::Vertex& vertex : mesh.vertices)
+        {
+            vertex.position.x *= scale.x; 
+            vertex.position.y *= scale.y; 
+            vertex.position.z *= scale.z;
+        }
+	}
 
     Sphere::~Sphere()
     {

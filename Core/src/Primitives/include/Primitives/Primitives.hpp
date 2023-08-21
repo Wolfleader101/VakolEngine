@@ -26,6 +26,15 @@ namespace Vakol
 			Rendering::Assets::Mesh mesh;   ///< The mesh object of the cube
 		};
 
+        /**
+         * @brief An enum for the different types of shapes
+         *
+         */
+        enum ShapeType
+        {
+            SPHERE                          ///< Sphere shape
+        };
+
         public:
             /**
             * @brief Construct a new Primitives object
@@ -38,17 +47,18 @@ namespace Vakol
             * @param inputRadius The radius of the sphere
             * @param inputStacks The number of stacks (latitude) of the sphere
             * @param inputSectors The number of sectors (longitude) of the sphere
+            * @param inputName The name of the sphere
             *
             */
-            void CreateSphere(Math::Vec3 inputPosition, double inputRadius, unsigned inputStacks, unsigned inputSectors);
+            void CreateSphere(Math::Vec3 inputPosition, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName);
             /**
-            * @brief Create a 3D Cube object
-            * @param position The position of the cube
-            * @param scale The scale of the cube
-            * @param rotation The rotation of the cube
-            *
-            */
-            void CreateCube(Math::Vec3 position, Math::Vec3 scale, Math::Quat rotation);
+             * @brief Scale a selected primitive shape
+             * @param type The type of shape to scale
+             * @param inputScale The scale of the shape
+             * @param inputName The name of the shape
+             *
+             */
+            void Scale(ShapeType type, Math::Vec3 inputScale, std::string inputName);
             /**
             * @brief Destroy the Primitives object
             *
