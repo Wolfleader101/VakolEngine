@@ -3,6 +3,8 @@
 #include "Math/Math.hpp"
 #include "Rendering/Assets/Mesh.hpp"
 
+#include "Primitives/Sphere.hpp"
+
 namespace Vakol
 {
     /**
@@ -24,34 +26,12 @@ namespace Vakol
 			Rendering::Assets::Mesh mesh;   ///< The mesh object of the cube
 		};
 
-        struct Sphere
-        {
-			Math::Vec3 position;            ///< The position of the sphere
-            Math::Vec3 scale;               ///< The scale of the sphere
-            Math::Quat rotation;            ///< The rotation of the sphere
-
-            unsigned stacks;                ///< The number of stacks (latitude) of the sphere
-            unsigned sectors;               ///< The number of sectors (longitude) of the sphere
-
-            Rendering::Assets::Mesh mesh;   ///< The mesh object of the sphere
-        };
-
         public:
             /**
             * @brief Construct a new Primitives object
             *
             */
             Primitives();
-            /**
-            * @brief Create a 3D Sphere object
-            * @param position The position of the sphere
-            * @param scale The scale of the sphere
-            * @param rotation The rotation of the sphere
-            * @param stacks The number of stacks (latitude) of the sphere
-            * @param sectors The number of sectors (longitude) of the sphere
-            *
-            */
-            void CreateSphere(Math::Vec3 position, Math::Vec3 scale, Math::Quat rotation, unsigned stacks, unsigned sectors);
             /**
             * @brief Create a 3D Cube object
             * @param position The position of the cube

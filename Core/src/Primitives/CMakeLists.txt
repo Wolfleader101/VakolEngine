@@ -1,5 +1,6 @@
 SET(PRIMITIVES_SRC
     ${CMAKE_CURRENT_SOURCE_DIR}/Primitives.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Sphere.cpp
     PARENT_SCOPE
 )
 
