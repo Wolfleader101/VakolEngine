@@ -121,6 +121,31 @@ namespace Vakol::Rendering
                     material->textures.emplace_back(texture);
                 }
             }
+            else
+            {
+                Assets::Texture fallback;
+
+                fallback.path = "coreAssets/textures/white.png";
+
+                std::vector<unsigned int> types;
+
+                for (const auto& texture : material->textures)
+                {
+                    types.emplace_back(texture.type);
+                }
+
+                for (unsigned int i = 0u; i < 6u; ++i)
+                {
+                    unsigned int target = Assets::VK_TEXTURE_DIFFUSE + i;
+
+                    if (!std::count(types.begin(), types.end(), target))
+                    {
+                        fallback.type = target;
+
+                        material->textures.emplace_back(fallback);
+                    }
+                }
+            }
 
             for (auto& texture : material->textures)
             {
