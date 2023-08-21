@@ -9,9 +9,8 @@ namespace Vakol
 
     void Primitives::CreateSphere(Math::Vec3 inputPosition, double inputRadius, unsigned inputStacks, unsigned inputSectors)
     {
-        Sphere tmpSphere;                                                               // Create a new Sphere object
-        tmpSphere.GenerateData(inputPosition, inputRadius, inputStacks, inputSectors);  // Generate the data for the sphere
-        m_Spheres.push_back(tmpSphere);                                                 // Add the sphere to the vector
+        Sphere tmpSphere(inputPosition, inputRadius, inputStacks, inputSectors);    // Create a new Sphere object with input data
+        m_Spheres.push_back(tmpSphere);                                             // Add the sphere to the storage vector
     }
 
     void Primitives::CreateCube(Math::Vec3 position, Math::Vec3 scale, Math::Quat rotation)
