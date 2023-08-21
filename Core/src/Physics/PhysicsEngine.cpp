@@ -176,7 +176,7 @@ namespace Vakol
                                    rb.collisionBody->getTransform().getPosition().y,
                                    rb.collisionBody->getTransform().getPosition().z);
 
-        Math::Vec3 newPosition = currentPosition + (float)(rb.collisionData->penetrationDepth + 1.0f) * collisionNormal;
+        Math::Vec3 newPosition = currentPosition + (float)rb.collisionData->penetrationDepth * collisionNormal;
 
         // Update the transform with the new position
         rb.collisionBody->setTransform(

@@ -203,7 +203,7 @@ namespace Vakol
                     Rendering::RenderEngine::GenerateModel(model, drawable);
 
                     auto& trans = ent.GetComponent<Components::Transform>();
-                    trans.pos = Math::Vec3(0.0f, 5.0f, 0.0f);
+                    trans.pos = Math::Vec3(0.0f, 2.0f, 0.0f);
 
                     RigidBody rb = activeScene.GetPhysicsScene().CreateRigidBody(trans.pos, trans.rot);
                     rb.type = BodyType::Static;

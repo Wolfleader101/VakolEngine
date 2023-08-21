@@ -151,7 +151,7 @@ namespace Vakol
          * @brief time step value
          *
          */
-        double m_timeStep = 1.0 / 60.0;
+        double m_timeStep = 1.0 / 120.0;
 
         /**
          * @brief react physics common object
