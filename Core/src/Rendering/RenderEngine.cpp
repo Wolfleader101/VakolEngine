@@ -6,8 +6,6 @@
 
 #include "Rendering/Assets/Model.hpp"
 
-#include "Window/Window.hpp"
-
 #include "AssetLoader/ShaderLoader.hpp"
 
 #include "AssetLoader/AssetLoader.hpp"

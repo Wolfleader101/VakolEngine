@@ -37,7 +37,7 @@ namespace Vakol
 
     void MaterialLibrary::AddTexture(const std::string& materialID, const Rendering::Assets::Texture& texture)
     {
-        VK_TRACE("TEXTURE PATH: {0} | TEXTURE TYPE: {1}", texture.path, Rendering::Assets::ToString(texture.type));
+        //VK_TRACE("TEXTURE PATH: {0} | TEXTURE TYPE: {1}", texture.path, Rendering::Assets::ToString(texture.type));
 
         m_textures[materialID].emplace_back(texture);
     }

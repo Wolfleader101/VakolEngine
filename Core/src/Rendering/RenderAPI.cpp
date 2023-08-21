@@ -13,8 +13,6 @@
 #include "ECS/Components.hpp"
 #include "Logger/Logger.hpp"
 
-#include "AssetLoader/TextureLoader.hpp"
-
 namespace Vakol::Rendering
 {
     std::map<std::string, std::vector<VertexCommand>> RenderAPI::m_vertexLibrary;
@@ -41,42 +39,15 @@ namespace Vakol::Rendering
         {
             for (const auto& texture : textures)
             {
-                switch (texture.type)
-                {
-                case Assets::VK_TEXTURE_NONE:
-                    break;
-                case Assets::VK_TEXTURE_DIFFUSE:
-                    OpenGL::SetActiveTexture(Assets::VK_TEXTURE_DIFFUSE);
-                    OpenGL::BindTexture(texture.ID);
-                    break;
-                case Assets::VK_TEXTURE_SPECULAR:
-                    OpenGL::SetActiveTexture(Assets::VK_TEXTURE_SPECULAR);
-                    OpenGL::BindTexture(texture.ID);
-                    break;
-                case Assets::VK_TEXTURE_AMBIENT:
-                    OpenGL::SetActiveTexture(Assets::VK_TEXTURE_AMBIENT);
-                    OpenGL::BindTexture(texture.ID);
-                    break;
-                case Assets::VK_TEXTURE_EMISSION:
-                    OpenGL::SetActiveTexture(Assets::VK_TEXTURE_EMISSION);
-                    OpenGL::BindTexture(texture.ID);
-                    break;
-                case Assets::VK_TEXTURE_HEIGHT:
-                    OpenGL::SetActiveTexture(Assets::VK_TEXTURE_HEIGHT);
-                    OpenGL::BindTexture(texture.ID);
-                    break;
-                case Assets::VK_TEXTURE_NORMAL:
-                    OpenGL::SetActiveTexture(Assets::VK_TEXTURE_NORMAL);
-                    OpenGL::BindTexture(texture.ID);
-                    break;
-                }
-
-                for (const auto& vertexArray : m_vertexLibrary.at(vertexID))
-                {
-                    OpenGL::BindVertexArray(vertexArray.vertexArray);
-                    OpenGL::DrawTriangleElements(vertexArray.nIndices);
-                }
+                OpenGL::SetActiveTexture(texture.type);
+                OpenGL::BindTexture(texture.ID);
             }
+        }
+
+        for (const auto& vertexArray : m_vertexLibrary.at(vertexID))
+        {
+            OpenGL::BindVertexArray(vertexArray.vertexArray);
+            OpenGL::DrawTriangleElements(vertexArray.nIndices);
         }
     }
 
