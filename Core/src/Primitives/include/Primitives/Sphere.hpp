@@ -28,7 +28,7 @@ namespace Vakol
             * @param inputName The name of the sphere
             *
             */
-            Sphere(Components::Transform& inputTransform, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName);
+            Sphere(Components::Transform inputTransform, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName);
             /**
              * @brief A function which returns the name of the current sphere
              *
@@ -67,13 +67,13 @@ namespace Vakol
             * @param inputName The name of the sphere
             *
             */
-            void GenerateData(Components::Transform& inputTransform, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName);
+            void GenerateData(Components::Transform inputTransform, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName);
 
             /**
              * @brief sphereTransform The transform of the sphere
              *
              */
-            Components::Transform& sphereTransform;
+            Components::Transform sphereTransform;
 
             /**
              * @brief The number of stacks (latitude) of the sphere

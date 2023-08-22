@@ -13,24 +13,24 @@ namespace Vakol
 		sectors = 10;                                                       // Set the number of sectors to 0
 		name = "DEFAULT_SPHERE";                                            // Set the name to DEFAULT_SPHERE
 
-		GenerateData(sphereTransform, 1.0f, 0, 0, name); // Generate the data for the sphere
+		GenerateData(sphereTransform, 1.0f, 0, 0, name);                    // Generate the data for the sphere
     }
 
-    Sphere::Sphere(Components::Transform& inputTransform, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName)
+    Sphere::Sphere(Components::Transform inputTransform, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName)
     {
-        sphereTransform.pos = inputTransform.pos; 
-        sphereTransform.scale = inputTransform.scale;
-        sphereTransform.rot = inputTransform.rot;
-        sphereTransform.eulerAngles = inputTransform.eulerAngles;
+        sphereTransform.pos = inputTransform.pos; 						    // Set the position to the input position
+        sphereTransform.scale = inputTransform.scale;					    // Set the scale to the input scale
+        sphereTransform.rot = inputTransform.rot;						    // Set the rotation to the input rotation
+        sphereTransform.eulerAngles = inputTransform.eulerAngles;		    // Set the euler angles to the input euler angles
 
-        stacks = inputStacks;
-        sectors = inputSectors; 
-        name = inputName; 
+        stacks = inputStacks; 											    // Set the number of stacks to the input number of stacks
+        sectors = inputSectors; 										    // Set the number of sectors to the input number of sectors
+        name = inputName; 												    // Set the name to the input name
 
         GenerateData(inputTransform, inputRadius, inputStacks, inputSectors, inputName);
     }
 
-    void Sphere::GenerateData(Components::Transform& inputTransform, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName)
+    void Sphere::GenerateData(Components::Transform inputTransform, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName)
     {
         Rendering::Vertex tmpVertex;                                        // A temporary vertex object to store the data
 
@@ -133,13 +133,7 @@ namespace Vakol
         for (size_t i = 0; i < originalVertices.size(); ++i)
         {
             mesh.vertices[i].position = originalVertices[i].position * inputScale; // Apply scaling to position
-
-            mesh.vertices[i].position.x *= inputScale.x;
-            mesh.vertices[i].position.y *= inputScale.y;
-            mesh.vertices[i].position.z *= inputScale.z;
-
-            // Apply scaling to the normal
-            mesh.vertices[i].normal *= originalVertices[i].normal; 
+            mesh.vertices[i].normal *= originalVertices[i].normal * inputScale; // Apply scaling to normal
         }
 
         sphereTransform.scale = inputScale; // Set the new scale variable
