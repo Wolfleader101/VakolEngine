@@ -40,8 +40,14 @@ namespace Vakol::Rendering
         AssetLoader::SetMat4(AssetLoader::GetShader(drawable.shaderID), "PV_MATRIX", false,
                              camera.GetMatrix(PROJECTION_MATRIX) * camera.GetMatrix(VIEW_MATRIX));
 
-        AssetLoader::SetMat4(AssetLoader::GetShader(drawable.shaderID), "MODEL_MATRIX", false,
-                             RenderAPI::GetModelMatrix(transform));
+        const auto& modelMatrix = RenderAPI::GetModelMatrix(transform);
+
+        AssetLoader::SetMat4(AssetLoader::GetShader(drawable.shaderID), "MODEL_MATRIX", false, modelMatrix);
+
+        AssetLoader::SetMat3(AssetLoader::GetShader(drawable.shaderID), "NORMAL_MATRIX", true,
+                             Math::Inverse(Math::Mat3(modelMatrix)));
+
+        AssetLoader::SetVec3(AssetLoader::GetShader(drawable.shaderID), "VIEW_POSITION", camera.GetPos());
 
         RenderAPI::EndDraw();
     }
