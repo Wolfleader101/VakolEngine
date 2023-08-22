@@ -14,6 +14,11 @@ namespace Vakol
     {
         public:
             /**
+            * @brief Construct a new Sphere object
+            *
+            */
+            Sphere();
+            /**
             * @brief Construct a new Sphere object with a position, radius, stacks and sectors
             * @param inputPosition The position of the sphere
             * @param inputRadius The radius of the sphere

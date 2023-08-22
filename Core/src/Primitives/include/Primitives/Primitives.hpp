@@ -1,5 +1,7 @@
 #pragma once
 
+#include <unordered_map>
+
 #include "Math/Math.hpp"
 #include "Rendering/Assets/Mesh.hpp"
 #include "Logger/Logger.hpp"
@@ -70,9 +72,9 @@ namespace Vakol
             ~Primitives();
         private:
             /**
-            * @brief A vector of sphere objects
+            * @brief A map of all the spheres
             *
             */
-			std::vector<Sphere> m_Spheres;
+            std::unordered_map<std::string, Sphere> m_Spheres;
     };
 } // namespace Vakol

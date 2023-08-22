@@ -2,6 +2,19 @@
 
 namespace Vakol
 {
+    Sphere::Sphere()
+    {
+        position = Math::Vec3(0.0f, 0.0f, 0.0f);                            // Set the position to 0
+		scale = Math::Vec3(1.0f, 1.0f, 1.0f);                               // Set the scale to 1
+		rotation = Math::Quat(0.0f, 0.0f, 0.0f, 1.0f);                      // Set the rotation to 0
+
+		stacks = 10;                                                        // Set the number of stacks to 0
+		sectors = 10;                                                       // Set the number of sectors to 0
+		name = "DEFAULT_SPHERE";                                            // Set the name to DEFAULT_SPHERE
+
+		GenerateData(position, 1.0f, 0, 0, name);                           // Generate the data for the sphere
+    }
+
     Sphere::Sphere(Math::Vec3& inputPosition, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName)
     {
         position = inputPosition; 
