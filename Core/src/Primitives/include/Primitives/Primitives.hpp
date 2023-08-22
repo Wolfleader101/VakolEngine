@@ -56,6 +56,14 @@ namespace Vakol
              */
             void Position(ShapeType type, Math::Vec3& inputPosition, std::string inputName);
             /**
+             * @brief Rotate a selected primitive shape
+             * @param type The type of shape to rotate
+             * @param inputRotation The new rotation of the shape
+             * @param inputName The name of the shape
+             *
+             */
+            void Rotation(ShapeType type, Math::Quat& inputRotation, std::string inputName);
+            /**
             * @brief Destroy the Primitives object
             *
             */

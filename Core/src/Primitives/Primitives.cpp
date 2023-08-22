@@ -59,6 +59,29 @@ namespace Vakol
         }
     }
 
+    void Primitives::Rotation(ShapeType type, Math::Quat& inputRotation, std::string inputName)
+    {
+        // Switch between the different types of shapes
+        switch (type)
+        {
+        case SPHERE:
+                // Loop through all the spheres
+                for (unsigned i = 0; i < m_Spheres.size(); i++)
+                {
+                    // Check if the name of the current sphere is the same as the input name
+                    if (m_Spheres[i].GetName() == inputName)
+                    {
+                        m_Spheres[i].SetRotation(inputRotation); // Rotate the sphere
+                    }
+                }
+                break;
+        default:
+                VK_ERROR("The primitive shape type is not valid!");
+
+                break;
+        }
+    }
+
     Primitives::~Primitives()
     {
         
