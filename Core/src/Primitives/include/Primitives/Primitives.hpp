@@ -1,6 +1,9 @@
 #pragma once
 
 #include <unordered_map>
+#include <algorithm>
+
+#include <crossguid/guid.hpp>
 
 #include "Math/Math.hpp"
 #include "Rendering/Assets/Mesh.hpp"
@@ -45,26 +48,32 @@ namespace Vakol
              * @brief Scale a selected primitive shape
              * @param type The type of shape to scale
              * @param inputScale The new scale of the shape
-             * @param inputName The name of the shape
+             * @param inputGUID The GUID of the shape
              *
              */
-            void Scale(ShapeType type, Math::Vec3& inputScale, std::string inputName);
+            void Scale(ShapeType type, Math::Vec3& inputScale, xg::Guid inputGUID);
             /**
              * @brief Position a selected primitive shape
              * @param type The type of shape to scale
              * @param inputPosition The new position of the shape
-             * @param inputName The name of the shape
+             * @param inputGUID The GUID of the shape
              *
              */
-            void Position(ShapeType type, Math::Vec3& inputPosition, std::string inputName);
+            void Position(ShapeType type, Math::Vec3& inputPosition, xg::Guid inputGUID);
             /**
              * @brief Rotate a selected primitive shape
              * @param type The type of shape to rotate
              * @param inputRotation The new rotation of the shape
-             * @param inputName The name of the shape
+             * @param inputGUID The GUID of the shape
              *
              */
-            void Rotation(ShapeType type, Math::Quat& inputRotation, std::string inputName);
+            void Rotation(ShapeType type, Math::Quat& inputRotation, xg::Guid inputGUID);
+            /**
+             * @brief Return the GUID of a shape based on its name
+             * @param name The name of the shape corrisonding to the GUID
+             *
+             */
+            xg::Guid GetGuidByName(const std::string& name);
             /**
             * @brief Destroy the Primitives object
             *
@@ -75,6 +84,11 @@ namespace Vakol
             * @brief A map of all the spheres
             *
             */
-            std::unordered_map<std::string, Sphere> m_Spheres;
+            std::unordered_map<xg::Guid, Sphere> m_Spheres;
+            /**
+            * @brief A map of corripsonding names to guids
+            *
+            */
+            std::unordered_map<std::string, xg::Guid> nameToGuidMap; 
     };
 } // namespace Vakol
