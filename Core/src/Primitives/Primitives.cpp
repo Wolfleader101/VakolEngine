@@ -7,13 +7,13 @@ namespace Vakol
         
     }
 
-    void Primitives::CreateSphere(Math::Vec3 inputPosition, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName)
+    void Primitives::CreateSphere(Math::Vec3& inputPosition, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName)
     {
         Sphere tmpSphere(inputPosition, inputRadius, inputStacks, inputSectors, inputName);     // Create a new Sphere object with input data
         m_Spheres.push_back(tmpSphere);                                                         // Add the sphere to the storage vector
     }
 
-    void Primitives::Scale(ShapeType type, Math::Vec3 inputScale, std::string inputName)
+    void Primitives::Scale(ShapeType type, Math::Vec3& inputScale, std::string inputName)
     {
         // Switch between the different types of shapes
         switch (type)
@@ -36,7 +36,7 @@ namespace Vakol
 		}
     }
 
-    void Primitives::Position(ShapeType type, Math::Vec3 inputPosition, std::string inputName)
+    void Primitives::Position(ShapeType type, Math::Vec3& inputPosition, std::string inputName)
     {
         // Switch between the different types of shapes
         switch (type)

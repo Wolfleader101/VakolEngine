@@ -38,7 +38,7 @@ namespace Vakol
             * @param inputName The name of the sphere
             *
             */
-            void CreateSphere(Math::Vec3 inputPosition, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName);
+            void CreateSphere(Math::Vec3& inputPosition, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName);
             /**
              * @brief Scale a selected primitive shape
              * @param type The type of shape to scale
@@ -46,7 +46,7 @@ namespace Vakol
              * @param inputName The name of the shape
              *
              */
-            void Scale(ShapeType type, Math::Vec3 inputScale, std::string inputName);
+            void Scale(ShapeType type, Math::Vec3& inputScale, std::string inputName);
             /**
              * @brief Position a selected primitive shape
              * @param type The type of shape to scale
@@ -54,7 +54,7 @@ namespace Vakol
              * @param inputName The name of the shape
              *
              */
-            void Position(ShapeType type, Math::Vec3 inputPosition, std::string inputName);
+            void Position(ShapeType type, Math::Vec3& inputPosition, std::string inputName);
             /**
             * @brief Destroy the Primitives object
             *
