@@ -15,7 +15,7 @@
 
 namespace Vakol::Rendering
 {
-    std::map<std::string, std::vector<VertexCommand>> RenderAPI::m_vertexLibrary;
+    std::map<std::string, VertexCommand> RenderAPI::m_vertexLibrary;
 
     RenderConfig RenderAPI::m_config;
 
@@ -27,7 +27,7 @@ namespace Vakol::Rendering
         m_config.API = API;
     }
 
-    void RenderAPI::BeginDraw(const std::string& modelID, const std::string& vertexID, const std::string& shaderID)
+    void RenderAPI::BeginDraw(const std::string& modelID, const std::string& shaderID)
     {
         OpenGL::BindShaderProgram(AssetLoader::GetShader(shaderID));
         
@@ -37,28 +37,24 @@ namespace Vakol::Rendering
 
             for (const auto& texture : material->textures)
             {
-                //VK_TRACE("PATH: {0} | TYPE: {1} | ID: {2}", texture.path, Assets::ToString(texture.type), texture.ID);
-
                 OpenGL::SetActiveTexture(static_cast<int>(texture.type));
                 OpenGL::BindTexture(texture.ID);
             }
-        }
 
-        for (const auto& vertexArray : m_vertexLibrary.at(vertexID))
-        {
+            const auto& vertexArray = m_vertexLibrary.at(mesh.ID);
+
             OpenGL::BindVertexArray(vertexArray.vertexArray);
             OpenGL::DrawTriangleElements(vertexArray.nIndices);
+            OpenGL::UnbindVertexArray();
         }
     }
 
     void RenderAPI::EndDraw()
     {
-        OpenGL::UnbindVertexArray();
-
         OpenGL::UnbindShaderProgram();
     }
 
-    void RenderAPI::GenerateVertexCommand(VertexArray&& vertexArray, const Drawable& drawable)
+    void RenderAPI::GenerateVertexCommand(VertexArray&& vertexArray)
     {
         VertexCommand command;
 
@@ -82,15 +78,10 @@ namespace Vakol::Rendering
             VK_WARN("Metal rendering has not been implemented yet.");
         }
 
-        m_vertexLibrary[drawable.vertexArrayID].emplace_back(command);
+        m_vertexLibrary[vertexArray.ID] = command;
 
         std::vector<Vertex>().swap(vertexArray.vertices);
         std::vector<unsigned int>().swap(vertexArray.indices);
-    }
-
-    void RenderAPI::PrepareVertexArray()
-    {
-        m_vertexLibrary.emplace();
     }
 
     void RenderAPI::GenerateShader(Assets::Shader&& shader, Drawable& drawable)

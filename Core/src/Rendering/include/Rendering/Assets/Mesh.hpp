@@ -33,6 +33,8 @@ namespace Vakol::Rendering::Assets
 
     struct Mesh
     {
+        std::string ID = "null";
+
         std::string name;
 
         std::vector<Vertex> vertices;

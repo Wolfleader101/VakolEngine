@@ -16,6 +16,7 @@
 #include "Math/Math.hpp"
 
 #include "AssetLoader/AssetLoader.hpp"
+#include "Rendering/RenderCommand.hpp"
 
 #include <iostream>
 
@@ -160,8 +161,8 @@ namespace Vakol
 
         const auto& material = ProcessMaterial(scene, scene.mMaterials[mesh.mMaterialIndex]);
 
-        return {mesh.mName.C_Str(), std::move(vertices), std::move(indices), std::vector<Bone>(),
-                std::make_shared<Material>(material)};
+        return {Rendering::GenerateID(), mesh.mName.C_Str(),  std::move(vertices),
+                std::move(indices),      std::vector<Bone>(), std::make_shared<Material>(material)};
     }
 
     void ExtractVertices(const aiMesh& mesh, std::vector<Rendering::Vertex>& vertices,

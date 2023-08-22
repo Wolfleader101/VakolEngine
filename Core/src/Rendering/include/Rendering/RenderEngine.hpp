@@ -41,10 +41,9 @@ namespace Vakol::Rendering
         static void GenerateCube(float scale, Drawable& drawable);
 
       private:
-        static void SubmitModel(Assets::Model& model,
-                                const Drawable& drawable); // Submit a user-defined model to renderer. Converted into
-                                                           // low-level render components.
-        static void SubmitMesh(Assets::Mesh& mesh, const Drawable& drawable);
+        static void SubmitModel(Assets::Model& model); // Submit a user-defined model to renderer. Converted into
+                                                       // low-level render components.
+        static void SubmitMesh(Assets::Mesh& mesh);
     };
 
     std::shared_ptr<RenderEngine> CreateRenderEngine(const std::string& API, const std::shared_ptr<Window>& window);

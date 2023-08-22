@@ -52,20 +52,18 @@ namespace Vakol::Rendering
         static void ClearColor(float r, float g, float b, float a = 1.0f);
         static void Clear(unsigned int mask);
 
-        static void BeginDraw(const std::string& modelID, const std::string& vertexID, const std::string& shaderID);
+        static void BeginDraw(const std::string& modelID, const std::string& shaderID);
         static void EndDraw();
-
-        static void PrepareVertexArray();
 
         static Math::Mat4 GetModelMatrix(Components::Transform& transform);
 
-        static void GenerateVertexCommand(VertexArray&& vertexArray, const Drawable& drawable);
+        static void GenerateVertexCommand(VertexArray&& vertexArray);
         static void GenerateShader(Assets::Shader&& shader, Drawable& drawable);
 
         static unsigned int GenerateTexture(int width, int height, int channels, const unsigned char* pixels);
 
       private:
-        static std::map<std::string, std::vector<VertexCommand>> m_vertexLibrary;
+        static std::map<std::string, VertexCommand> m_vertexLibrary;
 
         static RenderConfig m_config;
     };

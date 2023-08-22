@@ -34,7 +34,7 @@ namespace Vakol::Rendering
 
     void RenderEngine::Draw(const Camera& camera, Components::Transform& transform, const Drawable& drawable)
     {
-        RenderAPI::BeginDraw(drawable.modelID, drawable.vertexArrayID, drawable.shaderID);
+        RenderAPI::BeginDraw(drawable.modelID, drawable.shaderID);
 
         AssetLoader::SetMat4(AssetLoader::GetShader(drawable.shaderID), "PV_MATRIX", false,
                              camera.GetMatrix(PROJECTION_MATRIX) * camera.GetMatrix(VIEW_MATRIX));
@@ -60,7 +60,7 @@ namespace Vakol::Rendering
         auto model = AssetLoader::GetModel("coreAssets/models/sphere.obj", scale);
 
         if (success)
-            SubmitModel(model, drawable);
+            SubmitModel(model);
     }
 
     void RenderEngine::GenerateCube(const float scale, Drawable& drawable)
@@ -74,7 +74,7 @@ namespace Vakol::Rendering
         auto model = AssetLoader::GetModel("coreAssets/models/cube.obj", scale);
 
         if (success)
-            SubmitModel(model, drawable);
+            SubmitModel(model);
     }
 
     void RenderEngine::GenerateModel(Assets::Model& model, Drawable& drawable)
@@ -86,9 +86,8 @@ namespace Vakol::Rendering
             RenderAPI::GenerateShader(std::move(shader), drawable);
 
         drawable.modelID = model.path;
-        drawable.vertexArrayID = GenerateID();
 
-        SubmitModel(model, drawable);
+        SubmitModel(model);
 
         for (auto& mesh : model.meshes)
         {
@@ -97,26 +96,63 @@ namespace Vakol::Rendering
             material->ID = GenerateID();
             material->shaderID = drawable.shaderID;
 
-            //for (auto& texture : material->textures)
-            //{
-            //    AssetLoader::AddTexture(material->ID, AssetLoader::GetTexture(texture.path, texture.type));
-            //}
+            auto& textures = material->textures;
+
+            auto compare = [](const Assets::Texture& lhs, const Assets::Texture& rhs) -> bool {
+                return lhs.ID < rhs.ID;
+            };
+
+            if (textures.empty())
+            {
+                for (int i = 0; i < 6; ++i)
+                {
+                    std::string path = "coreAssets/textures/white.png";
+                    const unsigned int type = Assets::VK_TEXTURE_DIFFUSE + i;
+
+                    material->textures.emplace_back(AssetLoader::GetTexture(path, type));
+                }
+            }
+            else
+            {
+                std::string path = "coreAssets/textures/white.png";
+
+                std::vector<unsigned int> types;
+
+                for (const auto& texture : material->textures)
+                {
+                    types.emplace_back(texture.type);
+                }
+
+                for (int i = 0; i < 6; ++i)
+                {
+                    unsigned int target = Assets::VK_TEXTURE_DIFFUSE + i;
+
+                    if (!std::count(types.begin(), types.end(), target))
+                    {
+                        const unsigned int type = target;
+
+                        material->textures.emplace_back(AssetLoader::GetTexture(path, type));
+                    }
+                }
+            }
+
+            std::sort(textures.begin(), textures.end(), compare);
         }
     }
 
-    void RenderEngine::SubmitModel(Assets::Model& model, const Drawable& drawable)
+    void RenderEngine::SubmitModel(Assets::Model& model)
     {
-        RenderAPI::PrepareVertexArray();
-
         for (auto& mesh : model.meshes)
         {
-            SubmitMesh(mesh, drawable);
+            SubmitMesh(mesh);
         }
     }
 
-    void RenderEngine::SubmitMesh(Assets::Mesh& mesh, const Drawable& drawable)
+    void RenderEngine::SubmitMesh(Assets::Mesh& mesh)
     {
         VertexArray vertexArray;
+
+        vertexArray.ID = mesh.ID;
 
         vertexArray.vertices = mesh.vertices;
         vertexArray.indices = mesh.indices;
@@ -124,7 +160,7 @@ namespace Vakol::Rendering
         // swap vector with an empty vector to de-allocate the memory taken by the vector
         std::vector<unsigned int>().swap(mesh.indices);
 
-        RenderAPI::GenerateVertexCommand(std::move(vertexArray), drawable);
+        RenderAPI::GenerateVertexCommand(std::move(vertexArray));
     }
 
 } // namespace Vakol::Rendering

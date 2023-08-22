@@ -26,13 +26,13 @@ namespace Vakol::Rendering
         bool active = true;
 
         std::string modelID = "null";
-
-        std::string vertexArrayID = "null";
         std::string shaderID = "null";
     };
 
     struct VertexArray
     {
+        std::string ID = "null";
+
         std::vector<Vertex> vertices;
         std::vector<unsigned int> indices;
     };
