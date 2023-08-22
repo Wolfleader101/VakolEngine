@@ -1,6 +1,7 @@
 #include "AssetLoader/TextureLibrary.hpp"
 
 #include "AssetLoader/TextureLoader.hpp"
+#include "Logger/Logger.hpp"
 
 #include "Rendering/RenderAPI.hpp"
 

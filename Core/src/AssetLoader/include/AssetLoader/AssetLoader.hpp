@@ -40,7 +40,18 @@ namespace Vakol
 
         static void AddShader(const std::string& shaderID, unsigned int shader);
 
+        static void SetBool(unsigned int shader, const char* name, bool value);
+        static void SetInt(unsigned int shader, const char* name, int value);
+        static void SetFloat(unsigned int shader, const char* name, float value);
+
+        static void SetVec2(unsigned int shader, const char* name, const Math::Vec2& value);
+        static void SetVec3(unsigned int shader, const char* name, const Math::Vec3& value);
+        static void SetVec4(unsigned int shader, const char* name, const Math::Vec4& value);
+
+        static void SetMat3(unsigned int shader, const char* name, bool transpose, const Math::Mat3& value);
         static void SetMat4(unsigned int shader, const char* name, bool transpose, const Math::Mat4& value);
+
+        static Rendering::Assets::Model& FindModel(const std::string& path);
 
         static Rendering::Assets::Model& GetModel(const std::string& path, float scale = 1.0f);
         static const std::vector<Rendering::Assets::Mesh>& GetMeshes(const std::string& modelID);
@@ -50,6 +61,8 @@ namespace Vakol
         static Rendering::Assets::Texture& GetTexture(const std::string& path, unsigned int type);
         static Rendering::Assets::Texture& GetTexture(const std::string& path, unsigned int type, int size,
                                                       const void* data);
+        static void ReplaceTexture(const std::string& modelID, const std::string& srcPath, const std::string& dstPath,
+                                   const std::string& srcType, const std::string& dstType);
 
       private:
         static ModelLibrary m_modelLibrary;

@@ -20,12 +20,15 @@ namespace Vakol
 
         unsigned int GetShader(const std::string& shaderID);
 
+        void SetBool(unsigned int shader, const char* name, bool value);
         void SetInt(unsigned int shader, const char* name, int value);
         void SetFloat(unsigned int shader, const char* name, float value);
 
+        void SetVec2(unsigned int shader, const char* name, const Math::Vec2& value);
         void SetVec3(unsigned int shader, const char* name, const Math::Vec3& value);
         void SetVec4(unsigned int shader, const char* name, const Math::Vec4& value);
 
+        void SetMat3(unsigned int shader, const char* name, bool transpose, const Math::Mat3& value);
         void SetMat4(unsigned int shader, const char* name, bool transpose, const Math::Mat4& value);
 
       private:

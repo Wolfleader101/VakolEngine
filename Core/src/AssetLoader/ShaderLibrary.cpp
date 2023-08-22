@@ -43,6 +43,18 @@ namespace Vakol
         SetInt(shader, "material.normal_map", 6);
     }
 
+    void ShaderLibrary::SetBool(const unsigned int shader, const char* name, const bool value)
+    {
+        if (UniformExists(shader, name))
+        {
+            const auto& [location, count] = GetUniform(shader, name);
+
+            Rendering::OpenGL::BindShaderProgram(shader);
+            Rendering::OpenGL::SetBool(location, value);
+            Rendering::OpenGL::UnbindShaderProgram();
+        }
+    }
+
     void ShaderLibrary::SetInt(const unsigned int shader, const char* name, const int value)
     {
         if (UniformExists(shader, name))
@@ -67,6 +79,18 @@ namespace Vakol
         }
     }
 
+    void ShaderLibrary::SetVec2(const unsigned int shader, const char* name, const Math::Vec2& value)
+    {
+        if (UniformExists(shader, name))
+        {
+            const auto& [location, count] = GetUniform(shader, name);
+
+            Rendering::OpenGL::BindShaderProgram(shader);
+            Rendering::OpenGL::SetVec2(location, count, Math::AsArray(value));
+            Rendering::OpenGL::UnbindShaderProgram();
+        }
+    }
+
     void ShaderLibrary::SetVec3(const unsigned int shader, const char* name, const Math::Vec3& value)
     {
         if (UniformExists(shader, name))
@@ -87,6 +111,19 @@ namespace Vakol
 
             Rendering::OpenGL::BindShaderProgram(shader);
             Rendering::OpenGL::SetVec4(location, count, Math::AsArray(value));
+            Rendering::OpenGL::UnbindShaderProgram();
+        }
+    }
+
+    void ShaderLibrary::SetMat3(const unsigned int shader, const char* name, const bool transpose,
+                                const Math::Mat3& value)
+    {
+        if (UniformExists(shader, name))
+        {
+            const auto& [location, count] = GetUniform(shader, name);
+
+            Rendering::OpenGL::BindShaderProgram(shader);
+            Rendering::OpenGL::SetMat3(location, count, name, transpose, Math::AsArray(value));
             Rendering::OpenGL::UnbindShaderProgram();
         }
     }

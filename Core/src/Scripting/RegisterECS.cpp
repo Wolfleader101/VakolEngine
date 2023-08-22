@@ -26,15 +26,19 @@ namespace Vakol
             Rendering::RenderEngine::GenerateModel(model, drawable);
         });
 
-        entity_type.set_function("replace_texture", [](const Entity* ent, const std::string& src,
-                                                       const std::string& dst, const std::string& type) {
+        entity_type.set_function("replace_texture", [](const Entity* ent, const std::string& srcPath,
+                                                       const std::string& dstPath, const std::string& srcType,
+                                                       const std::string& dstType) {
             if (!ent->HasComponent<Rendering::Drawable>())
             {
-                VK_WARN("No Drawable component found on entity!");
+                VK_ERROR("No Drawable component found on entity!");
+
                 return;
             }
 
-            std::vector<Rendering::Assets::Texture> textures;
+            const auto& model = AssetLoader::FindModel(ent->GetComponent<Rendering::Drawable>().modelID);
+
+            AssetLoader::ReplaceTexture(model.path, srcPath, dstPath, srcType, dstType);
         });
 
         entity_type.set_function("set_vec3v", [](const Entity* ent, const char* name, Math::Vec3& value) {
