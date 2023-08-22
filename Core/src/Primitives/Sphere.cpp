@@ -4,31 +4,33 @@ namespace Vakol
 {
     Sphere::Sphere()
     {
-        position = Math::Vec3(0.0f, 0.0f, 0.0f);                            // Set the position to 0
-		scale = Math::Vec3(1.0f, 1.0f, 1.0f);                               // Set the scale to 1
-		rotation = Math::Quat(0.0f, 0.0f, 0.0f, 1.0f);                      // Set the rotation to 0
+        sphereTransform.pos = Math::Vec3(0.0f, 0.0f, 0.0f);                 // Set the position to 0 
+        sphereTransform.scale = Math::Vec3(1.0f, 1.0f, 1.0f);               // Set the scale to 1
+        sphereTransform.rot = Math::Quat(0.0f, 0.0f, 0.0f, 1.0f);           // Set the rotation to 0
+        sphereTransform.eulerAngles = Math::Vec3(0.0f, 0.0f, 0.0f);         // Set the euler angles to 0
 
 		stacks = 10;                                                        // Set the number of stacks to 0
 		sectors = 10;                                                       // Set the number of sectors to 0
 		name = "DEFAULT_SPHERE";                                            // Set the name to DEFAULT_SPHERE
 
-		GenerateData(position, 1.0f, 0, 0, name);                           // Generate the data for the sphere
+		GenerateData(sphereTransform, 1.0f, 0, 0, name); // Generate the data for the sphere
     }
 
-    Sphere::Sphere(Math::Vec3& inputPosition, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName)
+    Sphere::Sphere(Components::Transform& inputTransform, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName)
     {
-        position = inputPosition; 
-        scale = Math::Vec3(1.0f, 1.0f, 1.0f);
-        rotation = Math::Quat(0.0f, 0.0f, 0.0f, 1.0f);
+        sphereTransform.pos = inputTransform.pos; 
+        sphereTransform.scale = inputTransform.scale;
+        sphereTransform.rot = inputTransform.rot;
+        sphereTransform.eulerAngles = inputTransform.eulerAngles;
 
         stacks = inputStacks;
         sectors = inputSectors; 
         name = inputName; 
 
-        GenerateData(inputPosition, inputRadius, inputStacks, inputSectors, inputName);
+        GenerateData(inputTransform, inputRadius, inputStacks, inputSectors, inputName);
     }
 
-    void Sphere::GenerateData(Math::Vec3& inputPosition, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName)
+    void Sphere::GenerateData(Components::Transform& inputTransform, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName)
     {
         Rendering::Vertex tmpVertex;                                        // A temporary vertex object to store the data
 
@@ -37,7 +39,7 @@ namespace Vakol
         name = inputName; 												    // Set the name of the sphere
 
         double x, y, z, xy;                                                 // Vertex Position
-        double nx, ny, nz, lengthInv = 1.0f / inputRadius;                  // Vertex Normal
+        double lengthInv = 1.0f / inputRadius;                              // Vertex Normal
         double s, t;                                                        // Vertex UV Coordinates
 
         double sectorStep = 2 * M_PI / inputSectors;                        // The angle between each sector
@@ -51,7 +53,7 @@ namespace Vakol
         {
             stackAngle = M_PI / 2 - i * stackStep;                          // Starting from pi/2 to -pi/2
             xy = inputRadius * cos(stackAngle);                             // r * cos(u)
-            z = (inputRadius * sin(stackAngle)) + inputPosition.z;          // r * sin(u) (Add position to move sphere to point)
+            z = (inputRadius * sin(stackAngle)) + inputTransform.pos.z;     // r * sin(u) (Add position to move sphere to point)
 
             // The first and last vertices have same position and normal, but different tex coordinates
             for (int j = 0; j <= inputSectors; ++j)
@@ -59,17 +61,26 @@ namespace Vakol
                 sectorAngle = j * sectorStep; // starting from 0 to 2pi
 
                 // Vertex position (x, y, z)
-                x = xy * (cos(sectorAngle)) + inputPosition.x;              // r * cos(u) * cos(v) (Add position to move sphere to point)
-                y = xy * (sin(sectorAngle)) + inputPosition.y;              // r * cos(u) * sin(v) (Add position to move sphere to point) 
+                x = xy * (cos(sectorAngle)) + inputTransform.pos.x;         // r * cos(u) * cos(v) (Add position to move sphere to point)
+                y = xy * (sin(sectorAngle)) + inputTransform.pos.y;         // r * cos(u) * sin(v) (Add position to move sphere to point) 
 
+                // Set the position of the vertex
                 tmpVertex.position = Math::Vec3(x, y, z);
 
-                // Normalized vertex normal (nx, ny, nz)
-                nx = x * lengthInv;
-                ny = y * lengthInv;
-                nz = z * lengthInv;
+                // Apply scaling
+                tmpVertex.position *= inputTransform.scale;
 
-                tmpVertex.normal = Math::Vec3(nx, ny, nz);
+                // Apply rotation using quaternion
+                tmpVertex.position = inputTransform.rot * tmpVertex.position; 
+
+                // Normalized vertex normal and set
+                tmpVertex.normal = Math::Vec3(x * lengthInv, y * lengthInv, z * lengthInv); 
+
+                // Apply scaling to the normal
+                tmpVertex.normal *= inputTransform.scale; 
+
+                // Apply rotation to the normal
+                tmpVertex.normal = inputTransform.rot * tmpVertex.normal; 
 
                 // Vertex texture coordinate (s, t) range between [0, 1]
                 s = (double)j / inputSectors;                               // u Coordinate
@@ -121,20 +132,23 @@ namespace Vakol
         // Loop through all the vertices and scale them
         for (size_t i = 0; i < originalVertices.size(); ++i)
         {
-            mesh.vertices[i].position = originalVertices[i].position;       // Reset the vertices to the original vertices
+            mesh.vertices[i].position = originalVertices[i].position * inputScale; // Apply scaling to position
 
             mesh.vertices[i].position.x *= inputScale.x;
             mesh.vertices[i].position.y *= inputScale.y;
             mesh.vertices[i].position.z *= inputScale.z;
+
+            // Apply scaling to the normal
+            mesh.vertices[i].normal *= originalVertices[i].normal; 
         }
 
-        scale = inputScale;                                                 // Set the new scale variable
+        sphereTransform.scale = inputScale; // Set the new scale variable
 	}
 
     void Sphere::SetPosition(Math::Vec3& inputPosition)
     {
         // Calculate the translation vector
-        Math::Vec3 newPosition = inputPosition - position;
+        Math::Vec3 newPosition = inputPosition - sphereTransform.pos;
 
         // Loop through all the vertices and reposition them
         for (Rendering::Vertex& vertex : mesh.vertices)
@@ -142,15 +156,16 @@ namespace Vakol
             vertex.position += newPosition; // Add the translation
         }
 
-        position = inputPosition; // Set the new position variable
+        sphereTransform.pos = inputPosition; // Set the new position variable
     }
 
     void Sphere::SetRotation(Math::Quat& inputRotation)
     {
-        // Apply the rotation to the original vertices and store the result in mesh.vertices
+        // Apply the rotation to the original vertices/current normals and store the result in mesh.vertices
         for (size_t i = 0; i < originalVertices.size(); ++i)
         {
-            mesh.vertices[i].position = inputRotation * originalVertices[i].position; 
+            mesh.vertices[i].position = inputRotation * originalVertices[i].position;
+            mesh.vertices[i].normal = inputRotation * originalVertices[i].normal;
         }
     }
 

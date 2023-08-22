@@ -5,10 +5,7 @@
 
 #include <crossguid/guid.hpp>
 
-#include "Math/Math.hpp"
-#include "Rendering/Assets/Mesh.hpp"
 #include "Logger/Logger.hpp"
-
 #include "Primitives/Sphere.hpp"
 
 namespace Vakol
@@ -36,14 +33,14 @@ namespace Vakol
             Primitives();
             /**
             * @brief Create a 3D Sphere object
-            * @param inputPosition The position of the sphere
+            * @param inputTransform The transform of the sphere
             * @param inputRadius The radius of the sphere
             * @param inputStacks The number of stacks (latitude) of the sphere
             * @param inputSectors The number of sectors (longitude) of the sphere
             * @param inputName The name of the sphere
             *
             */
-            void CreateSphere(Math::Vec3& inputPosition, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName);
+            void CreateSphere(Components::Transform& inputTransform, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName); 
             /**
              * @brief Scale a selected primitive shape
              * @param type The type of shape to scale

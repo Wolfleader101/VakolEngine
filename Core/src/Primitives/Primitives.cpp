@@ -7,10 +7,10 @@ namespace Vakol
         
     }
 
-    void Primitives::CreateSphere(Math::Vec3& inputPosition, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName)
+    void Primitives::CreateSphere(Components::Transform& inputTransform, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName)
     {
         xg::Guid sphereGUID = xg::newGuid();                                                    // Generate a new GUID for the sphere
-        Sphere tmpSphere(inputPosition, inputRadius, inputStacks, inputSectors, inputName);     // Create a new Sphere object with input data
+        Sphere tmpSphere(inputTransform, inputRadius, inputStacks, inputSectors, inputName);    // Create a new Sphere object with input data
 
         m_Spheres[sphereGUID] = tmpSphere;                                                      // Add the sphere to the storage map
         nameToGuidMap[inputName] = sphereGUID;                                                  // Add the name-GUID mapping

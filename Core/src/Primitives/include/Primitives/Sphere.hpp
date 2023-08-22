@@ -3,6 +3,7 @@
 #include "Math/Math.hpp"
 #include "Rendering/Assets/Mesh.hpp"
 #include "Rendering/RenderData.hpp"
+#include "ECS/Components.hpp"
 
 namespace Vakol
 {
@@ -20,14 +21,14 @@ namespace Vakol
             Sphere();
             /**
             * @brief Construct a new Sphere object with a position, radius, stacks and sectors
-            * @param inputPosition The position of the sphere
+            * @param inputTransform The transform of the sphere
             * @param inputRadius The radius of the sphere
             * @param inputStacks The number of stacks (latitude) of the sphere
             * @param inputSectors The number of sectors (longitude) of the sphere
             * @param inputName The name of the sphere
             *
             */
-            Sphere(Math::Vec3& inputPosition, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName);
+            Sphere(Components::Transform& inputTransform, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName);
             /**
              * @brief A function which returns the name of the current sphere
              *
@@ -59,30 +60,20 @@ namespace Vakol
         private:
             /**
             * @brief Generate the data for a 3D sphere
-            * @param inputPosition The position of the sphere
+            * @param inputTransform The transform of the sphere
             * @param inputRadius The radius of the sphere
             * @param inputStacks The number of stacks (latitude) of the sphere
             * @param inputSectors The number of sectors (longitude) of the sphere
             * @param inputName The name of the sphere
             *
             */
-            void GenerateData(Math::Vec3& inputPosition, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName);
+            void GenerateData(Components::Transform& inputTransform, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName);
 
             /**
-            * @brief The position of the sphere
-            *
-            */
-            Math::Vec3 position;
-            /**
-            * @brief The scale of the sphere
-            *
-            */
-            Math::Vec3 scale;
-            /**
-             * @brief The rotation of the sphere
+             * @brief sphereTransform The transform of the sphere
              *
              */
-            Math::Quat rotation;
+            Components::Transform& sphereTransform;
 
             /**
              * @brief The number of stacks (latitude) of the sphere
