@@ -22,7 +22,7 @@ namespace Vakol
             * @param inputName The name of the sphere
             *
             */
-            Sphere(Math::Vec3 inputPosition, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName);
+            Sphere(Math::Vec3& inputPosition, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName);
             /**
              * @brief A function which returns the name of the current sphere
              *
@@ -33,19 +33,19 @@ namespace Vakol
              * @param inputScale The new scale of the sphere
              *
              */
-            void SetScale(Math::Vec3 inputScale);
+            void SetScale(Math::Vec3& inputScale);
             /**
              * @brief A function which moves the sphere to a new position
              * @param inputPosition The new position of the sphere
              *
              */
-            void SetPosition(Math::Vec3 inputPosition);
+            void SetPosition(Math::Vec3& inputPosition);
             /**
              * @brief A function which rotates the sphere to a new position
              * @param inputRotation The new rotation of the sphere
              *
              */
-            void SetRotation(Math::Quat inputRotation);
+            void SetRotation(Math::Quat& inputRotation);
             /**
             * @brief Destroy the Sphere object
             *
@@ -61,7 +61,7 @@ namespace Vakol
             * @param inputName The name of the sphere
             *
             */
-            void GenerateData(Math::Vec3 inputPosition, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName);
+            void GenerateData(Math::Vec3& inputPosition, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName);
 
             /**
             * @brief The position of the sphere

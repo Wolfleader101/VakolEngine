@@ -2,7 +2,7 @@
 
 namespace Vakol
 {
-    Sphere::Sphere(Math::Vec3 inputPosition, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName)
+    Sphere::Sphere(Math::Vec3& inputPosition, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName)
     {
         position = inputPosition; 
         scale = Math::Vec3(1.0f, 1.0f, 1.0f);
@@ -15,7 +15,7 @@ namespace Vakol
         GenerateData(inputPosition, inputRadius, inputStacks, inputSectors, inputName);
     }
 
-    void Sphere::GenerateData(Math::Vec3 inputPosition, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName)
+    void Sphere::GenerateData(Math::Vec3& inputPosition, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName)
     {
         Rendering::Vertex tmpVertex;                                        // A temporary vertex object to store the data
 
@@ -103,7 +103,7 @@ namespace Vakol
 		return name;
 	}
 
-    void Sphere::SetScale(Math::Vec3 inputScale)
+    void Sphere::SetScale(Math::Vec3& inputScale)
     {
         // Loop through all the vertices and scale them
         for (size_t i = 0; i < originalVertices.size(); ++i)
@@ -118,7 +118,7 @@ namespace Vakol
         scale = inputScale;                                                 // Set the new scale variable
 	}
 
-    void Sphere::SetPosition(Math::Vec3 inputPosition)
+    void Sphere::SetPosition(Math::Vec3& inputPosition)
     {
         // Calculate the translation vector
         Math::Vec3 newPosition = inputPosition - position;
@@ -132,7 +132,7 @@ namespace Vakol
         position = inputPosition; // Set the new position variable
     }
 
-    void Sphere::SetRotation(Math::Quat inputRotation)
+    void Sphere::SetRotation(Math::Quat& inputRotation)
     {
         // Apply the rotation to the original vertices and store the result in mesh.vertices
         for (size_t i = 0; i < originalVertices.size(); ++i)
