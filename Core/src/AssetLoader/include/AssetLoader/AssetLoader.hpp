@@ -58,11 +58,11 @@ namespace Vakol
 
         static unsigned int GetShader(const std::string& shaderID);
 
-        static Rendering::Assets::Texture& GetTexture(const std::string& path, unsigned int type);
+        static Rendering::Assets::Texture& GetTexture(const std::string& path, unsigned int type, int levels = 1);
         static Rendering::Assets::Texture& GetTexture(const std::string& path, unsigned int type, int size,
-                                                      const void* data);
-        static void ReplaceTexture(const std::string& modelID, const std::string& srcPath, const std::string& dstPath,
-                                   const std::string& srcType, const std::string& dstType);
+                                                      const void* data, int levels = 1);
+        static void ReplaceTexture(const std::string& modelID, const std::string& srcPath, unsigned int srcType,
+                                   const std::string& dstPath, unsigned int dstType);
 
       private:
         static ModelLibrary m_modelLibrary;

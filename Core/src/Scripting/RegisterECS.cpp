@@ -27,7 +27,7 @@ namespace Vakol
         });
 
         entity_type.set_function("replace_texture", [](const Entity* ent, const std::string& srcPath,
-                                                       const std::string& dstPath, const std::string& srcType,
+                                                       const std::string& srcType, const std::string& dstPath,
                                                        const std::string& dstType) {
             if (!ent->HasComponent<Rendering::Drawable>())
             {
@@ -38,7 +38,8 @@ namespace Vakol
 
             const auto& model = AssetLoader::FindModel(ent->GetComponent<Rendering::Drawable>().modelID);
 
-            AssetLoader::ReplaceTexture(model.path, srcPath, dstPath, srcType, dstType);
+            AssetLoader::ReplaceTexture(model.path, srcPath, Rendering::Assets::ToTextureType(srcType), dstPath,
+                                        Rendering::Assets::ToTextureType(dstType));
         });
 
         entity_type.set_function("set_vec3v", [](const Entity* ent, const char* name, Math::Vec3& value) {

@@ -48,6 +48,8 @@ namespace Vakol::Rendering
         static void SetupConfig(int width, int height, const std::string& API);
 
         static void EnableDepth();
+        static void EnableMultisample();
+        static void EnableSRGB();
 
         static void ClearColor(float r, float g, float b, float a = 1.0f);
         static void Clear(unsigned int mask);
@@ -60,7 +62,7 @@ namespace Vakol::Rendering
         static void GenerateVertexCommand(VertexArray&& vertexArray);
         static void GenerateShader(Assets::Shader&& shader, Drawable& drawable);
 
-        static unsigned int GenerateTexture(int width, int height, int channels, const unsigned char* pixels);
+        static unsigned int GenerateTexture(int levels, int width, int height, int channels, const unsigned char* pixels);
 
       private:
         static std::map<std::string, VertexCommand> m_vertexLibrary;

@@ -2,6 +2,8 @@
 
 #include "Logger/Logger.hpp"
 
+#include <algorithm>
+
 namespace Vakol
 {
     std::string AssetLoader::model_path = "assets/models/";
@@ -79,21 +81,34 @@ namespace Vakol
         return m_shaderLibrary.GetShader(shaderID);
     }
 
-    Rendering::Assets::Texture& AssetLoader::GetTexture(const std::string& path, const unsigned int type)
+    Rendering::Assets::Texture& AssetLoader::GetTexture(const std::string& path, const unsigned int type,
+                                                        const int levels)
     {
-        return m_textureLibrary.GetTexture(path, type);
+        return m_textureLibrary.GetTexture(path, type, levels);
     }
 
     Rendering::Assets::Texture& AssetLoader::GetTexture(const std::string& path, const unsigned int type,
-                                                        const int size, const void* data)
+                                                        const int size, const void* data, const int levels)
     {
-        return m_textureLibrary.GetTexture(path, type, size, data);
+        return m_textureLibrary.GetTexture(path, type, size, data, levels);
     }
 
-    void AssetLoader::ReplaceTexture(const std::string& modelID, const std::string& srcPath, const std::string& dstPath,
-                                     const std::string& srcType, const std::string& dstType)
+    void AssetLoader::ReplaceTexture(const std::string& modelID, const std::string& srcPath, const unsigned int srcType,
+                                     const std::string& dstPath, const unsigned int dstType)
     {
-        // m_textureLibrary.
+        const auto& model = FindModel(modelID);
+
+        for (const auto& mesh : model.meshes)
+        {
+            auto& textures = mesh.material->textures;
+
+            std::replace_if(
+                textures.begin(), textures.end(),
+                [&](const Rendering::Assets::Texture& texture) {
+                    return texture.path == srcPath && texture.type == srcType;
+                },
+                GetTexture(dstPath, dstType));
+        }
     }
 
 } // namespace Vakol

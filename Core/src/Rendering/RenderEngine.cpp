@@ -22,6 +22,7 @@ namespace Vakol::Rendering
         RenderAPI::SetupConfig(width, height, API);
 
         RenderAPI::EnableDepth();
+        RenderAPI::EnableMultisample();
     }
 
     void RenderEngine::PreDraw()

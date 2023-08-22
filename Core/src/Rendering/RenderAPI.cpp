@@ -94,10 +94,10 @@ namespace Vakol::Rendering
         AssetLoader::AddShader(drawable.shaderID, program);
     }
 
-    unsigned int RenderAPI::GenerateTexture(const int width, const int height, const int channels,
+    unsigned int RenderAPI::GenerateTexture(const int levels, const int width, const int height, const int channels,
                                             const unsigned char* pixels)
     {
-        return OpenGL::GenerateTexture(width, height, channels, pixels);
+        return OpenGL::GenerateTexture(levels, width, height, channels, pixels);
     }
 
     void RenderAPI::EnableDepth()
@@ -105,6 +105,46 @@ namespace Vakol::Rendering
         if (m_config.API == "OPENGL")
         {
             OpenGL::EnableDepth();
+        }
+        else if (m_config.API == "VULKAN")
+        {
+            VK_WARN("Vulkan rendering has not been implemented yet.");
+        }
+        else if (m_config.API == "DIRECT3D")
+        {
+            VK_WARN("Direct3D rendering has not been implemented yet.");
+        }
+        else if (m_config.API == "METAL")
+        {
+            VK_WARN("Metal rendering has not been implemented yet.");
+        }
+    }
+
+    void RenderAPI::EnableSRGB()
+    {
+        if (m_config.API == "OPENGL")
+        {
+            OpenGL::EnableSRGB();
+        }
+        else if (m_config.API == "VULKAN")
+        {
+            VK_WARN("Vulkan rendering has not been implemented yet.");
+        }
+        else if (m_config.API == "DIRECT3D")
+        {
+            VK_WARN("Direct3D rendering has not been implemented yet.");
+        }
+        else if (m_config.API == "METAL")
+        {
+            VK_WARN("Metal rendering has not been implemented yet.");
+        }
+    }
+
+    void RenderAPI::EnableMultisample()
+    {
+        if (m_config.API == "OPENGL")
+        {
+            OpenGL::EnableMultisample();
         }
         else if (m_config.API == "VULKAN")
         {

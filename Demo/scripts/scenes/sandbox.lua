@@ -1,11 +1,8 @@
 function init()
     scene:create_entity("Player", "entities/player/noclip.lua")
 
-    scene:create_entity("Plane", "entities/test/plane.lua")
-
     scene:create_entity("Digital Twin", "entities/test/digital_twin.lua");
 
-    scene:create_entity("Bear", "entities/agents/sandboxbear.lua")
 end
 
 function update()

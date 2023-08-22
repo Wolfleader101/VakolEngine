@@ -18,6 +18,16 @@ namespace Vakol::Rendering::OpenGL
         glEnable(GL_DEPTH_TEST);
     }
 
+    void EnableSRGB()
+    {
+        glEnable(GL_FRAMEBUFFER_SRGB);
+    }
+
+    void EnableMultisample()
+    {
+        glEnable(GL_MULTISAMPLE);
+    }
+
     void ClearColor(const float r, const float g, const float b, const float a)
     {
         glClearColor(r, g, b, a);

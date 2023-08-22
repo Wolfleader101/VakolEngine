@@ -6,6 +6,8 @@ namespace Vakol::Rendering::OpenGL
     unsigned int COLOR_BUFFER_BIT();
 
     void EnableDepth();
+    void EnableMultisample();
+    void EnableSRGB();
 
     void ClearColor(float r, float g, float b, float a);
     void Clear(unsigned int mask);

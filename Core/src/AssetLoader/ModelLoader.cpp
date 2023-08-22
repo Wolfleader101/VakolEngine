@@ -128,13 +128,13 @@ namespace Vakol
 
         std::cout << std::endl;
 
-        VK_TRACE("Stats for Model: {0}", path);
+        //VK_TRACE("Stats for Model: {0}", path);
 
         model.path = path;
 
         ExtractMeshes(*scene, model.meshes);
 
-        std::cout << std::endl;
+        //std::cout << std::endl;
 
         success = true;
 
@@ -259,12 +259,12 @@ namespace Vakol
                     const auto size = static_cast<int>(embedded_texture->mWidth);
 
                     texture = AssetLoader::GetTexture(embedded_texture->mFilename.C_Str(), GetTextureType(type), size,
-                                                      embedded_texture->pcData);
+                                                      embedded_texture->pcData, 12);
                     textures.emplace_back(texture);
                 }
                 else
                 {
-                    texture = AssetLoader::GetTexture(imported_path.C_Str(), GetTextureType(type));
+                    texture = AssetLoader::GetTexture(imported_path.C_Str(), GetTextureType(type), 12);
 
                     textures.emplace_back(texture);
                 }
