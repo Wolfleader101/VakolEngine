@@ -59,17 +59,17 @@ namespace Vakol::Rendering
     {
         RenderAPI::BeginDraw(drawable.modelID, drawable.shaderID);
 
-        AssetLoader::SetMat4(AssetLoader::GetShader(drawable.shaderID), "PV_MATRIX", false,
-                             camera.GetMatrix(PROJECTION_MATRIX) * camera.GetMatrix(VIEW_MATRIX));
+        RenderAPI::SetMat4(RenderAPI::GetShader(drawable.shaderID), "PV_MATRIX", false,
+                           camera.GetMatrix(PROJECTION_MATRIX) * camera.GetMatrix(VIEW_MATRIX));
 
         const auto& modelMatrix = RenderAPI::GetModelMatrix(transform);
 
-        AssetLoader::SetMat4(AssetLoader::GetShader(drawable.shaderID), "MODEL_MATRIX", false, modelMatrix);
+        RenderAPI::SetMat4(RenderAPI::GetShader(drawable.shaderID), "MODEL_MATRIX", false, modelMatrix);
 
-        AssetLoader::SetMat3(AssetLoader::GetShader(drawable.shaderID), "NORMAL_MATRIX", true,
-                             Math::Inverse(Math::Mat3(modelMatrix)));
+        RenderAPI::SetMat3(RenderAPI::GetShader(drawable.shaderID), "NORMAL_MATRIX", true,
+                           Math::Inverse(Math::Mat3(modelMatrix)));
 
-        AssetLoader::SetVec3(AssetLoader::GetShader(drawable.shaderID), "VIEW_POSITION", camera.GetPos());
+        RenderAPI::SetVec3(RenderAPI::GetShader(drawable.shaderID), "VIEW_POSITION", camera.GetPos());
 
         RenderAPI::EndDraw();
     }
@@ -82,9 +82,8 @@ namespace Vakol::Rendering
     {
         RenderAPI::BeginSkyboxDraw(skybox.vertexID, skybox.shaderID, skybox.textureID);
 
-        AssetLoader::SetMat4(AssetLoader::GetShader(skybox.shaderID), "PV_MATRIX", false,
-                             camera.GetMatrix(PROJECTION_MATRIX) *
-                                 Math::Mat4(Math::Mat3(camera.GetMatrix(VIEW_MATRIX))));
+        RenderAPI::SetMat4(RenderAPI::GetShader(skybox.shaderID), "PV_MATRIX", false,
+                           camera.GetMatrix(PROJECTION_MATRIX) * Math::Mat4(Math::Mat3(camera.GetMatrix(VIEW_MATRIX))));
 
         RenderAPI::EndSkyboxDraw();
     }

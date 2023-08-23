@@ -55,12 +55,6 @@ namespace Vakol
         static const std::vector<Rendering::Assets::Mesh>& GetMeshes(const std::string& modelID);
         /**
          * \brief
-         * \param shaderID id of the shader
-         * \return
-         */
-        static unsigned int GetShader(const std::string& shaderID);
-        /**
-         * \brief
          * \param path
          * \param type the type of texture
          * \param levels mipmap levels

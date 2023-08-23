@@ -6,6 +6,7 @@
 
 #include "AssetLoader/AssetLoader.hpp"
 #include "Logger/Logger.hpp"
+#include "Rendering/RenderAPI.hpp"
 
 namespace Vakol
 {
@@ -35,6 +36,10 @@ namespace Vakol
     void RegisterModel(sol::state& lua)
     {
         auto model_type = lua.new_usertype<Rendering::Assets::Model>("Model");
+
+        model_type.set_function("get_shader", [](const Rendering::Assets::Model* model) {
+            return Rendering::RenderAPI::GetShader(model->meshes.at(0).material->shaderID);
+        });
     }
 
     void RegisterMesh(sol::state& lua)
@@ -47,102 +52,37 @@ namespace Vakol
 
     void RegisterShader(sol::state& lua)
     {
-        lua.set_function("set_bool", [](const Entity* ent, const char* name, const bool value) {
-            if (!ent->HasComponent<Rendering::Drawable>())
-            {
-                VK_ERROR("No Drawable component found on entity!");
-
-                return;
-            }
-
-            AssetLoader::SetBool(AssetLoader::GetShader(ent->GetComponent<Rendering::Drawable>().shaderID), name,
-                                 value);
+        lua.set_function("set_bool", [](const unsigned int shader, const char* name, const bool value) {
+            Rendering::RenderAPI::SetBool(shader, name, value);
         });
 
-        lua.set_function("set_int", [](const Entity* ent, const char* name, const int value) {
-            if (!ent->HasComponent<Rendering::Drawable>())
-            {
-                VK_ERROR("No Drawable component found on entity!");
+        lua.set_function("set_int", [](const unsigned int shader, const char* name, const int value) {
 
-                return;
-            }
-
-            AssetLoader::SetInt(AssetLoader::GetShader(ent->GetComponent<Rendering::Drawable>().shaderID), name, value);
         });
 
-        lua.set_function("set_float", [](const Entity* ent, const char* name, const float value) {
-            if (!ent->HasComponent<Rendering::Drawable>())
-            {
-                VK_ERROR("No Drawable component found on entity!");
+        lua.set_function("set_float", [](const unsigned int shader, const char* name, const float value) {
 
-                return;
-            }
-
-            AssetLoader::SetFloat(AssetLoader::GetShader(ent->GetComponent<Rendering::Drawable>().shaderID), name,
-                                  value);
         });
 
-        lua.set_function("set_vec2v", [](const Entity* ent, const char* name, const Math::Vec2& value) {
-            if (!ent->HasComponent<Rendering::Drawable>())
-            {
-                VK_ERROR("No Drawable component found on entity!");
+        lua.set_function("set_vec2v", [](const unsigned int, const char* name, const Math::Vec2& value) {
 
-                return;
-            }
-
-            AssetLoader::SetVec2(AssetLoader::GetShader(ent->GetComponent<Rendering::Drawable>().shaderID), name,
-                                 value);
         });
 
-        lua.set_function("set_vec3v", [](const Entity* ent, const char* name, const Math::Vec3& value) {
-            if (!ent->HasComponent<Rendering::Drawable>())
-            {
-                VK_ERROR("No Drawable component found on entity!");
+        lua.set_function("set_vec3v", [](const unsigned int, const char* name, const Math::Vec3& value) {
 
-                return;
-            }
-
-            AssetLoader::SetVec3(AssetLoader::GetShader(ent->GetComponent<Rendering::Drawable>().shaderID), name,
-                                 value);
         });
 
-        lua.set_function("set_vec4v", [](const Entity* ent, const char* name, const Math::Vec4& value) {
-            if (!ent->HasComponent<Rendering::Drawable>())
-            {
-                VK_ERROR("No Drawable component found on entity!");
+        lua.set_function("set_vec4v", [](const unsigned int, const char* name, const Math::Vec4& value) {
 
-                return;
-            }
-
-            AssetLoader::SetVec4(AssetLoader::GetShader(ent->GetComponent<Rendering::Drawable>().shaderID), name,
-                                 value);
         });
 
-        lua.set_function(
-            "set_mat3", [](const char* name, const bool transpose, const Math::Mat3& value) {
-                if (!ent->HasComponent<Rendering::Drawable>())
-                {
-                    VK_ERROR("No Drawable component found on entity!");
+        lua.set_function("set_mat3",
+                         [](const unsigned int, const char* name, const bool transpose, const Math::Mat3& value) {
 
-                    return;
-                }
+                         });
 
-                AssetLoader::SetMat3(AssetLoader::GetShader(ent->GetComponent<Rendering::Drawable>().shaderID), name,
-                                     transpose, value);
-            });
-
-        lua.set_function(
-            "set_mat4", [](const Entity* ent, const char* name, const bool transpose, const Math::Mat4& value) {
-                if (!ent->HasComponent<Rendering::Drawable>())
-                {
-                    VK_ERROR("No Drawable component found on entity!");
-
-                    return;
-                }
-
-                AssetLoader::SetMat4(AssetLoader::GetShader(ent->GetComponent<Rendering::Drawable>().shaderID), name,
-                                     transpose, value);
-            });
+        lua.set_function("set_mat4",
+                         [](const unsigned int, const char* name, const bool transpose, const Math::Mat4& value) {});
     }
 
 } // namespace Vakol

@@ -10,9 +10,19 @@
 
 namespace Vakol::Rendering::Assets
 {
+    /**
+     * \brief AABB Bounds
+     */
     struct Bounds
     {
+        /**
+         * \brief min bounds
+         */
         Math::Vec3 min;
+
+        /**
+         * \brief max bounds
+         */
         Math::Vec3 max;
     };
 

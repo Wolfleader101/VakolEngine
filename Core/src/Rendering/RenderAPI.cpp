@@ -30,7 +30,7 @@ namespace Vakol::Rendering
 
     void RenderAPI::BeginDraw(const std::string& modelID, const std::string& shaderID)
     {
-        OpenGL::BindShaderProgram(AssetLoader::GetShader(shaderID));
+        OpenGL::BindShaderProgram(GetShader(shaderID));
 
         for (const auto& mesh : AssetLoader::GetMeshes(modelID))
         {
@@ -58,7 +58,7 @@ namespace Vakol::Rendering
     void RenderAPI::BeginSkyboxDraw(const std::string& vertexID, const std::string& shaderID,
                                     const unsigned int textureID)
     {
-        OpenGL::BindShaderProgram(AssetLoader::GetShader(shaderID));
+        OpenGL::BindShaderProgram(GetShader(shaderID));
 
         OpenGL::DepthLEQUAL();
 
@@ -145,7 +145,7 @@ namespace Vakol::Rendering
         const unsigned int program =
             OpenGL::GenerateShaderProgram(shader.vertSrc, shader.geomSrc, shader.tscSrc, shader.tseSrc, shader.fragSrc);
 
-        AssetLoader::AddShader(drawable.shaderID, program);
+        AddShader(drawable.shaderID, program);
     }
 
     void RenderAPI::GenerateSkyboxShader(Assets::Shader&& shader, Skybox& skybox)
@@ -155,7 +155,7 @@ namespace Vakol::Rendering
         const unsigned int program =
             OpenGL::GenerateShaderProgram(shader.vertSrc, shader.geomSrc, shader.tscSrc, shader.tseSrc, shader.fragSrc);
 
-        AssetLoader::AddShader(skybox.shaderID, program);
+        AddShader(skybox.shaderID, program);
     }
 
     unsigned int RenderAPI::GenerateTexture(const int levels, const int width, const int height, const int channels,
@@ -292,6 +292,11 @@ namespace Vakol::Rendering
     void RenderAPI::AddShader(const std::string& shaderID, const unsigned int shader)
     {
         m_shaderLibrary.AddShader(shaderID, shader);
+    }
+
+    unsigned RenderAPI::GetShader(const std::string& shaderID)
+    {
+        return m_shaderLibrary.GetShader(shaderID);   
     }
 
     void RenderAPI::SetBool(const unsigned int shader, const char* name, const bool value)
