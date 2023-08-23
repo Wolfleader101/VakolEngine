@@ -28,7 +28,8 @@ namespace Vakol
     {
       public:
         Rendering::Assets::Texture& GetTexture(const std::string& path, unsigned int type, int levels);
-        Rendering::Assets::Texture& GetTexture(const std::string& path, unsigned int type, int size, const void* data, int levels);
+        Rendering::Assets::Texture& GetTexture(const std::string& path, unsigned int type, int size, const void* data,
+                                               int levels);
 
       private:
         std::unordered_map<std::pair<std::string, unsigned int>, Rendering::Assets::Texture, PairHash> m_textures;

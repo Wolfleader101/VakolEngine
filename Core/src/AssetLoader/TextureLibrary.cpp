@@ -9,7 +9,8 @@
 
 namespace Vakol
 {
-    Rendering::Assets::Texture& TextureLibrary::GetTexture(const std::string& path, const unsigned int type, const int levels)
+    Rendering::Assets::Texture& TextureLibrary::GetTexture(const std::string& path, const unsigned int type,
+                                                           const int levels)
     {
         if (!FindTexture(path, type))
         {
@@ -21,7 +22,8 @@ namespace Vakol
             unsigned char* pixels = nullptr;
 
             ImportTexture(path, texture.width, texture.height, texture.channels, pixels);
-            texture.ID = Rendering::RenderAPI::GenerateTexture(levels, texture.width, texture.height, texture.channels, pixels);
+            texture.ID =
+                Rendering::RenderAPI::GenerateTexture(levels, texture.width, texture.height, texture.channels, pixels);
 
             m_textures[std::make_pair(path, type)] = std::move(texture);
         }
@@ -29,7 +31,8 @@ namespace Vakol
         return m_textures.at(std::make_pair(path, type));
     }
 
-    Rendering::Assets::Texture& TextureLibrary::GetTexture(const std::string& path, const unsigned int type, const int size, const void* data, const int levels)
+    Rendering::Assets::Texture& TextureLibrary::GetTexture(const std::string& path, const unsigned int type,
+                                                           const int size, const void* data, const int levels)
     {
         if (!FindTexture(path, type))
         {
@@ -42,7 +45,8 @@ namespace Vakol
             unsigned char* pixels = nullptr;
 
             ImportTexture(data, size, texture.width, texture.height, texture.channels, pixels);
-            texture.ID = Rendering::RenderAPI::GenerateTexture(levels, texture.width, texture.height, texture.channels, pixels);
+            texture.ID =
+                Rendering::RenderAPI::GenerateTexture(levels, texture.width, texture.height, texture.channels, pixels);
 
             m_textures[std::make_pair(path, type)] = std::move(texture);
         }
@@ -54,4 +58,4 @@ namespace Vakol
     {
         return m_textures.find(std::make_pair(path, type)) != m_textures.end();
     }
-}
+} // namespace Vakol

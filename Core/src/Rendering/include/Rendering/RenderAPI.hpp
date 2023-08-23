@@ -62,7 +62,8 @@ namespace Vakol::Rendering
         static void GenerateVertexCommand(VertexArray&& vertexArray);
         static void GenerateShader(Assets::Shader&& shader, Drawable& drawable);
 
-        static unsigned int GenerateTexture(int levels, int width, int height, int channels, const unsigned char* pixels);
+        static unsigned int GenerateTexture(int levels, int width, int height, int channels,
+                                            const unsigned char* pixels);
 
       private:
         static std::map<std::string, VertexCommand> m_vertexLibrary;

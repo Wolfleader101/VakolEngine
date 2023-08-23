@@ -30,7 +30,7 @@ namespace Vakol::Rendering
     void RenderAPI::BeginDraw(const std::string& modelID, const std::string& shaderID)
     {
         OpenGL::BindShaderProgram(AssetLoader::GetShader(shaderID));
-        
+
         for (const auto& mesh : AssetLoader::GetMeshes(modelID))
         {
             const auto& material = mesh.material;

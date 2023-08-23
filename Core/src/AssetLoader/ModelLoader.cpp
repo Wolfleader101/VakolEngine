@@ -128,13 +128,13 @@ namespace Vakol
 
         std::cout << std::endl;
 
-        //VK_TRACE("Stats for Model: {0}", path);
+        // VK_TRACE("Stats for Model: {0}", path);
 
         model.path = path;
 
         ExtractMeshes(*scene, model.meshes);
 
-        //std::cout << std::endl;
+        // std::cout << std::endl;
 
         success = true;
 

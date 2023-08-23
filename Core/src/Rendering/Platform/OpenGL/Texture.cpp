@@ -6,7 +6,8 @@
 
 namespace Vakol::Rendering::OpenGL
 {
-    unsigned int GenerateTexture(const int levels, const int width, const int height, const int channels, const unsigned char* pixels)
+    unsigned int GenerateTexture(const int levels, const int width, const int height, const int channels,
+                                 const unsigned char* pixels)
     {
         unsigned int texture;
 
