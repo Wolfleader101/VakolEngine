@@ -54,6 +54,12 @@ namespace Vakol
             unsigned char* pixels = nullptr;
 
             ImportTexture(data, size, texture.width, texture.height, texture.channels, pixels);
+
+            if (!pixels)
+            {
+                return GetErrorTexture(type);
+            }
+
             texture.ID =
                 Rendering::RenderAPI::GenerateTexture(levels, texture.width, texture.height, texture.channels, pixels);
 
