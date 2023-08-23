@@ -32,6 +32,8 @@ namespace Vakol
                                                int levels);
 
       private:
+        Rendering::Assets::Texture& GetErrorTexture(unsigned int type);
+
         std::unordered_map<std::pair<std::string, unsigned int>, Rendering::Assets::Texture, PairHash> m_textures;
 
         [[nodiscard]] bool FindTexture(const std::string& path, unsigned int type) const;
