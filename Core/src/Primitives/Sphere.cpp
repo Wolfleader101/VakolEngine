@@ -119,6 +119,30 @@ namespace Vakol
             }
         }
 
+        // Create the individual transformation matrices
+        Math::Mat4 translationMatrix = Math::Translation(inputTransform.pos);
+        Math::Mat4 rotationMatrix = Math::Mat4Cast(inputTransform.rot);
+        Math::Mat4 scaleMatrix = Math::Scale(inputTransform.scale);
+
+        // Combine them to create the full transformation matrix
+        Math::Mat4 transformationMatrix = translationMatrix * rotationMatrix * scaleMatrix;
+
+        // Calculate the inverse transpose
+        Math::Mat4 inverseTranspose = Math::Transpose(Math::Inverse(transformationMatrix));  
+
+        // Transform the normals
+        for (Rendering::Vertex& vertex : mesh.vertices)
+        {
+            // Extract the 3x3 part of the inverse transpose matrix
+            Math::Mat3 inverseTranspose3x3 = Math::Mat3(inverseTranspose);
+
+            // Multiply the normal by the 3x3 matrix
+            vertex.normal = inverseTranspose3x3 * vertex.normal;
+
+            // Normalize the normal
+            Math::Normalize(vertex.normal); 
+        }
+
         originalVertices = mesh.vertices;                                   // Store the original vertices
     }
 
@@ -129,6 +153,22 @@ namespace Vakol
 
     void Sphere::SetScale(Math::Vec3& inputScale)
     {
+        // Create the individual transformation matrices 
+        Math::Mat4 rotationMatrix = Math::Mat4Cast(sphereTransform.rot); 
+        Math::Mat4 scaleMatrix = Math::Scale(inputScale);
+
+        // Combine the scaling and rotation matrices
+        Math::Mat4 modelMatrix = scaleMatrix * rotationMatrix; 
+
+        // Calculate the inverse transpose of the model matrix
+        Math::Mat4 inverseTranspose = Math::Transpose(Math::Inverse(modelMatrix)); 
+
+        // Loop through all the vertices and apply the scaling to the positions
+        for (size_t i = 0; i < originalVertices.size(); ++i)
+        {
+            mesh.vertices[i].position = originalVertices[i].position * inputScale;
+        }
+        
         // Loop through all the vertices and scale them
         for (size_t i = 0; i < originalVertices.size(); ++i)
         {

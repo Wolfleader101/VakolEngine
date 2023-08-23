@@ -212,6 +212,11 @@ namespace Vakol::Math
         return glm::inverse(mat);
     }
 
+    Mat4 Transpose(const Mat4& mat)
+    {
+		return glm::transpose(mat);
+	}
+
     float Lerp(const float a, const float b, const float t)
     {
         return (1.0f - t) * a + b * t;
