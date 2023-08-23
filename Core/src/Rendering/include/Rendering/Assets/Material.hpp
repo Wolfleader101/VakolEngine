@@ -8,27 +8,27 @@
 namespace Vakol::Rendering::Assets
 {
     /**
-     * \brief 
+     * \brief The various properties of a material.
      */
     struct MaterialProperties
     {
         /**
-         * \brief 
+         * \brief the ambient color
          */
         Math::Vec3 ambient_color = Math::Vec3(0.0f);
 
         /**
-         * \brief 
+         * \brief the diffuse color
          */
         Math::Vec3 diffuse_color = Math::Vec3(0.0f);
 
         /**
-         * \brief 
+         * \brief the specular color
          */
         Math::Vec3 specular_color = Math::Vec3(0.0f);
 
         /**
-         * \brief 
+         * \brief the emission color
          */
         Math::Vec3 emissive_color = Math::Vec3(0.0f);
 
@@ -46,7 +46,7 @@ namespace Vakol::Rendering::Assets
         std::string ID = "null";
         std::string shaderID = "null";
 
-        std::vector<Texture> textures; /// The textures of a material 
+        std::vector<Texture> textures; /// The textures of a material
 
         MaterialProperties properties; /// The properties that make up a material
     };

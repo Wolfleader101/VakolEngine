@@ -28,9 +28,9 @@ namespace Vakol::Rendering::Assets
 
     struct Bone
     {
-        std::string name;
+        std::string name; // the name of the bone
 
-        Math::Mat4 offset{};
+        Math::Mat4 offset{}; // the offset of the bone
 
         struct Weight
         {
@@ -43,17 +43,17 @@ namespace Vakol::Rendering::Assets
 
     struct Mesh
     {
-        std::string ID = "null";
+        std::string ID = "null"; // the unique ID of the mesh.
 
-        std::string name;
+        std::string name; // the name of the mesh.
 
-        std::vector<Vertex> vertices;
-        std::vector<unsigned int> indices;
+        std::vector<Vertex> vertices;      // the vertices of a mesh.
+        std::vector<unsigned int> indices; // the indices of a mesh.
 
-        std::vector<Bone> bones;
+        std::vector<Bone> bones; // the bones of a mesh.
 
-        std::shared_ptr<Material> material = nullptr;
+        std::shared_ptr<Material> material = nullptr; // the material of a mesh.
 
-        Bounds bounds{};
+        Bounds bounds{}; // the AABB bounds of a mesh.
     };
 } // namespace Vakol::Rendering::Assets

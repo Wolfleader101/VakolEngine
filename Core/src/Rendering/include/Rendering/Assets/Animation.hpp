@@ -9,19 +9,19 @@ namespace Vakol::Rendering::Assets
     struct Channel
     {
         /**
-         * \brief 
+         * \brief
          */
         const char* name = nullptr;
 
         struct Position
         {
             /**
-             * \brief 
+             * \brief the position
              */
             Math::Vec3 position;
 
             /**
-             * \brief 
+             * \brief the timestamp at a particular time
              */
             double timestamp;
         };
@@ -29,42 +29,39 @@ namespace Vakol::Rendering::Assets
         struct Rotation
         {
             /**
-             * \brief 
+             * \brief the rotation
              */
             Math::Quat rotation;
 
             /**
-             * \brief 
+             * \brief the timestamp at a particular time
              */
             double timestamp;
         };
 
-        /**
-         * \brief 
-         */
         struct Scale
         {
             /**
-             * \brief 
+             * \brief the scale
              */
             Math::Vec3 scale;
 
             /**
-             * \brief 
+             * \brief the timestamp at a particular time
              */
             double timestamp;
         };
 
         /**
-         * \brief 
+         * \brief the position keyframes of a channel.
          */
         std::vector<Position> positions;
         /**
-         * \brief 
+         * \brief the rotation keyframes of a channel
          */
         std::vector<Rotation> rotations;
         /**
-         * \brief 
+         * \brief the scales keyframes of a channel
          */
         std::vector<Scale> scales;
     };
@@ -72,22 +69,22 @@ namespace Vakol::Rendering::Assets
     struct Animation
     {
         /**
-         * \brief 
+         * \brief the name of the animation.
          */
         const char* name = nullptr;
 
         /**
-         * \brief 
+         * \brief the duration of an animation (multiply by ticks per second)
          */
         double duration = 0.0;
 
         /**
-         * \brief 
+         * \brief the ticks per second of an animation
          */
         double ticksPerSecond = 0.0;
 
         /**
-         * \brief 
+         * \brief the channels of an animation.
          */
         std::vector<Channel> channels;
     };

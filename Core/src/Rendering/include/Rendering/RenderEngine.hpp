@@ -31,76 +31,76 @@ namespace Vakol::Rendering
     {
       public:
         /**
-         * \brief
-         * \param width
-         * \param height
-         * \param API
+         * \brief the initial setup of the render engine
+         * \param width initial window width
+         * \param height initial window height
+         * \param API the third-party rendering API chosen by the user (OpenGL, Metal, Direct3D, Vulkan)
          */
         static void Init(int width, int height, const std::string& API);
         /**
-         * \brief
+         * \brief called before drawing an object
          */
         static void PreDraw();
         /**
          * \brief
-         * \param camera
-         * \param transform
-         * \param drawable
+         * \param camera the camera of a scene
+         * \param transform the transform component of an object.
+         * \param drawable the drawable component of an object
          */
         static void Draw(const Camera& camera, Components::Transform& transform, const Drawable& drawable);
         /**
-         * \brief
+         * \brief called after drawing an object.
          */
         static void PostDraw();
         /**
-         * \brief
-         * \param camera
-         * \param skybox
+         * \brief draws the skybox
+         * \param camera the camera of a scene
+         * \param skybox the skybox of a scene
          */
         static void DrawSkybox(const Camera& camera, const Skybox& skybox);
 
         /**
-         * \brief
-         * \param model
-         * \param drawable
+         * \brief generate a model object
+         * \param scale the scale of the cube
+         * \param drawable the drawable component to be modified with the model's information
          */
         static void GenerateModel(Assets::Model& model, Drawable& drawable);
         /**
-         * \brief
-         * \param scale
-         * \param drawable
+         * \brief generate a sphere object
+         * \param scale the scale of the sphere
+         * \param drawable the drawable component to be modified with the sphere's information
          */
         static void GenerateSphere(float scale, Drawable& drawable);
         /**
-         * \brief
-         * \param scale
-         * \param drawable
+         * \brief generate a cube object
+         * \param scale the scale of the cube
+         * \param drawable the drawable component to be modified with the cube's information
          */
         static void GenerateCube(float scale, Drawable& drawable);
 
         /**
-         * \brief
-         * \param faces
-         * \param skybox
+         * \brief generate a skybox given the names of the faces of its' cubemap texture.
+         * \param faces the names of each face of a skybox cubemap texture
+         * \param skybox the skybox of a scene to be modified by the engine.
          */
         static void GenerateSkybox(std::vector<std::string>&& faces, Skybox& skybox);
 
       private:
         /**
-         * \brief
-         * \param vertices
-         * \param skybox
+         * \brief generate a vertex array based of the vertices of a skybox
+         * \param vertices the vertices of a skybox
+         * \param skybox the skybox to be modified by the engine
          */
         static void GenerateSkyboxVertexArray(const std::vector<float>& vertices, Skybox& skybox);
 
         /**
-         * \brief
-         * \param model
+         * \brief breaks down each mesh of a model.
+         * \param model the model to be submitted
          */
         static void SubmitModel(Assets::Model& model);
         /**
-         * \brief
-         * \param mesh
+         * \brief converts a high-level mesh object into low-level vertex array object via API
+         * \param mesh the mesh to be submitted
          */
         static void SubmitMesh(Assets::Mesh& mesh);
     };

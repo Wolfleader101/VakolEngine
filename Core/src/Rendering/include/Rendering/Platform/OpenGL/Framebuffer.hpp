@@ -9,7 +9,14 @@ namespace Vakol::Rendering::OpenGL
     void EnableMultisample();
     void EnableSRGB();
 
+    /**
+     * \brief less than or equal depth function
+     */
     void DepthLEQUAL();
+
+    /**
+     * \brief less than depth function (OPENGL DEFAULT)
+     */
     void DepthLESS();
 
     void ClearColor(float r, float g, float b, float a);
