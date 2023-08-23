@@ -296,7 +296,7 @@ namespace Vakol::Rendering
 
     unsigned RenderAPI::GetShader(const std::string& shaderID)
     {
-        return m_shaderLibrary.GetShader(shaderID);   
+        return m_shaderLibrary.GetShader(shaderID);
     }
 
     void RenderAPI::SetBool(const unsigned int shader, const char* name, const bool value)

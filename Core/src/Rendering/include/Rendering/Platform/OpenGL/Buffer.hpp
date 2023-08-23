@@ -3,31 +3,31 @@
 namespace Vakol::Rendering::OpenGL
 {
     /**
-     * \brief 
-     * \param buffer 
+     * \brief
+     * \param buffer
      */
     void GenBuffers(unsigned int& buffer);
     /**
-     * \brief 
-     * \param buffer 
+     * \brief
+     * \param buffer
      */
     void BindUniformBuffer(unsigned int buffer);
     /**
-     * \brief 
+     * \brief
      */
     void UnbindUniformBuffer();
     /**
-     * \brief 
-     * \param binding 
-     * \param buffer 
+     * \brief
+     * \param binding
+     * \param buffer
      */
     void BindUniformBufferBase(unsigned int binding, unsigned int buffer);
     /**
-     * \brief 
-     * \param binding 
-     * \param buffer 
-     * \param offset 
-     * \param size 
+     * \brief
+     * \param binding
+     * \param buffer
+     * \param offset
+     * \param size
      */
     void BindUniformBufferRange(unsigned int binding, unsigned int buffer, int offset, int size);
 

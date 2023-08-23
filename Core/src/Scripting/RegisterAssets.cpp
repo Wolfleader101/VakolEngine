@@ -64,15 +64,15 @@ namespace Vakol
             Rendering::RenderAPI::SetFloat(shader, name, value);
         });
 
-        lua.set_function("set_vec2", [](const unsigned int shader, const char* name, const Math::Vec2& value) {
+        lua.set_function("set_vec2v", [](const unsigned int shader, const char* name, const Math::Vec2& value) {
             Rendering::RenderAPI::SetVec2(shader, name, value);
         });
 
-        lua.set_function("set_vec3", [](const unsigned int shader, const char* name, const Math::Vec3& value) {
+        lua.set_function("set_vec3v", [](const unsigned int shader, const char* name, const Math::Vec3& value) {
             Rendering::RenderAPI::SetVec3(shader, name, value);
         });
 
-        lua.set_function("set_vec4", [](const unsigned int shader, const char* name, const Math::Vec4& value) {
+        lua.set_function("set_vec4v", [](const unsigned int shader, const char* name, const Math::Vec4& value) {
             Rendering::RenderAPI::SetVec4(shader, name, value);
         });
 

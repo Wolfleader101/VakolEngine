@@ -11,10 +11,10 @@ namespace Vakol::Rendering
 {
     struct Vertex
     {
-        Math::Vec3 position; // the position of a vertex.
-        Math::Vec3 normal; // the normal of a vertex.
-        Math::Vec2 uv; // the texture coordinates of a vertex
-        Math::Vec3 tangent; // the tangent of a vertex
+        Math::Vec3 position;  // the position of a vertex.
+        Math::Vec3 normal;    // the normal of a vertex.
+        Math::Vec2 uv;        // the texture coordinates of a vertex
+        Math::Vec3 tangent;   // the tangent of a vertex
         Math::Vec3 bitangent; // the bitangent of a vertex.
 
         int boneIDs[MAX_BONE_INFLUENCE];       ///< Array of bone IDs affecting the vertex.
@@ -25,7 +25,7 @@ namespace Vakol::Rendering
     {
         bool active = true; /// decides whether the drawable should be drawn in the scene.
 
-        std::string modelID = "null"; // the path of the model.
+        std::string modelID = "null";  // the path of the model.
         std::string shaderID = "null"; // A unique id of the shader.
     };
 
@@ -43,7 +43,7 @@ namespace Vakol::Rendering
     {
         std::string ID = "null"; // the unique id of the vertex array.
 
-        std::vector<Vertex> vertices; // the vertices of a vertex array.
+        std::vector<Vertex> vertices;      // the vertices of a vertex array.
         std::vector<unsigned int> indices; // the indices of a vertex array.
     };
 
@@ -57,12 +57,12 @@ namespace Vakol::Rendering
     struct Uniform
     {
         int location; // the location of the uniform variable within the shader
-        int count; // number of locations the uniform variable takes up in memory.
+        int count;    // number of locations the uniform variable takes up in memory.
     };
 
     struct UniformBuffer
     {
-        unsigned int id; // the unique id of the uniform buffer
+        unsigned int id;      // the unique id of the uniform buffer
         unsigned int binding; // the binding uniform location of the uniform buffer.
     };
 } // namespace Vakol::Rendering
