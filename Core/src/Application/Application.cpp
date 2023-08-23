@@ -158,7 +158,7 @@ namespace Vakol
 
             m_sceneManager.Update();
 
-                        Scene& activeScene = m_sceneManager.GetActiveScene();
+            Scene& activeScene = m_sceneManager.GetActiveScene();
 
             // Add the time difference in the accumulator
             physicsAccumulator += m_time.deltaTime;
@@ -316,6 +316,11 @@ namespace Vakol
     {
 
         m_layerManager.PopLayer();
+    }
+
+    const std::shared_ptr<Window> Application::GetWindow() const
+    {
+        return m_window;
     }
 
 } // namespace Vakol

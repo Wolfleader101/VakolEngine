@@ -24,6 +24,9 @@ void MyGUILayer::OnAttach(Vakol::SceneManager* SM)
 
     unsigned width = Vakol::Singleton<Vakol::Application>::GetInstance().GetWidth();
     unsigned height = Vakol::Singleton<Vakol::Application>::GetInstance().GetHeight();
+    auto window = Vakol::Singleton<Vakol::Application>::GetInstance().GetWindow();
+    ImGui_ImplGlfw_InitForOpenGL(window->GetWindow(), true); // Takes in the GLFW Window
+    ImGui_ImplOpenGL3_Init("#version 460");
 
     ImGuiIO& io = ImGui::GetIO();
     io.DisplaySize = ImVec2(width, height);
@@ -57,9 +60,11 @@ void MyGUILayer::OnUpdate()
                         ImGui::DragFloat3("Scale", &trans.scale.x, 0.1f);
                     }
                 });
+            ImGui::End();
         }
-        ImGui::EndFrame();
+
         ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     }
 }
 

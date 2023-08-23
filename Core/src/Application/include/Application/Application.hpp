@@ -132,7 +132,19 @@ namespace Vakol
          */
         void RegisterLua();
 
+        const std::shared_ptr<Window> GetWindow() const;
+
+        /**
+         * @brief Get the Script Engine object
+         *
+         * @return ScriptEngine&
+         */
         void PushLayer(std::shared_ptr<Layer> layer);
+
+        /**
+         * @brief Pop the top layer
+         *
+         */
         void PopLayer();
 
       private:
