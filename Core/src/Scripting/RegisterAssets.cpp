@@ -57,32 +57,34 @@ namespace Vakol
         });
 
         lua.set_function("set_int", [](const unsigned int shader, const char* name, const int value) {
-
+            Rendering::RenderAPI::SetInt(shader, name, value);
         });
 
         lua.set_function("set_float", [](const unsigned int shader, const char* name, const float value) {
-
+            Rendering::RenderAPI::SetFloat(shader, name, value);
         });
 
-        lua.set_function("set_vec2v", [](const unsigned int, const char* name, const Math::Vec2& value) {
-
+        lua.set_function("set_vec2v", [](const unsigned int shader, const char* name, const Math::Vec2& value) {
+            Rendering::RenderAPI::SetVec2(shader, name, value);
         });
 
-        lua.set_function("set_vec3v", [](const unsigned int, const char* name, const Math::Vec3& value) {
-
+        lua.set_function("set_vec3v", [](const unsigned int shader, const char* name, const Math::Vec3& value) {
+            Rendering::RenderAPI::SetVec3(shader, name, value);
         });
 
-        lua.set_function("set_vec4v", [](const unsigned int, const char* name, const Math::Vec4& value) {
-
+        lua.set_function("set_vec4v", [](const unsigned int shader, const char* name, const Math::Vec4& value) {
+            Rendering::RenderAPI::SetVec4(shader, name, value);
         });
 
-        lua.set_function("set_mat3",
-                         [](const unsigned int, const char* name, const bool transpose, const Math::Mat3& value) {
+        lua.set_function(
+            "set_mat3", [](const unsigned int shader, const char* name, const bool transpose, const Math::Mat3& value) {
+                Rendering::RenderAPI::SetMat3(shader, name, transpose, value);
+            });
 
-                         });
-
-        lua.set_function("set_mat4",
-                         [](const unsigned int, const char* name, const bool transpose, const Math::Mat4& value) {});
+        lua.set_function(
+            "set_mat4", [](const unsigned int shader, const char* name, const bool transpose, const Math::Mat4& value) {
+                Rendering::RenderAPI::SetMat4(shader, name, transpose, value);
+            });
     }
 
 } // namespace Vakol

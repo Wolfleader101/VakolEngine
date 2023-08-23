@@ -25,6 +25,8 @@ namespace Vakol
             auto& drawable = ent->GetComponent<Rendering::Drawable>();
 
             Rendering::RenderEngine::GenerateModel(model, drawable);
+
+            return std::make_shared<Rendering::Assets::Model>(std::move(model));
         });
 
         entity_type.set_function("replace_texture", [](const Entity* ent, const std::string& srcPath,

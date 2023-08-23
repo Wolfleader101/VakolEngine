@@ -34,28 +34,28 @@ namespace Vakol
         static std::string shader_path;
 
         /**
-         * \brief
-         * \param path
-         * \return
+         * \brief finds a model based on a path
+         * \param path the path of the model
+         * \return the model if found, else an error model
          */
         static Rendering::Assets::Model& FindModel(const std::string& path);
 
         /**
          * \brief
-         * \param path
-         * \param scale
+         * \param path the path of the model
+         * \param scale the uniform scale of the model
          * \return
          */
         static Rendering::Assets::Model& GetModel(const std::string& path, float scale = 1.0f);
         /**
          * \brief
-         * \param modelID
+         * \param modelID the path of the model
          * \return
          */
         static const std::vector<Rendering::Assets::Mesh>& GetMeshes(const std::string& modelID);
         /**
          * \brief
-         * \param path
+         * \param path the path of the texture
          * \param type the type of texture
          * \param levels mipmap levels
          * \return a texture
@@ -63,10 +63,10 @@ namespace Vakol
         static Rendering::Assets::Texture& GetTexture(const std::string& path, unsigned int type, int levels = 1);
         /**
          * \brief
-         * \param path
-         * \param type
+         * \param path the path of the texture
+         * \param type the type of the texture
          * \param size the size of the buffer
-         * \param data
+         * \param data the buffer data address of the texture
          * \param levels mipmap levels
          * \return
          */
@@ -92,11 +92,11 @@ namespace Vakol
 
       private:
         /**
-         * \brief
+         * \brief the model library containing a map of models to their paths
          */
         static ModelLibrary m_modelLibrary;
         /**
-         * \brief
+         * \brief the texture library containg a map of textures to their paths and types
          */
         static TextureLibrary m_textureLibrary;
     };
