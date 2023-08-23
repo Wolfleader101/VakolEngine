@@ -158,9 +158,7 @@ namespace Vakol
 
             m_sceneManager.Update();
 
-            m_layerManager.OnUpdate();
-
-            Scene& activeScene = m_sceneManager.GetActiveScene();
+                        Scene& activeScene = m_sceneManager.GetActiveScene();
 
             // Add the time difference in the accumulator
             physicsAccumulator += m_time.deltaTime;
@@ -216,6 +214,8 @@ namespace Vakol
             Rendering::RenderEngine::PostDraw();
 
             m_gui.Update();
+
+            m_layerManager.OnUpdate();
 
             m_input.Update();
             m_window->OnUpdate();

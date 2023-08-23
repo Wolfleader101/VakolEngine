@@ -21,9 +21,17 @@ namespace Vakol
         ImGui::GetIO().FontDefault = ImGui::GetIO().Fonts->AddFontFromFileTTF(inputPath.c_str(), 16.0f, &font_cfg);
     };
 
-    void GUIWindow::Init(const std::shared_ptr<Window>& window) const
+    void GUIWindow::Init(const std::shared_ptr<Window>& window)
     {
-        ImGui::CreateContext();
+        m_context = ImGui::CreateContext();
+
+        if (!m_context)
+        {
+            VK_ERROR("Failed to create GUI context!");
+            return;
+        }
+
+        SetAsContext();
 
         ImGui::StyleColorsDark(); // Chooses the Dark style
 
@@ -49,6 +57,7 @@ namespace Vakol
 
     void GUIWindow::CreateNewFrame() const
     {
+        SetAsContext();
         ImGui_ImplOpenGL3_NewFrame(); // Sets up the new frame to be used within OpenGL
         ImGui_ImplGlfw_NewFrame();    // Sets up the new frame to be used within GLFW
         ImGui::NewFrame();            // Creates a new frame
@@ -297,8 +306,13 @@ namespace Vakol
         if (!is_initialised)
             return;
 
-        ImGui_ImplOpenGL3_Shutdown(); // Shuts down OpenGL support
-        ImGui_ImplGlfw_Shutdown();    // Shuts down GLFW support
-        ImGui::DestroyContext();      // Destroys the Window
+        ImGui_ImplOpenGL3_Shutdown();     // Shuts down OpenGL support
+        ImGui_ImplGlfw_Shutdown();        // Shuts down GLFW support
+        ImGui::DestroyContext(m_context); // Destroys the Window
     };
+
+    void GUIWindow::SetAsContext() const
+    {
+        ImGui::SetCurrentContext(m_context); // Sets the current context (Window)
+    }
 } // namespace Vakol

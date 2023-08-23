@@ -2,6 +2,8 @@
 
 #include "Utils/Layer.hpp"
 
+#include <imgui.h>
+
 class MyGUILayer : public Vakol::Layer
 {
   public:
@@ -16,4 +18,5 @@ class MyGUILayer : public Vakol::Layer
 
   private:
     bool m_Show = false;
+    ImGuiContext* m_Context;
 };

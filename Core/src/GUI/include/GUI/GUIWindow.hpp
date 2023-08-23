@@ -26,7 +26,7 @@ namespace Vakol
          *
          * @param window The GLFW window the UI will be inside of
          */
-        void Init(const std::shared_ptr<Window>& window) const;
+        void Init(const std::shared_ptr<Window>& window);
         /**
          * @brief Creates a new frame for the window
          */
@@ -179,8 +179,11 @@ namespace Vakol
         ~GUIWindow();
 
       private:
+        void SetAsContext() const;
+
         std::vector<ImFont*> fonts;  /**< Fonts used in the GUI window */
         bool is_initialised = false; /**< Flag indicating whether the GUI window is initialized */
         std::string scriptName;      /**< Name of the script */
+        ImGuiContext* m_context;     /**< The context of the GUI window */
     };
 } // namespace Vakol

@@ -1,8 +1,6 @@
 #include "MyGUILayer.hpp"
 #include <iostream>
 
-#include <imgui.h>
-
 #include <ECS/Components.hpp>
 #include <SceneManager/SceneManager.hpp>
 
@@ -14,11 +12,26 @@
 #include <Application/Application.hpp>
 #include <Utils/Singleton.hpp>
 
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
+
 void MyGUILayer::OnAttach(Vakol::SceneManager* SM)
 {
     m_SceneManager = SM;
+    m_Context = ImGui::CreateContext();
+    ImGui::SetCurrentContext(m_Context);
+    ImGui::StyleColorsDark();
+
+    unsigned width = Vakol::Singleton<Vakol::Application>::GetInstance().GetWidth();
+    unsigned height = Vakol::Singleton<Vakol::Application>::GetInstance().GetHeight();
+
+    ImGuiIO& io = ImGui::GetIO();
+    io.DisplaySize = ImVec2(width, height);
 }
 
+// auto window = Vakol::Singleton<Vakol::Application>::GetInstance().GetWindow();
+// ImGui_ImplGlfw_InitForOpenGL(window->GetWindow(), true); // Takes in the GLFW Window
+// ImGui_ImplOpenGL3_Init("#version 460");
 void MyGUILayer::OnDetach()
 {
 }
@@ -27,6 +40,10 @@ void MyGUILayer::OnUpdate()
 {
     if (m_Show)
     {
+        ImGui::SetCurrentContext(m_Context);
+        ImGui_ImplOpenGL3_NewFrame(); // Sets up the new frame to be used within OpenGL
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
         if (ImGui::Begin("Entities"))
         {
             auto& EL = m_SceneManager->GetActiveScene().GetEntityList();
@@ -40,8 +57,9 @@ void MyGUILayer::OnUpdate()
                         ImGui::DragFloat3("Scale", &trans.scale.x, 0.1f);
                     }
                 });
-            ImGui::End();
         }
+        ImGui::EndFrame();
+        ImGui::Render();
     }
 }
 

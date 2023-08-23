@@ -6,8 +6,9 @@ namespace Vakol
 {
     class Layer;
 
-    void Run();
-
+    // Functions should be called in this order
+    void Init();
     void PushLayer(std::shared_ptr<Layer> layer);
+    void Run();
 
 } // namespace Vakol
