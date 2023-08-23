@@ -26,6 +26,14 @@ namespace Vakol
             Rendering::RenderEngine::GenerateModel(model, drawable);
         });
 
+        entity_type.set_function(
+            "generate_skybox", [](Entity* ent, const sol::as_table_t<std::vector<std::string>>& faces) {
+                if (!ent->HasComponent<Rendering::Skybox>())
+                    ent->AddComponent<Rendering::Skybox>();
+
+                Rendering::RenderEngine::GenerateSkybox(faces.value(), ent->GetComponent<Rendering::Skybox>());
+            });
+
         entity_type.set_function("replace_texture", [](const Entity* ent, const std::string& srcPath,
                                                        const std::string& srcType, const std::string& dstPath,
                                                        const std::string& dstType) {
@@ -42,12 +50,102 @@ namespace Vakol
                                         Rendering::Assets::ToTextureType(dstType));
         });
 
-        entity_type.set_function("set_vec3v", [](const Entity* ent, const char* name, Math::Vec3& value) {
+        entity_type.set_function("set_bool", [](const Entity* ent, const char* name, const bool value) {
             if (!ent->HasComponent<Rendering::Drawable>())
             {
+                VK_ERROR("No Drawable component found on entity!");
+
                 return;
             }
+
+            AssetLoader::SetBool(AssetLoader::GetShader(ent->GetComponent<Rendering::Drawable>().shaderID), name,
+                                 value);
         });
+
+        entity_type.set_function("set_int", [](const Entity* ent, const char* name, const int value) {
+            if (!ent->HasComponent<Rendering::Drawable>())
+            {
+                VK_ERROR("No Drawable component found on entity!");
+
+                return;
+            }
+
+            AssetLoader::SetInt(AssetLoader::GetShader(ent->GetComponent<Rendering::Drawable>().shaderID), name, value);
+        });
+
+        entity_type.set_function("set_float", [](const Entity* ent, const char* name, const float value) {
+            if (!ent->HasComponent<Rendering::Drawable>())
+            {
+                VK_ERROR("No Drawable component found on entity!");
+
+                return;
+            }
+
+            AssetLoader::SetFloat(AssetLoader::GetShader(ent->GetComponent<Rendering::Drawable>().shaderID), name,
+                                  value);
+        });
+
+        entity_type.set_function("set_vec2v", [](const Entity* ent, const char* name, const Math::Vec2& value) {
+            if (!ent->HasComponent<Rendering::Drawable>())
+            {
+                VK_ERROR("No Drawable component found on entity!");
+
+                return;
+            }
+
+            AssetLoader::SetVec2(AssetLoader::GetShader(ent->GetComponent<Rendering::Drawable>().shaderID), name,
+                                 value);
+        });
+
+        entity_type.set_function("set_vec3v", [](const Entity* ent, const char* name, const Math::Vec3& value) {
+            if (!ent->HasComponent<Rendering::Drawable>())
+            {
+                VK_ERROR("No Drawable component found on entity!");
+
+                return;
+            }
+
+            AssetLoader::SetVec3(AssetLoader::GetShader(ent->GetComponent<Rendering::Drawable>().shaderID), name,
+                                 value);
+        });
+
+        entity_type.set_function("set_vec4v", [](const Entity* ent, const char* name, const Math::Vec4& value) {
+            if (!ent->HasComponent<Rendering::Drawable>())
+            {
+                VK_ERROR("No Drawable component found on entity!");
+
+                return;
+            }
+
+            AssetLoader::SetVec4(AssetLoader::GetShader(ent->GetComponent<Rendering::Drawable>().shaderID), name,
+                                 value);
+        });
+
+        entity_type.set_function(
+            "set_mat3", [](const Entity* ent, const char* name, const bool transpose, const Math::Mat3& value) {
+                if (!ent->HasComponent<Rendering::Drawable>())
+                {
+                    VK_ERROR("No Drawable component found on entity!");
+
+                    return;
+                }
+
+                AssetLoader::SetMat3(AssetLoader::GetShader(ent->GetComponent<Rendering::Drawable>().shaderID), name,
+                                     transpose, value);
+            });
+
+        entity_type.set_function(
+            "set_mat4", [](const Entity* ent, const char* name, const bool transpose, const Math::Mat4& value) {
+                if (!ent->HasComponent<Rendering::Drawable>())
+                {
+                    VK_ERROR("No Drawable component found on entity!");
+
+                    return;
+                }
+
+                AssetLoader::SetMat4(AssetLoader::GetShader(ent->GetComponent<Rendering::Drawable>().shaderID), name,
+                                     transpose, value);
+            });
 
         entity_type.set_function("active_model", [](const Entity* ent, const bool active) {
             if (ent->HasComponent<Rendering::Drawable>())

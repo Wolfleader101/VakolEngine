@@ -187,6 +187,12 @@ namespace Vakol
                         Rendering::RenderEngine::Draw(activeScene.GetCamera(), transform, drawable);
                 });
 
+            activeScene.GetEntityList().GetRegistry().view<Rendering::Skybox>().each(
+                [&](const Rendering::Skybox& skybox) {
+                    if (skybox.active)
+                        Rendering::RenderEngine::DrawSkybox(activeScene.GetCamera(), skybox);
+                });
+
             activeScene.Update(m_time);
 
             Rendering::RenderEngine::PostDraw();

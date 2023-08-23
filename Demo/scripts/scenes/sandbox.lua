@@ -3,6 +3,7 @@ function init()
 
     scene:create_entity("Digital Twin", "entities/test/digital_twin.lua");
 
+    scene:create_entity("Skybox", "entities/test/skybox.lua");
 end
 
 function update()

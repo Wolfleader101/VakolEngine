@@ -15,7 +15,28 @@
 
 namespace Vakol::Rendering
 {
+    const std::vector DEFAULT_CUBE_VERTICES = {
+        // positions
+        -1.0f, 1.0f,  -1.0f, -1.0f, -1.0f, -1.0f, 1.0f,  -1.0f, -1.0f,
+        1.0f,  -1.0f, -1.0f, 1.0f,  1.0f,  -1.0f, -1.0f, 1.0f,  -1.0f,
+
+        -1.0f, -1.0f, 1.0f,  -1.0f, -1.0f, -1.0f, -1.0f, 1.0f,  -1.0f,
+        -1.0f, 1.0f,  -1.0f, -1.0f, 1.0f,  1.0f,  -1.0f, -1.0f, 1.0f,
+
+        1.0f,  -1.0f, -1.0f, 1.0f,  -1.0f, 1.0f,  1.0f,  1.0f,  1.0f,
+        1.0f,  1.0f,  1.0f,  1.0f,  1.0f,  -1.0f, 1.0f,  -1.0f, -1.0f,
+
+        -1.0f, -1.0f, 1.0f,  -1.0f, 1.0f,  1.0f,  1.0f,  1.0f,  1.0f,
+        1.0f,  1.0f,  1.0f,  1.0f,  -1.0f, 1.0f,  -1.0f, -1.0f, 1.0f,
+
+        -1.0f, 1.0f,  -1.0f, 1.0f,  1.0f,  -1.0f, 1.0f,  1.0f,  1.0f,
+        1.0f,  1.0f,  1.0f,  -1.0f, 1.0f,  1.0f,  -1.0f, 1.0f,  -1.0f,
+
+        -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, 1.0f,  1.0f,  -1.0f, -1.0f,
+        1.0f,  -1.0f, -1.0f, -1.0f, -1.0f, 1.0f,  1.0f,  -1.0f, 1.0f};
+
     const std::string DEFAULT_SHADER_PATH = "coreAssets/shaders/default.program";
+    const std::string DEFAULT_SKYBOX_SHADER_PATH = "coreAssets/shaders/skybox.program";
 
     void RenderEngine::Init(const int width, const int height, const std::string& API)
     {
@@ -56,6 +77,17 @@ namespace Vakol::Rendering
     {
     }
 
+    void RenderEngine::DrawSkybox(const Camera& camera, const Skybox& skybox)
+    {
+        RenderAPI::BeginSkyboxDraw(skybox.vertexID, skybox.shaderID, skybox.textureID);
+
+        AssetLoader::SetMat4(AssetLoader::GetShader(skybox.shaderID), "PV_MATRIX", false,
+                             camera.GetMatrix(PROJECTION_MATRIX) *
+                                 Math::Mat4(Math::Mat3(camera.GetMatrix(VIEW_MATRIX))));
+
+        RenderAPI::EndSkyboxDraw();
+    }
+
     void RenderEngine::GenerateSphere(const float scale, Drawable& drawable)
     {
         bool success = true;
@@ -82,6 +114,31 @@ namespace Vakol::Rendering
 
         if (success)
             SubmitModel(model);
+    }
+
+    void RenderEngine::GenerateSkybox(const std::vector<std::string>& faces, Skybox& skybox)
+    {
+        bool success = true;
+        auto shader = ImportShader(DEFAULT_SKYBOX_SHADER_PATH, success);
+
+        if (success)
+            RenderAPI::GenerateSkyboxShader(std::move(shader), skybox);
+
+        GenerateSkyboxVertexArray(DEFAULT_CUBE_VERTICES, skybox);
+
+        skybox.textureID = RenderAPI::GenerateTexture(faces);
+    }
+
+    void RenderEngine::GenerateSkyboxVertexArray(const std::vector<float>& vertices, Skybox& skybox)
+    {
+        SkyboxVertexArray vertexArray;
+
+        skybox.vertexID = GenerateID();
+
+        vertexArray.ID = skybox.vertexID;
+        vertexArray.vertices = vertices;
+
+        RenderAPI::GenerateVertexCommand(std::move(vertexArray));
     }
 
     void RenderEngine::GenerateModel(Assets::Model& model, Drawable& drawable)

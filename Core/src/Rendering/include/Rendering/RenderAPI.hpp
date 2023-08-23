@@ -20,12 +20,14 @@ namespace Vakol::Components
 namespace Vakol::Rendering
 {
     struct VertexArray;
+    struct SkyboxVertexArray;
 
     struct VertexCommand;
     struct ShaderCommand;
     struct TextureCommand;
 
     struct Drawable;
+    struct Skybox;
 
     enum VK_BUFFER_HINT
     {
@@ -57,13 +59,20 @@ namespace Vakol::Rendering
         static void BeginDraw(const std::string& modelID, const std::string& shaderID);
         static void EndDraw();
 
+        static void BeginSkyboxDraw(const std::string& vertexID, const std::string& shaderID, unsigned int textureID);
+        static void EndSkyboxDraw();
+
         static Math::Mat4 GetModelMatrix(Components::Transform& transform);
 
         static void GenerateVertexCommand(VertexArray&& vertexArray);
+        static void GenerateVertexCommand(SkyboxVertexArray&& vertexArray);
+
         static void GenerateShader(Assets::Shader&& shader, Drawable& drawable);
+        static void GenerateSkyboxShader(Assets::Shader&& shader, Skybox& skybox);
 
         static unsigned int GenerateTexture(int levels, int width, int height, int channels,
                                             const unsigned char* pixels);
+        static unsigned int GenerateTexture(const std::vector<std::string>& faces);
 
       private:
         static std::map<std::string, VertexCommand> m_vertexLibrary;

@@ -54,6 +54,29 @@ namespace Vakol::Rendering
         OpenGL::UnbindShaderProgram();
     }
 
+    void RenderAPI::BeginSkyboxDraw(const std::string& vertexID, const std::string& shaderID, const unsigned int textureID)
+    {
+        OpenGL::BindShaderProgram(AssetLoader::GetShader(shaderID));
+
+        OpenGL::DepthLEQUAL();
+
+        const auto& vertexArray = m_vertexLibrary.at(vertexID);
+
+        OpenGL::SetActiveTexture(0);
+        OpenGL::BindCubemapTexture(textureID);
+
+        OpenGL::BindVertexArray(vertexArray.vertexArray);
+        OpenGL::DrawTriangleArrays(vertexArray.nVertices);
+        OpenGL::UnbindVertexArray();
+
+        OpenGL::DepthLESS();
+    }
+
+    void RenderAPI::EndSkyboxDraw()
+    {
+        OpenGL::UnbindShaderProgram();
+    }
+
     void RenderAPI::GenerateVertexCommand(VertexArray&& vertexArray)
     {
         VertexCommand command;
@@ -84,6 +107,35 @@ namespace Vakol::Rendering
         std::vector<unsigned int>().swap(vertexArray.indices);
     }
 
+    void RenderAPI::GenerateVertexCommand(SkyboxVertexArray&& vertexArray)
+    {
+        VertexCommand command;
+
+        command.nVertices = static_cast<int>(vertexArray.vertices.size());
+        command.nIndices = 0;
+
+        if (m_config.API == "OPENGL")
+        {
+            OpenGL::GenerateSkyboxVertexArray(vertexArray.vertices.data(), command);
+        }
+        else if (m_config.API == "VULKAN")
+        {
+            VK_WARN("Vulkan rendering has not been implemented yet.");
+        }
+        else if (m_config.API == "DIRECT3D")
+        {
+            VK_WARN("Direct3D rendering has not been implemented yet.");
+        }
+        else if (m_config.API == "METAL")
+        {
+            VK_WARN("Metal rendering has not been implemented yet.");
+        }
+
+        m_vertexLibrary[vertexArray.ID] = command;
+
+        std::vector<float>().swap(vertexArray.vertices);
+    }
+
     void RenderAPI::GenerateShader(Assets::Shader&& shader, Drawable& drawable)
     {
         drawable.shaderID = GenerateID();
@@ -94,10 +146,25 @@ namespace Vakol::Rendering
         AssetLoader::AddShader(drawable.shaderID, program);
     }
 
+    void RenderAPI::GenerateSkyboxShader(Assets::Shader&& shader, Skybox& skybox)
+    {
+        skybox.shaderID = GenerateID();
+
+        const unsigned int program =
+            OpenGL::GenerateShaderProgram(shader.vertSrc, shader.geomSrc, shader.tscSrc, shader.tseSrc, shader.fragSrc);
+
+        AssetLoader::AddShader(skybox.shaderID, program);
+    }
+
     unsigned int RenderAPI::GenerateTexture(const int levels, const int width, const int height, const int channels,
                                             const unsigned char* pixels)
     {
         return OpenGL::GenerateTexture(levels, width, height, channels, pixels);
+    }
+
+    unsigned RenderAPI::GenerateTexture(const std::vector<std::string>& faces)
+    {
+        return OpenGL::GenerateTexture(faces);   
     }
 
     void RenderAPI::EnableDepth()

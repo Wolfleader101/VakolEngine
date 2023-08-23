@@ -9,6 +9,9 @@ namespace Vakol::Rendering::OpenGL
     void EnableMultisample();
     void EnableSRGB();
 
+    void DepthLEQUAL();
+    void DepthLESS();
+
     void ClearColor(float r, float g, float b, float a);
     void Clear(unsigned int mask);
 } // namespace Vakol::Rendering::OpenGL

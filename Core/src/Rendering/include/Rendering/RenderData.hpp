@@ -29,12 +29,29 @@ namespace Vakol::Rendering
         std::string shaderID = "null";
     };
 
+    struct Skybox
+    {
+        bool active = true;
+
+        std::string vertexID = "null";
+        std::string shaderID = "null";
+
+        unsigned int textureID = 0;
+    };
+
     struct VertexArray
     {
         std::string ID = "null";
 
         std::vector<Vertex> vertices;
         std::vector<unsigned int> indices;
+    };
+
+    struct SkyboxVertexArray
+    {
+        std::string ID = "null";
+
+        std::vector<float> vertices;
     };
 
     struct Uniform

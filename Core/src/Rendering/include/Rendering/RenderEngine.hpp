@@ -25,6 +25,7 @@ namespace Vakol::Rendering
     } // namespace Assets
 
     struct Drawable;
+    struct Skybox;
 
     class RenderEngine
     {
@@ -35,12 +36,18 @@ namespace Vakol::Rendering
         static void Draw(const Camera& camera, Components::Transform& transform, const Drawable& drawable);
         static void PostDraw();
 
+        static void DrawSkybox(const Camera& camera, const Skybox& skybox);
+
         static void GenerateModel(Assets::Model& model, Drawable& drawable);
 
         static void GenerateSphere(float scale, Drawable& drawable);
         static void GenerateCube(float scale, Drawable& drawable);
 
+        static void GenerateSkybox(const std::vector<std::string>& faces, Skybox& skybox);
+
       private:
+        static void GenerateSkyboxVertexArray(const std::vector<float>& vertices, Skybox& skybox);
+
         static void SubmitModel(Assets::Model& model); // Submit a user-defined model to renderer. Converted into
                                                        // low-level render components.
         static void SubmitMesh(Assets::Mesh& mesh);
