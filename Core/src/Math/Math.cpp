@@ -138,13 +138,12 @@ namespace Vakol::Math
 
     Mat4 Translation(const Vec3& pos)
     {
-        return Mat4(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, pos.x, pos.y, pos.z, 1.0f);
+        return glm::translate(glm::mat4(1.0f), pos); 
     }
 
     Mat4 Scale(const Vec3& scale)
     {
-        return Mat4(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, scale.x, scale.y, scale.z,
-                    1.0f);
+        return glm::scale(glm::mat4(1.0f), scale);  
     }
 
     Mat4 XRotation(float angle)

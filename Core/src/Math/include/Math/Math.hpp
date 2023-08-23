@@ -4,6 +4,7 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace Vakol::Math
 {
@@ -74,9 +75,31 @@ namespace Vakol::Math
     // assumes its degrees
     Mat4 ZRotation(float angle);
 
+    /**
+     * @brief Create a rotation matrix from euler angles
+     * 
+     * @param pitch The pitch of the rotation
+     * @param yaw The yaw of the rotation
+     * @param roll The roll of the rotation
+     *
+     */
     Mat4 Rotation(float pitch, float yaw, float roll);
 
+    /**
+     * @brief Multiply a point by a matrix
+     * 
+     * @param point The point to multiply
+     * @param mat The matrix to multiply by
+     *
+     */
     Point MultiplyPoint(const Point& point, const Mat4& mat);
+    /**
+     * @brief Multiply a vector by a matrix
+     * 
+     * @param vec The vector to multiply
+     * @param mat The matrix to multiply by
+     *
+     */
     Vec3 MultiplyVector(const Vec3& vec, const Mat4& mat);
 
     /**
@@ -93,13 +116,22 @@ namespace Vakol::Math
      *
      */
     Mat4 Transpose(const Mat4& mat);
-
+    /**
+     * @brief Create a Matrix from a Quaternion
+     * 
+     * @param quaternion The quaternion to convert
+     *
+     */
     Mat4 Mat4Cast(const Quat& quaternion);
 
+    /**
+     * @brief A 2D line segment
+     *
+     */
     struct Line
     {
-        Point start;
-        Point end;
+        Point start; ///< The start point of the line
+        Point end; ///< The end point of the line
 
         inline Line()
         {
@@ -109,13 +141,31 @@ namespace Vakol::Math
         }
     };
 
+    /**
+     * @brief Calculate the length of a line segment
+     * 
+     * @param line The line segment to calculate the length of
+     * 
+     */
     float Length(const Line& line);
+    /**
+     * @brief Calculate the squared length of a line segment
+     * 
+     * @param line The line segment to calculate the squared length of
+     *
+     */
     float LengthSq(const Line& line);
 
+    /**
+     * @brief A 3D ray
+     * 
+     * A ray is a line in 3D space with a starting point and a direction
+     *
+     */
     struct Ray
     {
-        Point origin;
-        Vec3 dir;
+        Point origin; ///< The starting point of the ray
+        Vec3 dir; ///< The direction of the ray
 
         inline Ray() : dir(0.0f, 0.0f, 1.0f)
         {
@@ -131,6 +181,10 @@ namespace Vakol::Math
         }
     };
 
+    /**
+     * @brief Calculate the point on a ray at a given distance
+     *
+     */
     Ray FromPoints(const Point& from, const Point& to);
 
     /**

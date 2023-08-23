@@ -162,18 +162,18 @@ namespace Vakol
 
         // Calculate the inverse transpose of the model matrix
         Math::Mat4 inverseTranspose = Math::Transpose(Math::Inverse(modelMatrix)); 
-
-        // Loop through all the vertices and apply the scaling to the positions
-        for (size_t i = 0; i < originalVertices.size(); ++i)
-        {
-            mesh.vertices[i].position = originalVertices[i].position * inputScale;
-        }
         
-        // Loop through all the vertices and scale them
-        for (size_t i = 0; i < originalVertices.size(); ++i)
+        // Transform the normals
+        for (Rendering::Vertex& vertex : mesh.vertices)
         {
-            mesh.vertices[i].position = originalVertices[i].position * inputScale; // Apply scaling to position
-            mesh.vertices[i].normal *= originalVertices[i].normal * inputScale; // Apply scaling to normal
+            // Extract the 3x3 part of the inverse transpose matrix
+            Math::Mat3 inverseTranspose3x3 = Math::Mat3(inverseTranspose);
+
+            // Multiply the normal by the 3x3 matrix
+            vertex.normal = inverseTranspose3x3 * vertex.normal;
+
+            // Normalize the normal
+            Math::Normalize(vertex.normal); 
         }
 
         sphereTransform.scale = inputScale; // Set the new scale variable
@@ -201,6 +201,8 @@ namespace Vakol
             mesh.vertices[i].position = inputRotation * originalVertices[i].position;
             mesh.vertices[i].normal = inputRotation * originalVertices[i].normal;
         }
+
+        sphereTransform.rot = inputRotation; // Set the new rotation variable
     }
 
     Sphere::~Sphere()
