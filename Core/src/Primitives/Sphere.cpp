@@ -18,6 +18,8 @@ namespace Vakol
 
     Sphere::Sphere(Components::Transform inputTransform, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName)
     {
+        Math::Normalized(inputTransform.rot);                               // Normalize the rotation quaternion
+        
         sphereTransform.pos = inputTransform.pos; 						    // Set the position to the input position
         sphereTransform.scale = inputTransform.scale;					    // Set the scale to the input scale
         sphereTransform.rot = inputTransform.rot;						    // Set the rotation to the input rotation
@@ -33,6 +35,8 @@ namespace Vakol
     void Sphere::GenerateData(Components::Transform inputTransform, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName)
     {
         Rendering::Vertex tmpVertex;                                        // A temporary vertex object to store the data
+
+        inputTransform.rot = Math::Normalized(inputTransform.rot);          // Normalize the rotation quaternion (Prevents the rotation from accidentally scaling the vertices)
 
         tmpVertex.bitangent = Math::Vec3(0.0f, 0.0f, 0.0f);                 // Set the bitangent to 0
         tmpVertex.tangent = Math::Vec3(0.0f, 0.0f, 0.0f);                   // Set the tangent to 0
@@ -195,14 +199,19 @@ namespace Vakol
 
     void Sphere::SetRotation(Math::Quat& inputRotation)
     {
-        // Apply the rotation to the original vertices/current normals and store the result in mesh.vertices
+        // Normalize the input quaternion
+        // (Prevents the rotation from accidentally scaling the vertices)
+        inputRotation = Math::Normalized(inputRotation);
+
+        // Apply the rotation to the original vertices and store the result in mesh.vertices
         for (size_t i = 0; i < originalVertices.size(); ++i)
         {
-            mesh.vertices[i].position = inputRotation * originalVertices[i].position;
-            mesh.vertices[i].normal = inputRotation * originalVertices[i].normal;
+            mesh.vertices[i].position = inputRotation * originalVertices[i].position; 
+            mesh.vertices[i].normal = inputRotation * originalVertices[i].normal; 
         }
 
-        sphereTransform.rot = inputRotation; // Set the new rotation variable
+        // Set the new rotation variable
+        sphereTransform.rot = inputRotation; 
     }
 
     Sphere::~Sphere()
