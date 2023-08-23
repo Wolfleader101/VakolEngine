@@ -8,13 +8,12 @@
 #include "ECS/Components.hpp"
 #include "ECS/Entity.hpp"
 
-#include "ECS/System.hpp"
 #include "Serialisation/SolSerialize.hpp"
 
 namespace Vakol
 {
-    Scene::Scene(const std::string& name, LuaScript& script, const std::shared_ptr<Physics::ScenePhysics>& SP)
-        : scenePhysics(SP), m_script(std::move(script)), m_name(name), m_cam(Math::Vec3(0.0f, 0.0f, 2.0f))
+    Scene::Scene(const std::string& name, LuaScript& script, PhysicsScene& physicsScene)
+        : m_script(std::move(script)), m_physicsScene(physicsScene), m_name(name), m_cam(Math::Vec3(0.0f, 0.0f, 2.0f))
     {
     }
 
@@ -45,13 +44,6 @@ namespace Vakol
         m_entityList.RemoveEntity(entity);
     }
 
-    void Scene::Update(const Time& time)
-    {
-        scenePhysics->Update(time);
-
-        m_cam.Update();
-    }
-
     std::shared_ptr<Entity> Scene::GetEntity(const std::string& tag)
     {
         Entity ent;
@@ -62,6 +54,11 @@ namespace Vakol
         });
 
         return std::make_shared<Entity>(ent);
+    }
+
+    PhysicsScene& Scene::GetPhysicsScene()
+    {
+        return m_physicsScene;
     }
 
     namespace fs = std::filesystem;
@@ -85,7 +82,6 @@ namespace Vakol
             // directory already exists
         }
 
-        System::Physics_SerializationPrep();
         const std::string FinalFolder = folder + "/" + m_name;
         m_entityList.Serialize(FinalFolder + "/EntityList.json");
 
@@ -129,8 +125,6 @@ namespace Vakol
 
         m_entityList.Deserialize(folder + "/EntityList.json");
 
-        System::BindScene(*this);
-        System::Physics_Init();
         // System::Script_Deserialize(lua, entityList, this);
 
         std::ifstream input(folder + "/Scene.json");

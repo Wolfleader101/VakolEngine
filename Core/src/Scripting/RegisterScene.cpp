@@ -33,9 +33,6 @@ namespace Vakol
         scene_type.set_function("get_camera", &Scene::GetCamera);
         scene_type.set_function("get_entity", &Scene::GetEntity);
 
-        scene_type.set_function("enable_debug",
-                                [](Scene* scene, const bool enable) { scene->scenePhysics->EnableDebug(enable); });
-
         scene_type.set_function("serialize",
                                 &Scene::Serialize); // Give it folder assets/scenes. will create subfolder for scene
         scene_type.set_function(

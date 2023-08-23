@@ -11,6 +11,7 @@
 
 #include "Logger/Logger.hpp"
 
+#include "Camera/Camera.hpp"
 #include "ECS/Components.hpp"
 
 namespace Vakol::Rendering

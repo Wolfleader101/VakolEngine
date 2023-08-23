@@ -8,6 +8,7 @@
 
 namespace Vakol
 {
+
     void RegisterEntity(sol::state& lua)
     {
         auto entity_type = lua.new_usertype<Entity>("Entity");
@@ -152,40 +153,34 @@ namespace Vakol
                 ent->GetComponent<Rendering::Drawable>().active = active;
         });
 
-        entity_type.set_function("physics_init", [](const Entity* ent, Scene& scene) {
-            VK_CRITICAL("Physics init is deprecated!");
-            // System::BindScene(scene);
-            // System::Physics_InitEntity(*ent);
-        });
+        // entity_type.set_function("add_rigid", [](Entity* ent) -> Components::RigidBody& {
+        //     if (!ent->HasComponent<Components::RigidBody>())
+        //         ent->AddComponent<Components::RigidBody>();
 
-        entity_type.set_function("add_rigid", [](Entity* ent) -> Components::RigidBody& {
-            if (!ent->HasComponent<Components::RigidBody>())
-                ent->AddComponent<Components::RigidBody>();
+        //     return ent->GetComponent<Components::RigidBody>();
+        // });
 
-            return ent->GetComponent<Components::RigidBody>();
-        });
+        // entity_type.set_function("get_rigid", [](const Entity* ent) -> Components::RigidBody& {
+        //     if (ent->HasComponent<Components::RigidBody>())
+        //         return ent->GetComponent<Components::RigidBody>();
 
-        entity_type.set_function("get_rigid", [](const Entity* ent) -> Components::RigidBody& {
-            if (ent->HasComponent<Components::RigidBody>())
-                return ent->GetComponent<Components::RigidBody>();
+        //     VK_CRITICAL("No rigid body component found on entity");
+        //     assert(0);
+        // });
 
-            VK_CRITICAL("No rigid body component found on entity");
-            assert(0);
-        });
+        // entity_type.set_function("add_collider", [](Entity* ent) -> Components::Collider& {
+        //     if (!ent->HasComponent<Components::Collider>())
+        //         ent->AddComponent<Components::Collider>();
+        //     return ent->GetComponent<Components::Collider>();
+        // });
 
-        entity_type.set_function("add_collider", [](Entity* ent) -> Components::Collider& {
-            if (!ent->HasComponent<Components::Collider>())
-                ent->AddComponent<Components::Collider>();
-            return ent->GetComponent<Components::Collider>();
-        });
+        // entity_type.set_function("get_collider", [](const Entity* ent) -> Components::Collider& {
+        //     if (ent->HasComponent<Components::Collider>())
+        //         return ent->GetComponent<Components::Collider>();
 
-        entity_type.set_function("get_collider", [](const Entity* ent) -> Components::Collider& {
-            if (ent->HasComponent<Components::Collider>())
-                return ent->GetComponent<Components::Collider>();
-
-            VK_CRITICAL("No collider component found on entity");
-            assert(0);
-        });
+        //     VK_CRITICAL("No collider component found on entity");
+        //     assert(0);
+        // });
 
         /* Changed by Caleb */
         // entity_type.set_function("get_bounds_from_model", [](const Entity* ent) -> void {

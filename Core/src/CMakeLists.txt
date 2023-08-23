@@ -5,6 +5,7 @@ add_subdirectory(Camera)
 add_subdirectory(ECS)
 add_subdirectory(GUI)
 add_subdirectory(Input)
+add_subdirectory(LayerManager)
 add_subdirectory(Logger)
 add_subdirectory(Math)
 add_subdirectory(Physics)
@@ -17,25 +18,26 @@ add_subdirectory(Utils)
 add_subdirectory(Window)
 
 SET(SOURCES
-${APPLICATION_SRC}
-${ASSET_LOADER_SRC}
-${ANIMATION_SRC}
-${CAMERA_SRC}
-${ECS_SRC}
-${GUI_SRC}
-${INPUT_SRC}
-${LOGGER_SRC}
-${MATH_SRC}
-${PHYSICS_SRC}
-${RENDERING_SRC}
-${SCENE_MANAGER_SRC}
-${SCRIPTING_SRC}
-${SERIALISATION_SRC}
-${TIME_SRC}
-${UTILS_SRC}
-${WINDOW_SRC}
-src/core.cpp
-PARENT_SCOPE)
+    ${APPLICATION_SRC}
+    ${ASSET_LOADER_SRC}
+    ${ANIMATION_SRC}
+    ${CAMERA_SRC}
+    ${ECS_SRC}
+    ${GUI_SRC}
+    ${INPUT_SRC}
+    ${LAYER_MANAGER_SRC}
+    ${LOGGER_SRC}
+    ${MATH_SRC}
+    ${PHYSICS_SRC}
+    ${RENDERING_SRC}
+    ${SCENE_MANAGER_SRC}
+    ${SCRIPTING_SRC}
+    ${SERIALISATION_SRC}
+    ${TIME_SRC}
+    ${UTILS_SRC}
+    ${WINDOW_SRC}
+    src/core.cpp
+    PARENT_SCOPE)
 
 SET(GLOBAL_INCLUDE_DIRS
     ${APPLICATION_INCLUDE_DIR}
@@ -45,6 +47,7 @@ SET(GLOBAL_INCLUDE_DIRS
     ${ECS_INCLUDE_DIR}
     ${GUI_INCLUDE_DIR}
     ${INPUT_INCLUDE_DIR}
+    ${LAYER_MANAGER_INCLUDE_DIR}
     ${LOGGER_INCLUDE_DIR}
     ${MATH_INCLUDE_DIR}
     ${PHYSICS_INCLUDE_DIR}
