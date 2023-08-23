@@ -18,7 +18,7 @@ namespace Vakol
         Rendering::Assets::Model& GetModel(const std::string& path, float scale = 1.0f);
 
       private:
-        Rendering::Assets::Model& GetErrorModel();
+        Rendering::Assets::Model& GetErrorModel(float scale);
 
         std::unordered_map<std::string, Rendering::Assets::Model> m_models;
     };

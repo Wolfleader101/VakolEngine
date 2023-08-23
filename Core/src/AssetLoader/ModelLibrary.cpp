@@ -16,7 +16,7 @@ namespace Vakol
         {
             VK_ERROR("Unable to find model at path {0}", path);
 
-            return GetErrorModel();
+            return GetErrorModel(1.0f);
         }
 
         return m_models.at(path);
@@ -39,17 +39,17 @@ namespace Vakol
 
             VK_ERROR("Unable to get model at path {0}", path);
 
-            return GetErrorModel();
+            return GetErrorModel(scale);
         }
 
         return m_models.at(path);
     }
 
-    Rendering::Assets::Model& ModelLibrary::GetErrorModel()
+    Rendering::Assets::Model& ModelLibrary::GetErrorModel(const float scale)
     {
         bool success;
 
-        const auto& error = ImportModel(ERROR_MODEL_PATH.c_str(), 1.0f, success);
+        const auto& error = ImportModel(ERROR_MODEL_PATH.c_str(), scale, success);
 
         if (success && m_models.find(ERROR_MODEL_PATH) == m_models.end())
         {

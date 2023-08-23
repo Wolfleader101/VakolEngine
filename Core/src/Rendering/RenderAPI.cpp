@@ -15,6 +15,7 @@
 
 namespace Vakol::Rendering
 {
+    ShaderLibrary RenderAPI::m_shaderLibrary;
     std::map<std::string, VertexCommand> RenderAPI::m_vertexLibrary;
 
     RenderConfig RenderAPI::m_config;
@@ -286,5 +287,50 @@ namespace Vakol::Rendering
         transform_matrix = Math::Scale(transform_matrix, transform.scale);
 
         return transform_matrix * rotation_matrix;
+    }
+
+    void RenderAPI::AddShader(const std::string& shaderID, const unsigned int shader)
+    {
+        m_shaderLibrary.AddShader(shaderID, shader);
+    }
+
+    void RenderAPI::SetBool(const unsigned int shader, const char* name, const bool value)
+    {
+        m_shaderLibrary.SetBool(shader, name, value);
+    }
+
+    void RenderAPI::SetInt(const unsigned int shader, const char* name, const int value)
+    {
+        m_shaderLibrary.SetInt(shader, name, value);
+    }
+
+    void RenderAPI::SetFloat(const unsigned shader, const char* name, const float value)
+    {
+        m_shaderLibrary.SetFloat(shader, name, value);
+    }
+
+    void RenderAPI::SetVec2(const unsigned int shader, const char* name, const Math::Vec2& value)
+    {
+        m_shaderLibrary.SetVec2(shader, name, value);
+    }
+
+    void RenderAPI::SetVec3(const unsigned int shader, const char* name, const Math::Vec3& value)
+    {
+        m_shaderLibrary.SetVec3(shader, name, value);
+    }
+
+    void RenderAPI::SetVec4(const unsigned int shader, const char* name, const Math::Vec4& value)
+    {
+        m_shaderLibrary.SetVec4(shader, name, value);
+    }
+
+    void RenderAPI::SetMat3(const unsigned int shader, const char* name, const bool transpose, const Math::Mat3& value)
+    {
+        m_shaderLibrary.SetMat3(shader, name, transpose, value);
+    }
+
+    void RenderAPI::SetMat4(const unsigned int shader, const char* name, const bool transpose, const Math::Mat4& value)
+    {
+        m_shaderLibrary.SetMat4(shader, name, transpose, value);
     }
 } // namespace Vakol::Rendering

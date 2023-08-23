@@ -31,7 +31,7 @@ constexpr int ASSIMP_LOADER_OPTIONS =
 namespace Vakol
 {
     /*Helper Functions*/
-    static Math::Mat4 ToGLM(const aiMatrix4x4& m)
+    static Math::Mat4 ToMat4(const aiMatrix4x4& m)
     {
         Math::Vec4 c1{m.a1, m.b1, m.c1, m.d1};
         Math::Vec4 c2{m.a2, m.b2, m.c2, m.d2};
@@ -41,17 +41,17 @@ namespace Vakol
         return {c1, c2, c3, c4};
     }
 
-    static Math::Quat ToGLM(aiQuaternion& v)
+    static Math::Quat ToQuat(aiQuaternion& v)
     {
         return {v.w, v.x, v.y, v.z};
     }
 
-    static Math::Vec3 ToGLM(aiColor3D& v)
+    static Math::Vec3 ToVec3(aiColor3D& v)
     {
         return {v.r, v.g, v.b};
     }
 
-    static Math::Vec3 ToGLM(aiVector3D& v)
+    static Math::Vec3 ToVec3(aiVector3D& v)
     {
         return {v.x, v.y, v.z};
     }
@@ -134,8 +134,6 @@ namespace Vakol
 
         ExtractMeshes(*scene, model.meshes);
 
-        // std::cout << std::endl;
-
         success = true;
 
         return model;
@@ -174,17 +172,17 @@ namespace Vakol
         {
             Rendering::Vertex vertex{};
 
-            vertex.position = ToGLM(mesh.mVertices[i]);
-            vertex.normal = ToGLM(mesh.mNormals[i]);
+            vertex.position = ToVec3(mesh.mVertices[i]);
+            vertex.normal = ToVec3(mesh.mNormals[i]);
 
             if (mesh.HasTextureCoords(0))
             {
-                vertex.uv = ToGLM(mesh.mTextureCoords[0][i]);
+                vertex.uv = ToVec3(mesh.mTextureCoords[0][i]);
 
                 if (mesh.HasTangentsAndBitangents())
                 {
-                    vertex.tangent = ToGLM(mesh.mTangents[i]);
-                    vertex.bitangent = ToGLM(mesh.mBitangents[i]);
+                    vertex.tangent = ToVec3(mesh.mTangents[i]);
+                    vertex.bitangent = ToVec3(mesh.mBitangents[i]);
                 }
             }
 
@@ -333,7 +331,7 @@ namespace Vakol
 
         for (auto i = 0u; i < in->mNumPositionKeys; ++i)
         {
-            position.position = ToGLM(in->mPositionKeys[i].mValue);
+            position.position = ToVec3(in->mPositionKeys[i].mValue);
             position.timestamp = in->mPositionKeys[i].mTime;
 
             channel.positions.emplace_back(position);
@@ -344,7 +342,7 @@ namespace Vakol
 
         for (auto i = 0u; i < in->mNumRotationKeys; ++i)
         {
-            rotation.rotation = ToGLM(in->mRotationKeys[i].mValue);
+            rotation.rotation = ToQuat(in->mRotationKeys[i].mValue);
             rotation.timestamp = in->mRotationKeys[i].mTime;
 
             channel.rotations.emplace_back(rotation);
@@ -355,7 +353,7 @@ namespace Vakol
 
         for (auto i = 0u; i < in->mNumScalingKeys; ++i)
         {
-            scale.scale = ToGLM(in->mScalingKeys[i].mValue);
+            scale.scale = ToVec3(in->mScalingKeys[i].mValue);
             scale.timestamp = in->mScalingKeys[i].mTime;
 
             channel.scales.emplace_back(scale);
