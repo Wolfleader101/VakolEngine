@@ -117,7 +117,7 @@ namespace Vakol::Rendering
             SubmitModel(model);
     }
 
-    void RenderEngine::GenerateSkybox(const std::vector<std::string>& faces, Skybox& skybox)
+    void RenderEngine::GenerateSkybox(std::vector<std::string>&& faces, Skybox& skybox)
     {
         bool success = true;
         auto shader = ImportShader(DEFAULT_SKYBOX_SHADER_PATH, success);
@@ -127,7 +127,8 @@ namespace Vakol::Rendering
 
         GenerateSkyboxVertexArray(DEFAULT_CUBE_VERTICES, skybox);
 
-        skybox.textureID = RenderAPI::GenerateTexture(faces);
+        auto&& textures = AssetLoader::GetTextures(std::move(faces));
+        skybox.textureID = RenderAPI::GenerateTexture(std::move(textures));
     }
 
     void RenderEngine::GenerateSkyboxVertexArray(const std::vector<float>& vertices, Skybox& skybox)

@@ -72,7 +72,7 @@ namespace Vakol::Rendering
 
         static unsigned int GenerateTexture(int levels, int width, int height, int channels,
                                             const unsigned char* pixels);
-        static unsigned int GenerateTexture(const std::vector<std::string>& faces);
+        static unsigned int GenerateTexture(std::vector<Assets::Texture>&& textures);
 
       private:
         static std::map<std::string, VertexCommand> m_vertexLibrary;

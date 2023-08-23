@@ -163,9 +163,9 @@ namespace Vakol::Rendering
         return OpenGL::GenerateTexture(levels, width, height, channels, pixels);
     }
 
-    unsigned RenderAPI::GenerateTexture(const std::vector<std::string>& faces)
+    unsigned RenderAPI::GenerateTexture(std::vector<Assets::Texture>&& textures)
     {
-        return OpenGL::GenerateTexture(faces);
+        return OpenGL::GenerateTexture(std::move(textures));
     }
 
     void RenderAPI::EnableDepth()

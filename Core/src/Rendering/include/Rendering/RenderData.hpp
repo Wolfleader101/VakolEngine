@@ -31,7 +31,7 @@ namespace Vakol::Rendering
 
     struct Skybox
     {
-        bool active = true;
+        bool active = false;
 
         std::string vertexID = "null";
         std::string shaderID = "null";

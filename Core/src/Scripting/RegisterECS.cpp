@@ -27,14 +27,6 @@ namespace Vakol
             Rendering::RenderEngine::GenerateModel(model, drawable);
         });
 
-        entity_type.set_function(
-            "generate_skybox", [](Entity* ent, const sol::as_table_t<std::vector<std::string>>& faces) {
-                if (!ent->HasComponent<Rendering::Skybox>())
-                    ent->AddComponent<Rendering::Skybox>();
-
-                Rendering::RenderEngine::GenerateSkybox(faces.value(), ent->GetComponent<Rendering::Skybox>());
-            });
-
         entity_type.set_function("replace_texture", [](const Entity* ent, const std::string& srcPath,
                                                        const std::string& srcType, const std::string& dstPath,
                                                        const std::string& dstType) {

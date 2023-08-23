@@ -1,6 +1,7 @@
 #include "LuaAccess.hpp"
 
 #include "ECS/Components.hpp"
+#include "Rendering/RenderEngine.hpp"
 #include "SceneManager/Scene.hpp"
 #include "Scripting/ScriptEngine.hpp"
 
@@ -27,6 +28,18 @@ namespace Vakol
             }
             return ent;
         });
+
+        scene_type.set_function(
+            "generate_skybox", [](Scene* scene, sol::as_table_t<std::vector<std::string>>&& faces) 
+            {
+                Rendering::Skybox skybox;
+
+                Rendering::RenderEngine::GenerateSkybox(std::move(faces.value()), skybox);
+
+                skybox.active = true;
+
+                scene->SetSkybox(skybox);
+            });
 
         // scene_type.set_function("set_active", [](Scene* scene, const bool active) { scene->active = active; });
 

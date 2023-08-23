@@ -42,7 +42,6 @@ namespace Vakol
     Rendering::Assets::Texture& TextureLibrary::GetTexture(const std::string& path, const unsigned int type,
                                                            const int size, const void* data, const int levels)
     {
-
         if (!FindTexture(path, type))
         {
             Rendering::Assets::Texture texture;
@@ -67,6 +66,19 @@ namespace Vakol
         }
 
         return m_textures.at(std::make_pair(path, type));
+    }
+
+    std::vector<Rendering::Assets::Texture> TextureLibrary::GetTextures(std::vector<std::string>&& paths)
+    {
+        std::vector<Rendering::Assets::Texture> textures;
+
+        for (const auto& path : paths)
+        {
+            const auto& texture = GetTexture(path, Rendering::Assets::VK_TEXTURE_DIFFUSE, 1);
+            textures.emplace_back(texture);
+        }
+
+        return textures;
     }
 
     Rendering::Assets::Texture& TextureLibrary::GetErrorTexture(const unsigned int type)

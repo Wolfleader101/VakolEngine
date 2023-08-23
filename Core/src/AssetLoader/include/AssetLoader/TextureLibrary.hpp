@@ -30,6 +30,7 @@ namespace Vakol
         Rendering::Assets::Texture& GetTexture(const std::string& path, unsigned int type, int levels);
         Rendering::Assets::Texture& GetTexture(const std::string& path, unsigned int type, int size, const void* data,
                                                int levels);
+        std::vector<Rendering::Assets::Texture> GetTextures(std::vector<std::string>&& paths);
 
       private:
         Rendering::Assets::Texture& GetErrorTexture(unsigned int type);

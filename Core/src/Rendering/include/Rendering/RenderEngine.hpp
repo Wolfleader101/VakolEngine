@@ -43,7 +43,7 @@ namespace Vakol::Rendering
         static void GenerateSphere(float scale, Drawable& drawable);
         static void GenerateCube(float scale, Drawable& drawable);
 
-        static void GenerateSkybox(const std::vector<std::string>& faces, Skybox& skybox);
+        static void GenerateSkybox(std::vector<std::string>&& faces, Skybox& skybox);
 
       private:
         static void GenerateSkyboxVertexArray(const std::vector<float>& vertices, Skybox& skybox);

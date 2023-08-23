@@ -1,4 +1,5 @@
 #include "Rendering/Platform/OpenGL/Texture.hpp"
+#include "Rendering/Assets/Texture.hpp"
 
 #include "Logger/Logger.hpp"
 
@@ -37,7 +38,7 @@ namespace Vakol::Rendering::OpenGL
         return texture;
     }
 
-    unsigned int GenerateTexture(const std::vector<std::string>& faces)
+    unsigned int GenerateTexture(std::vector<Assets::Texture>&& textures)
     {
         unsigned int texture;
 
@@ -46,11 +47,11 @@ namespace Vakol::Rendering::OpenGL
 
         int width = 0, height = 0, channels = 1;
 
-        for (int i = 0; i < faces.size(); ++i)
+        for (int i = 0; i < textures.size(); ++i)
         {
             unsigned char* pixels = nullptr;
 
-            ImportTexture(faces.at(i), width, height, channels, pixels);
+            ImportTexture(textures.at(i).path, width, height, channels, pixels);
 
             const GLenum internal_format = channels == 1 ? GL_R8 : channels > 3 ? GL_RGBA8 : GL_RGB8;
             const GLenum format = channels == 1 ? GL_RED : channels > 3 ? GL_RGBA : GL_RGB;
@@ -64,6 +65,7 @@ namespace Vakol::Rendering::OpenGL
 
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);

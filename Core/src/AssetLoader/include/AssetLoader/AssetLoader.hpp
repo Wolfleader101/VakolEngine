@@ -61,6 +61,8 @@ namespace Vakol
         static Rendering::Assets::Texture& GetTexture(const std::string& path, unsigned int type, int levels = 1);
         static Rendering::Assets::Texture& GetTexture(const std::string& path, unsigned int type, int size,
                                                       const void* data, int levels = 1);
+        static std::vector<Rendering::Assets::Texture> GetTextures(std::vector<std::string>&& paths);
+
         static void ReplaceTexture(const std::string& modelID, const std::string& srcPath, unsigned int srcType,
                                    const std::string& dstPath, unsigned int dstType);
 

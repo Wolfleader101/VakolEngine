@@ -93,6 +93,11 @@ namespace Vakol
         return m_textureLibrary.GetTexture(path, type, size, data, levels);
     }
 
+    std::vector<Rendering::Assets::Texture> AssetLoader::GetTextures(std::vector<std::string>&& paths)
+    {
+        return m_textureLibrary.GetTextures(std::move(paths));
+    }
+
     void AssetLoader::ReplaceTexture(const std::string& modelID, const std::string& srcPath, const unsigned int srcType,
                                      const std::string& dstPath, const unsigned int dstType)
     {

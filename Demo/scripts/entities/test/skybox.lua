@@ -1,9 +1,15 @@
 function init()
-	local path = "coreAssets/textures/Skybox/";
+	local path = "coreAssets/textures/Skybox/imported/Unity/WorldSkies/";
+	local extension = ".png";
 
-	local faces = { path .. "right.png", path .. "left.png", path .. "top.png", path .. "bottom.png", path .. "front.png", path .. "back.png"};
+	local faces = { path .. "left"  .. extension, 
+					path .. "right"   .. extension, 
+					path .. "top"    .. extension, 
+					path .. "bottom" .. extension, 
+					path .. "front"  .. extension, 
+					path .. "back"   .. extension};
 
-	entity:generate_skybox(faces);
+	scene:generate_skybox(faces);
 end
 
 function update()
