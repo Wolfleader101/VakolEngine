@@ -54,7 +54,8 @@ namespace Vakol::Rendering
         OpenGL::UnbindShaderProgram();
     }
 
-    void RenderAPI::BeginSkyboxDraw(const std::string& vertexID, const std::string& shaderID, const unsigned int textureID)
+    void RenderAPI::BeginSkyboxDraw(const std::string& vertexID, const std::string& shaderID,
+                                    const unsigned int textureID)
     {
         OpenGL::BindShaderProgram(AssetLoader::GetShader(shaderID));
 
@@ -164,7 +165,7 @@ namespace Vakol::Rendering
 
     unsigned RenderAPI::GenerateTexture(const std::vector<std::string>& faces)
     {
-        return OpenGL::GenerateTexture(faces);   
+        return OpenGL::GenerateTexture(faces);
     }
 
     void RenderAPI::EnableDepth()
