@@ -459,3 +459,15 @@ out/
 
 !**/[Aa]ssets/*
 !**/[Cc]ore[Aa]ssets/*
+
+## Media Files
+*.png
+*.jpg
+*.jpeg
+*.tiff
+*.gif
+*.webp
+*.bmp
+*.psd
+*.svg
+*.fbx
