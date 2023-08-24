@@ -14,29 +14,72 @@
 #include "Rendering/RenderData.hpp"
 
 #include "Math/Math.hpp"
-#include "Rendering/Platform/OpenGL/Texture.hpp"
-#include "Rendering/RenderAPI.hpp"
 
-#include "AssetLoader/TextureLoader.hpp"
+#include "AssetLoader/AssetLoader.hpp"
+#include "Rendering/RenderCommand.hpp"
 
 #include <iostream>
-#include <stack>
 
 using namespace Vakol::Rendering::Assets;
 
 constexpr int ASSIMP_LOADER_OPTIONS =
-    aiProcess_Triangulate | aiProcess_CalcTangentSpace | aiProcess_GenBoundingBoxes | aiProcess_JoinIdenticalVertices |
-    aiProcess_ImproveCacheLocality | aiProcess_SplitLargeMeshes | aiProcess_ValidateDataStructure |
-    aiProcess_FindInvalidData | aiProcess_GlobalScale | aiProcess_PopulateArmatureData | aiProcess_FlipUVs;
+    aiProcess_Triangulate | aiProcess_CalcTangentSpace | aiProcess_GenSmoothNormals | aiProcess_GenBoundingBoxes |
+    aiProcess_JoinIdenticalVertices | aiProcess_ImproveCacheLocality | aiProcess_SplitLargeMeshes |
+    aiProcess_ValidateDataStructure | aiProcess_FindInvalidData | aiProcess_GlobalScale |
+    aiProcess_PopulateArmatureData | aiProcess_FlipUVs | aiProcess_RemoveRedundantMaterials;
 
 namespace Vakol
 {
     /*Helper Functions*/
-    static void Mat4(const aiMatrix4x4& in, Math::Mat4& out);
-    static void Quaternion(const aiQuaternion& in, Math::Quat& out);
-    static void Vec3(const aiVector3D& in, Math::Vec3& out);
-    static void Vec3(const aiColor3D& in, Math::Vec3& out);
-    static void Vec2(const aiVector3D& in, Math::Vec2& out);
+    static Math::Mat4 ToMat4(const aiMatrix4x4& m)
+    {
+        Math::Vec4 c1{m.a1, m.b1, m.c1, m.d1};
+        Math::Vec4 c2{m.a2, m.b2, m.c2, m.d2};
+        Math::Vec4 c3{m.a3, m.b3, m.c3, m.d3};
+        Math::Vec4 c4{m.a4, m.b4, m.c4, m.d4};
+
+        return {c1, c2, c3, c4};
+    }
+
+    static Math::Quat ToQuat(aiQuaternion& v)
+    {
+        return {v.w, v.x, v.y, v.z};
+    }
+
+    static Math::Vec3 ToVec3(aiColor3D& v)
+    {
+        return {v.r, v.g, v.b};
+    }
+
+    static Math::Vec3 ToVec3(aiVector3D& v)
+    {
+        return {v.x, v.y, v.z};
+    }
+
+    static unsigned int GetTextureType(const aiTextureType type)
+    {
+        switch (type)
+        {
+        case aiTextureType_DIFFUSE:
+            return VK_TEXTURE_DIFFUSE;
+        case aiTextureType_SPECULAR:
+            return VK_TEXTURE_SPECULAR;
+        case aiTextureType_AMBIENT:
+            return VK_TEXTURE_AMBIENT;
+        case aiTextureType_EMISSIVE:
+            return VK_TEXTURE_EMISSION;
+        case aiTextureType_HEIGHT:
+            return VK_TEXTURE_HEIGHT;
+        case aiTextureType_NORMALS:
+            return VK_TEXTURE_NORMAL;
+        case aiTextureType_UNKNOWN:
+            return VK_TEXTURE_NONE;
+        default:
+            break;
+        }
+
+        return VK_TEXTURE_NONE;
+    }
 
     static void ExtractMeshes(const aiScene& scene, std::vector<Mesh>& meshes);
     static Mesh ProcessMesh(const aiScene& scene, const aiMesh& mesh);
@@ -85,11 +128,11 @@ namespace Vakol
 
         std::cout << std::endl;
 
-        VK_TRACE("Stats for Model: {0}", path);
+        // VK_TRACE("Stats for Model: {0}", path);
+
+        model.path = path;
 
         ExtractMeshes(*scene, model.meshes);
-
-        std::cout << std::endl;
 
         success = true;
 
@@ -116,8 +159,8 @@ namespace Vakol
 
         const auto& material = ProcessMaterial(scene, scene.mMaterials[mesh.mMaterialIndex]);
 
-        return {mesh.mName.C_Str(), std::move(vertices), std::move(indices), std::vector<Bone>(),
-                std::make_shared<Material>(material)};
+        return {Rendering::GenerateID(), mesh.mName.C_Str(),  std::move(vertices),
+                std::move(indices),      std::vector<Bone>(), std::make_shared<Material>(material)};
     }
 
     void ExtractVertices(const aiMesh& mesh, std::vector<Rendering::Vertex>& vertices,
@@ -129,17 +172,17 @@ namespace Vakol
         {
             Rendering::Vertex vertex{};
 
-            Vec3(mesh.mVertices[i], vertex.position);
-            Vec3(mesh.mNormals[i], vertex.normal);
+            vertex.position = ToVec3(mesh.mVertices[i]);
+            vertex.normal = ToVec3(mesh.mNormals[i]);
 
             if (mesh.HasTextureCoords(0))
             {
-                Vec2(mesh.mTextureCoords[0][i], vertex.uv);
+                vertex.uv = ToVec3(mesh.mTextureCoords[0][i]);
 
                 if (mesh.HasTangentsAndBitangents())
                 {
-                    Vec3(mesh.mTangents[i], vertex.tangent);
-                    Vec3(mesh.mBitangents[i], vertex.bitangent);
+                    vertex.tangent = ToVec3(mesh.mTangents[i]);
+                    vertex.bitangent = ToVec3(mesh.mBitangents[i]);
                 }
             }
 
@@ -152,44 +195,6 @@ namespace Vakol
         for (auto i = 0u; i < mesh.mNumFaces; ++i)
             indices.insert(indices.end(), mesh.mFaces[i].mIndices,
                            mesh.mFaces[i].mIndices + mesh.mFaces[i].mNumIndices);
-    }
-
-    std::vector<Texture> ExtractTextures(const aiScene& scene, const aiMaterial* material, const aiTextureType type)
-    {
-        std::vector<Texture> textures;
-
-        const auto count = material->GetTextureCount(type);
-
-        textures.reserve(count);
-
-        unsigned char* pixels = nullptr;
-
-        for (unsigned int i = 0; i < count; ++i)
-        {
-            auto imported_path = aiString{};
-            auto&& texture = Texture{};
-
-            if (material->GetTexture(type, i, &imported_path) == AI_SUCCESS)
-            {
-                texture.path = imported_path.C_Str();
-                texture.type = static_cast<VK_TEXTURE_TYPE>(type);
-
-                if (const auto& embedTexture = scene.GetEmbeddedTexture(imported_path.C_Str()))
-                {
-                    texture.embedded = true;
-
-                    ImportTexture(embedTexture->pcData, static_cast<int>(embedTexture->mWidth), texture.width,
-                                  texture.height, texture.channels, pixels);
-
-                    texture.ID =
-                        Rendering::OpenGL::GenerateTexture(texture.width, texture.height, texture.channels, pixels);
-                }
-
-                textures.emplace_back(std::move(texture));
-            }
-        }
-
-        return textures;
     }
 
     Material ProcessMaterial(const aiScene& scene, const aiMaterial* material)
@@ -227,6 +232,44 @@ namespace Vakol
                         std::make_move_iterator(normal_maps.end()));
 
         return {material->GetName().C_Str(), "null", "null", std::move(textures), properties};
+    }
+
+    std::vector<Texture> ExtractTextures(const aiScene& scene, const aiMaterial* material, const aiTextureType type)
+    {
+        std::vector<Texture> textures;
+
+        const auto count = material->GetTextureCount(type);
+
+        textures.reserve(count);
+
+        for (unsigned int i = 0; i < count; ++i)
+        {
+            auto imported_path = aiString{};
+
+            if (material->GetTexture(type, i, &imported_path) == AI_SUCCESS)
+            {
+                const std::string path = imported_path.C_Str();
+
+                auto&& texture = Texture{};
+
+                if (const auto& embedded_texture = scene.GetEmbeddedTexture(path.c_str()))
+                {
+                    const auto size = static_cast<int>(embedded_texture->mWidth);
+
+                    texture = AssetLoader::GetTexture(embedded_texture->mFilename.C_Str(), GetTextureType(type), size,
+                                                      embedded_texture->pcData, 12);
+                    textures.emplace_back(texture);
+                }
+                else
+                {
+                    texture = AssetLoader::GetTexture(imported_path.C_Str(), GetTextureType(type), 12);
+
+                    textures.emplace_back(texture);
+                }
+            }
+        }
+
+        return textures;
     }
 
     // void ExtractAnimations(const unsigned int count, aiAnimation** const& in)
@@ -288,8 +331,10 @@ namespace Vakol
 
         for (auto i = 0u; i < in->mNumPositionKeys; ++i)
         {
-            Vec3(in->mPositionKeys[i].mValue, position.position);
+            position.position = ToVec3(in->mPositionKeys[i].mValue);
             position.timestamp = in->mPositionKeys[i].mTime;
+
+            channel.positions.emplace_back(position);
         }
 
         channel.rotations.reserve(in->mNumRotationKeys);
@@ -297,8 +342,10 @@ namespace Vakol
 
         for (auto i = 0u; i < in->mNumRotationKeys; ++i)
         {
-            Quaternion(in->mRotationKeys[i].mValue, rotation.rotation);
+            rotation.rotation = ToQuat(in->mRotationKeys[i].mValue);
             rotation.timestamp = in->mRotationKeys[i].mTime;
+
+            channel.rotations.emplace_back(rotation);
         }
 
         channel.scales.reserve(in->mNumScalingKeys);
@@ -306,31 +353,10 @@ namespace Vakol
 
         for (auto i = 0u; i < in->mNumScalingKeys; ++i)
         {
-            Vec3(in->mScalingKeys[i].mValue, scale.scale);
+            scale.scale = ToVec3(in->mScalingKeys[i].mValue);
             scale.timestamp = in->mScalingKeys[i].mTime;
+
+            channel.scales.emplace_back(scale);
         }
-    }
-
-    void Mat4(const aiMatrix4x4& in, Math::Mat4& out)
-    {
-        out = Math::Mat4(in.a1, in.b1, in.c1, in.d1, in.a2, in.b2, in.c2, in.d2, in.a3, in.b3, in.c3, in.d3, in.a4,
-                         in.b4, in.c4, in.d4);
-    }
-
-    void Quaternion(const aiQuaternion& in, Math::Quat& out)
-    {
-        out = Math::Quat(in.w, in.x, in.y, in.z);
-    }
-    void Vec3(const aiVector3D& in, Math::Vec3& out)
-    {
-        out = Math::Vec3(in.x, in.y, in.z);
-    }
-    void Vec3(const aiColor3D& in, Math::Vec3& out)
-    {
-        out = Math::Vec3(in.r, in.g, in.b);
-    }
-    void Vec2(const aiVector3D& in, Math::Vec2& out)
-    {
-        out = Math::Vec2(in.x, in.y);
     }
 } // namespace Vakol

@@ -164,14 +164,9 @@ namespace Vakol::Rendering::OpenGL
         }
     }
 
-    void SetMat4(const int location, const int count, const char* name, const bool transpose, const float* value)
+    void SetBool(const int location, const bool value)
     {
-        glUniformMatrix4fv(location, count, transpose, value);
-    }
-
-    void SetMat3(const int location, const int count, const char* name, const bool transpose, const float* value)
-    {
-        glUniformMatrix3fv(location, count, transpose, value);
+        glUniform1i(location, value);
     }
 
     void SetFloat(const int location, const float value)
@@ -184,6 +179,11 @@ namespace Vakol::Rendering::OpenGL
         glUniform1i(location, value);
     }
 
+    void SetVec2(const int location, const int count, const float* value)
+    {
+        glUniform2fv(location, count, value);
+    }
+
     void SetVec3(const int location, const int count, const float* value)
     {
         glUniform3fv(location, count, value);
@@ -194,6 +194,15 @@ namespace Vakol::Rendering::OpenGL
         glUniform4fv(location, count, value);
     }
 
+    void SetMat3(const int location, const int count, const char* name, const bool transpose, const float* value)
+    {
+        glUniformMatrix3fv(location, count, transpose, value);
+    }
+
+    void SetMat4(const int location, const int count, const char* name, const bool transpose, const float* value)
+    {
+        glUniformMatrix4fv(location, count, transpose, value);
+    }
 } // namespace Vakol::Rendering::OpenGL
 
 std::string ToString(const unsigned int shader)

@@ -13,11 +13,10 @@
 #include "ECS/Components.hpp"
 #include "Logger/Logger.hpp"
 
-#include "AssetLoader/TextureLoader.hpp"
-
 namespace Vakol::Rendering
 {
-    std::map<std::string, std::vector<VertexCommand>> RenderAPI::m_vertexLibrary;
+    ShaderLibrary RenderAPI::m_shaderLibrary;
+    std::map<std::string, VertexCommand> RenderAPI::m_vertexLibrary;
 
     RenderConfig RenderAPI::m_config;
 
@@ -29,40 +28,58 @@ namespace Vakol::Rendering
         m_config.API = API;
     }
 
-    void RenderAPI::BeginDraw(const std::string& vertexID, const std::string& shaderID, const std::string& materialID)
+    void RenderAPI::BeginDraw(const std::string& modelID, const std::string& shaderID)
     {
-        const auto program = ShaderLibrary::GetShader(shaderID);
+        OpenGL::BindShaderProgram(GetShader(shaderID));
 
-        OpenGL::BindShaderProgram(program);
-
-        DefaultShaderSetup(shaderID);
-
-        std::vector<Assets::Texture> textures{};
-
-        if (const auto valid = AssetLoader::GetTextures(materialID, textures); valid)
+        for (const auto& mesh : AssetLoader::GetMeshes(modelID))
         {
-            for (const auto& texture : textures)
+            const auto& material = mesh.material;
+
+            for (const auto& texture : material->textures)
             {
-                OpenGL::SetActiveTexture(texture.type);
+                OpenGL::SetActiveTexture(static_cast<int>(texture.type));
                 OpenGL::BindTexture(texture.ID);
             }
-        }
 
-        for (const auto& vertexArray : m_vertexLibrary.at(vertexID))
-        {
+            const auto& vertexArray = m_vertexLibrary.at(mesh.ID);
+
             OpenGL::BindVertexArray(vertexArray.vertexArray);
             OpenGL::DrawTriangleElements(vertexArray.nIndices);
+            OpenGL::UnbindVertexArray();
         }
     }
 
     void RenderAPI::EndDraw()
     {
-        OpenGL::UnbindVertexArray();
-
         OpenGL::UnbindShaderProgram();
     }
 
-    void RenderAPI::GenerateVertexCommand(VertexArray&& vertexArray, const Drawable& drawable)
+    void RenderAPI::BeginSkyboxDraw(const std::string& vertexID, const std::string& shaderID,
+                                    const unsigned int textureID)
+    {
+        OpenGL::BindShaderProgram(GetShader(shaderID));
+
+        OpenGL::DepthLEQUAL();
+
+        const auto& vertexArray = m_vertexLibrary.at(vertexID);
+
+        OpenGL::SetActiveTexture(0);
+        OpenGL::BindCubemapTexture(textureID);
+
+        OpenGL::BindVertexArray(vertexArray.vertexArray);
+        OpenGL::DrawTriangleArrays(vertexArray.nVertices);
+        OpenGL::UnbindVertexArray();
+
+        OpenGL::DepthLESS();
+    }
+
+    void RenderAPI::EndSkyboxDraw()
+    {
+        OpenGL::UnbindShaderProgram();
+    }
+
+    void RenderAPI::GenerateVertexCommand(VertexArray&& vertexArray)
     {
         VertexCommand command;
 
@@ -86,41 +103,70 @@ namespace Vakol::Rendering
             VK_WARN("Metal rendering has not been implemented yet.");
         }
 
-        m_vertexLibrary[drawable.vertexArrayID].emplace_back(command);
+        m_vertexLibrary[vertexArray.ID] = command;
 
         std::vector<Vertex>().swap(vertexArray.vertices);
         std::vector<unsigned int>().swap(vertexArray.indices);
     }
 
-    void RenderAPI::PrepareVertexArray()
+    void RenderAPI::GenerateVertexCommand(SkyboxVertexArray&& vertexArray)
     {
-        m_vertexLibrary.emplace();
+        VertexCommand command;
+
+        command.nVertices = static_cast<int>(vertexArray.vertices.size());
+        command.nIndices = 0;
+
+        if (m_config.API == "OPENGL")
+        {
+            OpenGL::GenerateSkyboxVertexArray(vertexArray.vertices.data(), command);
+        }
+        else if (m_config.API == "VULKAN")
+        {
+            VK_WARN("Vulkan rendering has not been implemented yet.");
+        }
+        else if (m_config.API == "DIRECT3D")
+        {
+            VK_WARN("Direct3D rendering has not been implemented yet.");
+        }
+        else if (m_config.API == "METAL")
+        {
+            VK_WARN("Metal rendering has not been implemented yet.");
+        }
+
+        m_vertexLibrary[vertexArray.ID] = command;
+
+        std::vector<float>().swap(vertexArray.vertices);
     }
 
     void RenderAPI::GenerateShader(Assets::Shader&& shader, Drawable& drawable)
     {
         drawable.shaderID = GenerateID();
-        // VK_TRACE("Shader ID: {0}", drawable.shaderID);
 
         const unsigned int program =
             OpenGL::GenerateShaderProgram(shader.vertSrc, shader.geomSrc, shader.tscSrc, shader.tseSrc, shader.fragSrc);
-        ShaderLibrary::GetShaderUniforms(program);
 
-        ShaderLibrary::AddShader(drawable.shaderID, program);
+        AddShader(drawable.shaderID, program);
     }
 
-    unsigned int RenderAPI::GenerateTexture(Assets::Texture& texture, const Drawable& drawable)
+    void RenderAPI::GenerateSkyboxShader(Assets::Shader&& shader, Skybox& skybox)
     {
-        if (!texture.embedded)
-        {
-            unsigned char* pixels = nullptr;
+        skybox.shaderID = GenerateID();
 
-            ImportTexture(texture.path, texture.width, texture.height, texture.channels, pixels);
+        const unsigned int program =
+            OpenGL::GenerateShaderProgram(shader.vertSrc, shader.geomSrc, shader.tscSrc, shader.tseSrc, shader.fragSrc);
 
-            return OpenGL::GenerateTexture(texture.width, texture.height, texture.channels, pixels);
-        }
+        AddShader(skybox.shaderID, program);
+    }
 
-        return 0u;
+    unsigned int RenderAPI::GenerateTexture(const int levels, const int width, const int height, const int channels,
+                                            const unsigned char* pixels)
+    {
+        return OpenGL::GenerateTexture(levels, width, height, channels, pixels);
+    }
+
+    unsigned RenderAPI::GenerateTexture(std::vector<Assets::Texture>&& textures)
+    {
+        return OpenGL::GenerateTexture(std::move(textures));
     }
 
     void RenderAPI::EnableDepth()
@@ -128,6 +174,46 @@ namespace Vakol::Rendering
         if (m_config.API == "OPENGL")
         {
             OpenGL::EnableDepth();
+        }
+        else if (m_config.API == "VULKAN")
+        {
+            VK_WARN("Vulkan rendering has not been implemented yet.");
+        }
+        else if (m_config.API == "DIRECT3D")
+        {
+            VK_WARN("Direct3D rendering has not been implemented yet.");
+        }
+        else if (m_config.API == "METAL")
+        {
+            VK_WARN("Metal rendering has not been implemented yet.");
+        }
+    }
+
+    void RenderAPI::EnableSRGB()
+    {
+        if (m_config.API == "OPENGL")
+        {
+            OpenGL::EnableSRGB();
+        }
+        else if (m_config.API == "VULKAN")
+        {
+            VK_WARN("Vulkan rendering has not been implemented yet.");
+        }
+        else if (m_config.API == "DIRECT3D")
+        {
+            VK_WARN("Direct3D rendering has not been implemented yet.");
+        }
+        else if (m_config.API == "METAL")
+        {
+            VK_WARN("Metal rendering has not been implemented yet.");
+        }
+    }
+
+    void RenderAPI::EnableMultisample()
+    {
+        if (m_config.API == "OPENGL")
+        {
+            OpenGL::EnableMultisample();
         }
         else if (m_config.API == "VULKAN")
         {
@@ -188,16 +274,6 @@ namespace Vakol::Rendering
         }
     }
 
-    void RenderAPI::DefaultShaderSetup(const std::string& shaderID)
-    {
-        ShaderLibrary::SetInt(ShaderLibrary::GetShader(shaderID), "material.diffuse_map", Assets::VK_TEXTURE_DIFFUSE);
-        ShaderLibrary::SetInt(ShaderLibrary::GetShader(shaderID), "material.specular_map", Assets::VK_TEXTURE_SPECULAR);
-        ShaderLibrary::SetInt(ShaderLibrary::GetShader(shaderID), "material.ambient_map", Assets::VK_TEXTURE_AMBIENT);
-        ShaderLibrary::SetInt(ShaderLibrary::GetShader(shaderID), "material.emission_map", Assets::VK_TEXTURE_EMISSION);
-        ShaderLibrary::SetInt(ShaderLibrary::GetShader(shaderID), "material.height_map", Assets::VK_TEXTURE_HEIGHT);
-        ShaderLibrary::SetInt(ShaderLibrary::GetShader(shaderID), "material.normal_map", Assets::VK_TEXTURE_NORMAL);
-    }
-
     Math::Mat4 RenderAPI::GetModelMatrix(Components::Transform& transform)
     {
         auto transform_matrix = Math::Mat4(1.0f);
@@ -211,5 +287,55 @@ namespace Vakol::Rendering
         transform_matrix = Math::Scale(transform_matrix, transform.scale);
 
         return transform_matrix * rotation_matrix;
+    }
+
+    void RenderAPI::AddShader(const std::string& shaderID, const unsigned int shader)
+    {
+        m_shaderLibrary.AddShader(shaderID, shader);
+    }
+
+    unsigned RenderAPI::GetShader(const std::string& shaderID)
+    {
+        return m_shaderLibrary.GetShader(shaderID);
+    }
+
+    void RenderAPI::SetBool(const unsigned int shader, const char* name, const bool value)
+    {
+        m_shaderLibrary.SetBool(shader, name, value);
+    }
+
+    void RenderAPI::SetInt(const unsigned int shader, const char* name, const int value)
+    {
+        m_shaderLibrary.SetInt(shader, name, value);
+    }
+
+    void RenderAPI::SetFloat(const unsigned shader, const char* name, const float value)
+    {
+        m_shaderLibrary.SetFloat(shader, name, value);
+    }
+
+    void RenderAPI::SetVec2(const unsigned int shader, const char* name, const Math::Vec2& value)
+    {
+        m_shaderLibrary.SetVec2(shader, name, value);
+    }
+
+    void RenderAPI::SetVec3(const unsigned int shader, const char* name, const Math::Vec3& value)
+    {
+        m_shaderLibrary.SetVec3(shader, name, value);
+    }
+
+    void RenderAPI::SetVec4(const unsigned int shader, const char* name, const Math::Vec4& value)
+    {
+        m_shaderLibrary.SetVec4(shader, name, value);
+    }
+
+    void RenderAPI::SetMat3(const unsigned int shader, const char* name, const bool transpose, const Math::Mat3& value)
+    {
+        m_shaderLibrary.SetMat3(shader, name, transpose, value);
+    }
+
+    void RenderAPI::SetMat4(const unsigned int shader, const char* name, const bool transpose, const Math::Mat4& value)
+    {
+        m_shaderLibrary.SetMat4(shader, name, transpose, value);
     }
 } // namespace Vakol::Rendering

@@ -8,6 +8,20 @@
 
 namespace Vakol
 {
+    const std::string ERROR_MODEL_PATH = "coreAssets/models/error.obj";
+
+    Rendering::Assets::Model& ModelLibrary::FindModel(const std::string& path)
+    {
+        if (m_models.find(path) == m_models.end())
+        {
+            VK_ERROR("Unable to find model at path {0}", path);
+
+            return GetErrorModel(1.0f);
+        }
+
+        return m_models.at(path);
+    }
+
     Rendering::Assets::Model& ModelLibrary::GetModel(const std::string& path, const float scale)
     {
         if (m_models.find(path) == m_models.end())
@@ -25,17 +39,24 @@ namespace Vakol
 
             VK_ERROR("Unable to get model at path {0}", path);
 
-            const auto& error = ImportModel("coreAssets/models/error.obj", scale, success);
-
-            if (success)
-            {
-                m_models[path] = error;
-
-                return m_models.at(path);
-            }
+            return GetErrorModel(scale);
         }
 
         return m_models.at(path);
+    }
+
+    Rendering::Assets::Model& ModelLibrary::GetErrorModel(const float scale)
+    {
+        bool success;
+
+        const auto& error = ImportModel(ERROR_MODEL_PATH.c_str(), scale, success);
+
+        if (success && m_models.find(ERROR_MODEL_PATH) == m_models.end())
+        {
+            m_models[ERROR_MODEL_PATH] = error;
+        }
+
+        return m_models.at(ERROR_MODEL_PATH);
     }
 
 } // namespace Vakol
