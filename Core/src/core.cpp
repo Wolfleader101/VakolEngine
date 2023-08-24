@@ -14,4 +14,9 @@ namespace Vakol
 
         Singleton<Application>::GetInstance().Run();
     }
+
+    void PushLayer(std::shared_ptr<Layer> layer)
+    {
+        Singleton<Application>::GetInstance().PushLayer(layer);
+    }
 } // namespace Vakol

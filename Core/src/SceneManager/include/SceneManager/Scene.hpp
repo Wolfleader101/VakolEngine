@@ -4,6 +4,7 @@
 #include "ECS/Entity.hpp"
 #include "ECS/EntityList.hpp"
 #include "Physics/PhysicsScene.hpp"
+#include "Rendering/RenderData.hpp"
 #include "Scripting/ScriptTypes.hpp"
 #include "Time/Time.hpp"
 namespace Vakol
@@ -124,6 +125,16 @@ namespace Vakol
             return m_script;
         }
 
+        void SetSkybox(const Rendering::Skybox& skybox)
+        {
+            m_skybox = skybox;
+        }
+
+        Rendering::Skybox& GetSkybox()
+        {
+            return m_skybox;
+        }
+
         /**
          * @brief Get the Physics Scene object
          *
@@ -152,6 +163,8 @@ namespace Vakol
          * @brief The entity list of the scene.
          */
         EntityList m_entityList;
+
+        Rendering::Skybox m_skybox;
 
         /**
          * @brief physics scene for a scene

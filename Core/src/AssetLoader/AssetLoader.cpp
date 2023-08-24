@@ -1,7 +1,8 @@
 #include "AssetLoader/AssetLoader.hpp"
 
-#include "AssetLoader/TextureLoader.hpp"
-#include "Rendering/Platform/OpenGL/Texture.hpp"
+#include "Logger/Logger.hpp"
+
+#include <algorithm>
 
 namespace Vakol
 {
@@ -10,58 +11,56 @@ namespace Vakol
     std::string AssetLoader::shader_path = "assets/shaders/";
 
     ModelLibrary AssetLoader::m_modelLibrary;
-    MaterialLibrary AssetLoader::m_materialLibrary;
+    TextureLibrary AssetLoader::m_textureLibrary;
 
-    std::unordered_map<std::string, Rendering::Assets::Texture> AssetLoader::m_textures;
+    Rendering::Assets::Model& AssetLoader::FindModel(const std::string& path)
+    {
+        return m_modelLibrary.FindModel(path);
+    }
 
     Rendering::Assets::Model& AssetLoader::GetModel(const std::string& path, const float scale)
     {
         return m_modelLibrary.GetModel(path, scale);
     }
 
-    Rendering::Assets::Material& AssetLoader::GetMaterial(const std::string& materialID)
+    const std::vector<Rendering::Assets::Mesh>& AssetLoader::GetMeshes(const std::string& modelID)
     {
-        return m_materialLibrary.GetMaterial(materialID);
+        return m_modelLibrary.FindModel(modelID).meshes;
     }
 
-    Rendering::Assets::Texture& AssetLoader::GetTexture(const std::string& path)
+    Rendering::Assets::Texture& AssetLoader::GetTexture(const std::string& path, const unsigned int type,
+                                                        const int levels)
     {
-        if (m_textures.find(path) == m_textures.end())
+        return m_textureLibrary.GetTexture(path, type, levels);
+    }
+
+    Rendering::Assets::Texture& AssetLoader::GetTexture(const std::string& path, const unsigned int type,
+                                                        const int size, const void* data, const int levels)
+    {
+        return m_textureLibrary.GetTexture(path, type, size, data, levels);
+    }
+
+    std::vector<Rendering::Assets::Texture> AssetLoader::GetTextures(std::vector<std::string>&& paths)
+    {
+        return m_textureLibrary.GetTextures(std::move(paths));
+    }
+
+    void AssetLoader::ReplaceTexture(const std::string& modelID, const std::string& srcPath, const unsigned int srcType,
+                                     const std::string& dstPath, const unsigned int dstType)
+    {
+        const auto& model = FindModel(modelID);
+
+        for (const auto& mesh : model.meshes)
         {
-            Rendering::Assets::Texture texture;
+            auto& textures = mesh.material->textures;
 
-            texture.path = path;
-
-            unsigned char* pixels = nullptr;
-
-            ImportTexture(path, texture.width, texture.height, texture.channels, pixels);
-
-            texture.ID = Rendering::OpenGL::GenerateTexture(texture.width, texture.height, texture.channels, pixels);
-            texture.type = Rendering::Assets::VK_TEXTURE_DIFFUSE;
-
-            m_textures[path] = std::move(texture);
-
-            return m_textures.at(path);
+            std::replace_if(
+                textures.begin(), textures.end(),
+                [&](const Rendering::Assets::Texture& texture) {
+                    return texture.path == srcPath && texture.type == srcType;
+                },
+                GetTexture(dstPath, dstType));
         }
-
-        return m_textures.at(path);
-    }
-
-    void AssetLoader::AddTexture(const std::string& materialID, const Rendering::Assets::Texture& texture)
-    {
-        m_materialLibrary.AddTexture(materialID, texture);
-    }
-
-    void AssetLoader::AddMaterial(const Rendering::Assets::Material& material)
-    {
-        m_materialLibrary.AddMaterial(material);
-
-        MaterialLibrary::SetupMaterial(material);
-    }
-
-    bool AssetLoader::GetTextures(const std::string& materialID, std::vector<Rendering::Assets::Texture>& textures)
-    {
-        return m_materialLibrary.GetTextures(materialID, textures);
     }
 
 } // namespace Vakol

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <deque>
 #include <memory>
 
 #include "GUI/GUIWindow.hpp"
@@ -12,6 +13,15 @@
 #include "Window/Events/KeyEvent.hpp"
 #include "Window/Events/WindowEvent.hpp"
 #include "Window/Window.hpp"
+
+#include "LayerManager/LayerManager.hpp"
+#include "Utils/Layer.hpp"
+
+#include "SceneManager/SceneManager.hpp"
+
+#include "Scripting/ScriptEngine.hpp"
+
+#include "Rendering/RenderEngine.hpp"
 
 namespace Vakol
 {
@@ -122,6 +132,9 @@ namespace Vakol
          */
         void RegisterLua();
 
+        void PushLayer(std::shared_ptr<Layer> layer);
+        void PopLayer();
+
       private:
         /**
          * @brief on window close event
@@ -211,6 +224,8 @@ namespace Vakol
          *
          */
         SceneManager m_sceneManager;
+
+        LayerManager m_layerManager;
 
         /**
          * @brief if the app should be running

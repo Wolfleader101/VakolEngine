@@ -103,9 +103,9 @@ namespace Vakol::Math
     Vec3 MultiplyVector(const Vec3& vec, const Mat4& mat);
 
     /**
-     * @brief Invert a matrix
+     * @brief Invert a 4x4 matrix
      *
-     * @param mat The matrix to invert
+     * @param mat The 4x4 matrix to invert
      *
      */
     Mat4 Inverse(const Mat4& mat);
@@ -122,6 +122,8 @@ namespace Vakol::Math
      * @param quaternion The quaternion to convert
      *
      */
+    Mat3 Inverse(const Mat3& mat);
+
     Mat4 Mat4Cast(const Quat& quaternion);
 
     /**

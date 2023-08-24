@@ -1,12 +1,9 @@
 #include "Rendering/RenderEngine.hpp"
 
-#include "AssetLoader/MaterialLibrary.hpp"
 #include "AssetLoader/ShaderLibrary.hpp"
 #include "Rendering/RenderCommand.hpp"
 
 #include "Rendering/Assets/Model.hpp"
-
-#include "Window/Window.hpp"
 
 #include "AssetLoader/ShaderLoader.hpp"
 
@@ -19,15 +16,35 @@
 
 namespace Vakol::Rendering
 {
+    const std::vector DEFAULT_CUBE_VERTICES = {
+        // positions
+        -1.0f, 1.0f,  -1.0f, -1.0f, -1.0f, -1.0f, 1.0f,  -1.0f, -1.0f,
+        1.0f,  -1.0f, -1.0f, 1.0f,  1.0f,  -1.0f, -1.0f, 1.0f,  -1.0f,
+
+        -1.0f, -1.0f, 1.0f,  -1.0f, -1.0f, -1.0f, -1.0f, 1.0f,  -1.0f,
+        -1.0f, 1.0f,  -1.0f, -1.0f, 1.0f,  1.0f,  -1.0f, -1.0f, 1.0f,
+
+        1.0f,  -1.0f, -1.0f, 1.0f,  -1.0f, 1.0f,  1.0f,  1.0f,  1.0f,
+        1.0f,  1.0f,  1.0f,  1.0f,  1.0f,  -1.0f, 1.0f,  -1.0f, -1.0f,
+
+        -1.0f, -1.0f, 1.0f,  -1.0f, 1.0f,  1.0f,  1.0f,  1.0f,  1.0f,
+        1.0f,  1.0f,  1.0f,  1.0f,  -1.0f, 1.0f,  -1.0f, -1.0f, 1.0f,
+
+        -1.0f, 1.0f,  -1.0f, 1.0f,  1.0f,  -1.0f, 1.0f,  1.0f,  1.0f,
+        1.0f,  1.0f,  1.0f,  -1.0f, 1.0f,  1.0f,  -1.0f, 1.0f,  -1.0f,
+
+        -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, 1.0f,  1.0f,  -1.0f, -1.0f,
+        1.0f,  -1.0f, -1.0f, -1.0f, -1.0f, 1.0f,  1.0f,  -1.0f, 1.0f};
+
     const std::string DEFAULT_SHADER_PATH = "coreAssets/shaders/default.program";
+    const std::string DEFAULT_SKYBOX_SHADER_PATH = "coreAssets/shaders/skybox.program";
 
     void RenderEngine::Init(const int width, const int height, const std::string& API)
     {
         RenderAPI::SetupConfig(width, height, API);
 
         RenderAPI::EnableDepth();
-
-        ShaderLibrary::CreateUniformBuffer("Matrices", 2 * sizeof(Math::Mat4), 1);
+        RenderAPI::EnableMultisample();
     }
 
     void RenderEngine::PreDraw()
@@ -40,19 +57,35 @@ namespace Vakol::Rendering
 
     void RenderEngine::Draw(const Camera& camera, Components::Transform& transform, const Drawable& drawable)
     {
-        RenderAPI::BeginDraw(drawable.vertexArrayID, drawable.shaderID, drawable.materialID);
+        RenderAPI::BeginDraw(drawable.modelID, drawable.shaderID);
 
-        ShaderLibrary::SetMat4(ShaderLibrary::GetShader(drawable.shaderID), "PV_MATRIX", false,
-                               camera.GetMatrix(PROJECTION_MATRIX) * camera.GetMatrix(VIEW_MATRIX));
+        RenderAPI::SetMat4(RenderAPI::GetShader(drawable.shaderID), "PV_MATRIX", false,
+                           camera.GetMatrix(PROJECTION_MATRIX) * camera.GetMatrix(VIEW_MATRIX));
 
-        ShaderLibrary::SetMat4(ShaderLibrary::GetShader(drawable.shaderID), "MODEL_MATRIX", false,
-                               RenderAPI::GetModelMatrix(transform));
+        const auto& modelMatrix = RenderAPI::GetModelMatrix(transform);
+
+        RenderAPI::SetMat4(RenderAPI::GetShader(drawable.shaderID), "MODEL_MATRIX", false, modelMatrix);
+
+        RenderAPI::SetMat3(RenderAPI::GetShader(drawable.shaderID), "NORMAL_MATRIX", true,
+                           Math::Inverse(Math::Mat3(modelMatrix)));
+
+        RenderAPI::SetVec3(RenderAPI::GetShader(drawable.shaderID), "VIEW_POSITION", camera.GetPos());
 
         RenderAPI::EndDraw();
     }
 
     void RenderEngine::PostDraw()
     {
+    }
+
+    void RenderEngine::DrawSkybox(const Camera& camera, const Skybox& skybox)
+    {
+        RenderAPI::BeginSkyboxDraw(skybox.vertexID, skybox.shaderID, skybox.textureID);
+
+        RenderAPI::SetMat4(RenderAPI::GetShader(skybox.shaderID), "PV_MATRIX", false,
+                           camera.GetMatrix(PROJECTION_MATRIX) * Math::Mat4(Math::Mat3(camera.GetMatrix(VIEW_MATRIX))));
+
+        RenderAPI::EndSkyboxDraw();
     }
 
     void RenderEngine::GenerateSphere(const float scale, Drawable& drawable)
@@ -66,7 +99,7 @@ namespace Vakol::Rendering
         auto model = AssetLoader::GetModel("coreAssets/models/sphere.obj", scale);
 
         if (success)
-            SubmitModel(model, drawable);
+            SubmitModel(model);
     }
 
     void RenderEngine::GenerateCube(const float scale, Drawable& drawable)
@@ -80,7 +113,33 @@ namespace Vakol::Rendering
         auto model = AssetLoader::GetModel("coreAssets/models/cube.obj", scale);
 
         if (success)
-            SubmitModel(model, drawable);
+            SubmitModel(model);
+    }
+
+    void RenderEngine::GenerateSkybox(std::vector<std::string>&& faces, Skybox& skybox)
+    {
+        bool success = true;
+        auto shader = ImportShader(DEFAULT_SKYBOX_SHADER_PATH, success);
+
+        if (success)
+            RenderAPI::GenerateSkyboxShader(std::move(shader), skybox);
+
+        GenerateSkyboxVertexArray(DEFAULT_CUBE_VERTICES, skybox);
+
+        auto&& textures = AssetLoader::GetTextures(std::move(faces));
+        skybox.textureID = RenderAPI::GenerateTexture(std::move(textures));
+    }
+
+    void RenderEngine::GenerateSkyboxVertexArray(const std::vector<float>& vertices, Skybox& skybox)
+    {
+        SkyboxVertexArray vertexArray;
+
+        skybox.vertexID = GenerateID();
+
+        vertexArray.ID = skybox.vertexID;
+        vertexArray.vertices = vertices;
+
+        RenderAPI::GenerateVertexCommand(std::move(vertexArray));
     }
 
     void RenderEngine::GenerateModel(Assets::Model& model, Drawable& drawable)
@@ -91,55 +150,74 @@ namespace Vakol::Rendering
         if (success)
             RenderAPI::GenerateShader(std::move(shader), drawable);
 
-        drawable.vertexArrayID = GenerateID();
+        drawable.modelID = model.path;
 
-        SubmitModel(model, drawable);
+        SubmitModel(model);
 
         for (auto& mesh : model.meshes)
         {
-            auto& material = mesh.material;
+            const auto& material = mesh.material;
 
             material->ID = GenerateID();
             material->shaderID = drawable.shaderID;
 
-            AssetLoader::AddMaterial(*material);
+            auto& textures = material->textures;
 
-            drawable.materialID = material->ID;
+            auto compare = [](const Assets::Texture& lhs, const Assets::Texture& rhs) -> bool {
+                return lhs.ID < rhs.ID;
+            };
 
-            if (material->textures.empty())
+            if (textures.empty())
             {
-                Assets::Texture texture;
+                for (int i = 0; i < 6; ++i)
+                {
+                    std::string path = "coreAssets/textures/white.png";
+                    const unsigned int type = Assets::VK_TEXTURE_DIFFUSE + i;
 
-                texture.path = "coreAssets/textures/white.png";
-                texture.type = Assets::VK_TEXTURE_DIFFUSE;
+                    material->textures.emplace_back(AssetLoader::GetTexture(path, type));
+                }
+            }
+            else
+            {
+                std::string path = "coreAssets/textures/white.png";
 
-                material->textures.emplace_back(texture);
+                std::vector<unsigned int> types;
+
+                for (const auto& texture : material->textures)
+                {
+                    types.emplace_back(texture.type);
+                }
+
+                for (int i = 0; i < 6; ++i)
+                {
+                    unsigned int target = Assets::VK_TEXTURE_DIFFUSE + i;
+
+                    if (!std::count(types.begin(), types.end(), target))
+                    {
+                        const unsigned int type = target;
+
+                        material->textures.emplace_back(AssetLoader::GetTexture(path, type));
+                    }
+                }
             }
 
-            for (auto& texture : material->textures)
-            {
-                if (texture.ID == 0)
-                    texture.ID = RenderAPI::GenerateTexture(texture, drawable);
-
-                if (texture.ID != 0)
-                    AssetLoader::AddTexture(material->ID, texture);
-            }
+            std::sort(textures.begin(), textures.end(), compare);
         }
     }
 
-    void RenderEngine::SubmitModel(Assets::Model& model, const Drawable& drawable)
+    void RenderEngine::SubmitModel(Assets::Model& model)
     {
-        RenderAPI::PrepareVertexArray();
-
         for (auto& mesh : model.meshes)
         {
-            SubmitMesh(mesh, drawable);
+            SubmitMesh(mesh);
         }
     }
 
-    void RenderEngine::SubmitMesh(Assets::Mesh& mesh, const Drawable& drawable)
+    void RenderEngine::SubmitMesh(Assets::Mesh& mesh)
     {
         VertexArray vertexArray;
+
+        vertexArray.ID = mesh.ID;
 
         vertexArray.vertices = mesh.vertices;
         vertexArray.indices = mesh.indices;
@@ -147,7 +225,7 @@ namespace Vakol::Rendering
         // swap vector with an empty vector to de-allocate the memory taken by the vector
         std::vector<unsigned int>().swap(mesh.indices);
 
-        RenderAPI::GenerateVertexCommand(std::move(vertexArray), drawable);
+        RenderAPI::GenerateVertexCommand(std::move(vertexArray));
     }
 
 } // namespace Vakol::Rendering

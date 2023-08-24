@@ -158,6 +158,8 @@ namespace Vakol
 
             m_sceneManager.Update();
 
+            m_layerManager.OnUpdate();
+
             Scene& activeScene = m_sceneManager.GetActiveScene();
 
             // Add the time difference in the accumulator
@@ -190,6 +192,8 @@ namespace Vakol
 
                 m_scriptEngine.TickScript(activeScene.GetScript());
 
+                m_layerManager.OnTick();
+
                 // Decrease the accumulated time
                 m_time.accumulator -= m_time.tickRate;
             }
@@ -207,11 +211,17 @@ namespace Vakol
                         Rendering::RenderEngine::Draw(activeScene.GetCamera(), transform, drawable);
                 });
 
+            if (activeScene.GetSkybox().active)
+            {
+                Rendering::RenderEngine::DrawSkybox(activeScene.GetCamera(), activeScene.GetSkybox());
+            }
+
             activeScene.GetCamera().Update();
 
             Rendering::RenderEngine::PostDraw();
 
             m_gui.Update();
+
             m_input.Update();
             m_window->OnUpdate();
         }
@@ -220,6 +230,11 @@ namespace Vakol
     void Application::OnEvent(Event& ev)
     {
         EventDispatcher dispatcher(ev);
+
+        m_layerManager.OnEvent(ev); // go through layers before hitting application.
+
+        if (ev.Handled)
+            return;
 
         dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
         dispatcher.Dispatch<KeyPressedEvent>(BIND_EVENT_FN(OnKeyPressed));
@@ -291,4 +306,21 @@ namespace Vakol
     {
         return m_running;
     }
+
+    void Application::PushLayer(std::shared_ptr<Layer> layer)
+    {
+
+        if (layer)
+        {
+            layer->OnAttach(&m_sceneManager);
+            m_layerManager.PushLayer(layer);
+        }
+    }
+
+    void Application::PopLayer()
+    {
+
+        m_layerManager.PopLayer();
+    }
+
 } // namespace Vakol
