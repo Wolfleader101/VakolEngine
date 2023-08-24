@@ -55,6 +55,7 @@ namespace Vakol
         m_scriptEngine.SetGlobalVariable("Time", &m_time);
         m_scriptEngine.SetGlobalVariable("Input", &m_input);
         m_scriptEngine.SetGlobalVariable("GUI", &m_gui);
+        m_scriptEngine.SetGlobalVariable("Primitives", &m_primitives);
 
         m_scriptEngine.SetGlobalFunction("app_run", &Application::SetRunning, this);
 

@@ -13,6 +13,7 @@
 #include "Window/Events/KeyEvent.hpp"
 #include "Window/Events/WindowEvent.hpp"
 #include "Window/Window.hpp"
+#include "Primitives/Primitives.hpp"
 
 #include "LayerManager/LayerManager.hpp"
 #include "Utils/Layer.hpp"
@@ -241,5 +242,10 @@ namespace Vakol
          * @brief the input data of the engine
          */
         Input m_input;
+
+        /**
+         * @brief the primitive shapes of the engine
+         */
+        Primitives m_primitives;
     };
 } // namespace Vakol
