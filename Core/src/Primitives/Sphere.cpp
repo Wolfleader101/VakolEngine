@@ -155,6 +155,16 @@ namespace Vakol
 		return name;
 	}
 
+    std::vector<unsigned int> Sphere::GetIndices()
+    {
+		return mesh.indices;
+	}
+
+    std::vector<Rendering::Vertex> Sphere::GetVertices()
+    {
+     	return mesh.vertices;
+    }
+
     void Sphere::SetScale(Math::Vec3& inputScale)
     {
         // Create the individual transformation matrices 

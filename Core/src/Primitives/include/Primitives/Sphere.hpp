@@ -35,6 +35,16 @@ namespace Vakol
              */
             std::string GetName();
             /**
+             * @brief A function which returns the indices of the current sphere
+             *
+             */
+            std::vector<unsigned int> GetIndices();
+            /**
+             * @brief A function which returns the vertices of the current sphere
+             *
+             */
+            std::vector<Rendering::Vertex> GetVertices();
+            /**
              * @brief A function which scales the current sphere
              * @param inputScale The new scale of the sphere
              *

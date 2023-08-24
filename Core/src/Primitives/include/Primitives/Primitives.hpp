@@ -7,6 +7,7 @@
 
 #include "Logger/Logger.hpp"
 #include "Primitives/Sphere.hpp"
+#include "Rendering/RenderAPI.hpp" 
 
 namespace Vakol
 {
