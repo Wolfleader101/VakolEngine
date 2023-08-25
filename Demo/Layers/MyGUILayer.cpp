@@ -46,7 +46,7 @@ void MyGUILayer::OnUpdate()
             auto& EL = m_SceneManager->GetActiveScene().GetEntityList();
 
             EL.Iterate<Vakol::Components::Tag, Vakol::Components::Transform>(
-                [&](Vakol::Components::Tag& Tag, Vakol::Components::Transform trans) {
+                [&](Vakol::Components::Tag& Tag, Vakol::Components::Transform& trans) {
                     if (ImGui::CollapsingHeader(Tag.tag.c_str()))
                     {
                         ImGui::DragFloat3("Position", &trans.pos.x, 0.1f);
@@ -77,6 +77,10 @@ void MyGUILayer::OnEvent(Vakol::Event& event) // toggle editor view
 
             Vakol::Singleton<Vakol::Application>::GetInstance().SetActiveMouse(m_Show);
             event.Handled = true;
+
+            Vakol::Singleton<Vakol::Application>::GetInstance().SetGameState(m_Show ? Vakol::GameState::Paused
+                                                                                    : Vakol::GameState::Running);
+
             return;
         }
 

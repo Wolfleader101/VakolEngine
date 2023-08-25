@@ -79,6 +79,7 @@ namespace Vakol::Math
     Vec3 MultiplyVector(const Vec3& vec, const Mat4& mat);
 
     Mat4 Inverse(const Mat4& mat);
+    Mat3 Inverse(const Mat3& mat);
 
     Mat4 Mat4Cast(const Quat& quaternion);
 

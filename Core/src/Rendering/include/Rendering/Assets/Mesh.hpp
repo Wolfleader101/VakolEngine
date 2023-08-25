@@ -10,17 +10,27 @@
 
 namespace Vakol::Rendering::Assets
 {
+    /**
+     * \brief AABB Bounds
+     */
     struct Bounds
     {
+        /**
+         * \brief min bounds
+         */
         Math::Vec3 min;
+
+        /**
+         * \brief max bounds
+         */
         Math::Vec3 max;
     };
 
     struct Bone
     {
-        std::string name;
+        std::string name; // the name of the bone
 
-        Math::Mat4 offset{};
+        Math::Mat4 offset{}; // the offset of the bone
 
         struct Weight
         {
@@ -33,15 +43,17 @@ namespace Vakol::Rendering::Assets
 
     struct Mesh
     {
-        std::string name;
+        std::string ID = "null"; // the unique ID of the mesh.
 
-        std::vector<Vertex> vertices;
-        std::vector<unsigned int> indices;
+        std::string name; // the name of the mesh.
 
-        std::vector<Bone> bones;
+        std::vector<Vertex> vertices;      // the vertices of a mesh.
+        std::vector<unsigned int> indices; // the indices of a mesh.
 
-        std::shared_ptr<Material> material = nullptr;
+        std::vector<Bone> bones; // the bones of a mesh.
 
-        Bounds bounds{};
+        std::shared_ptr<Material> material = nullptr; // the material of a mesh.
+
+        Bounds bounds{}; // the AABB bounds of a mesh.
     };
 } // namespace Vakol::Rendering::Assets
