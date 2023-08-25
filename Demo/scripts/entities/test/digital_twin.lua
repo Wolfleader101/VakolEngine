@@ -33,28 +33,27 @@ function init()
 	roof:add_model("assets/models/new_building/roof.fbx", 0.005);
 	roof_support:add_model("assets/models/new_building/roof_supports.fbx", 0.5);
 	
-	--building:add_model("assets/models/new_building/building.fbx", 0.005);
+	building:add_model("assets/models/new_building/building.fbx", 0.005);
 	
 	floor:add_model("assets/models/new_building/floor.fbx", 0.005);
 	
-	--alcove_1:add_model("assets/models/new_building/alcove1.fbx", 0.005);
-	--alcove_2:add_model("assets/models/new_building/alcove2.fbx", 0.005);
+	alcove_1:add_model("assets/models/new_building/alcove1.fbx", 0.005);
+	alcove_2:add_model("assets/models/new_building/alcove2.fbx", 0.005);
 
-	--glass_panel1:add_model("assets/models/new_building/glass_panel1.fbx", 0.005);
-	--glass_panel2:add_model("assets/models/new_building/glass_panel2.fbx", 0.005);
+	glass_panel1:add_model("assets/models/new_building/glass_panel1.fbx", 0.005);
+	glass_panel2:add_model("assets/models/new_building/glass_panel2.fbx", 0.005);
 
 	for i = 1, 6 do
 		wood_pillars[i]:add_model("assets/models/new_building/wood_pillar.fbx", 0.30);
 	end
 
-	stone_pillars[1]:add_model("assets/models/new_building/stone_pillar1.fbx", 0.50);
-
 	for i = 1, 6 do
-		--stone_pillars[i]
+		stone_pillars[i]:add_model("assets/models/new_building/stone_pillar.fbx", 0.50);
 	end
 
-	--barrier_1:add_model("assets/models/new_building/glass_barrier.fbx", 0.010);
-	--barrier_2:add_model("assets/models/new_building/glass_barrier.fbx", 0.010);
+	for i = 1, 2 do
+		barriers[i]:add_model("assets/models/new_building/glass_barrier.fbx", 0.010);
+	end
 
 	roof:get_transform().pos = Vector3.new(0.0, 7.5, 0.0);
 	roof:get_transform().scale = Vector3.new(1.0, 1.0, 1.0);
@@ -95,17 +94,28 @@ function init()
 	wood_pillars[6]:get_transform().pos.z = 24.25;
 
 	for i = 1, 6 do
-		stone_pillars[i]:get_transform().pos = Vector3.new(-10.0, 1.75, 0.0);
+		stone_pillars[i]:get_transform().pos = Vector3.new(-10.0, -0.25, 0.0);
 		stone_pillars[i]:get_transform().rot = Vector3.new(0.0, -90.0, 0.0);
 		stone_pillars[i]:get_transform().scale = Vector3.new(1.0, 1.0, 1.0);
 	end
 
-	stone_pillars[1]:get_transform().pos.z = -1.95;
-	stone_pillars[2]:get_transform().pos.z = 3.25;
-	stone_pillars[3]:get_transform().pos.z = 8.50;
-	stone_pillars[4]:get_transform().pos.z = 13.75;
-	stone_pillars[5]:get_transform().pos.z = 19.0;
-	stone_pillars[6]:get_transform().pos.z = 24.25;
+	stone_pillars[1]:get_transform().pos = Vector3.new(-10.0, -0.25, -1.95);
+	stone_pillars[1]:get_transform().scale.y = 1.2;
+
+	stone_pillars[2]:get_transform().pos = Vector3.new(-10.0, -0.25, 3.25);
+	stone_pillars[2]:get_transform().scale.y = 1.2;
+
+	stone_pillars[3]:get_transform().pos = Vector3.new(-10.0, -1.25, 8.50);
+	stone_pillars[3]:get_transform().scale.y = 1.6;
+
+	stone_pillars[4]:get_transform().pos = Vector3.new(-10.0, -2.20, 13.75);
+	stone_pillars[4]:get_transform().scale.y = 1.8;
+
+	stone_pillars[5]:get_transform().pos = Vector3.new(-10.0, -2.20, 19.0);
+	stone_pillars[5]:get_transform().scale.y = 1.8;
+
+	stone_pillars[6]:get_transform().pos = Vector3.new(-10.0, -2.20, 24.25);
+	stone_pillars[6]:get_transform().scale.y = 1.8;
 
 	barriers[1]:get_transform().pos = Vector3.new(10.7, -1.230, 12.4);
 	barriers[1]:get_transform().rot = Vector3.new(0.0, 90.0, 0.0);
