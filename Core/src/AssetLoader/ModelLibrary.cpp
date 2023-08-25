@@ -45,6 +45,25 @@ namespace Vakol
         return m_models.at(path);
     }
 
+    void ModelLibrary::AddModel(Rendering::Assets::Model& inputModel) 
+    {
+        // Use the name of the model as the key
+        const std::string& key = inputModel.name;
+
+        // Check if a model with the same key already exists
+        if (m_models.find(key) != m_models.end())
+        {
+            VK_WARN("A model with key {0} already exists. Overwriting.", key);
+        }
+        else
+        {
+            // Insert the model into the map
+            m_models[key] = inputModel;
+
+            VK_INFO("Model with key {0} added successfully.", key); 
+        }
+    }
+
     Rendering::Assets::Model& ModelLibrary::GetErrorModel(const float scale)
     {
         bool success;
