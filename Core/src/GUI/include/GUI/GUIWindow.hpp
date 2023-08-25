@@ -186,9 +186,10 @@ namespace Vakol
       private:
         void SetAsContext() const;
 
-        std::vector<ImFont*> fonts;  /**< Fonts used in the GUI window */
-        bool is_initialised = false; /**< Flag indicating whether the GUI window is initialized */
-        std::string scriptName;      /**< Name of the script */
-        ImGuiContext* m_context;     /**< The context of the GUI window */
+        std::vector<ImFont*> fonts;       /**< Fonts used in the GUI window */
+        bool is_initialised = false;      /**< Flag indicating whether the GUI window is initialized */
+        std::string scriptName;           /**< Name of the script */
+        ImGuiContext* m_context;          /**< The context of the GUI window */
+        std::shared_ptr<Window> m_window; /**< The window the GUI is inside of */
     };
 } // namespace Vakol

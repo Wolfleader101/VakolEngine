@@ -74,6 +74,11 @@ void MyGUILayer::OnEvent(Vakol::Event& event) // toggle editor view
 
         if (m_Show) // basically disabling any keyboard presses getting to the game when the editor is open
         {
+            if (keyEvent.GetKeyCode() == (int)Vakol::Input::KEY::KEY_ESCAPE)
+            {
+                m_Show = false;
+                Vakol::Singleton<Vakol::Application>::GetInstance().SetActiveMouse(m_Show);
+            }
             event.Handled = true;
         }
     }

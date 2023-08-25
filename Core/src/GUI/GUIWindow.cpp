@@ -23,6 +23,7 @@ namespace Vakol
 
     void GUIWindow::Init(const std::shared_ptr<Window>& window)
     {
+        m_window = window;
         m_context = ImGui::CreateContext();
 
         if (!m_context)
@@ -87,9 +88,10 @@ namespace Vakol
     void GUIWindow::StartWindowCreation(const std::string& windowName, bool centerX, bool centerY, const float width,
                                         const float height, const float xOffset, float yOffset) const
     {
-        ImGui::Begin(windowName.c_str(), nullptr,
-                     ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize |
-                         ImGuiWindowFlags_NoDocking); // Begins the creation of the Window
+        ImGuiViewport* main_viewport = ImGui::GetMainViewport();
+
+        // We will calculate the final position first
+        ImVec2 finalPosition = {main_viewport->Pos.x + xOffset, main_viewport->Pos.y + yOffset};
 
         // Only consider centering if width and height are not zero
         if (width == 0)
@@ -101,31 +103,31 @@ namespace Vakol
             centerY = false;
         }
 
-        // Set position based on centering flags
+        // Adjust finalPosition based on centering flags
         if (centerX && centerY)
         {
-            ImGui::SetWindowPos({(DisplayWindowWidth() - width) / 2 + xOffset,
-                                 (DisplayWindowHeight() - height) / 2 + yOffset}); // Sets the position of the window
+            finalPosition.x = main_viewport->Pos.x + (DisplayWindowWidth() - width) / 2 + xOffset;
+            finalPosition.y = main_viewport->Pos.y + (DisplayWindowHeight() - height) / 2 + yOffset;
         }
         else if (centerX)
         {
-            ImGui::SetWindowPos(
-                {(DisplayWindowWidth() - width) / 2 + xOffset, yOffset}); // Sets the position of the window
+            finalPosition.x = main_viewport->Pos.x + (DisplayWindowWidth() - width) / 2 + xOffset;
         }
         else if (centerY)
         {
-            ImGui::SetWindowPos(
-                {xOffset, (DisplayWindowHeight() - height) / 2 + yOffset}); // Sets the position of the window
-        }
-        else
-        {
-            ImGui::SetWindowPos({xOffset, yOffset}); // Sets the position of the window
+            finalPosition.y = main_viewport->Pos.y + (DisplayWindowHeight() - height) / 2 + yOffset;
         }
 
-        ImGui::SetWindowSize({width, height},
-                             ImGuiCond_Always); // Sets the size of the window (Width, Height) in pixels
-    };
+        // Now set the final position
+        ImGui::SetNextWindowPos(finalPosition);
 
+        // Begin the window
+        ImGui::Begin(windowName.c_str(), nullptr,
+                     ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize |
+                         ImGuiWindowFlags_NoDocking);
+
+        ImGui::SetWindowSize({width, height}, ImGuiCond_Always);
+    }
     float GUIWindow::GetFramesPerSecond() const
     {
         return ImGui::GetIO().Framerate;
