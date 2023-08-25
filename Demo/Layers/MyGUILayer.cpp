@@ -18,18 +18,6 @@
 void MyGUILayer::OnAttach(Vakol::SceneManager* SM)
 {
     m_SceneManager = SM;
-    m_Context = ImGui::CreateContext();
-    ImGui::SetCurrentContext(m_Context);
-    ImGui::StyleColorsDark();
-
-    unsigned width = Vakol::Singleton<Vakol::Application>::GetInstance().GetWidth();
-    unsigned height = Vakol::Singleton<Vakol::Application>::GetInstance().GetHeight();
-    auto window = Vakol::Singleton<Vakol::Application>::GetInstance().GetWindow();
-    ImGui_ImplGlfw_InitForOpenGL(window->GetWindow(), true); // Takes in the GLFW Window
-    ImGui_ImplOpenGL3_Init("#version 460");
-
-    ImGuiIO& io = ImGui::GetIO();
-    io.DisplaySize = ImVec2(width, height);
 }
 
 // auto window = Vakol::Singleton<Vakol::Application>::GetInstance().GetWindow();
@@ -43,12 +31,14 @@ void MyGUILayer::OnUpdate()
 {
     if (m_Show)
     {
-        ImGui::SetCurrentContext(m_Context);
-        ImGui_ImplOpenGL3_NewFrame(); // Sets up the new frame to be used within OpenGL
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
-        if (ImGui::Begin("Entities"))
+
+        ImGui::SetNextWindowSize(ImVec2(500, 500), ImGuiCond_FirstUseEver);
+        if (ImGui::Begin("Entities", &m_Show, ImGuiWindowFlags_NoDocking))
         {
+
+            ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.15f, 0.15f, 0.15f, 1.0f)); // Dark background color
+            ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.9f, 0.9f, 0.9f, 1.0f));
+
             auto& EL = m_SceneManager->GetActiveScene().GetEntityList();
 
             EL.Iterate<Vakol::Components::Tag, Vakol::Components::Transform>(
@@ -60,11 +50,10 @@ void MyGUILayer::OnUpdate()
                         ImGui::DragFloat3("Scale", &trans.scale.x, 0.1f);
                     }
                 });
+
+            ImGui::PopStyleColor(2);
             ImGui::End();
         }
-
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     }
 }
 

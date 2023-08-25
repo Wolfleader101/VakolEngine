@@ -33,6 +33,10 @@ namespace Vakol
 
         SetAsContext();
 
+        ImGuiIO& io = ImGui::GetIO();
+        io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;   // Enable Docking
+        io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable; // Enable Multi-viewport
+
         ImGui::StyleColorsDark(); // Chooses the Dark style
 
         ImGui_ImplGlfw_InitForOpenGL(window->GetWindow(), true); // Takes in the GLFW Window
@@ -84,8 +88,8 @@ namespace Vakol
                                         const float height, const float xOffset, float yOffset) const
     {
         ImGui::Begin(windowName.c_str(), nullptr,
-                     ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove |
-                         ImGuiWindowFlags_NoResize); // Begins the creation of the Window
+                     ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize |
+                         ImGuiWindowFlags_NoDocking); // Begins the creation of the Window
 
         // Only consider centering if width and height are not zero
         if (width == 0)
@@ -132,6 +136,15 @@ namespace Vakol
         ImGui::Render(); // Renders the UI
 
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData()); // Renders the UI to the screen
+
+        // Handle viewports
+        if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+        {
+            GLFWwindow* backup_current_context = glfwGetCurrentContext();
+            ImGui::UpdatePlatformWindows();
+            ImGui::RenderPlatformWindowsDefault();
+            glfwMakeContextCurrent(backup_current_context);
+        }
     }
 
     void GUIWindow::AddText(const std::string& inputText, const bool centerX, const bool centerY, const float fontSize,
@@ -305,6 +318,12 @@ namespace Vakol
     {
         if (!is_initialised)
             return;
+
+        // Before shutting down the ImGui backends...
+        if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+        {
+            ImGui::DestroyPlatformWindows();
+        }
 
         ImGui_ImplOpenGL3_Shutdown();     // Shuts down OpenGL support
         ImGui_ImplGlfw_Shutdown();        // Shuts down GLFW support

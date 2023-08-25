@@ -41,6 +41,11 @@ namespace Vakol
          * @brief Ends the current frame
          */
         void EndFrame() const;
+
+        /**
+         * @brief Renders the GUI window
+         */
+        void Render() const;
         /**
          * @brief Returns the width of the display window
          */

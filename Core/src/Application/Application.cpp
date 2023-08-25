@@ -213,11 +213,10 @@ namespace Vakol
 
             Rendering::RenderEngine::PostDraw();
 
+            m_layerManager.OnUpdate();
             m_gui.Update();
 
-            m_layerManager.OnUpdate();
-
-            m_input.Update();
+                        m_input.Update();
             m_window->OnUpdate();
         }
     }
