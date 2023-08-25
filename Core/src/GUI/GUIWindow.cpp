@@ -23,7 +23,6 @@ namespace Vakol
 
     void GUIWindow::Init(const std::shared_ptr<Window>& window)
     {
-        m_window = window;
         m_context = ImGui::CreateContext();
 
         if (!m_context)

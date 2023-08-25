@@ -31,14 +31,18 @@ void MyGUILayer::OnUpdate()
 {
     if (m_Show)
     {
-
         ImGui::SetNextWindowSize(ImVec2(500, 500), ImGuiCond_FirstUseEver);
-        if (ImGui::Begin("Entities", &m_Show, ImGuiWindowFlags_NoDocking))
+
+        ImVec4 dark(0.15f, 0.15f, 0.15f, 1.0f);
+        ImGui::PushStyleColor(ImGuiCol_WindowBg, dark);
+        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.9f, 0.9f, 0.9f, 1.0f));
+        ImGui::PushStyleColor(ImGuiCol_TitleBg, dark);
+        ImGui::PushStyleColor(ImGuiCol_TitleBgActive, dark);
+
+        bool open = ImGui::Begin("Entities", &m_Show);
+
+        if (open) // Check if window is open
         {
-
-            ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.15f, 0.15f, 0.15f, 1.0f)); // Dark background color
-            ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.9f, 0.9f, 0.9f, 1.0f));
-
             auto& EL = m_SceneManager->GetActiveScene().GetEntityList();
 
             EL.Iterate<Vakol::Components::Tag, Vakol::Components::Transform>(
@@ -50,10 +54,14 @@ void MyGUILayer::OnUpdate()
                         ImGui::DragFloat3("Scale", &trans.scale.x, 0.1f);
                     }
                 });
-
-            ImGui::PopStyleColor(2);
-            ImGui::End();
         }
+        else
+        {
+            Vakol::Singleton<Vakol::Application>::GetInstance().SetActiveMouse(m_Show);
+        }
+
+        ImGui::End();            // Moved this outside the if-check.
+        ImGui::PopStyleColor(4); // Moved this outside the if-check.
     }
 }
 
