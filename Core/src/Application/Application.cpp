@@ -222,7 +222,6 @@ namespace Vakol
 
             if (IsSystemActive(SystemFlag::Rendering))
             {
-
                 activeScene.GetEntityList().Iterate<Components::Transform, Rendering::Drawable>(
                     [&](Components::Transform& transform, const Rendering::Drawable& drawable) {
                         if (drawable.active)
@@ -296,20 +295,14 @@ namespace Vakol
 
     void Application::ToggleSystem(SystemFlag system)
     {
-        // Create a mask with all bits set except for the specific system bit
-        int mask = ~(static_cast<int>(system));
-
         // Toggle the bit representing the system using the mask
-        m_activeSystems ^= mask;
+        m_activeSystems ^= static_cast<int>(system);
     }
+
     bool Application::IsSystemActive(SystemFlag system) const
     {
         int flagValue = static_cast<int>(system);
-        int activeValue = m_activeSystems;
-
-        int result = activeValue & flagValue;
-
-        return (result == flagValue);
+        return (m_activeSystems & flagValue) != 0;
     }
 
     bool Application::OnWindowClose([[maybe_unused]] WindowCloseEvent& ev)

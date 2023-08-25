@@ -32,7 +32,7 @@ void MyGUILayer::OnUpdate()
             auto& EL = m_SceneManager->GetActiveScene().GetEntityList();
 
             EL.Iterate<Vakol::Components::Tag, Vakol::Components::Transform>(
-                [&](Vakol::Components::Tag& Tag, Vakol::Components::Transform trans) {
+                [&](Vakol::Components::Tag& Tag, Vakol::Components::Transform& trans) {
                     if (ImGui::CollapsingHeader(Tag.tag.c_str()))
                     {
                         ImGui::DragFloat3("Position", &trans.pos.x, 0.1f);

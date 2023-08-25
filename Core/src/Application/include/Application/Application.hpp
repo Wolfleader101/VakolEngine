@@ -34,11 +34,11 @@ namespace Vakol
         Paused
     };
 
-    enum class SystemFlag
+    enum class SystemFlag : int
     {
-        Scripting,
-        Physics,
-        Rendering
+        Scripting = 1 << 0, // Same as 1
+        Physics = 1 << 1,   // Same as 2
+        Rendering = 1 << 2  // Same as 4
     };
 
     /**
