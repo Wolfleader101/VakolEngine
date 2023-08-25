@@ -28,6 +28,19 @@ namespace Vakol
 
     struct GameConfig;
 
+    enum class GameState
+    {
+        Running,
+        Paused
+    };
+
+    enum class SystemFlag : int
+    {
+        Scripting = 1 << 0, // Same as 1
+        Physics = 1 << 1,   // Same as 2
+        Rendering = 1 << 2  // Same as 4
+    };
+
     /**
      * @class Application
      * @brief The main application class to launch the game engine, expected use is a singleton
@@ -135,6 +148,36 @@ namespace Vakol
         void PushLayer(std::shared_ptr<Layer> layer);
         void PopLayer();
 
+        /**
+         * @brief Get the Game State object
+         *
+         * @return GameState
+         */
+        GameState GetGameState() const;
+
+        /**
+         * @brief Set the Game State object
+         *
+         * @param state to set
+         */
+        void SetGameState(GameState state);
+
+        /**
+         * @brief toggle a system on or off
+         *
+         * @param system to toggle
+         */
+        void ToggleSystem(SystemFlag system);
+
+        /**
+         * @brief check if a system is active
+         *
+         * @param system to check
+         * @return true if on
+         * @return false if off
+         */
+        bool IsSystemActive(SystemFlag system) const;
+
       private:
         /**
          * @brief on window close event
@@ -230,7 +273,15 @@ namespace Vakol
         /**
          * @brief if the app should be running
          */
-        bool m_running = true;
+        bool m_running;
+
+        /**
+         * @brief state of the game
+         *
+         */
+        GameState m_gameState;
+
+        int m_activeSystems;
 
         /**
          * @brief the gui window

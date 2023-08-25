@@ -14,7 +14,7 @@ namespace Vakol
 
     Application::Application()
         : m_window(nullptr), m_scriptEngine(), m_sceneManager(m_scriptEngine, m_physicsEngine), m_running(false),
-          m_input(){};
+          m_gameState(GameState::Running), m_activeSystems(0), m_input(){};
 
     void Application::Init()
     {
@@ -48,6 +48,9 @@ namespace Vakol
         LuaScript mainScript = m_scriptEngine.CreateScript("scripts/main.lua");
 
         m_running = true;
+
+        m_activeSystems = static_cast<int>(SystemFlag::Scripting) | static_cast<int>(SystemFlag::Physics) |
+                          static_cast<int>(SystemFlag::Rendering);
     }
 
     void Application::RegisterLua()
@@ -154,7 +157,12 @@ namespace Vakol
             m_time.accumulator += m_time.deltaTime;
 
             m_gui.CreateNewFrame();
-            Rendering::RenderEngine::PreDraw();
+
+            if (IsSystemActive(SystemFlag::Rendering))
+            {
+
+                Rendering::RenderEngine::PreDraw();
+            }
 
             m_sceneManager.Update();
 
@@ -166,7 +174,7 @@ namespace Vakol
             physicsAccumulator += m_time.deltaTime;
 
             // While there is enough accumulated time take one or several physics steps
-            while (physicsAccumulator >= m_physicsEngine.GetTimeStep())
+            while (IsSystemActive(SystemFlag::Physics) && physicsAccumulator >= m_physicsEngine.GetTimeStep())
             {
                 // apply forces
                 activeScene.GetEntityList().Iterate<RigidBody>([&](auto& rb) { m_physicsEngine.ApplyForces(rb); });
@@ -187,10 +195,13 @@ namespace Vakol
 
             while (m_time.accumulator >= m_time.tickRate)
             {
-                activeScene.GetEntityList().Iterate<LuaScript>(
-                    [&](auto& script) { m_scriptEngine.TickScript(script); });
+                if (IsSystemActive(SystemFlag::Scripting))
+                {
+                    activeScene.GetEntityList().Iterate<LuaScript>(
+                        [&](auto& script) { m_scriptEngine.TickScript(script); });
 
-                m_scriptEngine.TickScript(activeScene.GetScript());
+                    m_scriptEngine.TickScript(activeScene.GetScript());
+                }
 
                 m_layerManager.OnTick();
 
@@ -201,24 +212,32 @@ namespace Vakol
             // Compute the time interpolation factor
             // float alpha = m_time.accumulator / m_time.tickRate;
 
-            activeScene.GetEntityList().Iterate<LuaScript>([&](auto& script) { m_scriptEngine.UpdateScript(script); });
-
-            m_scriptEngine.UpdateScript(activeScene.GetScript());
-
-            activeScene.GetEntityList().Iterate<Components::Transform, Rendering::Drawable>(
-                [&](Components::Transform& transform, const Rendering::Drawable& drawable) {
-                    if (drawable.active)
-                        Rendering::RenderEngine::Draw(activeScene.GetCamera(), transform, drawable);
-                });
-
-            if (activeScene.GetSkybox().active)
+            if (IsSystemActive(SystemFlag::Scripting))
             {
-                Rendering::RenderEngine::DrawSkybox(activeScene.GetCamera(), activeScene.GetSkybox());
+                activeScene.GetEntityList().Iterate<LuaScript>(
+                    [&](auto& script) { m_scriptEngine.UpdateScript(script); });
+
+                m_scriptEngine.UpdateScript(activeScene.GetScript());
+            }
+
+            if (IsSystemActive(SystemFlag::Rendering))
+            {
+                activeScene.GetEntityList().Iterate<Components::Transform, Rendering::Drawable>(
+                    [&](Components::Transform& transform, const Rendering::Drawable& drawable) {
+                        if (drawable.active)
+                            Rendering::RenderEngine::Draw(activeScene.GetCamera(), transform, drawable);
+                    });
+
+                if (activeScene.GetSkybox().active)
+                {
+                    Rendering::RenderEngine::DrawSkybox(activeScene.GetCamera(), activeScene.GetSkybox());
+                }
             }
 
             activeScene.GetCamera().Update();
 
-            Rendering::RenderEngine::PostDraw();
+            if (IsSystemActive(SystemFlag::Rendering))
+                Rendering::RenderEngine::PostDraw();
 
             m_gui.Update();
 
@@ -251,6 +270,39 @@ namespace Vakol
             glfwSetInputMode(m_window->GetWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
         else
             glfwSetInputMode(m_window->GetWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    }
+
+    GameState Application::GetGameState() const
+    {
+        return m_gameState;
+    }
+
+    void Application::SetGameState(GameState state)
+    {
+        m_gameState = state;
+
+        if (m_gameState == GameState::Paused)
+        {
+            // Deactivate script execution and physics simulation on pause
+            m_activeSystems &= ~(static_cast<int>(SystemFlag::Scripting) | static_cast<int>(SystemFlag::Physics));
+        }
+        else if (m_gameState == GameState::Running)
+        {
+            // Reactivate script execution and physics simulation when running
+            m_activeSystems |= static_cast<int>(SystemFlag::Scripting) | static_cast<int>(SystemFlag::Physics);
+        }
+    }
+
+    void Application::ToggleSystem(SystemFlag system)
+    {
+        // Toggle the bit representing the system using the mask
+        m_activeSystems ^= static_cast<int>(system);
+    }
+
+    bool Application::IsSystemActive(SystemFlag system) const
+    {
+        int flagValue = static_cast<int>(system);
+        return (m_activeSystems & flagValue) != 0;
     }
 
     bool Application::OnWindowClose([[maybe_unused]] WindowCloseEvent& ev)
