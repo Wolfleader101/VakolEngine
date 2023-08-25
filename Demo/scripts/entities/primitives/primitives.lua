@@ -1,3 +1,5 @@
+local sphere_guid;
+
 function init()
     --Create a transform for the sphere
     local transform = Transform.new();
@@ -13,7 +15,11 @@ function init()
 
     --Create the sphere
     Primitives:create_sphere(transform, radius, stacks, sectors, name);
+
+    --Get the guid of the sphere
+    sphere_guid = Primitives:get_guid_by_name("sphere")
 end
 
 function update()
+    Primitives:render(ShapeType.SPHERE, sphere_guid);
 end

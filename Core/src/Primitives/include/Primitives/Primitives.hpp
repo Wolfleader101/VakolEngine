@@ -17,16 +17,15 @@ namespace Vakol
      */
     class Primitives
     {
-        /**
-         * @brief An enum for the different types of shapes
-         *
-         */
-        enum ShapeType
-        {
-            SPHERE                          ///< Sphere shape
-        };
-
         public:
+            /**
+             * @brief An enum for the different types of shapes
+             *
+             */
+            enum ShapeType
+            {
+                SPHERE ///< Sphere shape
+            };
             /**
             * @brief Construct a new Primitives object
             *

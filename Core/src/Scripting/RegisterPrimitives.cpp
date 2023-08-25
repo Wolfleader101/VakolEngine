@@ -6,6 +6,11 @@ namespace Vakol
 {
 	void RegisterPrimitives(sol::state& lua)
 	{
+        // Define the ShapeType enum
+        lua.new_enum("ShapeType", 
+            "SPHERE", Primitives::ShapeType::SPHERE 
+        );
+
         auto primitives_type = lua.new_usertype<Primitives>("Primitives"); // Create a new usertype in Lua
 
         // Register functions so they can be called from Lua
