@@ -13,6 +13,7 @@ namespace Vakol
         primitives_type.set_function("scale", &Primitives::Scale);
         primitives_type.set_function("position", &Primitives::Position);
         primitives_type.set_function("rotation", &Primitives::Rotation);
+        primitives_type.set_function("render", &Primitives::RenderShape); 
         primitives_type.set_function("get_guid_by_name", &Primitives::GetGuidByName);
 	}
 } // namespace Vakol

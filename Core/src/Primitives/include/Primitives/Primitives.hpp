@@ -67,6 +67,13 @@ namespace Vakol
              */
             void Rotation(ShapeType type, Math::Quat& inputRotation, xg::Guid inputGUID);
             /**
+             * @brief Render a selected primitive shape
+             * @param type The type of shape to render
+             * @param inputGUID The GUID of the shape
+             *
+             */
+            void RenderShape(ShapeType type, xg::Guid inputGUID); 
+            /**
              * @brief Return the GUID of a shape based on its name
              * @param name The name of the shape corrisonding to the GUID
              *

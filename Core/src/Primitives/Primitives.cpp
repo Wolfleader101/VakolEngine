@@ -21,8 +21,6 @@ namespace Vakol
         tmpVertexArray.indices = tmpSphere.GetIndices();                                        // Get the indices of the sphere
         tmpVertexArray.vertices = tmpSphere.GetVertices();                                      // Get the vertices of the sphere
 
-        Rendering::RenderAPI::GenerateVertexCommand(std::move(tmpVertexArray));                 // Generate the vertex commands for the sphere
-
         VK_INFO("Sphere '" + inputName + "' with GUID '" + sphereGUID.str() + "' created!");
     }
 
@@ -107,6 +105,43 @@ namespace Vakol
                     VK_ERROR("Sphere with GUID '" + inputGUID.str() + "' not found!");
                 }
 			}
+            default:
+                VK_ERROR("The primitive shape type is not valid!");
+
+                break;
+        }
+    }
+
+    void Primitives::RenderShape(ShapeType type, xg::Guid inputGUID)
+    {
+        // Switch between the different types of shapes
+        switch (type)
+        {
+            case SPHERE: 
+            {
+                // Look up the sphere in the map using the GUID
+                auto it = m_Spheres.find(inputGUID);
+
+                // Check if the sphere was found
+                if (it != m_Spheres.end())
+                {
+                    // Create and populate the VertexArray for this object
+                    Rendering::VertexArray tmpVertexArray;
+
+                    tmpVertexArray.ID = inputGUID;
+                    tmpVertexArray.indices = it->second.GetIndices();
+                    tmpVertexArray.vertices = it->second.GetVertices();
+
+                    // Generate the vertex commands for the object and render it
+                    Rendering::RenderAPI::GenerateVertexCommand(std::move(tmpVertexArray));
+                }
+                else
+                {
+                    VK_ERROR("Sphere with GUID '" + inputGUID.str() + "' not found!");
+                }
+
+                break;
+            }
             default:
                 VK_ERROR("The primitive shape type is not valid!");
 
