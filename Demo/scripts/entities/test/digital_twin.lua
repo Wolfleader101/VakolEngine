@@ -72,16 +72,16 @@ function init()
 	floor:get_transform().rot = Vector3.new(0.0, 0.0, 0.0);
 	floor:get_transform().scale = Vector3.new(30.0, 1.0, 30.0);
 
-	alcove_1:get_transform().pos = Vector3.new(-10.0, -1.0, 28.90);
-	alcove_1:get_transform().scale = Vector3.new(0.85, 1.0, 0.85);
+	alcove_1:get_transform().pos = Vector3.new(-10.0, -1.0, 28.70);
+	alcove_1:get_transform().scale = Vector3.new(0.90, 1.0, 0.890);
 
-	alcove_2:get_transform().pos = Vector3.new(-12.65, -1.25, 27.90);
-	alcove_2:get_transform().scale = Vector3.new(0.90, 1.0, 0.95);
+	alcove_2:get_transform().pos = Vector3.new(-12.65, -1.25, 27.870);
+	alcove_2:get_transform().scale = Vector3.new(0.90, 1.0, 0.890);
 
 	glass_panel1:get_transform().pos = Vector3.new(-10.675, -1.0, 9.35);
 	glass_panel1:get_transform().rot = Vector3.new(-90.0, 0.0, 0.0);
 
-	glass_panel2:get_transform().pos = Vector3.new(-10.675, -1.0, 9.25);
+	glass_panel2:get_transform().pos = Vector3.new(-10.675, -1.0, 9.30);
 	glass_panel2:get_transform().rot = Vector3.new(-90.0, 0.0, 0.0);
 
 	for i = 1, 6 do
@@ -121,11 +121,12 @@ function init()
 	stone_pillars[6]:get_transform().pos = Vector3.new(-10.0, -2.20, 24.25);
 	stone_pillars[6]:get_transform().scale.y = 1.8;
 
-	barriers[1]:get_transform().pos = Vector3.new(10.7, -1.230, 12.4);
+	barriers[1]:get_transform().pos = Vector3.new(10.7, -1.230, 14.0);
 	barriers[1]:get_transform().rot = Vector3.new(0.0, 90.0, 0.0);
 
 	barriers[2]:get_transform().pos = Vector3.new(-9.9, -1.230, 9.5);
 	barriers[2]:get_transform().rot = Vector3.new(0.0, -90.0, 0.0);
+	barriers[2]:get_transform().scale.z = 1.09;
 
 	balcony:get_transform().pos = Vector3.new(-7.20, 2.15, 13.40);
 	balcony:get_transform().scale = Vector3.new(2.10, 1.0, 2.6);
