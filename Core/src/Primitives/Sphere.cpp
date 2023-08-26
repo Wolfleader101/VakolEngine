@@ -4,35 +4,49 @@ namespace Vakol
 {
     Sphere::Sphere()
     {
-        sphereTransform.pos = Math::Vec3(0.0f, 0.0f, 0.0f);                 // Set the position to 0 
-        sphereTransform.scale = Math::Vec3(1.0f, 1.0f, 1.0f);               // Set the scale to 1
-        sphereTransform.rot = Math::Quat(0.0f, 0.0f, 0.0f, 1.0f);           // Set the rotation to 0
-        sphereTransform.eulerAngles = Math::Vec3(0.0f, 0.0f, 0.0f);         // Set the euler angles to 0
+        if (!this->model.meshes.empty())
+        {
+            VK_INFO("A mesh already exists for this sphere!");
+        }
+        else
+        {
+            sphereTransform.pos = Math::Vec3(0.0f, 0.0f, 0.0f);         // Set the position to 0
+            sphereTransform.scale = Math::Vec3(1.0f, 1.0f, 1.0f);       // Set the scale to 1
+            sphereTransform.rot = Math::Quat(0.0f, 0.0f, 0.0f, 1.0f);   // Set the rotation to 0
+            sphereTransform.eulerAngles = Math::Vec3(0.0f, 0.0f, 0.0f); // Set the euler angles to 0
 
-		stacks = 10;                                                        // Set the number of stacks to 0
-		sectors = 10;                                                       // Set the number of sectors to 0
-		name = "DEFAULT_SPHERE";                                            // Set the name to DEFAULT_SPHERE
+            stacks = 10;             // Set the number of stacks to 0
+            sectors = 10;            // Set the number of sectors to 0
+            mesh.name = "DEFAULT_SPHERE"; // Set the name to DEFAULT_SPHERE
 
-		GenerateData(sphereTransform, 1.0f, 0, 0, name);                    // Generate the data for the sphere
+            GenerateData(sphereTransform, 1.0f, 0, 0); // Generate the data for the sphere 
+        }
     }
 
     Sphere::Sphere(Components::Transform inputTransform, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName)
     {
-        Math::Normalized(inputTransform.rot);                               // Normalize the rotation quaternion
-        
-        sphereTransform.pos = inputTransform.pos; 						    // Set the position to the input position
-        sphereTransform.scale = inputTransform.scale;					    // Set the scale to the input scale
-        sphereTransform.rot = inputTransform.rot;						    // Set the rotation to the input rotation
-        sphereTransform.eulerAngles = inputTransform.eulerAngles;		    // Set the euler angles to the input euler angles
+        if (!this->model.meshes.empty())
+        {
+            VK_INFO("A mesh already exists for this sphere!");
+        }
+        else
+        {
+            Math::Normalized(inputTransform.rot); // Normalize the rotation quaternion
 
-        stacks = inputStacks; 											    // Set the number of stacks to the input number of stacks
-        sectors = inputSectors; 										    // Set the number of sectors to the input number of sectors
-        name = inputName; 												    // Set the name to the input name
+            sphereTransform.pos = inputTransform.pos;                 // Set the position to the input position
+            sphereTransform.scale = inputTransform.scale;             // Set the scale to the input scale
+            sphereTransform.rot = inputTransform.rot;                 // Set the rotation to the input rotation
+            sphereTransform.eulerAngles = inputTransform.eulerAngles; // Set the euler angles to the input euler angles
 
-        GenerateData(inputTransform, inputRadius, inputStacks, inputSectors, inputName);
+            stacks = inputStacks;               // Set the number of stacks to the input number of stacks
+            sectors = inputSectors;             // Set the number of sectors to the input number of sectors
+            mesh.name = inputName + "_mesh";    // Set the name to the input name
+
+            GenerateData(inputTransform, inputRadius, inputStacks, inputSectors); // Generate the data for the sphere
+        }
     }
 
-    void Sphere::GenerateData(Components::Transform inputTransform, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName)
+    void Sphere::GenerateData(Components::Transform inputTransform, double inputRadius, unsigned inputStacks, unsigned inputSectors) 
     {
         Rendering::Vertex tmpVertex;                                        // A temporary vertex object to store the data
 
@@ -40,7 +54,6 @@ namespace Vakol
 
         tmpVertex.bitangent = Math::Vec3(0.0f, 0.0f, 0.0f);                 // Set the bitangent to 0
         tmpVertex.tangent = Math::Vec3(0.0f, 0.0f, 0.0f);                   // Set the tangent to 0
-        name = inputName + "_mesh";                                         // Set the name of the sphere
 
         double x, y, z, xy;                                                 // Vertex Position
         double lengthInv = 1.0f / inputRadius;                              // Vertex Normal
@@ -153,7 +166,7 @@ namespace Vakol
 
     std::string Sphere::GetName()
     {
-		return name;
+		return mesh.name; 
 	}
 
     std::vector<unsigned int> Sphere::GetIndices()

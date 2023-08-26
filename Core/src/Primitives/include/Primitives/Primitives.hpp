@@ -2,12 +2,14 @@
 
 #include <unordered_map>
 #include <algorithm>
+#include <cstdlib>
 
 #include <crossguid/guid.hpp>
 
 #include "Logger/Logger.hpp"
 #include "Primitives/Sphere.hpp"
 #include "Rendering/RenderAPI.hpp" 
+#include "AssetLoader/AssetLoader.hpp" 
 
 namespace Vakol
 {
@@ -55,7 +57,7 @@ namespace Vakol
              * @param inputGUID The GUID of the shape
              *
              */ 
-            Rendering::Assets::Model GetShape(ShapeType type, xg::Guid inputGUID); 
+            Rendering::Assets::Model& GetShape(ShapeType type, xg::Guid inputGUID); 
             /**
             * @brief Destroy the Primitives object
             *

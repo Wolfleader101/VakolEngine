@@ -53,7 +53,7 @@ namespace Vakol
         // Check if a model with the same key already exists
         if (m_models.find(key) != m_models.end())
         {
-            VK_WARN("A model with key {0} already exists. Overwriting.", key);
+            VK_WARN("A model with key {0} already exists.", key);
         }
         else
         {

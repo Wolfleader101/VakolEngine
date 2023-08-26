@@ -25,12 +25,12 @@ namespace Vakol
             * @param inputRadius The radius of the sphere
             * @param inputStacks The number of stacks (latitude) of the sphere
             * @param inputSectors The number of sectors (longitude) of the sphere
-            * @param inputName The name of the sphere
+            * @param inputName The mesh name of the sphere
             *
             */
             Sphere(Components::Transform inputTransform, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName);
             /**
-             * @brief A function which returns the name of the current sphere
+             * @brief A function which returns the mesh name of the sphere
              *
              */
             std::string GetName();
@@ -56,10 +56,9 @@ namespace Vakol
             * @param inputRadius The radius of the sphere
             * @param inputStacks The number of stacks (latitude) of the sphere
             * @param inputSectors The number of sectors (longitude) of the sphere
-            * @param inputName The name of the sphere
             *
             */
-            void GenerateData(Components::Transform inputTransform, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName);
+            void GenerateData(Components::Transform inputTransform, double inputRadius, unsigned inputStacks, unsigned inputSectors);
 
             /**
              * @brief sphereTransform The transform of the sphere
@@ -77,12 +76,6 @@ namespace Vakol
              *
              */
             unsigned sectors;
-
-            /**
-             * @brief The name of the sphere
-             *
-             */
-            std::string name;
 
             /**
              * @brief The mesh object of the sphere
