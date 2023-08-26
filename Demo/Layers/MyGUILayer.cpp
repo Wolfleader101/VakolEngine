@@ -90,6 +90,7 @@ void MyGUILayer::OnEvent(Vakol::Event& event) // toggle editor view
             {
                 m_Show = false;
                 Vakol::Singleton<Vakol::Application>::GetInstance().SetActiveMouse(m_Show);
+                Vakol::Singleton<Vakol::Application>::GetInstance().SetGameState(Vakol::GameState::Running);
             }
             event.Handled = true;
         }
