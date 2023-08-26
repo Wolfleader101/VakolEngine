@@ -106,34 +106,35 @@ namespace Vakol
         collider.collider = rb.collisionBody->addCollider(collider.shape, rp3d::Transform::identity());
     }
 
-    void PhysicsEngine::ApplyForces(RigidBody& rb)
+    void PhysicsEngine::ApplyForces(Math::Vec3& pos, Math::Quat& rot, RigidBody& rb)
     {
         if (rb.type == BodyType::Static)
         {
+            //! THIS IS A HACK TO MAKE SURE THAT THE COLLIDER FOLLOWS THE TRANSFORM
+            rb.collisionBody->setTransform(rp3d::Transform(
+                rp3d::Vector3(static_cast<double>(pos.x), static_cast<double>(pos.y), static_cast<double>(pos.z)),
+                rp3d::Quaternion(static_cast<double>(rot.x), static_cast<double>(rot.y), static_cast<double>(rot.z),
+                                 static_cast<double>(rot.w))));
             return;
         }
 
-        // linear velocity: V = u + at
+        // can be assumed as static, can be moved later
+        static Math::Vec3 gravity(0.0f, -9.8f, 0.0f);
 
-        Math::Vec3 gravity(0.0f, -9.8f, 0.0f);
+        rb.force += rb.mass * gravity;
 
-        Math::Vec3 dv = gravity * (float)m_timeStep;
+        rb.linearVelocity += rb.force * static_cast<float>(m_timeStep);
 
-        rb.linearVelocity += dv;
-
-        // Get current position from transform
-
-        Math::Vec3 currentPosition(rb.collisionBody->getTransform().getPosition().x,
-                                   rb.collisionBody->getTransform().getPosition().y,
-                                   rb.collisionBody->getTransform().getPosition().z);
-
-        // Compute new position based on velocity and time step
-        Math::Vec3 newPosition = currentPosition + rb.linearVelocity * (float)m_timeStep;
+        pos += rb.linearVelocity * static_cast<float>(m_timeStep);
 
         // Update transform with new position
-        rb.collisionBody->setTransform(
-            rp3d::Transform(rp3d::Vector3((float)newPosition.x, (float)newPosition.y, (float)newPosition.z),
-                            rb.collisionBody->getTransform().getOrientation()));
+        rb.collisionBody->setTransform(rp3d::Transform(
+            rp3d::Vector3(static_cast<double>(pos.x), static_cast<double>(pos.y), static_cast<double>(pos.z)),
+            rp3d::Quaternion(static_cast<double>(rot.x), static_cast<double>(rot.y), static_cast<double>(rot.z),
+                             static_cast<double>(rot.w))));
+
+        // reset the force
+        rb.force = Math::Vec3(0.0f, 0.0f, 0.0f);
     }
 
     void PhysicsEngine::DetectCollisions(PhysicsScene& scene)
@@ -141,7 +142,7 @@ namespace Vakol
         scene.Update(m_timeStep);
     }
 
-    void PhysicsEngine::ResolveCollisions(RigidBody& rb)
+    void PhysicsEngine::ResolveCollisions(Math::Vec3& pos, Math::Quat& rot, RigidBody& rb)
     {
         // Exit if there's no collision data or if the body is static
         if (!rb.collisionData || rb.type == BodyType::Static)
@@ -149,43 +150,18 @@ namespace Vakol
             return;
         }
 
-        Math::Vec3 collisionNormal = rb.collisionData->normal;
-
-        // Calculate the velocity component along the collision normal
-        float velAlongNormal = Math::Dot(rb.linearVelocity, collisionNormal);
-
-        // If the velocity is away from the collision, do nothing
-        if (velAlongNormal > 0)
-        {
+        if (!rb.collisionData->isColliding)
             return;
-        }
 
-        // Add a restitution factor between 0 and 1
-        float restitution = 0.7f;
+        // reflect the velocity
+        rb.linearVelocity =
+            rb.linearVelocity - 2 * Math::Dot(rb.linearVelocity, rb.collisionData->normal) * rb.collisionData->normal;
 
-        // Calculate the new reflected velocity
-        Math::Vec3 reflectedVelocity = rb.linearVelocity - (1.0f + restitution) * velAlongNormal * collisionNormal;
-
-        // Update the body's velocity
-        rb.linearVelocity = reflectedVelocity;
-
-        // Small distance to move along the collision normal to resolve overlap
-
-        // Calculate the new position based on the collision normal and small distance
-        Math::Vec3 currentPosition(rb.collisionBody->getTransform().getPosition().x,
-                                   rb.collisionBody->getTransform().getPosition().y,
-                                   rb.collisionBody->getTransform().getPosition().z);
-
-        Math::Vec3 newPosition = currentPosition + (float)rb.collisionData->penetrationDepth * collisionNormal;
-
-        // Update the transform with the new position
-        rb.collisionBody->setTransform(
-            rp3d::Transform(rp3d::Vector3((float)newPosition.x, (float)newPosition.y, (float)newPosition.z),
-                            rb.collisionBody->getTransform().getOrientation()));
-
-        rb.collisionData->penetrationDepth = 0.0f;
+        // reset the collision data
+        rb.collisionData->penetrationDepth = 0.0;
         rb.collisionData->normal = Math::Vec3(0.0f, 0.0f, 0.0f);
         rb.collisionData->worldPoint = Math::Vec3(0.0f, 0.0f, 0.0f);
+        rb.collisionData->isColliding = false;
     }
 
     void PhysicsEngine::SetTimeStep(double step)

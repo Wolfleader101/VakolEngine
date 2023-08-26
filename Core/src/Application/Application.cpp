@@ -235,19 +235,7 @@ namespace Vakol
                 // apply forces
                 activeScene.GetEntityList().Iterate<Components::Transform, RigidBody>(
                     [&](Components::Transform& transform, RigidBody& rb) {
-                        if (rb.type == BodyType::Static)
-                            return;
-                        m_physicsEngine.ApplyForces(rb);
-
-                        // Get current position from transform
-                        Math::Vec3 currentPosition = transform.pos;
-
-                        // Compute new position based on velocity and time step
-                        Math::Vec3 newPosition =
-                            currentPosition + rb.linearVelocity * (float)m_physicsEngine.GetTimeStep();
-
-                        // Update transform with new position
-                        transform.pos = newPosition;
+                        m_physicsEngine.ApplyForces(transform.pos, transform.rot, rb);
                     });
 
                 // detect collisions
@@ -258,11 +246,7 @@ namespace Vakol
                     [&](Components::Transform& transform, RigidBody& rb) {
                         if (rb.type == BodyType::Static)
                             return;
-                        m_physicsEngine.ResolveCollisions(rb);
-
-                        transform.pos = Math::Vec3(rb.collisionBody->getTransform().getPosition().x,
-                                                   rb.collisionBody->getTransform().getPosition().y,
-                                                   rb.collisionBody->getTransform().getPosition().z);
+                        m_physicsEngine.ResolveCollisions(transform.pos, transform.rot, rb);
                     });
 
                 // Decrease the accumulated time

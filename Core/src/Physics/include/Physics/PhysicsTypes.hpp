@@ -25,9 +25,11 @@ namespace Vakol
      */
     struct CollisionData
     {
-        Math::Vec3 normal;
-        Math::Vec3 worldPoint;
-        double penetrationDepth;
+        Math::Vec3 normal = Math::Vec3(0.0f, 0.0f, 0.0f);
+        Math::Vec3 worldPoint = Math::Vec3(0.0f, 0.0f, 0.0f);
+        Math::Vec3 localPoint = Math::Vec3(0.0f, 0.0f, 0.0f);
+        double penetrationDepth = 0.0;
+        bool isColliding = false;
     };
 
     /**
@@ -36,21 +38,21 @@ namespace Vakol
      */
     struct RigidBody
     {
-        BodyType type;
-        float mass;
+        BodyType type = BodyType::Dynamic;
+        float mass = 1.0f;
 
-        bool hasGravity;
+        bool hasGravity = true;
 
-        Math::Vec3 centerOfMass; // will have to be calculated
+        Math::Vec3 centerOfMass = Math::Vec3(0.0f, 0.0f, 0.0f); // will have to be calculated
 
-        Math::Vec3 force;
-        Math::Vec3 torque;
-        Math::Vec3 linearVelocity;
-        Math::Vec3 angularVelocity;
+        Math::Vec3 force = Math::Vec3(0.0f, 0.0f, 0.0f);
+        Math::Vec3 torque = Math::Vec3(0.0f, 0.0f, 0.0f);
+        Math::Vec3 linearVelocity = Math::Vec3(0.0f, 0.0f, 0.0f);
+        Math::Vec3 angularVelocity = Math::Vec3(0.0f, 0.0f, 0.0f);
 
-        rp3d::CollisionBody* collisionBody;
+        rp3d::CollisionBody* collisionBody = nullptr;
 
-        std::shared_ptr<CollisionData> collisionData;
+        std::shared_ptr<CollisionData> collisionData = nullptr;
     };
 
     struct AABBCollider
