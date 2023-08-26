@@ -1,11 +1,19 @@
 function init()
     scene:create_entity("Player", "entities/player/noclip.lua")
 
-    scene:create_entity("Plane", "entities/test/plane.lua")
+    scene:create_entity("Digital Twin", "entities/test/digital_twin.lua");
 
-    for i = 1, 20, 1 do
-        scene:create_entity("Bear", "entities/agents/sandboxbear.lua")
-    end
+    local path = "coreAssets/textures/Skybox/imported/Unity/WorldSkies/";
+	local extension = ".png";
+
+	local faces = { path .. "left"  .. extension, 
+					path .. "right"   .. extension, 
+					path .. "top"    .. extension, 
+					path .. "bottom" .. extension, 
+					path .. "front"  .. extension, 
+					path .. "back"   .. extension};
+
+	scene:generate_skybox(faces);
 end
 
 function update()

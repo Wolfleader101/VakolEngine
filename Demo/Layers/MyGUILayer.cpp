@@ -1,8 +1,6 @@
 #include "MyGUILayer.hpp"
 #include <iostream>
 
-#include <imgui.h>
-
 #include <ECS/Components.hpp>
 #include <SceneManager/SceneManager.hpp>
 
@@ -14,11 +12,17 @@
 #include <Application/Application.hpp>
 #include <Utils/Singleton.hpp>
 
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
+
 void MyGUILayer::OnAttach(Vakol::SceneManager* SM)
 {
     m_SceneManager = SM;
 }
 
+// auto window = Vakol::Singleton<Vakol::Application>::GetInstance().GetWindow();
+// ImGui_ImplGlfw_InitForOpenGL(window->GetWindow(), true); // Takes in the GLFW Window
+// ImGui_ImplOpenGL3_Init("#version 460");
 void MyGUILayer::OnDetach()
 {
 }
@@ -27,21 +31,78 @@ void MyGUILayer::OnUpdate()
 {
     if (m_Show)
     {
-        if (ImGui::Begin("Entities"))
-        {
-            auto& EL = m_SceneManager->GetActiveScene().GetEntityList();
+        ImGui::SetNextWindowSize(ImVec2(500, 750), ImGuiCond_FirstUseEver);
 
-            EL.Iterate<Vakol::Components::Tag, Vakol::Components::Transform>(
-                [&](Vakol::Components::Tag& Tag, Vakol::Components::Transform trans) {
-                    if (ImGui::CollapsingHeader(Tag.tag.c_str()))
-                    {
-                        ImGui::DragFloat3("Position", &trans.pos.x, 0.1f);
-                        ImGui::DragFloat3("Rotation", &trans.rot.x, 0.1f);
-                        ImGui::DragFloat3("Scale", &trans.scale.x, 0.1f);
-                    }
-                });
-            ImGui::End();
+        ImVec4 dark(0.15f, 0.15f, 0.15f, 1.0f);
+        ImGui::PushStyleColor(ImGuiCol_WindowBg, dark);
+        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.9f, 0.9f, 0.9f, 1.0f));
+        ImGui::PushStyleColor(ImGuiCol_TitleBg, dark);
+        ImGui::PushStyleColor(ImGuiCol_TitleBgActive, dark);
+
+        bool open = ImGui::Begin("Editor", &m_Show);
+
+        if (open) // Check if window is open
+        {
+            if (ImGui::CollapsingHeader("Systems Control"))
+            {
+
+                if (ImGui::Button("Run Scripts"))
+                {
+                    if (Vakol::Singleton<Vakol::Application>::GetInstance().IsSystemActive(
+                            Vakol::SystemFlag::Scripting) == false)
+                        Vakol::Singleton<Vakol::Application>::GetInstance().ToggleSystem(Vakol::SystemFlag::Scripting);
+                }
+
+                if (ImGui::Button("Pause Scripts"))
+                {
+                    if (Vakol::Singleton<Vakol::Application>::GetInstance().IsSystemActive(
+                            Vakol::SystemFlag::Scripting))
+                        Vakol::Singleton<Vakol::Application>::GetInstance().ToggleSystem(Vakol::SystemFlag::Scripting);
+                }
+
+                if (ImGui::Button("Run Physics"))
+                {
+                    if (Vakol::Singleton<Vakol::Application>::GetInstance().IsSystemActive(
+                            Vakol::SystemFlag::Physics) == false)
+                        Vakol::Singleton<Vakol::Application>::GetInstance().ToggleSystem(Vakol::SystemFlag::Physics);
+                }
+
+                if (ImGui::Button("Pause Physics"))
+                {
+                    if (Vakol::Singleton<Vakol::Application>::GetInstance().IsSystemActive(Vakol::SystemFlag::Physics))
+                        Vakol::Singleton<Vakol::Application>::GetInstance().ToggleSystem(Vakol::SystemFlag::Physics);
+                }
+            }
+
+            ImGui::Separator();
+
+            if (ImGui::CollapsingHeader("Entity List"))
+            {
+
+                ImGui::BeginChild("Entity List Child", ImVec2(0, 0), true);
+
+                auto& EL = m_SceneManager->GetActiveScene().GetEntityList();
+
+                EL.Iterate<Vakol::Components::Tag, Vakol::Components::Transform>(
+                    [&](Vakol::Components::Tag& Tag, Vakol::Components::Transform& trans) {
+                        if (ImGui::CollapsingHeader(Tag.tag.c_str()))
+                        {
+                            ImGui::DragFloat3("Position", &trans.pos.x, 0.1f);
+                            ImGui::DragFloat3("Rotation", &trans.eulerAngles.x, 0.1f);
+                            ImGui::DragFloat3("Scale", &trans.scale.x, 0.1f);
+                        }
+                    });
+
+                ImGui::EndChild(); // End of child frame
+            }
         }
+        else
+        {
+            Vakol::Singleton<Vakol::Application>::GetInstance().SetActiveMouse(m_Show);
+        }
+
+        ImGui::End();            // Moved this outside the if-check.
+        ImGui::PopStyleColor(4); // Moved this outside the if-check.
     }
 }
 
@@ -57,11 +118,21 @@ void MyGUILayer::OnEvent(Vakol::Event& event) // toggle editor view
 
             Vakol::Singleton<Vakol::Application>::GetInstance().SetActiveMouse(m_Show);
             event.Handled = true;
+
+            Vakol::Singleton<Vakol::Application>::GetInstance().SetGameState(m_Show ? Vakol::GameState::Paused
+                                                                                    : Vakol::GameState::Running);
+
             return;
         }
 
         if (m_Show) // basically disabling any keyboard presses getting to the game when the editor is open
         {
+            if (keyEvent.GetKeyCode() == (int)Vakol::Input::KEY::KEY_ESCAPE)
+            {
+                m_Show = false;
+                Vakol::Singleton<Vakol::Application>::GetInstance().SetActiveMouse(m_Show);
+                Vakol::Singleton<Vakol::Application>::GetInstance().SetGameState(Vakol::GameState::Running);
+            }
             event.Handled = true;
         }
     }

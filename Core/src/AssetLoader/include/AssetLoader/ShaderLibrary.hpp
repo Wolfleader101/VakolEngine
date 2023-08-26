@@ -9,7 +9,6 @@
 namespace Vakol::Rendering
 {
     struct Uniform;
-    struct UniformBuffer;
 } // namespace Vakol::Rendering
 
 namespace Vakol
@@ -17,35 +16,110 @@ namespace Vakol
     class ShaderLibrary
     {
       public:
-        static void AddShader(const std::string& ID, unsigned int shader);
-        static void CreateUniformBuffer(const char* uBufferName, int size, unsigned int binding);
+        /**
+         * \brief
+         * \param shaderID
+         * \param shader
+         */
+        void AddShader(const std::string& shaderID, unsigned int shader);
 
-        static unsigned int GetShader(const std::string& ID);
+        /**
+         * \brief
+         * \param shaderID
+         * \return
+         */
+        unsigned int GetShader(const std::string& shaderID);
 
-        static void GetShaderUniforms(unsigned int shader);
+        /**
+         * \brief
+         * \param shader
+         * \param name
+         * \param value
+         */
+        void SetBool(unsigned int shader, const char* name, bool value);
 
-        static void SetInt(unsigned int shader, const char* name, int value);
-        static void SetFloat(unsigned int shader, const char* name, float value);
+        /**
+         * \brief
+         * \param shader
+         * \param name
+         * \param value
+         */
+        void SetInt(unsigned int shader, const char* name, int value);
 
-        static void SetVec3(unsigned int shader, const char* name, const Math::Vec3& value);
-        static void SetVec4(unsigned int shader, const char* name, const Math::Vec4& value);
-
-        static void SetMat4(unsigned int shader, const char* name, bool transpose, const Math::Mat4& value);
-
-        static void SetUniformBufferData(const char* name, int size, const void* data);
-        static void SetUniformBufferSubData(const char* name, int offset, int size, const void* data);
+        /**
+         * \brief
+         * \param shader
+         * \param name
+         * \param value
+         */
+        void SetFloat(unsigned int shader, const char* name, float value);
+        /**
+         * \brief
+         * \param shader
+         * \param name
+         * \param value
+         */
+        void SetVec2(unsigned int shader, const char* name, const Math::Vec2& value);
+        /**
+         * \brief
+         * \param shader
+         * \param name
+         * \param value
+         */
+        void SetVec3(unsigned int shader, const char* name, const Math::Vec3& value);
+        /**
+         * \brief
+         * \param shader
+         * \param name
+         * \param value
+         */
+        void SetVec4(unsigned int shader, const char* name, const Math::Vec4& value);
+        /**
+         * \brief
+         * \param shader
+         * \param name
+         * \param transpose
+         * \param value
+         */
+        void SetMat3(unsigned int shader, const char* name, bool transpose, const Math::Mat3& value);
+        /**
+         * \brief
+         * \param shader
+         * \param name
+         * \param transpose
+         * \param value
+         */
+        void SetMat4(unsigned int shader, const char* name, bool transpose, const Math::Mat4& value);
 
       private:
-        static std::unordered_map<std::string, unsigned int> m_shaders;
-        static std::map<unsigned int, std::unordered_map<std::string, Rendering::Uniform>> m_uniforms;
-        static std::unordered_map<std::string, Rendering::UniformBuffer> m_uniformBuffers;
+        /**
+         * \brief
+         */
+        std::unordered_map<std::string, unsigned int> m_shaders;
+        /**
+         * \brief
+         */
+        std::map<unsigned int, std::unordered_map<std::string, Rendering::Uniform>> m_uniforms;
 
-        static void AddUniformBuffer(const std::string& uBufferName, const Rendering::UniformBuffer& uBuffer);
+        /**
+         * \brief
+         * \param shader
+         */
+        void GetShaderUniforms(unsigned int shader);
+        /**
+         * \brief
+         * \param shader
+         * \param name
+         * \return
+         */
+        Rendering::Uniform& GetUniform(unsigned int shader, const char* name);
 
-        static Rendering::Uniform GetUniform(unsigned int shader, const char* name);
-        static Rendering::UniformBuffer GetUniformBuffer(const char* name);
-
-        static bool UniformExists(unsigned int shader, const char* name);
-        static bool UniformBufferExists(const char* name);
+        /**
+         * \brief
+         * \param shader
+         * \param name
+         * \return
+         */
+        bool UniformExists(unsigned int shader, const char* name);
     };
 } // namespace Vakol

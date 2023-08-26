@@ -25,23 +25,24 @@ namespace Vakol
             auto& drawable = ent->GetComponent<Rendering::Drawable>();
 
             Rendering::RenderEngine::GenerateModel(model, drawable);
+
+            return std::make_shared<Rendering::Assets::Model>(std::move(model));
         });
 
-        entity_type.set_function("add_texture", [](const Entity* ent, const std::string& path) {
+        entity_type.set_function("replace_texture", [](const Entity* ent, const std::string& srcPath,
+                                                       const std::string& srcType, const std::string& dstPath,
+                                                       const std::string& dstType) {
             if (!ent->HasComponent<Rendering::Drawable>())
             {
-                VK_WARN("No Drawable component found on entity!");
+                VK_ERROR("No Drawable component found on entity!");
+
                 return;
             }
 
-            AssetLoader::AddTexture(ent->GetComponent<Rendering::Drawable>().materialID, AssetLoader::GetTexture(path));
-        });
+            const auto& model = AssetLoader::FindModel(ent->GetComponent<Rendering::Drawable>().modelID);
 
-        entity_type.set_function("set_vec3v", [](const Entity* ent, const char* name, Math::Vec3& value) {
-            if (!ent->HasComponent<Rendering::Drawable>())
-            {
-                return;
-            }
+            AssetLoader::ReplaceTexture(model.path, srcPath, Rendering::Assets::ToTextureType(srcType), dstPath,
+                                        Rendering::Assets::ToTextureType(dstType));
         });
 
         entity_type.set_function("active_model", [](const Entity* ent, const bool active) {

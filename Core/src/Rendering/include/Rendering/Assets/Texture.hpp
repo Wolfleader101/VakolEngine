@@ -17,7 +17,12 @@ namespace Vakol::Rendering::Assets
         VK_TEXTURE_NORMAL
     };
 
-    inline std::string ToString(const VK_TEXTURE_TYPE type)
+    /**
+     * \brief convert numeric format of texture type to string form
+     * \param type the type of texture (in numeric format)
+     * \return the string-represented format of texture type
+     */
+    inline std::string ToString(const unsigned int type)
     {
         switch (type)
         {
@@ -40,6 +45,34 @@ namespace Vakol::Rendering::Assets
         return "UNKNOWN";
     }
 
+    /**
+     * \brief convert string format of texture type to numeric form
+     * \param type the type of texture (in string format)
+     * \return the numeric-represented format of texture type
+     */
+    inline VK_TEXTURE_TYPE ToTextureType(const std::string& type)
+    {
+        if (type == "DIFFUSE")
+            return VK_TEXTURE_DIFFUSE;
+
+        if (type == "SPECULAR")
+            return VK_TEXTURE_SPECULAR;
+
+        if (type == "AMBIENT")
+            return VK_TEXTURE_AMBIENT;
+
+        if (type == "EMISSION" || type == "EMISSIVE")
+            return VK_TEXTURE_EMISSION;
+
+        if (type == "HEIGHT")
+            return VK_TEXTURE_HEIGHT;
+
+        if (type == "NORMAL")
+            return VK_TEXTURE_NORMAL;
+
+        return VK_TEXTURE_NONE;
+    }
+
     struct Texture
     {
         std::string path;
@@ -51,8 +84,8 @@ namespace Vakol::Rendering::Assets
 
         int channels = 0; // bytes-per-pixel (number of color channels in an image) R = 1, RG = 2, RGB = 3, RGBA = 4
 
-        bool embedded = false;
+        bool embedded = false; // is the texture embedded in memory?
 
-        VK_TEXTURE_TYPE type = VK_TEXTURE_NONE;
+        unsigned int type = VK_TEXTURE_NONE;
     };
 } // namespace Vakol::Rendering::Assets
