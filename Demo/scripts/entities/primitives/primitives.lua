@@ -1,6 +1,8 @@
 local sphere_guid;
 
 function init()
+    local spheres = scene:create_entity("Spheres", "");
+
     --Create a transform for the sphere
     local transform = Transform.new();
     transform.pos = Vector3.new(0, 0, 0);
@@ -18,8 +20,11 @@ function init()
 
     --Get the guid of the sphere
     sphere_guid = Primitives:get_guid_by_name("sphere")
+
+    --Add the sphere model to the scene
+    spheres:add_model(Primitives:get_model(ShapeType.SPHERE, sphere_guid), 1.0);
 end
 
 function update()
-    Primitives:render(ShapeType.SPHERE, sphere_guid);
+    
 end

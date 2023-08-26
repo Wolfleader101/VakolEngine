@@ -52,12 +52,19 @@ namespace Vakol
              */ 
             xg::Guid GetGuidByName(const std::string& name);
             /**
-             * @brief Return a shape based on the type and GUID
-             * @param type The type of shape to return
+             * @brief Return the model of a selected primitive shape based on its GUID
+             * @param type The type of shape the model belongs to
+             * @param inputGUID The GUID of the shape
+             *
+             */
+            Rendering::Assets::Model& GetModel(ShapeType type, xg::Guid inputGUID); 
+            /**
+             * @brief Return the mesh of a selected primitive shape based on its GUID
+             * @param type The type of shape the mesh belongs to
              * @param inputGUID The GUID of the shape
              *
              */ 
-            Rendering::Assets::Model& GetShape(ShapeType type, xg::Guid inputGUID); 
+            Rendering::Assets::Mesh& GetMesh(ShapeType type, xg::Guid inputGUID);
             /**
             * @brief Destroy the Primitives object
             *

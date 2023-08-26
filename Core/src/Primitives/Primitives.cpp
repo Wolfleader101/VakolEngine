@@ -10,6 +10,7 @@ namespace Vakol
     void Primitives::CreateSphere(Components::Transform& inputTransform, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName)
     {
         Rendering::VertexArray tmpVertexArray; 												    // Create a temporary vertex array
+        Rendering::Assets::Model tmpModel; 													    // Create a temporary model
         
         xg::Guid sphereGUID = xg::newGuid();                                                    // Generate a new GUID for the sphere
 
@@ -36,11 +37,13 @@ namespace Vakol
 
         Sphere tmpSphere(inputTransform, inputRadius, inputStacks, inputSectors, uniqueName);   // Create a new Sphere object with input data
 
-        m_Spheres[sphereGUID] = GetShape(SPHERE, sphereGUID);                                   // Add the sphere to the storage map 
-        nameToGuidMap[uniqueName] = sphereGUID;                                                 // Add the name-GUID mapping
+        tmpModel.name = uniqueName;                                                             // Set the name of the model
+        tmpModel.meshes.push_back(GetMesh(SPHERE, sphereGUID));                                 // Add the mesh of the sphere to the model
+        tmpModel.path = uniqueName + "_GENERATED";                                              // Set a dummy path for the model
 
-        m_Spheres[sphereGUID].name = uniqueName;                                                // Set the name of the sphere
-        m_Spheres[sphereGUID].path = uniqueName + "_GENERATED";                                 // Set a dummy path for the sphere
+        m_Spheres[sphereGUID] = tmpModel;                                                       // Add the model to the map of spheres
+
+        nameToGuidMap[uniqueName] = sphereGUID;                                                 // Add the name-GUID mapping
 
         tmpVertexArray.ID = sphereGUID;                                                         // Set the ID of the vertex array to the GUID of the sphere 
         tmpVertexArray.indices = tmpSphere.GetIndices();                                        // Get the indices of the sphere
@@ -48,12 +51,12 @@ namespace Vakol
 
         Rendering::RenderAPI::GenerateVertexCommand(std::move(tmpVertexArray));                 // Create the vertex array in OpenGL
 
-        AssetLoader::AddModel(GetShape(SPHERE, sphereGUID));                                    // Add the sphere to the AssetLoader
+        AssetLoader::AddModel(GetModel(SPHERE, sphereGUID));                                    // Add the sphere to the AssetLoader
 
-        VK_INFO("Sphere '" + uniqueName + "' with GUID '" + sphereGUID.str() + "' created!"); 
+        VK_INFO("Sphere '" + uniqueName + "' with GUID '" + sphereGUID.str() + "' created!");
     }
 
-    Rendering::Assets::Model& Primitives::GetShape(ShapeType type, xg::Guid inputGUID)
+    Rendering::Assets::Model& Primitives::GetModel(ShapeType type, xg::Guid inputGUID)
     {
         // Switch between the different types of shapes
         switch (type)
@@ -73,21 +76,65 @@ namespace Vakol
                     }
                     else
                     {
-                        VK_ERROR("Sphere with GUID '" + inputGUID.str() + "' has no meshes! Exiting...");   // Log an error if the sphere does not contain any meshes
-                        std::exit(EXIT_FAILURE);                                                            // Terminate the program
+                        VK_ERROR("Sphere with GUID '" + inputGUID.str() + "' has no meshes! Exiting...");
+                        std::exit(EXIT_FAILURE);
                     }
                 }
                 else
                 {
-                    VK_ERROR("Sphere with GUID '" + inputGUID.str() + "' not found! Exiting...");           // Log an error if the sphere was not found
-                    std::exit(EXIT_FAILURE);                                                                // Terminate the program
+                    VK_ERROR("Sphere with GUID '" + inputGUID.str() + "' not found! Exiting...");
+                    std::exit(EXIT_FAILURE);
                 }
 
                 break;
             }
             default:
-                VK_ERROR("The primitive shape type is not valid! Exiting...");  // Log an error if the shape type is not valid
-                std::exit(EXIT_FAILURE);                                        // Terminate the program
+                VK_ERROR("The primitive shape type is not valid! Exiting...");
+                std::exit(EXIT_FAILURE);
+        }
+    }
+
+    Rendering::Assets::Mesh& Primitives::GetMesh(ShapeType type, xg::Guid inputGUID)
+    {
+        // Switch between the different types of shapes
+        switch (type)
+        {
+            case SPHERE: 
+            {
+                // Look up the sphere in the map using the GUID
+                auto it = m_Spheres.find(inputGUID);
+
+                // Check if the sphere was found
+                if (it != m_Spheres.end())
+                {
+                    // Assuming the sphere is represented by the first mesh in the model
+                    if (!it->second.meshes.empty())
+                    {
+                        // Check if there's more than one mesh
+                        if (it->second.meshes.size() > 1)
+                        {
+                            VK_INFO("Sphere with GUID '" + inputGUID.str() + "' has more than one mesh! Using the first one.");
+                        }
+                        
+                        return it->second.meshes[0]; // Return the first mesh of the found sphere
+                    }
+                    else
+                    {
+                        VK_ERROR("Sphere with GUID '" + inputGUID.str() + "' has no meshes! Exiting...");
+                        std::exit(EXIT_FAILURE);
+                    }
+                }
+                else
+                {
+                    VK_ERROR("Sphere with GUID '" + inputGUID.str() + "' not found! Exiting...");
+                    std::exit(EXIT_FAILURE);
+                }
+
+                break;
+            }
+            default:
+                VK_ERROR("The primitive shape type is not valid! Exiting...");
+                std::exit(EXIT_FAILURE);
         }
     }
 
