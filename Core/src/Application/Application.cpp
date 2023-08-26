@@ -10,6 +10,7 @@
 
 namespace Vakol
 {
+
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
     Application::Application()
@@ -166,8 +167,6 @@ namespace Vakol
 
             m_sceneManager.Update();
 
-            m_layerManager.OnUpdate();
-
             Scene& activeScene = m_sceneManager.GetActiveScene();
 
             // Add the time difference in the accumulator
@@ -239,6 +238,7 @@ namespace Vakol
             if (IsSystemActive(SystemFlag::Rendering))
                 Rendering::RenderEngine::PostDraw();
 
+            m_layerManager.OnUpdate();
             m_gui.Update();
 
             m_input.Update();
@@ -373,6 +373,11 @@ namespace Vakol
     {
 
         m_layerManager.PopLayer();
+    }
+
+    const std::shared_ptr<Window> Application::GetWindow() const
+    {
+        return m_window;
     }
 
 } // namespace Vakol
