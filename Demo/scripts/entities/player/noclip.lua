@@ -68,5 +68,4 @@ function update()
     end
 
     camera:set_pitch(pitch);
-    print("Player pos: " .. entity:get_transform().pos.x .. ", " .. entity:get_transform().pos.y .. ", " .. entity:get_transform().pos.z)
 end

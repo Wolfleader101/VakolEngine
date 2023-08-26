@@ -50,7 +50,7 @@ void MyGUILayer::OnUpdate()
                     if (ImGui::CollapsingHeader(Tag.tag.c_str()))
                     {
                         ImGui::DragFloat3("Position", &trans.pos.x, 0.1f);
-                        ImGui::DragFloat3("Rotation", &trans.rot.x, 0.1f);
+                        ImGui::DragFloat3("Rotation", &trans.eulerAngles.x, 0.1f);
                         ImGui::DragFloat3("Scale", &trans.scale.x, 0.1f);
                     }
                 });
