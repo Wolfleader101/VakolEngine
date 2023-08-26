@@ -47,8 +47,8 @@ namespace Vakol
 
     void ModelLibrary::AddModel(const Rendering::Assets::Model& inputModel) 
     {
-        // Use the name of the model as the key
-        const std::string& key = inputModel.name;
+        // Use the path of the model as the key
+        const std::string& key = inputModel.path;
 
         // Check if a model with the same key already exists
         if (m_models.find(key) != m_models.end())

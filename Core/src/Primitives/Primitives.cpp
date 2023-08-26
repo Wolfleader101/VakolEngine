@@ -40,6 +40,7 @@ namespace Vakol
         nameToGuidMap[uniqueName] = sphereGUID;                                                 // Add the name-GUID mapping
 
         m_Spheres[sphereGUID].name = uniqueName;                                                // Set the name of the sphere
+        m_Spheres[sphereGUID].path = uniqueName + "_GENERATED";                                 // Set a dummy path for the sphere
 
         tmpVertexArray.ID = sphereGUID;                                                         // Set the ID of the vertex array to the GUID of the sphere 
         tmpVertexArray.indices = tmpSphere.GetIndices();                                        // Get the indices of the sphere
