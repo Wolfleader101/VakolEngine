@@ -18,6 +18,8 @@ function init()
 
 	local barriers = {};
 
+	local balcony = scene:create_entity("Balcony", "");
+
 	for i = 1, 6 do
 		wood_pillars[i] = scene:create_entity("Wood Pillar " .. i, "");
 	end
@@ -54,6 +56,8 @@ function init()
 	for i = 1, 2 do
 		barriers[i]:add_model("assets/models/new_building/glass_barrier.fbx", 0.010);
 	end
+
+	balcony:add_model("assets/models/new_building/balcony.fbx", 0.2);
 
 	roof:get_transform().pos = Vector3.new(0.0, 7.5, 0.0);
 	roof:get_transform().scale = Vector3.new(1.0, 1.0, 1.0);
@@ -122,6 +126,9 @@ function init()
 
 	barriers[2]:get_transform().pos = Vector3.new(-9.9, -1.230, 9.5);
 	barriers[2]:get_transform().rot = Vector3.new(0.0, -90.0, 0.0);
+
+	balcony:get_transform().pos = Vector3.new(-7.20, 2.15, 13.40);
+	balcony:get_transform().scale = Vector3.new(2.10, 1.0, 2.6);
 end
 
 function update()
