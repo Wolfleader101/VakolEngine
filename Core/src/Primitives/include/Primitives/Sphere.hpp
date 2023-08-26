@@ -45,24 +45,6 @@ namespace Vakol
              */
             std::vector<Rendering::Vertex> GetVertices();
             /**
-             * @brief A function which scales the current sphere
-             * @param inputScale The new scale of the sphere
-             *
-             */
-            void SetScale(Math::Vec3& inputScale);
-            /**
-             * @brief A function which moves the sphere to a new position
-             * @param inputPosition The new position of the sphere
-             *
-             */
-            void SetPosition(Math::Vec3& inputPosition);
-            /**
-             * @brief A function which rotates the sphere to a new position
-             * @param inputRotation The new rotation of the sphere
-             *
-             */
-            void SetRotation(Math::Quat& inputRotation);
-            /**
             * @brief Destroy the Sphere object
             *
             */
@@ -107,6 +89,11 @@ namespace Vakol
              *
              */
             Rendering::Assets::Mesh mesh;
+            /**
+             * @brief The model object of the sphere
+             *
+             */
+            Rendering::Assets::Model model;
             /**
              * @brief The original vertices of the sphere before rotations
              *

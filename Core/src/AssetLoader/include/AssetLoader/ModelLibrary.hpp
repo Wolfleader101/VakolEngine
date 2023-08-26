@@ -28,7 +28,7 @@ namespace Vakol
             *   @brief Add a model to m_models
             *   @param inputModel The model to add
             */
-            void AddModel(Rendering::Assets::Model& inputModel);  
+            void AddModel(const Rendering::Assets::Model& inputModel);  
 
         private:
             /*

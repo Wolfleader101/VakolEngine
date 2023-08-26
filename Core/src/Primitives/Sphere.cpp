@@ -40,7 +40,7 @@ namespace Vakol
 
         tmpVertex.bitangent = Math::Vec3(0.0f, 0.0f, 0.0f);                 // Set the bitangent to 0
         tmpVertex.tangent = Math::Vec3(0.0f, 0.0f, 0.0f);                   // Set the tangent to 0
-        name = inputName; 												    // Set the name of the sphere
+        name = inputName + "_mesh";                                         // Set the name of the sphere
 
         double x, y, z, xy;                                                 // Vertex Position
         double lengthInv = 1.0f / inputRadius;                              // Vertex Normal
@@ -148,6 +148,7 @@ namespace Vakol
         }
 
         originalVertices = mesh.vertices;                                   // Store the original vertices
+        model.meshes.push_back(mesh);									    // Add the mesh to the model
     }
 
     std::string Sphere::GetName()
@@ -163,65 +164,6 @@ namespace Vakol
     std::vector<Rendering::Vertex> Sphere::GetVertices()
     {
      	return mesh.vertices;
-    }
-
-    void Sphere::SetScale(Math::Vec3& inputScale)
-    {
-        // Create the individual transformation matrices 
-        Math::Mat4 rotationMatrix = Math::Mat4Cast(sphereTransform.rot); 
-        Math::Mat4 scaleMatrix = Math::Scale(inputScale);
-
-        // Combine the scaling and rotation matrices
-        Math::Mat4 modelMatrix = scaleMatrix * rotationMatrix; 
-
-        // Calculate the inverse transpose of the model matrix
-        Math::Mat4 inverseTranspose = Math::Transpose(Math::Inverse(modelMatrix)); 
-        
-        // Transform the normals
-        for (Rendering::Vertex& vertex : mesh.vertices)
-        {
-            // Extract the 3x3 part of the inverse transpose matrix
-            Math::Mat3 inverseTranspose3x3 = Math::Mat3(inverseTranspose);
-
-            // Multiply the normal by the 3x3 matrix
-            vertex.normal = inverseTranspose3x3 * vertex.normal;
-
-            // Normalize the normal
-            Math::Normalize(vertex.normal); 
-        }
-
-        sphereTransform.scale = inputScale; // Set the new scale variable
-	}
-
-    void Sphere::SetPosition(Math::Vec3& inputPosition)
-    {
-        // Calculate the translation vector
-        Math::Vec3 newPosition = inputPosition - sphereTransform.pos;
-
-        // Loop through all the vertices and reposition them
-        for (Rendering::Vertex& vertex : mesh.vertices)
-        {
-            vertex.position += newPosition; // Add the translation
-        }
-
-        sphereTransform.pos = inputPosition; // Set the new position variable
-    }
-
-    void Sphere::SetRotation(Math::Quat& inputRotation)
-    {
-        // Normalize the input quaternion
-        // (Prevents the rotation from accidentally scaling the vertices)
-        inputRotation = Math::Normalized(inputRotation);
-
-        // Apply the rotation to the original vertices and store the result in mesh.vertices
-        for (size_t i = 0; i < originalVertices.size(); ++i)
-        {
-            mesh.vertices[i].position = inputRotation * originalVertices[i].position; 
-            mesh.vertices[i].normal = inputRotation * originalVertices[i].normal; 
-        }
-
-        // Set the new rotation variable
-        sphereTransform.rot = inputRotation; 
     }
 
     Sphere::~Sphere()

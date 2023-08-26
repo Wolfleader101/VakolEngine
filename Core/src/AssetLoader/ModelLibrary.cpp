@@ -45,7 +45,7 @@ namespace Vakol
         return m_models.at(path);
     }
 
-    void ModelLibrary::AddModel(Rendering::Assets::Model& inputModel) 
+    void ModelLibrary::AddModel(const Rendering::Assets::Model& inputModel) 
     {
         // Use the name of the model as the key
         const std::string& key = inputModel.name;

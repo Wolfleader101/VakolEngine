@@ -48,6 +48,12 @@ namespace Vakol
          */
         static Rendering::Assets::Model& GetModel(const std::string& path, float scale = 1.0f);
         /**
+         * \brief adds a model to the model library
+         * \param inputModel the model to add
+         * \return
+         */
+        static void AssetLoader::AddModel(const Rendering::Assets::Model& inputModel); 
+        /**
          * \brief
          * \param modelID the path of the model
          * \return
