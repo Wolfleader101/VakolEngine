@@ -6,17 +6,20 @@
 
 namespace Vakol
 {
-    void Run()
+    void Init()
     {
         Logger::Init();
-
         Singleton<Application>::GetInstance().Init();
-
-        Singleton<Application>::GetInstance().Run();
     }
 
     void PushLayer(std::shared_ptr<Layer> layer)
     {
         Singleton<Application>::GetInstance().PushLayer(layer);
     }
+
+    void Run()
+    {
+        Singleton<Application>::GetInstance().Run();
+    }
+
 } // namespace Vakol

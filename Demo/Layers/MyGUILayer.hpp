@@ -2,6 +2,8 @@
 
 #include "Utils/Layer.hpp"
 
+#include <imgui.h>
+
 class MyGUILayer : public Vakol::Layer
 {
   public:
