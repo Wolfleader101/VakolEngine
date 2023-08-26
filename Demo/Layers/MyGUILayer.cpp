@@ -31,7 +31,7 @@ void MyGUILayer::OnUpdate()
 {
     if (m_Show)
     {
-        ImGui::SetNextWindowSize(ImVec2(500, 500), ImGuiCond_FirstUseEver);
+        ImGui::SetNextWindowSize(ImVec2(500, 750), ImGuiCond_FirstUseEver);
 
         ImVec4 dark(0.15f, 0.15f, 0.15f, 1.0f);
         ImGui::PushStyleColor(ImGuiCol_WindowBg, dark);
@@ -39,21 +39,62 @@ void MyGUILayer::OnUpdate()
         ImGui::PushStyleColor(ImGuiCol_TitleBg, dark);
         ImGui::PushStyleColor(ImGuiCol_TitleBgActive, dark);
 
-        bool open = ImGui::Begin("Entities", &m_Show);
+        bool open = ImGui::Begin("Editor", &m_Show);
 
         if (open) // Check if window is open
         {
-            auto& EL = m_SceneManager->GetActiveScene().GetEntityList();
+            if (ImGui::CollapsingHeader("Systems Control"))
+            {
 
-            EL.Iterate<Vakol::Components::Tag, Vakol::Components::Transform>(
-                [&](Vakol::Components::Tag& Tag, Vakol::Components::Transform& trans) {
-                    if (ImGui::CollapsingHeader(Tag.tag.c_str()))
-                    {
-                        ImGui::DragFloat3("Position", &trans.pos.x, 0.1f);
-                        ImGui::DragFloat3("Rotation", &trans.eulerAngles.x, 0.1f);
-                        ImGui::DragFloat3("Scale", &trans.scale.x, 0.1f);
-                    }
-                });
+                if (ImGui::Button("Run Scripts"))
+                {
+                    if (Vakol::Singleton<Vakol::Application>::GetInstance().IsSystemActive(
+                            Vakol::SystemFlag::Scripting) == false)
+                        Vakol::Singleton<Vakol::Application>::GetInstance().ToggleSystem(Vakol::SystemFlag::Scripting);
+                }
+
+                if (ImGui::Button("Pause Scripts"))
+                {
+                    if (Vakol::Singleton<Vakol::Application>::GetInstance().IsSystemActive(
+                            Vakol::SystemFlag::Scripting))
+                        Vakol::Singleton<Vakol::Application>::GetInstance().ToggleSystem(Vakol::SystemFlag::Scripting);
+                }
+
+                if (ImGui::Button("Run Physics"))
+                {
+                    if (Vakol::Singleton<Vakol::Application>::GetInstance().IsSystemActive(
+                            Vakol::SystemFlag::Physics) == false)
+                        Vakol::Singleton<Vakol::Application>::GetInstance().ToggleSystem(Vakol::SystemFlag::Physics);
+                }
+
+                if (ImGui::Button("Pause Physics"))
+                {
+                    if (Vakol::Singleton<Vakol::Application>::GetInstance().IsSystemActive(Vakol::SystemFlag::Physics))
+                        Vakol::Singleton<Vakol::Application>::GetInstance().ToggleSystem(Vakol::SystemFlag::Physics);
+                }
+            }
+
+            ImGui::Separator();
+
+            if (ImGui::CollapsingHeader("Entity List"))
+            {
+
+                ImGui::BeginChild("Entity List Child", ImVec2(0, 0), true);
+
+                auto& EL = m_SceneManager->GetActiveScene().GetEntityList();
+
+                EL.Iterate<Vakol::Components::Tag, Vakol::Components::Transform>(
+                    [&](Vakol::Components::Tag& Tag, Vakol::Components::Transform& trans) {
+                        if (ImGui::CollapsingHeader(Tag.tag.c_str()))
+                        {
+                            ImGui::DragFloat3("Position", &trans.pos.x, 0.1f);
+                            ImGui::DragFloat3("Rotation", &trans.eulerAngles.x, 0.1f);
+                            ImGui::DragFloat3("Scale", &trans.scale.x, 0.1f);
+                        }
+                    });
+
+                ImGui::EndChild(); // End of child frame
+            }
         }
         else
         {
