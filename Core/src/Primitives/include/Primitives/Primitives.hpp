@@ -8,9 +8,11 @@
 
 #include "Rendering/Assets/Material.hpp"  
 #include "Logger/Logger.hpp"
-#include "Primitives/Sphere.hpp"
 #include "Rendering/RenderAPI.hpp" 
 #include "AssetLoader/AssetLoader.hpp" 
+
+#include "Primitives/Sphere.hpp"
+#include "Primitives/Cube.hpp"
 
 namespace Vakol
 {
@@ -45,6 +47,13 @@ namespace Vakol
             */
             void CreateSphere(Components::Transform& inputTransform, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName); 
             /**
+            * @brief Create a 3D Cube object
+            * @param inputTransform The transform of the cube
+            * @param inputName The name of the cube
+            *
+            */
+            void CreateCube(Components::Transform& inputTransform, std::string inputName);
+            /**
              * @brief Scale a selected primitive shape
              * @param type The type of shape to scale
              * @param inputScale The new scale of the shape
@@ -70,6 +79,11 @@ namespace Vakol
             *
             */
             std::unordered_map<xg::Guid, Rendering::Assets::Model> m_Spheres;
+            /**
+            * @brief A map of all the cubes
+            *
+            */
+            std::unordered_map<xg::Guid, Rendering::Assets::Model> m_Cubes;
             /**
             * @brief A map of corripsonding names to guids
             *

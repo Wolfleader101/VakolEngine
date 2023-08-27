@@ -91,7 +91,7 @@ namespace Vakol
              */
             Rendering::Assets::Mesh mesh;
             /**
-             * @brief The original vertices of the sphere before rotations
+             * @brief The original vertices of the sphere before rotations, scaling, etc.
              *
              */
             std::vector<Rendering::Vertex> originalVertices;

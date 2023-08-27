@@ -99,6 +99,35 @@ namespace Vakol
         }
     }
 
+    void Primitives::CreateCube(Components::Transform& inputTransform, std::string inputName)
+    {
+        Rendering::VertexArray tmpVertexArray;      // Create a temporary vertex array
+        Rendering::Assets::Model tmpModel;          // Create a temporary model
+        Rendering::Assets::Material tmpMaterial;    // Create a temporary material
+        Rendering::Assets::Mesh tmpMesh;            // Create a temporary mesh
+
+        xg::Guid cubeGUID = xg::newGuid();          // Generate a new GUID for the sphere
+
+        int highestCount = -1;
+
+        for (const auto& pair : nameToGuidMap)
+        {
+            std::string existingName = pair.first; 											                    // Get the name of the existing sphere
+
+            if (existingName.find(inputName) == 0)                                                              // Check if the existing name starts with the input name
+            {
+                std::string suffix = existingName.substr(inputName.length()); 				                    // Get the suffix of the existing name
+
+                // Check if the suffix is empty or if it is a number
+                if (suffix.empty() || (suffix[0] == '_' && std::all_of(suffix.begin() + 1, suffix.end(), ::isdigit)))
+                {
+                    int count = suffix.empty() ? 0 : std::stoi(suffix.substr(1)); 			                    // Get the count of the existing name
+                    highestCount = std::max(highestCount, count); 							                    // Update the highest count
+                }
+            }
+        }
+    }
+
     xg::Guid Primitives::GetGuidByName(const std::string& name)
     {
         if (nameToGuidMap.find(name) != nameToGuidMap.end())  

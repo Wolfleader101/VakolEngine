@@ -4,7 +4,7 @@ namespace Vakol
 {
     Sphere::Sphere()
     {
-        sphereTransform.pos = Math::Vec3(0.0f, 0.0f, 0.0f);         // Set the position to 0
+        sphereTransform.pos = Math::Vec3(0.0f, 0.0f, 0.0f);         // Set the position to 0 
         sphereTransform.scale = Math::Vec3(1.0f, 1.0f, 1.0f);       // Set the scale to 1
         sphereTransform.rot = Math::Quat(0.0f, 0.0f, 0.0f, 1.0f);   // Set the rotation to 0
         sphereTransform.eulerAngles = Math::Vec3(0.0f, 0.0f, 0.0f); // Set the euler angles to 0
@@ -14,7 +14,7 @@ namespace Vakol
         mesh.name = "DEFAULT_SPHERE_mesh";                          // Set the name to DEFAULT_SPHERE
         mesh.ID = xg::newGuid().str();                              // Generate a new GUID for the mesh
 
-        GenerateData(sphereTransform, 1.0f, 0, 0);                  // Generate the data for the sphere 
+        GenerateData(sphereTransform, 1.0f, 10, 10);                // Generate the data for the sphere 
     }
 
     Sphere::Sphere(Components::Transform inputTransform, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName, std::string inputID)
