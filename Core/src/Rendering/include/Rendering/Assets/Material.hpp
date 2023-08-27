@@ -35,7 +35,7 @@ namespace Vakol::Rendering::Assets
         float shininess = 32.0f; // the specular exponent (used for Phong shading)
         float shininess_strength = 1.0f;
 
-        float opacity = 1.0f;    // the transparency/alpha of the material
+        float opacity = 1.0f; // the transparency/alpha of the material
     };
 
     struct Material

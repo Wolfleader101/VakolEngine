@@ -51,7 +51,7 @@ namespace Vakol::Rendering::OpenGL
 
     void BlendFunc()
     {
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
     void EnableCulling()
