@@ -17,6 +17,7 @@ function init()
 	local stone_pillars = {};
 
 	local barriers = {};
+	local small_barriers = {};
 
 	local balcony = scene:create_entity("Balcony", "");
 
@@ -28,14 +29,18 @@ function init()
 		stone_pillars[i] = scene:create_entity("Stone Pillar " .. i, "");
 	end
 
-	for i = 1, 2 do
+	for i = 1, 7 do
 		barriers[i] = scene:create_entity("Glass Barrier " .. i, "");
+	end
+
+	for i = 1, 3 do
+		small_barriers[i] = scene:create_entity("Small Glass Barrier " .. i, "");
 	end
 
 	roof:add_model("assets/models/new_building/roof.fbx", 0.005);
 	roof_support:add_model("assets/models/new_building/roof_supports.fbx", 0.5);
 	
-	building:add_model("assets/models/new_building/building.fbx", 0.005);
+	building:add_model("assets/models/new_building/building.fbx", 0.50);
 	
 	floor:add_model("assets/models/new_building/floor.fbx", 0.005);
 	
@@ -53,8 +58,12 @@ function init()
 		stone_pillars[i]:add_model("assets/models/new_building/stone_pillar.fbx", 0.50);
 	end
 
-	for i = 1, 2 do
+	for i = 1, 7 do
 		barriers[i]:add_model("assets/models/new_building/glass_barrier.fbx", 0.010);
+	end
+
+	for i = 1, 3 do
+		small_barriers[i]:add_model("assets/models/new_building/small_glass_barrier.fbx", 0.010)
 	end
 
 	balcony:add_model("assets/models/new_building/balcony.fbx", 0.2);
@@ -128,7 +137,39 @@ function init()
 	barriers[2]:get_transform().rot = Vector3.new(0.0, -90.0, 0.0);
 	barriers[2]:get_transform().scale.z = 1.09;
 
-	balcony:get_transform().pos = Vector3.new(-7.210, 2.15, 13.40);
+	barriers[3]:get_transform().pos = Vector3.new(10.7, -1.23, -5.0);
+	barriers[3]:get_transform().rot = Vector3.new(0.0, 90.0, 0.0);
+	barriers[3]:get_transform().scale = Vector3.new(1.0, 1.0, 0.85);
+
+	barriers[4]:get_transform().pos = Vector3.new(4.9, -1.23, -19.3);
+	barriers[4]:get_transform().rot = Vector3.new(0.0, 180.0, 0.0);
+	barriers[4]:get_transform().scale = Vector3.new(1.5, 1.0, 1.0);
+
+	barriers[5]:get_transform().pos = Vector3.new(-19.5, -1.23, -14.1);
+	barriers[5]:get_transform().rot = Vector3.new(0.0, -90.0, 0.0);
+	barriers[5]:get_transform().scale = Vector3.new(1.0, 1.0, 1.289);
+
+	barriers[6]:get_transform().pos = Vector3.new(-15.6, -3.880, 27.3);
+	barriers[6]:get_transform().rot = Vector3.new(0.0, 0.0, 0.0);
+	barriers[6]:get_transform().scale = Vector3.new(1.0, 1.0, 1.0);
+
+	barriers[7]:get_transform().pos = Vector3.new(-19.53, -3.880, 13.4);
+	barriers[7]:get_transform().rot = Vector3.new(0.0, -90.0, 0.0);
+	barriers[7]:get_transform().scale = Vector3.new(1.0, 1.0, 0.82);
+
+	small_barriers[1]:get_transform().pos = Vector3.new(-11.02, -1.23, 26.1);
+	small_barriers[1]:get_transform().rot = Vector3.new(0.0, 180.0, 0.0);
+	small_barriers[1]:get_transform().scale = Vector3.new(0.53, 1.0, 1.0);
+
+	small_barriers[2]:get_transform().pos = Vector3.new(0.0, 0.0, 0.0);
+	small_barriers[2]:get_transform().rot = Vector3.new(0.0, 0.0, 0.0);
+	small_barriers[2]:get_transform().scale = Vector3.new(1.0, 1.0, 1.0);
+
+	small_barriers[3]:get_transform().pos = Vector3.new(0.0, 0.0, 0.0);
+	small_barriers[3]:get_transform().rot = Vector3.new(0.0, 0.0, 0.0);
+	small_barriers[3]:get_transform().scale = Vector3.new(1.0, 1.0, 1.0);
+
+	balcony:get_transform().pos = Vector3.new(-7.210, 2.20, 13.50);
 	balcony:get_transform().scale = Vector3.new(2.40, 1.0, 2.6);
 end
 

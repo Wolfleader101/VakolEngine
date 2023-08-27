@@ -47,6 +47,10 @@ namespace Vakol::Rendering::OpenGL
     void EnableBlending()
     {
         glEnable(GL_BLEND);
+    }
+
+    void BlendFunc()
+    {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  
     }
 

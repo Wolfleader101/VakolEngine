@@ -18,6 +18,8 @@ struct Material
 	vec3 specular_color;
 	vec3 emissive_color;
 
+    float shininess;
+
     sampler2D diffuse_map;
 	sampler2D specular_map;
 	sampler2D ambient_map;

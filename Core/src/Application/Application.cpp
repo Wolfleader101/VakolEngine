@@ -226,7 +226,7 @@ namespace Vakol
                     {
                         const auto& cameraPos = activeScene.GetCamera().GetPos();
 
-                        return Math::LengthSq(lhs.pos - cameraPos) < Math::LengthSq(rhs.pos - cameraPos);
+                        return Math::LengthSq(lhs.pos - cameraPos) > Math::LengthSq(rhs.pos - cameraPos);
                     });
 
                 activeScene.GetEntityList().Iterate<Components::Transform, Rendering::Drawable>(

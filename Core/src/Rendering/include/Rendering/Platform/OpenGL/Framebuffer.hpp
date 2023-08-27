@@ -12,7 +12,9 @@ namespace Vakol::Rendering::OpenGL
     void EnableDepth();
     void EnableSRGB();
     void EnableMultisample();
+
     void EnableBlending();
+    void BlendFunc();
 
     void EnableCulling();
     void CullFaces(unsigned int face);
