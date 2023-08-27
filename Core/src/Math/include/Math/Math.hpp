@@ -3,8 +3,8 @@
 #define M_PI 3.14159265358979323846 // Value of Pi
 
 #include <glm/glm.hpp>
-#include <glm/gtc/quaternion.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 namespace Vakol::Math
 {
@@ -77,7 +77,7 @@ namespace Vakol::Math
 
     /**
      * @brief Create a rotation matrix from euler angles
-     * 
+     *
      * @param pitch The pitch of the rotation
      * @param yaw The yaw of the rotation
      * @param roll The roll of the rotation
@@ -87,7 +87,7 @@ namespace Vakol::Math
 
     /**
      * @brief Multiply a point by a matrix
-     * 
+     *
      * @param point The point to multiply
      * @param mat The matrix to multiply by
      *
@@ -95,7 +95,7 @@ namespace Vakol::Math
     Point MultiplyPoint(const Point& point, const Mat4& mat);
     /**
      * @brief Multiply a vector by a matrix
-     * 
+     *
      * @param vec The vector to multiply
      * @param mat The matrix to multiply by
      *
@@ -111,14 +111,14 @@ namespace Vakol::Math
     Mat4 Inverse(const Mat4& mat);
     /**
      * @brief Transpose a matrix
-     * 
+     *
      * @param mat The matrix to transpose
      *
      */
     Mat4 Transpose(const Mat4& mat);
     /**
      * @brief Create a Matrix from a Quaternion
-     * 
+     *
      * @param quaternion The quaternion to convert
      *
      */
@@ -133,7 +133,7 @@ namespace Vakol::Math
     struct Line
     {
         Point start; ///< The start point of the line
-        Point end; ///< The end point of the line
+        Point end;   ///< The end point of the line
 
         inline Line()
         {
@@ -145,14 +145,14 @@ namespace Vakol::Math
 
     /**
      * @brief Calculate the length of a line segment
-     * 
+     *
      * @param line The line segment to calculate the length of
-     * 
+     *
      */
     float Length(const Line& line);
     /**
      * @brief Calculate the squared length of a line segment
-     * 
+     *
      * @param line The line segment to calculate the squared length of
      *
      */
@@ -160,14 +160,14 @@ namespace Vakol::Math
 
     /**
      * @brief A 3D ray
-     * 
+     *
      * A ray is a line in 3D space with a starting point and a direction
      *
      */
     struct Ray
     {
         Point origin; ///< The starting point of the ray
-        Vec3 dir; ///< The direction of the ray
+        Vec3 dir;     ///< The direction of the ray
 
         inline Ray() : dir(0.0f, 0.0f, 1.0f)
         {
@@ -223,7 +223,7 @@ namespace Vakol::Math
 
     /**
      * @brief The perspective projection matrix.
-     * 
+     *
      * @param fovY The field of view in the Y direction, in radians.
      * @param aspect The aspect ratio, defined as view space width divided by height.
      * @param zNear The distance to the near view plane.
@@ -232,7 +232,7 @@ namespace Vakol::Math
     Mat4 Perspective(float fovY, float aspect, float zNear, float zFar);
     /**
      * @brief The orthographic projection matrix.
-     * 
+     *
      * @param left The minimum x-coordinate of the view volume.
      * @param right The maximum x-coordinate of the view volume.
      * @param bottom The minimum y-coordinate of the view volume.

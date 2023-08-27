@@ -45,7 +45,7 @@ namespace Vakol
         return m_models.at(path);
     }
 
-    void ModelLibrary::AddModelDirect(const Rendering::Assets::Model& inputModel) 
+    void ModelLibrary::AddModelDirect(const Rendering::Assets::Model& inputModel)
     {
         // Use the path of the model as the key
         const std::string& key = inputModel.path;
@@ -60,7 +60,7 @@ namespace Vakol
             // Insert the model into the map
             m_models[key] = inputModel;
 
-            VK_INFO("Model with key {0} added successfully.", key); 
+            VK_INFO("Model with key {0} added successfully.", key);
         }
     }
 

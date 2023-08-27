@@ -6,6 +6,7 @@
 #include "GUI/GUIWindow.hpp"
 #include "Input/Input.hpp"
 #include "Physics/PhysicsEngine.hpp"
+#include "Primitives/Primitives.hpp"
 #include "Rendering/RenderEngine.hpp"
 #include "SceneManager/SceneManager.hpp"
 #include "Scripting/ScriptEngine.hpp"
@@ -13,7 +14,6 @@
 #include "Window/Events/KeyEvent.hpp"
 #include "Window/Events/WindowEvent.hpp"
 #include "Window/Window.hpp"
-#include "Primitives/Primitives.hpp"
 
 #include "LayerManager/LayerManager.hpp"
 #include "Utils/Layer.hpp"

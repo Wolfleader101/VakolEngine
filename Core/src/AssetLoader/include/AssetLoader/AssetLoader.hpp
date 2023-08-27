@@ -52,7 +52,7 @@ namespace Vakol
          * \param inputModel the model to add
          * \return
          */
-        static void AssetLoader::AddModelDirect(const Rendering::Assets::Model& inputModel); 
+        static void AssetLoader::AddModelDirect(const Rendering::Assets::Model& inputModel);
         /**
          * \brief
          * \param modelID the path of the model

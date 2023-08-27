@@ -167,7 +167,7 @@ namespace Vakol
     {
         RegisterTime(m_state);
         RegisterMath(m_state);
-        RegisterPrimitives(m_state); 
+        RegisterPrimitives(m_state);
         RegisterInput(m_state);
         RegisterModel(m_state);
         RegisterMesh(m_state);

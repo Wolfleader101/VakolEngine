@@ -33,7 +33,7 @@ namespace Vakol
             if (!ent->HasComponent<Rendering::Drawable>())
                 ent->AddComponent<Rendering::Drawable>();
 
-            auto& drawable = ent->GetComponent<Rendering::Drawable>(); 
+            auto& drawable = ent->GetComponent<Rendering::Drawable>();
 
             AssetLoader::AddModelDirect(inputModel);
 

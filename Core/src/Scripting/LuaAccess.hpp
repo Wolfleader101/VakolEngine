@@ -21,7 +21,7 @@ namespace Vakol
 
     void RegisterTime(sol::state& lua);
 
-    void RegisterPrimitives(sol::state& lua); 
+    void RegisterPrimitives(sol::state& lua);
 
     void RegisterInput(sol::state& lua);
 

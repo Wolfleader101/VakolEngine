@@ -23,9 +23,9 @@ namespace Vakol
         return m_modelLibrary.GetModel(path, scale);
     }
 
-    void AssetLoader::AddModelDirect(const Rendering::Assets::Model& inputModel) 
+    void AssetLoader::AddModelDirect(const Rendering::Assets::Model& inputModel)
     {
-        m_modelLibrary.AddModelDirect(inputModel);  
+        m_modelLibrary.AddModelDirect(inputModel);
     }
 
     const std::vector<Rendering::Assets::Mesh>& AssetLoader::GetMeshes(const std::string& modelID)
