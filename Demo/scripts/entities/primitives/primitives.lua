@@ -1,7 +1,8 @@
 local sphere_guid;
+local sphere;
 
 function init()
-    local spheres = scene:create_entity("Spheres", "");
+    sphere = scene:create_entity("Sphere", "");
 
     --Create a transform for the sphere
     local transform = Transform.new();
@@ -10,9 +11,9 @@ function init()
     transform.rot = Vector3.new(0, 0, 0);
 
     --Set the sphere parameters
-    local radius = 5.0;
-    local stacks = 50;
-    local sectors = 50;
+    local radius = 10.0;
+    local stacks = 100;
+    local sectors = 100;
     local name = "sphere";
 
     --Create the sphere
@@ -22,9 +23,9 @@ function init()
     sphere_guid = Primitives:get_guid_by_name("sphere");
 
     --Add the sphere model to the scene
-    spheres:add_model_direct(Primitives:get_model(ShapeType.SPHERE, sphere_guid));
+    sphere:add_model_direct(Primitives:get_model(ShapeType.SPHERE, sphere_guid));
 end
 
 function update()
-    
+    sphere:get_transform().scale = Vector3.new(1, 2, 1);
 end
