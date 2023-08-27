@@ -2,6 +2,8 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
+#include <glm/gtx/norm.hpp>
+
 namespace Vakol::Math
 {
     float Dot(const Vec2& a, const Vec2& b)
@@ -124,6 +126,16 @@ namespace Vakol::Math
     float LengthSq(const Line& line)
     {
         return MagnitudeSq(line.start - line.end);
+    }
+
+    float Length(const Vec3& v)
+    {
+        return glm::length(v);
+    }
+
+    float LengthSq(const Vec3& v)
+    {
+        return glm::length2(v);
     }
 
     Ray FromPoints(const Point& from, const Point& to)

@@ -229,6 +229,66 @@ namespace Vakol::Rendering
         }
     }
 
+    void RenderAPI::EnableBlending()
+    {
+        if (m_config.API == "OPENGL")
+        {
+            OpenGL::EnableBlending();
+        }
+        else if (m_config.API == "VULKAN")
+        {
+            VK_WARN("Vulkan rendering has not been implemented yet.");
+        }
+        else if (m_config.API == "DIRECT3D")
+        {
+            VK_WARN("Direct3D rendering has not been implemented yet.");
+        }
+        else if (m_config.API == "METAL")
+        {
+            VK_WARN("Metal rendering has not been implemented yet.");
+        }
+    }
+
+    void RenderAPI::EnableCulling()
+    {
+        if (m_config.API == "OPENGL")
+        {
+            OpenGL::EnableCulling();
+        }
+        else if (m_config.API == "VULKAN")
+        {
+            VK_WARN("Vulkan rendering has not been implemented yet.");
+        }
+        else if (m_config.API == "DIRECT3D")
+        {
+            VK_WARN("Direct3D rendering has not been implemented yet.");
+        }
+        else if (m_config.API == "METAL")
+        {
+            VK_WARN("Metal rendering has not been implemented yet.");
+        }
+    }
+
+    void RenderAPI::CullFaces()
+    {
+        if (m_config.API == "OPENGL")
+        {
+            OpenGL::CullFaces(OpenGL::BACK_FACE());
+        }
+        else if (m_config.API == "VULKAN")
+        {
+            VK_WARN("Vulkan rendering has not been implemented yet.");
+        }
+        else if (m_config.API == "DIRECT3D")
+        {
+            VK_WARN("Direct3D rendering has not been implemented yet.");
+        }
+        else if (m_config.API == "METAL")
+        {
+            VK_WARN("Metal rendering has not been implemented yet.");
+        }
+    }
+
     void RenderAPI::ClearColor(const float r, const float g, const float b, const float a)
     {
         if (m_config.API == "OPENGL")

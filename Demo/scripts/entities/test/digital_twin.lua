@@ -75,7 +75,7 @@ function init()
 	alcove_1:get_transform().pos = Vector3.new(-10.0, -1.0, 28.70);
 	alcove_1:get_transform().scale = Vector3.new(0.90, 1.0, 0.890);
 
-	alcove_2:get_transform().pos = Vector3.new(-12.65, -1.25, 27.870);
+	alcove_2:get_transform().pos = Vector3.new(-12.65, -1.05, 27.870);
 	alcove_2:get_transform().scale = Vector3.new(0.90, 1.0, 0.890);
 
 	glass_panel1:get_transform().pos = Vector3.new(-10.675, -1.0, 9.35);
@@ -128,8 +128,8 @@ function init()
 	barriers[2]:get_transform().rot = Vector3.new(0.0, -90.0, 0.0);
 	barriers[2]:get_transform().scale.z = 1.09;
 
-	balcony:get_transform().pos = Vector3.new(-7.20, 2.15, 13.40);
-	balcony:get_transform().scale = Vector3.new(2.10, 1.0, 2.6);
+	balcony:get_transform().pos = Vector3.new(-7.210, 2.15, 13.40);
+	balcony:get_transform().scale = Vector3.new(2.40, 1.0, 2.6);
 end
 
 function update()

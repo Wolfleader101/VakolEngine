@@ -73,6 +73,21 @@ namespace Vakol::Rendering
         static void EnableSRGB();
 
         /**
+         * \brief Enables transparent textures and materials
+         */
+        static void EnableBlending();
+
+        /**
+         * \brief Enable Culling of faces
+         */
+        static void EnableCulling();
+
+        /**
+         * \brief Cull the faces
+         */
+        static void CullFaces();
+
+        /**
          * \brief clear the color buffer's color
          * \param r red
          * \param g green

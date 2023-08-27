@@ -99,6 +99,9 @@ namespace Vakol::Math
     float Length(const Line& line);
     float LengthSq(const Line& line);
 
+    float Length(const Vec3& v);
+    float LengthSq(const Vec3& v);
+
     struct Ray
     {
         Point origin;

@@ -221,6 +221,14 @@ namespace Vakol
 
             if (IsSystemActive(SystemFlag::Rendering))
             {
+                activeScene.GetEntityList().Sort<Components::Transform>(
+                    [&](Components::Transform lhs, Components::Transform rhs) 
+                    {
+                        const auto& cameraPos = activeScene.GetCamera().GetPos();
+
+                        return Math::LengthSq(lhs.pos - cameraPos) < Math::LengthSq(rhs.pos - cameraPos);
+                    });
+
                 activeScene.GetEntityList().Iterate<Components::Transform, Rendering::Drawable>(
                     [&](Components::Transform& transform, const Rendering::Drawable& drawable) {
                         if (drawable.active)
