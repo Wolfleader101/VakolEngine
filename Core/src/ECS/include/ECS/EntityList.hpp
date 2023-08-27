@@ -99,7 +99,7 @@ namespace Vakol
         }
 
         template <typename Component, typename Func>
-        decltype(auto) Sort(Func&& func)
+        void Sort(Func&& func)
         {
             m_Registry.sort<Component>(std::forward<Func>(func));
         }
