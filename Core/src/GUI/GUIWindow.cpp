@@ -21,9 +21,21 @@ namespace Vakol
         ImGui::GetIO().FontDefault = ImGui::GetIO().Fonts->AddFontFromFileTTF(inputPath.c_str(), 16.0f, &font_cfg);
     };
 
-    void GUIWindow::Init(const std::shared_ptr<Window>& window) const
+    void GUIWindow::Init(const std::shared_ptr<Window>& window)
     {
-        ImGui::CreateContext();
+        m_context = ImGui::CreateContext();
+
+        if (!m_context)
+        {
+            VK_ERROR("Failed to create GUI context!");
+            return;
+        }
+
+        SetAsContext();
+
+        ImGuiIO& io = ImGui::GetIO();
+        io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;   // Enable Docking
+        io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable; // Enable Multi-viewport
 
         ImGui::StyleColorsDark(); // Chooses the Dark style
 
@@ -49,6 +61,7 @@ namespace Vakol
 
     void GUIWindow::CreateNewFrame() const
     {
+        SetAsContext();
         ImGui_ImplOpenGL3_NewFrame(); // Sets up the new frame to be used within OpenGL
         ImGui_ImplGlfw_NewFrame();    // Sets up the new frame to be used within GLFW
         ImGui::NewFrame();            // Creates a new frame
@@ -74,9 +87,10 @@ namespace Vakol
     void GUIWindow::StartWindowCreation(const std::string& windowName, bool centerX, bool centerY, const float width,
                                         const float height, const float xOffset, float yOffset) const
     {
-        ImGui::Begin(windowName.c_str(), nullptr,
-                     ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove |
-                         ImGuiWindowFlags_NoResize); // Begins the creation of the Window
+        ImGuiViewport* main_viewport = ImGui::GetMainViewport();
+
+        // We will calculate the final position first
+        ImVec2 finalPosition = {main_viewport->Pos.x + xOffset, main_viewport->Pos.y + yOffset};
 
         // Only consider centering if width and height are not zero
         if (width == 0)
@@ -88,31 +102,31 @@ namespace Vakol
             centerY = false;
         }
 
-        // Set position based on centering flags
+        // Adjust finalPosition based on centering flags
         if (centerX && centerY)
         {
-            ImGui::SetWindowPos({(DisplayWindowWidth() - width) / 2 + xOffset,
-                                 (DisplayWindowHeight() - height) / 2 + yOffset}); // Sets the position of the window
+            finalPosition.x = main_viewport->Pos.x + (DisplayWindowWidth() - width) / 2 + xOffset;
+            finalPosition.y = main_viewport->Pos.y + (DisplayWindowHeight() - height) / 2 + yOffset;
         }
         else if (centerX)
         {
-            ImGui::SetWindowPos(
-                {(DisplayWindowWidth() - width) / 2 + xOffset, yOffset}); // Sets the position of the window
+            finalPosition.x = main_viewport->Pos.x + (DisplayWindowWidth() - width) / 2 + xOffset;
         }
         else if (centerY)
         {
-            ImGui::SetWindowPos(
-                {xOffset, (DisplayWindowHeight() - height) / 2 + yOffset}); // Sets the position of the window
-        }
-        else
-        {
-            ImGui::SetWindowPos({xOffset, yOffset}); // Sets the position of the window
+            finalPosition.y = main_viewport->Pos.y + (DisplayWindowHeight() - height) / 2 + yOffset;
         }
 
-        ImGui::SetWindowSize({width, height},
-                             ImGuiCond_Always); // Sets the size of the window (Width, Height) in pixels
-    };
+        // Now set the final position
+        ImGui::SetNextWindowPos(finalPosition);
 
+        // Begin the window
+        ImGui::Begin(windowName.c_str(), nullptr,
+                     ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize |
+                         ImGuiWindowFlags_NoDocking);
+
+        ImGui::SetWindowSize({width, height}, ImGuiCond_Always);
+    }
     float GUIWindow::GetFramesPerSecond() const
     {
         return ImGui::GetIO().Framerate;
@@ -123,6 +137,15 @@ namespace Vakol
         ImGui::Render(); // Renders the UI
 
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData()); // Renders the UI to the screen
+
+        // Handle viewports
+        if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+        {
+            GLFWwindow* backup_current_context = glfwGetCurrentContext();
+            ImGui::UpdatePlatformWindows();
+            ImGui::RenderPlatformWindowsDefault();
+            glfwMakeContextCurrent(backup_current_context);
+        }
     }
 
     void GUIWindow::AddText(const std::string& inputText, const bool centerX, const bool centerY, const float fontSize,
@@ -297,8 +320,19 @@ namespace Vakol
         if (!is_initialised)
             return;
 
-        ImGui_ImplOpenGL3_Shutdown(); // Shuts down OpenGL support
-        ImGui_ImplGlfw_Shutdown();    // Shuts down GLFW support
-        ImGui::DestroyContext();      // Destroys the Window
+        // Before shutting down the ImGui backends...
+        if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+        {
+            ImGui::DestroyPlatformWindows();
+        }
+
+        ImGui_ImplOpenGL3_Shutdown();     // Shuts down OpenGL support
+        ImGui_ImplGlfw_Shutdown();        // Shuts down GLFW support
+        ImGui::DestroyContext(m_context); // Destroys the Window
     };
+
+    void GUIWindow::SetAsContext() const
+    {
+        ImGui::SetCurrentContext(m_context); // Sets the current context (Window)
+    }
 } // namespace Vakol
