@@ -157,6 +157,11 @@ namespace Vakol
         rb.linearVelocity =
             rb.linearVelocity - 2 * Math::Dot(rb.linearVelocity, rb.collisionData->normal) * rb.collisionData->normal;
 
+        // rb.collisionBody->setTransform(rp3d::Transform(
+        //     rp3d::Vector3(static_cast<double>(pos.x), static_cast<double>(pos.y), static_cast<double>(pos.z)),
+        //     rp3d::Quaternion(static_cast<double>(rot.x), static_cast<double>(rot.y), static_cast<double>(rot.z),
+        //                      static_cast<double>(rot.w))));
+
         // reset the collision data
         rb.collisionData->penetrationDepth = 0.0;
         rb.collisionData->normal = Math::Vec3(0.0f, 0.0f, 0.0f);
