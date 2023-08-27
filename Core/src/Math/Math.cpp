@@ -128,16 +128,6 @@ namespace Vakol::Math
         return MagnitudeSq(line.start - line.end);
     }
 
-    float Length(const Vec3& v)
-    {
-        return glm::length(v);
-    }
-
-    float LengthSq(const Vec3& v)
-    {
-        return glm::length2(v);
-    }
-
     Ray FromPoints(const Point& from, const Point& to)
     {
         return Ray(from, Normalized(to - from));
