@@ -6,6 +6,7 @@
 #include "ECS/Components.hpp"
 #include "Rendering/Assets/Mesh.hpp"
 #include "Rendering/RenderData.hpp"
+#include "Rendering/RenderAPI.hpp" 
 
 namespace Vakol
 {

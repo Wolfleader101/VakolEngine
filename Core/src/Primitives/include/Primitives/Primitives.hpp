@@ -29,7 +29,8 @@ namespace Vakol
              */
             enum ShapeType
             {
-                SPHERE ///< Sphere shape
+                SPHERE, ///< Sphere shape
+                CUBE    ///< Cube shape
             };
             /**
             * @brief Construct a new Primitives object
