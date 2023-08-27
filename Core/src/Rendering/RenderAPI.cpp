@@ -6,6 +6,7 @@
 
 #include "AssetLoader/ShaderLibrary.hpp"
 
+#include "Rendering/Assets/Material.hpp"
 #include "Rendering/Assets/Shader.hpp"
 
 #include "Rendering/Platform/OpenGL/common.h"
@@ -30,11 +31,15 @@ namespace Vakol::Rendering
 
     void RenderAPI::BeginDraw(const std::string& modelID, const std::string& shaderID)
     {
-        OpenGL::BindShaderProgram(GetShader(shaderID));
+        const auto shader = GetShader(shaderID);
+
+        OpenGL::BindShaderProgram(shader);
 
         for (const auto& mesh : AssetLoader::GetMeshes(modelID))
         {
             const auto& material = mesh.material;
+
+            // SetMaterial(shader, material);
 
             for (const auto& texture : material->textures)
             {
@@ -229,6 +234,66 @@ namespace Vakol::Rendering
         }
     }
 
+    void RenderAPI::EnableBlending()
+    {
+        if (m_config.API == "OPENGL")
+        {
+            OpenGL::EnableBlending();
+        }
+        else if (m_config.API == "VULKAN")
+        {
+            VK_WARN("Vulkan rendering has not been implemented yet.");
+        }
+        else if (m_config.API == "DIRECT3D")
+        {
+            VK_WARN("Direct3D rendering has not been implemented yet.");
+        }
+        else if (m_config.API == "METAL")
+        {
+            VK_WARN("Metal rendering has not been implemented yet.");
+        }
+    }
+
+    void RenderAPI::EnableCulling()
+    {
+        if (m_config.API == "OPENGL")
+        {
+            OpenGL::EnableCulling();
+        }
+        else if (m_config.API == "VULKAN")
+        {
+            VK_WARN("Vulkan rendering has not been implemented yet.");
+        }
+        else if (m_config.API == "DIRECT3D")
+        {
+            VK_WARN("Direct3D rendering has not been implemented yet.");
+        }
+        else if (m_config.API == "METAL")
+        {
+            VK_WARN("Metal rendering has not been implemented yet.");
+        }
+    }
+
+    void RenderAPI::CullFaces()
+    {
+        if (m_config.API == "OPENGL")
+        {
+            OpenGL::CullFaces(OpenGL::BACK_FACE());
+        }
+        else if (m_config.API == "VULKAN")
+        {
+            VK_WARN("Vulkan rendering has not been implemented yet.");
+        }
+        else if (m_config.API == "DIRECT3D")
+        {
+            VK_WARN("Direct3D rendering has not been implemented yet.");
+        }
+        else if (m_config.API == "METAL")
+        {
+            VK_WARN("Metal rendering has not been implemented yet.");
+        }
+    }
+
     void RenderAPI::ClearColor(const float r, const float g, const float b, const float a)
     {
         if (m_config.API == "OPENGL")
@@ -287,6 +352,23 @@ namespace Vakol::Rendering
         transform_matrix = Math::Scale(transform_matrix, transform.scale);
 
         return transform_matrix * rotation_matrix;
+    }
+
+    void RenderAPI::SetMaterial(const unsigned int shader, const std::shared_ptr<Assets::Material>& material)
+    {
+        const auto& properties = material->properties;
+
+        if (properties)
+        {
+            SetVec3(shader, "material.ambient_color", properties->ambient_color);
+            SetVec3(shader, "material.diffuse_color", properties->diffuse_color);
+            SetVec3(shader, "material.specular_color", properties->specular_color);
+            SetVec3(shader, "material.emissive_color", properties->emissive_color);
+
+            SetFloat(shader, "material.shininess", properties->shininess);
+            SetFloat(shader, "material.shininess_strength", properties->shininess_strength);
+            SetFloat(shader, "material.opacity", properties->opacity);
+        }
     }
 
     void RenderAPI::AddShader(const std::string& shaderID, const unsigned int shader)
