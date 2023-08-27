@@ -95,8 +95,7 @@ namespace Vakol
 
         tmpModel.name = uniqueName;      // Set the name of the model
         tmpMesh = tmpCube.GetCubeMesh(); // Get the mesh of the cube
-        tmpMesh.material =
-            std::make_shared<Vakol::Rendering::Assets::Material>(tmpMaterial); // Set the material of the mesh
+        tmpMesh.material = std::make_shared<Vakol::Rendering::Assets::Material>(tmpMaterial); // Set the material of the mesh
         tmpMesh.material->name = uniqueName + "_shader";                       // Set the name of the material
 
         tmpModel.meshes.push_back(tmpMesh); // Add the mesh of the cube to the model
@@ -148,7 +147,8 @@ namespace Vakol
 
                 break;
             }
-            case CUBE: { 
+            case CUBE: 
+            { 
                 // Look up the cube in the map using the GUID
                 auto it = m_Cubes.find(inputGUID);
 

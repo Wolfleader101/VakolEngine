@@ -165,38 +165,6 @@ namespace Vakol
             // Top face
             20, 21, 22, 22, 23, 20
         };
-
-        std::vector<Math::Vec3> preCalcTangents = 
-        {
-            // Back face
-            {1.0f, 0.0f, 0.0f},
-            // Front face
-            {-1.0f, 0.0f, 0.0f},
-            // Left face
-            {0.0f, 0.0f, -1.0f},
-            // Right face
-            {0.0f, 0.0f, 1.0f},
-            // Bottom face
-            {1.0f, 0.0f, 0.0f},
-            // Top face
-            {1.0f, 0.0f, 0.0f}
-        };
-
-        std::vector<Math::Vec3> preCalcBitangents = 
-        {
-            // Back face
-            {0.0f, -1.0f, 0.0f},
-            // Front face
-            {0.0f, -1.0f, 0.0f},
-            // Left face
-            {0.0f, -1.0f, 0.0f},
-            // Right face
-            {0.0f, -1.0f, 0.0f},
-            // Bottom face
-            {0.0f, 0.0f, -1.0f},
-            // Top face
-            {0.0f, 0.0f, 1.0f}
-        };
         
         // Create a temporary vertex to store the pre-calculated data, apply transformations, and push back into the final vertex list
         for (size_t i = 0; i < preCalcPositions.size(); ++i)
@@ -205,8 +173,6 @@ namespace Vakol
             tmpVertex.position = preCalcPositions[i];
             tmpVertex.normal = preCalcNormals[i];
             tmpVertex.uv = preCalcUVs[i];
-            tmpVertex.tangent = preCalcTangents[i];
-            tmpVertex.bitangent = preCalcBitangents[i];
 
             // Apply transformations to the vertex
             // Apply scaling
