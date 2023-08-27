@@ -33,7 +33,7 @@ function init()
 		barriers[i] = scene:create_entity("Glass Barrier " .. i, "");
 	end
 
-	for i = 1, 3 do
+	for i = 1, 2 do
 		small_barriers[i] = scene:create_entity("Small Glass Barrier " .. i, "");
 	end
 
@@ -62,7 +62,7 @@ function init()
 		barriers[i]:add_model("assets/models/new_building/glass_barrier.fbx", 0.010);
 	end
 
-	for i = 1, 3 do
+	for i = 1, 2 do
 		small_barriers[i]:add_model("assets/models/new_building/small_glass_barrier.fbx", 0.010)
 	end
 
@@ -164,10 +164,6 @@ function init()
 	small_barriers[2]:get_transform().pos = Vector3.new(0.0, 0.0, 0.0);
 	small_barriers[2]:get_transform().rot = Vector3.new(0.0, 0.0, 0.0);
 	small_barriers[2]:get_transform().scale = Vector3.new(1.0, 1.0, 1.0);
-
-	small_barriers[3]:get_transform().pos = Vector3.new(0.0, 0.0, 0.0);
-	small_barriers[3]:get_transform().rot = Vector3.new(0.0, 0.0, 0.0);
-	small_barriers[3]:get_transform().scale = Vector3.new(1.0, 1.0, 1.0);
 
 	balcony:get_transform().pos = Vector3.new(-7.210, 2.20, 13.50);
 	balcony:get_transform().scale = Vector3.new(2.40, 1.0, 2.6);
