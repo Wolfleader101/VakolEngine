@@ -30,7 +30,14 @@ namespace Vakol
         });
 
         entity_type.set_function("add_model_direct", [](Entity* ent, Rendering::Assets::Model& inputModel) {
+            if (!ent->HasComponent<Rendering::Drawable>())
+                ent->AddComponent<Rendering::Drawable>();
+
+            auto& drawable = ent->GetComponent<Rendering::Drawable>(); 
+
             AssetLoader::AddModelDirect(inputModel);
+
+            Rendering::RenderEngine::GenerateModel(inputModel, drawable);
         });
 
         entity_type.set_function("replace_texture", [](const Entity* ent, const std::string& srcPath,

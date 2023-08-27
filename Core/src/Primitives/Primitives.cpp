@@ -11,6 +11,8 @@ namespace Vakol
     {
         Rendering::VertexArray tmpVertexArray; 												    // Create a temporary vertex array
         Rendering::Assets::Model tmpModel; 													    // Create a temporary model
+        Rendering::Assets::Material tmpMaterial; 												// Create a temporary material
+        Rendering::Assets::Mesh tmpMesh;                                                        // Create a temporary mesh
         
         xg::Guid sphereGUID = xg::newGuid();                                                    // Generate a new GUID for the sphere
 
@@ -38,7 +40,12 @@ namespace Vakol
         Sphere tmpSphere(inputTransform, inputRadius, inputStacks, inputSectors, uniqueName, sphereGUID.str()); // Create a new Sphere object with input data
 
         tmpModel.name = uniqueName;                                                                             // Set the name of the model
-        tmpModel.meshes.push_back(tmpSphere.GetSphereMesh());                                                   // Add the mesh of the sphere to the model
+        tmpMesh = tmpSphere.GetSphereMesh();                                                                    // Get the mesh of the sphere
+        tmpMesh.material = std::make_shared<Vakol::Rendering::Assets::Material>(tmpMaterial);                   // Set the material of the mesh  
+        tmpMesh.material->name = uniqueName + "_shader";                                                        // Set the name of the material
+
+        tmpModel.meshes.push_back(tmpMesh);                                                                     // Add the mesh of the sphere to the model
+
         tmpModel.path = uniqueName + "_GENERATED";                                                              // Set a dummy path for the model
 
         m_Spheres[sphereGUID] = tmpModel;                                                                       // Add the model to the map of spheres

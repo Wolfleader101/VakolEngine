@@ -6,6 +6,7 @@
 
 #include <crossguid/guid.hpp>
 
+#include "Rendering/Assets/Material.hpp"  
 #include "Logger/Logger.hpp"
 #include "Primitives/Sphere.hpp"
 #include "Rendering/RenderAPI.hpp" 

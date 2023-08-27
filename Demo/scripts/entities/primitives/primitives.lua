@@ -10,9 +10,9 @@ function init()
     transform.rot = Vector3.new(0, 0, 0);
 
     --Set the sphere parameters
-    local radius = 10.0;
-    local stacks = 20;
-    local sectors = 20;
+    local radius = 5.0;
+    local stacks = 50;
+    local sectors = 50;
     local name = "sphere";
 
     --Create the sphere
