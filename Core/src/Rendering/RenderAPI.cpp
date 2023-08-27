@@ -6,8 +6,8 @@
 
 #include "AssetLoader/ShaderLibrary.hpp"
 
-#include "Rendering/Assets/Shader.hpp"
 #include "Rendering/Assets/Material.hpp"
+#include "Rendering/Assets/Shader.hpp"
 
 #include "Rendering/Platform/OpenGL/common.h"
 
@@ -39,7 +39,7 @@ namespace Vakol::Rendering
         {
             const auto& material = mesh.material;
 
-            //SetMaterial(shader, material);
+            // SetMaterial(shader, material);
 
             for (const auto& texture : material->textures)
             {
@@ -358,13 +358,17 @@ namespace Vakol::Rendering
     {
         const auto& properties = material->properties;
 
-        SetVec3(shader, "material.ambient_color", properties->ambient_color);
-        SetVec3(shader, "material.diffuse_color", properties->diffuse_color);
-        SetVec3(shader, "material.specular_color", properties->specular_color);
-        SetVec3(shader, "material.emissive_color", properties->emissive_color);
+        if (properties)
+        {
+            SetVec3(shader, "material.ambient_color", properties->ambient_color);
+            SetVec3(shader, "material.diffuse_color", properties->diffuse_color);
+            SetVec3(shader, "material.specular_color", properties->specular_color);
+            SetVec3(shader, "material.emissive_color", properties->emissive_color);
 
-        SetFloat(shader, "material.shininess", properties->shininess);
-        SetFloat(shader, "material.shininess_strength", properties->shininess_strength);
+            SetFloat(shader, "material.shininess", properties->shininess);
+            SetFloat(shader, "material.shininess_strength", properties->shininess_strength);
+            SetFloat(shader, "material.opacity", properties->opacity);
+        }
     }
 
     void RenderAPI::AddShader(const std::string& shaderID, const unsigned int shader)

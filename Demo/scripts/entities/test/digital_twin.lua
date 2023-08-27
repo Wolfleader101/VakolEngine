@@ -17,7 +17,7 @@ function init()
 	local stone_pillars = {};
 
 	local barriers = {};
-	local small_barriers = {};
+	local small_barrier = scene:create_entity("Small Glass Barrier", "");
 
 	local balcony = scene:create_entity("Balcony", "");
 
@@ -31,10 +31,6 @@ function init()
 
 	for i = 1, 7 do
 		barriers[i] = scene:create_entity("Glass Barrier " .. i, "");
-	end
-
-	for i = 1, 2 do
-		small_barriers[i] = scene:create_entity("Small Glass Barrier " .. i, "");
 	end
 
 	roof:add_model("assets/models/new_building/roof.fbx", 0.005);
@@ -62,9 +58,7 @@ function init()
 		barriers[i]:add_model("assets/models/new_building/glass_barrier.fbx", 0.010);
 	end
 
-	for i = 1, 2 do
-		small_barriers[i]:add_model("assets/models/new_building/small_glass_barrier.fbx", 0.010)
-	end
+	small_barrier:add_model("assets/models/new_building/small_glass_barrier.fbx", 0.010);
 
 	balcony:add_model("assets/models/new_building/balcony.fbx", 0.2);
 
@@ -157,13 +151,9 @@ function init()
 	barriers[7]:get_transform().rot = Vector3.new(0.0, -90.0, 0.0);
 	barriers[7]:get_transform().scale = Vector3.new(1.0, 1.0, 0.82);
 
-	small_barriers[1]:get_transform().pos = Vector3.new(-11.02, -1.23, 26.1);
-	small_barriers[1]:get_transform().rot = Vector3.new(0.0, 180.0, 0.0);
-	small_barriers[1]:get_transform().scale = Vector3.new(0.53, 1.0, 1.0);
-
-	small_barriers[2]:get_transform().pos = Vector3.new(0.0, 0.0, 0.0);
-	small_barriers[2]:get_transform().rot = Vector3.new(0.0, 0.0, 0.0);
-	small_barriers[2]:get_transform().scale = Vector3.new(1.0, 1.0, 1.0);
+	small_barrier:get_transform().pos = Vector3.new(-11.02, -1.23, 26.1);
+	small_barrier:get_transform().rot = Vector3.new(0.0, 180.0, 0.0);
+	small_barrier:get_transform().scale = Vector3.new(0.53, 1.0, 1.0);
 
 	balcony:get_transform().pos = Vector3.new(-7.210, 2.20, 13.50);
 	balcony:get_transform().scale = Vector3.new(2.40, 1.0, 2.6);

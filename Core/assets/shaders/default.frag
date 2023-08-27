@@ -19,6 +19,8 @@ struct Material
 	vec3 emissive_color;
 
     float shininess;
+    float shininess_strength;
+    float opacity;
 
     sampler2D diffuse_map;
 	sampler2D specular_map;
@@ -30,11 +32,14 @@ struct Material
 
 uniform Material material;
 
+uniform float AMBIENT_STRENGTH = 0.2;
+uniform float SPECULAR_STRENGTH = 0.3;
+
 uniform vec3 LIGHT_DIRECTION = vec3(0.0, -0.25, 0.0);
 
 vec4 BlinnPhong(const vec3 normal, const vec4 color)
 {
-    vec4 ambient = 0.2 * color;
+    vec4 ambient = AMBIENT_STRENGTH * color;
 
     vec3 lightDir = normalize(fs_in.TangentLightPos - fs_in.TangentFragPos);
     float diff = max(dot(lightDir, normal), 0.0);
@@ -45,7 +50,7 @@ vec4 BlinnPhong(const vec3 normal, const vec4 color)
     
     vec3 halfwayDir = normalize(lightDir + viewDir);
     float spec = pow(max(dot(normal, halfwayDir), 0.0), 32.0);
-    vec4 specular = vec4(vec3(0.3), 1.0) * spec;
+    vec4 specular = vec4(vec3(SPECULAR_STRENGTH), 1.0) * spec;
 
     return ambient + diffuse + specular;
 }
@@ -57,9 +62,11 @@ void main()
     vec3 normal = texture(material.normal_map, fs_in.TexCoords).rgb;
 
     if (normal.r >= 0.99 && normal.g >= 0.99 && normal.b >= 0.99)
-        normal = fs_in.Normal;
+        normal = normalize(fs_in.Normal);
     else
         normal = normalize(normal * 2.0 - 1.0); // this normal is now in tangent space in range [-1, 1]
 
-	FragColor = BlinnPhong(normal, color);
+    vec4 result = BlinnPhong(normal, color);
+
+	FragColor = result;
 }
