@@ -181,14 +181,10 @@ namespace Vakol
             // Apply rotation using quaternion
             tmpVertex.position = inputTransform.rot * tmpVertex.position;
 
-            // Transform and normalize the normal, tangent, and bitangent
+            // Transform and normalize the normal
             tmpVertex.normal = Math::Vec3(inverseTranspose * Math::Vec4(tmpVertex.normal, 0.0f));
-            tmpVertex.tangent = Math::Vec3(inverseTranspose * Math::Vec4(tmpVertex.tangent, 0.0f));
-            tmpVertex.bitangent = Math::Vec3(inverseTranspose * Math::Vec4(tmpVertex.bitangent, 0.0f));
 
             tmpVertex.normal = Math::Normalized(tmpVertex.normal);
-            tmpVertex.tangent = Math::Normalized(tmpVertex.tangent);
-            tmpVertex.bitangent = Math::Normalized(tmpVertex.bitangent);
 
             // Push the vertex into the mesh's vertices
             mesh.vertices.push_back(tmpVertex);
