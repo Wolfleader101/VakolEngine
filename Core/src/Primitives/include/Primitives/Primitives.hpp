@@ -59,13 +59,6 @@ namespace Vakol
              */
             Rendering::Assets::Model& GetModel(ShapeType type, xg::Guid inputGUID); 
             /**
-             * @brief Return the mesh of a selected primitive shape based on its GUID
-             * @param type The type of shape the mesh belongs to
-             * @param inputGUID The GUID of the shape
-             *
-             */ 
-            Rendering::Assets::Mesh& GetMesh(ShapeType type, xg::Guid inputGUID);
-            /**
             * @brief Destroy the Primitives object
             *
             */

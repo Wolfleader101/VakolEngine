@@ -4,46 +4,34 @@ namespace Vakol
 {
     Sphere::Sphere()
     {
-        if (!this->model.meshes.empty())
-        {
-            VK_INFO("A mesh already exists for this sphere!");
-        }
-        else
-        {
-            sphereTransform.pos = Math::Vec3(0.0f, 0.0f, 0.0f);         // Set the position to 0
-            sphereTransform.scale = Math::Vec3(1.0f, 1.0f, 1.0f);       // Set the scale to 1
-            sphereTransform.rot = Math::Quat(0.0f, 0.0f, 0.0f, 1.0f);   // Set the rotation to 0
-            sphereTransform.eulerAngles = Math::Vec3(0.0f, 0.0f, 0.0f); // Set the euler angles to 0
+        sphereTransform.pos = Math::Vec3(0.0f, 0.0f, 0.0f);         // Set the position to 0
+        sphereTransform.scale = Math::Vec3(1.0f, 1.0f, 1.0f);       // Set the scale to 1
+        sphereTransform.rot = Math::Quat(0.0f, 0.0f, 0.0f, 1.0f);   // Set the rotation to 0
+        sphereTransform.eulerAngles = Math::Vec3(0.0f, 0.0f, 0.0f); // Set the euler angles to 0
 
-            stacks = 10;             // Set the number of stacks to 0
-            sectors = 10;            // Set the number of sectors to 0
-            mesh.name = "DEFAULT_SPHERE"; // Set the name to DEFAULT_SPHERE
+        stacks = 10;                                                // Set the number of stacks to 0
+        sectors = 10;                                               // Set the number of sectors to 0
+        mesh.name = "DEFAULT_SPHERE_mesh";                          // Set the name to DEFAULT_SPHERE
+        mesh.ID = xg::newGuid().str();                              // Generate a new GUID for the mesh
 
-            GenerateData(sphereTransform, 1.0f, 0, 0); // Generate the data for the sphere 
-        }
+        GenerateData(sphereTransform, 1.0f, 0, 0);                  // Generate the data for the sphere 
     }
 
-    Sphere::Sphere(Components::Transform inputTransform, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName)
+    Sphere::Sphere(Components::Transform inputTransform, double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName, std::string inputID)
     {
-        if (!this->model.meshes.empty())
-        {
-            VK_INFO("A mesh already exists for this sphere!");
-        }
-        else
-        {
-            Math::Normalized(inputTransform.rot); // Normalize the rotation quaternion
+        Math::Normalized(inputTransform.rot);                       // Normalize the rotation quaternion
 
-            sphereTransform.pos = inputTransform.pos;                 // Set the position to the input position
-            sphereTransform.scale = inputTransform.scale;             // Set the scale to the input scale
-            sphereTransform.rot = inputTransform.rot;                 // Set the rotation to the input rotation
-            sphereTransform.eulerAngles = inputTransform.eulerAngles; // Set the euler angles to the input euler angles
+        sphereTransform.pos = inputTransform.pos;                   // Set the position to the input position
+        sphereTransform.scale = inputTransform.scale;               // Set the scale to the input scale
+        sphereTransform.rot = inputTransform.rot;                   // Set the rotation to the input rotation
+        sphereTransform.eulerAngles = inputTransform.eulerAngles;   // Set the euler angles to the input euler angles
 
-            stacks = inputStacks;               // Set the number of stacks to the input number of stacks
-            sectors = inputSectors;             // Set the number of sectors to the input number of sectors
-            mesh.name = inputName + "_mesh";    // Set the name to the input name
+        stacks = inputStacks;                                       // Set the number of stacks to the input number of stacks
+        sectors = inputSectors;                                     // Set the number of sectors to the input number of sectors
+        mesh.name = inputName + "_mesh";                            // Set the name to the input name
+        mesh.ID = inputID;                                          // Generate a new GUID for the mesh
 
-            GenerateData(inputTransform, inputRadius, inputStacks, inputSectors); // Generate the data for the sphere
-        }
+        GenerateData(inputTransform, inputRadius, inputStacks, inputSectors); // Generate the data for the sphere
     }
 
     void Sphere::GenerateData(Components::Transform inputTransform, double inputRadius, unsigned inputStacks, unsigned inputSectors) 
@@ -161,7 +149,6 @@ namespace Vakol
         }
 
         originalVertices = mesh.vertices;                                   // Store the original vertices
-        model.meshes.push_back(mesh);									    // Add the mesh to the model
     }
 
     std::string Sphere::GetName()
@@ -169,12 +156,17 @@ namespace Vakol
 		return mesh.name; 
 	}
 
-    std::vector<unsigned int> Sphere::GetIndices()
+    Rendering::Assets::Mesh& Sphere::GetSphereMesh()
+    {
+        return mesh; 
+    }
+
+    std::vector<unsigned int>& Sphere::GetIndices()
     {
 		return mesh.indices;
 	}
 
-    std::vector<Rendering::Vertex> Sphere::GetVertices()
+    std::vector<Rendering::Vertex>& Sphere::GetVertices() 
     {
      	return mesh.vertices;
     }

@@ -15,8 +15,7 @@ namespace Vakol
 
         // Register functions so they can be called from Lua
         primitives_type.set_function("create_sphere", &Primitives::CreateSphere);
-        primitives_type.set_function("get_model", &Primitives::GetModel);
-        primitives_type.set_function("get_mesh", &Primitives::GetMesh); 
+        primitives_type.set_function("get_model", &Primitives::GetModel); 
         primitives_type.set_function("get_guid_by_name", &Primitives::GetGuidByName);
 	}
 } // namespace Vakol

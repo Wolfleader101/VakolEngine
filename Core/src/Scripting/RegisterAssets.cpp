@@ -31,10 +31,6 @@ namespace Vakol
 
             return true;
         });
-
-        lua.set_function("add_model", [](const Rendering::Assets::Model inputModel) {
-			AssetLoader::AddModel(inputModel);
-		});
     }
 
     void RegisterModel(sol::state& lua)

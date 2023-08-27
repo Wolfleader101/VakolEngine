@@ -25,10 +25,10 @@ namespace Vakol
             */
             Rendering::Assets::Model& GetModel(const std::string& path, float scale = 1.0f);
             /*
-            *   @brief Add a model to m_models
+            *   @brief Add a model to m_models directly
             *   @param inputModel The model to add
             */
-            void AddModel(const Rendering::Assets::Model& inputModel);  
+            void AddModelDirect(const Rendering::Assets::Model& inputModel);  
 
         private:
             /*

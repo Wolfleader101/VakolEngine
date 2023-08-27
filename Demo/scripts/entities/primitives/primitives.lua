@@ -19,10 +19,10 @@ function init()
     Primitives:create_sphere(transform, radius, stacks, sectors, name);
 
     --Get the guid of the sphere
-    sphere_guid = Primitives:get_guid_by_name("sphere")
+    sphere_guid = Primitives:get_guid_by_name("sphere");
 
     --Add the sphere model to the scene
-    spheres:add_model(Primitives:get_model(ShapeType.SPHERE, sphere_guid), 1.0);
+    spheres:add_model_direct(Primitives:get_model(ShapeType.SPHERE, sphere_guid));
 end
 
 function update()

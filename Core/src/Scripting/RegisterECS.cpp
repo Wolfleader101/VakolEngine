@@ -29,6 +29,10 @@ namespace Vakol
             return std::make_shared<Rendering::Assets::Model>(std::move(model));
         });
 
+        entity_type.set_function("add_model_direct", [](Entity* ent, Rendering::Assets::Model& inputModel) {
+            AssetLoader::AddModelDirect(inputModel);
+        });
+
         entity_type.set_function("replace_texture", [](const Entity* ent, const std::string& srcPath,
                                                        const std::string& srcType, const std::string& dstPath,
                                                        const std::string& dstType) {
