@@ -16,7 +16,7 @@ namespace Vakol
 
     std::string GUID::ConvertToString() const
     {
-        return id.str(); 
+        return id.str();
     }
 
     bool GUID::operator==(const GUID& other) const

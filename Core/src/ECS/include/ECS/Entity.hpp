@@ -5,9 +5,9 @@
 #include <functional>
 #include <string>
 
-#include "Utils/GUID.hpp" 
 #include "EntityList.hpp"
 #include "Logger/Logger.hpp"
+#include "Utils/GUID.hpp"
 
 namespace Vakol
 {

@@ -33,7 +33,7 @@ namespace Vakol
 
         ent.GetComponent<Components::Tag>().tag = tag;
 
-        if (!ent.GetComponent<GUID>().GetGUID().isValid()) 
+        if (!ent.GetComponent<GUID>().GetGUID().isValid())
             ent.GetComponent<GUID>().GenNewGUID();
 
         return ent;

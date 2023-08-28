@@ -10,7 +10,7 @@ namespace Vakol
 
         this->AddComponent<Components::Tag>();
 
-        this->AddComponent<GUID>(); 
+        this->AddComponent<GUID>();
 
         this->AddComponent<Components::Transform>(); // every entity has a transform. Can change easily
     }
