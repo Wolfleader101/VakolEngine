@@ -1,9 +1,6 @@
 #pragma once
 
-#define M_PI 3.14159265358979323846 // Value of Pi
-
 #include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/quaternion.hpp>
 
 namespace Vakol::Math
@@ -30,6 +27,9 @@ namespace Vakol::Math
     using Mat3 = glm::mat3;
     using Mat4 = glm::mat4;
     using Quat = glm::quat;
+
+    double PiDouble();
+    float PiFloat();  
 
     float DegToRad(const float deg);
     Vec3 DegToRad(const Vec3& vec);
@@ -63,7 +63,19 @@ namespace Vakol::Math
     Vec2 Perpendicular(const Vec2& len, const Vec2& dir);
     Vec3 Perpendicular(const Vec3& len, const Vec3& dir);
 
+    /**
+     * @brief Create a translation matrix
+     *
+     * @param pos The position of the matrix
+     *
+     */
     Mat4 Translation(const Vec3& pos);
+    /**
+     * @brief Create a scale matrix
+     *
+     * @param scale The scale of the matrix
+     *
+     */
     Mat4 Scale(const Vec3& scale);
 
     Mat3 Cut(const Mat4& mat, int row, int col);
@@ -117,13 +129,19 @@ namespace Vakol::Math
      */
     Mat4 Transpose(const Mat4& mat);
     /**
+     * @brief Invert a 3x3 matrix
+     *
+     * @param mat The 3x3 matrix to invert
+     *
+     */
+    Mat3 Inverse(const Mat3& mat);
+
+    /**
      * @brief Create a Matrix from a Quaternion
      *
      * @param quaternion The quaternion to convert
      *
      */
-    Mat3 Inverse(const Mat3& mat);
-
     Mat4 Mat4Cast(const Quat& quaternion);
 
     /**
@@ -257,6 +275,12 @@ namespace Vakol::Math
     const float* AsArray(const Mat4& m);
     const float* AsArray(const Quat& q);
 
+    /**
+     * @brief Calculate the cosine of a value.
+     *
+     * @param val The value to calculate the cosine of.
+     *
+     */
     float Cos(float val);
 
     Mat4 Translate(const Mat4& mat, const Vec3& vec);

@@ -22,8 +22,7 @@ namespace Vakol
          */
         Sphere();
         /**
-         * @brief Construct a new Sphere object with a position, radius, stacks and sectors
-         * @param inputTransform The transform of the sphere
+         * @brief Construct a new Sphere object with a radius, stacks and sectors
          * @param inputRadius The radius of the sphere
          * @param inputStacks The number of stacks (latitude) of the sphere
          * @param inputSectors The number of sectors (longitude) of the sphere
@@ -31,8 +30,8 @@ namespace Vakol
          * @param inputID The mesh ID of the sphere
          *
          */
-        Sphere(Components::Transform inputTransform, double inputRadius, unsigned inputStacks, unsigned inputSectors,
-               std::string inputName, std::string inputID);
+        Sphere(double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName,
+               std::string inputID);
         /**
          * @brief A function which returns the mesh name of the sphere
          *
@@ -62,20 +61,12 @@ namespace Vakol
       private:
         /**
          * @brief Generate the data for a 3D sphere
-         * @param inputTransform The transform of the sphere
          * @param inputRadius The radius of the sphere
          * @param inputStacks The number of stacks (latitude) of the sphere
          * @param inputSectors The number of sectors (longitude) of the sphere
          *
          */
-        void GenerateData(Components::Transform inputTransform, double inputRadius, unsigned inputStacks,
-                          unsigned inputSectors);
-
-        /**
-         * @brief sphereTransform The transform of the sphere
-         *
-         */
-        Components::Transform sphereTransform;
+        void GenerateData(double inputRadius, unsigned inputStacks, unsigned inputSectors);
 
         /**
          * @brief The number of stacks (latitude) of the sphere

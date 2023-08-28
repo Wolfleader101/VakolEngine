@@ -6,8 +6,8 @@ namespace Vakol
     {
     }
 
-    void Primitives::CreateSphere(Components::Transform& inputTransform, double inputRadius, unsigned inputStacks,
-                                  unsigned inputSectors, std::string inputName)
+    void Primitives::CreateSphere(double inputRadius, unsigned inputStacks, unsigned inputSectors,
+                                  std::string inputName)
     {
         Rendering::VertexArray tmpVertexArray;   // Create a temporary vertex array
         Rendering::Assets::Model tmpModel;       // Create a temporary model
@@ -37,7 +37,7 @@ namespace Vakol
 
         std::string uniqueName = inputName + (highestCount >= 0 ? "_" + std::to_string(highestCount + 1) : "");
 
-        Sphere tmpSphere(inputTransform, inputRadius, inputStacks, inputSectors, uniqueName,
+        Sphere tmpSphere(inputRadius, inputStacks, inputSectors, uniqueName,
                          sphereGUID.str()); // Create a new Sphere object with input data
 
         tmpModel.name = uniqueName;          // Set the name of the model
@@ -63,7 +63,7 @@ namespace Vakol
         VK_INFO("Sphere '" + uniqueName + "' with GUID '" + sphereGUID.str() + "' created!");
     }
 
-    void Primitives::CreateCube(Components::Transform& inputTransform, std::string inputName)
+    void Primitives::CreateCube(std::string inputName)
     {
         Rendering::VertexArray tmpVertexArray;   // Create a temporary vertex array
         Rendering::Assets::Model tmpModel;       // Create a temporary model
@@ -93,7 +93,7 @@ namespace Vakol
 
         std::string uniqueName = inputName + (highestCount >= 0 ? "_" + std::to_string(highestCount + 1) : "");
 
-        Cube tmpCube(inputTransform, uniqueName, cubeGUID.str()); // Create a new Cube object with input data
+        Cube tmpCube(uniqueName, cubeGUID.str()); // Create a new Cube object with input data
 
         tmpModel.name = uniqueName;      // Set the name of the model
         tmpMesh = tmpCube.GetCubeMesh(); // Get the mesh of the cube
@@ -118,66 +118,57 @@ namespace Vakol
         VK_INFO("Cube '" + uniqueName + "' with GUID '" + cubeGUID.str() + "' created!");
     }
 
-    Rendering::Assets::Model& Primitives::GetModel(ShapeType type, xg::Guid inputGUID)
+    bool Primitives::GetModel(ShapeType type, xg::Guid inputGUID, Rendering::Assets::Model& outModel)
     {
-        // Switch between the different types of shapes
         switch (type)
         {
         case SPHERE: {
-            // Look up the sphere in the map using the GUID
             auto it = m_Spheres.find(inputGUID);
-
-            // Check if the sphere was found
             if (it != m_Spheres.end())
             {
-                // Assuming the sphere is represented by the first mesh in the model
                 if (!it->second.meshes.empty())
                 {
-                    return it->second; // Return the found sphere
+                    outModel = it->second;
+                    return true;
                 }
                 else
                 {
-                    VK_ERROR("Sphere with GUID '" + inputGUID.str() + "' has no meshes! Exiting...");
-                    std::exit(EXIT_FAILURE);
+                    VK_ERROR("Sphere with GUID '" + inputGUID.str() + "' has no meshes!");
+                    return false;
                 }
             }
             else
             {
-                VK_ERROR("Sphere with GUID '" + inputGUID.str() + "' not found! Exiting...");
-                std::exit(EXIT_FAILURE);
+                VK_ERROR("Sphere with GUID '" + inputGUID.str() + "' not found!");
+                return false;
             }
-
             break;
         }
         case CUBE: {
-            // Look up the cube in the map using the GUID
             auto it = m_Cubes.find(inputGUID);
-
-            // Check if the cube was found
             if (it != m_Cubes.end())
             {
-                // Assuming the cube is represented by the first mesh in the model
                 if (!it->second.meshes.empty())
                 {
-                    return it->second; // Return the found cube
+                    outModel = it->second;
+                    return true;
                 }
                 else
                 {
-                    VK_ERROR("Cube with GUID '" + inputGUID.str() + "' has no meshes! Exiting...");
-                    std::exit(EXIT_FAILURE);
+                    VK_ERROR("Cube with GUID '" + inputGUID.str() + "' has no meshes!");
+                    return false;
                 }
             }
             else
             {
-                VK_ERROR("Cube with GUID '" + inputGUID.str() + "' not found! Exiting...");
-                std::exit(EXIT_FAILURE);
+                VK_ERROR("Cube with GUID '" + inputGUID.str() + "' not found!");
+                return false;
             }
-
             break;
         }
         default:
-            VK_ERROR("The primitive shape type is not valid! Exiting...");
-            std::exit(EXIT_FAILURE);
+            VK_ERROR("The primitive shape type is not valid!");
+            return false;
         }
     }
 

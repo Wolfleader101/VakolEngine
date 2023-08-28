@@ -24,12 +24,11 @@ namespace Vakol
         Cube();
         /**
          * @brief Construct a new Cube object
-         * @param inputTransform The transform of the cube
          * @param inputName The mesh name of the cube
          * @param inputID The mesh ID of the cube
          *
          */
-        Cube(Components::Transform inputTransform, std::string inputName, std::string inputID);
+        Cube(std::string inputName, std::string inputID);
         /**
          * @brief A function which returns the mesh name of the cube
          *
@@ -59,16 +58,9 @@ namespace Vakol
       private:
         /**
          * @brief Generate the data for a 3D cube
-         * @param inputTransform The transform of the cube
          *
          */
-        void GenerateData(Components::Transform inputTransform);
-
-        /**
-         * @brief The transform of the cube
-         *
-         */
-        Components::Transform cubeTransform;
+        void GenerateData();
 
         /**
          * @brief The mesh object of the cube

@@ -4,41 +4,35 @@ namespace Vakol
 {
     Cube::Cube()
     {
-        cubeTransform.pos = Math::Vec3(0.0f, 0.0f, 0.0f);         // Set the position to 0
-        cubeTransform.scale = Math::Vec3(1.0f, 1.0f, 1.0f);       // Set the scale to 1
-        cubeTransform.rot = Math::Quat(0.0f, 0.0f, 0.0f, 1.0f);   // Set the rotation to 0
-        cubeTransform.eulerAngles = Math::Vec3(0.0f, 0.0f, 0.0f); // Set the euler angles to 0
-
         mesh.name = "DEFAULT_CUBE_mesh"; // Set the name to DEFAULT_CUBE_mesh
         mesh.ID = xg::newGuid().str();   // Generate a new GUID for the mesh
 
-        GenerateData(cubeTransform); // Generate the data for the cube
+        GenerateData(); // Generate the data for the cube
     }
 
-    Cube::Cube(Components::Transform inputTransform, std::string inputName, std::string inputID)
+    Cube::Cube(std::string inputName, std::string inputID)
     {
-        Math::Normalized(inputTransform.rot); // Normalize the rotation quaternion
-
-        cubeTransform.pos = inputTransform.pos;                 // Set the position to the input position
-        cubeTransform.scale = inputTransform.scale;             // Set the scale to the input scale
-        cubeTransform.rot = inputTransform.rot;                 // Set the rotation to the input rotation
-        cubeTransform.eulerAngles = inputTransform.eulerAngles; // Set the euler angles to the input euler angles
-
         mesh.name = inputName + "_mesh"; // Set the name to the input name
         mesh.ID = inputID;               // Generate a new GUID for the mesh
 
-        GenerateData(inputTransform); // Generate the data for the cube
+        GenerateData(); // Generate the data for the cube
     }
 
-    void Cube::GenerateData(Components::Transform inputTransform)
+    void Cube::GenerateData()
     {
-        Rendering::Vertex tmpVertex; // A temporary vertex object to store the data
+        Rendering::Vertex tmpVertex;        // A temporary vertex object to store the data
+        Components::Transform tmpTransform; // A temporary transform object to store the data
 
-        inputTransform.rot = Math::Normalized(inputTransform.rot); // Normalize the rotation quaternion (Prevents the
-                                                                   // rotation from accidentally scaling the vertices)
+        tmpTransform.pos = Math::Vec3(0.0f, 0.0f, 0.0f);         // Set the position to 0
+        tmpTransform.scale = Math::Vec3(1.0f, 1.0f, 1.0f);       // Set the scale to 1
+        tmpTransform.rot = Math::Quat(1.0f, 0.0f, 0.0f, 0.0f);   // Set the rotation to 0
+        tmpTransform.eulerAngles = Math::Vec3(0.0f, 0.0f, 0.0f); // Set the euler angles to 0
+
+        tmpTransform.rot = Math::Normalized(tmpTransform.rot); // Normalize the rotation quaternion (Prevents the
+                                                               // rotation from accidentally scaling the vertices)
 
         // Get the model matrix
-        Math::Mat4 modelMatrix = Rendering::RenderAPI::GetModelMatrix(inputTransform);
+        Math::Mat4 modelMatrix = Rendering::RenderAPI::GetModelMatrix(tmpTransform);
 
         // Compute the inverse transpose of the model matrix
         Math::Mat4 inverseTranspose = Math::Transpose(Math::Inverse(modelMatrix));
@@ -166,10 +160,10 @@ namespace Vakol
 
             // Apply transformations to the vertex
             // Apply scaling
-            tmpVertex.position *= inputTransform.scale;
+            tmpVertex.position *= tmpTransform.scale;
 
             // Apply rotation using quaternion
-            tmpVertex.position = inputTransform.rot * tmpVertex.position;
+            tmpVertex.position = tmpTransform.rot * tmpVertex.position;
 
             // Transform and normalize the normal
             tmpVertex.normal = Math::Vec3(inverseTranspose * Math::Vec4(tmpVertex.normal, 0.0f));

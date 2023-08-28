@@ -39,22 +39,19 @@ namespace Vakol
         Primitives();
         /**
          * @brief Create a 3D Sphere object
-         * @param inputTransform The transform of the sphere
          * @param inputRadius The radius of the sphere
          * @param inputStacks The number of stacks (latitude) of the sphere
          * @param inputSectors The number of sectors (longitude) of the sphere
          * @param inputName The name of the sphere
          *
          */
-        void CreateSphere(Components::Transform& inputTransform, double inputRadius, unsigned inputStacks,
-                          unsigned inputSectors, std::string inputName);
+        void CreateSphere(double inputRadius, unsigned inputStacks, unsigned inputSectors, std::string inputName);
         /**
          * @brief Create a 3D Cube object
-         * @param inputTransform The transform of the cube
          * @param inputName The name of the cube
          *
          */
-        void CreateCube(Components::Transform& inputTransform, std::string inputName);
+        void CreateCube(std::string inputName);
         /**
          * @brief Scale a selected primitive shape
          * @param type The type of shape to scale
@@ -64,12 +61,13 @@ namespace Vakol
          */
         xg::Guid GetGuidByName(const std::string& name);
         /**
-         * @brief Return the model of a selected primitive shape based on its GUID
+         * @brief Return a boolean if the shape exists and return the model through the outModel parameter
          * @param type The type of shape the model belongs to
          * @param inputGUID The GUID of the shape
+         * @param outModel The model to return
          *
          */
-        Rendering::Assets::Model& GetModel(ShapeType type, xg::Guid inputGUID);
+        bool GetModel(ShapeType type, xg::Guid inputGUID, Rendering::Assets::Model& outModel);
         /**
          * @brief Destroy the Primitives object
          *

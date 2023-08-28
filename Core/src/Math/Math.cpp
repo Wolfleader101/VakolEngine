@@ -6,6 +6,16 @@
 
 namespace Vakol::Math
 {
+    double PiDouble()
+    {
+        return glm::pi<double>();
+    }
+
+    float PiFloat() 
+    {
+        return glm::pi<float>();
+    }
+
     float Dot(const Vec2& a, const Vec2& b)
     {
         return a.x * b.x + a.y * b.y;
