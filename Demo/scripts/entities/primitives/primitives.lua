@@ -31,6 +31,8 @@ function init()
     --Add the sphere model to the scene
     --sphere:add_model_direct(Primitives:get_model(ShapeType.SPHERE, sphere_guid));
 
+    cubeModel = Model.new();
+
     if(Primitives:get_model(ShapeType.CUBE, cube_guid, cubeModel))
     then
         cubeEntity:add_model_direct(cubeModel); 
