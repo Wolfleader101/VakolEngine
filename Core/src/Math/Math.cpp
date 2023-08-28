@@ -11,7 +11,7 @@ namespace Vakol::Math
         return glm::pi<double>();
     }
 
-    float PiFloat() 
+    float PiFloat()
     {
         return glm::pi<float>();
     }
