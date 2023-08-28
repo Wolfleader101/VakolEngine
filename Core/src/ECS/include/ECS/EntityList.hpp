@@ -11,7 +11,6 @@
 
 namespace Vakol
 {
-
     class Entity; // pre declared to prevent recursive include
     class System;
     class Scene;

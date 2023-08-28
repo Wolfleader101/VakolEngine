@@ -64,10 +64,11 @@ namespace Vakol
         VK_INFO("Sphere '" + uniqueName + "' with GUID '" + tmpGUID.ConvertToString() + "' created!");
     }
 
-    void Primitives::CreateCube(std::string inputName)
+    void Primitives::CreateCube(std::string inputName, Math::Vec3 halfExtents)
     {
-        GUID tmpGUID;         // Create a temporary GUID object
-        tmpGUID.GenNewGUID(); // Generate a new GUID
+        Cube* tmpCube = nullptr; // Declare a pointer to Cube
+        GUID tmpGUID;            // Create a temporary GUID object
+        tmpGUID.GenNewGUID();    // Generate a new GUID
 
         Rendering::VertexArray tmpVertexArray;   // Create a temporary vertex array
         Rendering::Assets::Model tmpModel;       // Create a temporary model
@@ -95,10 +96,18 @@ namespace Vakol
 
         std::string uniqueName = inputName + (highestCount >= 0 ? "_" + std::to_string(highestCount + 1) : "");
 
-        Cube tmpCube(uniqueName, tmpGUID.ConvertToString()); // Create a new Cube object with input data
+        if (halfExtents == Math::Vec3(0.0, 0.0, 0.0))
+        {
+            tmpCube = new Cube(uniqueName, tmpGUID.ConvertToString()); // Allocate a new Cube object
+        }
+        else
+        {
+            tmpCube = new Cube(uniqueName, tmpGUID.ConvertToString(),
+                               halfExtents); // Allocate a new Cube object with halfExtents
+        }
 
-        tmpModel.name = uniqueName;      // Set the name of the model
-        tmpMesh = tmpCube.GetCubeMesh(); // Get the mesh of the cube
+        tmpModel.name = uniqueName;       // Set the name of the model
+        tmpMesh = tmpCube->GetCubeMesh(); // Get the mesh of the cube
         tmpMesh.material =
             std::make_shared<Vakol::Rendering::Assets::Material>(tmpMaterial); // Set the material of the mesh
         tmpMesh.material->name = uniqueName + "_shader";                       // Set the name of the material
@@ -111,9 +120,9 @@ namespace Vakol
 
         nameToGuidMap[uniqueName] = tmpGUID.GetGUID(); // Add the name-GUID mapping
 
-        tmpVertexArray.ID = tmpGUID.GetGUID();           // Set the ID of the vertex array to the GUID of the cube
-        tmpVertexArray.indices = tmpCube.GetIndices();   // Get the indices of the cube
-        tmpVertexArray.vertices = tmpCube.GetVertices(); // Get the vertices of the cube
+        tmpVertexArray.ID = tmpGUID.GetGUID();            // Set the ID of the vertex array to the GUID of the cube
+        tmpVertexArray.indices = tmpCube->GetIndices();   // Get the indices of the cube
+        tmpVertexArray.vertices = tmpCube->GetVertices(); // Get the vertices of the cube
 
         Rendering::RenderAPI::GenerateVertexCommand(std::move(tmpVertexArray)); // Create the vertex array in OpenGL
 

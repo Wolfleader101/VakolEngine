@@ -47,9 +47,10 @@ namespace Vakol
         /**
          * @brief Create a 3D Cube object
          * @param inputName The name of the cube
+         * @param halfExtents The half extents of the cube (Overloaded with default values of an empty Vec3)
          *
          */
-        void CreateCube(std::string inputName);
+        void Primitives::CreateCube(std::string inputName, Math::Vec3 halfExtents = Math::Vec3(0.0, 0.0, 0.0));
         /**
          * @brief Return a boolean if the shape exists and return the model through the outModel parameter
          * @param type The type of shape the model belongs to

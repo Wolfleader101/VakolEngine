@@ -13,7 +13,12 @@ namespace Vakol
 
         // Register functions so they can be called from Lua
         primitives_type.set_function("create_sphere", &Primitives::CreateSphere);
-        primitives_type.set_function("create_cube", &Primitives::CreateCube);
+        primitives_type.set_function(
+            "create_cube",
+            sol::overload([](Primitives& self, const std::string& name) { self.CreateCube(name); },
+                          [](Primitives& self, const std::string& name, const Math::Vec3& halfExtents) {
+                              self.CreateCube(name, halfExtents);
+                          })); // Overload the create_cube function so it can be called with 1 or 2 arguments
         primitives_type.set_function("get_model", &Primitives::GetModel);
     }
 } // namespace Vakol

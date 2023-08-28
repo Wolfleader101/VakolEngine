@@ -17,7 +17,7 @@ namespace Vakol
     {
       public:
         /**
-         * @brief Construct a new Cube object
+         * @brief Construct a new default Cube object
          *
          */
         Cube();
@@ -28,6 +28,14 @@ namespace Vakol
          *
          */
         Cube(std::string inputName, std::string inputID);
+        /**
+         * @brief Construct a new Cube object with half extents
+         * @param inputName The mesh name of the cube
+         * @param inputID The mesh ID of the cube
+         * @param halfExtents The half extents of the cube
+         *
+         */
+        Cube(std::string inputName, std::string inputID, Math::Vec3 halfExtents);
         /**
          * @brief A function which returns the mesh name of the cube
          *
@@ -56,10 +64,11 @@ namespace Vakol
 
       private:
         /**
-         * @brief Generate the data for a 3D cube
+         * @brief Generate the data for a 3D cube based on half extents
+         * @param halfExtents The half extents of the cube (Overloaded with a zeroed out vector)
          *
          */
-        void GenerateData();
+        void GenerateData(Math::Vec3 halfExtents = Math::Vec3(0.0, 0.0, 0.0));
 
         /**
          * @brief The mesh object of the cube

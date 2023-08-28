@@ -21,7 +21,15 @@ namespace Vakol
         GenerateData(); // Generate the data for the cube
     }
 
-    void Cube::GenerateData()
+    Cube::Cube(std::string inputName, std::string inputID, Math::Vec3 halfExtents)
+    {
+        mesh.name = inputName + "_mesh"; // Set the name to the input name
+        mesh.ID = inputID;               // Generate a new GUID for the mesh
+
+        GenerateData(halfExtents); // Generate the data for the cube
+    }
+
+    void Cube::GenerateData(Math::Vec3 halfExtents)
     {
         Rendering::Vertex tmpVertex; // A temporary vertex object to store the data
 
@@ -137,8 +145,15 @@ namespace Vakol
         // Fill the temporary vertex with the pre-calculated data and push it into the mesh's vertices
         for (size_t i = 0; i < preCalcPositions.size(); ++i)
         {
-            // Directly plug in the pre-calculated vertex positions, normals, and UVs
-            tmpVertex.position = preCalcPositions[i];
+            // Check if the half extents are 0, if so, use the pre-calculated positions, otherwise, scale them by the
+            // half extents
+            if (halfExtents == Math::Vec3(0.0, 0.0, 0.0))
+            {
+                tmpVertex.position = preCalcPositions[i];
+            }
+            else
+                tmpVertex.position = preCalcPositions[i] * (halfExtents * 2.0f);
+
             tmpVertex.normal = Math::Normalized(preCalcNormals[i]);
             tmpVertex.uv = preCalcUVs[i];
 
