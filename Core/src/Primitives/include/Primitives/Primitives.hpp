@@ -60,6 +60,14 @@ namespace Vakol
          */
         bool GetModel(ShapeType type, std::string inputName, Rendering::Assets::Model& outModel);
         /**
+         * @brief Set the Colour of the shape
+         * @param type The type of shape the model belongs to
+         * @param inputName The name of the shape
+         * @param newColour The new colour of the shape
+         *
+         */
+        void SetColour(ShapeType type, std::string inputName, Math::Vec3 newColour);
+        /**
          * @brief Destroy the Primitives object
          *
          */

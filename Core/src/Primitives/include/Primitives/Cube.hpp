@@ -22,20 +22,13 @@ namespace Vakol
          */
         Cube();
         /**
-         * @brief Construct a new Cube object
-         * @param inputName The mesh name of the cube
-         * @param inputID The mesh ID of the cube
-         *
-         */
-        Cube(std::string inputName, std::string inputID);
-        /**
          * @brief Construct a new Cube object with half extents
          * @param inputName The mesh name of the cube
          * @param inputID The mesh ID of the cube
-         * @param halfExtents The half extents of the cube
+         * @param halfExtents The half extents of the cube (Overloaded with a zeroed out vector)
          *
          */
-        Cube(std::string inputName, std::string inputID, Math::Vec3 halfExtents);
+        Cube(std::string inputName, std::string inputID, Math::Vec3 halfExtents = Math::Vec3(0.0, 0.0, 0.0));
         /**
          * @brief A function which returns the mesh name of the cube
          *

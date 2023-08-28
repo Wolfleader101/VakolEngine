@@ -20,5 +20,6 @@ namespace Vakol
                               self.CreateCube(name, halfExtents);
                           })); // Overload the create_cube function so it can be called with 1 or 2 arguments
         primitives_type.set_function("get_model", &Primitives::GetModel);
+        primitives_type.set_function("set_colour", &Primitives::SetColour);
     }
 } // namespace Vakol

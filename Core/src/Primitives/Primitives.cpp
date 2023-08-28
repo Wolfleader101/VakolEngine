@@ -185,6 +185,55 @@ namespace Vakol
         }
     }
 
+    void Primitives::SetColour(ShapeType type, std::string inputName, Math::Vec3 newColour)
+    {
+        xg::Guid searchGUID = nameToGuidMap[inputName]; // Get the GUID of the model
+
+        switch (type)
+        {
+        case SPHERE: {
+            auto it = m_Spheres.find(searchGUID);
+            if (it != m_Spheres.end())
+            {
+                if (!it->second.meshes.empty())
+                {
+                    it->second.meshes[0].material->properties->diffuse_color = newColour;
+                }
+                else
+                {
+                    VK_ERROR("Sphere with GUID '" + searchGUID.str() + "' has no meshes!");
+                }
+            }
+            else
+            {
+                VK_ERROR("Sphere with GUID '" + searchGUID.str() + "' not found!");
+            }
+            break;
+        }
+        case CUBE: {
+            auto it = m_Cubes.find(searchGUID);
+            if (it != m_Cubes.end())
+            {
+                if (!it->second.meshes.empty())
+                {
+                    it->second.meshes[0].material->properties->diffuse_color = newColour;
+                }
+                else
+                {
+                    VK_ERROR("Cube with GUID '" + searchGUID.str() + "' has no meshes!");
+                }
+            }
+            else
+            {
+                VK_ERROR("Cube with GUID '" + searchGUID.str() + "' not found!");
+            }
+            break;
+        }
+        default:
+            VK_ERROR("The primitive shape type is not valid!");
+        }
+    }
+
     Primitives::~Primitives()
     {
     }

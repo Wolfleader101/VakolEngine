@@ -13,20 +13,19 @@ namespace Vakol
         GenerateData(); // Generate the data for the cube
     }
 
-    Cube::Cube(std::string inputName, std::string inputID)
-    {
-        mesh.name = inputName + "_mesh"; // Set the name to the input name
-        mesh.ID = inputID;               // Generate a new GUID for the mesh
-
-        GenerateData(); // Generate the data for the cube
-    }
-
     Cube::Cube(std::string inputName, std::string inputID, Math::Vec3 halfExtents)
     {
         mesh.name = inputName + "_mesh"; // Set the name to the input name
         mesh.ID = inputID;               // Generate a new GUID for the mesh
 
-        GenerateData(halfExtents); // Generate the data for the cube
+        if (halfExtents == Math::Vec3(0.0f, 0.0f, 0.0f))
+        {
+            GenerateData(); // Generate the data for the cube
+        }
+        else
+        {
+            GenerateData(halfExtents); // Generate the data for the cube with the input half extents
+        }
     }
 
     void Cube::GenerateData(Math::Vec3 halfExtents)
