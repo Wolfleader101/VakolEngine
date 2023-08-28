@@ -3,12 +3,11 @@
 #include <algorithm>
 #include <unordered_map>
 
-#include <crossguid/guid.hpp>
-
 #include "AssetLoader/AssetLoader.hpp"
 #include "Logger/Logger.hpp"
 #include "Rendering/Assets/Material.hpp"
 #include "Rendering/RenderAPI.hpp"
+#include "Utils/GUID.hpp"
 
 #include "Primitives/Cube.hpp"
 #include "Primitives/Sphere.hpp"

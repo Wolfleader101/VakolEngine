@@ -4,8 +4,11 @@ namespace Vakol
 {
     Cube::Cube()
     {
-        mesh.name = "DEFAULT_CUBE_mesh"; // Set the name to DEFAULT_CUBE_mesh
-        mesh.ID = xg::newGuid().str();   // Generate a new GUID for the mesh
+        GUID tmpGUID;         // Create a temporary GUID object
+        tmpGUID.GenNewGUID(); // Generate a new GUID
+
+        mesh.name = "DEFAULT_CUBE_mesh";     // Set the name to DEFAULT_CUBE_mesh
+        mesh.ID = tmpGUID.ConvertToString(); // Generate a new GUID for the mesh
 
         GenerateData(); // Generate the data for the cube
     }

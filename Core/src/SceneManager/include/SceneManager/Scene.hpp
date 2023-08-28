@@ -7,6 +7,7 @@
 #include "Rendering/RenderData.hpp"
 #include "Scripting/ScriptTypes.hpp"
 #include "Time/Time.hpp"
+#include "Utils/GUID.hpp"
 namespace Vakol
 {
     /**

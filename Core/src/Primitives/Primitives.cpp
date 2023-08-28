@@ -9,12 +9,13 @@ namespace Vakol
     void Primitives::CreateSphere(double inputRadius, unsigned inputStacks, unsigned inputSectors,
                                   std::string inputName)
     {
+        GUID tmpGUID;         // Create a temporary GUID object
+        tmpGUID.GenNewGUID(); // Generate a new GUID
+
         Rendering::VertexArray tmpVertexArray;   // Create a temporary vertex array
         Rendering::Assets::Model tmpModel;       // Create a temporary model
         Rendering::Assets::Material tmpMaterial; // Create a temporary material
         Rendering::Assets::Mesh tmpMesh;         // Create a temporary mesh
-
-        xg::Guid sphereGUID = xg::newGuid(); // Generate a new GUID for the sphere
 
         int highestCount = -1;
 
@@ -38,7 +39,7 @@ namespace Vakol
         std::string uniqueName = inputName + (highestCount >= 0 ? "_" + std::to_string(highestCount + 1) : "");
 
         Sphere tmpSphere(inputRadius, inputStacks, inputSectors, uniqueName,
-                         sphereGUID.str()); // Create a new Sphere object with input data
+                         tmpGUID.ConvertToString()); // Create a new Sphere object with input data
 
         tmpModel.name = uniqueName;          // Set the name of the model
         tmpMesh = tmpSphere.GetSphereMesh(); // Get the mesh of the sphere
@@ -50,27 +51,28 @@ namespace Vakol
 
         tmpModel.path = uniqueName + "_GENERATED"; // Set a dummy path for the model
 
-        m_Spheres[sphereGUID] = tmpModel; // Add the model to the map of spheres
+        m_Spheres[tmpGUID.GetGUID()] = tmpModel; // Add the model to the map of spheres
 
-        nameToGuidMap[uniqueName] = sphereGUID; // Add the name-GUID mapping
+        nameToGuidMap[uniqueName] = tmpGUID.GetGUID(); // Add the name-GUID mapping
 
-        tmpVertexArray.ID = sphereGUID;                    // Set the ID of the vertex array to the GUID of the sphere
+        tmpVertexArray.ID = tmpGUID.GetGUID();             // Set the ID of the vertex array to the GUID of the sphere
         tmpVertexArray.indices = tmpSphere.GetIndices();   // Get the indices of the sphere
         tmpVertexArray.vertices = tmpSphere.GetVertices(); // Get the vertices of the sphere
 
         Rendering::RenderAPI::GenerateVertexCommand(std::move(tmpVertexArray)); // Create the vertex array in OpenGL
 
-        VK_INFO("Sphere '" + uniqueName + "' with GUID '" + sphereGUID.str() + "' created!");
+        VK_INFO("Sphere '" + uniqueName + "' with GUID '" + tmpGUID.ConvertToString() + "' created!");
     }
 
     void Primitives::CreateCube(std::string inputName)
     {
+        GUID tmpGUID;         // Create a temporary GUID object
+        tmpGUID.GenNewGUID(); // Generate a new GUID
+
         Rendering::VertexArray tmpVertexArray;   // Create a temporary vertex array
         Rendering::Assets::Model tmpModel;       // Create a temporary model
         Rendering::Assets::Material tmpMaterial; // Create a temporary material
         Rendering::Assets::Mesh tmpMesh;         // Create a temporary mesh
-
-        xg::Guid cubeGUID = xg::newGuid(); // Generate a new GUID for the cube
 
         int highestCount = -1;
 
@@ -93,7 +95,7 @@ namespace Vakol
 
         std::string uniqueName = inputName + (highestCount >= 0 ? "_" + std::to_string(highestCount + 1) : "");
 
-        Cube tmpCube(uniqueName, cubeGUID.str()); // Create a new Cube object with input data
+        Cube tmpCube(uniqueName, tmpGUID.ConvertToString()); // Create a new Cube object with input data
 
         tmpModel.name = uniqueName;      // Set the name of the model
         tmpMesh = tmpCube.GetCubeMesh(); // Get the mesh of the cube
@@ -105,17 +107,17 @@ namespace Vakol
 
         tmpModel.path = uniqueName + "_GENERATED"; // Set a dummy path for the model
 
-        m_Cubes[cubeGUID] = tmpModel; // Add the model to the map of cubes
+        m_Cubes[tmpGUID.GetGUID()] = tmpModel; // Add the model to the map of cubes
 
-        nameToGuidMap[uniqueName] = cubeGUID; // Add the name-GUID mapping
+        nameToGuidMap[uniqueName] = tmpGUID.GetGUID(); // Add the name-GUID mapping
 
-        tmpVertexArray.ID = cubeGUID;                    // Set the ID of the vertex array to the GUID of the cube
+        tmpVertexArray.ID = tmpGUID.GetGUID();           // Set the ID of the vertex array to the GUID of the cube
         tmpVertexArray.indices = tmpCube.GetIndices();   // Get the indices of the cube
         tmpVertexArray.vertices = tmpCube.GetVertices(); // Get the vertices of the cube
 
         Rendering::RenderAPI::GenerateVertexCommand(std::move(tmpVertexArray)); // Create the vertex array in OpenGL
 
-        VK_INFO("Cube '" + uniqueName + "' with GUID '" + cubeGUID.str() + "' created!");
+        VK_INFO("Cube '" + uniqueName + "' with GUID '" + tmpGUID.ConvertToString() + "' created!");
     }
 
     bool Primitives::GetModel(ShapeType type, std::string inputName, Rendering::Assets::Model& outModel)

@@ -5,6 +5,7 @@
 #include <functional>
 #include <string>
 
+#include "Utils/GUID.hpp" 
 #include "EntityList.hpp"
 #include "Logger/Logger.hpp"
 

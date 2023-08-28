@@ -4,10 +4,13 @@ namespace Vakol
 {
     Sphere::Sphere()
     {
-        stacks = 10;                       // Set the default number of stacks to 10
-        sectors = 10;                      // Set the default number of sectors to 10
-        mesh.name = "DEFAULT_SPHERE_mesh"; // Set the default name to DEFAULT_SPHERE_mesh
-        mesh.ID = xg::newGuid().str();     // Generate a new GUID for the mesh
+        GUID tmpGUID;         // Create a temporary GUID object
+        tmpGUID.GenNewGUID(); // Generate a new GUID
+
+        stacks = 10;                         // Set the default number of stacks to 10
+        sectors = 10;                        // Set the default number of sectors to 10
+        mesh.name = "DEFAULT_SPHERE_mesh";   // Set the default name to DEFAULT_SPHERE_mesh
+        mesh.ID = tmpGUID.ConvertToString(); // Generate a new GUID for the mesh
 
         GenerateData(1.0f, stacks, sectors); // Generate the data for the sphere with a radius of 1
     }

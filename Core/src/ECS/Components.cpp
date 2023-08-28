@@ -42,24 +42,4 @@ namespace Vakol::Components
 
     Tag::Tag(std::string& tag) : tag(std::move(tag)){};
 
-    void GUID::GenNewGUID()
-    {
-        id = xg::newGuid();
-    }
-
-    bool GUID::operator==(const GUID& other) const
-    {
-        return id == other.id;
-    }
-
-    bool GUID::operator!=(const GUID& other) const
-    {
-        return id != other.id;
-    }
-
-    bool GUID::operator<(const GUID& other) const
-    {
-        return id < other.id;
-    }
-
 } // namespace Vakol::Components

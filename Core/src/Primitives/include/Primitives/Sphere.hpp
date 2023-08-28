@@ -1,11 +1,10 @@
 #pragma once
 
-#include <crossguid/guid.hpp>
-
 #include "ECS/Components.hpp"
 #include "Math/Math.hpp"
 #include "Rendering/Assets/Mesh.hpp"
 #include "Rendering/RenderData.hpp"
+#include "Utils/GUID.hpp"
 
 namespace Vakol
 {

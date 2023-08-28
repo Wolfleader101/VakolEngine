@@ -6,6 +6,7 @@
 #include <memory>
 #include <vector>
 
+#include "Utils/GUID.hpp" 
 #include "Logger/Logger.hpp"
 
 namespace Vakol
