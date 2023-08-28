@@ -15,6 +15,5 @@ namespace Vakol
         primitives_type.set_function("create_sphere", &Primitives::CreateSphere);
         primitives_type.set_function("create_cube", &Primitives::CreateCube);
         primitives_type.set_function("get_model", &Primitives::GetModel);
-        primitives_type.set_function("get_guid_by_name", &Primitives::GetGuidByName);
     }
 } // namespace Vakol

@@ -29,7 +29,7 @@ namespace Vakol::Math
     using Quat = glm::quat;
 
     double PiDouble();
-    float PiFloat();  
+    float PiFloat();
 
     float DegToRad(const float deg);
     Vec3 DegToRad(const Vec3& vec);

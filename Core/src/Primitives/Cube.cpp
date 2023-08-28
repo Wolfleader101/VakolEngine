@@ -20,25 +20,7 @@ namespace Vakol
 
     void Cube::GenerateData()
     {
-        Rendering::Vertex tmpVertex;        // A temporary vertex object to store the data
-        Components::Transform tmpTransform; // A temporary transform object to store the data
-
-        tmpTransform.pos = Math::Vec3(0.0f, 0.0f, 0.0f);         // Set the position to 0
-        tmpTransform.scale = Math::Vec3(1.0f, 1.0f, 1.0f);       // Set the scale to 1
-        tmpTransform.rot = Math::Quat(1.0f, 0.0f, 0.0f, 0.0f);   // Set the rotation to 0
-        tmpTransform.eulerAngles = Math::Vec3(0.0f, 0.0f, 0.0f); // Set the euler angles to 0
-
-        tmpTransform.rot = Math::Normalized(tmpTransform.rot); // Normalize the rotation quaternion (Prevents the
-                                                               // rotation from accidentally scaling the vertices)
-
-        // Get the model matrix
-        Math::Mat4 modelMatrix = Rendering::RenderAPI::GetModelMatrix(tmpTransform);
-
-        // Compute the inverse transpose of the model matrix
-        Math::Mat4 inverseTranspose = Math::Transpose(Math::Inverse(modelMatrix));
-
-        tmpVertex.bitangent = Math::Vec3(0.0f, 0.0f, 0.0f); // Set the bitangent to 0
-        tmpVertex.tangent = Math::Vec3(0.0f, 0.0f, 0.0f);   // Set the tangent to 0
+        Rendering::Vertex tmpVertex; // A temporary vertex object to store the data
 
         // Use pre-calculated positions for the cube
         std::vector<Math::Vec3> preCalcPositions = {// Back face
@@ -149,29 +131,16 @@ namespace Vakol
                                                      // Top face
                                                      20, 21, 22, 22, 23, 20};
 
-        // Create a temporary vertex to store the pre-calculated data, apply transformations, and push back into the
-        // final vertex list
+        // Fill the temporary vertex with the pre-calculated data and push it into the mesh's vertices
         for (size_t i = 0; i < preCalcPositions.size(); ++i)
         {
             // Directly plug in the pre-calculated vertex positions, normals, and UVs
             tmpVertex.position = preCalcPositions[i];
-            tmpVertex.normal = preCalcNormals[i];
+            tmpVertex.normal = Math::Normalized(preCalcNormals[i]);
             tmpVertex.uv = preCalcUVs[i];
 
-            // Apply transformations to the vertex
-            // Apply scaling
-            tmpVertex.position *= tmpTransform.scale;
-
-            // Apply rotation using quaternion
-            tmpVertex.position = tmpTransform.rot * tmpVertex.position;
-
-            // Transform and normalize the normal
-            tmpVertex.normal = Math::Vec3(inverseTranspose * Math::Vec4(tmpVertex.normal, 0.0f));
-
-            tmpVertex.normal = Math::Normalized(tmpVertex.normal);
-
             // Push the vertex into the mesh's vertices
-            mesh.vertices.push_back(tmpVertex);
+            mesh.vertices.emplace_back(tmpVertex);
         }
 
         mesh.indices = unitCubeIndices;

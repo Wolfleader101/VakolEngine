@@ -118,12 +118,14 @@ namespace Vakol
         VK_INFO("Cube '" + uniqueName + "' with GUID '" + cubeGUID.str() + "' created!");
     }
 
-    bool Primitives::GetModel(ShapeType type, xg::Guid inputGUID, Rendering::Assets::Model& outModel)
+    bool Primitives::GetModel(ShapeType type, std::string inputName, Rendering::Assets::Model& outModel)
     {
+        xg::Guid searchGUID = nameToGuidMap[inputName]; // Get the GUID of the model
+
         switch (type)
         {
         case SPHERE: {
-            auto it = m_Spheres.find(inputGUID);
+            auto it = m_Spheres.find(searchGUID);
             if (it != m_Spheres.end())
             {
                 if (!it->second.meshes.empty())
@@ -133,19 +135,19 @@ namespace Vakol
                 }
                 else
                 {
-                    VK_ERROR("Sphere with GUID '" + inputGUID.str() + "' has no meshes!");
+                    VK_ERROR("Sphere with GUID '" + searchGUID.str() + "' has no meshes!");
                     return false;
                 }
             }
             else
             {
-                VK_ERROR("Sphere with GUID '" + inputGUID.str() + "' not found!");
+                VK_ERROR("Sphere with GUID '" + searchGUID.str() + "' not found!");
                 return false;
             }
             break;
         }
         case CUBE: {
-            auto it = m_Cubes.find(inputGUID);
+            auto it = m_Cubes.find(searchGUID);
             if (it != m_Cubes.end())
             {
                 if (!it->second.meshes.empty())
@@ -155,13 +157,13 @@ namespace Vakol
                 }
                 else
                 {
-                    VK_ERROR("Cube with GUID '" + inputGUID.str() + "' has no meshes!");
+                    VK_ERROR("Cube with GUID '" + searchGUID.str() + "' has no meshes!");
                     return false;
                 }
             }
             else
             {
-                VK_ERROR("Cube with GUID '" + inputGUID.str() + "' not found!");
+                VK_ERROR("Cube with GUID '" + searchGUID.str() + "' not found!");
                 return false;
             }
             break;
@@ -169,19 +171,6 @@ namespace Vakol
         default:
             VK_ERROR("The primitive shape type is not valid!");
             return false;
-        }
-    }
-
-    xg::Guid Primitives::GetGuidByName(const std::string& name)
-    {
-        if (nameToGuidMap.find(name) != nameToGuidMap.end())
-        {
-            return nameToGuidMap[name];
-        }
-        else
-        {
-            VK_ERROR("Primitive with name '" + name + "' not found! Exiting...");
-            std::exit(EXIT_FAILURE);
         }
     }
 

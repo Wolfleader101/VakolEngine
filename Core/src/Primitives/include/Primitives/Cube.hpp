@@ -67,10 +67,5 @@ namespace Vakol
          *
          */
         Rendering::Assets::Mesh mesh;
-        /**
-         * @brief The original vertices of the cube before rotations, scaling, etc.
-         *
-         */
-        std::vector<Rendering::Vertex> originalVertices;
     };
 } // namespace Vakol

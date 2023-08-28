@@ -1,7 +1,6 @@
 #pragma once
 
 #include <algorithm>
-#include <cstdlib>
 #include <unordered_map>
 
 #include <crossguid/guid.hpp>
@@ -53,21 +52,13 @@ namespace Vakol
          */
         void CreateCube(std::string inputName);
         /**
-         * @brief Scale a selected primitive shape
-         * @param type The type of shape to scale
-         * @param inputScale The new scale of the shape
-         * @param inputGUID The GUID of the shape
-         *
-         */
-        xg::Guid GetGuidByName(const std::string& name);
-        /**
          * @brief Return a boolean if the shape exists and return the model through the outModel parameter
          * @param type The type of shape the model belongs to
-         * @param inputGUID The GUID of the shape
+         * @param inputName The name of the shape
          * @param outModel The model to return
          *
          */
-        bool GetModel(ShapeType type, xg::Guid inputGUID, Rendering::Assets::Model& outModel);
+        bool GetModel(ShapeType type, std::string inputName, Rendering::Assets::Model& outModel);
         /**
          * @brief Destroy the Primitives object
          *

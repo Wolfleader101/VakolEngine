@@ -1,18 +1,17 @@
---local sphere_guid;
-local cube_guid;
+local sphereEntity;
+local sphereModel;
 
---local cube;
 local cubeEntity;
 local cubeModel;
 
 function init()
-    --sphere = scene:create_entity("Sphere", "");
+    --sphereEntity = scene:create_entity("Sphere", "");
     cubeEntity = scene:create_entity("Cube", "");
 
     --Set the sphere parameters
-    --local radius = 5.0;
-    --local stacks = 50;
-    --local sectors = 50;
+    --local radius = 1.0;
+    --local stacks = 100;
+    --local sectors = 100;
     --local sphereName = "sphere";
     local cubeName = "cube";
 
@@ -22,18 +21,17 @@ function init()
     --Create the cube
     Primitives:create_cube(cubeName);
 
-    --Get the guid of the sphere
-    --sphere_guid = Primitives:get_guid_by_name("sphere");
-
-    --Get the guid of the cube
-    cube_guid = Primitives:get_guid_by_name("cube");
+    --sphereModel = Model.new();
 
     --Add the sphere model to the scene
-    --sphere:add_model_direct(Primitives:get_model(ShapeType.SPHERE, sphere_guid));
+    --if(Primitives:get_model(ShapeType.SPHERE, sphereName, sphereModel))
+    --then
+        --sphereEntity:add_model_direct(sphereModel); 
+    --end
 
     cubeModel = Model.new();
 
-    if(Primitives:get_model(ShapeType.CUBE, cube_guid, cubeModel))
+    if(Primitives:get_model(ShapeType.CUBE, cubeName, cubeModel))
     then
         cubeEntity:add_model_direct(cubeModel); 
     end
