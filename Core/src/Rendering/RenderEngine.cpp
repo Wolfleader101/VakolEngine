@@ -223,7 +223,7 @@ namespace Vakol::Rendering
         vertexArray.indices = mesh.indices;
 
         // swap vector with an empty vector to de-allocate the memory taken by the vector
-        std::vector<unsigned int>().swap(mesh.indices);
+        // std::vector<unsigned int>().swap(mesh.indices);
 
         RenderAPI::GenerateVertexCommand(std::move(vertexArray));
     }

@@ -176,12 +176,15 @@ namespace Vakol
         rb.linearVelocity = rb.linearVelocity - 2 * Math::Dot(rb.linearVelocity, rb.collisionData->worldNormal) *
                                                     rb.collisionData->worldNormal;
 
-        // multiply velocity by epsilon to get dampening
-        rb.linearVelocity *= rb.epsilon;
+        // multiply velocity by coefficient of restitution
+        rb.linearVelocity *= rb.bounciness;
 
         Math::Vec3 depenetration =
             -rb.collisionData->worldNormal * static_cast<float>(rb.collisionData->penetrationDepth);
         pos = pos + depenetration;
+
+        // another valid de-penetration is get the difference in position between last frame and this frame using the
+        // velocity, and move it back by that amount
 
         rb.collisionBody->setTransform(rp3d::Transform(
             rp3d::Vector3(static_cast<double>(pos.x), static_cast<double>(pos.y), static_cast<double>(pos.z)),

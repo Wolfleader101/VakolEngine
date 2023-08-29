@@ -8,7 +8,7 @@ function init()
         scene.globals.player = 
         {
             pos = Vector3.new(0.0, 0.0, 0.0)
-        }
+    }
     scene.globals.player.pos = entity:get_transform().pos;
 end
 

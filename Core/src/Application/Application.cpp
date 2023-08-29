@@ -158,6 +158,17 @@ namespace Vakol
         while (m_running)
         {
             m_time.Update();
+
+            m_sceneManager.Update();
+
+            if (m_sceneManager.SceneChanged())
+            {
+                // ignore the current frame, and next frame on scene change
+                // on scene change, ignore rest of the current frame, delta time will be low (current frame)
+                // the next frame, the delta time will be large because of how long it took to initialise the scene
+                continue;
+            }
+
             m_time.accumulator += m_time.deltaTime;
 
             m_gui.CreateNewFrame();
@@ -167,8 +178,6 @@ namespace Vakol
 
                 Rendering::RenderEngine::PreDraw();
             }
-
-            m_sceneManager.Update();
 
             Scene& activeScene = m_sceneManager.GetActiveScene();
             if (activeScene.getName() == "sandbox" && !set)
@@ -189,6 +198,8 @@ namespace Vakol
                     trans.pos = Math::Vec3(0.0f, 30.0f, 0.0f);
 
                     RigidBody rb = activeScene.GetPhysicsScene().CreateRigidBody(trans.pos, trans.rot);
+                    rb.mass = 80.0f;
+                    rb.bounciness = 0.5f;
 
                     SphereCollider collider = m_physicsEngine.CreateSphereCollider(1.0);
                     m_physicsEngine.AttachCollider(rb, collider);
@@ -209,7 +220,9 @@ namespace Vakol
                     Rendering::RenderEngine::GenerateModel(model, drawable);
 
                     auto& trans = ent.GetComponent<Components::Transform>();
-                    trans.pos = Math::Vec3(0.0f, 2.0f, 0.0f);
+                    trans.pos = Math::Vec3(0.0f, 5.0f, 0.0f);
+                    trans.eulerAngles = Math::Vec3(0.0f, 0.0f, -23.0f);
+                    trans.rot = Math::Quat(Math::DegToRad(trans.eulerAngles));
 
                     RigidBody rb = activeScene.GetPhysicsScene().CreateRigidBody(trans.pos, trans.rot);
                     rb.type = BodyType::Static;
@@ -223,30 +236,30 @@ namespace Vakol
                 }
 
                 // Floor
-                // {
-                //     Entity ent = activeScene.CreateEntity("Floor");
+                {
+                    Entity ent = activeScene.CreateEntity("Floor");
 
-                //     ent.AddComponent<Rendering::Drawable>();
+                    ent.AddComponent<Rendering::Drawable>();
 
-                //     auto& model = AssetLoader::GetModel("coreAssets/models/cube.obj", 1);
-                //     auto& drawable = ent.GetComponent<Rendering::Drawable>();
+                    auto& model = AssetLoader::GetModel("coreAssets/models/cube.obj", 1);
+                    auto& drawable = ent.GetComponent<Rendering::Drawable>();
 
-                //     Rendering::RenderEngine::GenerateModel(model, drawable);
+                    Rendering::RenderEngine::GenerateModel(model, drawable);
 
-                //     auto& trans = ent.GetComponent<Components::Transform>();
-                //     trans.pos = Math::Vec3(0.0f, 2.0f, 0.0f);
-                //     trans.scale = Math::Vec3(100.0f, 1.0f, 100.0f);
+                    auto& trans = ent.GetComponent<Components::Transform>();
+                    trans.pos = Math::Vec3(0.0f, 0.0f, 0.0f);
+                    trans.scale = Math::Vec3(100.0f, 1.0f, 100.0f);
 
-                //     RigidBody rb = activeScene.GetPhysicsScene().CreateRigidBody(trans.pos, trans.rot);
-                //     rb.type = BodyType::Static;
+                    RigidBody rb = activeScene.GetPhysicsScene().CreateRigidBody(trans.pos, trans.rot);
+                    rb.type = BodyType::Static;
 
-                //     Math::Vec3 halfExts = trans.scale * 0.5f;
-                //     AABBCollider collider = m_physicsEngine.CreateAABBCollider(halfExts);
-                //     m_physicsEngine.AttachCollider(rb, collider);
+                    Math::Vec3 halfExts = trans.scale;
+                    AABBCollider collider = m_physicsEngine.CreateAABBCollider(halfExts);
+                    m_physicsEngine.AttachCollider(rb, collider);
 
-                //     ent.AddComponent<RigidBody>(rb);
-                //     ent.AddComponent<AABBCollider>(collider);
-                // }
+                    ent.AddComponent<RigidBody>(rb);
+                    ent.AddComponent<AABBCollider>(collider);
+                }
 
                 set = true;
             }

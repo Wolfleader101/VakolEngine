@@ -72,6 +72,8 @@ namespace Vakol
          */
         void Update();
 
+        bool SceneChanged() const;
+
         /**
          * @brief Used to check if scene manager is valid to use.
          *        Checks if empty, and if current scene is set.
@@ -86,6 +88,8 @@ namespace Vakol
 
         Scene* m_activeScene;
         Scene* m_nextScene;
+        bool m_sceneChanged;
+        int m_counter;
 
         /**
          * @brief The map of scenes.

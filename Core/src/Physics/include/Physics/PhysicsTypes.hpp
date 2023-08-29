@@ -40,7 +40,7 @@ namespace Vakol
     {
         BodyType type = BodyType::Dynamic;
         float mass = 1.0f;
-        float epsilon = 0.8f;
+        float bounciness = 0.8f;
 
         bool hasGravity = true;
 

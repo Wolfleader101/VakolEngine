@@ -83,15 +83,111 @@ void MyGUILayer::OnUpdate()
 
                 auto& EL = m_SceneManager->GetActiveScene().GetEntityList();
 
-                EL.Iterate<Vakol::Components::Tag, Vakol::Components::Transform>(
-                    [&](Vakol::Components::Tag& Tag, Vakol::Components::Transform& trans) {
-                        if (ImGui::CollapsingHeader(Tag.tag.c_str()))
+                EL.IterateEntities([&](auto handle) {
+                    Vakol::Entity entity = EL.GetEntity(static_cast<uint32_t>(handle));
+                    Vakol::Components::Tag& tag = entity.GetComponent<Vakol::Components::Tag>();
+                    Vakol::Components::Transform& trans = entity.GetComponent<Vakol::Components::Transform>();
+
+                    if (ImGui::CollapsingHeader(tag.tag.c_str()))
+                    {
+                        ImGui::Indent(20.0f);
+                        ImGui::PushStyleColor(ImGuiCol_Header, ImVec4(0.9f, 0.4f, 0.f, 1.0f));
+
+                        if (ImGui::CollapsingHeader("Transform"))
                         {
                             ImGui::DragFloat3("Position", &trans.pos.x, 0.1f);
                             ImGui::DragFloat3("Rotation", &trans.eulerAngles.x, 0.1f);
                             ImGui::DragFloat3("Scale", &trans.scale.x, 0.1f);
                         }
-                    });
+
+                        if (ImGui::CollapsingHeader("RigidBody"))
+                        {
+                            Vakol::RigidBody& rb = entity.GetComponent<Vakol::RigidBody>();
+                            const char* preview_label;
+
+                            switch (rb.type)
+                            {
+                            case Vakol::BodyType::Static:
+                                preview_label = "Static";
+                                break;
+                            case Vakol::BodyType::Kinematic:
+                                preview_label = "Kinematic";
+                                break;
+                            case Vakol::BodyType::Dynamic:
+                                preview_label = "Dynamic";
+                                break;
+                            }
+
+                            if (ImGui::BeginCombo("BodyType", preview_label))
+                            {
+                                bool is_selected = (rb.type == Vakol::BodyType::Static);
+                                if (ImGui::Selectable("Static", is_selected))
+                                {
+                                    rb.type = Vakol::BodyType::Static;
+                                }
+                                if (is_selected)
+                                {
+                                    ImGui::SetItemDefaultFocus();
+                                }
+
+                                is_selected = (rb.type == Vakol::BodyType::Kinematic);
+                                if (ImGui::Selectable("Kinematic", is_selected))
+                                {
+                                    rb.type = Vakol::BodyType::Kinematic;
+                                }
+                                if (is_selected)
+                                {
+                                    ImGui::SetItemDefaultFocus();
+                                }
+
+                                is_selected = (rb.type == Vakol::BodyType::Dynamic);
+                                if (ImGui::Selectable("Dynamic", is_selected))
+                                {
+                                    rb.type = Vakol::BodyType::Dynamic;
+                                }
+                                if (is_selected)
+                                {
+                                    ImGui::SetItemDefaultFocus();
+                                }
+
+                                ImGui::EndCombo();
+                            }
+
+                            ImGui::Checkbox("Has Gravity", &rb.hasGravity);
+                            ImGui::DragFloat("Mass", &rb.mass, 0.1f);
+                            ImGui::DragFloat("Epsilon", &rb.epsilon, 0.1f, 0.0f, 1.0f);
+                            ImGui::DragFloat3("Center of Mass", &rb.centerOfMass.x, 0.1f);
+
+                            ImGui::DragFloat3("Force", &rb.force.x, 0.1f);
+                            ImGui::DragFloat3("Torque", &rb.torque.x, 0.1f);
+                            ImGui::DragFloat3("Linear Velocity", &rb.linearVelocity.x, 0.1f);
+                            ImGui::DragFloat3("Angular Velocity", &rb.angularVelocity.x, 0.1f);
+
+                            if (rb.collisionData)
+                            {
+                                ImGui::DragFloat3("World Normal", &rb.collisionData->worldNormal.x, 0.1f);
+                                ImGui::DragFloat3("World Point", &rb.collisionData->worldPoint.x, 0.1f);
+                                ImGui::DragFloat3("Local Point", &rb.collisionData->localPoint.x, 0.1f);
+                                ImGui::DragScalar("Penetration Depth", ImGuiDataType_Double,
+                                                  &rb.collisionData->penetrationDepth, 0.1f);
+                                ImGui::Checkbox("Is Colliding", &rb.collisionData->isColliding);
+                            }
+                        }
+
+                        ImGui::PopStyleColor();
+                        ImGui::Unindent(20.0f);
+                    }
+                });
+
+                // EL.Iterate<Vakol::Components::Tag, Vakol::Components::Transform>(
+                //     [&](Vakol::Components::Tag& Tag, Vakol::Components::Transform& trans) {
+                //         if (ImGui::CollapsingHeader(Tag.tag.c_str()))
+                //         {
+                //             ImGui::DragFloat3("Position", &trans.pos.x, 0.1f);
+                //             ImGui::DragFloat3("Rotation", &trans.eulerAngles.x, 0.1f);
+                //             ImGui::DragFloat3("Scale", &trans.scale.x, 0.1f);
+                //         }
+                //     });
 
                 ImGui::EndChild(); // End of child frame
             }

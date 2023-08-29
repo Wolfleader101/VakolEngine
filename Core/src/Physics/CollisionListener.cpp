@@ -71,8 +71,8 @@ namespace Vakol
             if (body1Data)
             {
                 body1Data->worldNormal = Math::Normalized(avgNormal);
-                VK_CRITICAL("Normal: {0},{1},{2}", body1Data->worldNormal.x, body1Data->worldNormal.y,
-                            body1Data->worldNormal.z);
+                // VK_CRITICAL("Normal: {0},{1},{2}", body1Data->worldNormal.x, body1Data->worldNormal.y,
+                //             body1Data->worldNormal.z);
                 body1Data->worldPoint = avgWorldPoint1;
                 body1Data->localPoint = avgLocalPoint1;
                 body1Data->penetrationDepth = avgPenetrationDepth;
