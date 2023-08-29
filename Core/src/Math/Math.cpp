@@ -6,11 +6,12 @@ namespace Vakol::Math
 {
     float Dot(const Vec2& a, const Vec2& b)
     {
-        return a.x * b.x + a.y * b.y;
+        return glm::dot(a, b);
     }
+
     float Dot(const Vec3& a, const Vec3& b)
     {
-        return a.x * b.x + a.y * b.y + a.z * b.z;
+        return glm::dot(a, b);
     }
 
     float DegToRad(const float deg)
@@ -35,16 +36,19 @@ namespace Vakol::Math
 
     float Magnitude(const Vec2& v)
     {
-        return sqrtf(Dot(v, v));
+        return glm::length(v);
     }
+
     float Magnitude(const Vec3& v)
     {
-        return sqrtf(Dot(v, v));
+        return glm::length(v);
     }
+
     float MagnitudeSq(const Vec2& v)
     {
         return Dot(v, v);
     }
+
     float MagnitudeSq(const Vec3& v)
     {
         return Dot(v, v);
@@ -58,28 +62,25 @@ namespace Vakol::Math
 
     void Normalize(Vec2& v)
     {
-        v = v * (1.0f / Magnitude(v));
+        v = glm::normalize(v);
     }
     void Normalize(Vec3& v)
     {
-        v = v * (1.0f / Magnitude(v));
+        v = glm::normalize(v);
     }
+
     Vec2 Normalized(const Vec2& v)
     {
-        return v * (1.0f / Magnitude(v));
+        return glm::normalize(v);
     }
     Vec3 Normalized(const Vec3& v)
     {
-        return v * (1.0f / Magnitude(v));
+        return glm::normalize(v);
     }
 
     Vec3 Cross(const Vec3& a, const Vec3& b)
     {
-        Vec3 res;
-        res.x = a.y * b.z - a.z * b.y;
-        res.y = a.z * b.x - a.x * b.z;
-        res.z = a.x * b.y - a.y * b.x;
-        return res;
+        return glm::cross(a, b);
     }
 
     float Angle(const Vec2& a, const Vec2& b)

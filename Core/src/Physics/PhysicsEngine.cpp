@@ -5,6 +5,21 @@
 
 namespace Vakol
 {
+    Math::Vec3 FromRPVec3(rp3d::Vector3& vec)
+    {
+        return Math::Vec3((float)vec.x, (float)vec.y, (float)vec.z);
+    }
+
+    Math::Vec3 FromRPVec3(const rp3d::Vector3& vec)
+    {
+        return Math::Vec3((float)vec.x, (float)vec.y, (float)vec.z);
+    }
+
+    rp3d::Vector3 ToRPVec3(Math::Vec3& vec)
+    {
+        return rp3d::Vector3((double)vec.x, (double)vec.y, (double)vec.z);
+    }
+
     PhysicsEngine::PhysicsEngine()
     {
     }
@@ -89,11 +104,15 @@ namespace Vakol
     void PhysicsEngine::AttachCollider(RigidBody& rb, AABBCollider& collider)
     {
         collider.collider = rb.collisionBody->addCollider(collider.shape, rp3d::Transform::identity());
+
+        rb.centerOfMass = FromRPVec3(collider.collider->getLocalToBodyTransform().getPosition());
     }
 
     void PhysicsEngine::AttachCollider(RigidBody& rb, SphereCollider& collider)
     {
         collider.collider = rb.collisionBody->addCollider(collider.shape, rp3d::Transform::identity());
+
+        rb.centerOfMass = FromRPVec3(collider.collider->getLocalToBodyTransform().getPosition());
     }
 
     void PhysicsEngine::AttachCollider(RigidBody& rb, CapsuleCollider& collider)
@@ -154,17 +173,24 @@ namespace Vakol
             return;
 
         // reflect the velocity
-        rb.linearVelocity =
-            rb.linearVelocity - 2 * Math::Dot(rb.linearVelocity, rb.collisionData->normal) * rb.collisionData->normal;
+        rb.linearVelocity = rb.linearVelocity - 2 * Math::Dot(rb.linearVelocity, rb.collisionData->worldNormal) *
+                                                    rb.collisionData->worldNormal;
 
-        // rb.collisionBody->setTransform(rp3d::Transform(
-        //     rp3d::Vector3(static_cast<double>(pos.x), static_cast<double>(pos.y), static_cast<double>(pos.z)),
-        //     rp3d::Quaternion(static_cast<double>(rot.x), static_cast<double>(rot.y), static_cast<double>(rot.z),
-        //                      static_cast<double>(rot.w))));
+        // multiply velocity by epsilon to get dampening
+        rb.linearVelocity *= rb.epsilon;
+
+        Math::Vec3 depenetration =
+            -rb.collisionData->worldNormal * static_cast<float>(rb.collisionData->penetrationDepth);
+        pos = pos + depenetration;
+
+        rb.collisionBody->setTransform(rp3d::Transform(
+            rp3d::Vector3(static_cast<double>(pos.x), static_cast<double>(pos.y), static_cast<double>(pos.z)),
+            rp3d::Quaternion(static_cast<double>(rot.x), static_cast<double>(rot.y), static_cast<double>(rot.z),
+                             static_cast<double>(rot.w))));
 
         // reset the collision data
         rb.collisionData->penetrationDepth = 0.0;
-        rb.collisionData->normal = Math::Vec3(0.0f, 0.0f, 0.0f);
+        rb.collisionData->worldNormal = Math::Vec3(0.0f, 0.0f, 0.0f);
         rb.collisionData->worldPoint = Math::Vec3(0.0f, 0.0f, 0.0f);
         rb.collisionData->isColliding = false;
     }

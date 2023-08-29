@@ -26,6 +26,11 @@ namespace Vakol
 
             double avgPenetrationDepth = 0.0;
 
+            if (contactPair.getNbContactPoints() == 0u)
+            {
+                continue;
+            }
+
             // For each contact point of the contact pair
             for (unsigned int c = 0; c < contactPair.getNbContactPoints(); c++)
             {
@@ -57,9 +62,17 @@ namespace Vakol
                 avgPenetrationDepth += contactPoint.getPenetrationDepth();
             }
 
+            avgWorldPoint1 /= static_cast<float>(contactPair.getNbContactPoints());
+            avgLocalPoint1 /= static_cast<float>(contactPair.getNbContactPoints());
+            avgWorldPoint2 /= static_cast<float>(contactPair.getNbContactPoints());
+            avgLocalPoint2 /= static_cast<float>(contactPair.getNbContactPoints());
+            avgPenetrationDepth /= static_cast<double>(contactPair.getNbContactPoints());
+
             if (body1Data)
             {
-                body1Data->normal = avgNormal;
+                body1Data->worldNormal = Math::Normalized(avgNormal);
+                VK_CRITICAL("Normal: {0},{1},{2}", body1Data->worldNormal.x, body1Data->worldNormal.y,
+                            body1Data->worldNormal.z);
                 body1Data->worldPoint = avgWorldPoint1;
                 body1Data->localPoint = avgLocalPoint1;
                 body1Data->penetrationDepth = avgPenetrationDepth;
@@ -68,7 +81,7 @@ namespace Vakol
 
             if (body2Data)
             {
-                body2Data->normal = avgNormal;
+                body2Data->worldNormal = Math::Normalized(avgNormal);
                 body2Data->worldPoint = avgWorldPoint2;
                 body2Data->localPoint = avgLocalPoint2;
                 body2Data->penetrationDepth = avgPenetrationDepth;
