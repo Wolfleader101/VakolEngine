@@ -55,6 +55,7 @@ namespace Vakol::Math
 
     float Angle(const Vec2& a, const Vec2& b);
     float Angle(const Vec3& a, const Vec3& b);
+    Quat AngleAxis(float angle, const Vec3& axis);
 
     Vec2 Project(const Vec2& length, const Vec2& direction);
     Vec3 Project(const Vec3& length, const Vec3& direction);

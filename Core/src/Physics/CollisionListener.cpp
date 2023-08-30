@@ -71,8 +71,6 @@ namespace Vakol
             if (body1Data)
             {
                 body1Data->worldNormal = Math::Normalized(avgNormal);
-                // VK_CRITICAL("Normal: {0},{1},{2}", body1Data->worldNormal.x, body1Data->worldNormal.y,
-                //             body1Data->worldNormal.z);
                 body1Data->worldPoint = avgWorldPoint1;
                 body1Data->localPoint = avgLocalPoint1;
                 body1Data->penetrationDepth = avgPenetrationDepth;
@@ -86,6 +84,12 @@ namespace Vakol
                 body2Data->localPoint = avgLocalPoint2;
                 body2Data->penetrationDepth = avgPenetrationDepth;
                 body2Data->isColliding = true;
+            }
+
+            if (body1Data && body2Data)
+            {
+                body1Data->otherBody = body2Data->parentBody;
+                body2Data->otherBody = body1Data->parentBody;
             }
         }
     }

@@ -22,9 +22,9 @@ namespace Vakol
          *
          * @param pos of body
          * @param orientation of body
-         * @return RigidBody created
+         * @return RigidBody& reference of a rigidbody
          */
-        RigidBody CreateRigidBody(Math::Vec3& pos, Math::Quat& orientation);
+        RigidBody& CreateRigidBody(Math::Vec3& pos, Math::Quat& orientation);
 
         /**
          * @brief Get the Guid object
@@ -65,6 +65,8 @@ namespace Vakol
          *
          */
         xg::Guid m_guid;
+
+        std::vector<std::shared_ptr<RigidBody>> m_rigidBodies;
 
         friend class PhysicsEngine;
     };

@@ -95,6 +95,11 @@ namespace Vakol::Math
         return acos(Dot(a, b) / m);
     }
 
+    Quat AngleAxis(float angle, const Vec3& axis)
+    {
+        return glm::angleAxis(angle, axis);
+    }
+
     Vec2 Project(const Vec2& length, const Vec2& direction)
     {
         float dot = Dot(length, direction);
