@@ -2,6 +2,8 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
+#include <glm/gtx/norm.hpp>
+
 namespace Vakol::Math
 {
     float Dot(const Vec2& a, const Vec2& b)

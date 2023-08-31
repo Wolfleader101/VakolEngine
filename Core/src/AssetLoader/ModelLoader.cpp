@@ -203,13 +203,20 @@ namespace Vakol
 
         MaterialProperties properties;
 
-        material->Get(AI_MATKEY_COLOR_AMBIENT, properties.ambient_color);
-        material->Get(AI_MATKEY_COLOR_DIFFUSE, properties.diffuse_color);
-        material->Get(AI_MATKEY_COLOR_SPECULAR, properties.specular_color);
-        material->Get(AI_MATKEY_COLOR_EMISSIVE, properties.emissive_color);
+        aiColor3D ambient, diffuse, specular, emissive;
+
+        material->Get(AI_MATKEY_COLOR_AMBIENT, ambient);
+        material->Get(AI_MATKEY_COLOR_DIFFUSE, diffuse);
+        material->Get(AI_MATKEY_COLOR_SPECULAR, specular);
+        material->Get(AI_MATKEY_COLOR_EMISSIVE, emissive);
         material->Get(AI_MATKEY_SHININESS, properties.shininess);
-        material->Get(AI_MATKEY_EMISSIVE_INTENSITY, properties.intensity);
-        material->Get(AI_MATKEY_ENABLE_WIREFRAME, properties.wireframe);
+        material->Get(AI_MATKEY_SHININESS_STRENGTH, properties.shininess_strength);
+        material->Get(AI_MATKEY_OPACITY, properties.opacity);
+
+        properties.ambient_color = ToVec3(ambient);
+        properties.diffuse_color = ToVec3(diffuse);
+        properties.specular_color = ToVec3(specular);
+        properties.emissive_color = ToVec3(emissive);
 
         auto&& diffuse_maps = ExtractTextures(scene, material, aiTextureType_DIFFUSE);
         auto&& specular_maps = ExtractTextures(scene, material, aiTextureType_SPECULAR);
@@ -231,7 +238,8 @@ namespace Vakol
         textures.insert(textures.end(), std::make_move_iterator(normal_maps.begin()),
                         std::make_move_iterator(normal_maps.end()));
 
-        return {material->GetName().C_Str(), "null", "null", std::move(textures), properties};
+        return {material->GetName().C_Str(), "null", "null", std::move(textures),
+                std::make_shared<MaterialProperties>(properties)};
     }
 
     std::vector<Texture> ExtractTextures(const aiScene& scene, const aiMaterial* material, const aiTextureType type)

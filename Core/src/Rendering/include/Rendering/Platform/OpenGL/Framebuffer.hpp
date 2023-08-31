@@ -5,9 +5,19 @@ namespace Vakol::Rendering::OpenGL
     unsigned int DEPTH_BUFFER_BIT();
     unsigned int COLOR_BUFFER_BIT();
 
+    unsigned int FRONT_FACE();
+    unsigned int BACK_FACE();
+    unsigned int FRONT_AND_BACK_FACE();
+
     void EnableDepth();
-    void EnableMultisample();
     void EnableSRGB();
+    void EnableMultisample();
+
+    void EnableBlending();
+    void BlendFunc();
+
+    void EnableCulling();
+    void CullFaces(unsigned int face);
 
     /**
      * \brief less than or equal depth function

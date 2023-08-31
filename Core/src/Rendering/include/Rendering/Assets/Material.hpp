@@ -32,11 +32,10 @@ namespace Vakol::Rendering::Assets
          */
         Math::Vec3 emissive_color = Math::Vec3(0.0f);
 
-        float intensity = 0.0f;  // the intensity of the emmisive texture/color
         float shininess = 32.0f; // the specular exponent (used for Phong shading)
-        float opacity = 1.0f;    // the transparency/alpha of the material
+        float shininess_strength = 1.0f;
 
-        bool wireframe = false; // determine whether to draw the material in wireframe
+        float opacity = 1.0f; // the transparency/alpha of the material
     };
 
     struct Material
@@ -48,6 +47,6 @@ namespace Vakol::Rendering::Assets
 
         std::vector<Texture> textures; /// The textures of a material
 
-        MaterialProperties properties; /// The properties that make up a material
+        std::shared_ptr<MaterialProperties> properties = nullptr; /// The properties that make up a material
     };
 } // namespace Vakol::Rendering::Assets

@@ -98,6 +98,12 @@ namespace Vakol
             m_Registry.view<Components...>().each(std::forward<Func>(func));
         }
 
+        template <typename Component, typename Func>
+        void Sort(Func&& func)
+        {
+            m_Registry.sort<Component>(std::forward<Func>(func));
+        }
+
         template <typename Func>
         void IterateEntities(Func&& func)
         {
