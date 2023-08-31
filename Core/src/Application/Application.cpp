@@ -251,7 +251,7 @@ namespace Vakol
                     ent.AddComponent<Rendering::Drawable>();
 
                     auto& model = AssetLoader::GetModel("coreAssets/models/cube.obj", 1);
-                    model.meshes[0].material->properties.diffuse_color = Math::Vec3(0.0f, 0.50f, 0.4f);
+                    model.meshes[0].material->properties->diffuse_color = Math::Vec3(0.0f, 0.50f, 0.4f);
                     auto& drawable = ent.GetComponent<Rendering::Drawable>();
 
                     Rendering::RenderEngine::GenerateModel(model, drawable);

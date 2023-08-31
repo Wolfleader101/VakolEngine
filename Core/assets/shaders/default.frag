@@ -68,5 +68,5 @@ void main()
 
     vec4 result = BlinnPhong(normal, color);
 
-	FragColor = result;
+	FragColor = vec4(material.diffuse_color, 1.0);
 }
