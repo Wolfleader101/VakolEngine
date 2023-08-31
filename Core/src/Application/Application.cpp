@@ -39,7 +39,10 @@ namespace Vakol
             return;
         }
 
-        m_window->SetEventCallback([this](auto&& PH1) { OnEvent(std::forward<decltype(PH1)>(PH1)); });
+        m_window->SetEventCallback(BIND_EVENT_FN(OnEvent));
+
+        Rendering::RenderEngine::Init(config.value().windowWidth, config.value().windowHeight,
+                                      config.value().rendererType);
 
         m_gui.Init(m_window);
 
@@ -51,9 +54,6 @@ namespace Vakol
 
         m_activeSystems = static_cast<int>(SystemFlag::Scripting) | static_cast<int>(SystemFlag::Physics) |
                           static_cast<int>(SystemFlag::Rendering);
-
-        Rendering::RenderEngine::Init(m_sceneManager.GetActiveScene().GetCamera(), config.value().windowWidth,
-                                      config.value().windowHeight, config.value().rendererType);
     }
 
     void Application::RegisterLua()
@@ -143,6 +143,8 @@ namespace Vakol
     {
         double physicsAccumulator = 0.0;
 
+        bool set = false;
+
         while (m_running)
         {
             m_time.Update();
@@ -159,6 +161,14 @@ namespace Vakol
             }
 
             Scene& activeScene = m_sceneManager.GetActiveScene();
+
+            if (activeScene.getName() == "sandbox" && !set)
+            {
+                activeScene.GetCamera().SetAspect(static_cast<float>(GetWidth()) /
+                                                  (GetHeight() != 0 ? static_cast<float>(GetHeight()) : 1.0f));
+
+                set = true;
+            }
 
             // While there is enough accumulated time take one or several physics steps
             if (IsSystemActive(SystemFlag::Physics))

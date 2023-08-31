@@ -40,7 +40,7 @@ namespace Vakol::Rendering
     const std::string DEFAULT_SKYBOX_SHADER_PATH = "coreAssets/shaders/skybox.program";
     const std::string DEFAULT_DEBUG_SHADER_PATH = "coreAssets/shaders/debug.program";
 
-    void RenderEngine::Init(Camera& camera, const int width, const int height, const std::string& API)
+    void RenderEngine::Init(const int width, const int height, const std::string& API)
     {
         RenderAPI::SetupConfig(width, height, API);
 
@@ -51,7 +51,6 @@ namespace Vakol::Rendering
 
         RenderAPI::CullFaces();
 
-        camera.SetAspect(static_cast<float>(width) / static_cast<float>(height));
         RenderAPI::ResizeScreen(0, 0, width, height);
     }
 

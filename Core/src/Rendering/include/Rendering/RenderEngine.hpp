@@ -38,7 +38,7 @@ namespace Vakol::Rendering
          * \param height initial window height
          * \param API the third-party rendering API chosen by the user (OpenGL, Metal, Direct3D, Vulkan)
          */
-        static void Init(Camera& camera, int width, int height, const std::string& API);
+        static void Init(int width, int height, const std::string& API);
         /**
          * \brief called before drawing an object
          */
