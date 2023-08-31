@@ -142,6 +142,16 @@ namespace Vakol::Math
         return glm::mat4_cast(quaternion);
     }
 
+    Mat3 Mat3Cast(const Quat& quat)
+    {
+        return glm::mat3_cast(quat);
+    }
+
+    Mat3 Transpose(const Mat3& mat)
+    {
+        return glm::transpose(mat);
+    }
+
     Mat4 Translation(const Vec3& pos)
     {
         return Mat4(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, pos.x, pos.y, pos.z, 1.0f);

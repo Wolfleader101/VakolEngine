@@ -83,9 +83,7 @@ namespace Vakol
 
         if (m_sceneChanged)
         {
-            VK_TRACE(m_counter);
             m_counter++;
-            VK_INFO(m_counter);
             if (m_counter >= 3)
             {
                 m_sceneChanged = false;

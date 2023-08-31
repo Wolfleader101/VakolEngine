@@ -195,11 +195,11 @@ namespace Vakol
                     Rendering::RenderEngine::GenerateModel(model, drawable);
 
                     auto& trans = ent.GetComponent<Components::Transform>();
-                    trans.pos = Math::Vec3(0.0f, 30.0f, 0.0f);
+                    trans.pos = Math::Vec3(0.0f, 15.0f, 0.0f);
 
                     RigidBody& rb = activeScene.GetPhysicsScene().CreateRigidBody(trans.pos, trans.rot);
-                    rb.mass = 10.0f;
-                    rb.bounciness = 0.4f;
+                    rb.mass = 20.0f;
+                    rb.bounciness = 0.2f;
 
                     // SphereCollider collider = m_physicsEngine.CreateSphereCollider(1.0);
                     // m_physicsEngine.AttachCollider(rb, collider);
@@ -227,12 +227,14 @@ namespace Vakol
                     Rendering::RenderEngine::GenerateModel(model, drawable);
 
                     auto& trans = ent.GetComponent<Components::Transform>();
-                    trans.pos = Math::Vec3(0.0f, 5.0f, 0.0f);
+                    trans.pos = Math::Vec3(-0.50f, 5.0f, 0.0f);
                     trans.eulerAngles = Math::Vec3(0.0f, 0.0f, -23.0f);
                     trans.rot = Math::Quat(Math::DegToRad(trans.eulerAngles));
 
                     RigidBody& rb = activeScene.GetPhysicsScene().CreateRigidBody(trans.pos, trans.rot);
                     rb.type = BodyType::Static;
+                    rb.mass = 10.f;
+                    rb.bounciness = 0.15f;
 
                     Math::Vec3 halfExts = trans.scale;
                     AABBCollider collider = m_physicsEngine.CreateAABBCollider(halfExts);
@@ -259,6 +261,7 @@ namespace Vakol
 
                     RigidBody& rb = activeScene.GetPhysicsScene().CreateRigidBody(trans.pos, trans.rot);
                     rb.type = BodyType::Static;
+                    rb.bounciness = 0.1f;
 
                     Math::Vec3 halfExts = trans.scale;
                     AABBCollider collider = m_physicsEngine.CreateAABBCollider(halfExts);
@@ -280,22 +283,24 @@ namespace Vakol
                 // While there is enough accumulated time take one or several physics steps
                 while (physicsAccumulator >= m_physicsEngine.GetTimeStep())
                 {
+                    constexpr int numIterations = 5;
                     // apply forces
                     activeScene.GetEntityList().Iterate<Components::Transform, RigidBody>(
                         [&](Components::Transform& transform, RigidBody& rb) {
                             m_physicsEngine.ApplyForces(transform.pos, transform.eulerAngles, rb);
                         });
 
-                    // detect collisions
-                    m_physicsEngine.DetectCollisions(activeScene.GetPhysicsScene());
+                    for (int i = 0; i < numIterations; ++i)
+                    {
+                        // detect collisions
+                        m_physicsEngine.DetectCollisions(activeScene.GetPhysicsScene());
 
-                    // resolve collisions
-                    activeScene.GetEntityList().Iterate<Components::Transform, RigidBody>(
-                        [&](Components::Transform& transform, RigidBody& rb) {
-                            if (rb.type == BodyType::Static)
-                                return;
-                            m_physicsEngine.ResolveCollisions(transform.pos, transform.rot, rb);
-                        });
+                        // resolve collisions
+                        activeScene.GetEntityList().Iterate<Components::Transform, RigidBody>(
+                            [&](Components::Transform& transform, RigidBody& rb) {
+                                m_physicsEngine.ResolveCollisions(transform.pos, transform.eulerAngles, rb);
+                            });
+                    }
 
                     // Decrease the accumulated time
                     physicsAccumulator -= m_physicsEngine.GetTimeStep();

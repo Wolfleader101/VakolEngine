@@ -124,7 +124,9 @@ namespace Vakol
          *
          * @param rb to handle resolution
          */
-        void ResolveCollisions(Math::Vec3& pos, Math::Quat& rot, RigidBody& rb);
+        void ResolveCollisions(Math::Vec3& pos, Math::Vec3& rot, RigidBody& rb);
+
+        static double SolveLambda(RigidBody& rb1, RigidBody& rb2);
 
         /**
          * @brief Set the Time Step object

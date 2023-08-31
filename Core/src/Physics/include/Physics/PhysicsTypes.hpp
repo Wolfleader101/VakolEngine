@@ -32,6 +32,7 @@ namespace Vakol
         Math::Vec3 localPoint = Math::Vec3(0.0f, 0.0f, 0.0f);
         double penetrationDepth = 0.0;
         bool isColliding = false;
+        float lambda = 0.0f;
 
         RigidBody* parentBody = nullptr;
         RigidBody* otherBody = nullptr;
@@ -56,7 +57,8 @@ namespace Vakol
         Math::Vec3 linearVelocity = Math::Vec3(0.0f, 0.0f, 0.0f);
         Math::Vec3 angularVelocity = Math::Vec3(0.0f, 0.0f, 0.0f);
 
-        Math::Mat3 interiaTensor = Math::Mat3(0.0f);
+        Math::Mat3 worldInertiaTensor = Math::Mat3(0.0f);
+        Math::Mat3 inertiaTensor = Math::Mat3(0.0f);
 
         rp3d::CollisionBody* collisionBody = nullptr;
 
