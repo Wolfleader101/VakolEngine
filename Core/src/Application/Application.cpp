@@ -183,37 +183,37 @@ namespace Vakol
             if (activeScene.getName() == "sandbox" && !set)
             {
                 // BALL
-                {
+                // {
 
-                    Entity ent = activeScene.CreateEntity("Ball");
+                //     Entity ent = activeScene.CreateEntity("Ball");
 
-                    ent.AddComponent<Rendering::Drawable>();
+                //     ent.AddComponent<Rendering::Drawable>();
 
-                    auto& model = AssetLoader::GetModel("coreAssets/models/cube.obj", 1);
-                    auto& drawable = ent.GetComponent<Rendering::Drawable>();
+                //     auto& model = AssetLoader::GetModel("coreAssets/models/cube.obj", 1);
+                //     auto& drawable = ent.GetComponent<Rendering::Drawable>();
 
-                    Rendering::RenderEngine::GenerateModel(model, drawable);
+                //     Rendering::RenderEngine::GenerateModel(model, drawable);
 
-                    auto& trans = ent.GetComponent<Components::Transform>();
-                    trans.pos = Math::Vec3(0.0f, 15.0f, 0.0f);
+                //     auto& trans = ent.GetComponent<Components::Transform>();
+                //     trans.pos = Math::Vec3(0.0f, 15.0f, 0.0f);
 
-                    RigidBody& rb = activeScene.GetPhysicsScene().CreateRigidBody(trans.pos, trans.rot);
-                    rb.mass = 20.0;
-                    rb.bounciness = 0.2;
+                //     RigidBody& rb = activeScene.GetPhysicsScene().CreateRigidBody(trans.pos, trans.rot);
+                //     rb.mass = 20.0;
+                //     rb.bounciness = 0.2;
 
-                    // SphereCollider collider = m_physicsEngine.CreateSphereCollider(1.0);
-                    // m_physicsEngine.AttachCollider(rb, collider);
+                //     // SphereCollider collider = m_physicsEngine.CreateSphereCollider(1.0);
+                //     // m_physicsEngine.AttachCollider(rb, collider);
 
-                    // ent.AddComponent<RigidBody>(rb);
-                    // ent.AddComponent<SphereCollider>(collider);
+                //     // ent.AddComponent<RigidBody>(rb);
+                //     // ent.AddComponent<SphereCollider>(collider);
 
-                    Math::Vec3 halfExts = trans.scale;
-                    AABBCollider collider = m_physicsEngine.CreateAABBCollider(halfExts);
-                    m_physicsEngine.AttachCollider(rb, collider);
+                //     Math::Vec3 halfExts = trans.scale;
+                //     AABBCollider collider = m_physicsEngine.CreateAABBCollider(halfExts);
+                //     m_physicsEngine.AttachCollider(rb, collider);
 
-                    ent.AddComponent<RigidBody>(rb);
-                    ent.AddComponent<AABBCollider>(collider);
-                }
+                //     ent.AddComponent<RigidBody>(rb);
+                //     ent.AddComponent<AABBCollider>(collider);
+                // }
 
                 // BOX
                 {
@@ -228,8 +228,8 @@ namespace Vakol
 
                     auto& trans = ent.GetComponent<Components::Transform>();
                     trans.pos = Math::Vec3(-0.50f, 5.0f, 0.0f);
-                    // trans.eulerAngles = Math::Vec3(0.0f, 0.0f, -23.0f);
-                    // trans.rot = Math::Quat(Math::DegToRad(trans.eulerAngles));
+                    trans.eulerAngles = Math::Vec3(0.0f, 0.0f, -23.0f);
+                    trans.rot = Math::Quat(Math::DegToRad(trans.eulerAngles));
 
                     RigidBody& rb = activeScene.GetPhysicsScene().CreateRigidBody(trans.pos, trans.rot);
                     // rb.type = BodyType::Static;
@@ -251,6 +251,7 @@ namespace Vakol
                     ent.AddComponent<Rendering::Drawable>();
 
                     auto& model = AssetLoader::GetModel("coreAssets/models/cube.obj", 1);
+                    model.meshes[0].material->properties.diffuse_color = Math::Vec3(0.0f, 0.50f, 0.4f);
                     auto& drawable = ent.GetComponent<Rendering::Drawable>();
 
                     Rendering::RenderEngine::GenerateModel(model, drawable);

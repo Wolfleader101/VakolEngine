@@ -3,11 +3,12 @@ function init()
 
     -- scene:create_entity("Digital Twin", "entities/test/digital_twin.lua");
 
-    local path = "coreAssets/textures/Skybox/imported/Unity/WorldSkies/";
+    local path = "coreAssets/textures/Skybox/";
 	local extension = ".png";
 
-	local faces = { path .. "left"  .. extension, 
-					path .. "right"   .. extension, 
+    local faces = {
+                    path .. "right"   .. extension, 
+                    path .. "left"  .. extension, 
 					path .. "top"    .. extension, 
 					path .. "bottom" .. extension, 
 					path .. "front"  .. extension, 
