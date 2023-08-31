@@ -271,9 +271,6 @@ namespace Vakol
         if (!rb.collisionData->isColliding)
             return;
 
-        // normal
-        Math::Vec3 n = rb.collisionData->worldNormal;
-
         // distance from collision point to center of mass
         Math::Vec3 r1 = rb.centerOfMass - rb.collisionData->localPoint;
 
@@ -291,37 +288,16 @@ namespace Vakol
 
         rb.angularVelocity += newW;
 
-        Depenetration(rb);
-
-        // pos += rb.linearVelocity * static_cast<float>(m_timeStep);
-
-        // // Convert angular velocity to degrees per time step
-        // Math::Vec3 angularChange = rb.angularVelocity * static_cast<float>(m_timeStep);
-
-        // // Update Euler angles
-        // rot += angularChange;
-
-        // Math::Quat quatRot(Math::DegToRad(rot));
-
-        // // Now rotate correctly to world space
-        // rb.worldInertiaTensor = Math::Mat3Cast(quatRot) * rb.inertiaTensor *
-        // Math::Transpose(Math::Mat3Cast(quatRot));
-
-        // // Update transform with new position
-        // rb.collisionBody->setTransform(rp3d::Transform(
-        //     rp3d::Vector3(static_cast<double>(pos.x), static_cast<double>(pos.y), static_cast<double>(pos.z)),
-        //     rp3d::Quaternion(static_cast<double>(quatRot.x), static_cast<double>(quatRot.y),
-        //                      static_cast<double>(quatRot.z), static_cast<double>(quatRot.w))));
+        Depenetration(pos, rb);
 
         // reset the collision data
         rb.collisionData->penetrationDepth = 0.0;
         rb.collisionData->worldNormal = Math::Vec3(0.0f, 0.0f, 0.0f);
         rb.collisionData->worldPoint = Math::Vec3(0.0f, 0.0f, 0.0f);
         rb.collisionData->isColliding = false;
-        rb.accumulatedImpulse = Math::Vec3(0.0f, 0.0f, 0.0f);
     }
 
-    void PhysicsEngine::Depenetration(RigidBody& rb)
+    void PhysicsEngine::Depenetration(Math::Vec3& pos, RigidBody& rb)
     {
         if (!rb.collisionData || rb.type == BodyType::Static)
         {
@@ -333,29 +309,16 @@ namespace Vakol
             return;
         }
 
-        RigidBody* rb2 = rb.collisionData->otherBody;
+        // Calculate the depenetration vector
+        Math::Vec3 depenetration =
+            -rb.collisionData->worldNormal * static_cast<float>(rb.collisionData->penetrationDepth);
 
-        // Get the penetration depth and collision normal
-        float penetrationDepth = rb.collisionData->penetrationDepth;
-        Math::Vec3 collisionNormal = -rb.collisionData->worldNormal;
+        pos += depenetration;
 
-        // Calculate the depenetration velocity needed for each object to resolve the collision
-        float depenetrationVelocity = std::max(penetrationDepth, 0.0f) / m_timeStep *
-                                      2.0; // someFactor could be greater than 1 to ensure quick depenetration
-
-        // Calculate the mass factor for each object based on its mass
-        float rb1MassFactor = (rb.type == BodyType::Static) ? 0.0f : 1.0f / rb.mass;
-        float rb2MassFactor = (rb2->type == BodyType::Static) ? 0.0f : 1.0f / rb2->mass;
-
-        // Weight the depenetration velocity by the mass factors
-        Math::Vec3 rb1Depenetration = depenetrationVelocity * collisionNormal * rb1MassFactor;
-        Math::Vec3 rb2Depenetration = depenetrationVelocity * collisionNormal * rb2MassFactor;
-
-        VK_ERROR("Depentration Velocity: {0} {1} {2}", rb1Depenetration.x, rb1Depenetration.y, rb1Depenetration.z);
-
-        // Apply the depenetration by modifying the velocities
-        rb.linearVelocity += rb1Depenetration;
-        rb2->linearVelocity -= rb2Depenetration;
+        // Update transform with new position
+        rb.collisionBody->setTransform(rp3d::Transform(
+            rp3d::Vector3(static_cast<double>(pos.x), static_cast<double>(pos.y), static_cast<double>(pos.z)),
+            rb.collisionBody->getTransform().getOrientation()));
     }
 
     void PhysicsEngine::SetTimeStep(double step)

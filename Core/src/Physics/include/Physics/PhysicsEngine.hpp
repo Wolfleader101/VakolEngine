@@ -126,6 +126,8 @@ namespace Vakol
          */
         void ResolveCollisions(Math::Vec3& pos, Math::Vec3& rot, RigidBody& rb);
 
+        void Depenetration(Math::Vec3& pos, RigidBody& rb);
+
         static double SolveLambda(RigidBody& rb1, RigidBody& rb2);
 
         /**
@@ -143,7 +145,6 @@ namespace Vakol
         double GetTimeStep() const;
 
       private:
-        void Depenetration(RigidBody& rb);
         /**
          * @brief scenes vector
          *
