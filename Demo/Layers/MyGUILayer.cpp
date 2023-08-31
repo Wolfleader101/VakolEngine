@@ -154,8 +154,8 @@ void MyGUILayer::OnUpdate()
                             }
 
                             ImGui::Checkbox("Has Gravity", &rb.hasGravity);
-                            ImGui::DragFloat("Mass", &rb.mass, 0.1f);
-                            ImGui::DragFloat("Bounciness", &rb.bounciness, 0.1f, 0.0f, 1.0f);
+                            ImGui::DragScalar("Mass", ImGuiDataType_Double, &rb.mass, 0.1f);
+                            ImGui::DragScalar("Bounciness", ImGuiDataType_Double, &rb.bounciness, 0.1f);
                             ImGui::DragFloat3("Center of Mass", &rb.centerOfMass.x, 0.1f);
 
                             ImGui::DragFloat3("Force", &rb.force.x, 0.1f);

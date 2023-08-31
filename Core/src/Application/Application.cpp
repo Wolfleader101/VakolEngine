@@ -198,8 +198,8 @@ namespace Vakol
                     trans.pos = Math::Vec3(0.0f, 15.0f, 0.0f);
 
                     RigidBody& rb = activeScene.GetPhysicsScene().CreateRigidBody(trans.pos, trans.rot);
-                    rb.mass = 20.0f;
-                    rb.bounciness = 0.2f;
+                    rb.mass = 20.0;
+                    rb.bounciness = 0.2;
 
                     // SphereCollider collider = m_physicsEngine.CreateSphereCollider(1.0);
                     // m_physicsEngine.AttachCollider(rb, collider);
@@ -232,9 +232,9 @@ namespace Vakol
                     trans.rot = Math::Quat(Math::DegToRad(trans.eulerAngles));
 
                     RigidBody& rb = activeScene.GetPhysicsScene().CreateRigidBody(trans.pos, trans.rot);
-                    rb.type = BodyType::Static;
-                    rb.mass = 10.f;
-                    rb.bounciness = 0.15f;
+                    // rb.type = BodyType::Static;
+                    rb.mass = 10.0;
+                    rb.bounciness = 0.15;
 
                     Math::Vec3 halfExts = trans.scale;
                     AABBCollider collider = m_physicsEngine.CreateAABBCollider(halfExts);
@@ -261,7 +261,7 @@ namespace Vakol
 
                     RigidBody& rb = activeScene.GetPhysicsScene().CreateRigidBody(trans.pos, trans.rot);
                     rb.type = BodyType::Static;
-                    rb.bounciness = 0.1f;
+                    rb.bounciness = 0.1;
 
                     Math::Vec3 halfExts = trans.scale;
                     AABBCollider collider = m_physicsEngine.CreateAABBCollider(halfExts);

@@ -32,7 +32,7 @@ namespace Vakol
         Math::Vec3 localPoint = Math::Vec3(0.0f, 0.0f, 0.0f);
         double penetrationDepth = 0.0;
         bool isColliding = false;
-        float lambda = 0.0f;
+        double lambda = 0.0;
 
         RigidBody* parentBody = nullptr;
         RigidBody* otherBody = nullptr;
@@ -45,8 +45,8 @@ namespace Vakol
     struct RigidBody
     {
         BodyType type = BodyType::Dynamic;
-        float mass = 1.0f;
-        float bounciness = 0.3f;
+        double mass = 1.0;
+        double bounciness = 0.3;
 
         bool hasGravity = true;
 
@@ -56,6 +56,7 @@ namespace Vakol
         Math::Vec3 torque = Math::Vec3(0.0f, 0.0f, 0.0f);
         Math::Vec3 linearVelocity = Math::Vec3(0.0f, 0.0f, 0.0f);
         Math::Vec3 angularVelocity = Math::Vec3(0.0f, 0.0f, 0.0f);
+        Math::Vec3 accumulatedImpulse = Math::Vec3(0.0f, 0.0f, 0.0f);
 
         Math::Mat3 worldInertiaTensor = Math::Mat3(0.0f);
         Math::Mat3 inertiaTensor = Math::Mat3(0.0f);

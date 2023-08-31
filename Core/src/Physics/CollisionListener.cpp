@@ -1,4 +1,5 @@
 #include "Physics/CollisionListener.hpp"
+#include "Physics/PhysicsEngine.hpp"
 
 #include "Logger/Logger.hpp"
 namespace Vakol
@@ -90,6 +91,15 @@ namespace Vakol
             {
                 body1Data->otherBody = body2Data->parentBody;
                 body2Data->otherBody = body1Data->parentBody;
+
+                double lambda = PhysicsEngine::SolveLambda(*body1Data->parentBody, *body2Data->parentBody);
+                body1Data->lambda = lambda;
+                body2Data->lambda = lambda;
+
+                Math::Vec3 impulse = static_cast<float>(lambda) * body1Data->worldNormal;
+
+                body1Data->parentBody->accumulatedImpulse += impulse;
+                body2Data->parentBody->accumulatedImpulse -= impulse;
             }
         }
     }
