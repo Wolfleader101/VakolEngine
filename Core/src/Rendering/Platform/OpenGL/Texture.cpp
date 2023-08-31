@@ -1,6 +1,7 @@
 #include "Rendering/Platform/OpenGL/Texture.hpp"
 #include "Rendering/Assets/Texture.hpp"
 
+#include "AssetLoader/AssetLoader.hpp"
 #include "Logger/Logger.hpp"
 
 #include <glad/glad.h>
@@ -17,7 +18,7 @@ namespace Vakol::Rendering::OpenGL
         glGenTextures(1, &texture);
         glBindTexture(GL_TEXTURE_2D, texture);
 
-        const GLenum internal_format = channels == 1 ? GL_R8 : channels > 3 ? GL_RGBA8 : GL_RGB8;
+        const GLint internal_format = channels == 1 ? GL_R8 : channels > 3 ? GL_RGBA8 : GL_RGB8;
         const GLenum format = channels == 1 ? GL_RED : channels > 3 ? GL_RGBA : GL_RGB;
 
         glTexStorage2D(GL_TEXTURE_2D, levels, internal_format, width, height);
@@ -38,7 +39,7 @@ namespace Vakol::Rendering::OpenGL
         return texture;
     }
 
-    unsigned int GenerateTexture(std::vector<Assets::Texture>&& textures)
+    unsigned int GenerateTexture(std::vector<std::string>&& faces)
     {
         unsigned int texture;
 
@@ -47,13 +48,13 @@ namespace Vakol::Rendering::OpenGL
 
         int width = 0, height = 0, channels = 1;
 
-        for (int i = 0; i < textures.size(); ++i)
+        for (int i = 0; i < faces.size(); ++i)
         {
             unsigned char* pixels = nullptr;
 
-            ImportTexture(textures.at(i).path, width, height, channels, pixels);
+            AssetLoader::GetTexture(faces.at(i), Assets::VK_TEXTURE_DIFFUSE, width, height, channels, pixels);
 
-            const GLenum internal_format = channels == 1 ? GL_R8 : channels > 3 ? GL_RGBA8 : GL_RGB8;
+            const GLint internal_format = channels == 1 ? GL_R8 : channels > 3 ? GL_RGBA8 : GL_RGB8;
             const GLenum format = channels == 1 ? GL_RED : channels > 3 ? GL_RGBA : GL_RGB;
 
             glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, internal_format, width, height, 0, format,

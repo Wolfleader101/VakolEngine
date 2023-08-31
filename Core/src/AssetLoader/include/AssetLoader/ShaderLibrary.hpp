@@ -35,61 +35,71 @@ namespace Vakol
          * \param shader
          * \param name
          * \param value
+         * \param binding
          */
-        void SetBool(unsigned int shader, const char* name, bool value);
+        void SetBool(unsigned int shader, const char* name, bool value, bool binding = true);
 
         /**
          * \brief
          * \param shader
          * \param name
          * \param value
+         * \param binding
          */
-        void SetInt(unsigned int shader, const char* name, int value);
+        void SetInt(unsigned int shader, const char* name, int value, bool binding = true);
 
         /**
          * \brief
          * \param shader
          * \param name
          * \param value
+         * \param binding
          */
-        void SetFloat(unsigned int shader, const char* name, float value);
+        void SetFloat(unsigned int shader, const char* name, float value, bool binding = true);
         /**
          * \brief
          * \param shader
          * \param name
          * \param value
+         * \param binding
          */
-        void SetVec2(unsigned int shader, const char* name, const Math::Vec2& value);
+        void SetVec2(unsigned int shader, const char* name, const Math::Vec2& value, bool binding = true);
         /**
          * \brief
          * \param shader
          * \param name
          * \param value
+         * \param binding
          */
-        void SetVec3(unsigned int shader, const char* name, const Math::Vec3& value);
+        void SetVec3(unsigned int shader, const char* name, const Math::Vec3& value, bool binding = true);
         /**
          * \brief
          * \param shader
          * \param name
          * \param value
+         * \param binding
          */
-        void SetVec4(unsigned int shader, const char* name, const Math::Vec4& value);
+        void SetVec4(unsigned int shader, const char* name, const Math::Vec4& value, bool binding = true);
         /**
          * \brief
          * \param shader
          * \param name
          * \param transpose
          * \param value
+         * \param binding
          */
-        void SetMat3(unsigned int shader, const char* name, bool transpose, const Math::Mat3& value);
+        void SetMat3(unsigned int shader, const char* name, bool transpose, const Math::Mat3& value,
+                     bool binding = true);
         /**
          * \brief
          * \param shader
          * \param name
          * \param transpose
          * \param value
+         * \param binding
          */
-        void SetMat4(unsigned int shader, const char* name, bool transpose, const Math::Mat4& value);
+        void SetMat4(unsigned int shader, const char* name, bool transpose, const Math::Mat4& value,
+                     bool binding = true);
 
       private:
         /**

@@ -218,6 +218,9 @@ namespace Vakol
         properties.specular_color = ToVec3(specular);
         properties.emissive_color = ToVec3(emissive);
 
+        if (properties.shininess < 1.0f)
+            properties.shininess = 1.0f;
+
         auto&& diffuse_maps = ExtractTextures(scene, material, aiTextureType_DIFFUSE);
         auto&& specular_maps = ExtractTextures(scene, material, aiTextureType_SPECULAR);
         auto&& ambient_maps = ExtractTextures(scene, material, aiTextureType_AMBIENT);

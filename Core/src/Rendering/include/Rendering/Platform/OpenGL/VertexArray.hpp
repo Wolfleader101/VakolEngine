@@ -7,6 +7,8 @@ namespace Vakol::Rendering
 
 namespace Vakol::Rendering::OpenGL
 {
+    void GenerateEmptyVertexArray(unsigned int& vao, unsigned int& vbo);
+
     /**
      * \brief Generate a vertex array object within an OpenGL context
      * \param vertexData the pointer to the vertex data.
@@ -20,6 +22,13 @@ namespace Vakol::Rendering::OpenGL
      * \param command the vertex command to be modified by the function.
      */
     void GenerateSkyboxVertexArray(const void* vertexData, VertexCommand& command);
+
+    /**
+     * \brief
+     * \param vertexData
+     * \param command
+     */
+    void GenerateDebugVertexArray(const void* vertexData, const VertexCommand& command);
 
     /**
      * \brief binds a vertex array object within an OpenGL context

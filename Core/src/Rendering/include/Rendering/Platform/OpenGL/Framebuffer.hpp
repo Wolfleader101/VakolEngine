@@ -19,6 +19,8 @@ namespace Vakol::Rendering::OpenGL
     void EnableCulling();
     void CullFaces(unsigned int face);
 
+    void Viewport(int x, int y, int width, int height);
+
     /**
      * \brief less than or equal depth function
      */

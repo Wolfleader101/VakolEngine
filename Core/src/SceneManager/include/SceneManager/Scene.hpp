@@ -88,6 +88,15 @@ namespace Vakol
         }
 
         /**
+         * \brief Set the camera of the scene
+         * \param camera The const reference to a new camera
+         */
+        void SetCamera(const Camera& camera)
+        {
+            m_cam = camera;
+        }
+
+        /**
          * @brief Get an entity in the scene by its tag.
          *
          * @param tag The tag of the entity.

@@ -18,6 +18,8 @@ namespace Vakol::Components
 
 namespace Vakol::Rendering
 {
+    struct DebugScene;
+
     namespace Assets
     {
         struct Model;
@@ -36,7 +38,7 @@ namespace Vakol::Rendering
          * \param height initial window height
          * \param API the third-party rendering API chosen by the user (OpenGL, Metal, Direct3D, Vulkan)
          */
-        static void Init(int width, int height, const std::string& API);
+        static void Init(Camera& camera, int width, int height, const std::string& API);
         /**
          * \brief called before drawing an object
          */
@@ -59,6 +61,8 @@ namespace Vakol::Rendering
          */
         static void DrawSkybox(const Camera& camera, const Skybox& skybox);
 
+        static void DrawDebugScene(const Camera& camera, const DebugScene& debugScene);
+
         /**
          * \brief generate a model object
          * \param scale the scale of the cube
@@ -78,12 +82,22 @@ namespace Vakol::Rendering
          */
         static void GenerateCube(float scale, Drawable& drawable);
 
+        static void GenerateDebugScene(DebugScene& debugScene);
+
         /**
          * \brief generate a skybox given the names of the faces of its' cubemap texture.
          * \param faces the names of each face of a skybox cubemap texture
          * \param skybox the skybox of a scene to be modified by the engine.
          */
         static void GenerateSkybox(std::vector<std::string>&& faces, Skybox& skybox);
+
+        /**
+         * \brief
+         * \param camera the camera of a scene
+         * \param width the width of the screen
+         * \param height the height of the screen
+         */
+        static void ResizeScreen(Camera& camera, unsigned int width, unsigned int height);
 
       private:
         /**

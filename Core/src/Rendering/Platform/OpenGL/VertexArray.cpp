@@ -7,6 +7,17 @@
 
 namespace Vakol::Rendering::OpenGL
 {
+    void GenerateEmptyVertexArray(unsigned int& vao, unsigned int& vbo)
+    {
+        glGenVertexArrays(1, &vao);
+        glGenBuffers(1, &vbo);
+
+        glBindVertexArray(vao);
+
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindVertexArray(0);
+    }
+
     void GenerateVertexArray(const void* vertexData, const void* indexData, VertexCommand& command)
     {
         unsigned int ebo = 0;
@@ -73,6 +84,26 @@ namespace Vakol::Rendering::OpenGL
 
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindVertexArray(0);
+    }
+
+    void GenerateDebugVertexArray(const void* vertexData, const VertexCommand& command)
+    {
+        glBindVertexArray(command.vertexArray);
+
+        glBindBuffer(GL_ARRAY_BUFFER, command.vertexBuffer);
+
+        glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(command.nVertices * sizeof(DebugVertex)), vertexData,
+                     GL_DYNAMIC_DRAW);
+
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(DebugVertex), nullptr);
+
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(DebugVertex),
+                              reinterpret_cast<const void*>(offsetof(DebugVertex, color)));
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);

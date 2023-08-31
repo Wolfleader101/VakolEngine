@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Math/Math.hpp>
+#include "Math/Math.hpp"
 
 #include <string>
 #include <vector>
@@ -21,10 +21,17 @@ namespace Vakol::Rendering
         float boneWeights[MAX_BONE_INFLUENCE]; ///< Array of weights of the bones affecting the vertex.
     };
 
+    struct DebugVertex
+    {
+        Math::Vec3 position;
+        Math::Vec3 color;
+    };
+
     struct Drawable
     {
         bool active = true; /// decides whether the drawable should be drawn in the scene.
 
+        std::string ID = "null";
         std::string modelID = "null";  // the path of the model.
         std::string shaderID = "null"; // A unique id of the shader.
     };
@@ -37,6 +44,12 @@ namespace Vakol::Rendering
         std::string shaderID = "null";
 
         unsigned int textureID = 0;
+    };
+
+    struct DebugScene
+    {
+        std::string ID = "null";
+        std::string shaderID = "null";
     };
 
     struct VertexArray

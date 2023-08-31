@@ -84,4 +84,9 @@ namespace Vakol::Rendering::OpenGL
         glDepthFunc(GL_LESS);
     }
 
+    void Viewport(const int x, const int y, const int width, const int height)
+    {
+        glViewport(x, y, width, height);
+    }
+
 } // namespace Vakol::Rendering::OpenGL

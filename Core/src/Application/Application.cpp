@@ -14,7 +14,7 @@ namespace Vakol
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
     Application::Application()
-        : m_window(nullptr), m_scriptEngine(), m_sceneManager(m_scriptEngine, m_physicsEngine), m_running(false),
+        : m_window(nullptr), m_sceneManager(m_scriptEngine, m_physicsEngine), m_running(false),
           m_gameState(GameState::Running), m_activeSystems(0), m_input(){};
 
     void Application::Init()
@@ -32,15 +32,14 @@ namespace Vakol
         m_window =
             std::make_shared<Window>(config.value().name, config.value().windowWidth, config.value().windowHeight);
 
-        if (m_window == nullptr)
+        if (!m_window)
         {
+            VK_CRITICAL("Window was NULLPTR!");
+
             return;
         }
 
         m_window->SetEventCallback([this](auto&& PH1) { OnEvent(std::forward<decltype(PH1)>(PH1)); });
-
-        Rendering::RenderEngine::Init(config.value().windowWidth, config.value().windowHeight,
-                                      config.value().rendererType);
 
         m_gui.Init(m_window);
 
@@ -52,6 +51,9 @@ namespace Vakol
 
         m_activeSystems = static_cast<int>(SystemFlag::Scripting) | static_cast<int>(SystemFlag::Physics) |
                           static_cast<int>(SystemFlag::Rendering);
+
+        Rendering::RenderEngine::Init(m_sceneManager.GetActiveScene().GetCamera(), config.value().windowWidth,
+                                      config.value().windowHeight, config.value().rendererType);
     }
 
     void Application::RegisterLua()
@@ -70,18 +72,6 @@ namespace Vakol
         // dont think we need get_current_scene as that's more for backend
 
         m_scriptEngine.SetGlobalFunction("set_active_mouse", &Application::SetActiveMouse, this);
-
-        // m_scriptEngine.SetGlobalFunction("toggle_wireframe", &Renderer::ToggleWireframe, m_renderer);
-        // m_scriptEngine.SetGlobalFunction("toggle_skybox", &Renderer::ToggleSkybox, m_renderer);
-        // m_scriptEngine.SetGlobalFunction("set_wireframe", &Renderer::SetWireframe, m_renderer);
-        // m_scriptEngine.SetGlobalFunction("set_skybox", &Renderer::SetSkybox, m_renderer);
-
-        // lua.set_function("clear_color_v", [&](const Math::Vec4& color) { renderer->ClearColor(color); });
-
-        // lua.set_function("clear_color", [&](const float r, const float g, const float b, const float a) {
-        //     renderer->ClearColor(r, g, b, a);
-        //     renderer->ClearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        // });
     }
 
     std::optional<GameConfig> Application::LoadConfig()
@@ -152,44 +142,48 @@ namespace Vakol
     void Application::Run()
     {
         double physicsAccumulator = 0.0;
+
         while (m_running)
         {
             m_time.Update();
+
+            m_sceneManager.Update();
+
             m_time.accumulator += m_time.deltaTime;
 
             m_gui.CreateNewFrame();
 
             if (IsSystemActive(SystemFlag::Rendering))
             {
-
                 Rendering::RenderEngine::PreDraw();
             }
 
-            m_sceneManager.Update();
-
             Scene& activeScene = m_sceneManager.GetActiveScene();
 
-            // Add the time difference in the accumulator
-            physicsAccumulator += m_time.deltaTime;
-
             // While there is enough accumulated time take one or several physics steps
-            while (IsSystemActive(SystemFlag::Physics) && physicsAccumulator >= m_physicsEngine.GetTimeStep())
+            if (IsSystemActive(SystemFlag::Physics))
             {
-                // apply forces
-                activeScene.GetEntityList().Iterate<RigidBody>([&](auto& rb) { m_physicsEngine.ApplyForces(rb); });
+                // Add the time difference in the accumulator
+                physicsAccumulator += m_time.deltaTime;
 
-                // detect collisions
-                m_physicsEngine.DetectCollisions(activeScene.GetPhysicsScene());
+                while (physicsAccumulator >= m_physicsEngine.GetTimeStep())
+                {
+                    // apply forces
+                    activeScene.GetEntityList().Iterate<Components::Transform, RigidBody>(
+                        [&](Components::Transform& tf, auto& rb) {});
 
-                // resolve collisions
-                activeScene.GetEntityList().Iterate<RigidBody>(
-                    [&](auto& rb) { m_physicsEngine.ResolveCollisions(rb); });
+                    // detect collisions
+                    m_physicsEngine.DetectCollisions(activeScene.GetPhysicsScene());
 
-                // Decrease the accumulated time
-                physicsAccumulator -= m_physicsEngine.GetTimeStep();
+                    // resolve collisions
+                    activeScene.GetEntityList().Iterate<Components::Transform, RigidBody>(
+                        [&](Components::Transform& tf, auto& rb) {
 
-                // Compute the time interpolation factor
-                //     double factor = physicsAccumulator / m_timestep;
+                        });
+
+                    // Decrease the accumulated time
+                    physicsAccumulator -= m_physicsEngine.GetTimeStep();
+                }
             }
 
             while (m_time.accumulator >= m_time.tickRate)
@@ -230,6 +224,12 @@ namespace Vakol
                 if (activeScene.GetSkybox().active)
                 {
                     Rendering::RenderEngine::DrawSkybox(activeScene.GetCamera(), activeScene.GetSkybox());
+                }
+
+                if (activeScene.GetPhysicsScene().IsDebugEnabled())
+                {
+                    Rendering::RenderEngine::DrawDebugScene(activeScene.GetCamera(),
+                                                            activeScene.GetPhysicsScene().GetDebugScene());
                 }
             }
 
@@ -312,9 +312,10 @@ namespace Vakol
         return true;
     }
 
-    bool Application::OnWindowResize(const WindowResizeEvent& ev) const
+    bool Application::OnWindowResize(const WindowResizeEvent& ev)
     {
-        glViewport(0, 0, ev.GetWidth(), ev.GetHeight());
+        Rendering::RenderEngine::ResizeScreen(m_sceneManager.GetActiveScene().GetCamera(), ev.GetWidth(),
+                                              ev.GetHeight());
 
         return true;
     }
