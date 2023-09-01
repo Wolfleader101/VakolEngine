@@ -77,6 +77,17 @@ namespace Vakol
         {
             m_activeScene = m_nextScene;
             m_nextScene = nullptr;
+            m_sceneChanged = true;
+            m_counter = 0;
+        }
+
+        if (m_sceneChanged)
+        {
+            m_counter++;
+            if (m_counter >= 3)
+            {
+                m_sceneChanged = false;
+            }
         }
 
         m_scriptEngine.SetGlobalVariable("scene", m_activeScene);
@@ -86,6 +97,10 @@ namespace Vakol
             m_scriptEngine.InitScript(m_activeScene->GetScript());
             m_activeScene->initialized = true;
         }
+    }
+    bool SceneManager::SceneChanged() const
+    {
+        return m_sceneChanged;
     }
 
     bool SceneManager::operator!() const
