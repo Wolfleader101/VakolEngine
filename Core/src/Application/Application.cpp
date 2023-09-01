@@ -155,6 +155,17 @@ namespace Vakol
         while (m_running)
         {
             m_time.Update();
+
+            m_sceneManager.Update();
+
+            if (m_sceneManager.SceneChanged())
+            {
+                // ignore the current frame, and next frame on scene change
+                // on scene change, ignore rest of the current frame, delta time will be low (current frame)
+                // the next frame, the delta time will be large because of how long it took to initialise the scene
+                continue;
+            }
+
             m_time.accumulator += m_time.deltaTime;
 
             m_gui.CreateNewFrame();
@@ -164,8 +175,6 @@ namespace Vakol
 
                 Rendering::RenderEngine::PreDraw();
             }
-
-            m_sceneManager.Update();
 
             Scene& activeScene = m_sceneManager.GetActiveScene();
 
