@@ -203,7 +203,7 @@ namespace Vakol::Rendering
          * \param shader the shader
          * \param material the material to send to shader
          */
-        static void SetMaterial(unsigned int shader, const std::shared_ptr<Assets::Material>& material);
+        static void SetMaterial(unsigned int shader, const Assets::Material& material);
 
         /**
          * \brief get the shader's rendering id based on its application id.

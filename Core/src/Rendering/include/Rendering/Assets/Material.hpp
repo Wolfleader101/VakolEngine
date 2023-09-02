@@ -47,6 +47,6 @@ namespace Vakol::Rendering::Assets
 
         std::vector<Texture> textures; /// The textures of a material
 
-        std::shared_ptr<MaterialProperties> properties = nullptr; /// The properties that make up a material
+        MaterialProperties properties; /// The properties that make up a material
     };
 } // namespace Vakol::Rendering::Assets

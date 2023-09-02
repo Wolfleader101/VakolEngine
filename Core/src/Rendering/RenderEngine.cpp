@@ -120,7 +120,7 @@ namespace Vakol::Rendering
 
     void RenderEngine::GenerateCube(const float scale, Drawable& drawable)
     {
-        GenerateModel(AssetLoader::GetModel(drawable.ID,"coreAssets/models/cube.obj", scale), drawable);
+        GenerateModel(AssetLoader::GetModel(drawable.ID, "coreAssets/models/cube.obj", scale), drawable);
     }
 
     void RenderEngine::GenerateDebugScene(DebugScene& debugScene)
@@ -169,11 +169,11 @@ namespace Vakol::Rendering
 
         for (auto& mesh : model.meshes)
         {
-            const auto& material = mesh.material;
+            Assets::Material& material = mesh.material;
 
-            material->shaderID = drawable.shaderID;
+            material.shaderID = drawable.shaderID;
 
-            auto& textures = material->textures;
+            auto& textures = material.textures;
 
             auto compare = [](const Assets::Texture& lhs, const Assets::Texture& rhs) -> bool {
                 return lhs.ID < rhs.ID;
@@ -186,7 +186,7 @@ namespace Vakol::Rendering
                     std::string path = "coreAssets/textures/white.png";
                     const unsigned int type = Assets::VK_TEXTURE_DIFFUSE + i;
 
-                    material->textures.emplace_back(AssetLoader::GetTexture(path, type));
+                    material.textures.emplace_back(AssetLoader::GetTexture(path, type));
                 }
             }
             else
@@ -195,7 +195,7 @@ namespace Vakol::Rendering
 
                 std::vector<unsigned int> types;
 
-                for (const auto& texture : material->textures)
+                for (const auto& texture : material.textures)
                 {
                     types.emplace_back(texture.type);
                 }
@@ -208,7 +208,7 @@ namespace Vakol::Rendering
                     {
                         const unsigned int type = target;
 
-                        material->textures.emplace_back(AssetLoader::GetTexture(path, type));
+                        material.textures.emplace_back(AssetLoader::GetTexture(path, type));
                     }
                 }
             }

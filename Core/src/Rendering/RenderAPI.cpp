@@ -41,7 +41,7 @@ namespace Vakol::Rendering
 
             SetMaterial(shader, material);
 
-            for (const auto& texture : material->textures)
+            for (const auto& texture : material.textures)
             {
                 OpenGL::SetActiveTexture(static_cast<int>(texture.type));
                 OpenGL::BindTexture(texture.ID);
@@ -426,21 +426,18 @@ namespace Vakol::Rendering
         return transform_matrix;
     }
 
-    void RenderAPI::SetMaterial(const unsigned int shader, const std::shared_ptr<Assets::Material>& material)
+    void RenderAPI::SetMaterial(const unsigned int shader, const Assets::Material& material)
     {
-        const auto& properties = material->properties;
+        const auto& properties = material.properties;
 
-        if (properties)
-        {
-            SetVec3(shader, "material.ambient_color", properties->ambient_color, false);
-            SetVec3(shader, "material.diffuse_color", properties->diffuse_color, false);
-            SetVec3(shader, "material.specular_color", properties->specular_color, false);
-            SetVec3(shader, "material.emissive_color", properties->emissive_color, false);
+        SetVec3(shader, "material.ambient_color", properties.ambient_color, false);
+        SetVec3(shader, "material.diffuse_color", properties.diffuse_color, false);
+        SetVec3(shader, "material.specular_color", properties.specular_color, false);
+        SetVec3(shader, "material.emissive_color", properties.emissive_color, false);
 
-            SetFloat(shader, "material.shininess", properties->shininess, false);
-            SetFloat(shader, "material.shininess_strength", properties->shininess_strength, false);
-            SetFloat(shader, "material.opacity", properties->opacity, false);
-        }
+        SetFloat(shader, "material.shininess", properties.shininess, false);
+        SetFloat(shader, "material.shininess_strength", properties.shininess_strength, false);
+        SetFloat(shader, "material.opacity", properties.opacity, false);
     }
 
     void RenderAPI::AddShader(const std::string& shaderID, const unsigned int shader)

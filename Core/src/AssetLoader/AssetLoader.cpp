@@ -34,7 +34,8 @@ namespace Vakol
         return m_textureLibrary.GetTexture(path, type, levels);
     }
 
-    void AssetLoader::GetTexture(const std::string& path, const unsigned int type, int& width, int& height, int& channels, unsigned char*& pixels)
+    void AssetLoader::GetTexture(const std::string& path, const unsigned int type, int& width, int& height,
+                                 int& channels, unsigned char*& pixels)
     {
         return m_textureLibrary.GetTexture(path, type, width, height, channels, pixels);
     }
@@ -48,11 +49,11 @@ namespace Vakol
     void AssetLoader::ReplaceTexture(const std::string& modelID, const std::string& srcPath, const unsigned int srcType,
                                      const std::string& dstPath, const unsigned int dstType)
     {
-        const auto& model = FindModel(modelID);
+        Rendering::Assets::Model& model = FindModel(modelID);
 
-        for (const auto& mesh : model.meshes)
+        for (Rendering::Assets::Mesh& mesh : model.meshes)
         {
-            auto& textures = mesh.material->textures;
+            auto& textures = mesh.material.textures;
 
             std::replace_if(
                 textures.begin(), textures.end(),

@@ -19,7 +19,7 @@ namespace Vakol
             return GetErrorModel(1.0f);
         }
 
-        //VK_TRACE(m_models.at(ID).meshes.at(0).material->ID);
+        // VK_TRACE(m_models.at(ID).meshes.at(0).material.ID);
 
         return m_models.at(ID);
     }
@@ -28,18 +28,18 @@ namespace Vakol
     {
         if (!ModelExists(ID))
         {
-            const auto& model = GetModel(path, scale); // load the model and put it into the loaded models map
+            Rendering::Assets::Model model =
+                GetModel(path, scale); // load the model and put it into the loaded models map
 
-            for (auto& mesh : model.meshes)
+            for (Vakol::Rendering::Assets::Mesh& mesh : model.meshes)
             {
-                auto& material = mesh.material;
-                material->ID = Rendering::GenerateID();
+                mesh.material.ID = Rendering::GenerateID();
             }
 
             m_models[ID] = model;
         }
 
-        //VK_TRACE(m_models.at(ID).meshes.at(0).material->ID);
+        VK_TRACE(m_models.at(ID).meshes.at(0).material.ID);
 
         return m_models.at(ID);
     }

@@ -160,7 +160,7 @@ namespace Vakol
         const auto& material = ProcessMaterial(scene, scene.mMaterials[mesh.mMaterialIndex]);
 
         return {Rendering::GenerateID(), mesh.mName.C_Str(),  std::move(vertices),
-                std::move(indices),      std::vector<Bone>(), std::make_shared<Material>(material)};
+                std::move(indices),      std::vector<Bone>(), material};
     }
 
     void ExtractVertices(const aiMesh& mesh, std::vector<Rendering::Vertex>& vertices,
@@ -241,8 +241,7 @@ namespace Vakol
         textures.insert(textures.end(), std::make_move_iterator(normal_maps.begin()),
                         std::make_move_iterator(normal_maps.end()));
 
-        return {material->GetName().C_Str(), "null", "null", std::move(textures),
-                std::make_shared<MaterialProperties>(properties)};
+        return {material->GetName().C_Str(), "null", "null", std::move(textures), properties};
     }
 
     std::vector<Texture> ExtractTextures(const aiScene& scene, const aiMaterial* material, const aiTextureType type)

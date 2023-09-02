@@ -105,16 +105,17 @@ void MyGUILayer::OnUpdate()
 
                             ImGui::SeparatorText("Material");
 
-                            const auto& model = Vakol::AssetLoader::FindModel(drawable.ID);
+                            Vakol::Rendering::Assets::Model& model = Vakol::AssetLoader::FindModel(drawable.ID);
 
-                            for (auto& mesh : model.meshes)
+                            for (Vakol::Rendering::Assets::Mesh& mesh : model.meshes)
                             {
                                 ImGui::Text("Mesh ID: %s", mesh.ID.c_str());
 
-                                const auto& material = mesh.material;
+                                Vakol::Rendering::Assets::Material& material = mesh.material;
 
-                                ImGui::Text("Material ID: %s", material->ID.c_str());
-                                ImGui::ColorEdit3(("Diffuse Color##" + material->ID).c_str(), &material->properties->diffuse_color.x);
+                                ImGui::Text("Material ID: %s", material.ID.c_str());
+                                ImGui::ColorEdit3(("Diffuse Color##" + material.ID).c_str(),
+                                                  &material.properties.diffuse_color.x);
                             }
                         }
 
