@@ -28,7 +28,7 @@ namespace Vakol
     {
         if (!ModelExists(ID))
         {
-            Rendering::Assets::Model model =
+            Rendering::Assets::Model& model =
                 GetModel(path, scale); // load the model and put it into the loaded models map
 
             for (Vakol::Rendering::Assets::Mesh& mesh : model.meshes)
