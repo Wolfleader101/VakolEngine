@@ -1,4 +1,7 @@
 #include "MyGUILayer.hpp"
+
+#include "AssetLoader/AssetLoader.hpp"
+
 #include <iostream>
 
 #include <ECS/Components.hpp>
@@ -83,14 +86,39 @@ void MyGUILayer::OnUpdate()
 
                 auto& EL = m_SceneManager->GetActiveScene().GetEntityList();
 
-                EL.Iterate<Vakol::Components::Tag, Vakol::Components::Transform>(
-                    [&](Vakol::Components::Tag& Tag, Vakol::Components::Transform& trans) {
-                        if (ImGui::CollapsingHeader(Tag.tag.c_str()))
+                EL.Iterate<Vakol::Components::Tag, Vakol::Components::Transform, Vakol::Rendering::Drawable>(
+                    [&](const Vakol::Components::Tag& tag, Vakol::Components::Transform& trans,
+                        const Vakol::Rendering::Drawable& drawable) {
+                        ImGui::PushID((tag.tag + drawable.ID).c_str());
+
+                        if (ImGui::CollapsingHeader(tag.tag.c_str()))
                         {
+                            ImGui::Text("Drawable ID: %s", drawable.ID.c_str());
+
+                            ImGui::SeparatorText("Transform");
+
                             ImGui::DragFloat3("Position", &trans.pos.x, 0.1f);
                             ImGui::DragFloat3("Rotation", &trans.eulerAngles.x, 0.1f);
                             ImGui::DragFloat3("Scale", &trans.scale.x, 0.1f);
+
+                            ImGui::Spacing();
+
+                            ImGui::SeparatorText("Material");
+
+                            const auto& model = Vakol::AssetLoader::FindModel(drawable.ID);
+
+                            for (auto& mesh : model.meshes)
+                            {
+                                ImGui::Text("Mesh ID: %s", mesh.ID.c_str());
+
+                                const auto& material = mesh.material;
+
+                                ImGui::Text("Material ID: %s", material->ID.c_str());
+                                ImGui::ColorEdit3(("Diffuse Color##" + material->ID).c_str(), &material->properties->diffuse_color.x);
+                            }
                         }
+
+                        ImGui::PopID();
                     });
 
                 ImGui::EndChild(); // End of child frame

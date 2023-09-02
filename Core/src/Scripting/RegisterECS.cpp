@@ -2,6 +2,7 @@
 #include "ECS/Components.hpp"
 #include "ECS/Entity.hpp"
 #include "LuaAccess.hpp"
+#include "Rendering/RenderCommand.hpp"
 #include "SceneManager/Scene.hpp"
 
 #include "Rendering/RenderEngine.hpp"
@@ -21,12 +22,13 @@ namespace Vakol
             if (!ent->HasComponent<Rendering::Drawable>())
                 ent->AddComponent<Rendering::Drawable>();
 
-            auto model = AssetLoader::GetModel(path, scale);
             auto& drawable = ent->GetComponent<Rendering::Drawable>();
+            drawable.ID = Rendering::GenerateID();
 
+            auto& model = AssetLoader::GetModel(drawable.ID, path, scale);
             Rendering::RenderEngine::GenerateModel(model, drawable);
 
-            return std::make_shared<Rendering::Assets::Model>(std::move(model));
+            return model;
         });
 
         entity_type.set_function("replace_texture", [](const Entity* ent, const std::string& srcPath,
@@ -39,7 +41,7 @@ namespace Vakol
                 return;
             }
 
-            const auto& model = AssetLoader::FindModel(ent->GetComponent<Rendering::Drawable>().modelID);
+            const auto& model = AssetLoader::FindModel(ent->GetComponent<Rendering::Drawable>().ID);
 
             AssetLoader::ReplaceTexture(model.path, srcPath, Rendering::Assets::ToTextureType(srcType), dstPath,
                                         Rendering::Assets::ToTextureType(dstType));

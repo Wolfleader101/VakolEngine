@@ -111,11 +111,11 @@ namespace Vakol::Rendering
          * \brief breaks down each mesh of a model.
          * \param model the model to be submitted
          */
-        static void SubmitModel(Assets::Model& model);
+        static void SubmitModel(const Assets::Model& model);
         /**
          * \brief converts a high-level mesh object into low-level vertex array object via API
          * \param mesh the mesh to be submitted
          */
-        static void SubmitMesh(Assets::Mesh& mesh);
+        static void SubmitMesh(const Assets::Mesh& mesh);
     };
 } // namespace Vakol::Rendering

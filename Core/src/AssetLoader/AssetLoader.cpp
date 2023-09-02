@@ -13,19 +13,19 @@ namespace Vakol
     ModelLibrary AssetLoader::m_modelLibrary;
     TextureLibrary AssetLoader::m_textureLibrary;
 
-    Rendering::Assets::Model& AssetLoader::FindModel(const std::string& path)
+    Rendering::Assets::Model& AssetLoader::FindModel(const std::string& ID)
     {
-        return m_modelLibrary.FindModel(path);
+        return m_modelLibrary.FindModel(ID);
     }
 
-    Rendering::Assets::Model& AssetLoader::GetModel(const std::string& path, const float scale)
+    Rendering::Assets::Model& AssetLoader::GetModel(const std::string& ID, const std::string& path, const float scale)
     {
-        return m_modelLibrary.GetModel(path, scale);
+        return m_modelLibrary.GetModel(ID, path, scale);
     }
 
-    const std::vector<Rendering::Assets::Mesh>& AssetLoader::GetMeshes(const std::string& modelID)
+    const std::vector<Rendering::Assets::Mesh>& AssetLoader::GetMeshes(const std::string& ID)
     {
-        return m_modelLibrary.FindModel(modelID).meshes;
+        return m_modelLibrary.FindModel(ID).meshes;
     }
 
     Rendering::Assets::Texture& AssetLoader::GetTexture(const std::string& path, const unsigned int type,

@@ -35,24 +35,25 @@ namespace Vakol
 
         /**
          * \brief finds a model based on a path
-         * \param path the path of the model
+         * \param ID the path of the model
          * \return the model if found, else an error model
          */
-        static Rendering::Assets::Model& FindModel(const std::string& path);
+        static Rendering::Assets::Model& FindModel(const std::string& ID);
 
         /**
          * \brief
+         * \param ID the drawable ID
          * \param path the path of the model
          * \param scale the uniform scale of the model
          * \return
          */
-        static Rendering::Assets::Model& GetModel(const std::string& path, float scale = 1.0f);
+        static Rendering::Assets::Model& GetModel(const std::string& ID, const std::string& path, float scale = 1.0f);
         /**
          * \brief
-         * \param modelID the path of the model
+         * \param ID the drawable ID of the model
          * \return
          */
-        static const std::vector<Rendering::Assets::Mesh>& GetMeshes(const std::string& modelID);
+        static const std::vector<Rendering::Assets::Mesh>& GetMeshes(const std::string& ID);
         /**
          * \brief
          * \param path the path of the texture

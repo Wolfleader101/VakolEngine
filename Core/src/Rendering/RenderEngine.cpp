@@ -72,7 +72,7 @@ namespace Vakol::Rendering
 
     void RenderEngine::Draw(const Camera& camera, Components::Transform& transform, const Drawable& drawable)
     {
-        RenderAPI::BeginDraw(drawable.modelID, drawable.shaderID);
+        RenderAPI::BeginDraw(drawable.ID, drawable.shaderID);
 
         RenderAPI::SetMat4(RenderAPI::GetShader(drawable.shaderID), "PV_MATRIX", false,
                            camera.GetProjectionMatrix() * camera.GetViewMatrix());
@@ -115,12 +115,12 @@ namespace Vakol::Rendering
 
     void RenderEngine::GenerateSphere(const float scale, Drawable& drawable)
     {
-        GenerateModel(AssetLoader::GetModel("coreAssets/models/sphere.obj", scale), drawable);
+        GenerateModel(AssetLoader::GetModel(drawable.ID, "coreAssets/models/sphere.obj", scale), drawable);
     }
 
     void RenderEngine::GenerateCube(const float scale, Drawable& drawable)
     {
-        GenerateModel(AssetLoader::GetModel("coreAssets/models/cube.obj", scale), drawable);
+        GenerateModel(AssetLoader::GetModel(drawable.ID,"coreAssets/models/cube.obj", scale), drawable);
     }
 
     void RenderEngine::GenerateDebugScene(DebugScene& debugScene)
@@ -167,16 +167,10 @@ namespace Vakol::Rendering
         if (success)
             RenderAPI::GenerateShader(std::move(shader), drawable);
 
-        drawable.ID = GenerateID();
-        drawable.modelID = model.path;
-
-        SubmitModel(model);
-
         for (auto& mesh : model.meshes)
         {
             const auto& material = mesh.material;
 
-            material->ID = GenerateID();
             material->shaderID = drawable.shaderID;
 
             auto& textures = material->textures;
@@ -221,17 +215,19 @@ namespace Vakol::Rendering
 
             std::sort(textures.begin(), textures.end(), compare);
         }
+
+        SubmitModel(model);
     }
 
-    void RenderEngine::SubmitModel(Assets::Model& model)
+    void RenderEngine::SubmitModel(const Assets::Model& model)
     {
-        for (auto& mesh : model.meshes)
+        for (const auto& mesh : model.meshes)
         {
             SubmitMesh(mesh);
         }
     }
 
-    void RenderEngine::SubmitMesh(Assets::Mesh& mesh)
+    void RenderEngine::SubmitMesh(const Assets::Mesh& mesh)
     {
         VertexArray vertexArray;
 

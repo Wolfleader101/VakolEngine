@@ -22,23 +22,28 @@ namespace Vakol
             return true;
         });
 
-        lua.set_function("load_model", [](const std::string& path, const float scale = 1.0f) {
-            if (const auto& model = std::make_shared<Rendering::Assets::Model>(AssetLoader::GetModel(path, scale));
-                model == nullptr)
-            {
-                return false;
-            }
+        //lua.set_function("load_model", [](const std::string& path, const float scale = 1.0f) {
+        //    if (const auto& model = std::make_shared<Rendering::Assets::Model>(AssetLoader::GetModel(path, scale));
+        //        model == nullptr)
+        //    {
+        //        return false;
+        //    }
 
-            return true;
-        });
+        //    return true;
+        //});
     }
 
     void RegisterModel(sol::state& lua)
     {
         auto model_type = lua.new_usertype<Rendering::Assets::Model>("Model");
 
-        model_type.set_function("get_shader", [](const Rendering::Assets::Model* model) {
-            return Rendering::RenderAPI::GetShader(model->meshes.at(0).material->shaderID);
+        model_type.set_function("get_material", [](const Rendering::Assets::Model* model, const int index) {
+            if (model->meshes.size() > index)
+                return model->meshes.at(index).material;
+
+            VK_WARN("Invalid material index! Retreiving first available material.");
+
+            return model->meshes.at(0).material;
         });
     }
 
@@ -48,6 +53,26 @@ namespace Vakol
 
     void RegisterMaterial(sol::state& lua)
     {
+        auto material_type = lua.new_usertype<Rendering::Assets::Material>("Material");
+
+        material_type.set_function("get_shader", [](const Rendering::Assets::Material* material) {
+            return Rendering::RenderAPI::GetShader(material->shaderID);
+        });
+
+        material_type.set_function("set_diffuse_color",
+                                   [](const Rendering::Assets::Material* material, const Math::Vec3& diffuse) {
+                                       material->properties->diffuse_color = diffuse;
+                                   });
+
+        material_type.set_function("set_specular_color",
+                                   [](const Rendering::Assets::Material* material, const Math::Vec3& specular) {
+                                       material->properties->specular_color = specular;
+                                   });
+
+        material_type.set_function("set_diffuse_color",
+                                   [](const Rendering::Assets::Material* material, const Math::Vec3& diffuse) {
+                                       material->properties->diffuse_color = diffuse;
+                                   });
     }
 
     void RegisterShader(sol::state& lua)
