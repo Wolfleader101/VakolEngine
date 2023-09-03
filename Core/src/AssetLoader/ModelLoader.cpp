@@ -104,7 +104,7 @@ namespace Vakol
     // static void ExtractChannels(unsigned int count, aiNodeAnim** const& in, std::vector<Channel>& channels);
     // static void ProcessChannel(aiNodeAnim* const& in, Channel& channel);
 
-    Model ImportModel(const char* path, const float scale, bool& success)
+    bool ImportModel(Model& model, const char* path, const float scale)
     {
         auto importer = Assimp::Importer{};
 
@@ -114,16 +114,12 @@ namespace Vakol
         static_cast<void>(importer.SetPropertyFloat(AI_CONFIG_GLOBAL_SCALE_FACTOR_KEY, scale));
         auto* scene = importer.ReadFile(path, ASSIMP_LOADER_OPTIONS);
 
-        Model model;
-
         // if no scene flags were set (loader options) or the imported scene or root node is nullptr.
         if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
         {
             VK_ERROR("ASSIMP ERROR: {0}", importer.GetErrorString());
 
-            success = false;
-
-            return model;
+            return false;
         }
 
         std::cout << std::endl;
@@ -134,9 +130,7 @@ namespace Vakol
 
         ExtractMeshes(*scene, model.meshes);
 
-        success = true;
-
-        return model;
+        return true;
     }
 
     void ExtractMeshes(const aiScene& scene, std::vector<Mesh>& meshes)

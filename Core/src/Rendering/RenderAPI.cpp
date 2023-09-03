@@ -438,6 +438,9 @@ namespace Vakol::Rendering
         SetFloat(shader, "material.shininess", properties.shininess, false);
         SetFloat(shader, "material.shininess_strength", properties.shininess_strength, false);
         SetFloat(shader, "material.opacity", properties.opacity, false);
+
+        SetFloat(shader, "material.use_lighting", properties.use_lighting, false);
+        SetFloat(shader, "material.use_textures", properties.use_textures, false);
     }
 
     void RenderAPI::AddShader(const std::string& shaderID, const unsigned int shader)

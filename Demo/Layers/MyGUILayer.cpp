@@ -114,8 +114,12 @@ void MyGUILayer::OnUpdate()
                                 Vakol::Rendering::Assets::Material& material = mesh.material;
 
                                 ImGui::Text("Material ID: %s", material.ID.c_str());
-                                ImGui::ColorEdit3(("Diffuse Color##" + material.ID).c_str(),
-                                                  &material.properties.diffuse_color.x);
+
+                                ImGui::Checkbox("Use Lighting?", &material.properties.use_lighting);
+                                ImGui::Checkbox("Use Textures?", &material.properties.use_textures);
+
+                                /*ImGui::ColorEdit3(("Diffuse Color##" + material.ID).c_str(),
+                                                  &material.properties.diffuse_color.x);*/
                             }
                         }
 

@@ -31,15 +31,13 @@ namespace Vakol
             Rendering::Assets::Model& model =
                 GetModel(path, scale); // load the model and put it into the loaded models map
 
-            for (Vakol::Rendering::Assets::Mesh& mesh : model.meshes)
+            for (Rendering::Assets::Mesh& mesh : model.meshes)
             {
                 mesh.material.ID = Rendering::GenerateID();
             }
 
             m_models[ID] = model;
         }
-
-        VK_TRACE(m_models.at(ID).meshes.at(0).material.ID);
 
         return m_models.at(ID);
     }
@@ -48,14 +46,7 @@ namespace Vakol
     {
         if (!UniqueModelExists(path))
         {
-            bool success = true;
-            const auto& model = ImportModel(path.c_str(), scale, success);
-
-            if (success)
-            {
-                m_loadedModels[path] = model;
-            }
-            else
+            if (!ImportModel(m_loadedModels[path], path.c_str(), scale))
             {
                 VK_ERROR("Unable to get model at path {0}", path);
                 return GetErrorModel(scale);
@@ -69,16 +60,10 @@ namespace Vakol
     {
         if (!UniqueModelExists(ERROR_MODEL_PATH))
         {
-            bool success;
-
-            const auto& error = ImportModel(ERROR_MODEL_PATH.c_str(), scale, success);
-
-            if (success)
+            if (!ImportModel(m_loadedModels[ERROR_MODEL_PATH], ERROR_MODEL_PATH.c_str(), scale))
             {
-                m_loadedModels[ERROR_MODEL_PATH] = error;
-            }
-            else
                 VK_CRITICAL("ERROR MODEL NOT FOUND!");
+            }
         }
 
         return m_loadedModels.at(ERROR_MODEL_PATH);

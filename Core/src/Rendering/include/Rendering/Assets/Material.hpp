@@ -36,6 +36,9 @@ namespace Vakol::Rendering::Assets
         float shininess_strength = 1.0f;
 
         float opacity = 1.0f; // the transparency/alpha of the material
+
+        bool use_lighting = true;
+        bool use_textures = true;
     };
 
     struct Material

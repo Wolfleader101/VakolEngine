@@ -22,7 +22,8 @@ struct Material
     float shininess_strength;
     float opacity;
 
-    bool lighting;
+    bool use_lighting;
+    bool use_textures;
 
     sampler2D diffuse_map;
 	sampler2D specular_map;
@@ -59,9 +60,12 @@ vec4 BlinnPhong(const vec3 normal, const vec4 color)
 
 void main()
 {
-    vec4 color = texture(material.diffuse_map, fs_in.TexCoords);
+    vec4 color = vec4(1.0);
+    
+    if (material.use_textures)
+        texture(material.diffuse_map, fs_in.TexCoords);
 
-    if (color.r >= 0.99 && color.g >= 0.99 && color.b >= 0.99)
+    if ((color.r >= 0.99 && color.g >= 0.99 && color.b >= 0.99) || !material.use_textures)
         color = vec4(material.diffuse_color, 1.0);
 
     vec3 normal = texture(material.normal_map, fs_in.TexCoords).rgb;
@@ -71,7 +75,7 @@ void main()
     else
         normal = normalize(normal * 2.0 - 1.0); // this normal is now in tangent space in range [-1, 1]
 
-    if (material.lighting)
+    if (material.use_lighting)
     {
         vec4 result = BlinnPhong(normal, color);
 	    FragColor = result;
