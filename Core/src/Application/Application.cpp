@@ -143,8 +143,6 @@ namespace Vakol
     {
         double physicsAccumulator = 0.0;
 
-        bool set = false;
-
         while (m_running)
         {
             m_time.Update();

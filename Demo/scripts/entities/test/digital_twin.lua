@@ -131,7 +131,7 @@ function init()
 	barriers[2]:get_transform().rot = Vector3.new(0.0, -90.0, 0.0);
 	barriers[2]:get_transform().scale.z = 1.09;
 
-	barriers[3]:get_transform().pos = Vector3.new(10.7, -1.23, -5.0);
+	barriers[3]:get_transform().pos = Vector3.new(10.7, -1.23, -2.7);
 	barriers[3]:get_transform().rot = Vector3.new(0.0, 90.0, 0.0);
 	barriers[3]:get_transform().scale = Vector3.new(1.0, 1.0, 0.85);
 
