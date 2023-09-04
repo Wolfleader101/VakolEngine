@@ -24,7 +24,8 @@ namespace Vakol
 
         Rendering::Assets::Model& GetErrorModel(float scale);
 
-        std::unordered_map<std::string, Rendering::Assets::Model> m_models; // duplicate models allowed based on the drawable ID
+        std::unordered_map<std::string, Rendering::Assets::Model>
+            m_models; // duplicate models allowed based on the drawable ID
         std::unordered_map<std::string, Rendering::Assets::Model> m_loadedModels; // duplicate models not allowed
     };
 } // namespace Vakol

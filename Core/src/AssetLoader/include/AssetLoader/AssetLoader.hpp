@@ -1,8 +1,5 @@
 #pragma once
 
-#include <memory>
-#include <unordered_map>
-
 #include "Rendering/Assets/Model.hpp"
 #include "Rendering/Assets/Texture.hpp"
 
@@ -78,12 +75,13 @@ namespace Vakol
          * \brief just grab the entire texture lol
          * \param path
          * \param type
-         * \param width 
-         * \param height 
-         * \param channels 
-         * \param pixels 
+         * \param width
+         * \param height
+         * \param channels
+         * \param pixels
          */
-        static void GetTexture(const std::string& path, unsigned int type, int& width, int& height, int& channels, unsigned char*& pixels);
+        static void GetTexture(const std::string& path, unsigned int type, int& width, int& height, int& channels,
+                               unsigned char*& pixels);
 
         /**
          * \brief

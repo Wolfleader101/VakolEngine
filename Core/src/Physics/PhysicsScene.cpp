@@ -31,9 +31,10 @@ namespace Vakol
         rb.collisionData = std::make_shared<CollisionData>();
 
         const auto dPos = static_cast<Math::dVec3>(pos);
-        const auto dRot = static_cast<Math::dQuat>(orientation); 
+        const auto dRot = static_cast<Math::dQuat>(orientation);
 
-        const auto& transform = rp3d::Transform(rp3d::Vector3(dPos.x, dPos.y, dPos.z), rp3d::Quaternion(dRot.x, dRot.y, dRot.z, dRot.w));
+        const auto& transform =
+            rp3d::Transform(rp3d::Vector3(dPos.x, dPos.y, dPos.z), rp3d::Quaternion(dRot.x, dRot.y, dRot.z, dRot.w));
 
         rb.collisionBody = m_world->createCollisionBody(transform);
 

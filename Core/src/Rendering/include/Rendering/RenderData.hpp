@@ -31,7 +31,7 @@ namespace Vakol::Rendering
     {
         bool active = true; /// decides whether the drawable should be drawn in the scene.
 
-        std::string ID = "null"; // a unique id of the drawable
+        std::string ID = "null";       // a unique id of the drawable
         std::string shaderID = "null"; // A unique id of the shader.
     };
 
