@@ -13,6 +13,7 @@
 
 #include "Camera/Camera.hpp"
 #include "ECS/Components.hpp"
+#include "Rendering/RenderData.hpp"
 
 namespace Vakol::Rendering
 {

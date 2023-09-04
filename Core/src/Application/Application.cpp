@@ -14,7 +14,7 @@ namespace Vakol
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
     Application::Application()
-        : m_window(nullptr), m_sceneManager(m_scriptEngine, m_physicsEngine), m_running(false),
+        : m_window(nullptr), m_scriptEngine(), m_sceneManager(m_scriptEngine, m_physicsEngine), m_running(false),
           m_gameState(GameState::Running), m_activeSystems(0), m_input(){};
 
     void Application::Init()
@@ -153,6 +153,9 @@ namespace Vakol
 
             if (m_sceneManager.SceneChanged())
             {
+                m_sceneManager.GetActiveScene().GetCamera().SetAspect(
+                    static_cast<float>(GetWidth()) / (GetHeight() != 0 ? static_cast<float>(GetHeight()) : 1.0f));
+
                 // ignore the current frame, and next frame on scene change
                 // on scene change, ignore rest of the current frame, delta time will be low (current frame)
                 // the next frame, the delta time will be large because of how long it took to initialise the scene
@@ -170,14 +173,6 @@ namespace Vakol
 
             Scene& activeScene = m_sceneManager.GetActiveScene();
 
-            if (activeScene.getName() == "sandbox" && !set)
-            {
-                activeScene.GetCamera().SetAspect(static_cast<float>(GetWidth()) /
-                                                  (GetHeight() != 0 ? static_cast<float>(GetHeight()) : 1.0f));
-
-                set = true;
-            }
-
             // While there is enough accumulated time take one or several physics steps
             if (IsSystemActive(SystemFlag::Physics))
             {
@@ -187,17 +182,14 @@ namespace Vakol
                 while (physicsAccumulator >= m_physicsEngine.GetTimeStep())
                 {
                     // apply forces
-                    activeScene.GetEntityList().Iterate<Components::Transform, RigidBody>(
-                        [&](Components::Transform& tf, auto& rb) {});
+                    activeScene.GetEntityList().Iterate<RigidBody>([&](auto& rb) { m_physicsEngine.ApplyForces(rb); });
 
                     // detect collisions
                     m_physicsEngine.DetectCollisions(activeScene.GetPhysicsScene());
 
                     // resolve collisions
-                    activeScene.GetEntityList().Iterate<Components::Transform, RigidBody>(
-                        [&](Components::Transform& tf, auto& rb) {
-
-                        });
+                    activeScene.GetEntityList().Iterate<RigidBody>(
+                        [&](auto& rb) { m_physicsEngine.ResolveCollisions(rb); });
 
                     // Decrease the accumulated time
                     physicsAccumulator -= m_physicsEngine.GetTimeStep();

@@ -12,8 +12,6 @@ namespace Vakol
         return {v.x, v.y, v.z};
     }
 
-    CollisionListener PhysicsScene::m_collisionListener;
-
     static Math::Vec3 GetDebugColor(rp3d::uint32 color);
 
     PhysicsScene::PhysicsScene(rp3d::PhysicsWorld* world) : m_world(world)
@@ -24,21 +22,17 @@ namespace Vakol
         CreateDebugScene();
     }
 
-    RigidBody PhysicsScene::CreateRigidBody(const Math::Vec3& pos, const Math::Quat& orientation) const
+    RigidBody PhysicsScene::CreateRigidBody(Math::Vec3& pos, Math::Quat& orientation)
     {
         RigidBody rb;
 
         rb.collisionData = std::make_shared<CollisionData>();
 
-        const auto dPos = static_cast<Math::dVec3>(pos);
-        const auto dRot = static_cast<Math::dQuat>(orientation);
+        rp3d::Transform trans(rp3d::Vector3(pos.x, pos.y, pos.z),
+                              rp3d::Quaternion(orientation.x, orientation.y, orientation.z, orientation.w));
+        rb.collisionBody = m_world->createCollisionBody(trans);
 
-        const auto& transform =
-            rp3d::Transform(rp3d::Vector3(dPos.x, dPos.y, dPos.z), rp3d::Quaternion(dRot.x, dRot.y, dRot.z, dRot.w));
-
-        rb.collisionBody = m_world->createCollisionBody(transform);
-
-        rb.collisionBody->setUserData(rb.collisionData.get());
+        rb.collisionBody->setUserData(static_cast<void*>(rb.collisionData.get()));
 
         return rb;
     }
@@ -93,7 +87,7 @@ namespace Vakol
         Rendering::RenderAPI::SetDebugVertexArray(std::move(vertices), m_debugScene);
     }
 
-    void PhysicsScene::Update(const double timeStep) const
+    void PhysicsScene::Update(const double timeStep)
     {
         m_world->update(timeStep);
 

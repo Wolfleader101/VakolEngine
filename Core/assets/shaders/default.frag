@@ -60,10 +60,7 @@ vec4 BlinnPhong(const vec3 normal, const vec4 color)
 
 void main()
 {
-    vec4 color = vec4(1.0);
-    
-    if (material.use_textures)
-        texture(material.diffuse_map, fs_in.TexCoords);
+    vec4 color = texture(material.diffuse_map, fs_in.TexCoords);
 
     if ((color.r >= 0.99 && color.g >= 0.99 && color.b >= 0.99) || !material.use_textures)
         color = vec4(material.diffuse_color, 1.0);

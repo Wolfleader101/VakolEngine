@@ -1,10 +1,10 @@
 function init()
     scene:create_entity("Player", "entities/player/noclip.lua")
 
-    --scene:create_entity("Digital Twin", "entities/test/digital_twin.lua");
+    scene:create_entity("Digital Twin", "entities/test/digital_twin.lua");
 
-    scene:create_entity("Sphere 1", "entities/test/sphere.lua");
-    scene:create_entity("Sphere 2", "entities/test/sphere2.lua");
+    --scene:create_entity("Sphere 1", "entities/test/sphere.lua");
+    --scene:create_entity("Sphere 2", "entities/test/sphere2.lua");
 
     local path = "coreAssets/textures/Skybox/imported/Unity/WorldSkies/";
 	local extension = ".png";

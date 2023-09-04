@@ -25,15 +25,14 @@ namespace Vakol
          * @param orientation of body
          * @return RigidBody created
          */
-        RigidBody CreateRigidBody(const Math::Vec3& pos = Math::Vec3(0.00f),
-                                  const Math::Quat& orientation = Math::Quat(1.0f, 0.0f, 0.0f, 0.0f)) const;
+        RigidBody CreateRigidBody(Math::Vec3& pos, Math::Quat& orientation);
 
         /**
          * @brief Get the Guid object
          *
          * @return const xg::Guid& guid of scene
          */
-        [[nodiscard]] const xg::Guid& GetGuid() const;
+        const xg::Guid& GetGuid() const;
 
         void CreateDebugScene();
         void UpdateDebugScene() const;
@@ -57,7 +56,7 @@ namespace Vakol
          *
          * @param timeStep to update with
          */
-        void Update(double timeStep) const;
+        void Update(double timeStep);
 
         /**
          * @brief rp3d physics world ptr
@@ -69,7 +68,7 @@ namespace Vakol
          * @brief collision listener
          *
          */
-        static CollisionListener m_collisionListener;
+        CollisionListener m_collisionListener;
 
         /**
          * @brief guid of scene
