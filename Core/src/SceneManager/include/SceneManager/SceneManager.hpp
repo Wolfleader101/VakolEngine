@@ -81,11 +81,15 @@ namespace Vakol
          */
         bool operator!() const;
 
+        bool SceneChanged() const;
+
       private:
         void ThrowRuntime(const std::string& str) const;
 
         Scene* m_activeScene;
         Scene* m_nextScene;
+        bool m_sceneChanged;
+        int m_counter;
 
         /**
          * @brief The map of scenes.
