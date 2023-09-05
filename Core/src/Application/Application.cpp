@@ -143,6 +143,8 @@ namespace Vakol
     {
         double physicsAccumulator = 0.0;
 
+        bool set = false;
+
         while (m_running)
         {
             m_time.Update();
@@ -151,8 +153,38 @@ namespace Vakol
 
             if (m_sceneManager.SceneChanged())
             {
-                m_sceneManager.GetActiveScene().GetCamera().SetAspect(
-                    static_cast<float>(GetWidth()) / (GetHeight() != 0 ? static_cast<float>(GetHeight()) : 1.0f));
+                if (!set)
+                {
+                    m_sceneManager.GetActiveScene().GetCamera().SetAspect(
+                        static_cast<float>(GetWidth()) / (GetHeight() != 0 ? static_cast<float>(GetHeight()) : 1.0f));
+
+                    {
+                        Entity entity = m_sceneManager.GetActiveScene().CreateEntity("Sphere");
+
+                        entity.AddComponent<Rendering::Drawable>();
+
+                        Rendering::Drawable& drawable = entity.GetComponent<Rendering::Drawable>();
+                        drawable.ID.GenNewGUID();
+                        Rendering::Assets::Model& model =
+                            AssetLoader::GetModel(drawable.ID, "coreAssets/models/sphere.obj", 1.0f);
+
+                        Rendering::RenderEngine::GenerateModel(model, drawable);
+
+                        Components::Transform& transform = entity.GetComponent<Components::Transform>();
+                        transform.pos = Math::Vec3(0.0f, 0.0f, -5.0f);
+
+                        RigidBody rigidbody = m_sceneManager.GetActiveScene().GetPhysicsScene().CreateRigidBody(
+                            transform.pos, transform.rot);
+
+                        SphereCollider collider = m_physicsEngine.CreateSphereCollider(1.0);
+                        m_physicsEngine.AttachCollider(rigidbody, collider);
+
+                        entity.AddComponent<RigidBody>(rigidbody);
+                        entity.AddComponent<SphereCollider>(collider);
+                    }
+
+                    set = true;
+                }
 
                 // ignore the current frame, and next frame on scene change
                 // on scene change, ignore rest of the current frame, delta time will be low (current frame)
