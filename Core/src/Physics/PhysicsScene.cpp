@@ -79,7 +79,7 @@ namespace Vakol
 
     const GUID& PhysicsScene::GetGuid() const
     {
-        return m_guid;   
+        return m_guid;
     }
 
     void PhysicsScene::Update(const double timeStep)

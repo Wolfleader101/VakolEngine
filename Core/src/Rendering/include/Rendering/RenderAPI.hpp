@@ -11,7 +11,7 @@ namespace Vakol
 {
     class GUID;
     class ShaderLibrary;
-}
+} // namespace Vakol
 
 namespace Vakol::Rendering::Assets
 {

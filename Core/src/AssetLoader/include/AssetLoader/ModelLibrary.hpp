@@ -1,7 +1,7 @@
 #pragma once
 
-#include <string>
 #include <map>
+#include <string>
 #include <unordered_map>
 
 namespace Vakol::Rendering::Assets
@@ -27,8 +27,7 @@ namespace Vakol
 
         Rendering::Assets::Model& GetErrorModel(float scale);
 
-        std::map<GUID, Rendering::Assets::Model>
-            m_models; // duplicate models allowed based on the drawable ID
+        std::map<GUID, Rendering::Assets::Model> m_models; // duplicate models allowed based on the drawable ID
         std::unordered_map<std::string, Rendering::Assets::Model> m_loadedModels; // duplicate models not allowed
     };
 } // namespace Vakol

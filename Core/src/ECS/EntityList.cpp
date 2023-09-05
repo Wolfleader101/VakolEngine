@@ -4,9 +4,9 @@
 #include <cereal/cereal.hpp>
 
 #include "ECS/Components.hpp"
-#include "Utils/GUID.hpp"
 #include "ECS/Entity.hpp"
 #include "Logger/Logger.hpp"
+#include "Utils/GUID.hpp"
 
 using namespace Vakol;
 
