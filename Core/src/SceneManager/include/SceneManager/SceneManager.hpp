@@ -55,9 +55,9 @@ namespace Vakol
          *
          * @param name Name of Scene (unique)
          * @param scriptName Script name
-         *
+         * @param debugEnabled If debug mode should be enabled
          */
-        void CreateScene(const std::string& name, const std::string& scriptName);
+        void CreateScene(const std::string& name, const std::string& scriptName, bool debugEnabled);
 
         /**
          * @brief Remove a scene from the scene manager.

@@ -234,10 +234,9 @@ namespace Vakol
                     Rendering::RenderEngine::DrawSkybox(activeScene.GetCamera(), activeScene.GetSkybox());
                 }
 
-                if (activeScene.GetPhysicsScene().IsDebugEnabled())
+                if (activeScene.IsDebugEnabled())
                 {
-                    Rendering::RenderEngine::DrawDebugScene(activeScene.GetCamera(),
-                                                            activeScene.GetPhysicsScene().GetDebugScene());
+                    Rendering::RenderEngine::DrawDebugScene(activeScene.GetCamera(), activeScene.GetDebugScene());
                 }
             }
 

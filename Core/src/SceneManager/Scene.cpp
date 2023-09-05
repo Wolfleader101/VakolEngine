@@ -5,6 +5,7 @@
 #include <filesystem>
 
 #include "Camera/Camera.hpp"
+#include "Utils/GUID.hpp"
 #include "ECS/Components.hpp"
 #include "ECS/Entity.hpp"
 
@@ -12,8 +13,8 @@
 
 namespace Vakol
 {
-    Scene::Scene(const std::string& name, LuaScript& script, PhysicsScene& physicsScene)
-        : m_script(std::move(script)), m_name(name), m_physicsScene(physicsScene)
+    Scene::Scene(const std::string& name, LuaScript& script, PhysicsScene& physicsScene, const bool debugEnabled)
+        : m_debugEnabled(debugEnabled), m_script(std::move(script)), m_name(name), m_physicsScene(physicsScene)
     {
     }
 
@@ -33,8 +34,8 @@ namespace Vakol
 
         ent.GetComponent<Components::Tag>().tag = tag;
 
-        if (!ent.GetComponent<Components::GUID>().id.isValid())
-            ent.GetComponent<Components::GUID>().GenNewGUID();
+        if (!ent.GetComponent<GUID>().IsValid())
+            ent.GetComponent<GUID>().GenNewGUID();
 
         return ent;
     }
@@ -54,6 +55,16 @@ namespace Vakol
         });
 
         return std::make_shared<Entity>(ent);
+    }
+
+    const Rendering::DebugScene& Scene::GetDebugScene() const
+    {
+        return m_debugScene;
+    }
+
+    bool Scene::IsDebugEnabled() const
+    {
+        return m_debugEnabled;
     }
 
     PhysicsScene& Scene::GetPhysicsScene()

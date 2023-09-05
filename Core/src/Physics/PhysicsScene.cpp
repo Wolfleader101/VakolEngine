@@ -3,23 +3,19 @@
 #include <reactphysics3d/reactphysics3d.h>
 
 #include "Rendering/RenderData.hpp"
-#include "Rendering/RenderEngine.hpp"
 
 namespace Vakol
 {
-    static Math::Vec3 Vec3(const rp3d::Vector3& v)
-    {
-        return {v.x, v.y, v.z};
-    }
-
+    static Math::Vec3 Vec3(const rp3d::Vector3& v);
     static Math::Vec3 GetDebugColor(rp3d::uint32 color);
 
-    PhysicsScene::PhysicsScene(rp3d::PhysicsWorld* world) : m_world(world)
+    PhysicsScene::PhysicsScene(rp3d::PhysicsWorld* world, const bool debugEnabled) : m_world(world)
     {
         m_world->setEventListener(&m_collisionListener);
-        m_world->setIsDebugRenderingEnabled(m_debugEnabled);
+        m_world->setIsDebugRenderingEnabled(debugEnabled);
 
-        CreateDebugScene();
+        if (debugEnabled)
+            SetDebugActive();
     }
 
     RigidBody PhysicsScene::CreateRigidBody(Math::Vec3& pos, Math::Quat& orientation)
@@ -37,7 +33,7 @@ namespace Vakol
         return rb;
     }
 
-    void PhysicsScene::CreateDebugScene()
+    void PhysicsScene::SetDebugActive() const
     {
         auto& debugRenderer = m_world->getDebugRenderer();
 
@@ -45,17 +41,13 @@ namespace Vakol
         debugRenderer.setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::COLLISION_SHAPE, true);
         debugRenderer.setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::CONTACT_POINT, true);
         debugRenderer.setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::CONTACT_NORMAL, true);
-
-        Rendering::RenderEngine::GenerateDebugScene(m_debugScene);
     }
 
-    void PhysicsScene::UpdateDebugScene() const
+    void PhysicsScene::GetVertices(std::vector<Rendering::DebugVertex>& vertices) const
     {
         Rendering::DebugVertex p1{};
         Rendering::DebugVertex p2{};
         Rendering::DebugVertex p3{};
-
-        std::vector<Rendering::DebugVertex> vertices;
 
         for (auto& tri : m_world->getDebugRenderer().getTriangles())
         {
@@ -83,31 +75,21 @@ namespace Vakol
             vertices.emplace_back(p1);
             vertices.emplace_back(p2);
         }
+    }
 
-        Rendering::RenderAPI::SetDebugVertexArray(std::move(vertices), m_debugScene);
+    const GUID& PhysicsScene::GetGuid() const
+    {
+        return m_guid;   
     }
 
     void PhysicsScene::Update(const double timeStep)
     {
         m_world->update(timeStep);
-
-        if (m_debugEnabled)
-            UpdateDebugScene();
     }
 
-    const Rendering::DebugScene& PhysicsScene::GetDebugScene() const
+    Math::Vec3 Vec3(const rp3d::Vector3& v)
     {
-        return m_debugScene;
-    }
-
-    bool PhysicsScene::IsDebugEnabled() const
-    {
-        return m_debugEnabled;
-    }
-
-    const xg::Guid& PhysicsScene::GetGuid() const
-    {
-        return m_guid;
+        return {v.x, v.y, v.z};
     }
 
     Math::Vec3 GetDebugColor(const rp3d::uint32 color)

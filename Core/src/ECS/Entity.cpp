@@ -1,6 +1,7 @@
 #include "ECS/Entity.hpp"
 
 #include "ECS/Components.hpp"
+#include "Utils/GUID.hpp"
 
 namespace Vakol
 {
@@ -10,7 +11,7 @@ namespace Vakol
 
         this->AddComponent<Components::Tag>();
 
-        this->AddComponent<Components::GUID>();
+        this->AddComponent<GUID>();
 
         this->AddComponent<Components::Transform>(); // every entity has a transform. Can change easily
     }

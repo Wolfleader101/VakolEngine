@@ -2,12 +2,14 @@
 
 #include "CollisionListener.hpp"
 #include "PhysicsTypes.hpp"
-#include "Rendering/RenderData.hpp"
-
-#include <crossguid/guid.hpp>
+#include "Utils/GUID.hpp"
 
 namespace Vakol
 {
+    namespace Rendering
+    {
+        struct DebugVertex;
+    }
 
     class PhysicsEngine;
 
@@ -27,29 +29,19 @@ namespace Vakol
          */
         RigidBody CreateRigidBody(Math::Vec3& pos, Math::Quat& orientation);
 
-        /**
-         * @brief Get the Guid object
-         *
-         * @return const xg::Guid& guid of scene
-         */
-        const xg::Guid& GetGuid() const;
-
-        void CreateDebugScene();
-        void UpdateDebugScene() const;
-        const Rendering::DebugScene& GetDebugScene() const;
-
-        bool IsDebugEnabled() const;
+        void SetDebugActive() const;
+        void GetVertices(std::vector<Rendering::DebugVertex>& vertices) const;
+        
+        const GUID& GetGuid() const;
 
       private:
-        bool m_debugEnabled = true;
-
-        Rendering::DebugScene m_debugScene;
         /**
          * @brief Construct a new Physics Scene object
          *
          * @param world to create scene from
+         * @param debugEnabled whether debug mode should be enabled
          */
-        explicit PhysicsScene(rp3d::PhysicsWorld* world);
+        explicit PhysicsScene(rp3d::PhysicsWorld* world, bool debugEnabled);
 
         /**
          * @brief update a physics scene
@@ -70,11 +62,7 @@ namespace Vakol
          */
         CollisionListener m_collisionListener;
 
-        /**
-         * @brief guid of scene
-         *
-         */
-        xg::Guid m_guid;
+        GUID m_guid;
 
         friend class PhysicsEngine;
     };

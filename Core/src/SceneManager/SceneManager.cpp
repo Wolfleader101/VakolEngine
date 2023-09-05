@@ -45,15 +45,15 @@ namespace Vakol
         ThrowRuntime("Scene with name " + name + " not found.");
     }
 
-    void SceneManager::CreateScene(const std::string& name, const std::string& scriptName)
+    void SceneManager::CreateScene(const std::string& name, const std::string& scriptName, const bool debugEnabled)
     {
         if (m_scenes.find(name) != m_scenes.end())
             VK_ERROR("Scene with name: {0} already exists. Skipping...", name);
 
         auto script = m_scriptEngine.CreateScript("scripts/" + scriptName);
 
-        PhysicsScene& PhysicsScene = m_physicsEngine.CreateScene();
-        m_scenes.emplace(name, new Scene(name, script, PhysicsScene));
+        PhysicsScene& PhysicsScene = m_physicsEngine.CreateScene(debugEnabled);
+        m_scenes.emplace(name, new Scene(name, script, PhysicsScene, debugEnabled));
 
         if (m_scenes.size() == 1)
             m_activeScene = m_scenes.at(name);
