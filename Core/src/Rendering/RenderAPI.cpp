@@ -204,6 +204,8 @@ namespace Vakol::Rendering
     {
         drawable.shaderID = GenerateID();
 
+        VK_TRACE("DRAWABLE: {0}", drawable.shaderID);
+
         const unsigned int program =
             OpenGL::GenerateShaderProgram(shader.vertSrc, shader.geomSrc, shader.tscSrc, shader.tseSrc, shader.fragSrc);
 
@@ -223,6 +225,8 @@ namespace Vakol::Rendering
     void RenderAPI::GenerateDebugShader(Assets::Shader&& shader, DebugScene& debugScene)
     {
         debugScene.shaderID = GenerateID();
+
+        VK_TRACE("DEBUG: {0}", debugScene.shaderID);
 
         const unsigned int program =
             OpenGL::GenerateShaderProgram(shader.vertSrc, shader.geomSrc, shader.tscSrc, shader.tseSrc, shader.fragSrc);
