@@ -165,6 +165,7 @@ namespace Vakol
 
                         Rendering::Drawable& drawable = entity.GetComponent<Rendering::Drawable>();
                         drawable.ID.GenNewGUID();
+
                         Rendering::Assets::Model& model =
                             AssetLoader::GetModel(drawable.ID, "coreAssets/models/sphere.obj", 1.0f);
 
@@ -181,6 +182,92 @@ namespace Vakol
 
                         entity.AddComponent<RigidBody>(rigidbody);
                         entity.AddComponent<SphereCollider>(collider);
+                    }
+
+                    {
+                        Entity entity = m_sceneManager.GetActiveScene().CreateEntity("Cylinder");
+
+                        entity.AddComponent<Rendering::Drawable>();
+
+                        Rendering::Drawable& drawable = entity.GetComponent<Rendering::Drawable>();
+                        drawable.ID.GenNewGUID();
+
+                        Rendering::Assets::Model& model =
+                            AssetLoader::GetModel(drawable.ID, "coreAssets/models/cylinder.obj", 1.0f);
+
+                        Rendering::RenderEngine::GenerateModel(model, drawable);
+
+                        Components::Transform& transform = entity.GetComponent<Components::Transform>();
+                        transform.pos = Math::Vec3(-2.5f, 0.0f, -5.0f);
+
+                        RigidBody rigidbody = m_sceneManager.GetActiveScene().GetPhysicsScene().CreateRigidBody(
+                            transform.pos, transform.rot);
+
+                        CapsuleCollider collider = m_physicsEngine.CreateCapsuleCollider(1.0, 1.0);
+                        m_physicsEngine.AttachCollider(rigidbody, collider);
+
+                        entity.AddComponent<RigidBody>(rigidbody);
+                        entity.AddComponent<CapsuleCollider>(collider);
+                    }
+
+                    {
+                        Entity entity = m_sceneManager.GetActiveScene().CreateEntity("Cube");
+
+                        entity.AddComponent<Rendering::Drawable>();
+
+                        Rendering::Drawable& drawable = entity.GetComponent<Rendering::Drawable>();
+                        drawable.ID.GenNewGUID();
+
+                        VK_TRACE(drawable.ID.ConvertToString());
+
+                        Rendering::Assets::Model& model =
+                            AssetLoader::GetModel(drawable.ID, "coreAssets/models/cube.obj", 1.0f);
+
+                        Rendering::RenderEngine::GenerateModel(model, drawable);
+
+                        Components::Transform& transform = entity.GetComponent<Components::Transform>();
+                        transform.pos = Math::Vec3(2.5f, 0.0f, -5.0f);
+
+                        RigidBody rigidbody = m_sceneManager.GetActiveScene().GetPhysicsScene().CreateRigidBody(
+                            transform.pos, transform.rot);
+
+                        AABBCollider collider = m_physicsEngine.CreateAABBCollider(transform.scale);
+                        m_physicsEngine.AttachCollider(rigidbody, collider);
+
+                        entity.AddComponent<RigidBody>(rigidbody);
+                        entity.AddComponent<AABBCollider>(collider);
+                    }
+
+                    {
+                        Entity entity = m_sceneManager.GetActiveScene().CreateEntity("Cone");
+
+                        entity.AddComponent<Rendering::Drawable>();
+
+                        Rendering::Drawable& drawable = entity.GetComponent<Rendering::Drawable>();
+                        drawable.ID.GenNewGUID();
+
+                        VK_TRACE(drawable.ID.ConvertToString());
+
+                        Rendering::Assets::Model& model =
+                            AssetLoader::GetModel(drawable.ID, "coreAssets/models/cone.obj", 1.0f);
+
+                        Rendering::RenderEngine::GenerateModel(model, drawable);
+
+                        Components::Transform& transform = entity.GetComponent<Components::Transform>();
+                        transform.pos = Math::Vec3(2.5f, 0.0f, -5.0f);
+
+                        RigidBody rigidbody = m_sceneManager.GetActiveScene().GetPhysicsScene().CreateRigidBody(
+                            transform.pos, transform.rot);
+
+                        std::vector<Math::Point> vertices;
+
+                        Rendering::RenderEngine::ConvertToPoints(model.meshes.at(0).vertices, vertices);
+
+                        MeshCollider collider = m_physicsEngine.CreateMeshCollider(vertices, model.meshes.at(0).indices);
+                        m_physicsEngine.AttachCollider(rigidbody, collider);
+
+                        entity.AddComponent<RigidBody>(rigidbody);
+                        entity.AddComponent<MeshCollider>(collider);
                     }
 
                     set = true;

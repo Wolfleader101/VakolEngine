@@ -66,12 +66,12 @@ namespace Vakol
         MeshCollider collider;
 
         rp3d::TriangleVertexArray* triangleArray = new rp3d::TriangleVertexArray(
-            vertices.size(),      // number of vertices
+            vertices.size() / 14, // number of vertices
             vertices.data(),      // start of vertex data
-            sizeof(Math::Point),  // stride of vertex data
-            indices.size() / 3ul, // number of triangles, assuming 3 indices per triangle
+            3 * sizeof(float),             // stride of vertex data
+            indices.size() / 14,             // number of triangles, assuming 3 indices per triangle
             indices.data(),       // start of index data
-            sizeof(unsigned int), // stride of index data
+            3 * sizeof(unsigned int), // stride of index data
             rp3d::TriangleVertexArray::VertexDataType::VERTEX_FLOAT_TYPE, // vertex data type
             rp3d::TriangleVertexArray::IndexDataType::INDEX_INTEGER_TYPE  // index data type
         );

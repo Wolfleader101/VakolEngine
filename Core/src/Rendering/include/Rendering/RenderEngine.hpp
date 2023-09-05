@@ -18,6 +18,7 @@ namespace Vakol::Components
 
 namespace Vakol::Rendering
 {
+    struct Vertex;
     struct DebugScene;
 
     namespace Assets
@@ -98,6 +99,8 @@ namespace Vakol::Rendering
          * \param height the height of the screen
          */
         static void ResizeScreen(Camera& camera, unsigned int width, unsigned int height);
+
+        static void ConvertToPoints(const std::vector<Vertex>& vertices, std::vector<Math::Point>& points);
 
       private:
         /**
