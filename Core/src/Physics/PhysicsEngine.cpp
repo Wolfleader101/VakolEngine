@@ -112,6 +112,8 @@ namespace Vakol
         rb.inertiaTensor[0][0] = (1.0f / 12.0f) * rb.mass * ((h.y * h.y) + (h.z * h.z));
         rb.inertiaTensor[1][1] = (1.0f / 12.0f) * rb.mass * ((h.x * h.x) + (h.z * h.z));
         rb.inertiaTensor[2][2] = (1.0f / 12.0f) * rb.mass * ((h.x * h.x) + (h.y * h.y));
+
+        rb.inverseInteralTensor = Math::Inverse(rb.inertiaTensor);
     }
 
     void PhysicsEngine::AttachCollider(RigidBody& rb, SphereCollider& collider)
@@ -162,17 +164,15 @@ namespace Vakol
         pos += rb.linearVelocity * static_cast<float>(m_timeStep);
 
         // Update angular velocity
-        Math::Vec3 angularAcceleration = Math::Inverse(rb.worldInertiaTensor) * rb.torque;
+        Math::Vec3 angularAcceleration = rb.worldInertiaTensor * rb.torque;
         rb.angularVelocity += angularAcceleration * static_cast<float>(m_timeStep);
 
-        rot += rb.angularVelocity * static_cast<float>(m_timeStep);
+        quatRot = quatRot + (Math::Quat(0.0f, rb.angularVelocity * static_cast<float>(m_timeStep) * 0.5f) * quatRot);
 
-        quatRot = Math::Quat(Math::DegToRad(rot));
+        quatRot = Math::Normalized(quatRot);
 
-        // Math::Quat angularVelocityQuat(0.0f, rb.angularVelocity.x, rb.angularVelocity.y, rb.angularVelocity.z);
-        // Math::Quat deltaOrientation = angularVelocityQuat * quatRot * (0.5f * static_cast<float>(m_timeStep));
-        // quatRot = quatRot + deltaOrientation;
-        // quatRot = Math::Normalized(quatRot);
+        // TODO pass in quaternion instead
+        rot = Math::RadToDeg(Math::EulerFromQuat(quatRot));
 
         rb.worldInertiaTensor = Math::Mat3Cast(quatRot) * rb.inertiaTensor * Math::Transpose(Math::Mat3Cast(quatRot));
 
@@ -211,7 +211,7 @@ namespace Vakol
         // x n) + (r2 x n)^T . J2^-1 * (r2 x n))
 
         // normal
-        Math::Vec3 n = rb1.collisionData->worldNormal;
+        Math::Vec3 n = Math::Normalized(rb1.collisionData->worldNormal);
 
         // distance from collision point to center of mass
         Math::Vec3 r1 = rb1.centerOfMass - rb1.collisionData->localPoint;
@@ -247,7 +247,7 @@ namespace Vakol
         // j2^-1
         Math::Mat3 j2Inverse = Math::Inverse(rb2.worldInertiaTensor);
 
-        // (r1 x n)^T . J1^-1 * (r1 x n)
+        // (r1 x n)^T J1^-1 * (r1 x n)
         double r1j = Math::Dot(r1CrossN, j1Inverse * r1CrossN);
 
         // (r2 x n)^T . J2^-1 * (r2 x n)

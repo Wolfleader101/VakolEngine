@@ -62,7 +62,10 @@ namespace Vakol::Math
     Vec2 Perpendicular(const Vec2& len, const Vec2& dir);
     Vec3 Perpendicular(const Vec3& len, const Vec3& dir);
 
+    Vec3 EulerFromQuat(const Quat& quat);
+
     Mat3 Mat3Cast(const Quat& quat);
+
     Mat3 Transpose(const Mat3& mat);
     Mat4 Translation(const Vec3& pos);
     Mat4 Scale(const Vec3& scale);

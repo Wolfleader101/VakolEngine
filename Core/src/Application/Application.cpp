@@ -228,7 +228,7 @@ namespace Vakol
 
                     auto& trans = ent.GetComponent<Components::Transform>();
                     trans.pos = Math::Vec3(7.50f, 5.0f, 0.0f);
-                    trans.eulerAngles = Math::Vec3(0.0f, 0.0f, -23.0f);
+                    trans.eulerAngles = Math::Vec3(0.0f, 0.0f, 45.0f);
                     trans.rot = Math::Quat(Math::DegToRad(trans.eulerAngles));
 
                     RigidBody& rb = activeScene.GetPhysicsScene().CreateRigidBody(trans.pos, trans.rot);
@@ -301,10 +301,10 @@ namespace Vakol
                             [&](Components::Transform& transform, RigidBody& rb) {
                                 m_physicsEngine.ResolveCollisions(transform.pos, transform.eulerAngles, rb);
                             });
-                    }
 
-                    activeScene.GetEntityList().Iterate<RigidBody>(
-                        [&](RigidBody& rb) { rb.accumulatedImpulse = Math::Vec3(0.0f, 0.0f, 0.0f); });
+                        activeScene.GetEntityList().Iterate<RigidBody>(
+                            [&](RigidBody& rb) { rb.collisionData->lambda = 0.0; });
+                    }
 
                     // Decrease the accumulated time
                     physicsAccumulator -= m_physicsEngine.GetTimeStep();

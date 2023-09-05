@@ -56,10 +56,10 @@ namespace Vakol
         Math::Vec3 torque = Math::Vec3(0.0f, 0.0f, 0.0f);
         Math::Vec3 linearVelocity = Math::Vec3(0.0f, 0.0f, 0.0f);
         Math::Vec3 angularVelocity = Math::Vec3(0.0f, 0.0f, 0.0f);
-        Math::Vec3 accumulatedImpulse = Math::Vec3(0.0f, 0.0f, 0.0f);
 
         Math::Mat3 worldInertiaTensor = Math::Mat3(0.0f);
         Math::Mat3 inertiaTensor = Math::Mat3(0.0f);
+        Math::Mat3 inverseInteralTensor = Math::Mat3(0.0f);
 
         rp3d::CollisionBody* collisionBody = nullptr;
 

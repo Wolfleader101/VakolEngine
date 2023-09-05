@@ -324,4 +324,9 @@ namespace Vakol::Math
         return glm::normalize(x);
     }
 
+    Vec3 EulerFromQuat(const Quat& quat)
+    {
+        return glm::eulerAngles(quat);
+    }
+
 } // namespace Vakol::Math
