@@ -32,7 +32,7 @@ namespace Vakol
 
         void SetDebugActive() const;
         void GetVertices(std::vector<Rendering::DebugVertex>& vertices) const;
-        
+
         const GUID& GetGuid() const;
 
       private:
