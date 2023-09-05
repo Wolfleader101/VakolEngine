@@ -43,7 +43,7 @@ namespace Vakol::Rendering::Assets
 
     struct Mesh
     {
-        std::string ID = "null"; // the unique ID of the mesh.
+        std::string ID; // the unique ID of the mesh.
 
         std::string name; // the name of the mesh.
 

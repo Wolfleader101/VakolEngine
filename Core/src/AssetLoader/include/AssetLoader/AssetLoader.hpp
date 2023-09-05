@@ -35,7 +35,7 @@ namespace Vakol
          * \param ID the path of the model
          * \return the model if found, else an error model
          */
-        static Rendering::Assets::Model& FindModel(const std::string& ID);
+        static Rendering::Assets::Model& FindModel(const GUID& ID);
 
         /**
          * \brief
@@ -44,13 +44,13 @@ namespace Vakol
          * \param scale the uniform scale of the model
          * \return
          */
-        static Rendering::Assets::Model& GetModel(const std::string& ID, const std::string& path, float scale = 1.0f);
+        static Rendering::Assets::Model& GetModel(const GUID& ID, const std::string& path, float scale = 1.0f);
         /**
          * \brief
          * \param ID the drawable ID of the model
          * \return
          */
-        static const std::vector<Rendering::Assets::Mesh>& GetMeshes(const std::string& ID);
+        static const std::vector<Rendering::Assets::Mesh>& GetMeshes(const GUID& ID);
         /**
          * \brief
          * \param path the path of the texture
@@ -91,7 +91,7 @@ namespace Vakol
          * \param dstPath the new path of the texture
          * \param dstType the new type of texture
          */
-        static void ReplaceTexture(const std::string& modelID, const std::string& srcPath, unsigned int srcType,
+        static void ReplaceTexture(const GUID& modelID, const std::string& srcPath, unsigned int srcType,
                                    const std::string& dstPath, unsigned int dstType);
 
       private:

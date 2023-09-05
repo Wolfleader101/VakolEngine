@@ -29,7 +29,7 @@ namespace Vakol::Rendering
         m_config.API = API;
     }
 
-    void RenderAPI::BeginDraw(const std::string& modelID, const std::string& shaderID)
+    void RenderAPI::BeginDraw(const GUID& modelID, const std::string& shaderID)
     {
         const auto shader = GetShader(shaderID);
 

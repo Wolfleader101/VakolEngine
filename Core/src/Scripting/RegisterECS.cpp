@@ -2,7 +2,6 @@
 #include "ECS/Components.hpp"
 #include "ECS/Entity.hpp"
 #include "LuaAccess.hpp"
-#include "Rendering/RenderCommand.hpp"
 #include "SceneManager/Scene.hpp"
 
 #include "Rendering/RenderEngine.hpp"
@@ -23,7 +22,7 @@ namespace Vakol
                 ent->AddComponent<Rendering::Drawable>();
 
             auto& drawable = ent->GetComponent<Rendering::Drawable>();
-            drawable.ID = Rendering::GenerateID();
+            drawable.ID.GenNewGUID();
 
             auto& model = AssetLoader::GetModel(drawable.ID, path, scale);
             Rendering::RenderEngine::GenerateModel(model, drawable);
@@ -31,21 +30,20 @@ namespace Vakol
             return model;
         });
 
-        entity_type.set_function("replace_texture", [](const Entity* ent, const std::string& srcPath,
-                                                       const std::string& srcType, const std::string& dstPath,
-                                                       const std::string& dstType) {
-            if (!ent->HasComponent<Rendering::Drawable>())
-            {
-                VK_ERROR("No Drawable component found on entity!");
+        entity_type.set_function("replace_texture",
+                                 [](const Entity* ent, const std::string& srcPath, const std::string& srcType,
+                                    const std::string& dstPath, const std::string& dstType) {
+                                     if (!ent->HasComponent<Rendering::Drawable>())
+                                     {
+                                         VK_ERROR("No Drawable component found on entity!");
 
-                return;
-            }
+                                         return;
+                                     }
 
-            const auto& model = AssetLoader::FindModel(ent->GetComponent<Rendering::Drawable>().ID);
-
-            AssetLoader::ReplaceTexture(model.path, srcPath, Rendering::Assets::ToTextureType(srcType), dstPath,
-                                        Rendering::Assets::ToTextureType(dstType));
-        });
+                                     AssetLoader::ReplaceTexture(ent->GetComponent<Rendering::Drawable>().ID, srcPath,
+                                                                 Rendering::Assets::ToTextureType(srcType), dstPath,
+                                                                 Rendering::Assets::ToTextureType(dstType));
+                                 });
 
         entity_type.set_function("active_model", [](const Entity* ent, const bool active) {
             if (ent->HasComponent<Rendering::Drawable>())

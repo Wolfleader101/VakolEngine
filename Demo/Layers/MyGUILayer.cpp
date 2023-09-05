@@ -89,11 +89,11 @@ void MyGUILayer::OnUpdate()
                 EL.Iterate<Vakol::Components::Tag, Vakol::Components::Transform, Vakol::Rendering::Drawable>(
                     [&](const Vakol::Components::Tag& tag, Vakol::Components::Transform& trans,
                         const Vakol::Rendering::Drawable& drawable) {
-                        ImGui::PushID((tag.tag + drawable.ID).c_str());
+                        ImGui::PushID((tag.tag + drawable.ID.ConvertToString()).c_str());
 
                         if (ImGui::CollapsingHeader(tag.tag.c_str()))
                         {
-                            ImGui::Text("Drawable ID: %s", drawable.ID.c_str());
+                            ImGui::Text("Drawable ID: %s", drawable.ID.ConvertToString().c_str());
 
                             ImGui::SeparatorText("Transform");
 

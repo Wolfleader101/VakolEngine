@@ -13,17 +13,17 @@ namespace Vakol
     ModelLibrary AssetLoader::m_modelLibrary;
     TextureLibrary AssetLoader::m_textureLibrary;
 
-    Rendering::Assets::Model& AssetLoader::FindModel(const std::string& ID)
+    Rendering::Assets::Model& AssetLoader::FindModel(const GUID& ID)
     {
         return m_modelLibrary.FindModel(ID);
     }
 
-    Rendering::Assets::Model& AssetLoader::GetModel(const std::string& ID, const std::string& path, const float scale)
+    Rendering::Assets::Model& AssetLoader::GetModel(const GUID& ID, const std::string& path, const float scale)
     {
         return m_modelLibrary.GetModel(ID, path, scale);
     }
 
-    const std::vector<Rendering::Assets::Mesh>& AssetLoader::GetMeshes(const std::string& ID)
+    const std::vector<Rendering::Assets::Mesh>& AssetLoader::GetMeshes(const GUID& ID)
     {
         return m_modelLibrary.FindModel(ID).meshes;
     }
@@ -46,7 +46,7 @@ namespace Vakol
         return m_textureLibrary.GetTexture(path, type, size, data, levels);
     }
 
-    void AssetLoader::ReplaceTexture(const std::string& modelID, const std::string& srcPath, const unsigned int srcType,
+    void AssetLoader::ReplaceTexture(const GUID& modelID, const std::string& srcPath, const unsigned int srcType,
                                      const std::string& dstPath, const unsigned int dstType)
     {
         Rendering::Assets::Model& model = FindModel(modelID);

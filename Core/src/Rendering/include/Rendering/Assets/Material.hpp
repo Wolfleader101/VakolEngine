@@ -45,8 +45,8 @@ namespace Vakol::Rendering::Assets
     {
         std::string name; /// The name of the material
 
-        std::string ID = "null";
-        std::string shaderID = "null";
+        std::string ID;
+        std::string shaderID;
 
         std::vector<Texture> textures; /// The textures of a material
 

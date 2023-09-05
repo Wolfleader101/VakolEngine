@@ -11,11 +11,11 @@ namespace Vakol
 {
     const std::string ERROR_MODEL_PATH = "coreAssets/models/error.obj";
 
-    Rendering::Assets::Model& ModelLibrary::FindModel(const std::string& ID)
+    Rendering::Assets::Model& ModelLibrary::FindModel(const GUID& ID)
     {
         if (!ModelExists(ID))
         {
-            VK_ERROR("Unable to find unique model at ID: {0}", ID);
+            VK_ERROR("Unable to find unique model at ID: {0}", ID.ConvertToString());
             return GetErrorModel(1.0f);
         }
 
@@ -24,7 +24,7 @@ namespace Vakol
         return m_models.at(ID);
     }
 
-    Rendering::Assets::Model& ModelLibrary::GetModel(const std::string& ID, const std::string& path, const float scale)
+    Rendering::Assets::Model& ModelLibrary::GetModel(const GUID& ID, const std::string& path, const float scale)
     {
         if (!ModelExists(ID))
         {
@@ -74,7 +74,7 @@ namespace Vakol
         return m_loadedModels.find(path) != m_loadedModels.end();
     }
 
-    bool ModelLibrary::ModelExists(const std::string& ID) const
+    bool ModelLibrary::ModelExists(const GUID& ID) const
     {
         return m_models.find(ID) != m_models.end();
     }
