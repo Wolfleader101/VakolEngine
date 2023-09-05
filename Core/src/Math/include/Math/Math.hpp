@@ -29,9 +29,6 @@ namespace Vakol::Math
     using Mat4 = glm::mat4;
     using Quat = glm::quat;
 
-    using dVec3 = glm::dvec3;
-    using dQuat = glm::dquat;
-
     float DegToRad(const float deg);
     Vec3 DegToRad(const Vec3& vec);
 

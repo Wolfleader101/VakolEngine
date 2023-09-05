@@ -254,7 +254,7 @@ namespace Vakol
                         Rendering::RenderEngine::GenerateModel(model, drawable);
 
                         Components::Transform& transform = entity.GetComponent<Components::Transform>();
-                        transform.pos = Math::Vec3(2.5f, 0.0f, -5.0f);
+                        transform.pos = Math::Vec3(5.0f, 0.0f, -5.0f);
 
                         RigidBody rigidbody = m_sceneManager.GetActiveScene().GetPhysicsScene().CreateRigidBody(
                             transform.pos, transform.rot);
@@ -263,7 +263,8 @@ namespace Vakol
 
                         Rendering::RenderEngine::ConvertToPoints(model.meshes.at(0).vertices, vertices);
 
-                        MeshCollider collider = m_physicsEngine.CreateMeshCollider(vertices, model.meshes.at(0).indices);
+                        MeshCollider collider =
+                            m_physicsEngine.CreateMeshCollider(vertices, model.meshes.at(0).indices);
                         m_physicsEngine.AttachCollider(rigidbody, collider);
 
                         entity.AddComponent<RigidBody>(rigidbody);

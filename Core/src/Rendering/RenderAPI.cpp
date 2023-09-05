@@ -411,13 +411,11 @@ namespace Vakol::Rendering
         OpenGL::Viewport(x, y, width, height);
     }
 
-    Math::Mat4 RenderAPI::GetModelMatrix(Components::Transform& transform)
+    Math::Mat4 RenderAPI::GetModelMatrix(const Components::Transform& transform)
     {
         auto transform_matrix = Math::Mat4(1.0f);
 
         transform_matrix = Math::Translate(transform_matrix, transform.pos);
-
-        transform.rot = Math::Quat(Math::DegToRad(transform.eulerAngles));
 
         transform_matrix *= Math::Mat4Cast(transform.rot);
 

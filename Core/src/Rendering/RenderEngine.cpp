@@ -249,8 +249,10 @@ namespace Vakol::Rendering
 
         points.reserve(vertices.size()); // it'll never be that large
 
-        for (int i = 0; i < size; ++i)
-            points.emplace_back(vertices.at(i).position);
+        for (const Vertex& vertex : vertices)
+        {
+            points.emplace_back(vertex.position);
+        }
 
         // since points reserved so much memory, we want to resize capacity to fit its actual size
         points.shrink_to_fit();

@@ -146,7 +146,7 @@ namespace Vakol::Rendering
          * \param transform
          * \return the model-transform matrix
          */
-        static Math::Mat4 GetModelMatrix(Components::Transform& transform);
+        static Math::Mat4 GetModelMatrix(const Components::Transform& transform);
 
         /**
          * \brief Generates a vertex command that contains the necessary info to render an item's vertices.
