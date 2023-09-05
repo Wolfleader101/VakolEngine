@@ -5,17 +5,23 @@
 #include <filesystem>
 
 #include "Camera/Camera.hpp"
-#include "Utils/GUID.hpp"
 #include "ECS/Components.hpp"
 #include "ECS/Entity.hpp"
+#include "Utils/GUID.hpp"
 
 #include "Serialisation/SolSerialize.hpp"
+
+#include "Rendering/RenderEngine.hpp"
 
 namespace Vakol
 {
     Scene::Scene(const std::string& name, LuaScript& script, PhysicsScene& physicsScene, const bool debugEnabled)
         : m_debugEnabled(debugEnabled), m_script(std::move(script)), m_name(name), m_physicsScene(physicsScene)
     {
+        if (m_debugEnabled)
+        {
+            CreateDebugScene();
+        }
     }
 
     const std::string& Scene::getName() const
@@ -57,8 +63,18 @@ namespace Vakol
         return std::make_shared<Entity>(ent);
     }
 
+    void Scene::CreateDebugScene()
+    {
+        Rendering::RenderEngine::GenerateDebugScene(m_debugScene);
+    }
+
     const Rendering::DebugScene& Scene::GetDebugScene() const
     {
+        std::vector<Rendering::DebugVertex> vertices;
+        m_physicsScene.GetVertices(vertices);
+
+        Rendering::RenderAPI::SetDebugVertexArray(std::move(vertices), m_debugScene);
+
         return m_debugScene;
     }
 

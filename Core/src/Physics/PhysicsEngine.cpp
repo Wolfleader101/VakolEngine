@@ -26,7 +26,7 @@ namespace Vakol
 
         auto it = std::find_if(
             m_scenes.begin(), m_scenes.end(),
-            [&targetGuid](const std::unique_ptr<Vakol::PhysicsScene>& s) { return s->GetGuid() == targetGuid; });
+            [&targetGuid](const std::unique_ptr<Vakol::PhysicsScene>& s) { return s->m_guid == targetGuid; });
 
         if (it != m_scenes.end())
         {

@@ -2,6 +2,7 @@
 
 #include "CollisionListener.hpp"
 #include "PhysicsTypes.hpp"
+
 #include "Utils/GUID.hpp"
 
 namespace Vakol
