@@ -139,12 +139,10 @@ namespace Vakol
         // VK_TRACE("RB Address: {0}", fmt::ptr(&ent.GetComponent<RigidBody>()));
         // VK_TRACE("RB Parent Address: {0}", fmt::ptr(rb.collisionData->parentBody));
 
+        rb.worldInertiaTensor = Math::Mat3Cast(quatRot) * rb.inertiaTensor * Math::Transpose(Math::Mat3Cast(quatRot));
+
         if (rb.type == BodyType::Static)
         {
-            // Now rotate correctly to world space
-            rb.worldInertiaTensor =
-                Math::Mat3Cast(quatRot) * rb.inertiaTensor * Math::Transpose(Math::Mat3Cast(quatRot));
-
             //! THIS IS A HACK TO MAKE SURE THAT THE COLLIDER FOLLOWS THE TRANSFORM
             rb.collisionBody->setTransform(rp3d::Transform(
                 rp3d::Vector3(static_cast<double>(pos.x), static_cast<double>(pos.y), static_cast<double>(pos.z)),
@@ -156,21 +154,25 @@ namespace Vakol
         // can be assumed as static, can be moved later
         static Math::Vec3 gravity(0.0f, -9.8f, 0.0f);
 
-        rb.force += static_cast<float>(rb.mass) * gravity;
+        Math::Vec3 linearAcceleration = rb.force / static_cast<float>(rb.mass);
+        linearAcceleration += gravity;
 
-        rb.linearVelocity += rb.force * static_cast<float>(m_timeStep);
+        rb.linearVelocity += linearAcceleration * static_cast<float>(m_timeStep);
 
         pos += rb.linearVelocity * static_cast<float>(m_timeStep);
 
         // Update angular velocity
-        rb.angularVelocity += rb.torque * static_cast<float>(m_timeStep);
+        Math::Vec3 angularAcceleration = Math::Inverse(rb.worldInertiaTensor) * rb.torque;
+        rb.angularVelocity += angularAcceleration * static_cast<float>(m_timeStep);
 
-        // Convert angular velocity to degrees per time step
-        Math::Vec3 angularChange = rb.angularVelocity * static_cast<float>(m_timeStep);
+        rot += rb.angularVelocity * static_cast<float>(m_timeStep);
 
-        // Update Euler angles
-        rot += angularChange;
         quatRot = Math::Quat(Math::DegToRad(rot));
+
+        // Math::Quat angularVelocityQuat(0.0f, rb.angularVelocity.x, rb.angularVelocity.y, rb.angularVelocity.z);
+        // Math::Quat deltaOrientation = angularVelocityQuat * quatRot * (0.5f * static_cast<float>(m_timeStep));
+        // quatRot = quatRot + deltaOrientation;
+        // quatRot = Math::Normalized(quatRot);
 
         rb.worldInertiaTensor = Math::Mat3Cast(quatRot) * rb.inertiaTensor * Math::Transpose(Math::Mat3Cast(quatRot));
 
@@ -277,14 +279,15 @@ namespace Vakol
         double Lambda = rb.collisionData->lambda;
         VK_INFO("Lambda: {0}", Lambda);
 
-        Math::Vec3 impulse = rb.accumulatedImpulse;
+        // Math::Vec3 impulse = rb.accumulatedImpulse;
+        Math::Vec3 impulse = static_cast<float>(Lambda) * rb.collisionData->worldNormal;
         VK_INFO("Impulse: {0} {1} {2}", impulse.x, impulse.y, impulse.z);
 
         // Update linear velocities
         rb.linearVelocity += impulse / static_cast<float>(rb.mass);
 
         // Update angular velocities
-        Math::Vec3 newW = Math::Inverse(rb.inertiaTensor) * Math::Cross(r1, impulse);
+        Math::Vec3 newW = Math::Inverse(rb.worldInertiaTensor) * Math::Cross(r1, impulse);
 
         rb.angularVelocity += newW;
 

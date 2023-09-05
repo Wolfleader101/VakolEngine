@@ -227,7 +227,7 @@ namespace Vakol
                     Rendering::RenderEngine::GenerateModel(model, drawable);
 
                     auto& trans = ent.GetComponent<Components::Transform>();
-                    trans.pos = Math::Vec3(-0.50f, 5.0f, 0.0f);
+                    trans.pos = Math::Vec3(7.50f, 5.0f, 0.0f);
                     trans.eulerAngles = Math::Vec3(0.0f, 0.0f, -23.0f);
                     trans.rot = Math::Quat(Math::DegToRad(trans.eulerAngles));
 

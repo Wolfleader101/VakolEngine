@@ -96,10 +96,10 @@ namespace Vakol
                 body1Data->lambda = lambda;
                 body2Data->lambda = lambda;
 
-                Math::Vec3 impulse = static_cast<float>(lambda) * body1Data->worldNormal;
+                // Math::Vec3 impulse = static_cast<float>(lambda) * body1Data->worldNormal;
 
-                body1Data->parentBody->accumulatedImpulse += impulse;
-                body2Data->parentBody->accumulatedImpulse -= impulse;
+                // body1Data->parentBody->accumulatedImpulse += impulse;
+                // body2Data->parentBody->accumulatedImpulse -= impulse;
             }
         }
     }
