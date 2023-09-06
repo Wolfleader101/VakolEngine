@@ -11,17 +11,6 @@ namespace Vakol::Math
 
     using Vec3 = glm::vec3;
 
-    // struct Vec3
-    // {
-    //     union {
-    //         float x;
-    //         float y;
-    //         float z;
-    //     };
-    //     glm::vec3 glm;
-    //     float[3] arr;
-    // };
-
     using Vec4 = glm::vec4;
     using Point = Vec3;
 

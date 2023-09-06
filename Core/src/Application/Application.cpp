@@ -284,7 +284,7 @@ namespace Vakol
                 // While there is enough accumulated time take one or several physics steps
                 while (physicsAccumulator >= m_physicsEngine.GetTimeStep())
                 {
-                    constexpr int numIterations = 5;
+                    constexpr int numIterations = 2;
                     // apply forces
                     activeScene.GetEntityList().Iterate<Components::Transform, RigidBody>(
                         [&](Components::Transform& transform, RigidBody& rb) {
@@ -300,8 +300,8 @@ namespace Vakol
 
                         // resolve collisions
                         activeScene.GetEntityList().Iterate<Components::Transform, RigidBody>(
-                            [&](Components::Transform& transform, RigidBody& rb) {
-                                m_physicsEngine.ResolveCollisions(transform.pos, rb);
+                            [&](Components::Transform& trans, RigidBody& rb) {
+                                m_physicsEngine.ResolveCollisions(trans.pos, rb);
                             });
 
                         activeScene.GetEntityList().Iterate<RigidBody>(

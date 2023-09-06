@@ -6,17 +6,17 @@
 
 namespace Vakol
 {
-    Math::Vec3 FromRPVec3(rp3d::Vector3& vec)
+    static Math::Vec3 FromRPVec3(rp3d::Vector3& vec)
     {
         return Math::Vec3((float)vec.x, (float)vec.y, (float)vec.z);
     }
 
-    Math::Vec3 FromRPVec3(const rp3d::Vector3& vec)
+    static Math::Vec3 FromRPVec3(const rp3d::Vector3& vec)
     {
         return Math::Vec3((float)vec.x, (float)vec.y, (float)vec.z);
     }
 
-    rp3d::Vector3 ToRPVec3(Math::Vec3& vec)
+    static rp3d::Vector3 ToRPVec3(Math::Vec3& vec)
     {
         return rp3d::Vector3((double)vec.x, (double)vec.y, (double)vec.z);
     }
@@ -85,7 +85,7 @@ namespace Vakol
             vertices.size(),      // number of vertices
             vertices.data(),      // start of vertex data
             sizeof(Math::Point),  // stride of vertex data
-            indices.size() / 3ul, // number of triangles, assuming 3 indices per triangle
+            indices.size() / 3,   // number of triangles, assuming 3 indices per triangle
             indices.data(),       // start of index data
             sizeof(unsigned int), // stride of index data
             rp3d::TriangleVertexArray::VertexDataType::VERTEX_FLOAT_TYPE, // vertex data type
@@ -109,9 +109,9 @@ namespace Vakol
         rb.centerOfMass = FromRPVec3(collider.collider->getLocalToBodyTransform().getPosition());
         Math::Vec3 h = FromRPVec3(collider.shape->getHalfExtents());
 
-        rb.inertiaTensor[0][0] = (1.0f / 12.0f) * rb.mass * ((h.y * h.y) + (h.z * h.z));
-        rb.inertiaTensor[1][1] = (1.0f / 12.0f) * rb.mass * ((h.x * h.x) + (h.z * h.z));
-        rb.inertiaTensor[2][2] = (1.0f / 12.0f) * rb.mass * ((h.x * h.x) + (h.y * h.y));
+        rb.inertiaTensor[0][0] = (1.0 / 12.0) * rb.mass * ((h.y * h.y) + (h.z * h.z));
+        rb.inertiaTensor[1][1] = (1.0 / 12.0) * rb.mass * ((h.x * h.x) + (h.z * h.z));
+        rb.inertiaTensor[2][2] = (1.0 / 12.0) * rb.mass * ((h.x * h.x) + (h.y * h.y));
     }
 
     void PhysicsEngine::AttachCollider(RigidBody& rb, SphereCollider& collider)
@@ -162,11 +162,6 @@ namespace Vakol
         quatRot = quatRot + (Math::Quat(0.0f, rb.angularVelocity * static_cast<float>(m_timeStep) * 0.5f) * quatRot);
 
         quatRot = Math::Normalized(quatRot);
-
-        // float dampingFactor = 1.0f - 0.95f;
-        // float frameDamping = powf(dampingFactor, static_cast<float>(m_timeStep));
-        // rb.angularVelocity = rb.angularVelocity * frameDamping;
-        // rb.linearVelocity = rb.linearVelocity * frameDamping;
 
         Math::Mat3 rotationMatrix = Math::Mat3Cast(quatRot); // Convert the quaternion to a 3x3 rotation matrix
 
@@ -221,18 +216,18 @@ namespace Vakol
         Math::Vec3 r2CrossN = Math::Cross(r2, n);
 
         // n . (v1 - v2)
-        double nv = Math::Dot(n, Math::Vec3(rb1.linearVelocity - rb2.linearVelocity));
+        double nv = static_cast<double>(Math::Dot(n, Math::Vec3(rb1.linearVelocity - rb2.linearVelocity)));
 
         // w1 . (r1 x n)
-        double wr1 = Math::Dot(rb1.angularVelocity, r1CrossN);
+        double wr1 = static_cast<double>(Math::Dot(rb1.angularVelocity, r1CrossN));
 
         // w2 . (r2 x n)
-        double wr2 = Math::Dot(rb2.angularVelocity, r2CrossN);
+        double wr2 = static_cast<double>(Math::Dot(rb2.angularVelocity, r2CrossN));
 
         double e = (rb1.bounciness + rb2.bounciness) / 2.0; // average
 
         // top =  -(1 + e) * (n . (v1 - v2) + w1 . (r1 x n) - w2 . (r2 x n))
-        double top = -(1.0f + e) * (nv + wr1 - wr2);
+        double top = -(1.0 + e) * (nv + wr1 - wr2);
 
         // 1/m1 + 1/m2
         double rb2MassInv = rb2.type == BodyType::Static ? 0.0 : 1.0 / rb2.mass;
@@ -244,11 +239,11 @@ namespace Vakol
         // j2^-1
         Math::Mat3 j2Inverse = rb2.type == BodyType::Static ? Math::Mat3(0.0f) : Math::Inverse(rb2.worldInertiaTensor);
 
-        // (r1 x n)^T J1^-1 * (r1 x n)
-        double r1j = Math::Dot(r1CrossN, j1Inverse * r1CrossN);
+        // (r1 x n)^T * J1^-1 * (r1 x n)
+        double r1j = static_cast<double>(Math::Dot(r1CrossN, j1Inverse * r1CrossN));
 
         // (r2 x n)^T . J2^-1 * (r2 x n)
-        double r2j = Math::Dot(r2CrossN, j2Inverse * r2CrossN);
+        double r2j = static_cast<double>(Math::Dot(r2CrossN, j2Inverse * r2CrossN));
 
         // bottom = 1/m1 + 1/m2 + ((r1 x n)^T J1^-1 . (r1 x n) + (r2 x n)^T . J2^-1 . (r2 x n))
         double bottom = masses + (r1j + r2j);
@@ -282,8 +277,14 @@ namespace Vakol
         // Update linear velocities
         rb.linearVelocity += impulse / static_cast<float>(rb.mass);
 
+        VK_ERROR("Angular Velocity Before: {0} {1} {2}", rb.angularVelocity.x, rb.angularVelocity.y,
+                 rb.angularVelocity.z);
+
         rb.angularVelocity += static_cast<float>(Lambda) * Math::Inverse(rb.worldInertiaTensor) *
                               Math::Cross(r1, rb.collisionData->worldNormal);
+
+        VK_WARN("Angular Velocity After: {0} {1} {2}", rb.angularVelocity.x, rb.angularVelocity.y,
+                rb.angularVelocity.z);
 
         Depenetration(pos, rb);
 
