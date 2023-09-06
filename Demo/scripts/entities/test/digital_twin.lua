@@ -129,27 +129,27 @@ function init()
 
 	barriers[2]:get_transform().pos = Vector3.new(-9.9, -1.230, 9.5);
 	barriers[2]:get_transform().rot = Vector3.new(0.0, -90.0, 0.0);
-	barriers[2]:get_transform().scale.z = 1.09;
+	barriers[2]:get_transform().scale.x = 1.09;
 
-	barriers[3]:get_transform().pos = Vector3.new(10.7, -1.23, -2.7);
+	barriers[3]:get_transform().pos = Vector3.new(10.7, -1.23, -3.0);
 	barriers[3]:get_transform().rot = Vector3.new(0.0, 90.0, 0.0);
-	barriers[3]:get_transform().scale = Vector3.new(1.0, 1.0, 0.85);
+	barriers[3]:get_transform().scale = Vector3.new(1.0, 1.0, 1.0);
 
-	barriers[4]:get_transform().pos = Vector3.new(4.9, -1.23, -19.3);
+	barriers[4]:get_transform().pos = Vector3.new(4.9, -1.23, -19.7);
 	barriers[4]:get_transform().rot = Vector3.new(0.0, 180.0, 0.0);
 	barriers[4]:get_transform().scale = Vector3.new(1.5, 1.0, 1.0);
 
 	barriers[5]:get_transform().pos = Vector3.new(-19.5, -1.23, -14.1);
 	barriers[5]:get_transform().rot = Vector3.new(0.0, -90.0, 0.0);
-	barriers[5]:get_transform().scale = Vector3.new(1.0, 1.0, 1.289);
+	barriers[5]:get_transform().scale = Vector3.new(1.289, 1.0, 1.0);
 
-	barriers[6]:get_transform().pos = Vector3.new(-15.6, -3.880, 27.3);
+	barriers[6]:get_transform().pos = Vector3.new(-15.4, -3.880, 27.3);
 	barriers[6]:get_transform().rot = Vector3.new(0.0, 0.0, 0.0);
 	barriers[6]:get_transform().scale = Vector3.new(1.0, 1.0, 1.0);
 
 	barriers[7]:get_transform().pos = Vector3.new(-19.53, -3.880, 13.4);
 	barriers[7]:get_transform().rot = Vector3.new(0.0, -90.0, 0.0);
-	barriers[7]:get_transform().scale = Vector3.new(1.0, 1.0, 0.82);
+	barriers[7]:get_transform().scale = Vector3.new(0.82, 1.0, 1.0);
 
 	small_barrier:get_transform().pos = Vector3.new(-11.02, -1.23, 26.1);
 	small_barrier:get_transform().rot = Vector3.new(0.0, 180.0, 0.0);

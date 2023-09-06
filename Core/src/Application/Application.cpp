@@ -238,39 +238,6 @@ namespace Vakol
                         entity.AddComponent<AABBCollider>(collider);
                     }
 
-                    {
-                        Entity entity = m_sceneManager.GetActiveScene().CreateEntity("Cone");
-
-                        entity.AddComponent<Rendering::Drawable>();
-
-                        Rendering::Drawable& drawable = entity.GetComponent<Rendering::Drawable>();
-                        drawable.ID.GenNewGUID();
-
-                        VK_TRACE(drawable.ID.ConvertToString());
-
-                        Rendering::Assets::Model& model =
-                            AssetLoader::GetModel(drawable.ID, "coreAssets/models/cone.obj", 1.0f);
-
-                        Rendering::RenderEngine::GenerateModel(model, drawable);
-
-                        Components::Transform& transform = entity.GetComponent<Components::Transform>();
-                        transform.pos = Math::Vec3(5.0f, 0.0f, -5.0f);
-
-                        RigidBody rigidbody = m_sceneManager.GetActiveScene().GetPhysicsScene().CreateRigidBody(
-                            transform.pos, transform.rot);
-
-                        std::vector<Math::Point> vertices;
-
-                        Rendering::RenderEngine::ConvertToPoints(model.meshes.at(0).vertices, vertices);
-
-                        MeshCollider collider =
-                            m_physicsEngine.CreateMeshCollider(vertices, model.meshes.at(0).indices);
-                        m_physicsEngine.AttachCollider(rigidbody, collider);
-
-                        entity.AddComponent<RigidBody>(rigidbody);
-                        entity.AddComponent<MeshCollider>(collider);
-                    }
-
                     set = true;
                 }
 

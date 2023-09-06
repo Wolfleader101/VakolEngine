@@ -1,7 +1,7 @@
 function init()
     scene:create_entity("Player", "entities/player/noclip.lua")
 
-    --scene:create_entity("Digital Twin", "entities/test/digital_twin.lua");
+    scene:create_entity("Digital Twin", "entities/test/digital_twin.lua");
 
     --local sphere_1 = scene:create_entity("Sphere 1", "entities/test/sphere.lua");
     --local sphere_2 = scene:create_entity("Sphere 2", "entities/test/sphere.lua");
