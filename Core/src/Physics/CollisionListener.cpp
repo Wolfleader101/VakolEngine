@@ -80,7 +80,7 @@ namespace Vakol
 
             if (body2Data)
             {
-                body2Data->worldNormal = Math::Normalized(avgNormal);
+                body2Data->worldNormal = -Math::Normalized(avgNormal);
                 body2Data->worldPoint = avgWorldPoint2;
                 body2Data->localPoint = avgLocalPoint2;
                 body2Data->penetrationDepth = avgPenetrationDepth;

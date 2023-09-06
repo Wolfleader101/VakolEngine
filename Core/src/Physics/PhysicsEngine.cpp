@@ -276,17 +276,14 @@ namespace Vakol
         double Lambda = rb.collisionData->lambda;
         VK_INFO("Lambda: {0}", Lambda);
 
-        // Math::Vec3 impulse = rb.accumulatedImpulse;
         Math::Vec3 impulse = static_cast<float>(Lambda) * rb.collisionData->worldNormal;
         VK_INFO("Impulse: {0} {1} {2}", impulse.x, impulse.y, impulse.z);
 
         // Update linear velocities
         rb.linearVelocity += impulse / static_cast<float>(rb.mass);
 
-        // Update angular velocities
-        Math::Vec3 newW = Math::Inverse(rb.worldInertiaTensor) * Math::Cross(r1, impulse);
-
-        rb.angularVelocity += newW;
+        rb.angularVelocity += static_cast<float>(Lambda) * Math::Inverse(rb.worldInertiaTensor) *
+                              Math::Cross(r1, rb.collisionData->worldNormal);
 
         Depenetration(pos, rb);
 
