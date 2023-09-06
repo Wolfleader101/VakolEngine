@@ -112,8 +112,6 @@ namespace Vakol
         rb.inertiaTensor[0][0] = (1.0f / 12.0f) * rb.mass * ((h.y * h.y) + (h.z * h.z));
         rb.inertiaTensor[1][1] = (1.0f / 12.0f) * rb.mass * ((h.x * h.x) + (h.z * h.z));
         rb.inertiaTensor[2][2] = (1.0f / 12.0f) * rb.mass * ((h.x * h.x) + (h.y * h.y));
-
-        rb.inverseInteralTensor = Math::Inverse(rb.inertiaTensor);
     }
 
     void PhysicsEngine::AttachCollider(RigidBody& rb, SphereCollider& collider)
@@ -133,15 +131,9 @@ namespace Vakol
         collider.collider = rb.collisionBody->addCollider(collider.shape, rp3d::Transform::identity());
     }
 
-    void PhysicsEngine::ApplyForces(Math::Vec3& pos, Math::Vec3& rot, RigidBody& rb)
+    void PhysicsEngine::ApplyForces(Math::Vec3& pos, Math::Quat& quatRot, RigidBody& rb)
     {
-        Math::Quat quatRot(Math::DegToRad(rot));
-
         rb.collisionData->parentBody = &rb;
-        // VK_TRACE("RB Address: {0}", fmt::ptr(&ent.GetComponent<RigidBody>()));
-        // VK_TRACE("RB Parent Address: {0}", fmt::ptr(rb.collisionData->parentBody));
-
-        rb.worldInertiaTensor = Math::Mat3Cast(quatRot) * rb.inertiaTensor * Math::Transpose(Math::Mat3Cast(quatRot));
 
         if (rb.type == BodyType::Static)
         {
@@ -171,10 +163,15 @@ namespace Vakol
 
         quatRot = Math::Normalized(quatRot);
 
-        // TODO pass in quaternion instead
-        rot = Math::RadToDeg(Math::EulerFromQuat(quatRot));
+        // float dampingFactor = 1.0f - 0.95f;
+        // float frameDamping = powf(dampingFactor, static_cast<float>(m_timeStep));
+        // rb.angularVelocity = rb.angularVelocity * frameDamping;
+        // rb.linearVelocity = rb.linearVelocity * frameDamping;
 
-        rb.worldInertiaTensor = Math::Mat3Cast(quatRot) * rb.inertiaTensor * Math::Transpose(Math::Mat3Cast(quatRot));
+        Math::Mat3 rotationMatrix = Math::Mat3Cast(quatRot); // Convert the quaternion to a 3x3 rotation matrix
+
+        // Update the world inertia tensor
+        rb.worldInertiaTensor = rotationMatrix * rb.inertiaTensor * Math::Transpose(rotationMatrix);
 
         // Update transform with new position
         rb.collisionBody->setTransform(rp3d::Transform(
@@ -242,10 +239,10 @@ namespace Vakol
         double masses = (1 / rb1.mass) + rb2MassInv;
 
         // J1^-1
-        Math::Mat3 j1Inverse = Math::Inverse(rb1.worldInertiaTensor);
+        Math::Mat3 j1Inverse = rb1.type == BodyType::Static ? Math::Mat3(0.0f) : Math::Inverse(rb1.worldInertiaTensor);
 
         // j2^-1
-        Math::Mat3 j2Inverse = Math::Inverse(rb2.worldInertiaTensor);
+        Math::Mat3 j2Inverse = rb2.type == BodyType::Static ? Math::Mat3(0.0f) : Math::Inverse(rb2.worldInertiaTensor);
 
         // (r1 x n)^T J1^-1 * (r1 x n)
         double r1j = Math::Dot(r1CrossN, j1Inverse * r1CrossN);
@@ -262,7 +259,7 @@ namespace Vakol
         return Lambda;
     }
 
-    void PhysicsEngine::ResolveCollisions(Math::Vec3& pos, Math::Vec3& rot, RigidBody& rb)
+    void PhysicsEngine::ResolveCollisions(Math::Vec3& pos, RigidBody& rb)
     {
         // Exit if there's no collision data or if the body is static
         if (!rb.collisionData || rb.type == BodyType::Static)

@@ -195,7 +195,7 @@ namespace Vakol
                 //     Rendering::RenderEngine::GenerateModel(model, drawable);
 
                 //     auto& trans = ent.GetComponent<Components::Transform>();
-                //     trans.pos = Math::Vec3(0.0f, 15.0f, 0.0f);
+                //     trans.pos = Math::Vec3(7.5f, 15.0f, 0.0f);
 
                 //     RigidBody& rb = activeScene.GetPhysicsScene().CreateRigidBody(trans.pos, trans.rot);
                 //     rb.mass = 20.0;
@@ -228,7 +228,7 @@ namespace Vakol
 
                     auto& trans = ent.GetComponent<Components::Transform>();
                     trans.pos = Math::Vec3(7.50f, 5.0f, 0.0f);
-                    trans.eulerAngles = Math::Vec3(0.0f, 0.0f, 45.0f);
+                    trans.eulerAngles = Math::Vec3(0.0f, 0.0f, 90.0f);
                     trans.rot = Math::Quat(Math::DegToRad(trans.eulerAngles));
 
                     RigidBody& rb = activeScene.GetPhysicsScene().CreateRigidBody(trans.pos, trans.rot);
@@ -288,7 +288,9 @@ namespace Vakol
                     // apply forces
                     activeScene.GetEntityList().Iterate<Components::Transform, RigidBody>(
                         [&](Components::Transform& transform, RigidBody& rb) {
-                            m_physicsEngine.ApplyForces(transform.pos, transform.eulerAngles, rb);
+                            m_physicsEngine.ApplyForces(transform.pos, transform.rot, rb);
+
+                            transform.eulerAngles = Math::RadToDeg(Math::EulerFromQuat(transform.rot));
                         });
 
                     for (int i = 0; i < numIterations; ++i)
@@ -299,7 +301,7 @@ namespace Vakol
                         // resolve collisions
                         activeScene.GetEntityList().Iterate<Components::Transform, RigidBody>(
                             [&](Components::Transform& transform, RigidBody& rb) {
-                                m_physicsEngine.ResolveCollisions(transform.pos, transform.eulerAngles, rb);
+                                m_physicsEngine.ResolveCollisions(transform.pos, rb);
                             });
 
                         activeScene.GetEntityList().Iterate<RigidBody>(

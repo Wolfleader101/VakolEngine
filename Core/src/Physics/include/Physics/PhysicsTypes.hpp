@@ -59,7 +59,6 @@ namespace Vakol
 
         Math::Mat3 worldInertiaTensor = Math::Mat3(0.0f);
         Math::Mat3 inertiaTensor = Math::Mat3(0.0f);
-        Math::Mat3 inverseInteralTensor = Math::Mat3(0.0f);
 
         rp3d::CollisionBody* collisionBody = nullptr;
 

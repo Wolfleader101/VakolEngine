@@ -110,7 +110,7 @@ namespace Vakol
          *
          * @param rb to apply forces
          */
-        void ApplyForces(Math::Vec3& pos, Math::Vec3& rot, RigidBody& rb);
+        void ApplyForces(Math::Vec3& pos, Math::Quat& rot, RigidBody& rb);
 
         /**
          * @brief detect collisions in a world
@@ -124,7 +124,7 @@ namespace Vakol
          *
          * @param rb to handle resolution
          */
-        void ResolveCollisions(Math::Vec3& pos, Math::Vec3& rot, RigidBody& rb);
+        void ResolveCollisions(Math::Vec3& pos, RigidBody& rb);
 
         void Depenetration(Math::Vec3& pos, RigidBody& rb);
 
