@@ -2,8 +2,6 @@
 
 #include <reactphysics3d/reactphysics3d.h>
 
-#include "Rendering/RenderData.hpp"
-
 namespace Vakol
 {
     static Math::Vec3 GetDebugColor(rp3d::uint32 color);
