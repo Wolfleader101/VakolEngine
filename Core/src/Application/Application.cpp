@@ -153,6 +153,8 @@ namespace Vakol
 
             if (m_sceneManager.SceneChanged())
             {
+                m_sceneManager.GetActiveScene().GetCamera().SetAspect(
+                    static_cast<float>(GetWidth()) / (GetHeight() != 0 ? static_cast<float>(GetHeight()) : 1.0f));
                 // ignore the current frame, and next frame on scene change
                 // on scene change, ignore rest of the current frame, delta time will be low (current frame)
                 // the next frame, the delta time will be large because of how long it took to initialise the scene
@@ -216,14 +218,14 @@ namespace Vakol
                     Rendering::RenderEngine::GenerateModel(model, drawable);
 
                     auto& trans = ent.GetComponent<Components::Transform>();
-                    trans.pos = Math::Vec3(7.50f, 5.0f, 0.0f);
-                    trans.eulerAngles = Math::Vec3(0.0f, 0.0f, 90.f);
+                    trans.pos = Math::Vec3(7.50f, 10.0f, 0.0f);
+                    trans.eulerAngles = Math::Vec3(0.0f, 0.0f, 0.0f);
                     trans.rot = Math::Quat(Math::DegToRad(trans.eulerAngles));
 
                     RigidBody& rb = activeScene.GetPhysicsScene().CreateRigidBody(trans.pos, trans.rot);
                     // rb.type = BodyType::Static;
                     rb.mass = 10.0;
-                    rb.bounciness = 0.15;
+                    rb.bounciness = 0.95;
 
                     Math::Vec3 halfExts = trans.scale;
                     AABBCollider collider = m_physicsEngine.CreateAABBCollider(halfExts);
@@ -251,7 +253,7 @@ namespace Vakol
 
                     RigidBody& rb = activeScene.GetPhysicsScene().CreateRigidBody(trans.pos, trans.rot);
                     rb.type = BodyType::Static;
-                    rb.bounciness = 0.1;
+                    rb.bounciness = 0.95;
 
                     Math::Vec3 halfExts = trans.scale;
                     AABBCollider collider = m_physicsEngine.CreateAABBCollider(halfExts);

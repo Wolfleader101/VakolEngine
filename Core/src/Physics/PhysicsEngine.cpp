@@ -110,7 +110,7 @@ namespace Vakol
     {
         collider.collider = rb.collisionBody->addCollider(collider.shape, rp3d::Transform::identity());
 
-        rb.centerOfMass = FromRPVec3(collider.collider->getLocalToBodyTransform().getPosition());
+        rb.centerOfMass = Math::Vec3(0.0f); // FromRPVec3(collider.collider->getLocalToBodyTransform().getPosition());
         Math::Vec3 h = FromRPVec3(collider.shape->getHalfExtents());
 
         rb.inertiaTensor[0][0] = (1.0 / 12.0) * rb.mass * ((h.y * h.y) + (h.z * h.z));
@@ -167,10 +167,12 @@ namespace Vakol
 
         quatRot = Math::Normalized(quatRot);
 
-        Math::Mat3 rotationMatrix = Math::Mat3Cast(quatRot); // Convert the quaternion to a 3x3 rotation matrix
+        rb.rotationMatrix = Math::Mat3Cast(quatRot); // Convert the quaternion to a 3x3 rotation matrix
 
         // Update the world inertia tensor
-        rb.worldInertiaTensor = rotationMatrix * rb.inertiaTensor * Math::Transpose(rotationMatrix);
+        rb.worldInertiaTensor = rb.rotationMatrix * rb.inertiaTensor * Math::Transpose(rb.rotationMatrix);
+
+        rb.inertiaTensor = Math::Transpose(rb.rotationMatrix) * rb.worldInertiaTensor * rb.rotationMatrix;
 
         // Update transform with new position
         rb.collisionBody->setTransform(rp3d::Transform(
@@ -207,7 +209,11 @@ namespace Vakol
         // x n) + (r2 x n)^T . J2^-1 * (r2 x n))
 
         // normal
-        Math::Vec3 n = Math::Normalized(rb1.collisionData->worldNormal);
+        // Get the world-space normal and normalize it
+        Math::Vec3 worldNormal = Math::Normalized(rb1.collisionData->worldNormal);
+
+        // Transform the world-space normal to object-local space using the transpose of the rotation matrix
+        Math::Vec3 n = Math::Transpose(rb1.rotationMatrix) * worldNormal;
 
         // distance from collision point to center of mass
         Math::Vec3 r1 = rb1.centerOfMass - rb1.collisionData->localPoint;
@@ -238,10 +244,10 @@ namespace Vakol
         double masses = (1 / rb1.mass) + rb2MassInv;
 
         // J1^-1
-        Math::Mat3 j1Inverse = rb1.type == BodyType::Static ? Math::Mat3(0.0f) : Math::Inverse(rb1.worldInertiaTensor);
+        Math::Mat3 j1Inverse = rb1.type == BodyType::Static ? Math::Mat3(0.0f) : Math::Inverse(rb1.inertiaTensor);
 
         // j2^-1
-        Math::Mat3 j2Inverse = rb2.type == BodyType::Static ? Math::Mat3(0.0f) : Math::Inverse(rb2.worldInertiaTensor);
+        Math::Mat3 j2Inverse = rb2.type == BodyType::Static ? Math::Mat3(0.0f) : Math::Inverse(rb2.inertiaTensor);
 
         // (r1 x n)^T * J1^-1 * (r1 x n)
         double r1j = static_cast<double>(Math::Dot(r1CrossN, j1Inverse * r1CrossN));
@@ -272,20 +278,33 @@ namespace Vakol
         // distance from collision point to center of mass
         Math::Vec3 r1 = rb.centerOfMass - rb.collisionData->localPoint;
 
+        // Get the world-space normal and normalize it
+        Math::Vec3 worldNormal = Math::Normalized(rb.collisionData->worldNormal);
+
+        // Transform the world-space normal to object-local space using the transpose of the rotation matrix
+        Math::Vec3 n = Math::Transpose(rb.rotationMatrix) * worldNormal;
+
         double Lambda = rb.collisionData->lambda;
         VK_INFO("Lambda: {0}", Lambda);
+        VK_TRACE("Local Normal: {0} {1} {2}", n.x, n.y, n.z);
 
-        Math::Vec3 impulse = static_cast<float>(Lambda) * rb.collisionData->worldNormal;
+        Math::Vec3 impulse = static_cast<float>(Lambda) * n;
         VK_INFO("Impulse: {0} {1} {2}", impulse.x, impulse.y, impulse.z);
+
+        VK_ERROR("Linear Velocity Before: {0} {1} {2}", rb.linearVelocity.x, rb.linearVelocity.y, rb.linearVelocity.z);
 
         // Update linear velocities
         rb.linearVelocity += impulse / static_cast<float>(rb.mass);
 
+        VK_TRACE("Linear Velocity After: {0} {1} {2}", rb.linearVelocity.x, rb.linearVelocity.y, rb.linearVelocity.z);
+
         VK_ERROR("Angular Velocity Before: {0} {1} {2}", rb.angularVelocity.x, rb.angularVelocity.y,
                  rb.angularVelocity.z);
 
-        rb.angularVelocity += static_cast<float>(Lambda) * Math::Inverse(rb.worldInertiaTensor) *
-                              Math::Cross(r1, rb.collisionData->worldNormal);
+        VK_CRITICAL("Inverse Interia Tensor: {0} {1} {2}", rb.inertiaTensor[0][0], rb.inertiaTensor[0][1],
+                    rb.inertiaTensor[0][2]);
+
+        rb.angularVelocity += static_cast<float>(Lambda) * Math::Inverse(rb.inertiaTensor) * Math::Cross(r1, n);
 
         VK_WARN("Angular Velocity After: {0} {1} {2}", rb.angularVelocity.x, rb.angularVelocity.y,
                 rb.angularVelocity.z);
