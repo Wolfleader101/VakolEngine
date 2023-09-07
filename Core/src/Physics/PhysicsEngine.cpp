@@ -11,10 +11,10 @@ namespace Vakol
     {
     }
 
-    PhysicsScene& PhysicsEngine::CreateScene(const bool debugEnabled)
+    PhysicsScene& PhysicsEngine::CreateScene()
     {
         rp3d::PhysicsWorld* newWorld = m_rpCommon.createPhysicsWorld();
-        PhysicsScene newScene(newWorld, debugEnabled);
+        PhysicsScene newScene(newWorld);
 
         std::unique_ptr<Vakol::PhysicsScene> newScenePtr = std::make_unique<PhysicsScene>(newScene);
         m_scenes.push_back(std::move(newScenePtr));

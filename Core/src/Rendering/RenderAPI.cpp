@@ -173,7 +173,7 @@ namespace Vakol::Rendering
         m_vertexLibrary[debugScene.ID] = command;
     }
 
-    void RenderAPI::SetDebugVertexArray(std::vector<DebugVertex>&& vertices, const DebugScene& debugScene)
+    void RenderAPI::SetDebugVertexArray(std::vector<float>&& vertices, const DebugScene& debugScene)
     {
         auto& command = m_vertexLibrary.at(debugScene.ID);
 
@@ -197,7 +197,7 @@ namespace Vakol::Rendering
             VK_WARN("Metal rendering has not been implemented yet.");
         }
 
-        std::vector<DebugVertex>().swap(vertices);
+        std::vector<float>().swap(vertices);
     }
 
     void RenderAPI::GenerateShader(Assets::Shader&& shader, Drawable& drawable)

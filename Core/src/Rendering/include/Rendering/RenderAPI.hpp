@@ -160,7 +160,7 @@ namespace Vakol::Rendering
         static void GenerateVertexCommand(SkyboxVertexArray&& vertexArray);
 
         static void GenerateEmptyDebugVertexCommand(const DebugScene& debugScene);
-        static void SetDebugVertexArray(std::vector<DebugVertex>&& vertices, const DebugScene& debugScene);
+        static void SetDebugVertexArray(std::vector<float>&& vertices, const DebugScene& debugScene);
         /**
          * \brief generate a shader
          * \param shader the shader

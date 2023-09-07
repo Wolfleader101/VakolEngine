@@ -7,11 +7,6 @@
 
 namespace Vakol
 {
-    namespace Rendering
-    {
-        struct DebugVertex;
-    }
-
     class PhysicsEngine;
 
     /**
@@ -30,8 +25,10 @@ namespace Vakol
          */
         RigidBody CreateRigidBody(Math::Vec3& pos, Math::Quat& orientation);
 
-        void SetDebugActive() const;
-        void GetVertices(std::vector<Rendering::DebugVertex>& vertices) const;
+        void EnableDebug() const;
+        void DisableDebug() const;
+
+        void GetVertices(std::vector<float>& vertices) const;
 
         const GUID& GetGuid() const;
 
@@ -40,9 +37,8 @@ namespace Vakol
          * @brief Construct a new Physics Scene object
          *
          * @param world to create scene from
-         * @param debugEnabled whether debug mode should be enabled
          */
-        explicit PhysicsScene(rp3d::PhysicsWorld* world, bool debugEnabled);
+        explicit PhysicsScene(rp3d::PhysicsWorld* world);
 
         /**
          * @brief update a physics scene

@@ -95,7 +95,7 @@ namespace Vakol::Rendering::OpenGL
 
         glBindBuffer(GL_ARRAY_BUFFER, command.vertexBuffer);
 
-        glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(command.nVertices * sizeof(DebugVertex)), vertexData,
+        glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(command.nVertices * sizeof(float)), vertexData,
                      GL_DYNAMIC_DRAW);
 
         glEnableVertexAttribArray(0);

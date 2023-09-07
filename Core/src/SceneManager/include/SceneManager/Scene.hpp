@@ -23,9 +23,8 @@ namespace Vakol
          * @param name The name of the scene.
          * @param script The Lua script associated with the scene.
          * @param physicsScene The physics scene associated with the scene.
-         * @param debugEnabled Whether the debug scene should be enabled or not
          */
-        Scene(const std::string& name, LuaScript& script, PhysicsScene& physicsScene, bool debugEnabled);
+        Scene(const std::string& name, LuaScript& script, PhysicsScene& physicsScene);
 
         Scene(const Scene& other) = delete;
         Scene(Scene&& other) = default;
@@ -149,6 +148,7 @@ namespace Vakol
 
         const Rendering::DebugScene& GetDebugScene() const;
 
+        void SetDebug(bool enabled);
         bool IsDebugEnabled() const;
 
         /**
@@ -159,7 +159,7 @@ namespace Vakol
         PhysicsScene& GetPhysicsScene();
 
       private:
-        bool m_debugEnabled;
+        bool m_debugEnabled = false;
 
         /**
          * @brief The lua script of the scene.

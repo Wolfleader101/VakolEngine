@@ -15,13 +15,9 @@
 
 namespace Vakol
 {
-    Scene::Scene(const std::string& name, LuaScript& script, PhysicsScene& physicsScene, const bool debugEnabled)
-        : m_debugEnabled(debugEnabled), m_script(std::move(script)), m_name(name), m_physicsScene(physicsScene)
+    Scene::Scene(const std::string& name, LuaScript& script, PhysicsScene& physicsScene)
+        : m_script(std::move(script)), m_name(name), m_physicsScene(physicsScene)
     {
-        if (m_debugEnabled)
-        {
-            CreateDebugScene();
-        }
     }
 
     const std::string& Scene::getName() const
@@ -65,12 +61,15 @@ namespace Vakol
 
     void Scene::CreateDebugScene()
     {
-        Rendering::RenderEngine::GenerateDebugScene(m_debugScene);
+        if (m_debugEnabled)
+            Rendering::RenderEngine::GenerateDebugScene(m_debugScene);
+        else
+            VK_WARN("Unable to create debug scene: Debug mode is not enabled!");
     }
 
     const Rendering::DebugScene& Scene::GetDebugScene() const
     {
-        std::vector<Rendering::DebugVertex> vertices;
+        std::vector<float> vertices;
         m_physicsScene.GetVertices(vertices);
 
         Rendering::RenderAPI::SetDebugVertexArray(std::move(vertices), m_debugScene);
@@ -86,6 +85,16 @@ namespace Vakol
     PhysicsScene& Scene::GetPhysicsScene()
     {
         return m_physicsScene;
+    }
+
+    void Scene::SetDebug(bool enabled)
+    {
+        m_debugEnabled = enabled;
+
+        if (m_debugEnabled)
+            m_physicsScene.EnableDebug();
+        else
+            m_physicsScene.DisableDebug();
     }
 
     namespace fs = std::filesystem;

@@ -6,16 +6,11 @@
 
 namespace Vakol
 {
-    static Math::Vec3 Vec3(const rp3d::Vector3& v);
     static Math::Vec3 GetDebugColor(rp3d::uint32 color);
 
-    PhysicsScene::PhysicsScene(rp3d::PhysicsWorld* world, const bool debugEnabled) : m_world(world)
+    PhysicsScene::PhysicsScene(rp3d::PhysicsWorld* world) : m_world(world)
     {
         m_world->setEventListener(&m_collisionListener);
-        m_world->setIsDebugRenderingEnabled(debugEnabled);
-
-        if (debugEnabled)
-            SetDebugActive();
     }
 
     RigidBody PhysicsScene::CreateRigidBody(Math::Vec3& pos, Math::Quat& orientation)
@@ -33,8 +28,10 @@ namespace Vakol
         return rb;
     }
 
-    void PhysicsScene::SetDebugActive() const
+    void PhysicsScene::EnableDebug() const
     {
+        m_world->setIsDebugRenderingEnabled(true);
+
         auto& debugRenderer = m_world->getDebugRenderer();
 
         debugRenderer.setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::COLLIDER_AABB, true);
@@ -43,37 +40,68 @@ namespace Vakol
         debugRenderer.setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::CONTACT_NORMAL, true);
     }
 
-    void PhysicsScene::GetVertices(std::vector<Rendering::DebugVertex>& vertices) const
+    void PhysicsScene::DisableDebug() const
     {
-        Rendering::DebugVertex p1{};
-        Rendering::DebugVertex p2{};
-        Rendering::DebugVertex p3{};
+        m_world->setIsDebugRenderingEnabled(false);
+    }
 
-        for (auto& tri : m_world->getDebugRenderer().getTriangles())
+    void PhysicsScene::GetVertices(std::vector<float>& vertices) const
+    {
+
+        for (rp3d::DebugRenderer::DebugTriangle& tri : m_world->getDebugRenderer().getTriangles())
         {
-            p1.position = Vec3(tri.point1);
-            p2.position = Vec3(tri.point2);
-            p3.position = Vec3(tri.point3);
+            vertices.emplace_back(tri.point1.x);
+            vertices.emplace_back(tri.point1.y);
+            vertices.emplace_back(tri.point1.z);
 
-            p1.color = GetDebugColor(tri.color1);
-            p2.color = GetDebugColor(tri.color2);
-            p3.color = GetDebugColor(tri.color3);
+            Math::Vec3 color = GetDebugColor(tri.color1);
 
-            vertices.emplace_back(p1);
-            vertices.emplace_back(p2);
-            vertices.emplace_back(p3);
+            vertices.emplace_back(color.r);
+            vertices.emplace_back(color.g);
+            vertices.emplace_back(color.b);
+
+            vertices.emplace_back(tri.point2.x);
+            vertices.emplace_back(tri.point2.y);
+            vertices.emplace_back(tri.point2.z);
+
+            color = GetDebugColor(tri.color2);
+
+            vertices.emplace_back(color.r);
+            vertices.emplace_back(color.g);
+            vertices.emplace_back(color.b);
+
+            vertices.emplace_back(tri.point3.x);
+            vertices.emplace_back(tri.point3.y);
+            vertices.emplace_back(tri.point3.z);
+
+            color = GetDebugColor(tri.color3);
+
+            vertices.emplace_back(color.r);
+            vertices.emplace_back(color.g);
+            vertices.emplace_back(color.b);
         }
 
-        for (auto& line : m_world->getDebugRenderer().getLines())
+        for (rp3d::DebugRenderer::DebugLine& line : m_world->getDebugRenderer().getLines())
         {
-            p1.position = Vec3(line.point1);
-            p2.position = Vec3(line.point2);
+            vertices.emplace_back(line.point1.x);
+            vertices.emplace_back(line.point1.y);
+            vertices.emplace_back(line.point1.z);
 
-            p1.color = GetDebugColor(line.color1);
-            p2.color = GetDebugColor(line.color2);
+            Math::Vec3 color = GetDebugColor(line.color1);
 
-            vertices.emplace_back(p1);
-            vertices.emplace_back(p2);
+            vertices.emplace_back(color.r);
+            vertices.emplace_back(color.g);
+            vertices.emplace_back(color.b);
+
+            vertices.emplace_back(line.point2.x);
+            vertices.emplace_back(line.point2.y);
+            vertices.emplace_back(line.point2.z);
+
+            color = GetDebugColor(line.color2);
+
+            vertices.emplace_back(color.r);
+            vertices.emplace_back(color.g);
+            vertices.emplace_back(color.b);
         }
     }
 
@@ -85,11 +113,6 @@ namespace Vakol
     void PhysicsScene::Update(const double timeStep)
     {
         m_world->update(timeStep);
-    }
-
-    Math::Vec3 Vec3(const rp3d::Vector3& v)
-    {
-        return {v.x, v.y, v.z};
     }
 
     Math::Vec3 GetDebugColor(const rp3d::uint32 color)

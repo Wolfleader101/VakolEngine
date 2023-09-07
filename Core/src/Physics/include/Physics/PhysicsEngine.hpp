@@ -28,11 +28,9 @@ namespace Vakol
         /**
          * @brief Create a Scene object
          *
-         * @param debugEnabled whether physics debug has been enabled
-         *
          * @return PhysicsScene& thats been created
          */
-        PhysicsScene& CreateScene(bool debugEnabled);
+        PhysicsScene& CreateScene();
 
         /**
          * @brief Destroy a Scene object
