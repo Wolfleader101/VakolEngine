@@ -26,6 +26,7 @@ namespace Vakol
 
             texture.path = path;
             texture.type = type;
+            texture.embedded = false;
 
             unsigned char* pixels = nullptr;
 
@@ -66,6 +67,33 @@ namespace Vakol
         }
 
         return m_textures.at(std::make_pair(path, type));
+    }
+
+    void TextureLibrary::GetTexture(const std::string& path, const unsigned int type, int& width, int& height,
+                                    int& channels, unsigned char*& pixels)
+    {
+        if (!FindTexture(path, type))
+        {
+            Rendering::Assets::Texture texture;
+
+            texture.path = path;
+            texture.type = type;
+            texture.embedded = false;
+
+            ImportTexture(path, width, height, channels, pixels);
+
+            texture.width = width;
+            texture.height = height;
+            texture.channels = channels;
+
+            if (!pixels)
+            {
+                m_textures[std::make_pair(path, type)] = GetErrorTexture(type);
+                return;
+            }
+
+            m_textures[std::make_pair(path, type)] = std::move(texture);
+        }
     }
 
     std::vector<Rendering::Assets::Texture> TextureLibrary::GetTextures(std::vector<std::string>&& paths)

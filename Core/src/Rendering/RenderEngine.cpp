@@ -13,6 +13,7 @@
 
 #include "Camera/Camera.hpp"
 #include "ECS/Components.hpp"
+#include "Rendering/RenderData.hpp"
 
 namespace Vakol::Rendering
 {
@@ -38,6 +39,7 @@ namespace Vakol::Rendering
 
     const std::string DEFAULT_SHADER_PATH = "coreAssets/shaders/default.program";
     const std::string DEFAULT_SKYBOX_SHADER_PATH = "coreAssets/shaders/skybox.program";
+    const std::string DEFAULT_DEBUG_SHADER_PATH = "coreAssets/shaders/debug.program";
 
     void RenderEngine::Init(const int width, const int height, const std::string& API)
     {
@@ -49,6 +51,16 @@ namespace Vakol::Rendering
         RenderAPI::EnableCulling();
 
         RenderAPI::CullFaces();
+
+        RenderAPI::ResizeScreen(0, 0, width, height);
+    }
+
+    void RenderEngine::ResizeScreen(Camera& camera, const unsigned int width, const unsigned int height)
+    {
+        camera.SetAspect(static_cast<float>(width) / (height != 0 ? static_cast<float>(height) : 1.0f));
+
+        if (height != 0)
+            RenderAPI::ResizeScreen(0, 0, static_cast<int>(width), static_cast<int>(height));
     }
 
     void RenderEngine::PreDraw()
@@ -61,10 +73,10 @@ namespace Vakol::Rendering
 
     void RenderEngine::Draw(const Camera& camera, Components::Transform& transform, const Drawable& drawable)
     {
-        RenderAPI::BeginDraw(drawable.modelID, drawable.shaderID);
+        RenderAPI::BeginDraw(drawable.ID, drawable.shaderID);
 
         RenderAPI::SetMat4(RenderAPI::GetShader(drawable.shaderID), "PV_MATRIX", false,
-                           camera.GetMatrix(PROJECTION_MATRIX) * camera.GetMatrix(VIEW_MATRIX));
+                           camera.GetProjectionMatrix() * camera.GetViewMatrix());
 
         const auto& modelMatrix = RenderAPI::GetModelMatrix(transform);
 
@@ -87,37 +99,40 @@ namespace Vakol::Rendering
         RenderAPI::BeginSkyboxDraw(skybox.vertexID, skybox.shaderID, skybox.textureID);
 
         RenderAPI::SetMat4(RenderAPI::GetShader(skybox.shaderID), "PV_MATRIX", false,
-                           camera.GetMatrix(PROJECTION_MATRIX) * Math::Mat4(Math::Mat3(camera.GetMatrix(VIEW_MATRIX))));
+                           camera.GetProjectionMatrix() * Math::Mat4(Math::Mat3(camera.GetViewMatrix())));
 
-        RenderAPI::EndSkyboxDraw();
+        RenderAPI::EndDraw();
+    }
+
+    void RenderEngine::DrawDebugScene(const Camera& camera, const DebugScene& debugScene)
+    {
+        RenderAPI::BeginDebugSceneDraw(debugScene.ID, debugScene.shaderID);
+
+        RenderAPI::SetMat4(RenderAPI::GetShader(debugScene.shaderID), "PV_MATRIX", false,
+                           camera.GetProjectionMatrix() * camera.GetViewMatrix());
+
+        RenderAPI::EndDraw();
     }
 
     void RenderEngine::GenerateSphere(const float scale, Drawable& drawable)
     {
-        bool success = true;
-        auto shader = ImportShader(DEFAULT_SHADER_PATH, success);
-
-        if (success)
-            RenderAPI::GenerateShader(std::move(shader), drawable);
-
-        auto model = AssetLoader::GetModel("coreAssets/models/sphere.obj", scale);
-
-        if (success)
-            SubmitModel(model);
+        GenerateModel(AssetLoader::GetModel(drawable.ID, "coreAssets/models/sphere.obj", scale), drawable);
     }
 
     void RenderEngine::GenerateCube(const float scale, Drawable& drawable)
     {
+        GenerateModel(AssetLoader::GetModel(drawable.ID, "coreAssets/models/cube.obj", scale), drawable);
+    }
+
+    void RenderEngine::GenerateDebugScene(DebugScene& debugScene)
+    {
         bool success = true;
-        auto shader = ImportShader(DEFAULT_SHADER_PATH, success);
+        auto shader = ImportShader(DEFAULT_DEBUG_SHADER_PATH, success);
 
         if (success)
-            RenderAPI::GenerateShader(std::move(shader), drawable);
+            RenderAPI::GenerateDebugShader(std::move(shader), debugScene);
 
-        auto model = AssetLoader::GetModel("coreAssets/models/cube.obj", scale);
-
-        if (success)
-            SubmitModel(model);
+        RenderAPI::GenerateEmptyDebugVertexCommand(debugScene);
     }
 
     void RenderEngine::GenerateSkybox(std::vector<std::string>&& faces, Skybox& skybox)
@@ -130,8 +145,7 @@ namespace Vakol::Rendering
 
         GenerateSkyboxVertexArray(DEFAULT_CUBE_VERTICES, skybox);
 
-        auto&& textures = AssetLoader::GetTextures(std::move(faces));
-        skybox.textureID = RenderAPI::GenerateTexture(std::move(textures));
+        skybox.textureID = RenderAPI::GenerateTexture(std::move(faces));
     }
 
     void RenderEngine::GenerateSkyboxVertexArray(const std::vector<float>& vertices, Skybox& skybox)
@@ -154,18 +168,13 @@ namespace Vakol::Rendering
         if (success)
             RenderAPI::GenerateShader(std::move(shader), drawable);
 
-        drawable.modelID = model.path;
-
-        SubmitModel(model);
-
         for (auto& mesh : model.meshes)
         {
-            const auto& material = mesh.material;
+            Assets::Material& material = mesh.material;
 
-            material->ID = GenerateID();
-            material->shaderID = drawable.shaderID;
+            material.shaderID = drawable.shaderID;
 
-            auto& textures = material->textures;
+            auto& textures = material.textures;
 
             auto compare = [](const Assets::Texture& lhs, const Assets::Texture& rhs) -> bool {
                 return lhs.ID < rhs.ID;
@@ -178,7 +187,7 @@ namespace Vakol::Rendering
                     std::string path = "coreAssets/textures/white.png";
                     const unsigned int type = Assets::VK_TEXTURE_DIFFUSE + i;
 
-                    material->textures.emplace_back(AssetLoader::GetTexture(path, type));
+                    material.textures.emplace_back(AssetLoader::GetTexture(path, type));
                 }
             }
             else
@@ -187,7 +196,7 @@ namespace Vakol::Rendering
 
                 std::vector<unsigned int> types;
 
-                for (const auto& texture : material->textures)
+                for (const auto& texture : material.textures)
                 {
                     types.emplace_back(texture.type);
                 }
@@ -200,24 +209,26 @@ namespace Vakol::Rendering
                     {
                         const unsigned int type = target;
 
-                        material->textures.emplace_back(AssetLoader::GetTexture(path, type));
+                        material.textures.emplace_back(AssetLoader::GetTexture(path, type));
                     }
                 }
             }
 
             std::sort(textures.begin(), textures.end(), compare);
         }
+
+        SubmitModel(model);
     }
 
-    void RenderEngine::SubmitModel(Assets::Model& model)
+    void RenderEngine::SubmitModel(const Assets::Model& model)
     {
-        for (auto& mesh : model.meshes)
+        for (const auto& mesh : model.meshes)
         {
             SubmitMesh(mesh);
         }
     }
 
-    void RenderEngine::SubmitMesh(Assets::Mesh& mesh)
+    void RenderEngine::SubmitMesh(const Assets::Mesh& mesh)
     {
         VertexArray vertexArray;
 
@@ -227,9 +238,24 @@ namespace Vakol::Rendering
         vertexArray.indices = mesh.indices;
 
         // swap vector with an empty vector to de-allocate the memory taken by the vector
-        std::vector<unsigned int>().swap(mesh.indices);
+        // std::vector<unsigned int>().swap(mesh.indices);
 
         RenderAPI::GenerateVertexCommand(std::move(vertexArray));
+    }
+
+    void RenderEngine::ConvertToPoints(const std::vector<Vertex>& vertices, std::vector<Math::Point>& points)
+    {
+        const int size = static_cast<int>(vertices.size());
+
+        points.reserve(vertices.size()); // it'll never be that large
+
+        for (const Vertex& vertex : vertices)
+        {
+            points.emplace_back(vertex.position);
+        }
+
+        // since points reserved so much memory, we want to resize capacity to fit its actual size
+        points.shrink_to_fit();
     }
 
 } // namespace Vakol::Rendering

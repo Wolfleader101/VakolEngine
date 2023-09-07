@@ -1,7 +1,12 @@
 function init()
     scene:create_entity("Player", "entities/player/noclip.lua")
 
-    scene:create_entity("Digital Twin", "entities/test/digital_twin.lua");
+    --scene:create_entity("Digital Twin", "entities/test/digital_twin.lua");
+
+    --local sphere_1 = scene:create_entity("Sphere 1", "entities/test/sphere.lua");
+    --local sphere_2 = scene:create_entity("Sphere 2", "entities/test/sphere.lua");
+    
+    --sphere_2:get_transform().pos = Vector3.new(0.0, 2.0, 0.0);
 
     local path = "coreAssets/textures/Skybox/imported/Unity/WorldSkies/";
 	local extension = ".png";
@@ -14,6 +19,9 @@ function init()
 					path .. "back"   .. extension};
 
 	scene:generate_skybox(faces);
+
+    scene:enable_debug();
+    scene:create_debug_scene();
 end
 
 function update()

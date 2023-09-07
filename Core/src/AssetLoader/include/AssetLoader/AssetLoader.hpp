@@ -1,8 +1,5 @@
 #pragma once
 
-#include <memory>
-#include <unordered_map>
-
 #include "Rendering/Assets/Model.hpp"
 #include "Rendering/Assets/Texture.hpp"
 
@@ -35,24 +32,25 @@ namespace Vakol
 
         /**
          * \brief finds a model based on a path
-         * \param path the path of the model
+         * \param ID the path of the model
          * \return the model if found, else an error model
          */
-        static Rendering::Assets::Model& FindModel(const std::string& path);
+        static Rendering::Assets::Model& FindModel(const GUID& ID);
 
         /**
          * \brief
+         * \param ID the drawable ID
          * \param path the path of the model
          * \param scale the uniform scale of the model
          * \return
          */
-        static Rendering::Assets::Model& GetModel(const std::string& path, float scale = 1.0f);
+        static Rendering::Assets::Model& GetModel(const GUID& ID, const std::string& path, float scale = 1.0f);
         /**
          * \brief
-         * \param modelID the path of the model
+         * \param ID the drawable ID of the model
          * \return
          */
-        static const std::vector<Rendering::Assets::Mesh>& GetMeshes(const std::string& modelID);
+        static const std::vector<Rendering::Assets::Mesh>& GetMeshes(const GUID& ID);
         /**
          * \brief
          * \param path the path of the texture
@@ -72,12 +70,18 @@ namespace Vakol
          */
         static Rendering::Assets::Texture& GetTexture(const std::string& path, unsigned int type, int size,
                                                       const void* data, int levels = 1);
+
         /**
-         * \brief
-         * \param paths
-         * \return
+         * \brief just grab the entire texture lol
+         * \param path
+         * \param type
+         * \param width
+         * \param height
+         * \param channels
+         * \param pixels
          */
-        static std::vector<Rendering::Assets::Texture> GetTextures(std::vector<std::string>&& paths);
+        static void GetTexture(const std::string& path, unsigned int type, int& width, int& height, int& channels,
+                               unsigned char*& pixels);
 
         /**
          * \brief
@@ -87,7 +91,7 @@ namespace Vakol
          * \param dstPath the new path of the texture
          * \param dstType the new type of texture
          */
-        static void ReplaceTexture(const std::string& modelID, const std::string& srcPath, unsigned int srcType,
+        static void ReplaceTexture(const GUID& modelID, const std::string& srcPath, unsigned int srcType,
                                    const std::string& dstPath, unsigned int dstType);
 
       private:

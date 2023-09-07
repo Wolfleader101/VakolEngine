@@ -55,7 +55,6 @@ namespace Vakol
          *
          * @param name Name of Scene (unique)
          * @param scriptName Script name
-         *
          */
         void CreateScene(const std::string& name, const std::string& scriptName);
 

@@ -7,13 +7,16 @@
 #include "Camera/Camera.hpp"
 #include "ECS/Components.hpp"
 #include "ECS/Entity.hpp"
+#include "Utils/GUID.hpp"
 
 #include "Serialisation/SolSerialize.hpp"
+
+#include "Rendering/RenderEngine.hpp"
 
 namespace Vakol
 {
     Scene::Scene(const std::string& name, LuaScript& script, PhysicsScene& physicsScene)
-        : m_script(std::move(script)), m_physicsScene(physicsScene), m_name(name), m_cam(Math::Vec3(0.0f, 0.0f, 2.0f))
+        : m_script(std::move(script)), m_name(name), m_physicsScene(physicsScene)
     {
     }
 
@@ -33,8 +36,8 @@ namespace Vakol
 
         ent.GetComponent<Components::Tag>().tag = tag;
 
-        if (!ent.GetComponent<Components::GUID>().id.isValid())
-            ent.GetComponent<Components::GUID>().GenNewGUID();
+        if (!ent.GetComponent<GUID>().IsValid())
+            ent.GetComponent<GUID>().GenNewGUID();
 
         return ent;
     }
@@ -56,9 +59,42 @@ namespace Vakol
         return std::make_shared<Entity>(ent);
     }
 
+    void Scene::CreateDebugScene()
+    {
+        if (m_debugEnabled)
+            Rendering::RenderEngine::GenerateDebugScene(m_debugScene);
+        else
+            VK_WARN("Unable to create debug scene: Debug mode is not enabled!");
+    }
+
+    const Rendering::DebugScene& Scene::GetDebugScene() const
+    {
+        std::vector<float> vertices;
+        m_physicsScene.GetVertices(vertices);
+
+        Rendering::RenderAPI::SetDebugVertexArray(std::move(vertices), m_debugScene);
+
+        return m_debugScene;
+    }
+
+    bool Scene::IsDebugEnabled() const
+    {
+        return m_debugEnabled;
+    }
+
     PhysicsScene& Scene::GetPhysicsScene()
     {
         return m_physicsScene;
+    }
+
+    void Scene::SetDebug(bool enabled)
+    {
+        m_debugEnabled = enabled;
+
+        if (m_debugEnabled)
+            m_physicsScene.EnableDebug();
+        else
+            m_physicsScene.DisableDebug();
     }
 
     namespace fs = std::filesystem;

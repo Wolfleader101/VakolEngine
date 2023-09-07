@@ -36,17 +36,20 @@ namespace Vakol::Rendering::Assets
         float shininess_strength = 1.0f;
 
         float opacity = 1.0f; // the transparency/alpha of the material
+
+        bool use_lighting = true;
+        bool use_textures = true;
     };
 
     struct Material
     {
         std::string name; /// The name of the material
 
-        std::string ID = "null";
-        std::string shaderID = "null";
+        std::string ID;
+        std::string shaderID;
 
         std::vector<Texture> textures; /// The textures of a material
 
-        std::shared_ptr<MaterialProperties> properties = nullptr; /// The properties that make up a material
+        MaterialProperties properties; /// The properties that make up a material
     };
 } // namespace Vakol::Rendering::Assets

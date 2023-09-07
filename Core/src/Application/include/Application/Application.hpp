@@ -1,12 +1,10 @@
 #pragma once
 
-#include <deque>
 #include <memory>
 
 #include "GUI/GUIWindow.hpp"
 #include "Input/Input.hpp"
 #include "Physics/PhysicsEngine.hpp"
-#include "Rendering/RenderEngine.hpp"
 #include "SceneManager/SceneManager.hpp"
 #include "Scripting/ScriptEngine.hpp"
 #include "Time/Time.hpp"
@@ -16,12 +14,6 @@
 
 #include "LayerManager/LayerManager.hpp"
 #include "Utils/Layer.hpp"
-
-#include "SceneManager/SceneManager.hpp"
-
-#include "Scripting/ScriptEngine.hpp"
-
-#include "Rendering/RenderEngine.hpp"
 
 namespace Vakol
 {
@@ -204,7 +196,7 @@ namespace Vakol
          * @param ev The WindowResizeEvent.
          * @return bool True if the event was handled, false otherwise.
          */
-        bool OnWindowResize(const WindowResizeEvent& ev) const;
+        bool OnWindowResize(const WindowResizeEvent& ev);
 
         /**
          * @brief on keyboard press event

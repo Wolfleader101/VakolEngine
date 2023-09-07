@@ -1,6 +1,5 @@
 #pragma once
 
-#include <crossguid/guid.hpp>
 #include <memory>
 #include <string>
 
@@ -201,68 +200,6 @@ namespace Vakol::Components
 
             // data.data.clear();
             // ar(data);
-        }
-    };
-
-    /**
-     * @brief Struct representing a Globally Unique Identifier (GUID).
-     */
-    struct GUID
-    {
-        /**
-         * @brief Default constructor for the GUID struct.
-         */
-        GUID() = default;
-
-        /**
-         * @brief Function to generate a new GUID.
-         */
-        void GenNewGUID();
-
-        /**
-         * @brief Equality operator for GUID.
-         * @param other The other GUID to compare with.
-         * @return True if the GUIDs are equal, false otherwise.
-         */
-        bool operator==(const GUID& other) const;
-
-        /**
-         * @brief Inequality operator for GUID.
-         * @param other The other GUID to compare with.
-         * @return True if the GUIDs are not equal, false otherwise.
-         */
-        bool operator!=(const GUID& other) const;
-
-        /**
-         * @brief Less than operator for GUID.
-         * @param other The other GUID to compare with.
-         * @return True if the current GUID is less than the other GUID, false otherwise.
-         */
-        bool operator<(const GUID& other) const;
-
-        xg::Guid id; ///< The actual GUID.
-
-        /**
-         * @brief Function to save the GUID.
-         * @param ar Archive to save the GUID to.
-         */
-        template <class Archive>
-        void save(Archive& ar) const
-        {
-            std::string id_str = id.str();
-            ar(cereal::make_nvp("guid", id_str));
-        }
-
-        /**
-         * @brief Function to load the GUID.
-         * @param ar Archive to load the GUID from.
-         */
-        template <class Archive>
-        void load(Archive& ar)
-        {
-            std::string id_str;
-            ar(cereal::make_nvp("guid", id_str));
-            id = xg::Guid(id_str);
         }
     };
 
