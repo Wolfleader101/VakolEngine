@@ -219,7 +219,7 @@ namespace Vakol
 
                     auto& trans = ent.GetComponent<Components::Transform>();
                     trans.pos = Math::Vec3(7.50f, 10.0f, 0.0f);
-                    trans.eulerAngles = Math::Vec3(0.0f, 0.0f, 0.0f);
+                    trans.eulerAngles = Math::Vec3(0.0f, 0.0f, 45.0f);
                     trans.rot = Math::Quat(Math::DegToRad(trans.eulerAngles));
 
                     RigidBody& rb = activeScene.GetPhysicsScene().CreateRigidBody(trans.pos, trans.rot);

@@ -417,7 +417,7 @@ namespace Vakol::Rendering
 
         transform_matrix = Math::Translate(transform_matrix, transform.pos);
 
-        transform.rot = Math::Quat(Math::DegToRad(transform.eulerAngles));
+        // transform.rot = Math::Quat(Math::DegToRad(transform.eulerAngles));
 
         transform_matrix *= Math::Mat4Cast(transform.rot);
 
