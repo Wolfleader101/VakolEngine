@@ -11,5 +11,5 @@ namespace Vakol
      * \param success does the model successfully load?
      * \return
      */
-    Rendering::Assets::Model ImportModel(const char* path, float scale, bool& success);
+    bool ImportModel(Rendering::Assets::Model& model, const char* path, const float scale);
 } // namespace Vakol

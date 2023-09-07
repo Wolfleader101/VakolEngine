@@ -104,7 +104,7 @@ namespace Vakol
     // static void ExtractChannels(unsigned int count, aiNodeAnim** const& in, std::vector<Channel>& channels);
     // static void ProcessChannel(aiNodeAnim* const& in, Channel& channel);
 
-    Model ImportModel(const char* path, const float scale, bool& success)
+    bool ImportModel(Model& model, const char* path, const float scale)
     {
         auto importer = Assimp::Importer{};
 
@@ -114,16 +114,12 @@ namespace Vakol
         static_cast<void>(importer.SetPropertyFloat(AI_CONFIG_GLOBAL_SCALE_FACTOR_KEY, scale));
         auto* scene = importer.ReadFile(path, ASSIMP_LOADER_OPTIONS);
 
-        Model model;
-
         // if no scene flags were set (loader options) or the imported scene or root node is nullptr.
         if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
         {
             VK_ERROR("ASSIMP ERROR: {0}", importer.GetErrorString());
 
-            success = false;
-
-            return model;
+            return false;
         }
 
         std::cout << std::endl;
@@ -134,9 +130,7 @@ namespace Vakol
 
         ExtractMeshes(*scene, model.meshes);
 
-        success = true;
-
-        return model;
+        return true;
     }
 
     void ExtractMeshes(const aiScene& scene, std::vector<Mesh>& meshes)
@@ -160,7 +154,7 @@ namespace Vakol
         const auto& material = ProcessMaterial(scene, scene.mMaterials[mesh.mMaterialIndex]);
 
         return {Rendering::GenerateID(), mesh.mName.C_Str(),  std::move(vertices),
-                std::move(indices),      std::vector<Bone>(), std::make_shared<Material>(material)};
+                std::move(indices),      std::vector<Bone>(), material};
     }
 
     void ExtractVertices(const aiMesh& mesh, std::vector<Rendering::Vertex>& vertices,
@@ -218,6 +212,9 @@ namespace Vakol
         properties.specular_color = ToVec3(specular);
         properties.emissive_color = ToVec3(emissive);
 
+        if (properties.shininess < 1.0f)
+            properties.shininess = 1.0f;
+
         auto&& diffuse_maps = ExtractTextures(scene, material, aiTextureType_DIFFUSE);
         auto&& specular_maps = ExtractTextures(scene, material, aiTextureType_SPECULAR);
         auto&& ambient_maps = ExtractTextures(scene, material, aiTextureType_AMBIENT);
@@ -238,8 +235,7 @@ namespace Vakol
         textures.insert(textures.end(), std::make_move_iterator(normal_maps.begin()),
                         std::make_move_iterator(normal_maps.end()));
 
-        return {material->GetName().C_Str(), "null", "null", std::move(textures),
-                std::make_shared<MaterialProperties>(properties)};
+        return {material->GetName().C_Str(), "null", "null", std::move(textures), properties};
     }
 
     std::vector<Texture> ExtractTextures(const aiScene& scene, const aiMaterial* material, const aiTextureType type)

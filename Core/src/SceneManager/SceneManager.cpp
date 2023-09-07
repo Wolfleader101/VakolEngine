@@ -98,7 +98,6 @@ namespace Vakol
             m_activeScene->initialized = true;
         }
     }
-
     bool SceneManager::SceneChanged() const
     {
         return m_sceneChanged;

@@ -1,7 +1,7 @@
 function init()
     scene:create_entity("Player", "entities/player/noclip.lua")
 
-    -- scene:create_entity("Digital Twin", "entities/test/digital_twin.lua");
+    --scene:create_entity("Digital Twin", "entities/test/digital_twin.lua");
 
     local path = "coreAssets/textures/Skybox/";
 	local extension = ".png";
@@ -15,6 +15,9 @@ function init()
 					path .. "back"   .. extension};
 
 	scene:generate_skybox(faces);
+
+    scene:enable_debug();
+    scene:create_debug_scene();
 end
 
 function update()

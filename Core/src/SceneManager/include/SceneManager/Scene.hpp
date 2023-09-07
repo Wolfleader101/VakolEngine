@@ -88,6 +88,15 @@ namespace Vakol
         }
 
         /**
+         * \brief Set the camera of the scene
+         * \param camera The const reference to a new camera
+         */
+        void SetCamera(const Camera& camera)
+        {
+            m_cam = camera;
+        }
+
+        /**
          * @brief Get an entity in the scene by its tag.
          *
          * @param tag The tag of the entity.
@@ -135,6 +144,13 @@ namespace Vakol
             return m_skybox;
         }
 
+        void CreateDebugScene();
+
+        const Rendering::DebugScene& GetDebugScene() const;
+
+        void SetDebug(bool enabled);
+        bool IsDebugEnabled() const;
+
         /**
          * @brief Get the Physics Scene object
          *
@@ -143,6 +159,8 @@ namespace Vakol
         PhysicsScene& GetPhysicsScene();
 
       private:
+        bool m_debugEnabled = false;
+
         /**
          * @brief The lua script of the scene.
          *
@@ -165,6 +183,11 @@ namespace Vakol
         EntityList m_entityList;
 
         Rendering::Skybox m_skybox;
+
+        /**
+         * \brief the (physics) debug scene for a scene
+         */
+        Rendering::DebugScene m_debugScene;
 
         /**
          * @brief physics scene for a scene

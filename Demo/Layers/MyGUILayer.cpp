@@ -1,4 +1,7 @@
 #include "MyGUILayer.hpp"
+
+#include "AssetLoader/AssetLoader.hpp"
+
 #include <iostream>
 
 #include <ECS/Components.hpp>
@@ -87,6 +90,7 @@ void MyGUILayer::OnUpdate()
                     Vakol::Entity entity = EL.GetEntity(static_cast<uint32_t>(handle));
                     Vakol::Components::Tag& tag = entity.GetComponent<Vakol::Components::Tag>();
                     Vakol::Components::Transform& trans = entity.GetComponent<Vakol::Components::Transform>();
+                    Vakol::Rendering::Drawable& drawable = entity.GetComponent<Vakol::Rendering::Drawable>();
 
                     if (ImGui::CollapsingHeader(tag.tag.c_str()))
                     {
@@ -95,9 +99,34 @@ void MyGUILayer::OnUpdate()
 
                         if (ImGui::CollapsingHeader("Transform"))
                         {
+                            ImGui::Text("Drawable ID: %s", drawable.ID.ToString().c_str());
+
+                            ImGui::SeparatorText("Transform");
+
                             ImGui::DragFloat3("Position", &trans.pos.x, 0.1f);
                             ImGui::DragFloat3("Rotation", &trans.eulerAngles.x, 0.1f);
                             ImGui::DragFloat3("Scale", &trans.scale.x, 0.1f);
+
+                            ImGui::Spacing();
+
+                            ImGui::SeparatorText("Material");
+
+                            Vakol::Rendering::Assets::Model& model = Vakol::AssetLoader::FindModel(drawable.ID);
+
+                            for (Vakol::Rendering::Assets::Mesh& mesh : model.meshes)
+                            {
+                                ImGui::Text("Mesh ID: %s", mesh.ID.c_str());
+
+                                Vakol::Rendering::Assets::Material& material = mesh.material;
+
+                                ImGui::Text("Material ID: %s", material.ID.c_str());
+
+                                ImGui::Checkbox("Use Lighting?", &material.properties.use_lighting);
+                                ImGui::Checkbox("Use Textures?", &material.properties.use_textures);
+
+                                /*ImGui::ColorEdit3(("Diffuse Color##" + material.ID).c_str(),
+                                                  &material.properties.diffuse_color.x);*/
+                            }
                         }
 
                         if (ImGui::CollapsingHeader("RigidBody"))
@@ -178,16 +207,6 @@ void MyGUILayer::OnUpdate()
                         ImGui::Unindent(20.0f);
                     }
                 });
-
-                // EL.Iterate<Vakol::Components::Tag, Vakol::Components::Transform>(
-                //     [&](Vakol::Components::Tag& Tag, Vakol::Components::Transform& trans) {
-                //         if (ImGui::CollapsingHeader(Tag.tag.c_str()))
-                //         {
-                //             ImGui::DragFloat3("Position", &trans.pos.x, 0.1f);
-                //             ImGui::DragFloat3("Rotation", &trans.eulerAngles.x, 0.1f);
-                //             ImGui::DragFloat3("Scale", &trans.scale.x, 0.1f);
-                //         }
-                //     });
 
                 ImGui::EndChild(); // End of child frame
             }

@@ -1,4 +1,6 @@
 #include "Physics/PhysicsEngine.hpp"
+
+#include "Logger/Logger.hpp"
 #include "Physics/PhysicsScene.hpp"
 
 #include "Logger/Logger.hpp"
@@ -42,7 +44,7 @@ namespace Vakol
 
         auto it = std::find_if(
             m_scenes.begin(), m_scenes.end(),
-            [&targetGuid](const std::unique_ptr<Vakol::PhysicsScene>& s) { return s->GetGuid() == targetGuid; });
+            [&targetGuid](const std::unique_ptr<Vakol::PhysicsScene>& s) { return s->m_guid == targetGuid; });
 
         if (it != m_scenes.end())
         {
@@ -81,23 +83,25 @@ namespace Vakol
     {
         MeshCollider collider;
 
-        rp3d::TriangleVertexArray* triangleArray = new rp3d::TriangleVertexArray(
-            vertices.size(),      // number of vertices
-            vertices.data(),      // start of vertex data
-            sizeof(Math::Point),  // stride of vertex data
-            indices.size() / 3,   // number of triangles, assuming 3 indices per triangle
-            indices.data(),       // start of index data
-            sizeof(unsigned int), // stride of index data
-            rp3d::TriangleVertexArray::VertexDataType::VERTEX_FLOAT_TYPE, // vertex data type
-            rp3d::TriangleVertexArray::IndexDataType::INDEX_INTEGER_TYPE  // index data type
-        );
+        // rp3d::TriangleVertexArray* triangleArray = new rp3d::TriangleVertexArray(
+        //     vertices.size(),          // number of vertices
+        //     vertices.data(),          // start of vertex data
+        //     sizeof(Math::Point),      // stride of vertex data (3 floats per vertex)
+        //     indices.size() / 3,       // number of triangles (assuming 3 indices per triangle)
+        //     indices.data(),           // start of index data
+        //     sizeof(unsigned int) * 3, // stride of index data (3 indices per triangle)
+        //     rp3d::TriangleVertexArray::VertexDataType::VERTEX_FLOAT_TYPE, // vertex data type
+        //     rp3d::TriangleVertexArray::IndexDataType::INDEX_INTEGER_TYPE  // index data type
+        //);
 
-        rp3d::TriangleMesh* triangleMesh = m_rpCommon.createTriangleMesh();
+        // rp3d::TriangleMesh* triangleMesh = m_rpCommon.createTriangleMesh();
 
-        triangleMesh->addSubpart(triangleArray);
+        // triangleMesh->addSubpart(triangleArray);
 
-        collider.shape = m_rpCommon.createConcaveMeshShape(triangleMesh);
+        // collider.shape = m_rpCommon.createConcaveMeshShape(triangleMesh);
         collider.collider = nullptr;
+
+        VK_WARN("Mesh Collider not supported!");
 
         return collider;
     }

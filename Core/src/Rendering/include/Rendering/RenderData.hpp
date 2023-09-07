@@ -1,9 +1,11 @@
 #pragma once
 
-#include <Math/Math.hpp>
+#include "Math/Math.hpp"
 
 #include <string>
 #include <vector>
+
+#include "Utils/GUID.hpp"
 
 constexpr int MAX_BONE_INFLUENCE = 4; // how many bones can influence a vertex.
 
@@ -21,27 +23,39 @@ namespace Vakol::Rendering
         float boneWeights[MAX_BONE_INFLUENCE]; ///< Array of weights of the bones affecting the vertex.
     };
 
+    struct DebugVertex
+    {
+        Math::Vec3 position;
+        Math::Vec3 color;
+    };
+
     struct Drawable
     {
         bool active = true; /// decides whether the drawable should be drawn in the scene.
 
-        std::string modelID = "null";  // the path of the model.
-        std::string shaderID = "null"; // A unique id of the shader.
+        GUID ID;              // a unique id of the drawable
+        std::string shaderID; // A unique id of the shader.
     };
 
     struct Skybox
     {
         bool active = false; /// decides whether the skybox should be drawn in the scene.
 
-        std::string vertexID = "null";
-        std::string shaderID = "null";
+        std::string vertexID;
+        std::string shaderID;
 
         unsigned int textureID = 0;
     };
 
+    struct DebugScene
+    {
+        std::string ID;
+        std::string shaderID;
+    };
+
     struct VertexArray
     {
-        std::string ID = "null"; // the unique id of the vertex array.
+        std::string ID; // the unique id of the vertex array.
 
         std::vector<Vertex> vertices;      // the vertices of a vertex array.
         std::vector<unsigned int> indices; // the indices of a vertex array.
@@ -49,7 +63,7 @@ namespace Vakol::Rendering
 
     struct SkyboxVertexArray
     {
-        std::string ID = "null"; // the unique id of the skybox vertex array
+        std::string ID; // the unique id of the skybox vertex array
 
         std::vector<float> vertices; // the vertices of a skybox.
     };

@@ -13,19 +13,19 @@ namespace Vakol
     ModelLibrary AssetLoader::m_modelLibrary;
     TextureLibrary AssetLoader::m_textureLibrary;
 
-    Rendering::Assets::Model& AssetLoader::FindModel(const std::string& path)
+    Rendering::Assets::Model& AssetLoader::FindModel(const GUID& ID)
     {
-        return m_modelLibrary.FindModel(path);
+        return m_modelLibrary.FindModel(ID);
     }
 
-    Rendering::Assets::Model& AssetLoader::GetModel(const std::string& path, const float scale)
+    Rendering::Assets::Model& AssetLoader::GetModel(const GUID& ID, const std::string& path, const float scale)
     {
-        return m_modelLibrary.GetModel(path, scale);
+        return m_modelLibrary.GetModel(ID, path, scale);
     }
 
-    const std::vector<Rendering::Assets::Mesh>& AssetLoader::GetMeshes(const std::string& modelID)
+    const std::vector<Rendering::Assets::Mesh>& AssetLoader::GetMeshes(const GUID& ID)
     {
-        return m_modelLibrary.FindModel(modelID).meshes;
+        return m_modelLibrary.FindModel(ID).meshes;
     }
 
     Rendering::Assets::Texture& AssetLoader::GetTexture(const std::string& path, const unsigned int type,
@@ -34,25 +34,26 @@ namespace Vakol
         return m_textureLibrary.GetTexture(path, type, levels);
     }
 
+    void AssetLoader::GetTexture(const std::string& path, const unsigned int type, int& width, int& height,
+                                 int& channels, unsigned char*& pixels)
+    {
+        return m_textureLibrary.GetTexture(path, type, width, height, channels, pixels);
+    }
+
     Rendering::Assets::Texture& AssetLoader::GetTexture(const std::string& path, const unsigned int type,
                                                         const int size, const void* data, const int levels)
     {
         return m_textureLibrary.GetTexture(path, type, size, data, levels);
     }
 
-    std::vector<Rendering::Assets::Texture> AssetLoader::GetTextures(std::vector<std::string>&& paths)
-    {
-        return m_textureLibrary.GetTextures(std::move(paths));
-    }
-
-    void AssetLoader::ReplaceTexture(const std::string& modelID, const std::string& srcPath, const unsigned int srcType,
+    void AssetLoader::ReplaceTexture(const GUID& modelID, const std::string& srcPath, const unsigned int srcType,
                                      const std::string& dstPath, const unsigned int dstType)
     {
-        const auto& model = FindModel(modelID);
+        Rendering::Assets::Model& model = FindModel(modelID);
 
-        for (const auto& mesh : model.meshes)
+        for (Rendering::Assets::Mesh& mesh : model.meshes)
         {
-            auto& textures = mesh.material->textures;
+            auto& textures = mesh.material.textures;
 
             std::replace_if(
                 textures.begin(), textures.end(),

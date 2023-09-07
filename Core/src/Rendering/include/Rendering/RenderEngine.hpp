@@ -18,6 +18,9 @@ namespace Vakol::Components
 
 namespace Vakol::Rendering
 {
+    struct Vertex;
+    struct DebugScene;
+
     namespace Assets
     {
         struct Model;
@@ -59,6 +62,8 @@ namespace Vakol::Rendering
          */
         static void DrawSkybox(const Camera& camera, const Skybox& skybox);
 
+        static void DrawDebugScene(const Camera& camera, const DebugScene& debugScene);
+
         /**
          * \brief generate a model object
          * \param scale the scale of the cube
@@ -78,12 +83,24 @@ namespace Vakol::Rendering
          */
         static void GenerateCube(float scale, Drawable& drawable);
 
+        static void GenerateDebugScene(DebugScene& debugScene);
+
         /**
          * \brief generate a skybox given the names of the faces of its' cubemap texture.
          * \param faces the names of each face of a skybox cubemap texture
          * \param skybox the skybox of a scene to be modified by the engine.
          */
         static void GenerateSkybox(std::vector<std::string>&& faces, Skybox& skybox);
+
+        /**
+         * \brief
+         * \param camera the camera of a scene
+         * \param width the width of the screen
+         * \param height the height of the screen
+         */
+        static void ResizeScreen(Camera& camera, unsigned int width, unsigned int height);
+
+        static void ConvertToPoints(const std::vector<Vertex>& vertices, std::vector<Math::Point>& points);
 
       private:
         /**
@@ -97,11 +114,11 @@ namespace Vakol::Rendering
          * \brief breaks down each mesh of a model.
          * \param model the model to be submitted
          */
-        static void SubmitModel(Assets::Model& model);
+        static void SubmitModel(const Assets::Model& model);
         /**
          * \brief converts a high-level mesh object into low-level vertex array object via API
          * \param mesh the mesh to be submitted
          */
-        static void SubmitMesh(Assets::Mesh& mesh);
+        static void SubmitMesh(const Assets::Mesh& mesh);
     };
 } // namespace Vakol::Rendering

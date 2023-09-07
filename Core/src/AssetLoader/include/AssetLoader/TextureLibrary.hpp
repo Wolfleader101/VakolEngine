@@ -49,6 +49,19 @@ namespace Vakol
          */
         Rendering::Assets::Texture& GetTexture(const std::string& path, unsigned int type, int size, const void* data,
                                                int levels);
+
+        /**
+         * \brief get the texture including it's pixel data.
+         * \param path
+         * \param type
+         * \param width
+         * \param height
+         * \param channels
+         * \param pixels
+         */
+        void GetTexture(const std::string& path, unsigned int type, int& width, int& height, int& channels,
+                        unsigned char*& pixels);
+
         /**
          * \brief
          * \param paths

@@ -4,9 +4,6 @@
 
 #include "Math/Math.hpp"
 
-constexpr unsigned char PROJECTION_MATRIX = 0x0;
-constexpr unsigned char VIEW_MATRIX = 0x1;
-
 namespace Vakol
 {
     /**
@@ -22,15 +19,23 @@ namespace Vakol
          *
          * @param position The position of the camera.
          */
-        explicit Camera(const Math::Vec3& position = Math::Vec3(0.0f, 0.0f, 5.0f));
+        explicit Camera(const Math::Vec3& position);
 
         /**
-         * @brief Get the transformation matrix of the camera based on the specified type.
-         *
-         * @param type The type of matrix (0 for projection matrix, 1 for view matrix).
-         * @return const Math::Mat4& The transformation matrix.
+         * \brief get projection matrix
+         * \return the camera projection matrix
          */
-        const Math::Mat4& GetMatrix(unsigned char type) const;
+        const Math::Mat4& GetProjectionMatrix() const;
+        /**
+         * \brief get view matrix
+         * \return the camera view matrix
+         */
+        const Math::Mat4& GetViewMatrix() const;
+
+        float GetAspect() const
+        {
+            return aspect;
+        }
 
         /**
          * @brief Set the aspect ratio of the camera.
@@ -156,12 +161,12 @@ namespace Vakol
         /**
          * @brief The field of view angle of the camera.
          */
-        float fov = 65.0f;
+        float fov = 45.0f;
 
         /**
          * @brief The aspect ratio of the camera.
          */
-        float aspect = 1.3f;
+        float aspect = 1.0f;
 
         /**
          * @brief The near clipping plane distance of the camera.

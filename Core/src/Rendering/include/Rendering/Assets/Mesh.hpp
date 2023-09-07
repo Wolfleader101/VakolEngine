@@ -43,7 +43,7 @@ namespace Vakol::Rendering::Assets
 
     struct Mesh
     {
-        std::string ID = "null"; // the unique ID of the mesh.
+        std::string ID; // the unique ID of the mesh.
 
         std::string name; // the name of the mesh.
 
@@ -52,7 +52,7 @@ namespace Vakol::Rendering::Assets
 
         std::vector<Bone> bones; // the bones of a mesh.
 
-        std::shared_ptr<Material> material = nullptr; // the material of a mesh.
+        Material material; // the material of a mesh.
 
         Bounds bounds{}; // the AABB bounds of a mesh.
     };

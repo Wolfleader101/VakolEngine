@@ -3,11 +3,10 @@
 #include "CollisionListener.hpp"
 #include "PhysicsTypes.hpp"
 
-#include <crossguid/guid.hpp>
+#include "Utils/GUID.hpp"
 
 namespace Vakol
 {
-
     class PhysicsEngine;
 
     /**
@@ -26,12 +25,12 @@ namespace Vakol
          */
         RigidBody& CreateRigidBody(Math::Vec3& pos, Math::Quat& orientation);
 
-        /**
-         * @brief Get the Guid object
-         *
-         * @return const xg::Guid& guid of scene
-         */
-        const xg::Guid& GetGuid() const;
+        void EnableDebug() const;
+        void DisableDebug() const;
+
+        void GetVertices(std::vector<float>& vertices) const;
+
+        const GUID& GetGuid() const;
 
       private:
         /**
@@ -39,7 +38,7 @@ namespace Vakol
          *
          * @param world to create scene from
          */
-        PhysicsScene(rp3d::PhysicsWorld* world);
+        explicit PhysicsScene(rp3d::PhysicsWorld* world);
 
         /**
          * @brief update a physics scene
@@ -52,7 +51,7 @@ namespace Vakol
          * @brief rp3d physics world ptr
          *
          */
-        rp3d::PhysicsWorld* m_world;
+        rp3d::PhysicsWorld* m_world = nullptr;
 
         /**
          * @brief collision listener
@@ -60,11 +59,7 @@ namespace Vakol
          */
         static CollisionListener m_collisionListener;
 
-        /**
-         * @brief guid of scene
-         *
-         */
-        xg::Guid m_guid;
+        GUID m_guid;
 
         std::vector<std::shared_ptr<RigidBody>> m_rigidBodies;
 

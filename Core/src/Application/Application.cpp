@@ -32,12 +32,14 @@ namespace Vakol
         m_window =
             std::make_shared<Window>(config.value().name, config.value().windowWidth, config.value().windowHeight);
 
-        if (m_window == nullptr)
+        if (!m_window)
         {
+            VK_CRITICAL("Window was NULLPTR!");
+
             return;
         }
 
-        m_window->SetEventCallback([this](auto&& PH1) { OnEvent(std::forward<decltype(PH1)>(PH1)); });
+        m_window->SetEventCallback(BIND_EVENT_FN(OnEvent));
 
         Rendering::RenderEngine::Init(config.value().windowWidth, config.value().windowHeight,
                                       config.value().rendererType);
@@ -70,18 +72,6 @@ namespace Vakol
         // dont think we need get_current_scene as that's more for backend
 
         m_scriptEngine.SetGlobalFunction("set_active_mouse", &Application::SetActiveMouse, this);
-
-        // m_scriptEngine.SetGlobalFunction("toggle_wireframe", &Renderer::ToggleWireframe, m_renderer);
-        // m_scriptEngine.SetGlobalFunction("toggle_skybox", &Renderer::ToggleSkybox, m_renderer);
-        // m_scriptEngine.SetGlobalFunction("set_wireframe", &Renderer::SetWireframe, m_renderer);
-        // m_scriptEngine.SetGlobalFunction("set_skybox", &Renderer::SetSkybox, m_renderer);
-
-        // lua.set_function("clear_color_v", [&](const Math::Vec4& color) { renderer->ClearColor(color); });
-
-        // lua.set_function("clear_color", [&](const float r, const float g, const float b, const float a) {
-        //     renderer->ClearColor(r, g, b, a);
-        //     renderer->ClearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        // });
     }
 
     std::optional<GameConfig> Application::LoadConfig()
@@ -175,7 +165,6 @@ namespace Vakol
 
             if (IsSystemActive(SystemFlag::Rendering))
             {
-
                 Rendering::RenderEngine::PreDraw();
             }
 
@@ -220,9 +209,9 @@ namespace Vakol
                     Entity ent = activeScene.CreateEntity("Box");
 
                     ent.AddComponent<Rendering::Drawable>();
-
-                    auto& model = AssetLoader::GetModel("coreAssets/models/cube.obj", 1);
                     auto& drawable = ent.GetComponent<Rendering::Drawable>();
+
+                    auto& model = AssetLoader::GetModel(drawable.ID, "coreAssets/models/cube.obj", 1);
 
                     Rendering::RenderEngine::GenerateModel(model, drawable);
 
@@ -249,10 +238,10 @@ namespace Vakol
                     Entity ent = activeScene.CreateEntity("Floor");
 
                     ent.AddComponent<Rendering::Drawable>();
-
-                    auto& model = AssetLoader::GetModel("coreAssets/models/cube.obj", 1);
-                    model.meshes[0].material->properties->diffuse_color = Math::Vec3(0.0f, 0.50f, 0.4f);
                     auto& drawable = ent.GetComponent<Rendering::Drawable>();
+
+                    auto& model = AssetLoader::GetModel(drawable.ID, "coreAssets/models/cube.obj", 1);
+                    model.meshes[0].material.properties.diffuse_color = Math::Vec3(0.0f, 0.50f, 0.4f);
 
                     Rendering::RenderEngine::GenerateModel(model, drawable);
 
@@ -352,6 +341,11 @@ namespace Vakol
                 {
                     Rendering::RenderEngine::DrawSkybox(activeScene.GetCamera(), activeScene.GetSkybox());
                 }
+
+                if (activeScene.IsDebugEnabled())
+                {
+                    Rendering::RenderEngine::DrawDebugScene(activeScene.GetCamera(), activeScene.GetDebugScene());
+                }
             }
 
             activeScene.GetCamera().Update();
@@ -433,9 +427,12 @@ namespace Vakol
         return true;
     }
 
-    bool Application::OnWindowResize(const WindowResizeEvent& ev) const
+    bool Application::OnWindowResize(const WindowResizeEvent& ev)
     {
         glViewport(0, 0, ev.GetWidth(), ev.GetHeight());
+        Rendering::RenderEngine::ResizeScreen(m_sceneManager.GetActiveScene().GetCamera(), ev.GetWidth(),
+                                              ev.GetHeight());
+
         return true;
     }
 
