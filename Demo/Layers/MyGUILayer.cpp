@@ -133,7 +133,7 @@ void MyGUILayer::OnUpdate()
                             }
                         }
 
-                        if (ImGui::CollapsingHeader("RigidBody"))
+                        if (entity.HasComponent<Vakol::RigidBody>() && ImGui::CollapsingHeader("RigidBody"))
                         {
                             Vakol::RigidBody& rb = entity.GetComponent<Vakol::RigidBody>();
                             const char* preview_label;
