@@ -24,7 +24,6 @@ namespace Vakol
                 ent->AddComponent<Rendering::Drawable>();
 
             auto& drawable = ent->GetComponent<Rendering::Drawable>();
-            drawable.ID.GenNewGUID();
 
             auto& model = AssetLoader::GetModel(drawable.ID, path, scale);
             Rendering::RenderEngine::GenerateModel(model, drawable);

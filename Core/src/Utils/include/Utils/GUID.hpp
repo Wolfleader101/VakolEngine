@@ -16,7 +16,7 @@ namespace Vakol
         /**
          * @brief Default constructor for the GUID class.
          */
-        GUID() = default;
+        GUID();
 
         /**
          * @brief Function to generate a new GUID.
