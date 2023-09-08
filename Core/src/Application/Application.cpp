@@ -61,6 +61,7 @@ namespace Vakol
         m_scriptEngine.SetGlobalVariable("Time", &m_time);
         m_scriptEngine.SetGlobalVariable("Input", &m_input);
         m_scriptEngine.SetGlobalVariable("GUI", &m_gui);
+        m_scriptEngine.SetGlobalVariable("PhysicsEngine", &m_physicsEngine);
 
         m_scriptEngine.SetGlobalFunction("app_run", &Application::SetRunning, this);
 
@@ -68,8 +69,6 @@ namespace Vakol
         m_scriptEngine.SetGlobalFunction("get_scene", &SceneManager::GetScene, &m_sceneManager);
         m_scriptEngine.SetGlobalFunction("remove_scene", &SceneManager::RemoveScene, &m_sceneManager);
         m_scriptEngine.SetGlobalFunction("change_scene", &SceneManager::ChangeActiveScene, &m_sceneManager);
-        // m_scriptEngine.SetGlobalFunction("set_current_scene", &SceneManager::SetactiveScene, &m_sceneManager);
-        // dont think we need get_current_scene as that's more for backend
 
         m_scriptEngine.SetGlobalFunction("set_active_mouse", &Application::SetActiveMouse, this);
     }
