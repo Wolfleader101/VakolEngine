@@ -37,9 +37,9 @@ namespace Vakol
         }
     }
 
-    AABBCollider PhysicsEngine::CreateAABBCollider(Math::Vec3& halfExtents)
+    BoxCollider PhysicsEngine::CreateBoxCollider(Math::Vec3& halfExtents)
     {
-        AABBCollider collider;
+        BoxCollider collider;
         collider.shape = m_rpCommon.createBoxShape(
             rp3d::Vector3((double)halfExtents.x, (double)halfExtents.y, (double)halfExtents.z));
         collider.collider = nullptr;
@@ -90,7 +90,7 @@ namespace Vakol
         return collider;
     }
 
-    void PhysicsEngine::AttachCollider(RigidBody& rb, AABBCollider& collider)
+    void PhysicsEngine::AttachCollider(RigidBody& rb, BoxCollider& collider)
     {
         collider.collider = rb.collisionBody->addCollider(collider.shape, rp3d::Transform::identity());
     }

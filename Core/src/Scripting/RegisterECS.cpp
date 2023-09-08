@@ -93,6 +93,24 @@ namespace Vakol
             return &ent->GetComponent<SphereCollider>();
         });
 
+        entity_type.set_function("add_box_collider", [&](Entity* ent, Math::Vec3& halfExtents) {
+            PhysicsEngine& physEngine = lua["PhysicsEngine"];
+
+            if (!ent->HasComponent<RigidBody>())
+            {
+                VK_CRITICAL("No rigid body component found on entity");
+
+                return static_cast<BoxCollider*>(nullptr);
+            }
+
+            BoxCollider collider = physEngine.CreateBoxCollider(halfExtents);
+
+            ent->AddComponent<BoxCollider>(collider);
+            physEngine.AttachCollider(ent->GetComponent<RigidBody>(), collider);
+
+            return &ent->GetComponent<BoxCollider>();
+        });
+
         // TODO remove FSM component
         entity_type.set_function("add_fsm", [&](Entity* ent) -> Components::FSM& {
             if (!ent->HasComponent<Components::FSM>())

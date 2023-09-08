@@ -3,8 +3,9 @@ function init()
 
     --scene:create_entity("Digital Twin", "entities/test/digital_twin.lua");
 
-    local sphere_1 = scene:create_entity("Sphere 1", "entities/test/sphere.lua");
-    --local sphere_2 = scene:create_entity("Sphere 2", "entities/test/sphere.lua");
+    local sphere = scene:create_entity("Sphere", "entities/test/sphere.lua");
+    local cube = scene:create_entity("Cube", "entities/test/cube.lua");
+    cube:get_transform().pos = Vector3.new(3.0, 0.0, 0.0);
     
     --sphere_2:get_transform().pos = Vector3.new(0.0, 2.0, 0.0);
 

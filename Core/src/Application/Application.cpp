@@ -142,8 +142,6 @@ namespace Vakol
     {
         double physicsAccumulator = 0.0;
 
-        bool set = false;
-
         while (m_running)
         {
             m_time.Update();
@@ -152,93 +150,9 @@ namespace Vakol
 
             if (m_sceneManager.SceneChanged())
             {
-                if (!set)
-                {
-                    m_sceneManager.GetActiveScene().GetCamera().SetAspect(
-                        static_cast<float>(GetWidth()) / (GetHeight() != 0 ? static_cast<float>(GetHeight()) : 1.0f));
 
-                    {
-                        Entity entity = m_sceneManager.GetActiveScene().CreateEntity("Sphere");
-
-                        entity.AddComponent<Rendering::Drawable>();
-
-                        Rendering::Drawable& drawable = entity.GetComponent<Rendering::Drawable>();
-                        drawable.ID.GenNewGUID();
-
-                        Rendering::Assets::Model& model =
-                            AssetLoader::GetModel(drawable.ID, "coreAssets/models/sphere.obj", 1.0f);
-
-                        Rendering::RenderEngine::GenerateModel(model, drawable);
-
-                        Components::Transform& transform = entity.GetComponent<Components::Transform>();
-                        transform.pos = Math::Vec3(0.0f, 0.0f, -5.0f);
-
-                        RigidBody rigidbody = m_sceneManager.GetActiveScene().GetPhysicsScene().CreateRigidBody(
-                            transform.pos, transform.rot);
-
-                        SphereCollider collider = m_physicsEngine.CreateSphereCollider(1.0);
-                        m_physicsEngine.AttachCollider(rigidbody, collider);
-
-                        entity.AddComponent<RigidBody>(rigidbody);
-                        entity.AddComponent<SphereCollider>(collider);
-                    }
-
-                    {
-                        Entity entity = m_sceneManager.GetActiveScene().CreateEntity("Cylinder");
-
-                        entity.AddComponent<Rendering::Drawable>();
-
-                        Rendering::Drawable& drawable = entity.GetComponent<Rendering::Drawable>();
-                        drawable.ID.GenNewGUID();
-
-                        Rendering::Assets::Model& model =
-                            AssetLoader::GetModel(drawable.ID, "coreAssets/models/cylinder.obj", 1.0f);
-
-                        Rendering::RenderEngine::GenerateModel(model, drawable);
-
-                        Components::Transform& transform = entity.GetComponent<Components::Transform>();
-                        transform.pos = Math::Vec3(-2.5f, 0.0f, -5.0f);
-
-                        RigidBody rigidbody = m_sceneManager.GetActiveScene().GetPhysicsScene().CreateRigidBody(
-                            transform.pos, transform.rot);
-
-                        CapsuleCollider collider = m_physicsEngine.CreateCapsuleCollider(1.0, 1.0);
-                        m_physicsEngine.AttachCollider(rigidbody, collider);
-
-                        entity.AddComponent<RigidBody>(rigidbody);
-                        entity.AddComponent<CapsuleCollider>(collider);
-                    }
-
-                    {
-                        Entity entity = m_sceneManager.GetActiveScene().CreateEntity("Cube");
-
-                        entity.AddComponent<Rendering::Drawable>();
-
-                        Rendering::Drawable& drawable = entity.GetComponent<Rendering::Drawable>();
-                        drawable.ID.GenNewGUID();
-
-                        VK_TRACE(drawable.ID.ConvertToString());
-
-                        Rendering::Assets::Model& model =
-                            AssetLoader::GetModel(drawable.ID, "coreAssets/models/cube.obj", 1.0f);
-
-                        Rendering::RenderEngine::GenerateModel(model, drawable);
-
-                        Components::Transform& transform = entity.GetComponent<Components::Transform>();
-                        transform.pos = Math::Vec3(2.5f, 0.0f, -5.0f);
-
-                        RigidBody rigidbody = m_sceneManager.GetActiveScene().GetPhysicsScene().CreateRigidBody(
-                            transform.pos, transform.rot);
-
-                        AABBCollider collider = m_physicsEngine.CreateAABBCollider(transform.scale);
-                        m_physicsEngine.AttachCollider(rigidbody, collider);
-
-                        entity.AddComponent<RigidBody>(rigidbody);
-                        entity.AddComponent<AABBCollider>(collider);
-                    }
-
-                    set = true;
-                }
+                m_sceneManager.GetActiveScene().GetCamera().SetAspect(
+                    static_cast<float>(GetWidth()) / (GetHeight() != 0 ? static_cast<float>(GetHeight()) : 1.0f));
 
                 // ignore the current frame, and next frame on scene change
                 // on scene change, ignore rest of the current frame, delta time will be low (current frame)

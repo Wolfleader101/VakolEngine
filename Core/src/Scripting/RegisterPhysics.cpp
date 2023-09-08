@@ -20,26 +20,6 @@ namespace Vakol
         rbT.set("torque", &RigidBody::torque);
         rbT.set("linearVelocity", &RigidBody::linearVelocity);
         rbT.set("angularVelocity", &RigidBody::angularVelocity);
-
-        // auto physT = lua.new_usertype<PhysicsEngine>("PhysicsEngine");
-
-        // AABBCollider CreateAABBCollider(Math::Vec3& halfExtents);
-
-        // SphereCollider CreateSphereCollider(double radius);
-
-        // CapsuleCollider CreateCapsuleCollider(double radius, double height);
-
-        // MeshCollider CreateMeshCollider(std::vector<Math::Point>& vertices, std::vector<unsigned int>& indices);
-
-        // void AttachCollider(RigidBody& rb, AABBCollider& collider);
-
-        // void AttachCollider(RigidBody& rb, SphereCollider& collider);
-
-        // void AttachCollider(RigidBody& rb, CapsuleCollider& collider);
-
-        // void AttachCollider(RigidBody& rb, MeshCollider& collider);
-
-        // physT.set_function("create_box_collider")
     }
 
 } // namespace Vakol

@@ -54,7 +54,7 @@ namespace Vakol
         std::shared_ptr<CollisionData> collisionData = nullptr;
     };
 
-    struct AABBCollider
+    struct BoxCollider
     {
         rp3d::BoxShape* shape;
         rp3d::Collider* collider;
@@ -91,7 +91,7 @@ namespace Vakol
     //     ShapeType type;
 
     //     union {
-    //         AABBCollider aabb;
+    //         BoxCollider aabb;
     //         SphereCollider sphere;
     //         CapsuleCollider capsule;
     //         TriangleCollider triangle;
