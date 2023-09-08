@@ -43,9 +43,9 @@ namespace Vakol
          * @brief create an AABB collider
          *
          * @param halfExtents of AABB
-         * @return AABBCollider created
+         * @return BoxCollider created
          */
-        AABBCollider CreateAABBCollider(Math::Vec3& halfExtents);
+        BoxCollider CreateBoxCollider(Math::Vec3& halfExtents);
 
         /**
          * @brief Create a Sphere Collider object
@@ -79,7 +79,7 @@ namespace Vakol
          * @param rb body to attach too
          * @param collider to attach
          */
-        void AttachCollider(RigidBody& rb, AABBCollider& collider);
+        void AttachCollider(RigidBody& rb, BoxCollider& collider);
 
         /**
          * @brief Attach a collider to a rigidbody
@@ -110,7 +110,7 @@ namespace Vakol
          *
          * @param rb to apply forces
          */
-        void ApplyForces(RigidBody& rb);
+        void ApplyForces(Math::Vec3& pos, Math::Quat& rot, RigidBody& rb);
 
         /**
          * @brief detect collisions in a world

@@ -33,24 +33,28 @@ namespace Vakol
      */
     struct RigidBody
     {
-        BodyType type;
-        float mass;
+        BodyType type = BodyType::Dynamic;
+        double mass = 1.0;
+        double bounciness = 0.3;
+        bool hasGravity = true;
 
-        bool hasGravity;
+        Math::Vec3 centerOfMass = Math::Vec3(0.0f, 0.0f, 0.0f); // will have to be calculated
 
-        Math::Vec3 centerOfMass; // will have to be calculated
+        Math::Vec3 force = Math::Vec3(0.0f, 0.0f, 0.0f);
+        Math::Vec3 torque = Math::Vec3(0.0f, 0.0f, 0.0f);
+        Math::Vec3 linearVelocity = Math::Vec3(0.0f, 0.0f, 0.0f);
+        Math::Vec3 angularVelocity = Math::Vec3(0.0f, 0.0f, 0.0f);
+        Math::Mat3 rotationMatrix = Math::Mat3(0.0f);
 
-        Math::Vec3 force;
-        Math::Vec3 torque;
-        Math::Vec3 linearVelocity;
-        Math::Vec3 angularVelocity;
+        Math::Mat3 worldInertiaTensor = Math::Mat3(0.0f);
+        Math::Mat3 inertiaTensor = Math::Mat3(0.0f);
 
-        rp3d::CollisionBody* collisionBody;
+        rp3d::CollisionBody* collisionBody = nullptr;
 
-        std::shared_ptr<CollisionData> collisionData;
+        std::shared_ptr<CollisionData> collisionData = nullptr;
     };
 
-    struct AABBCollider
+    struct BoxCollider
     {
         rp3d::BoxShape* shape;
         rp3d::Collider* collider;
@@ -87,7 +91,7 @@ namespace Vakol
     //     ShapeType type;
 
     //     union {
-    //         AABBCollider aabb;
+    //         BoxCollider aabb;
     //         SphereCollider sphere;
     //         CapsuleCollider capsule;
     //         TriangleCollider triangle;

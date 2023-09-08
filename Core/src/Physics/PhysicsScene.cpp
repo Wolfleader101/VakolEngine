@@ -4,6 +4,8 @@
 
 namespace Vakol
 {
+    CollisionListener PhysicsScene::m_collisionListener;
+
     static Math::Vec3 GetDebugColor(rp3d::uint32 color);
 
     PhysicsScene::PhysicsScene(rp3d::PhysicsWorld* world) : m_world(world)

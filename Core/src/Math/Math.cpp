@@ -119,6 +119,11 @@ namespace Vakol::Math
         return len - Project(len, dir);
     }
 
+    Vec3 EulerFromQuat(const Quat& quat)
+    {
+        return glm::eulerAngles(quat);
+    }
+
     float Length(const Line& line)
     {
         return Magnitude(line.start - line.end);

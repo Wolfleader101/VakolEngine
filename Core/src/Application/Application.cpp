@@ -61,6 +61,7 @@ namespace Vakol
         m_scriptEngine.SetGlobalVariable("Time", &m_time);
         m_scriptEngine.SetGlobalVariable("Input", &m_input);
         m_scriptEngine.SetGlobalVariable("GUI", &m_gui);
+        m_scriptEngine.SetGlobalVariable("PhysicsEngine", &m_physicsEngine);
 
         m_scriptEngine.SetGlobalFunction("app_run", &Application::SetRunning, this);
 
@@ -68,8 +69,6 @@ namespace Vakol
         m_scriptEngine.SetGlobalFunction("get_scene", &SceneManager::GetScene, &m_sceneManager);
         m_scriptEngine.SetGlobalFunction("remove_scene", &SceneManager::RemoveScene, &m_sceneManager);
         m_scriptEngine.SetGlobalFunction("change_scene", &SceneManager::ChangeActiveScene, &m_sceneManager);
-        // m_scriptEngine.SetGlobalFunction("set_current_scene", &SceneManager::SetactiveScene, &m_sceneManager);
-        // dont think we need get_current_scene as that's more for backend
 
         m_scriptEngine.SetGlobalFunction("set_active_mouse", &Application::SetActiveMouse, this);
     }
@@ -143,8 +142,6 @@ namespace Vakol
     {
         double physicsAccumulator = 0.0;
 
-        bool set = false;
-
         while (m_running)
         {
             m_time.Update();
@@ -153,93 +150,9 @@ namespace Vakol
 
             if (m_sceneManager.SceneChanged())
             {
-                if (!set)
-                {
-                    m_sceneManager.GetActiveScene().GetCamera().SetAspect(
-                        static_cast<float>(GetWidth()) / (GetHeight() != 0 ? static_cast<float>(GetHeight()) : 1.0f));
 
-                    {
-                        Entity entity = m_sceneManager.GetActiveScene().CreateEntity("Sphere");
-
-                        entity.AddComponent<Rendering::Drawable>();
-
-                        Rendering::Drawable& drawable = entity.GetComponent<Rendering::Drawable>();
-                        drawable.ID.GenNewGUID();
-
-                        Rendering::Assets::Model& model =
-                            AssetLoader::GetModel(drawable.ID, "coreAssets/models/sphere.obj", 1.0f);
-
-                        Rendering::RenderEngine::GenerateModel(model, drawable);
-
-                        Components::Transform& transform = entity.GetComponent<Components::Transform>();
-                        transform.pos = Math::Vec3(0.0f, 0.0f, -5.0f);
-
-                        RigidBody rigidbody = m_sceneManager.GetActiveScene().GetPhysicsScene().CreateRigidBody(
-                            transform.pos, transform.rot);
-
-                        SphereCollider collider = m_physicsEngine.CreateSphereCollider(1.0);
-                        m_physicsEngine.AttachCollider(rigidbody, collider);
-
-                        entity.AddComponent<RigidBody>(rigidbody);
-                        entity.AddComponent<SphereCollider>(collider);
-                    }
-
-                    {
-                        Entity entity = m_sceneManager.GetActiveScene().CreateEntity("Cylinder");
-
-                        entity.AddComponent<Rendering::Drawable>();
-
-                        Rendering::Drawable& drawable = entity.GetComponent<Rendering::Drawable>();
-                        drawable.ID.GenNewGUID();
-
-                        Rendering::Assets::Model& model =
-                            AssetLoader::GetModel(drawable.ID, "coreAssets/models/cylinder.obj", 1.0f);
-
-                        Rendering::RenderEngine::GenerateModel(model, drawable);
-
-                        Components::Transform& transform = entity.GetComponent<Components::Transform>();
-                        transform.pos = Math::Vec3(-2.5f, 0.0f, -5.0f);
-
-                        RigidBody rigidbody = m_sceneManager.GetActiveScene().GetPhysicsScene().CreateRigidBody(
-                            transform.pos, transform.rot);
-
-                        CapsuleCollider collider = m_physicsEngine.CreateCapsuleCollider(1.0, 1.0);
-                        m_physicsEngine.AttachCollider(rigidbody, collider);
-
-                        entity.AddComponent<RigidBody>(rigidbody);
-                        entity.AddComponent<CapsuleCollider>(collider);
-                    }
-
-                    {
-                        Entity entity = m_sceneManager.GetActiveScene().CreateEntity("Cube");
-
-                        entity.AddComponent<Rendering::Drawable>();
-
-                        Rendering::Drawable& drawable = entity.GetComponent<Rendering::Drawable>();
-                        drawable.ID.GenNewGUID();
-
-                        VK_TRACE(drawable.ID.ConvertToString());
-
-                        Rendering::Assets::Model& model =
-                            AssetLoader::GetModel(drawable.ID, "coreAssets/models/cube.obj", 1.0f);
-
-                        Rendering::RenderEngine::GenerateModel(model, drawable);
-
-                        Components::Transform& transform = entity.GetComponent<Components::Transform>();
-                        transform.pos = Math::Vec3(2.5f, 0.0f, -5.0f);
-
-                        RigidBody rigidbody = m_sceneManager.GetActiveScene().GetPhysicsScene().CreateRigidBody(
-                            transform.pos, transform.rot);
-
-                        AABBCollider collider = m_physicsEngine.CreateAABBCollider(transform.scale);
-                        m_physicsEngine.AttachCollider(rigidbody, collider);
-
-                        entity.AddComponent<RigidBody>(rigidbody);
-                        entity.AddComponent<AABBCollider>(collider);
-                    }
-
-                    set = true;
-                }
+                m_sceneManager.GetActiveScene().GetCamera().SetAspect(
+                    static_cast<float>(GetWidth()) / (GetHeight() != 0 ? static_cast<float>(GetHeight()) : 1.0f));
 
                 // ignore the current frame, and next frame on scene change
                 // on scene change, ignore rest of the current frame, delta time will be low (current frame)
@@ -267,7 +180,12 @@ namespace Vakol
                 while (physicsAccumulator >= m_physicsEngine.GetTimeStep())
                 {
                     // apply forces
-                    activeScene.GetEntityList().Iterate<RigidBody>([&](auto& rb) { m_physicsEngine.ApplyForces(rb); });
+                    activeScene.GetEntityList().Iterate<Components::Transform, RigidBody>(
+                        [&](Components::Transform& transform, RigidBody& rb) {
+                            m_physicsEngine.ApplyForces(transform.pos, transform.rot, rb);
+
+                            transform.eulerAngles = Math::RadToDeg(Math::EulerFromQuat(transform.rot));
+                        });
 
                     // detect collisions
                     m_physicsEngine.DetectCollisions(activeScene.GetPhysicsScene());

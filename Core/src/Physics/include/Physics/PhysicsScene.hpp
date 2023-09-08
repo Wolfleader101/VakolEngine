@@ -57,7 +57,7 @@ namespace Vakol
          * @brief collision listener
          *
          */
-        CollisionListener m_collisionListener;
+        static CollisionListener m_collisionListener;
 
         GUID m_guid;
 
