@@ -53,6 +53,82 @@ function init()
 	balcony:get_transform().pos.z = 2.25;
 
 	windowsill:get_transform().pos.z = 1.85;
+
+	create_pillar_colliders();
+	create_floor_colliders();
+	create_building_colliders();
+end
+
+function create_pillar_colliders()
+	local colliders = {};
+
+	for i = 1, 5 do
+		colliders[i] = scene:create_entity("Left Pillar Collider " .. i, "");
+
+		local rigid = colliders[i]:add_rigid();
+		rigid.type = BodyType.Static;
+
+		colliders[i]:add_box_collider(Vector3.new(1.0, 9.0, 0.7));
+
+		colliders[i]:get_transform().pos = Vector3.new(37.7, 9.0, 0.0);
+	end
+
+	colliders[1]:get_transform().pos.z = -18.50;
+	colliders[2]:get_transform().pos.z = -6.2;
+	colliders[3]:get_transform().pos.z = 6.2;
+	colliders[4]:get_transform().pos.z = 18.5;
+	colliders[5]:get_transform().pos.z = 30.85;
+
+	for i = 6, 10 do
+		colliders[i] = scene:create_entity("Right Pillar Collider " .. i, "");
+
+		local rigid = colliders[i]:add_rigid();
+		rigid.type = BodyType.Static;
+
+		colliders[i]:add_box_collider(Vector3.new(1.0, 9.0, 0.7));
+
+		colliders[i]:get_transform().pos = Vector3.new(-37.7, 9.0, 0.0);
+	end
+
+	colliders[6]:get_transform().pos.z = -18.50;
+	colliders[7]:get_transform().pos.z = -6.2;
+	colliders[8]:get_transform().pos.z = 6.2;
+	colliders[9]:get_transform().pos.z = 18.5;
+	colliders[10]:get_transform().pos.z = 30.85;
+end
+
+function create_floor_colliders()
+	local colliders = {};
+
+	for i = 1, 1 do
+		colliders[i] = scene:create_entity("Floor Collider " .. i, "");
+
+		local rigid = colliders[i]:add_rigid();
+		rigid.type = BodyType.Static;
+	end
+
+	colliders[1]:get_transform().pos = Vector3.new(4.0, -0.05, 30.0);
+	colliders[1]:add_box_collider(Vector3.new(32.0, 0.1, 115.0));
+end
+
+function create_building_colliders()
+	local colliders = {};
+
+	for i = 1, 3 do
+		colliders[i] = scene:create_entity("Building Collider " .. i, "");
+
+		local rigid = colliders[i]:add_rigid();
+		rigid.type = BodyType.Static;
+	end
+
+	colliders[1]:get_transform().pos = Vector3.new(-5.6, 14.1, 90.9);
+	colliders[1]:add_box_collider(Vector3.new(9.75, 14.0, 50.0));
+
+	colliders[2]:get_transform().pos = Vector3.new(14.8, 14.05, 43.3);
+	colliders[2]:add_box_collider(Vector3.new(10.4, 14.0, 5.0));
+	
+	colliders[3]:get_transform().pos = Vector3.new(32.3, 14.05, 43.1);
+	colliders[3]:add_box_collider(Vector3.new(6.8, 14.0, 1.0));
 end
 
 function update()
