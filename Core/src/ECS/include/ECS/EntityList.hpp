@@ -104,6 +104,12 @@ namespace Vakol
             m_Registry.sort<Component>(std::forward<Func>(func));
         }
 
+        template <typename Func>
+        void IterateEntities(Func&& func)
+        {
+            m_Registry.each(std::forward<Func>(func));
+        }
+
       private:
         /**
          * @brief EnTT registry actually containing all the entity and component data.
