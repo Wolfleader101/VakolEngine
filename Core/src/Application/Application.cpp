@@ -180,7 +180,12 @@ namespace Vakol
                 while (physicsAccumulator >= m_physicsEngine.GetTimeStep())
                 {
                     // apply forces
-                    activeScene.GetEntityList().Iterate<RigidBody>([&](auto& rb) { m_physicsEngine.ApplyForces(rb); });
+                    activeScene.GetEntityList().Iterate<Components::Transform, RigidBody>(
+                        [&](Components::Transform& transform, RigidBody& rb) {
+                            m_physicsEngine.ApplyForces(transform.pos, transform.rot, rb);
+
+                            transform.eulerAngles = Math::RadToDeg(Math::EulerFromQuat(transform.rot));
+                        });
 
                     // detect collisions
                     m_physicsEngine.DetectCollisions(activeScene.GetPhysicsScene());
