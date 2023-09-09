@@ -68,8 +68,9 @@ namespace Vakol::Rendering
          * \brief generate a model object
          * \param scale the scale of the cube
          * \param drawable the drawable component to be modified with the model's information
+         * \param shaderPath
          */
-        static void GenerateModel(Assets::Model& model, Drawable& drawable);
+        static void GenerateModel(Assets::Model& model, Drawable& drawable, const std::string& shaderPath);
         /**
          * \brief generate a sphere object
          * \param scale the scale of the sphere

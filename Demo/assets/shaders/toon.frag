@@ -1,45 +1,68 @@
 #version 460 core
 out vec4 FragColor;
 
-struct Light
+struct Material
 {
-	vec3 position;
-	vec3 intensity;
-	vec3 color;
+    vec3 ambient_color;
+    vec3 diffuse_color;
+    vec3 specular_color;
+    vec3 emissive_color;
+
+    float shininess;
+    float shininess_strength;
+    float opacity;
+
+    bool use_lighting;
+    bool use_textures;
+
+    sampler2D diffuse_map;
+    sampler2D specular_map;
+    sampler2D ambient_map;
+    sampler2D emissive_map;
+    sampler2D height_map;
+    sampler2D normal_map;
 };
 
-uniform Light light;
+in VS_OUT {
+    vec3 FragPos;
+    vec2 TexCoords;
+    vec3 Normal;
+} fs_in;
+
+uniform Material material;
+
 const int levels = 3;
 const float scaleFactor = 1.0 / 3.0;
 
-uniform bool combineTexAndVert;
+uniform vec3 LIGHT_POSITION = vec3(0.0, 10.0, 0.0);
 
-uniform sampler2D diffuseTexture;
+vec4 ToonShading(const vec3 normal, const vec4 color)
+{
+    vec4 ambient = vec4(0.5);
 
-uniform vec3 Kd;
-uniform vec3 Ka;
+    vec3 lightDir = normalize(LIGHT_POSITION - fs_in.FragPos);
+    float diff = max(0.0, dot(lightDir, normal));
+    
+    vec4 diffuse = color * (ceil(diff * levels) * scaleFactor);
 
-in vec3 FragPos;
-in vec3 Normal;
-in vec2 TexCoord;
+    // light strength * (ambient + diffuse)
+    return 0.4 * (ambient + diffuse);
+}
 
 void main()
-{	
-	vec3 lightDir = normalize(light.position - FragPos);
-	
-	float diff = max(0.0, dot(lightDir, Normal));
-	
-	vec3 diffuse = Kd * (ceil(diff * levels) * scaleFactor);
+{    
+    vec4 color = texture(material.diffuse_map, fs_in.TexCoords);
 
-	vec3 result = light.intensity * (Ka + diffuse);
-	
-	FragColor = vec4(result, 1.0);
+    if ((color.r >= 0.99 && color.g >= 0.99 && color.b >= 0.99) || !material.use_textures)
+        color = vec4(material.diffuse_color, 1.0);
 
-	if(combineTexAndVert == true)
-	{
-	    //Combines the texture, toon shading and vertex colours
-	    FragColor = texture(diffuseTexture, TexCoord) * FragColor;
-	}
-	else
-	    FragColor = texture(diffuseTexture, TexCoord);
+    vec3 normal = fs_in.Normal;
+
+    if (material.use_lighting)
+    {
+        vec4 result = ToonShading(normal, color);
+        FragColor = result;
+    }
+    else
+        FragColor = color;
 }

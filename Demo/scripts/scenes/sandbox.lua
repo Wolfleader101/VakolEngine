@@ -3,7 +3,7 @@ function init()
 
     scene:create_entity("Digital Twin", "entities/test/digital_twin.lua");
 
-       scene:create_entity("290 World", "entities/worlds/290_world.lua");
+    scene:create_entity("290 World", "entities/worlds/290_world.lua");
     
 
     local cube = scene:create_entity("Cube", "entities/test/cube.lua");

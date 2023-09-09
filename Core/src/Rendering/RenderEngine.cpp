@@ -116,12 +116,12 @@ namespace Vakol::Rendering
 
     void RenderEngine::GenerateSphere(const float scale, Drawable& drawable)
     {
-        GenerateModel(AssetLoader::GetModel(drawable.ID, "coreAssets/models/sphere.obj", scale), drawable);
+        GenerateModel(AssetLoader::GetModel(drawable.ID, "coreAssets/models/sphere.obj", scale), drawable, DEFAULT_SHADER_PATH);
     }
 
     void RenderEngine::GenerateCube(const float scale, Drawable& drawable)
     {
-        GenerateModel(AssetLoader::GetModel(drawable.ID, "coreAssets/models/cube.obj", scale), drawable);
+        GenerateModel(AssetLoader::GetModel(drawable.ID, "coreAssets/models/cube.obj", scale), drawable, DEFAULT_SHADER_PATH);
     }
 
     void RenderEngine::GenerateDebugScene(DebugScene& debugScene)
@@ -160,10 +160,10 @@ namespace Vakol::Rendering
         RenderAPI::GenerateVertexCommand(std::move(vertexArray));
     }
 
-    void RenderEngine::GenerateModel(Assets::Model& model, Drawable& drawable)
+    void RenderEngine::GenerateModel(Assets::Model& model, Drawable& drawable, const std::string& shaderPath)
     {
         bool success = true;
-        auto shader = ImportShader(DEFAULT_SHADER_PATH, success);
+        auto shader = ImportShader(shaderPath, success);
 
         if (success)
             RenderAPI::GenerateShader(std::move(shader), drawable);
