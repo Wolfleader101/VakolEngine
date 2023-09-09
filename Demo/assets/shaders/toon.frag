@@ -34,35 +34,38 @@ uniform Material material;
 const int levels = 3;
 const float scaleFactor = 1.0 / 3.0;
 
-uniform vec3 LIGHT_POSITION = vec3(0.0, 5.0, 0.0);
+uniform vec3 LIGHT_POSITION = vec3(0.0, 100.0, -100.0);
 
-vec4 ToonShading(const vec3 normal, const vec4 color)
+vec3 ToonShading(const vec3 normal, const vec3 color)
 {
-    vec4 ambient = vec4(0.4);
+    vec3 ambient = vec3(1.0);
 
     vec3 lightDir = normalize(LIGHT_POSITION - fs_in.FragPos);
     float diff = max(0.0, dot(lightDir, normal));
     
-    vec4 diffuse = color * (ceil(diff * levels) * scaleFactor);
+    vec3 diffuse = color * (ceil(diff * levels) * scaleFactor);
 
     // light strength * (ambient + diffuse)
-    return 0.9 * (ambient + diffuse);
+    return 0.8 * (ambient + diffuse);
 }
 
 void main()
 {    
-    vec4 color = texture(material.diffuse_map, fs_in.TexCoords);
+    vec3 color = texture(material.diffuse_map, fs_in.TexCoords).rgb;
 
     if ((color.r >= 0.99 && color.g >= 0.99 && color.b >= 0.99) || !material.use_textures)
-        color = vec4(material.diffuse_color, 1.0);
+        color = material.diffuse_color;
 
     vec3 normal = fs_in.Normal;
 
+    FragColor = vec4(color, 1.0);
+
     if (material.use_lighting)
     {
-        vec4 result = ToonShading(normal, color);
-        FragColor = result;
+        vec3 result = ToonShading(normal, color);
+        FragColor = vec4(result, 1.0) * FragColor;
     }
     else
-        FragColor = color;
+        FragColor = vec4(color, 1.0);
+
 }
