@@ -102,7 +102,8 @@ void MyGUILayer::OnUpdate()
                     Vakol::Components::Tag& tag = entity.GetComponent<Vakol::Components::Tag>();
                     Vakol::Components::Transform& trans = entity.GetComponent<Vakol::Components::Transform>();
 
-                    if (ImGui::CollapsingHeader(tag.tag.c_str()))
+                    // ## is needed to differentiate entities by their handle
+                    if (ImGui::CollapsingHeader((tag.tag + "##" + std::to_string(entity.GetHandle())).c_str()))
                     {
                         ImGui::Indent(20.0f);
                         ImGui::PushStyleColor(ImGuiCol_Header, ImVec4(0.9f, 0.4f, 0.f, 1.0f));

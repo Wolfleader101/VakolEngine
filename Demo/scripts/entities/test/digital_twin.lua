@@ -57,6 +57,7 @@ function init()
 	create_pillar_colliders();
 	create_floor_colliders();
 	create_building_colliders();
+	create_barrier_colliders();
 end
 
 function create_pillar_colliders()
@@ -73,34 +74,72 @@ function create_pillar_colliders()
 		colliders[i]:get_transform().pos = Vector3.new(37.7, 9.0, 0.0);
 	end
 
-	colliders[1]:get_transform().pos.z = -18.50;
+	colliders[1]:get_transform().pos.z = -18.5;
 	colliders[2]:get_transform().pos.z = -6.2;
 	colliders[3]:get_transform().pos.z = 6.2;
 	colliders[4]:get_transform().pos.z = 18.5;
 	colliders[5]:get_transform().pos.z = 30.85;
 
-	for i = 6, 10 do
+	for i = 6, 21 do
 		colliders[i] = scene:create_entity("Right Pillar Collider " .. i, "");
 
 		local rigid = colliders[i]:add_rigid();
 		rigid.type = BodyType.Static;
-
-		colliders[i]:add_box_collider(Vector3.new(1.0, 9.0, 0.7));
-
-		colliders[i]:get_transform().pos = Vector3.new(-37.7, 9.0, 0.0);
 	end
 
-	colliders[6]:get_transform().pos.z = -18.50;
-	colliders[7]:get_transform().pos.z = -6.2;
-	colliders[8]:get_transform().pos.z = 6.2;
-	colliders[9]:get_transform().pos.z = 18.5;
-	colliders[10]:get_transform().pos.z = 30.85;
+	colliders[6]:get_transform().pos = Vector3.new(-38.0, 11.0, -18.5);
+	colliders[6]:add_box_collider(Vector3.new(1.0, 7.0, 0.7));
+
+	colliders[7]:get_transform().pos = Vector3.new(-38.0, 11.0, -6.2);
+	colliders[7]:add_box_collider(Vector3.new(1.0, 7.0, 0.7));
+
+	colliders[8]:get_transform().pos = Vector3.new(-38.0, 11.0, 6.2);
+	colliders[8]:add_box_collider(Vector3.new(1.0, 7.0, 0.7));
+
+	colliders[9]:get_transform().pos = Vector3.new(-38.0, 11.0, 18.5);
+	colliders[9]:add_box_collider(Vector3.new(1.0, 7.0, 0.7));
+	
+	colliders[10]:get_transform().pos = Vector3.new(-38.0, 7.85, 30.85);
+	colliders[10]:add_box_collider(Vector3.new(1.0, 9.25, 0.7));
+
+	colliders[11]:get_transform().pos = Vector3.new(-38.0, 5.4, 43.25);
+	colliders[11]:add_box_collider(Vector3.new(1.0, 12.0, 0.7));
+
+	colliders[12]:get_transform().pos = Vector3.new(-38.0, 5.0, 55.55);
+	colliders[12]:add_box_collider(Vector3.new(1.0, 12.0, 0.7));
+	
+	colliders[13]:get_transform().pos = Vector3.new(-38.0, 5.0, 67.9);
+	colliders[13]:add_box_collider(Vector3.new(1.0, 12.0, 0.7));
+
+	colliders[14]:get_transform().pos = Vector3.new(-38, 1.25, -18.5);
+	colliders[14]:add_sphere_collider(2.0);
+
+	colliders[15]:get_transform().pos = Vector3.new(-38.0, 1.25, -6.2);
+	colliders[15]:add_sphere_collider(2.0);
+
+	colliders[16]:get_transform().pos = Vector3.new(-38.0, 1.25, 6.2);
+	colliders[16]:add_sphere_collider(2.0);
+
+	colliders[17]:get_transform().pos = Vector3.new(-38.0, 1.25, 18.5);
+	colliders[17]:add_sphere_collider(2.0);
+
+	colliders[18]:get_transform().pos = Vector3.new(-38.0, -4.0, 30.85);
+	colliders[18]:add_sphere_collider(2.0);
+
+	colliders[19]:get_transform().pos = Vector3.new(-38.0, -9.0, 43.25);
+	colliders[19]:add_sphere_collider(2.0);
+
+	colliders[20]:get_transform().pos = Vector3.new(-38.0, -9.5, 55.55);
+	colliders[20]:add_sphere_collider(2.0);
+
+	colliders[21]:get_transform().pos = Vector3.new(-38.0, -9.5, 67.9);
+	colliders[21]:add_sphere_collider(2.0);
 end
 
 function create_floor_colliders()
 	local colliders = {};
 
-	for i = 1, 1 do
+	for i = 1, 2 do
 		colliders[i] = scene:create_entity("Floor Collider " .. i, "");
 
 		local rigid = colliders[i]:add_rigid();
@@ -109,12 +148,15 @@ function create_floor_colliders()
 
 	colliders[1]:get_transform().pos = Vector3.new(4.0, -0.05, 30.0);
 	colliders[1]:add_box_collider(Vector3.new(32.0, 0.1, 115.0));
+
+	colliders[2]:get_transform().pos = Vector3.new(-45.0, -0.05, -31.7);
+	colliders[2]:add_box_collider(Vector3.new(17.0, 0.1, 53.4));
 end
 
 function create_building_colliders()
 	local colliders = {};
 
-	for i = 1, 3 do
+	for i = 1, 4 do
 		colliders[i] = scene:create_entity("Building Collider " .. i, "");
 
 		local rigid = colliders[i]:add_rigid();
@@ -129,6 +171,44 @@ function create_building_colliders()
 	
 	colliders[3]:get_transform().pos = Vector3.new(32.3, 14.05, 43.1);
 	colliders[3]:add_box_collider(Vector3.new(6.8, 14.0, 1.0));
+
+	colliders[4]:get_transform().pos = Vector3.new(-25.5, 5.1, 141.4);
+	colliders[4]:add_box_collider(Vector3.new(10.0, 5.0, 0.1));
+end
+
+function create_barrier_colliders()
+	local colliders = {};
+
+	for i = 1, 5 do
+		colliders[i] = scene:create_entity("Left Barrier Collider " .. i, "");
+
+		local rigid = colliders[i]:add_rigid();
+		rigid.type = BodyType.Static;
+
+		colliders[i]:get_transform().pos = Vector3.new(37.9, 1.5, 0.0);
+		colliders[i]:add_box_collider(Vector3.new(0.3, 1.3, 5.1));
+	end
+
+	colliders[1]:get_transform().pos.z = -12.5;
+	colliders[2]:get_transform().pos.z = 0.0;
+	colliders[3]:get_transform().pos.z = 12.5;
+	colliders[4]:get_transform().pos.z = 24.5;
+	colliders[5]:get_transform().pos.z = 36.9;
+
+	local colliders = {};
+
+	for i = 1, 2 do
+		colliders[i] = scene:create_entity("Right Barrier Collider " .. i, "");
+
+		local rigid = colliders[i]:add_rigid();
+		rigid.type = BodyType.Static;
+	end
+
+	colliders[1]:get_transform().pos = Vector3.new(-28.2, 1.5, 67.4);
+	colliders[1]:add_box_collider(Vector3.new(0.3, 1.3, 43.7));
+
+	colliders[2]:get_transform().pos = Vector3.new(-30.5, 1.5, 111.3);
+	colliders[2]:add_box_collider(Vector3.new(1.950, 1.3, 0.30));
 end
 
 function update()
