@@ -52,7 +52,7 @@ function init()
 	windowsill:add_model("assets/models/digital_twin/WINDOWSILL.fbx", GLOBAL_SCALE);
 
 	--Digital Twin Prop Models
-	benches[1]:add_model("assets/models/imported/OpenGameArt/Teh_Bucket/Bench/bench.fbx", GLOBAL_SCALE);
+	benches[1]:add_model("assets/models/imported/OpenGameArt/Teh_Bucket/Bench/bench.fbx", 1.0);
 
 	--MODEL TRANSFORMATIONS
 	--Digital Twin Geometry Transformations
@@ -68,7 +68,7 @@ function init()
 	windowsill:get_transform().pos.z = 1.85;
 
 	--Digital Twin Prop Transformations
-	barriers[1]:get_transform().pos = Vector3.new(0.0, 0.0, 0.0);
+	benches[1]:get_transform().pos = Vector3.new(0.0, 5.0, 0.0);
 
 	--COLLIDER FUNCTIONS
 	create_pillar_colliders();
