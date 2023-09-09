@@ -17,6 +17,8 @@ namespace Vakol
     {
         if (!FileExists(path))
         {
+            VK_ERROR("Texture at path: {0} could not be found!", path);
+
             return GetErrorTexture(type);
         }
 
@@ -57,6 +59,8 @@ namespace Vakol
 
             if (!pixels)
             {
+                VK_ERROR("Unable to import texture at path: {0}", path);
+
                 return GetErrorTexture(type);
             }
 
