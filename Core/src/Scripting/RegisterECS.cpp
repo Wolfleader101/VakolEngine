@@ -19,7 +19,8 @@ namespace Vakol
         entity_type.set_function("get_transform", &Entity::GetComponent<Components::Transform>);
         entity_type.set_function("get_fsm", &Entity::GetComponent<Components::FSM>);
 
-        entity_type.set_function("add_model", [](Entity* ent, const std::string& path, const float scale = 1.0f) {
+        entity_type.set_function("add_model", [](Entity* ent, const std::string& path, const float scale = 1.0f,
+                                                 const std::string& shaderPath = "") {
             if (!ent->HasComponent<Rendering::Drawable>())
                 ent->AddComponent<Rendering::Drawable>();
 
