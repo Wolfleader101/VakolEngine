@@ -67,5 +67,4 @@ void main()
     }
     else
         FragColor = vec4(color, 1.0);
-
 }
