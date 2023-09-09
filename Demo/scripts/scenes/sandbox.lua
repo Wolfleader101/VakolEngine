@@ -12,11 +12,11 @@ function init()
     --sphere:get_transform().pos = Vector3.new(0.0, 1.5, 0.0);
     cube:get_transform().pos = Vector3.new(3.0, 1.5, 0.0);
 
-    local path = "coreAssets/textures/Skybox/imported/Unity/WorldSkies/";
+    local path = "coreAssets/textures/Skybox/";
 	local extension = ".png";
 
-	local faces = { path .. "left"  .. extension, 
-					path .. "right"   .. extension, 
+	local faces = { path .. "right"  .. extension, 
+					path .. "left"   .. extension, 
 					path .. "top"    .. extension, 
 					path .. "bottom" .. extension, 
 					path .. "front"  .. extension, 

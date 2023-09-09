@@ -34,11 +34,11 @@ uniform Material material;
 const int levels = 3;
 const float scaleFactor = 1.0 / 3.0;
 
-uniform vec3 LIGHT_POSITION = vec3(0.0, 10.0, 0.0);
+uniform vec3 LIGHT_POSITION = vec3(0.0, 5.0, 0.0);
 
 vec4 ToonShading(const vec3 normal, const vec4 color)
 {
-    vec4 ambient = vec4(0.5);
+    vec4 ambient = vec4(0.4);
 
     vec3 lightDir = normalize(LIGHT_POSITION - fs_in.FragPos);
     float diff = max(0.0, dot(lightDir, normal));
@@ -46,7 +46,7 @@ vec4 ToonShading(const vec3 normal, const vec4 color)
     vec4 diffuse = color * (ceil(diff * levels) * scaleFactor);
 
     // light strength * (ambient + diffuse)
-    return 0.4 * (ambient + diffuse);
+    return 0.9 * (ambient + diffuse);
 }
 
 void main()
