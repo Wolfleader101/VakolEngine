@@ -261,7 +261,7 @@ namespace Vakol
                     const auto size = static_cast<int>(embedded_texture->mWidth);
 
                     texture = AssetLoader::GetTexture(embedded_texture->mFilename.C_Str(), GetTextureType(type), size,
-                                                      embedded_texture->pcData, 12);
+                                                      embedded_texture->pcData, 7);
                     textures.emplace_back(texture);
                 }
                 else

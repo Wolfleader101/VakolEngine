@@ -177,7 +177,7 @@ namespace Vakol
          * @brief The far clipping plane distance of the camera.
          *
          */
-        float far = 1000.0f;
+        float far = 10000.0f;
 
         /**
          * @brief The projection matrix of the camera.

@@ -1,4 +1,4 @@
-local flying = false;
+local is_sprinting = false;
 
 function init()
     print("Initialising NoClip");
@@ -31,8 +31,8 @@ function update()
 
     velocity = 10 * Time.delta_time;
 
-    if (Input:get_key_down(KEYS["KEY_Z"])) then
-        flying = not flying
+    if (Input:get_key(KEYS["KEY_LEFT_SHIFT"])) then
+        velocity = velocity * 10;
     end
 
     local camera = scene:get_camera();

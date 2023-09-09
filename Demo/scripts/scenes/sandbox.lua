@@ -3,9 +3,12 @@ function init()
 
     scene:create_entity("Digital Twin", "entities/test/digital_twin.lua");
 
-    --local sphere = scene:create_entity("Sphere", "entities/test/sphere.lua");
+       scene:create_entity("290 World", "entities/worlds/290_world.lua");
+    
+
     local cube = scene:create_entity("Cube", "entities/test/cube.lua");
     
+    -- local sphere = scene:create_entity("Sphere", "entities/test/sphere.lua");
     --sphere:get_transform().pos = Vector3.new(0.0, 1.5, 0.0);
     cube:get_transform().pos = Vector3.new(3.0, 1.5, 0.0);
 
