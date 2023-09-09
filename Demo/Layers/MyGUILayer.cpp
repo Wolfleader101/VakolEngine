@@ -27,8 +27,6 @@ static rp3d::Vector3 Vec3(const Vakol::Math::Vec3& v)
     return {v.x, v.y, v.z};
 }
 
-void EngineMenu(Vakol::SceneManager* SM);
-
 void MyGUILayer::OnAttach(Vakol::SceneManager* SM)
 {
     m_SceneManager = SM;
