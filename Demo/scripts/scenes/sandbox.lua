@@ -19,10 +19,8 @@ function init()
 					path .. "front"  .. extension, 
 					path .. "back"   .. extension};
 
-	scene:generate_skybox(faces);
-
-    scene:enable_debug();
-    scene:create_debug_scene();
+    scene:generate_skybox(faces);
+    
 end
 
 function update()

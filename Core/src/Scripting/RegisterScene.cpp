@@ -37,7 +37,6 @@ namespace Vakol
             scene->SetSkybox(skybox);
         });
 
-        scene_type.set_function("create_debug_scene", [](Scene* scene) { scene->CreateDebugScene(); });
         scene_type.set_function("enable_debug", [](Scene* scene) { scene->SetDebug(true); });
         scene_type.set_function("disable_debug", [](Scene* scene) { scene->SetDebug(false); });
 

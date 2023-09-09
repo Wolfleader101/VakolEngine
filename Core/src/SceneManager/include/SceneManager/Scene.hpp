@@ -144,8 +144,6 @@ namespace Vakol
             return m_skybox;
         }
 
-        void CreateDebugScene();
-
         const Rendering::DebugScene& GetDebugScene() const;
 
         void SetDebug(bool enabled);

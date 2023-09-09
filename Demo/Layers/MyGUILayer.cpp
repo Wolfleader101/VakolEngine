@@ -86,6 +86,11 @@ void MyGUILayer::OnUpdate()
                     if (Vakol::Singleton<Vakol::Application>::GetInstance().IsSystemActive(Vakol::SystemFlag::Physics))
                         Vakol::Singleton<Vakol::Application>::GetInstance().ToggleSystem(Vakol::SystemFlag::Physics);
                 }
+
+                if (ImGui::Button("Toggle Physics Wireframe"))
+                {
+                    m_SceneManager->GetActiveScene().SetDebug(!m_SceneManager->GetActiveScene().IsDebugEnabled());
+                }
             }
 
             ImGui::Separator();
