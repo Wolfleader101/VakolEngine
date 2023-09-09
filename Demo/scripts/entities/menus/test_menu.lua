@@ -6,7 +6,7 @@ OPENED_OPTIONS_MENU = false;
 function start_menu()
     GUI:start_window("Start Menu - Title", true, true, 700, 0.0 , 0, 350); 
 
-    GUI:add_text("PLACES UNKNOWN", true, false, 4.0, 1.0, 0.169, 0.169, 1.0);
+    GUI:add_text("Vakol Engine", true, false, 4.0, 1.0, 0.169, 0.169, 1.0);
 
     GUI:end_window();
 
@@ -45,12 +45,12 @@ function update()
     
     if (Input:get_key_down(KEYS["KEY_1"])) then
         -- toggle_skybox();
-        print("CHANGING SCENE")
         change_scene("sandbox");
         -- toggle_wireframe();
     end
 
     if(Input:get_key_down(KEYS["KEY_ESC"])) then
-        app_run(false);
+        change_scene("end screen");
     end
+    
 end
