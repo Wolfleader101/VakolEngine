@@ -171,7 +171,7 @@ namespace Vakol
         /**
          * @brief The near clipping plane distance of the camera.
          */
-        float near = 0.01f;
+        float near = 1.0f;
 
         /**
          * @brief The far clipping plane distance of the camera.
