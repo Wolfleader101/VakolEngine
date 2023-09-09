@@ -1,6 +1,8 @@
 function init()
 	GLOBAL_SCALE = 0.02;
 
+	--ENTITY CREATION
+	--Digital Twin Geometry Entities
 	local floor = scene:create_entity("Floor", "");
 
 	local roof = scene:create_entity("Roof", "");
@@ -22,6 +24,12 @@ function init()
 	barriers[1] = scene:create_entity("Glass Barrier Left", "");
 	barriers[2] = scene:create_entity("Glass Barrier Right", "");
 
+	--Digital Twin Prop Entities
+	local benches = {};
+	benches[1] = scene:create_entity("Bench 1", "");
+
+	--MODEL FILE ACQUISITION
+	--Digital Twin Geometry Models
 	floor:add_model("assets/models/digital_twin/GROUND.fbx", GLOBAL_SCALE);
 	floor:get_transform().pos = Vector3.new(0.0, 0.0, 0.0);
 	floor:get_transform().scale = Vector3.new(26.177, 1.0, 32.2);
@@ -43,6 +51,11 @@ function init()
 
 	windowsill:add_model("assets/models/digital_twin/WINDOWSILL.fbx", GLOBAL_SCALE);
 
+	--Digital Twin Prop Models
+	benches[1]:add_model("assets/models/imported/OpenGameArt/Teh_Bucket/Bench/bench.fbx", GLOBAL_SCALE);
+
+	--MODEL TRANSFORMATIONS
+	--Digital Twin Geometry Transformations
 	building:get_transform().pos.z = 1.80;
 
 	roof:get_transform().pos.y = 31.0;
@@ -54,6 +67,10 @@ function init()
 
 	windowsill:get_transform().pos.z = 1.85;
 
+	--Digital Twin Prop Transformations
+	barriers[1]:get_transform().pos = Vector3.new(0.0, 0.0, 0.0);
+
+	--COLLIDER FUNCTIONS
 	create_pillar_colliders();
 	create_floor_colliders();
 	create_building_colliders();
