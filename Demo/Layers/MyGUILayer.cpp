@@ -93,6 +93,36 @@ void MyGUILayer::OnUpdate()
             if (ImGui::CollapsingHeader("Entity List"))
             {
 
+                ImGui::SeparatorText("Add Entities");
+
+                if (ImGui::Button("Add Empty Entity"))
+                {
+                    m_SceneManager->GetActiveScene().CreateEntity("New Entity");
+                }
+
+                if (ImGui::Button("Add Entity with Sphere"))
+                {
+                    Vakol::Entity entity = m_SceneManager->GetActiveScene().CreateEntity("Default Sphere");
+
+                    entity.AddComponent<Vakol::Rendering::Drawable>();
+
+                    Vakol::Rendering::RenderEngine::GenerateSphere(1.0f,
+                                                                   entity.GetComponent<Vakol::Rendering::Drawable>());
+                }
+
+                if (ImGui::Button("Add Entity with Cube"))
+                {
+
+                    Vakol::Entity entity = m_SceneManager->GetActiveScene().CreateEntity("Default Cube");
+
+                    entity.AddComponent<Vakol::Rendering::Drawable>();
+
+                    Vakol::Rendering::RenderEngine::GenerateCube(1.0f,
+                                                                 entity.GetComponent<Vakol::Rendering::Drawable>());
+                }
+
+                ImGui::SeparatorText("Entities");
+
                 ImGui::BeginChild("Entity List Child", ImVec2(0, 0), true);
 
                 auto& EL = m_SceneManager->GetActiveScene().GetEntityList();
@@ -393,24 +423,6 @@ void MyGUILayer::OnUpdate()
 
         ImGui::End();            // Moved this outside the if-check.
         ImGui::PopStyleColor(4); // Moved this outside the if-check.
-
-        /*EDITOR MENU*/
-
-        ImGui::PushStyleColor(ImGuiCol_WindowBg, dark);
-        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.9f, 0.9f, 0.9f, 1.0f));
-        ImGui::PushStyleColor(ImGuiCol_TitleBg, dark);
-        ImGui::PushStyleColor(ImGuiCol_TitleBgActive, dark);
-
-        ImGui::SetNextWindowPos(viewport->Pos);
-        ImGui::SetNextWindowSize(ImVec2(viewport->Size.x, 20.0f), ImGuiCond_Once);
-        ImGui::SetNextWindowViewport(viewport->ID);
-
-        ImGui::Begin("Menu", nullptr, menu_flags);
-
-        EngineMenu(m_SceneManager);
-
-        ImGui::End();
-        ImGui::PopStyleColor(4);
     }
 }
 
@@ -457,108 +469,4 @@ void MyGUILayer::OnEvent(Vakol::Event& event) // toggle editor view
 
 void MyGUILayer::OnTick()
 {
-}
-
-void EngineMenu(Vakol::SceneManager* SM)
-{
-    ImGui::BeginMenuBar();
-
-    if (ImGui::BeginMenu("File"))
-    {
-        if (ImGui::BeginMenu("New"))
-        {
-            if (ImGui::MenuItem("Entity"))
-            {
-                SM->GetActiveScene().CreateEntity("New Entity");
-            }
-
-            if (ImGui::BeginMenu("3D Object"))
-            {
-                if (ImGui::MenuItem("Sphere"))
-                {
-                    Vakol::Entity entity = SM->GetActiveScene().CreateEntity("Default Sphere");
-
-                    entity.AddComponent<Vakol::Rendering::Drawable>();
-
-                    Vakol::Rendering::RenderEngine::GenerateSphere(1.0f,
-                                                                   entity.GetComponent<Vakol::Rendering::Drawable>());
-                }
-
-                if (ImGui::MenuItem("Cube"))
-                {
-                    Vakol::Entity entity = SM->GetActiveScene().CreateEntity("Default Cube");
-
-                    entity.AddComponent<Vakol::Rendering::Drawable>();
-
-                    Vakol::Rendering::RenderEngine::GenerateCube(1.0f,
-                                                                 entity.GetComponent<Vakol::Rendering::Drawable>());
-                }
-
-                ImGui::EndMenu();
-            }
-
-            ImGui::EndMenu();
-        }
-
-        if (ImGui::BeginMenu("Open"))
-        {
-
-            ImGui::EndMenu();
-        }
-
-        if (ImGui::MenuItem("Save", "Ctrl+S"))
-        {
-        }
-
-        if (ImGui::MenuItem("Save As"))
-        {
-        }
-
-        ImGui::EndMenu();
-    }
-
-    if (ImGui::BeginMenu("Edit"))
-    {
-        if (ImGui::MenuItem("Undo", "Ctrl+Z"))
-        {
-        }
-
-        if (ImGui::MenuItem("Redo", "Ctrl+Y"))
-        {
-        }
-
-        if (ImGui::MenuItem("Copy", "Ctrl+C"))
-        {
-        }
-
-        if (ImGui::MenuItem("Cut", "Ctrl+X"))
-        {
-        }
-
-        if (ImGui::MenuItem("Paste", "Ctrl+V"))
-        {
-        }
-
-        ImGui::EndMenu();
-    }
-
-    if (ImGui::BeginMenu("Help"))
-    {
-        if (ImGui::MenuItem("View Help", "Ctrl+F1"))
-        {
-        }
-
-        ImGui::EndMenu();
-    }
-
-    ImGui::EndMenuBar();
-
-    /* KEYBOARD SHORTCUTS */
-    if (ImGui::Shortcut(ImGuiMod_Ctrl | ImGuiKey_S))
-    {
-    }
-
-    if (ImGui::Shortcut(ImGuiMod_Ctrl | ImGuiKey_N))
-    {
-    }
 }
