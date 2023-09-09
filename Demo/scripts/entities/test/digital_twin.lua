@@ -1,162 +1,214 @@
 function init()
-	local roof = scene:create_entity("Roof", "");
-
-	local roof_support = scene:create_entity("Roof Support", "");
-
-	local building = scene:create_entity("Building", "");
+	GLOBAL_SCALE = 0.02;
 
 	local floor = scene:create_entity("Floor", "");
+
+	local roof = scene:create_entity("Roof", "");
+	local roof_supports = scene:create_entity("Roof Supports", "");
 	
-	local alcove_1 = scene:create_entity("Alcove 1", "");
-	local alcove_2 = scene:create_entity("Alcove 2", "");
-
-	local glass_panel1 = scene:create_entity("Glass Panel 1", "");
-	local glass_panel2 = scene:create_entity("Glass Panel 2", "");
-
-	local wood_pillars = {};
-	local stone_pillars = {};
-
+	local building = scene:create_entity("Building", "");
+	
 	local barriers = {};
-	local small_barrier = scene:create_entity("Small Glass Barrier", "");
+	
+	local left_pillars = scene:create_entity("Left Pillars", "");
+	local right_pillars = scene:create_entity("Right Pillars", "");
 
 	local balcony = scene:create_entity("Balcony", "");
 
-	for i = 1, 6 do
-		wood_pillars[i] = scene:create_entity("Wood Pillar " .. i, "");
-	end
-
-	for i = 1, 6 do
-		stone_pillars[i] = scene:create_entity("Stone Pillar " .. i, "");
-	end
-
-	for i = 1, 7 do
-		barriers[i] = scene:create_entity("Glass Barrier " .. i, "");
-	end
-
-	roof:add_model("assets/models/new_building/roof.fbx", 0.005);
-	roof_support:add_model("assets/models/new_building/roof_supports.fbx", 0.5);
+	local table_top = scene:create_entity("Table Top", "");
 	
-	building:add_model("assets/models/new_building/building.fbx", 0.50);
+	local windowsill = scene:create_entity("Windowsill", "");
+
+	barriers[1] = scene:create_entity("Glass Barrier Left", "");
+	barriers[2] = scene:create_entity("Glass Barrier Right", "");
+
+	floor:add_model("assets/models/digital_twin/GROUND.fbx", GLOBAL_SCALE);
+	floor:get_transform().pos = Vector3.new(0.0, 0.0, 0.0);
+	floor:get_transform().scale = Vector3.new(26.177, 1.0, 32.2);
+
+	roof:add_model("assets/models/digital_twin/ROOF.fbx", GLOBAL_SCALE);
+	roof_supports:add_model("assets/models/digital_twin/ROOF-SUPPORTS.fbx", GLOBAL_SCALE);
+
+	building:add_model("assets/models/digital_twin/BUILDING.fbx", GLOBAL_SCALE);
+
+	barriers[1]:add_model("assets/models/digital_twin/GLASS-BARRIERS-LEFT.fbx", GLOBAL_SCALE);
+	barriers[2]:add_model("assets/models/digital_twin/GLASS-BARRIERS-RIGHT.fbx", GLOBAL_SCALE);
+
+	left_pillars:add_model("assets/models/digital_twin/WOODEN-PILLARS-LEFT.fbx", GLOBAL_SCALE);
+	right_pillars:add_model("assets/models/digital_twin/WOODEN-PILLARS-RIGHT.fbx", GLOBAL_SCALE);
+
+	balcony:add_model("assets/models/digital_twin/BALCONY.fbx", GLOBAL_SCALE);
+
+	table_top:add_model("assets/models/digital_twin/TABLE-TOP.fbx", GLOBAL_SCALE);
+
+	windowsill:add_model("assets/models/digital_twin/WINDOWSILL.fbx", GLOBAL_SCALE);
+
+	building:get_transform().pos.z = 1.80;
+
+	roof:get_transform().pos.y = 31.0;
+	roof_supports:get_transform().pos.y = -1.0;
+
+	barriers[2]:get_transform().pos = Vector3.new(0.1, 0.0, 2.0);
+
+	balcony:get_transform().pos.z = 2.25;
+
+	windowsill:get_transform().pos.z = 1.85;
+
+	create_pillar_colliders();
+	create_floor_colliders();
+	create_building_colliders();
+	create_barrier_colliders();
+end
+
+function create_pillar_colliders()
+	local colliders = {};
+
+	for i = 1, 5 do
+		colliders[i] = scene:create_entity("Left Pillar Collider " .. i, "");
+
+		local rigid = colliders[i]:add_rigid();
+		rigid.type = BodyType.Static;
+
+		colliders[i]:add_box_collider(Vector3.new(1.0, 9.0, 0.7));
+
+		colliders[i]:get_transform().pos = Vector3.new(37.7, 9.0, 0.0);
+	end
+
+	colliders[1]:get_transform().pos.z = -18.5;
+	colliders[2]:get_transform().pos.z = -6.2;
+	colliders[3]:get_transform().pos.z = 6.2;
+	colliders[4]:get_transform().pos.z = 18.5;
+	colliders[5]:get_transform().pos.z = 30.85;
+
+	for i = 6, 21 do
+		colliders[i] = scene:create_entity("Right Pillar Collider " .. i, "");
+
+		local rigid = colliders[i]:add_rigid();
+		rigid.type = BodyType.Static;
+	end
+
+	colliders[6]:get_transform().pos = Vector3.new(-38.0, 11.0, -18.5);
+	colliders[6]:add_box_collider(Vector3.new(1.0, 7.0, 0.7));
+
+	colliders[7]:get_transform().pos = Vector3.new(-38.0, 11.0, -6.2);
+	colliders[7]:add_box_collider(Vector3.new(1.0, 7.0, 0.7));
+
+	colliders[8]:get_transform().pos = Vector3.new(-38.0, 11.0, 6.2);
+	colliders[8]:add_box_collider(Vector3.new(1.0, 7.0, 0.7));
+
+	colliders[9]:get_transform().pos = Vector3.new(-38.0, 11.0, 18.5);
+	colliders[9]:add_box_collider(Vector3.new(1.0, 7.0, 0.7));
 	
-	floor:add_model("assets/models/new_building/floor.fbx", 0.005);
+	colliders[10]:get_transform().pos = Vector3.new(-38.0, 7.85, 30.85);
+	colliders[10]:add_box_collider(Vector3.new(1.0, 9.25, 0.7));
+
+	colliders[11]:get_transform().pos = Vector3.new(-38.0, 5.4, 43.25);
+	colliders[11]:add_box_collider(Vector3.new(1.0, 12.0, 0.7));
+
+	colliders[12]:get_transform().pos = Vector3.new(-38.0, 5.0, 55.55);
+	colliders[12]:add_box_collider(Vector3.new(1.0, 12.0, 0.7));
 	
-	alcove_1:add_model("assets/models/new_building/alcove1.fbx", 0.005);
-	alcove_2:add_model("assets/models/new_building/alcove2.fbx", 0.005);
+	colliders[13]:get_transform().pos = Vector3.new(-38.0, 5.0, 67.9);
+	colliders[13]:add_box_collider(Vector3.new(1.0, 12.0, 0.7));
 
-	glass_panel1:add_model("assets/models/new_building/glass_panel1.fbx", 0.005);
-	glass_panel2:add_model("assets/models/new_building/glass_panel2.fbx", 0.005);
+	colliders[14]:get_transform().pos = Vector3.new(-38, 1.25, -18.5);
+	colliders[14]:add_sphere_collider(2.0);
 
-	for i = 1, 6 do
-		wood_pillars[i]:add_model("assets/models/new_building/wood_pillar.fbx", 0.30);
+	colliders[15]:get_transform().pos = Vector3.new(-38.0, 1.25, -6.2);
+	colliders[15]:add_sphere_collider(2.0);
+
+	colliders[16]:get_transform().pos = Vector3.new(-38.0, 1.25, 6.2);
+	colliders[16]:add_sphere_collider(2.0);
+
+	colliders[17]:get_transform().pos = Vector3.new(-38.0, 1.25, 18.5);
+	colliders[17]:add_sphere_collider(2.0);
+
+	colliders[18]:get_transform().pos = Vector3.new(-38.0, -4.0, 30.85);
+	colliders[18]:add_sphere_collider(2.0);
+
+	colliders[19]:get_transform().pos = Vector3.new(-38.0, -9.0, 43.25);
+	colliders[19]:add_sphere_collider(2.0);
+
+	colliders[20]:get_transform().pos = Vector3.new(-38.0, -9.5, 55.55);
+	colliders[20]:add_sphere_collider(2.0);
+
+	colliders[21]:get_transform().pos = Vector3.new(-38.0, -9.5, 67.9);
+	colliders[21]:add_sphere_collider(2.0);
+end
+
+function create_floor_colliders()
+	local colliders = {};
+
+	for i = 1, 2 do
+		colliders[i] = scene:create_entity("Floor Collider " .. i, "");
+
+		local rigid = colliders[i]:add_rigid();
+		rigid.type = BodyType.Static;
 	end
 
-	for i = 1, 6 do
-		stone_pillars[i]:add_model("assets/models/new_building/stone_pillar.fbx", 0.50);
+	colliders[1]:get_transform().pos = Vector3.new(4.0, -0.05, 30.0);
+	colliders[1]:add_box_collider(Vector3.new(32.0, 0.1, 115.0));
+
+	colliders[2]:get_transform().pos = Vector3.new(-45.0, -0.05, -31.7);
+	colliders[2]:add_box_collider(Vector3.new(17.0, 0.1, 53.4));
+end
+
+function create_building_colliders()
+	local colliders = {};
+
+	for i = 1, 4 do
+		colliders[i] = scene:create_entity("Building Collider " .. i, "");
+
+		local rigid = colliders[i]:add_rigid();
+		rigid.type = BodyType.Static;
 	end
 
-	for i = 1, 7 do
-		barriers[i]:add_model("assets/models/new_building/glass_barrier.fbx", 0.010);
-	end
+	colliders[1]:get_transform().pos = Vector3.new(-5.6, 14.1, 90.9);
+	colliders[1]:add_box_collider(Vector3.new(9.75, 14.0, 50.0));
 
-	small_barrier:add_model("assets/models/new_building/small_glass_barrier.fbx", 0.010);
-
-	balcony:add_model("assets/models/new_building/balcony.fbx", 0.2);
-
-	roof:get_transform().pos = Vector3.new(0.0, 7.5, 0.0);
-	roof:get_transform().scale = Vector3.new(1.0, 1.0, 1.0);
-
-	roof_support:get_transform().pos = roof:get_transform().pos - Vector3.new(0.0, 0.515, -13.75);
+	colliders[2]:get_transform().pos = Vector3.new(14.8, 14.05, 43.3);
+	colliders[2]:add_box_collider(Vector3.new(10.4, 14.0, 5.0));
 	
-	building:get_transform().pos = Vector3.new(2.0, -1.0, 9.295);
-	building:get_transform().rot = Vector3.new(-90.0, 0.0, 0.0);
-	building:get_transform().scale = Vector3.new(28.415, 1.0, 1.0);
+	colliders[3]:get_transform().pos = Vector3.new(32.3, 14.05, 43.1);
+	colliders[3]:add_box_collider(Vector3.new(6.8, 14.0, 1.0));
 
-	floor:get_transform().pos = Vector3.new(-1.0, -1.251, 1.0);
-	floor:get_transform().rot = Vector3.new(0.0, 0.0, 0.0);
-	floor:get_transform().scale = Vector3.new(30.0, 1.0, 30.0);
+	colliders[4]:get_transform().pos = Vector3.new(-25.5, 5.1, 141.4);
+	colliders[4]:add_box_collider(Vector3.new(10.0, 5.0, 0.1));
+end
 
-	alcove_1:get_transform().pos = Vector3.new(-10.0, -1.0, 28.70);
-	alcove_1:get_transform().scale = Vector3.new(0.90, 1.0, 0.890);
+function create_barrier_colliders()
+	local colliders = {};
 
-	alcove_2:get_transform().pos = Vector3.new(-12.65, -1.05, 27.870);
-	alcove_2:get_transform().scale = Vector3.new(0.90, 1.0, 0.890);
+	for i = 1, 5 do
+		colliders[i] = scene:create_entity("Left Barrier Collider " .. i, "");
 
-	glass_panel1:get_transform().pos = Vector3.new(-10.675, -1.0, 9.35);
-	glass_panel1:get_transform().rot = Vector3.new(-90.0, 0.0, 0.0);
+		local rigid = colliders[i]:add_rigid();
+		rigid.type = BodyType.Static;
 
-	glass_panel2:get_transform().pos = Vector3.new(-10.675, -1.0, 9.30);
-	glass_panel2:get_transform().rot = Vector3.new(-90.0, 0.0, 0.0);
-
-	for i = 1, 6 do
-		wood_pillars[i]:get_transform().pos = Vector3.new(10.0, 1.75, 0.0);
-		wood_pillars[i]:get_transform().rot = Vector3.new(0.0, 90.0, 0.0);
-		wood_pillars[i]:get_transform().scale = Vector3.new(1.0, 1.0, 1.0);
+		colliders[i]:get_transform().pos = Vector3.new(37.9, 1.5, 0.0);
+		colliders[i]:add_box_collider(Vector3.new(0.3, 1.3, 5.1));
 	end
 
-	wood_pillars[1]:get_transform().pos.z = -1.95;
-	wood_pillars[2]:get_transform().pos.z = 3.25;
-	wood_pillars[3]:get_transform().pos.z = 8.50;
-	wood_pillars[4]:get_transform().pos.z = 13.75;
-	wood_pillars[5]:get_transform().pos.z = 19.0;
-	wood_pillars[6]:get_transform().pos.z = 24.25;
+	colliders[1]:get_transform().pos.z = -12.5;
+	colliders[2]:get_transform().pos.z = 0.0;
+	colliders[3]:get_transform().pos.z = 12.5;
+	colliders[4]:get_transform().pos.z = 24.5;
+	colliders[5]:get_transform().pos.z = 36.9;
 
-	for i = 1, 6 do
-		stone_pillars[i]:get_transform().pos = Vector3.new(-10.0, -0.25, 0.0);
-		stone_pillars[i]:get_transform().rot = Vector3.new(0.0, -90.0, 0.0);
-		stone_pillars[i]:get_transform().scale = Vector3.new(1.0, 1.0, 1.0);
+	local colliders = {};
+
+	for i = 1, 2 do
+		colliders[i] = scene:create_entity("Right Barrier Collider " .. i, "");
+
+		local rigid = colliders[i]:add_rigid();
+		rigid.type = BodyType.Static;
 	end
 
-	stone_pillars[1]:get_transform().pos = Vector3.new(-10.0, -0.25, -1.95);
-	stone_pillars[1]:get_transform().scale.y = 1.2;
+	colliders[1]:get_transform().pos = Vector3.new(-28.2, 1.5, 67.4);
+	colliders[1]:add_box_collider(Vector3.new(0.3, 1.3, 43.7));
 
-	stone_pillars[2]:get_transform().pos = Vector3.new(-10.0, -0.25, 3.25);
-	stone_pillars[2]:get_transform().scale.y = 1.2;
-
-	stone_pillars[3]:get_transform().pos = Vector3.new(-10.0, -1.25, 8.50);
-	stone_pillars[3]:get_transform().scale.y = 1.6;
-
-	stone_pillars[4]:get_transform().pos = Vector3.new(-10.0, -2.20, 13.75);
-	stone_pillars[4]:get_transform().scale.y = 1.8;
-
-	stone_pillars[5]:get_transform().pos = Vector3.new(-10.0, -2.20, 19.0);
-	stone_pillars[5]:get_transform().scale.y = 1.8;
-
-	stone_pillars[6]:get_transform().pos = Vector3.new(-10.0, -2.20, 24.25);
-	stone_pillars[6]:get_transform().scale.y = 1.8;
-
-	barriers[1]:get_transform().pos = Vector3.new(10.7, -1.230, 14.0);
-	barriers[1]:get_transform().rot = Vector3.new(0.0, 90.0, 0.0);
-
-	barriers[2]:get_transform().pos = Vector3.new(-9.9, -1.230, 9.5);
-	barriers[2]:get_transform().rot = Vector3.new(0.0, -90.0, 0.0);
-	barriers[2]:get_transform().scale.x = 1.09;
-
-	barriers[3]:get_transform().pos = Vector3.new(10.7, -1.23, -3.0);
-	barriers[3]:get_transform().rot = Vector3.new(0.0, 90.0, 0.0);
-	barriers[3]:get_transform().scale = Vector3.new(1.0, 1.0, 1.0);
-
-	barriers[4]:get_transform().pos = Vector3.new(4.9, -1.23, -19.7);
-	barriers[4]:get_transform().rot = Vector3.new(0.0, 180.0, 0.0);
-	barriers[4]:get_transform().scale = Vector3.new(1.5, 1.0, 1.0);
-
-	barriers[5]:get_transform().pos = Vector3.new(-19.5, -1.23, -14.1);
-	barriers[5]:get_transform().rot = Vector3.new(0.0, -90.0, 0.0);
-	barriers[5]:get_transform().scale = Vector3.new(1.289, 1.0, 1.0);
-
-	barriers[6]:get_transform().pos = Vector3.new(-15.4, -3.880, 27.3);
-	barriers[6]:get_transform().rot = Vector3.new(0.0, 0.0, 0.0);
-	barriers[6]:get_transform().scale = Vector3.new(1.0, 1.0, 1.0);
-
-	barriers[7]:get_transform().pos = Vector3.new(-19.53, -3.880, 13.4);
-	barriers[7]:get_transform().rot = Vector3.new(0.0, -90.0, 0.0);
-	barriers[7]:get_transform().scale = Vector3.new(0.82, 1.0, 1.0);
-
-	small_barrier:get_transform().pos = Vector3.new(-11.02, -1.23, 26.1);
-	small_barrier:get_transform().rot = Vector3.new(0.0, 180.0, 0.0);
-	small_barrier:get_transform().scale = Vector3.new(0.53, 1.0, 1.0);
-
-	balcony:get_transform().pos = Vector3.new(-7.210, 2.20, 13.50);
-	balcony:get_transform().scale = Vector3.new(2.40, 1.0, 2.6);
+	colliders[2]:get_transform().pos = Vector3.new(-30.5, 1.5, 111.3);
+	colliders[2]:add_box_collider(Vector3.new(1.950, 1.3, 0.30));
 end
 
 function update()

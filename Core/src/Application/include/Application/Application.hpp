@@ -126,6 +126,15 @@ namespace Vakol
         }
 
         /**
+         * \brief Get the physics engine.
+         * \return the physics engine
+         */
+        PhysicsEngine& GetPhysicsEngine()
+        {
+            return m_physicsEngine;
+        }
+
+        /**
          * @brief Set the Active Mouse object
          *
          * @param active mouse is active or not

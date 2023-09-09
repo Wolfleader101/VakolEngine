@@ -18,6 +18,7 @@ namespace Vakol
     Scene::Scene(const std::string& name, LuaScript& script, PhysicsScene& physicsScene)
         : m_script(std::move(script)), m_name(name), m_physicsScene(physicsScene)
     {
+        Rendering::RenderEngine::GenerateDebugScene(m_debugScene);
     }
 
     const std::string& Scene::getName() const
@@ -57,14 +58,6 @@ namespace Vakol
         });
 
         return std::make_shared<Entity>(ent);
-    }
-
-    void Scene::CreateDebugScene()
-    {
-        if (m_debugEnabled)
-            Rendering::RenderEngine::GenerateDebugScene(m_debugScene);
-        else
-            VK_WARN("Unable to create debug scene: Debug mode is not enabled!");
     }
 
     const Rendering::DebugScene& Scene::GetDebugScene() const

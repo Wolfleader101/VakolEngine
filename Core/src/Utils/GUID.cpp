@@ -2,6 +2,11 @@
 
 namespace Vakol
 {
+    GUID::GUID()
+    {
+        id = xg::newGuid();
+    }
+
     void GUID::GenNewGUID()
     {
         id = xg::newGuid();
