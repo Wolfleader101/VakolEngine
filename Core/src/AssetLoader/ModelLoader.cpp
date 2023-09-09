@@ -261,12 +261,12 @@ namespace Vakol
                     const auto size = static_cast<int>(embedded_texture->mWidth);
 
                     texture = AssetLoader::GetTexture(embedded_texture->mFilename.C_Str(), GetTextureType(type), size,
-                                                      embedded_texture->pcData, 7);
+                                                      embedded_texture->pcData);
                     textures.emplace_back(texture);
                 }
                 else
                 {
-                    texture = AssetLoader::GetTexture(imported_path.C_Str(), GetTextureType(type), 12);
+                    texture = AssetLoader::GetTexture(imported_path.C_Str(), GetTextureType(type));
 
                     textures.emplace_back(texture);
                 }

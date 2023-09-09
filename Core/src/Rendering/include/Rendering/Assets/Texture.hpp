@@ -83,6 +83,7 @@ namespace Vakol::Rendering::Assets
         int height = 0;
 
         int channels = 0; // bytes-per-pixel (number of color channels in an image) R = 1, RG = 2, RGB = 3, RGBA = 4
+        int levels = 1;
 
         bool embedded = false; // is the texture embedded in memory?
 

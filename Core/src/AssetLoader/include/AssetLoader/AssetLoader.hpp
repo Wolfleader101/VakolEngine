@@ -58,7 +58,7 @@ namespace Vakol
          * \param levels mipmap levels
          * \return a texture
          */
-        static Rendering::Assets::Texture& GetTexture(const std::string& path, unsigned int type, int levels = 1);
+        static Rendering::Assets::Texture& GetTexture(const std::string& path, unsigned int type);
         /**
          * \brief
          * \param path the path of the texture
@@ -69,7 +69,7 @@ namespace Vakol
          * \return
          */
         static Rendering::Assets::Texture& GetTexture(const std::string& path, unsigned int type, int size,
-                                                      const void* data, int levels = 1);
+                                                      const void* data);
 
         /**
          * \brief just grab the entire texture lol
