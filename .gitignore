@@ -459,4 +459,5 @@ out/
 
 !**/[Aa]ssets/*
 !**/[Cc]ore[Aa]ssets/*
-Demo/assets/
+Demo/assets/textures/
+Demo/assets/models/
