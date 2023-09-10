@@ -17,12 +17,23 @@ namespace Vakol
 
         rbT.set("type", &RigidBody::type);
         rbT.set("mass", &RigidBody::mass);
+        rbT.set("bounciness", &RigidBody::bounciness);
         rbT.set("hasGravity", &RigidBody::hasGravity);
         rbT.set("centerOfMass", &RigidBody::centerOfMass);
         rbT.set("force", &RigidBody::force);
         rbT.set("torque", &RigidBody::torque);
         rbT.set("linearVelocity", &RigidBody::linearVelocity);
         rbT.set("angularVelocity", &RigidBody::angularVelocity);
+        rbT.set("is_colliding", sol::property([](RigidBody& rb) { return rb.collisionData->isColliding; }));
+
+        rbT.set_function("add_force", [](RigidBody& rb, Math::Vec3& force) { rb.force += force; });
+
+        auto rct = lua.new_usertype<RayCastHitInfo>("RayCastHitInfo");
+
+        rct.set("point", &RayCastHitInfo::point);
+        rct.set("normal", &RayCastHitInfo::normal);
+        rct.set("distance", &RayCastHitInfo::distance);
+        rct.set("hit", &RayCastHitInfo::hit);
     }
 
 } // namespace Vakol

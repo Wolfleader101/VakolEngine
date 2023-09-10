@@ -179,6 +179,13 @@ namespace Vakol
 
                 while (physicsAccumulator >= m_physicsEngine.GetTimeStep())
                 {
+                    if (IsSystemActive(SystemFlag::Scripting))
+                    {
+                        activeScene.GetEntityList().Iterate<LuaScript>(
+                            [&](auto& script) { m_scriptEngine.PhysUpdateScript(script); });
+
+                        m_scriptEngine.PhysUpdateScript(activeScene.GetScript());
+                    }
                     // apply forces
                     activeScene.GetEntityList().Iterate<Components::Transform, RigidBody>(
                         [&](Components::Transform& transform, RigidBody& rb) {
@@ -187,20 +194,17 @@ namespace Vakol
                             transform.eulerAngles = Math::RadToDeg(Math::EulerFromQuat(transform.rot));
                         });
 
-                    for (int i = 0; i < 2; ++i)
-                    {
-                        // detect collisions
-                        m_physicsEngine.DetectCollisions(activeScene.GetPhysicsScene());
+                    // detect collisions
+                    m_physicsEngine.DetectCollisions(activeScene.GetPhysicsScene());
 
-                        // resolve collisions
-                        activeScene.GetEntityList().Iterate<Components::Transform, RigidBody>(
-                            [&](Components::Transform& trans, RigidBody& rb) {
-                                m_physicsEngine.ResolveCollisions(trans.pos, rb);
-                            });
+                    // resolve collisions
+                    activeScene.GetEntityList().Iterate<Components::Transform, RigidBody>(
+                        [&](Components::Transform& trans, RigidBody& rb) {
+                            m_physicsEngine.ResolveCollisions(trans.pos, rb);
+                        });
 
-                        activeScene.GetEntityList().Iterate<RigidBody>(
-                            [&](RigidBody& rb) { rb.collisionData->lambda = 0.0; });
-                    }
+                    activeScene.GetEntityList().Iterate<RigidBody>(
+                        [&](RigidBody& rb) { rb.collisionData->lambda = 0.0; });
 
                     // Decrease the accumulated time
                     physicsAccumulator -= m_physicsEngine.GetTimeStep();

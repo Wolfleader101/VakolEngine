@@ -1,4 +1,5 @@
 #include "Physics/CollisionListener.hpp"
+#include "Logger/Logger.hpp"
 
 namespace Vakol
 {
@@ -54,7 +55,8 @@ namespace Vakol
 
                 rp3d::Vector3 rp3dNormal = contactPoint.getWorldNormal();
 
-                Math::Vec3 normal((float)rp3dNormal.x, (float)rp3dNormal.y, (float)rp3dNormal.z);
+                Math::Vec3 normal(static_cast<float>(rp3dNormal.x), static_cast<float>(rp3dNormal.y),
+                                  static_cast<float>(rp3dNormal.z));
 
                 avgNormal += normal;
 
@@ -69,19 +71,19 @@ namespace Vakol
 
             if (body1Data)
             {
-                body1Data->worldNormal = Math::Normalized(avgNormal);
+                body1Data->worldNormal += Math::Normalized(avgNormal);
                 body1Data->worldPoint = avgWorldPoint1;
                 body1Data->localPoint = avgLocalPoint1;
-                body1Data->penetrationDepth = avgPenetrationDepth;
+                body1Data->penetrationDepth += avgPenetrationDepth;
                 body1Data->isColliding = true;
             }
 
             if (body2Data)
             {
-                body2Data->worldNormal = -Math::Normalized(avgNormal);
+                body2Data->worldNormal += -Math::Normalized(avgNormal);
                 body2Data->worldPoint = avgWorldPoint2;
                 body2Data->localPoint = avgLocalPoint2;
-                body2Data->penetrationDepth = avgPenetrationDepth;
+                body2Data->penetrationDepth += avgPenetrationDepth;
                 body2Data->isColliding = true;
             }
 

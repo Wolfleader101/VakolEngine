@@ -170,12 +170,12 @@ namespace Vakol
             return;
 
         // Get the world-space normal and normalize it
-        Math::Vec3 n = Math::Normalized(rb.collisionData->worldNormal);
+        Math::Vec3 n = -Math::Normalized(rb.collisionData->worldNormal);
 
         Math::Vec3 reflectedVelocity = rb.linearVelocity - (2.0f * Math::Dot(rb.linearVelocity, n) * n);
 
         // Update linear velocities
-        rb.linearVelocity += reflectedVelocity * 0.75f;
+        rb.linearVelocity = reflectedVelocity * rb.bounciness;
 
         Depenetration(pos, rb);
 

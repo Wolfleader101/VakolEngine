@@ -22,6 +22,14 @@ namespace Vakol
         return rp3d::Vector3((double)vec.x, (double)vec.y, (double)vec.z);
     }
 
+    struct RayCastHitInfo
+    {
+        Math::Vec3 point = Math::Vec3(0.0f, 0.0f, 0.0f);
+        Math::Vec3 normal = Math::Vec3(0.0f, 0.0f, 0.0f);
+        double distance = 0.0;
+        bool hit = false;
+    };
+
     /**
      * @brief Rigidbody types
      *
@@ -59,7 +67,8 @@ namespace Vakol
     {
         BodyType type = BodyType::Dynamic;
         double mass = 1.0;
-        double bounciness = 0.3;
+        // double bounciness = 0.3;
+        Math::Vec3 bounciness = Math::Vec3(0.8f, 0.3f, 0.8f);
         bool hasGravity = true;
 
         Math::Vec3 centerOfMass = Math::Vec3(0.0f, 0.0f, 0.0f); // will have to be calculated
