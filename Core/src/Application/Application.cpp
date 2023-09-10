@@ -187,12 +187,20 @@ namespace Vakol
                             transform.eulerAngles = Math::RadToDeg(Math::EulerFromQuat(transform.rot));
                         });
 
-                    // detect collisions
-                    m_physicsEngine.DetectCollisions(activeScene.GetPhysicsScene());
+                    for (int i = 0; i < 2; ++i)
+                    {
+                        // detect collisions
+                        m_physicsEngine.DetectCollisions(activeScene.GetPhysicsScene());
 
-                    // resolve collisions
-                    activeScene.GetEntityList().Iterate<RigidBody>(
-                        [&](auto& rb) { m_physicsEngine.ResolveCollisions(rb); });
+                        // resolve collisions
+                        activeScene.GetEntityList().Iterate<Components::Transform, RigidBody>(
+                            [&](Components::Transform& trans, RigidBody& rb) {
+                                m_physicsEngine.ResolveCollisions(trans.pos, rb);
+                            });
+
+                        activeScene.GetEntityList().Iterate<RigidBody>(
+                            [&](RigidBody& rb) { rb.collisionData->lambda = 0.0; });
+                    }
 
                     // Decrease the accumulated time
                     physicsAccumulator -= m_physicsEngine.GetTimeStep();

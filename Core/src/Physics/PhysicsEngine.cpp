@@ -112,57 +112,45 @@ namespace Vakol
 
     void PhysicsEngine::ApplyForces(Math::Vec3& pos, Math::Quat& quatRot, RigidBody& rb)
     {
+        rb.collisionData->parentBody = &rb;
+
+        if (rb.type == BodyType::Static)
+        {
+            //! THIS IS A HACK TO MAKE SURE THAT THE COLLIDER FOLLOWS THE TRANSFORM
+            rb.collisionBody->setTransform(rp3d::Transform(
+                rp3d::Vector3(static_cast<double>(pos.x), static_cast<double>(pos.y), static_cast<double>(pos.z)),
+                rp3d::Quaternion(static_cast<double>(quatRot.x), static_cast<double>(quatRot.y),
+                                 static_cast<double>(quatRot.z), static_cast<double>(quatRot.w))));
+            return;
+        }
+
+        // can be assumed as static, can be moved later
+        static Math::Vec3 gravity(0.0f, -9.8f, 0.0f);
+
+        Math::Vec3 linearAcceleration = rb.force / static_cast<float>(rb.mass);
+        linearAcceleration += gravity;
+
+        rb.linearVelocity += linearAcceleration * static_cast<float>(m_timeStep);
+
+        pos += rb.linearVelocity * static_cast<float>(m_timeStep);
+
+        // Update angular velocity
+        Math::Vec3 angularAcceleration = rb.worldInertiaTensor * rb.torque;
+        rb.angularVelocity += angularAcceleration * static_cast<float>(m_timeStep);
+
+        quatRot = quatRot + (Math::Quat(0.0f, rb.angularVelocity * static_cast<float>(m_timeStep) * 0.5f) * quatRot);
+
+        quatRot = Math::Normalized(quatRot);
+
+        // Update transform with new position
         rb.collisionBody->setTransform(rp3d::Transform(
             rp3d::Vector3(static_cast<double>(pos.x), static_cast<double>(pos.y), static_cast<double>(pos.z)),
             rp3d::Quaternion(static_cast<double>(quatRot.x), static_cast<double>(quatRot.y),
                              static_cast<double>(quatRot.z), static_cast<double>(quatRot.w))));
 
-        // rb.collisionData->parentBody = &rb;
-
-        // if (rb.type == BodyType::Static)
-        // {
-        //     //! THIS IS A HACK TO MAKE SURE THAT THE COLLIDER FOLLOWS THE TRANSFORM
-        //     rb.collisionBody->setTransform(rp3d::Transform(
-        //         rp3d::Vector3(static_cast<double>(pos.x), static_cast<double>(pos.y), static_cast<double>(pos.z)),
-        //         rp3d::Quaternion(static_cast<double>(quatRot.x), static_cast<double>(quatRot.y),
-        //                          static_cast<double>(quatRot.z), static_cast<double>(quatRot.w))));
-        //     return;
-        // }
-
-        // // can be assumed as static, can be moved later
-        // static Math::Vec3 gravity(0.0f, -9.8f, 0.0f);
-
-        // Math::Vec3 linearAcceleration = rb.force / static_cast<float>(rb.mass);
-        // linearAcceleration += gravity;
-
-        // rb.linearVelocity += linearAcceleration * static_cast<float>(m_timeStep);
-
-        // pos += rb.linearVelocity * static_cast<float>(m_timeStep);
-
-        // // Update angular velocity
-        // Math::Vec3 angularAcceleration = rb.worldInertiaTensor * rb.torque;
-        // rb.angularVelocity += angularAcceleration * static_cast<float>(m_timeStep);
-
-        // quatRot = quatRot + (Math::Quat(0.0f, rb.angularVelocity * static_cast<float>(m_timeStep) * 0.5f) * quatRot);
-
-        // quatRot = Math::Normalized(quatRot);
-
-        // rb.rotationMatrix = Math::Mat3Cast(quatRot); // Convert the quaternion to a 3x3 rotation matrix
-
-        // // Update the world inertia tensor
-        // rb.worldInertiaTensor = rb.rotationMatrix * rb.inertiaTensor * Math::Transpose(rb.rotationMatrix);
-
-        // // rb.inertiaTensor = Math::Transpose(rb.rotationMatrix) * rb.worldInertiaTensor * rb.rotationMatrix;
-
-        // // Update transform with new position
-        // rb.collisionBody->setTransform(rp3d::Transform(
-        //     rp3d::Vector3(static_cast<double>(pos.x), static_cast<double>(pos.y), static_cast<double>(pos.z)),
-        //     rp3d::Quaternion(static_cast<double>(quatRot.x), static_cast<double>(quatRot.y),
-        //                      static_cast<double>(quatRot.z), static_cast<double>(quatRot.w))));
-
-        // // reset the force
-        // rb.force = Math::Vec3(0.0f, 0.0f, 0.0f);
-        // rb.torque = Math::Vec3(0.0f, 0.0f, 0.0f);
+        // reset the force
+        rb.force = Math::Vec3(0.0f, 0.0f, 0.0f);
+        rb.torque = Math::Vec3(0.0f, 0.0f, 0.0f);
     }
 
     void PhysicsEngine::DetectCollisions(PhysicsScene& scene)
@@ -170,8 +158,56 @@ namespace Vakol
         scene.Update(m_timeStep);
     }
 
-    void PhysicsEngine::ResolveCollisions(RigidBody& rb)
+    void PhysicsEngine::ResolveCollisions(Math::Vec3& pos, RigidBody& rb)
     {
+        // Exit if there's no collision data or if the body is static
+        if (!rb.collisionData || rb.type == BodyType::Static)
+        {
+            return;
+        }
+
+        if (!rb.collisionData->isColliding)
+            return;
+
+        // Get the world-space normal and normalize it
+        Math::Vec3 n = Math::Normalized(rb.collisionData->worldNormal);
+
+        Math::Vec3 reflectedVelocity = rb.linearVelocity - (2.0f * Math::Dot(rb.linearVelocity, n) * n);
+
+        // Update linear velocities
+        rb.linearVelocity += reflectedVelocity * 0.75f;
+
+        Depenetration(pos, rb);
+
+        // reset the collision data
+        rb.collisionData->penetrationDepth = 0.0;
+        rb.collisionData->worldNormal = Math::Vec3(0.0f, 0.0f, 0.0f);
+        rb.collisionData->worldPoint = Math::Vec3(0.0f, 0.0f, 0.0f);
+        rb.collisionData->isColliding = false;
+    }
+
+    void PhysicsEngine::Depenetration(Math::Vec3& pos, RigidBody& rb)
+    {
+        if (!rb.collisionData || rb.type == BodyType::Static)
+        {
+            return;
+        }
+
+        if (!rb.collisionData->isColliding)
+        {
+            return;
+        }
+
+        // Calculate the depenetration vector
+        Math::Vec3 depenetration =
+            -rb.collisionData->worldNormal * static_cast<float>(rb.collisionData->penetrationDepth);
+
+        pos += depenetration;
+
+        // Update transform with new position
+        rb.collisionBody->setTransform(rp3d::Transform(
+            rp3d::Vector3(static_cast<double>(pos.x), static_cast<double>(pos.y), static_cast<double>(pos.z)),
+            rb.collisionBody->getTransform().getOrientation()));
     }
 
     void PhysicsEngine::SetTimeStep(double step)

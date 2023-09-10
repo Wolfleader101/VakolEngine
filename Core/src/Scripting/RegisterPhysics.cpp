@@ -12,6 +12,9 @@ namespace Vakol
         lua.new_enum("BodyType", "Static", BodyType::Static, "Kinematic", BodyType::Kinematic, "Dynamic",
                      BodyType::Dynamic);
 
+        lua["BodyType"] = lua.create_table_with("Static", BodyType::Static, "Kinematic", BodyType::Kinematic, "Dynamic",
+                                                BodyType::Dynamic);
+
         rbT.set("type", &RigidBody::type);
         rbT.set("mass", &RigidBody::mass);
         rbT.set("hasGravity", &RigidBody::hasGravity);

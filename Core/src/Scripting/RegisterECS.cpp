@@ -59,10 +59,10 @@ namespace Vakol
             ent->AddComponent<RigidBody>(rb);
 
             // TODO implement this
-            // auto& newRb = ent->GetComponent<RigidBody>();
-            // newRb.collisionData->parentBody = &newRb;
+            auto& newRb = ent->GetComponent<RigidBody>();
+            newRb.collisionData->parentBody = &newRb;
 
-            return ent->GetComponent<RigidBody>();
+            return newRb;
         });
 
         entity_type.set_function("get_rigid", [](const Entity* ent) {
