@@ -1,6 +1,5 @@
 function init()
 	GLOBAL_SCALE = 0.02;
-	GLOBAL_PROP_SCALE = 2.0;
 
 	--ENTITY CREATION
 	--Digital Twin Geometry Entities
@@ -39,7 +38,6 @@ function init()
 	--MODEL FILE ACQUISITION
 	--Digital Twin Geometry Models
 	floor:add_model("assets/models/digital_twin/GROUND.fbx", GLOBAL_SCALE);
-	floor:get_transform().scale = Vector3.new(26.177, 1.0, 32.2);
 
 	roof:add_model("assets/models/digital_twin/ROOF.fbx", GLOBAL_SCALE);
 	roof_supports:add_model("assets/models/digital_twin/ROOF-SUPPORTS.fbx", GLOBAL_SCALE);
@@ -59,22 +57,19 @@ function init()
 	windowsill:add_model("assets/models/digital_twin/WINDOWSILL.fbx", GLOBAL_SCALE);
 
 	--Digital Twin Prop Models
-	benches[1]:add_model("assets/models/imported/OpenGameArt/Teh_Bucket/Bench/bench.fbx", GLOBAL_PROP_SCALE);
+	benches[1]:add_model("assets/models/imported/OpenGameArt/Teh_Bucket/Bench/bench.fbx", GLOBAL_SCALE);
 
-	chairs[1]:add_model("assets/models/imported/OpenGameArt/loafbrr_1/Furniture/Furniture_Chair_1.fbx", GLOBAL_PROP_SCALE);
+	chairs[1]:add_model("assets/models/imported/OpenGameArt/loafbrr_1/Furniture/Furniture_Chair_1.fbx", GLOBAL_SCALE);
 
-	tables[1]:add_model("assets/models/imported/OpenGameArt/loafbrr_1/Furniture/Furniture_Table_2.fbx", GLOBAL_PROP_SCALE);
+	tables[1]:add_model("assets/models/imported/OpenGameArt/loafbrr_1/Furniture/Furniture_Table_2.fbx", GLOBAL_SCALE);
 
 	--MODEL TRANSFORMATIONS
-	--Digital Twin Geometry Transformations
-	roof:get_transform().pos.y = 31.0;
-
 	--Digital Twin Prop Transformations
-	benches[1]:get_transform().pos = Vector3.new(0.0, 2.0, 0.0);
+	benches[1]:get_transform().pos = Vector3.new(0.0, 0.0, 0.0);
 
-	chairs[1]:get_transform().pos = Vector3.new(0.0, 1.1, 0.0);
+	chairs[1]:get_transform().pos = Vector3.new(0.0, 0.0, 0.0);
 
-	tables[1]:get_transform().pos = Vector3.new(0.0, 1.8, 0.0);
+	tables[1]:get_transform().pos = Vector3.new(0.0, 0.0, 0.0);
 
 	--COLLIDER FUNCTIONS
 	create_pillar_colliders();
