@@ -203,10 +203,7 @@ namespace Vakol
         material->Get(AI_MATKEY_SHININESS_STRENGTH, properties.shininess_strength);
         material->Get(AI_MATKEY_OPACITY, properties.opacity);
 
-        if (properties.opacity == 1.0f)
-            properties.use_lighting = false;
-        else
-            properties.use_lighting = true;
+        VK_TRACE("OPACITY = {0}", properties.opacity);
 
         properties.ambient_color = ToVec4(ambient);
         properties.diffuse_color = ToVec4(diffuse);

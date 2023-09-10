@@ -230,7 +230,15 @@ namespace Vakol
             {
                 activeScene.GetEntityList().Iterate<Components::Transform, Rendering::Drawable>(
                     [&](Components::Transform& transform, const Rendering::Drawable& drawable) {
+
+                        //activeScene.GetEntityList().Sort<Components::Transform>(
+                        //    [&](const Components::Transform& left, const Components::Transform& right) {
+                        //        return Math::Distance(left.pos, activeScene.GetCamera().GetPos()) >
+                        //               Math::Distance(right.pos, activeScene.GetCamera().GetPos());
+                        //    });
+
                         transform.rot = Math::Quat(Math::DegToRad(transform.eulerAngles));
+
                         if (drawable.active)
                             Rendering::RenderEngine::Draw(activeScene.GetCamera(), transform, drawable);
                     });

@@ -39,6 +39,11 @@ namespace Vakol::Rendering
         {
             const auto& material = mesh.material;
 
+            if (material.properties.opacity < 1.0f)
+                OpenGL::EnableBlending();
+            else
+                OpenGL::DisableBlending();
+
             SetMaterial(shader, material);
 
             for (const auto& texture : material.textures)

@@ -47,7 +47,14 @@ namespace Vakol::Rendering::OpenGL
     void EnableBlending()
     {
         glEnable(GL_BLEND);
+        BlendFunc();
     }
+
+    void DisableBlending()
+    {
+        glDisable(GL_BLEND);
+    }
+
 
     void BlendFunc()
     {

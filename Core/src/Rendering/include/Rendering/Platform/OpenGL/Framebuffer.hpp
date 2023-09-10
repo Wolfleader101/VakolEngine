@@ -14,6 +14,7 @@ namespace Vakol::Rendering::OpenGL
     void EnableMultisample();
 
     void EnableBlending();
+    void DisableBlending();
     void BlendFunc();
 
     void EnableCulling();
