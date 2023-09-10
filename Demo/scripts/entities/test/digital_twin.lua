@@ -28,12 +28,41 @@ function init()
 	local benches = {};
 	local chairs = {};
 	local tables = {};
+	local rubbishBins = {};
+	local recyclingBins = {};
 
-	benches[1] = scene:create_entity("Bench 1", "");
+	for i = 1, 7 do
+		local entityName = "Bench";
+		entityName = entityName .. " " .. i;
+	
+		benches[i] = scene:create_entity(entityName, "");
+	end
 
-	chairs[1] = scene:create_entity("Chair 1", "");
+	for i = 1, 20 do
+		local entityName = "Chair";
+		entityName = entityName .. " " .. i;
+	
+		chairs[i] = scene:create_entity(entityName, "");
+	end
 
-	tables[1] = scene:create_entity("Table 1", "");
+	for i = 1, 4 do
+		local entityName = "Table";
+		entityName = entityName .. " " .. i;
+	
+		tables[i] = scene:create_entity(entityName, "");
+	end
+
+	for i = 1, 2 do
+		local entityName = "Rubbish Bin";
+		entityName = entityName .. " " .. i;
+	
+		rubbishBins[i] = scene:create_entity(entityName, "");
+
+		entityName = "Recycling Bin";
+		entityName = entityName .. " " .. i;
+
+		recyclingBins[i] = scene:create_entity(entityName, "");
+	end
 
 	--MODEL FILE ACQUISITION
 	--Digital Twin Geometry Models
@@ -57,11 +86,22 @@ function init()
 	windowsill:add_model("assets/models/digital_twin/WINDOWSILL.fbx", GLOBAL_SCALE);
 
 	--Digital Twin Prop Models
-	benches[1]:add_model("assets/models/imported/OpenGameArt/Teh_Bucket/Bench/bench.fbx", GLOBAL_SCALE);
+	for i = 1, 7 do
+		benches[i]:add_model("assets/models/imported/OpenGameArt/Teh_Bucket/Bench/bench.fbx", GLOBAL_SCALE);
+	end
 
-	chairs[1]:add_model("assets/models/imported/OpenGameArt/loafbrr_1/Furniture/Furniture_Chair_1.fbx", GLOBAL_SCALE);
+	for i = 1, 20 do
+		chairs[i]:add_model("assets/models/imported/OpenGameArt/loafbrr_1/Furniture/Furniture_Chair_1.fbx", GLOBAL_SCALE);
+	end
 
-	tables[1]:add_model("assets/models/imported/OpenGameArt/loafbrr_1/Furniture/Furniture_Table_2.fbx", GLOBAL_SCALE);
+	for i = 1, 4 do
+		tables[i]:add_model("assets/models/imported/OpenGameArt/loafbrr_1/Furniture/Furniture_Table_2.fbx", GLOBAL_SCALE);
+	end
+
+	for i = 1, 2 do
+		rubbishBins[i]:add_model("assets/models/imported/OpenGameArt/PagDev/Trashcan/rubbishBin_Rubbish.fbx", GLOBAL_SCALE);
+		recyclingBins[i]:add_model("assets/models/imported/OpenGameArt/PagDev/Trashcan/rubbishBin_Recycling.fbx", GLOBAL_SCALE);
+	end
 
 	--MODEL TRANSFORMATIONS
 	--Digital Twin Prop Transformations
@@ -69,7 +109,6 @@ function init()
 
 	chairs[1]:get_transform().pos = Vector3.new(-17.3, 0.0, 45.6);
 	chairs[1]:get_transform().rot = Vector3.new(0.0, -102.0, 0.0);
-	chairs[1]:get_transform().scale = Vector3.new(1.0, 2.0, 1.0);
 
 	tables[1]:get_transform().pos = Vector3.new(-17.9, 0.0, 44.2);
 
