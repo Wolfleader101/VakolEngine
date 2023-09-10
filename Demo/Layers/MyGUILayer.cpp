@@ -176,7 +176,7 @@ void MyGUILayer::OnUpdate()
                                 ImGui::Checkbox(("Use Textures##" + material.ID).c_str(),
                                                 &material.properties.use_textures);
 
-                                ImGui::ColorEdit3(("Diffuse Color##" + material.ID).c_str(),
+                                ImGui::ColorEdit4(("Diffuse Color##" + material.ID).c_str(),
                                                   &material.properties.diffuse_color.x);
                             }
                         }

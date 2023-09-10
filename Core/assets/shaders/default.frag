@@ -13,10 +13,10 @@ in VS_OUT {
 
 struct Material
 {
-	vec3 ambient_color;
-	vec3 diffuse_color;
-	vec3 specular_color;
-	vec3 emissive_color;
+    vec4 ambient_color;
+    vec4 diffuse_color;
+    vec4 specular_color;
+    vec4 emissive_color;
 
     float shininess;
     float shininess_strength;
@@ -63,7 +63,7 @@ void main()
     vec4 color = texture(material.diffuse_map, fs_in.TexCoords);
 
     if ((color.r >= 0.99 && color.g >= 0.99 && color.b >= 0.99) || !material.use_textures)
-        color = vec4(material.diffuse_color, 1.0);
+        color = material.diffuse_color;
 
     vec3 normal = texture(material.normal_map, fs_in.TexCoords).rgb;
 

@@ -128,6 +128,7 @@ namespace Vakol::Math
     {
         return Magnitude(line.start - line.end);
     }
+
     float LengthSq(const Line& line)
     {
         return MagnitudeSq(line.start - line.end);

@@ -3,10 +3,10 @@ out vec4 FragColor;
 
 struct Material
 {
-    vec3 ambient_color;
-    vec3 diffuse_color;
-    vec3 specular_color;
-    vec3 emissive_color;
+    vec4 ambient_color;
+    vec4 diffuse_color;
+    vec4 specular_color;
+    vec4 emissive_color;
 
     float shininess;
     float shininess_strength;
@@ -51,20 +51,20 @@ vec3 ToonShading(const vec3 normal, const vec3 color)
 
 void main()
 {    
-    vec3 color = texture(material.diffuse_map, fs_in.TexCoords).rgb;
+    vec4 color = texture(material.diffuse_map, fs_in.TexCoords);
 
     if ((color.r >= 0.99 && color.g >= 0.99 && color.b >= 0.99) || !material.use_textures)
         color = material.diffuse_color;
 
     vec3 normal = fs_in.Normal;
 
-    FragColor = vec4(color, 1.0);
+    FragColor = color;
 
     if (material.use_lighting)
     {
-        vec3 result = ToonShading(normal, color);
+        vec3 result = ToonShading(normal, color.rgb);
         FragColor = vec4(result, 1.0) * FragColor;
     }
     else
-        FragColor = vec4(color, 1.0);
+        FragColor = color;
 }

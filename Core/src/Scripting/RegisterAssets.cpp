@@ -60,17 +60,17 @@ namespace Vakol
         });
 
         material_type.set_function("set_diffuse_color",
-                                   [](Rendering::Assets::Material& material, const Math::Vec3& diffuse) {
+                                   [](Rendering::Assets::Material& material, const Math::Vec4& diffuse) {
                                        material.properties.diffuse_color = diffuse;
                                    });
 
         material_type.set_function("set_specular_color",
-                                   [](Rendering::Assets::Material& material, const Math::Vec3& specular) {
+                                   [](Rendering::Assets::Material& material, const Math::Vec4& specular) {
                                        material.properties.specular_color = specular;
                                    });
 
         material_type.set_function("set_diffuse_color",
-                                   [](Rendering::Assets::Material& material, const Math::Vec3& diffuse) {
+                                   [](Rendering::Assets::Material& material, const Math::Vec4& diffuse) {
                                        material.properties.diffuse_color = diffuse;
                                    });
     }
