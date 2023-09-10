@@ -65,11 +65,13 @@ function init()
 
 	--MODEL TRANSFORMATIONS
 	--Digital Twin Prop Transformations
-	benches[1]:get_transform().pos = Vector3.new(0.0, 0.0, 0.0);
+	benches[1]:get_transform().pos = Vector3.new(-35.0, 0.0, 114.7);
 
-	chairs[1]:get_transform().pos = Vector3.new(0.0, 0.0, 0.0);
+	chairs[1]:get_transform().pos = Vector3.new(-17.3, 0.0, 45.6);
+	chairs[1]:get_transform().rot = Vector3.new(0.0, -102.0, 0.0);
+	chairs[1]:get_transform().scale = Vector3.new(1.0, 2.0, 1.0);
 
-	tables[1]:get_transform().pos = Vector3.new(0.0, 0.0, 0.0);
+	tables[1]:get_transform().pos = Vector3.new(-17.9, 0.0, 44.2);
 
 	--COLLIDER FUNCTIONS
 	create_pillar_colliders();
