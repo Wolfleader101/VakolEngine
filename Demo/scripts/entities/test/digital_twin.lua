@@ -1,5 +1,6 @@
 function init()
 	GLOBAL_SCALE = 0.02;
+	GLOBAL_PROP_SCALE = 2.0;
 
 	--ENTITY CREATION
 	--Digital Twin Geometry Entities
@@ -26,12 +27,18 @@ function init()
 
 	--Digital Twin Prop Entities
 	local benches = {};
+	local chairs = {};
+	local tables = {};
+
 	benches[1] = scene:create_entity("Bench 1", "");
+
+	chairs[1] = scene:create_entity("Chair 1", "");
+
+	tables[1] = scene:create_entity("Table 1", "");
 
 	--MODEL FILE ACQUISITION
 	--Digital Twin Geometry Models
 	floor:add_model("assets/models/digital_twin/GROUND.fbx", GLOBAL_SCALE);
-	floor:get_transform().pos = Vector3.new(0.0, 0.0, 0.0);
 	floor:get_transform().scale = Vector3.new(26.177, 1.0, 32.2);
 
 	roof:add_model("assets/models/digital_twin/ROOF.fbx", GLOBAL_SCALE);
@@ -52,23 +59,22 @@ function init()
 	windowsill:add_model("assets/models/digital_twin/WINDOWSILL.fbx", GLOBAL_SCALE);
 
 	--Digital Twin Prop Models
-	benches[1]:add_model("assets/models/imported/OpenGameArt/Teh_Bucket/Bench/bench.fbx", 1.0);
+	benches[1]:add_model("assets/models/imported/OpenGameArt/Teh_Bucket/Bench/bench.fbx", GLOBAL_PROP_SCALE);
+
+	chairs[1]:add_model("assets/models/imported/OpenGameArt/loafbrr_1/Furniture/Furniture_Chair_1.fbx", GLOBAL_PROP_SCALE);
+
+	tables[1]:add_model("assets/models/imported/OpenGameArt/loafbrr_1/Furniture/Furniture_Table_2.fbx", GLOBAL_PROP_SCALE);
 
 	--MODEL TRANSFORMATIONS
 	--Digital Twin Geometry Transformations
-	building:get_transform().pos.z = 1.80;
-
 	roof:get_transform().pos.y = 31.0;
-	roof_supports:get_transform().pos.y = -1.0;
-
-	barriers[2]:get_transform().pos = Vector3.new(0.1, 0.0, 2.0);
-
-	balcony:get_transform().pos.z = 2.25;
-
-	windowsill:get_transform().pos.z = 1.85;
 
 	--Digital Twin Prop Transformations
-	benches[1]:get_transform().pos = Vector3.new(0.0, 5.0, 0.0);
+	benches[1]:get_transform().pos = Vector3.new(0.0, 2.0, 0.0);
+
+	chairs[1]:get_transform().pos = Vector3.new(0.0, 1.1, 0.0);
+
+	tables[1]:get_transform().pos = Vector3.new(0.0, 1.8, 0.0);
 
 	--COLLIDER FUNCTIONS
 	create_pillar_colliders();
