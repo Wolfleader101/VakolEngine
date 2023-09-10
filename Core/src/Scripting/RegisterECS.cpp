@@ -51,7 +51,7 @@ namespace Vakol
                 ent->GetComponent<Rendering::Drawable>().active = active;
         });
 
-        entity_type.set_function("add_rigid", [&](Entity* ent) {
+        entity_type.set_function("add_rigid", [&](Entity* ent) -> RigidBody& {
             Scene& scene = lua["scene"];
 
             RigidBody rb = scene.GetPhysicsScene().CreateRigidBody(ent->GetComponent<Components::Transform>().pos,
