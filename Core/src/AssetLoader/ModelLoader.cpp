@@ -122,8 +122,6 @@ namespace Vakol
             return false;
         }
 
-        std::cout << std::endl;
-
         // VK_TRACE("Stats for Model: {0}", path);
 
         model.path = path;
