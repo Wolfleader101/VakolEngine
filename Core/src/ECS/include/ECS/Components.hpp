@@ -150,8 +150,8 @@ namespace Vakol::Components
         float LIGHT_ATTENUATION_CUTOFF = Math::Cos(Math::DegToRad(7.5f));
         float LIGHT_ATTENUATION_OUTER_CUTOFF = Math::Cos(Math::DegToRad(12.5f));
 
-        Math::Vec3 LIGHT_DIRECTION = Math::Vec3(0.0f);
-        Math::Vec3 LIGHT_POSITION = Math::Vec3(0.0f);
+        Math::Vec4 LIGHT_DIRECTION = Math::Vec4(0.0f);
+        Math::Vec4 LIGHT_POSITION = Math::Vec4(0.0f);
     };
 
     /**

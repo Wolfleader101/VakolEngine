@@ -2,6 +2,10 @@
 
 out vec4 FragColor;
 
+const uint DIRECTIONAL_LIGHT = 1;
+const uint POINT_LIGHT = 2;
+const uint SPOT_LIGHT = 3;
+
 in VS_OUT {
     vec3 FragPos;
     vec2 TexCoords;
@@ -31,6 +35,27 @@ struct Material
 	sampler2D emissive_map;
 	sampler2D height_map;
 	sampler2D normal_map;
+};
+
+struct Light
+{
+    uint type;
+
+    float LIGHT_ATTENUATION_CONSTANT;
+    float LIGHT_ATTENUATION_LINEAR;
+    float LIGHT_ATTENUATION_QUADRATIC;
+
+    float LIGHT_ATTENUATION_CUTOFF;
+    float LIGHT_ATTENUATION_OUTER_CUTOFF;
+
+    vec4 direction;
+    vec4 position;
+};
+
+layout (std430, binding = 1) buffer Lights
+{
+    int nLights;
+    Light[] lights;
 };
 
 uniform Material material;
