@@ -93,8 +93,6 @@ void APIENTRY DebugOutput(const unsigned int source, const unsigned int type, co
     default:
         break;
     }
-
-    std::cout << std::endl;
 }
 
 namespace Vakol
@@ -137,8 +135,6 @@ namespace Vakol
             VK_CRITICAL("Failed to initialise GLAD");
         }
 
-        std::cout << std::endl;
-
         VK_INFO("OpenGL Info:");
         VK_INFO("Vendor: {0}", reinterpret_cast<const char*>(glGetString(GL_VENDOR)));
         VK_INFO("Renderer: {0}", reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
@@ -150,8 +146,6 @@ namespace Vakol
                         "{0}.{1}!",
                         GLVersion.major, GLVersion.minor);
         }
-
-        std::cout << std::endl;
 
         // enable OpenGL debug context if context allows for debug context
         int flags;

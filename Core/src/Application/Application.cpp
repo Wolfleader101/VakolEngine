@@ -179,6 +179,13 @@ namespace Vakol
 
                 while (physicsAccumulator >= m_physicsEngine.GetTimeStep())
                 {
+                    if (IsSystemActive(SystemFlag::Scripting))
+                    {
+                        activeScene.GetEntityList().Iterate<LuaScript>(
+                            [&](auto& script) { m_scriptEngine.PhysUpdateScript(script); });
+
+                        m_scriptEngine.PhysUpdateScript(activeScene.GetScript());
+                    }
                     // apply forces
                     activeScene.GetEntityList().Iterate<Components::Transform, RigidBody>(
                         [&](Components::Transform& transform, RigidBody& rb) {
@@ -191,8 +198,13 @@ namespace Vakol
                     m_physicsEngine.DetectCollisions(activeScene.GetPhysicsScene());
 
                     // resolve collisions
+                    activeScene.GetEntityList().Iterate<Components::Transform, RigidBody>(
+                        [&](Components::Transform& trans, RigidBody& rb) {
+                            m_physicsEngine.ResolveCollisions(trans.pos, rb);
+                        });
+
                     activeScene.GetEntityList().Iterate<RigidBody>(
-                        [&](auto& rb) { m_physicsEngine.ResolveCollisions(rb); });
+                        [&](RigidBody& rb) { rb.collisionData->lambda = 0.0; });
 
                     // Decrease the accumulated time
                     physicsAccumulator -= m_physicsEngine.GetTimeStep();
@@ -240,7 +252,10 @@ namespace Vakol
                         transform.rot = Math::Quat(Math::DegToRad(transform.eulerAngles));
 
                         if (drawable.active)
+                        {
                             Rendering::RenderEngine::Draw(activeScene.GetCamera(), transform, drawable);
+                            transform.rot = Math::Quat(Math::DegToRad(transform.eulerAngles));
+                        }
                     });
 
                 if (activeScene.GetSkybox().active)

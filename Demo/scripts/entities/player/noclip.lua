@@ -3,12 +3,16 @@ local is_sprinting = false;
 function init()
     print("Initialising NoClip");
 
-    entity:get_transform().rot = Vector3.new(0.0, 180.0, 0.0);
+    entity:get_transform().rot = Vector3.new(0.0, 0.0, 0.0);
 
 
         scene.globals.player = {
-        pos = Vector3.new(0.0, 1.0, 0.0)
+        pos = Vector3.new(0.0, 0.0, 0.0)
         }
+    local camera = scene:get_camera();
+    camera:set_pos(3, 5, -22);
+    camera:set_yaw(90);
+    entity:get_transform().pos = camera:get_pos();
     scene.globals.player.pos = entity:get_transform().pos;
 end
 
@@ -29,7 +33,11 @@ function update()
         dir.x = 1;
     end
 
-    velocity = 10 * Time.delta_time;
+    if (Input:get_key(KEYS["KEY_LEFT_SHIFT"])) then
+        velocity = (10 * Time.delta_time) * 4;
+    else
+        velocity = 10 * Time.delta_time;
+    end
 
     if (Input:get_key(KEYS["KEY_LEFT_SHIFT"])) then
         velocity = velocity * 10;

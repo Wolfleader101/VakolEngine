@@ -57,6 +57,11 @@ namespace Vakol
         RunFunction(script.env, "tick", true);
     }
 
+    void ScriptEngine::PhysUpdateScript(LuaScript& script)
+    {
+        RunFunction(script.env, "phys_update", true);
+    }
+
     LuaScript ScriptEngine::CreateScript(const std::string& scriptPath)
     {
         LuaScript script;

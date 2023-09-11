@@ -7,6 +7,28 @@
 
 namespace Vakol
 {
+    inline Math::Vec3 FromRPVec3(rp3d::Vector3& vec)
+    {
+        return Math::Vec3((float)vec.x, (float)vec.y, (float)vec.z);
+    }
+
+    inline Math::Vec3 FromRPVec3(const rp3d::Vector3& vec)
+    {
+        return Math::Vec3((float)vec.x, (float)vec.y, (float)vec.z);
+    }
+
+    inline rp3d::Vector3 ToRPVec3(Math::Vec3& vec)
+    {
+        return rp3d::Vector3((double)vec.x, (double)vec.y, (double)vec.z);
+    }
+
+    struct RayCastHitInfo
+    {
+        Math::Vec3 point = Math::Vec3(0.0f, 0.0f, 0.0f);
+        Math::Vec3 normal = Math::Vec3(0.0f, 0.0f, 0.0f);
+        double distance = 0.0;
+        bool hit = false;
+    };
 
     /**
      * @brief Rigidbody types
@@ -19,12 +41,22 @@ namespace Vakol
         Dynamic
     };
 
+    struct RigidBody;
+
     /**
      * @brief Collision data of rigidbody
      *
      */
     struct CollisionData
     {
+        Math::Vec3 worldNormal = Math::Vec3(0.0f, 0.0f, 0.0f);
+        Math::Vec3 worldPoint = Math::Vec3(0.0f, 0.0f, 0.0f);
+        Math::Vec3 localPoint = Math::Vec3(0.0f, 0.0f, 0.0f);
+        double penetrationDepth = 0.0;
+        bool isColliding = false;
+        double lambda = 0.0;
+
+        RigidBody* parentBody = nullptr;
     };
 
     /**
@@ -35,7 +67,8 @@ namespace Vakol
     {
         BodyType type = BodyType::Dynamic;
         double mass = 1.0;
-        double bounciness = 0.3;
+        // double bounciness = 0.3;
+        Math::Vec3 bounciness = Math::Vec3(0.8f, 0.3f, 0.8f);
         bool hasGravity = true;
 
         Math::Vec3 centerOfMass = Math::Vec3(0.0f, 0.0f, 0.0f); // will have to be calculated
