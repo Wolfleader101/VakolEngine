@@ -108,7 +108,7 @@ function create_pillar_colliders()
 		colliders[i] = scene:create_entity("Left Pillar Collider " .. i, "");
 
 		local rigid = colliders[i]:add_rigid();
-		rigid.type = BodyType.Static;
+        rigid.type = BodyType.Static;
 
 		colliders[i]:add_box_collider(Vector3.new(1.0, 9.0, 0.7));
 
