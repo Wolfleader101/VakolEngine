@@ -231,7 +231,10 @@ namespace Vakol
                 activeScene.GetEntityList().Iterate<Components::Transform, Rendering::Drawable>(
                     [&](Components::Transform& transform, const Rendering::Drawable& drawable) {
                         if (drawable.active)
+                        {
                             Rendering::RenderEngine::Draw(activeScene.GetCamera(), transform, drawable);
+                            transform.rot = Math::Quat(Math::DegToRad(transform.eulerAngles));  
+                        }
                     });
 
                 if (activeScene.GetSkybox().active)

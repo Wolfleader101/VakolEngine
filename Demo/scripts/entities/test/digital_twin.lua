@@ -1,5 +1,11 @@
 function init()
 	GLOBAL_SCALE = 0.02;
+	local benchPositions = {Vector3.new(-35.0, 0.0, 114.7), Vector3.new(-27.6, 0.0, 114.54), Vector3.new(-21.1, 0.0, 114.58),
+							Vector3.new(-21.5, 0.0, 123.6), Vector3.new(-27.9, 0.0, 123.7), Vector3.new(-21.5, 0.0, 132.58), 
+							Vector3.new(-28.6, 0.0, 131.8)};
+
+	local tablePositions = {Vector3.new(-17.9, 0.0, 44.2), Vector3.new(-21.2, 0.0, 48.7), Vector3.new(-21.3, 0.0, 54.1),
+							Vector3.new(-20.9, 0.0, 60.8)};
 
 	--ENTITY CREATION
 	--Digital Twin Geometry Entities
@@ -105,12 +111,18 @@ function init()
 
 	--MODEL TRANSFORMATIONS
 	--Digital Twin Prop Transformations
-	benches[1]:get_transform().pos = Vector3.new(-35.0, 0.0, 114.7);
+	for i = 1, 7 do
+		benches[i]:get_transform().pos = benchPositions[i];
+	end
 
 	chairs[1]:get_transform().pos = Vector3.new(-17.3, 0.0, 45.6);
 	chairs[1]:get_transform().rot = Vector3.new(0.0, -102.0, 0.0);
 
 	tables[1]:get_transform().pos = Vector3.new(-17.9, 0.0, 44.2);
+
+	for i = 1, 4 do
+		tables[i]:get_transform().pos = tablePositions[i];
+	end
 
 	--COLLIDER FUNCTIONS
 	create_pillar_colliders();
