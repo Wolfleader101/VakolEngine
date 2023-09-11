@@ -61,6 +61,8 @@ namespace Vakol
 
         void TickScript(LuaScript& script);
 
+        void PhysUpdateScript(LuaScript& script);
+
       private:
         //! global state
         LuaState m_state;

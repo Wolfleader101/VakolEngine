@@ -122,9 +122,18 @@ namespace Vakol
         /**
          * @brief handle collision resolution for a rigidbody
          *
+         * @param pos pos of body
          * @param rb to handle resolution
          */
-        void ResolveCollisions(RigidBody& rb);
+        void ResolveCollisions(Math::Vec3& pos, RigidBody& rb);
+
+        /**
+         * @brief handle depenetration for a rigidbody
+         *
+         * @param pos pos of body
+         * @param rb rigidbody
+         */
+        void Depenetration(Math::Vec3& pos, RigidBody& rb);
 
         /**
          * @brief Set the Time Step object

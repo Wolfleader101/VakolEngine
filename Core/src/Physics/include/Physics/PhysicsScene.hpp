@@ -25,6 +25,8 @@ namespace Vakol
          */
         RigidBody CreateRigidBody(Math::Vec3& pos, Math::Quat& orientation);
 
+        bool RayCast(Math::Vec3& origin, Math::Vec3& direction, double maxDistance, RayCastHitInfo& info) const;
+
         void EnableDebug() const;
         void DisableDebug() const;
 
