@@ -71,7 +71,7 @@ function init()
 	barriers[2] = scene:create_entity("Glass Barrier Right", "");
 
 	--Add Props to Digital Twin
-	local props = scene:create_entity("Props", "entities/test/digital_twin_props.lua");
+	local props = scene:create_entity("Props", "entities/worlds/digital_twin_props.lua");
 
 	--MODEL FILE ACQUISITION
 	--Digital Twin Geometry Models
