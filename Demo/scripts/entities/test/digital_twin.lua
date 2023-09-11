@@ -1,10 +1,4 @@
 function init()
-	local benches = {};
-	local chairs = {};
-	local tables = {};
-	local rubbishBins = {};
-	local recyclingBins = {};
-
 	GLOBAL_SCALE = 0.02;
 
 	--OBJECT POSITIONS
@@ -76,90 +70,8 @@ function init()
 	barriers[1] = scene:create_entity("Glass Barrier Left", "");
 	barriers[2] = scene:create_entity("Glass Barrier Right", "");
 
-	--Digital Twin Prop Entities
-	for i = 1, 7 do
-		local entityName = "Bench";
-		entityName = entityName .. " " .. i;
-	
-		benches[i] = scene:create_entity(entityName, "");
-
-		benches[i]:add_model("assets/models/imported/OpenGameArt/Teh_Bucket/Bench/bench.fbx", GLOBAL_SCALE);
-
-		benches[i]:get_transform().pos = benchPositions[i];
-
-		local benchesRigid = benches[i]:add_rigid();
-
-		benchesRigid.type = BodyType.Static;
-
-		benches[i]:add_box_collider(Vector3.new(2.64, 1.016, 2.158));
-	end
-
-	for i = 1, 20 do
-		local entityName = "Chair";
-		entityName = entityName .. " " .. i;
-	
-		chairs[i] = scene:create_entity(entityName, "");
-
-		chairs[i]:add_model("assets/models/imported/OpenGameArt/loafbrr_1/Furniture/Furniture_Chair_1.fbx", GLOBAL_SCALE);
-
-		chairs[i]:get_transform().pos = chairPositions[i];
-		chairs[i]:get_transform().rot = chairRotations[i];
-
-		local chairsRigid = chairs[i]:add_rigid();
-
-		chairsRigid.type = BodyType.Static;
-
-		chairs[i]:add_box_collider(Vector3.new(0.7, 1.15, 0.5));
-	end
-
-	for i = 1, 4 do
-		local entityName = "Table";
-		entityName = entityName .. " " .. i;
-	
-		tables[i] = scene:create_entity(entityName, "");
-
-		tables[i]:add_model("assets/models/imported/OpenGameArt/loafbrr_1/Furniture/Furniture_Table_2.fbx", GLOBAL_SCALE);
-
-		tables[i]:get_transform().pos = tablePositions[i];
-
-		local tablesRigid = tables[i]:add_rigid();
-
-		tablesRigid.type = BodyType.Static;
-
-		tables[i]:add_box_collider(Vector3.new(1.9, 1.03, 1.0));
-	end
-
-	for i = 1, 2 do
-		local entityName = "Rubbish Bin";
-		entityName = entityName .. " " .. i;
-	
-		rubbishBins[i] = scene:create_entity(entityName, "");
-
-		entityName = "Recycling Bin";
-		entityName = entityName .. " " .. i;
-
-		recyclingBins[i] = scene:create_entity(entityName, "");
-
-		rubbishBins[i]:add_model("assets/models/imported/OpenGameArt/PagDev/Trashcan/rubbishBin_Rubbish.fbx", GLOBAL_SCALE);
-		recyclingBins[i]:add_model("assets/models/imported/OpenGameArt/PagDev/Trashcan/rubbishBin_Recycling.fbx", GLOBAL_SCALE);
-
-		rubbishBins[i]:get_transform().pos = rubbishBinPositions[i];
-		recyclingBins[i]:get_transform().pos = recyclingBinPositions[i];
-
-		if i == 2 then
-			rubbishBins[i]:get_transform().rot = Vector3.new(0.0, 90.0, 0.0);
-			recyclingBins[i]:get_transform().rot = Vector3.new(0.0, 90.0, 0.0);
-		end
-
-		local rubbishRigid = rubbishBins[i]:add_rigid();
-		local recyclingRigid = recyclingBins[i]:add_rigid();
-
-		rubbishRigid.type = BodyType.Static;
-		recyclingRigid.type = BodyType.Static;
-
-		rubbishBins[i]:add_box_collider(Vector3.new(0.6, 1.2, 0.9));
-		recyclingBins[i]:add_box_collider(Vector3.new(0.6, 1.2, 0.9));
-	end
+	--Add Props to Digital Twin
+	local props = scene:create_entity("Props", "entities/test/digital_twin_props.lua");
 
 	--MODEL FILE ACQUISITION
 	--Digital Twin Geometry Models
