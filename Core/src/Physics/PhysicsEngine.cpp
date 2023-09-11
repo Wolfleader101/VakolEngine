@@ -126,9 +126,9 @@ namespace Vakol
 
         // can be assumed as static, can be moved later
         static Math::Vec3 gravity(0.0f, -9.8f, 0.0f);
+        rb.force += gravity;
 
         Math::Vec3 linearAcceleration = rb.force / static_cast<float>(rb.mass);
-        linearAcceleration += gravity;
 
         rb.linearVelocity += linearAcceleration * static_cast<float>(m_timeStep);
 
