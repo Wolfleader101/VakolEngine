@@ -1,6 +1,8 @@
 function init()
     print("Initialising Physics Player");
 
+    entity:get_transform().pos.y = 2.0;
+
     local rb = entity:add_rigid();
     rb.bounciness = Vector3.new(0.8, 0.3, 0.9);
 	rb.mass = 1;

@@ -1,5 +1,5 @@
 function init()
-    -- scene:create_entity("Player", "entities/player/noclip.lua")
+    --scene:create_entity("Player", "entities/player/noclip.lua")
     scene:create_entity("Player", "entities/player/phys_player.lua")
 
     scene:create_entity("Digital Twin", "entities/worlds/digital_twin.lua");
