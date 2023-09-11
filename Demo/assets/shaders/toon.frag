@@ -36,14 +36,14 @@ const float scaleFactor = 1.0 / 3.0;
 
 uniform vec3 LIGHT_POSITION = vec3(0.0, 100.0, -100.0);
 
-vec3 ToonShading(const vec3 normal, const vec3 color)
+vec4 ToonShading(const vec3 normal, const vec4 color)
 {
-    vec3 ambient = vec3(1.0);
+    vec4 ambient = vec4(1.0);
 
     vec3 lightDir = normalize(LIGHT_POSITION - fs_in.FragPos);
     float diff = max(0.0, dot(lightDir, normal));
     
-    vec3 diffuse = color * (ceil(diff * levels) * scaleFactor);
+    vec4 diffuse = color * (ceil(diff * levels) * scaleFactor);
 
     // light strength * (ambient + diffuse)
     return 0.8 * (ambient + diffuse);
@@ -56,14 +56,15 @@ void main()
     if ((color.r >= 0.99 && color.g >= 0.99 && color.b >= 0.99) || !material.use_textures)
         color = material.diffuse_color;
 
-    vec3 normal = fs_in.Normal;
+    if (color.a < 0.6)
+        discard;
 
     FragColor = color;
 
     if (material.use_lighting)
     {
-        vec3 result = ToonShading(normal, color.rgb);
-        FragColor = vec4(result, 1.0) * FragColor;
+        vec4 result = ToonShading(fs_in.Normal, color);
+        FragColor = result * FragColor;
     }
     else
         FragColor = color;

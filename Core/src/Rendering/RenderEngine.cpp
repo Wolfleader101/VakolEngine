@@ -192,26 +192,26 @@ namespace Vakol::Rendering
             }
             else
             {
-                std::string path = "coreAssets/textures/white.png";
+                //std::string path = "coreAssets/textures/white.png";
 
-                std::vector<unsigned int> types;
+                //std::vector<unsigned int> types;
 
-                for (const auto& texture : material.textures)
-                {
-                    types.emplace_back(texture.type);
-                }
+                //for (const auto& texture : material.textures)
+                //{
+                //    types.emplace_back(texture.type);
+                //}
 
-                for (int i = 0; i < 6; ++i)
-                {
-                    unsigned int target = Assets::VK_TEXTURE_DIFFUSE + i;
+                //for (int i = 0; i < 6; ++i)
+                //{
+                //    unsigned int target = Assets::VK_TEXTURE_DIFFUSE + i;
 
-                    if (!std::count(types.begin(), types.end(), target))
-                    {
-                        const unsigned int type = target;
+                //    if (!std::count(types.begin(), types.end(), target))
+                //    {
+                //        const unsigned int type = target;
 
-                        material.textures.emplace_back(AssetLoader::GetTexture(path, type));
-                    }
-                }
+                //        material.textures.emplace_back(AssetLoader::GetTexture(path, type));
+                //    }
+                //}
             }
 
             std::sort(textures.begin(), textures.end(), compare);
