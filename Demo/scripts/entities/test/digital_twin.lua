@@ -1,18 +1,24 @@
+benches = {};
+chairs = {};
+tables = {};
+rubbishBins = {};
+recyclingBins = {};
+
 function init()
 	GLOBAL_SCALE = 0.02;
 
 	--OBJECT POSITIONS
 	local benchPositions = 
 	{
-		Vector3.new(-35.0, 0.0, 114.7), Vector3.new(-27.6, 0.0, 114.54), Vector3.new(-21.1, 0.0, 114.58),
-		Vector3.new(-21.5, 0.0, 123.6), Vector3.new(-27.9, 0.0, 123.7), Vector3.new(-21.5, 0.0, 132.58), 
-		Vector3.new(-28.6, 0.0, 131.8)
+		Vector3.new(-35.0, 1.02, 114.7), Vector3.new(-27.6, 1.02, 114.54), Vector3.new(-21.1, 1.02, 114.58),
+		Vector3.new(-21.5, 1.02, 123.6), Vector3.new(-27.9, 1.02, 123.7), Vector3.new(-21.5, 1.02, 132.58), 
+		Vector3.new(-28.6, 1.02, 131.8)
 	};
 
 	local tablePositions = 
 	{
-		Vector3.new(-17.9, 0.0, 44.2), Vector3.new(-21.2, 0.0, 48.7), Vector3.new(-21.3, 0.0, 54.1),
-		Vector3.new(-20.9, 0.0, 60.8)
+		Vector3.new(-17.9, 1.04, 44.2), Vector3.new(-21.2, 1.04, 48.7), Vector3.new(-21.3, 1.04, 54.1),
+		Vector3.new(-20.9, 1.04, 60.8)
 	};
 
 	local chairRotations = 
@@ -28,23 +34,23 @@ function init()
 
 	local chairPositions = 
 	{
-		Vector3.new(-17.3, 0.0, 45.6), Vector3.new(-17.3, 0.0, 42.6), Vector3.new(-18.6, 0.0, 43.0),
-		Vector3.new(-19.0, 0.0, 46.3), Vector3.new(-20.8, 0.0, 49.7), Vector3.new(-22.1, 0.0, 50.0),
-		Vector3.new(-21.9, 0.0, 47.5), Vector3.new(-20.6, 0.0, 47.9), Vector3.new(-20.4, 0.0, 53.3),
-		Vector3.new(-22.0, 0.0, 53.0), Vector3.new(-20.8, 0.0, 55.2), Vector3.new(-22.1, 0.0, 55.4),
-		Vector3.new(-20.2, 0.0, 61.7), Vector3.new(-21.6, 0.0, 61.9), Vector3.new(-20.1, 0.0, 59.8),
-		Vector3.new(-21.7, 0.0, 59.6), Vector3.new(-17.2, 0.0, 56.5), Vector3.new(-17.5, 0.0, 58.5),
-		Vector3.new(-17.3, 0.0, 60.2), Vector3.new(-17.4, 0.0, 61.9)
+		Vector3.new(-17.3, 1.16, 45.6), Vector3.new(-17.3, 1.16, 42.6), Vector3.new(-18.6, 1.16, 43.0),
+		Vector3.new(-19.0, 1.16, 46.3), Vector3.new(-20.8, 1.16, 49.7), Vector3.new(-22.1, 1.16, 50.0),
+		Vector3.new(-21.9, 1.16, 47.5), Vector3.new(-20.6, 1.16, 47.9), Vector3.new(-20.4, 1.16, 53.3),
+		Vector3.new(-22.0, 1.16, 53.0), Vector3.new(-20.8, 1.16, 55.2), Vector3.new(-22.1, 1.16, 55.4),
+		Vector3.new(-20.2, 1.16, 61.7), Vector3.new(-21.6, 1.16, 61.9), Vector3.new(-20.1, 1.16, 59.8),
+		Vector3.new(-21.7, 1.16, 59.6), Vector3.new(-17.2, 1.16, 56.5), Vector3.new(-17.5, 1.16, 58.5),
+		Vector3.new(-17.3, 1.16, 60.2), Vector3.new(-17.4, 1.16, 61.9)
 	}
 
 	local rubbishBinPositions = 
 	{
-		Vector3.new(33.0, 0.0, 39.0), Vector3.new(-16.0, 0.0, 84.0)
+		Vector3.new(33.0, 1.21, 39.0), Vector3.new(-16.3, 1.21, 84.0)
 	}
 
 	local recyclingBinPositions = 
 	{
-		Vector3.new(31.4, 0.0, 39.0), Vector3.new(-16.0, 0.0, 85.6)
+		Vector3.new(31.4, 1.21, 39.0), Vector3.new(-16.3, 1.21, 85.6)
 	}
 
 	--ENTITY CREATION
@@ -71,12 +77,6 @@ function init()
 	barriers[2] = scene:create_entity("Glass Barrier Right", "");
 
 	--Digital Twin Prop Entities
-	local benches = {};
-	local chairs = {};
-	local tables = {};
-	local rubbishBins = {};
-	local recyclingBins = {};
-
 	for i = 1, 7 do
 		local entityName = "Bench";
 		entityName = entityName .. " " .. i;
@@ -108,6 +108,26 @@ function init()
 		entityName = entityName .. " " .. i;
 
 		recyclingBins[i] = scene:create_entity(entityName, "");
+
+		rubbishBins[i]:add_model("assets/models/imported/OpenGameArt/PagDev/Trashcan/rubbishBin_Rubbish.fbx", GLOBAL_SCALE);
+		recyclingBins[i]:add_model("assets/models/imported/OpenGameArt/PagDev/Trashcan/rubbishBin_Recycling.fbx", GLOBAL_SCALE);
+
+		rubbishBins[i]:get_transform().pos = rubbishBinPositions[i];
+		recyclingBins[i]:get_transform().pos = recyclingBinPositions[i];
+
+		if i == 2 then
+			rubbishBins[i]:get_transform().rot = Vector3.new(0.0, 90.0, 0.0);
+			recyclingBins[i]:get_transform().rot = Vector3.new(0.0, 90.0, 0.0);
+		end
+
+		local rubbishRigid = rubbishBins[i]:add_rigid();
+		local recyclingRigid = recyclingBins[i]:add_rigid();
+
+		rubbishRigid.type = BodyType.Static;
+		recyclingRigid.type = BodyType.Static;
+
+		rubbishBins[i]:add_box_collider(Vector3.new(0.6, 1.2, 0.9));
+		recyclingBins[i]:add_box_collider(Vector3.new(0.6, 1.2, 0.9));
 	end
 
 	--MODEL FILE ACQUISITION
@@ -144,11 +164,6 @@ function init()
 		tables[i]:add_model("assets/models/imported/OpenGameArt/loafbrr_1/Furniture/Furniture_Table_2.fbx", GLOBAL_SCALE);
 	end
 
-	for i = 1, 2 do
-		rubbishBins[i]:add_model("assets/models/imported/OpenGameArt/PagDev/Trashcan/rubbishBin_Rubbish.fbx", GLOBAL_SCALE);
-		recyclingBins[i]:add_model("assets/models/imported/OpenGameArt/PagDev/Trashcan/rubbishBin_Recycling.fbx", GLOBAL_SCALE);
-	end
-
 	--MODEL TRANSFORMATIONS
 	--Digital Twin Prop Transformations
 	for i = 1, 7 do
@@ -158,16 +173,6 @@ function init()
 	for i = 1, 20 do
 		chairs[i]:get_transform().pos = chairPositions[i];
 		chairs[i]:get_transform().rot = chairRotations[i];
-	end
-
-	for i = 1, 2 do
-		rubbishBins[i]:get_transform().pos = rubbishBinPositions[i];
-		recyclingBins[i]:get_transform().pos = recyclingBinPositions[i];
-
-		if i == 2 then
-			rubbishBins[i]:get_transform().rot = Vector3.new(0.0, 90.0, 0.0);
-			recyclingBins[i]:get_transform().rot = Vector3.new(0.0, 90.0, 0.0);
-		end
 	end
 
 	for i = 1, 4 do
