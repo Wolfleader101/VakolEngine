@@ -1,10 +1,10 @@
-benches = {};
-chairs = {};
-tables = {};
-rubbishBins = {};
-recyclingBins = {};
-
 function init()
+	local benches = {};
+	local chairs = {};
+	local tables = {};
+	local rubbishBins = {};
+	local recyclingBins = {};
+
 	GLOBAL_SCALE = 0.02;
 
 	--OBJECT POSITIONS
@@ -82,6 +82,16 @@ function init()
 		entityName = entityName .. " " .. i;
 	
 		benches[i] = scene:create_entity(entityName, "");
+
+		benches[i]:add_model("assets/models/imported/OpenGameArt/Teh_Bucket/Bench/bench.fbx", GLOBAL_SCALE);
+
+		benches[i]:get_transform().pos = benchPositions[i];
+
+		local benchesRigid = benches[i]:add_rigid();
+
+		benchesRigid.type = BodyType.Static;
+
+		benches[i]:add_box_collider(Vector3.new(2.64, 1.016, 2.158));
 	end
 
 	for i = 1, 20 do
@@ -89,6 +99,17 @@ function init()
 		entityName = entityName .. " " .. i;
 	
 		chairs[i] = scene:create_entity(entityName, "");
+
+		chairs[i]:add_model("assets/models/imported/OpenGameArt/loafbrr_1/Furniture/Furniture_Chair_1.fbx", GLOBAL_SCALE);
+
+		chairs[i]:get_transform().pos = chairPositions[i];
+		chairs[i]:get_transform().rot = chairRotations[i];
+
+		local chairsRigid = chairs[i]:add_rigid();
+
+		chairsRigid.type = BodyType.Static;
+
+		chairs[i]:add_box_collider(Vector3.new(0.7, 1.15, 0.5));
 	end
 
 	for i = 1, 4 do
@@ -96,6 +117,16 @@ function init()
 		entityName = entityName .. " " .. i;
 	
 		tables[i] = scene:create_entity(entityName, "");
+
+		tables[i]:add_model("assets/models/imported/OpenGameArt/loafbrr_1/Furniture/Furniture_Table_2.fbx", GLOBAL_SCALE);
+
+		tables[i]:get_transform().pos = tablePositions[i];
+
+		local tablesRigid = tables[i]:add_rigid();
+
+		tablesRigid.type = BodyType.Static;
+
+		tables[i]:add_box_collider(Vector3.new(1.9, 1.03, 1.0));
 	end
 
 	for i = 1, 2 do
@@ -150,34 +181,6 @@ function init()
 	table_top:add_model("assets/models/digital_twin/TABLE-TOP.fbx", GLOBAL_SCALE);
 
 	windowsill:add_model("assets/models/digital_twin/WINDOWSILL.fbx", GLOBAL_SCALE);
-
-	--Digital Twin Prop Models
-	for i = 1, 7 do
-		benches[i]:add_model("assets/models/imported/OpenGameArt/Teh_Bucket/Bench/bench.fbx", GLOBAL_SCALE);
-	end
-
-	for i = 1, 20 do
-		chairs[i]:add_model("assets/models/imported/OpenGameArt/loafbrr_1/Furniture/Furniture_Chair_1.fbx", GLOBAL_SCALE);
-	end
-
-	for i = 1, 4 do
-		tables[i]:add_model("assets/models/imported/OpenGameArt/loafbrr_1/Furniture/Furniture_Table_2.fbx", GLOBAL_SCALE);
-	end
-
-	--MODEL TRANSFORMATIONS
-	--Digital Twin Prop Transformations
-	for i = 1, 7 do
-		benches[i]:get_transform().pos = benchPositions[i];
-	end
-
-	for i = 1, 20 do
-		chairs[i]:get_transform().pos = chairPositions[i];
-		chairs[i]:get_transform().rot = chairRotations[i];
-	end
-
-	for i = 1, 4 do
-		tables[i]:get_transform().pos = tablePositions[i];
-	end
 
 	--COLLIDER FUNCTIONS
 	create_pillar_colliders();
