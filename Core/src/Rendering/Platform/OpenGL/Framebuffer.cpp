@@ -64,6 +64,7 @@ namespace Vakol::Rendering::OpenGL
     void EnableCulling()
     {
         glEnable(GL_CULL_FACE);
+        CullFaces(GL_BACK);
     }
 
     void CullFaces(const unsigned int face)

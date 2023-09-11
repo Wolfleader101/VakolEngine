@@ -50,8 +50,6 @@ namespace Vakol::Rendering
         RenderAPI::EnableBlending();
         RenderAPI::EnableCulling();
 
-        RenderAPI::CullFaces();
-
         RenderAPI::ResizeScreen(0, 0, width, height);
     }
 

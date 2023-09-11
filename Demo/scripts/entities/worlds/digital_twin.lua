@@ -24,6 +24,10 @@ function init()
 	barriers[1] = scene:create_entity("Glass Barrier Left", "");
 	barriers[2] = scene:create_entity("Glass Barrier Right", "");
 
+	barriers[3] = scene:create_entity("Glass Barrier 1", "");
+	barriers[4] = scene:create_entity("Glass Barrier 2", "");
+	barriers[5] = scene:create_entity("Glass Barrier 3", "");
+
 	--Add Props to Digital Twin
 	local props = scene:create_entity("Props", "entities/worlds/digital_twin_props.lua");
 
@@ -39,6 +43,10 @@ function init()
 	barriers[1]:add_model("assets/models/digital_twin/GLASS-BARRIERS-LEFT.fbx", GLOBAL_SCALE);
 	barriers[2]:add_model("assets/models/digital_twin/GLASS-BARRIERS-RIGHT.fbx", GLOBAL_SCALE);
 
+	barriers[3]:add_model("assets/models/digital_twin/GLASS-BARRIERS-LEFT.fbx", GLOBAL_SCALE);
+	barriers[4]:add_model("assets/models/digital_twin/GLASS-BARRIERS-LEFT.fbx", GLOBAL_SCALE);
+	barriers[5]:add_model("assets/models/digital_twin/GLASS-BARRIERS-LEFT.fbx", GLOBAL_SCALE);
+
 	left_pillars:add_model("assets/models/digital_twin/WOODEN-PILLARS-LEFT.fbx", GLOBAL_SCALE);
 	right_pillars:add_model("assets/models/digital_twin/WOODEN-PILLARS-RIGHT.fbx", GLOBAL_SCALE);
 
@@ -53,6 +61,18 @@ function init()
 	create_floor_colliders();
 	create_building_colliders();
 	create_barrier_colliders();
+
+	--ADDITIONAL MODIFICATIONS
+	barriers[3]:get_transform().pos = Vector3.new(0.0, 0.0, -64.7);
+	barriers[3]:get_transform().scale = Vector3.new(1.0, 1.0, 1.06);
+
+	barriers[4]:get_transform().pos = Vector3.new(-32.0, 0.0, -46.4);
+	barriers[4]:get_transform().rot = Vector3.new(0.0, 90.0, 0.0);
+	barriers[4]:get_transform().scale = Vector3.new(1.0, 1.0, 1.61);
+
+	barriers[5]:get_transform().pos = Vector3.new(-23.9, 0.0, -9.7);
+	barriers[5]:get_transform().rot = Vector3.new(0.0, 180.0, 0.0);
+	barriers[5]:get_transform().scale = Vector3.new(1.0, 1.0, 1.72);
 end
 
 function create_pillar_colliders()
@@ -204,20 +224,42 @@ function create_barrier_colliders()
 	colliders[5]:get_transform().pos = Vector3.new(37.9, 1.5, 35.9);
 	colliders[5]:add_box_collider(Vector3.new(0.3, 1.3, 4.3));
 
-	local colliders = {};
+	local count = 1;
 
-	for i = 1, 2 do
-		colliders[i] = scene:create_entity("Right Barrier Collider " .. i, "");
+	for i = 6, 7 do
+		colliders[i] = scene:create_entity("Right Barrier Collider " .. count, "");
 
 		local rigid = colliders[i]:add_rigid();
 		rigid.type = BodyType.Static;
+
+		count = count + 1;
 	end
 
-	colliders[1]:get_transform().pos = Vector3.new(-28.2, 1.5, 65.7);
-	colliders[1]:add_box_collider(Vector3.new(0.3, 1.3, 44.0));
+	colliders[6]:get_transform().pos = Vector3.new(-28.2, 1.5, 65.7);
+	colliders[6]:add_box_collider(Vector3.new(0.3, 1.3, 44.0));
 
-	colliders[2]:get_transform().pos = Vector3.new(-30.5, 1.5, 109.3);
-	colliders[2]:add_box_collider(Vector3.new(1.950, 1.3, 0.30));
+	colliders[7]:get_transform().pos = Vector3.new(-30.5, 1.5, 109.3);
+	colliders[7]:add_box_collider(Vector3.new(1.950, 1.3, 0.30));
+
+	count = 1;
+
+	for i = 8, 10 do
+		colliders[i] = scene:create_entity("Barrier Collider " .. count, "");
+
+		local rigid = colliders[i]:add_rigid();
+		rigid.type = BodyType.Static;
+
+		count = count + 1;
+	end
+
+	colliders[8]:get_transform().pos = Vector3.new(37.9, 1.4, -51.8);
+	colliders[8]:add_box_collider(Vector3.new(0.3, 1.3, 32.5));
+
+	colliders[9]:get_transform().pos = Vector3.new(-12.3, 1.4, -84.3);
+	colliders[9]:add_box_collider(Vector3.new(49.5, 1.3, 0.3));
+
+	colliders[10]:get_transform().pos = Vector3.new(-61.8, 1.4, -31.4);
+	colliders[10]:add_box_collider(Vector3.new(0.3, 1.3, 52.5));
 end
 
 function update()
