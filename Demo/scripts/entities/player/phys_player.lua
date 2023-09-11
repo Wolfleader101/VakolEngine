@@ -36,22 +36,23 @@ function phys_update()
     local camera = scene:get_camera();
     local camera_forward = camera:get_forward():normalize();
     local camera_right =  camera:get_right():normalize();
+    local is_grounded = is_grounded();
     
-    if (Input:get_key(KEYS["KEY_W"])) then
+    if (Input:get_key(KEYS["KEY_W"]) and is_grounded) then
         dir = dir + camera_forward;
     end
-    if (Input:get_key(KEYS["KEY_S"])) then
+    if (Input:get_key(KEYS["KEY_S"]) and is_grounded) then
         dir = dir - camera_forward;
     end
-    if (Input:get_key(KEYS["KEY_A"])) then
+    if (Input:get_key(KEYS["KEY_A"]) and is_grounded) then
         dir = dir - camera_right;
     end
-    if (Input:get_key(KEYS["KEY_D"])) then
+    if (Input:get_key(KEYS["KEY_D"]) and is_grounded) then
         dir = dir + camera_right;
     end
     
     local jump_force = 5;
-    if (Input:get_key(KEYS["KEY_SPACE"]) and is_grounded()) then
+    if (Input:get_key(KEYS["KEY_SPACE"]) and is_grounded) then
         dir.y = dir.y + jump_force;
     end
 
