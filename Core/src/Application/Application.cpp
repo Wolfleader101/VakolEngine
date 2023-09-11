@@ -233,7 +233,7 @@ namespace Vakol
                         if (drawable.active)
                         {
                             Rendering::RenderEngine::Draw(activeScene.GetCamera(), transform, drawable);
-                            transform.rot = Math::Quat(Math::DegToRad(transform.eulerAngles));  
+                            transform.rot = Math::Quat(Math::DegToRad(transform.eulerAngles));
                         }
                     });
 
