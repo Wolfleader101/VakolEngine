@@ -1,11 +1,51 @@
 function init()
 	GLOBAL_SCALE = 0.02;
-	local benchPositions = {Vector3.new(-35.0, 0.0, 114.7), Vector3.new(-27.6, 0.0, 114.54), Vector3.new(-21.1, 0.0, 114.58),
-							Vector3.new(-21.5, 0.0, 123.6), Vector3.new(-27.9, 0.0, 123.7), Vector3.new(-21.5, 0.0, 132.58), 
-							Vector3.new(-28.6, 0.0, 131.8)};
 
-	local tablePositions = {Vector3.new(-17.9, 0.0, 44.2), Vector3.new(-21.2, 0.0, 48.7), Vector3.new(-21.3, 0.0, 54.1),
-							Vector3.new(-20.9, 0.0, 60.8)};
+	--OBJECT POSITIONS
+	local benchPositions = 
+	{
+		Vector3.new(-35.0, 0.0, 114.7), Vector3.new(-27.6, 0.0, 114.54), Vector3.new(-21.1, 0.0, 114.58),
+		Vector3.new(-21.5, 0.0, 123.6), Vector3.new(-27.9, 0.0, 123.7), Vector3.new(-21.5, 0.0, 132.58), 
+		Vector3.new(-28.6, 0.0, 131.8)
+	};
+
+	local tablePositions = 
+	{
+		Vector3.new(-17.9, 0.0, 44.2), Vector3.new(-21.2, 0.0, 48.7), Vector3.new(-21.3, 0.0, 54.1),
+		Vector3.new(-20.9, 0.0, 60.8)
+	};
+
+	local chairRotations = 
+	{
+		Vector3.new(0.0, -102.0, 0.0), Vector3.new(0.0, 87.0, 0.0), Vector3.new(0.0, 92.6, 0.0),
+		Vector3.new(0.0, 254.2, 0.0), Vector3.new(0.0, 280.4, 0.0), Vector3.new(0.0, 271.4, 0.0),
+		Vector3.new(0.0, 433.4, 0.0), Vector3.new(0.0, 89.0, 0.0), Vector3.new(0.0, 94.0, 0.0),
+		Vector3.new(0.0, 90.6, 0.0), Vector3.new(0.0, 270.7, 0.0), Vector3.new(0.0, 262.8, 0.0),
+		Vector3.new(0.0, 273.5, 0.0), Vector3.new(0.0, -82.1, 0.0), Vector3.new(0.0, 73.1, 0.0),
+		Vector3.new(0.0, 92.2, 0.0), Vector3.new(0.0, 175.6, 0.0), Vector3.new(0.0, 182.1, 0.0),
+		Vector3.new(0.0, 180.2, 0.0), Vector3.new(0.0, 174.3, 0.0)
+	};
+
+	local chairPositions = 
+	{
+		Vector3.new(-17.3, 0.0, 45.6), Vector3.new(-17.3, 0.0, 42.6), Vector3.new(-18.6, 0.0, 43.0),
+		Vector3.new(-19.0, 0.0, 46.3), Vector3.new(-20.8, 0.0, 49.7), Vector3.new(-22.1, 0.0, 50.0),
+		Vector3.new(-21.9, 0.0, 47.5), Vector3.new(-20.6, 0.0, 47.9), Vector3.new(-20.4, 0.0, 53.3),
+		Vector3.new(-22.0, 0.0, 53.0), Vector3.new(-20.8, 0.0, 55.2), Vector3.new(-22.1, 0.0, 55.4),
+		Vector3.new(-20.2, 0.0, 61.7), Vector3.new(-21.6, 0.0, 61.9), Vector3.new(-20.1, 0.0, 59.8),
+		Vector3.new(-21.7, 0.0, 59.6), Vector3.new(-17.2, 0.0, 56.5), Vector3.new(-17.5, 0.0, 58.5),
+		Vector3.new(-17.3, 0.0, 60.2), Vector3.new(-17.4, 0.0, 61.9)
+	}
+
+	local rubbishBinPositions = 
+	{
+		Vector3.new(33.0, 0.0, 39.0), Vector3.new(-16.0, 0.0, 84.0)
+	}
+
+	local recyclingBinPositions = 
+	{
+		Vector3.new(31.4, 0.0, 39.0), Vector3.new(-16.0, 0.0, 85.6)
+	}
 
 	--ENTITY CREATION
 	--Digital Twin Geometry Entities
@@ -115,10 +155,20 @@ function init()
 		benches[i]:get_transform().pos = benchPositions[i];
 	end
 
-	chairs[1]:get_transform().pos = Vector3.new(-17.3, 0.0, 45.6);
-	chairs[1]:get_transform().rot = Vector3.new(0.0, -102.0, 0.0);
+	for i = 1, 20 do
+		chairs[i]:get_transform().pos = chairPositions[i];
+		chairs[i]:get_transform().rot = chairRotations[i];
+	end
 
-	tables[1]:get_transform().pos = Vector3.new(-17.9, 0.0, 44.2);
+	for i = 1, 2 do
+		rubbishBins[i]:get_transform().pos = rubbishBinPositions[i];
+		recyclingBins[i]:get_transform().pos = recyclingBinPositions[i];
+
+		if i == 2 then
+			rubbishBins[i]:get_transform().rot = Vector3.new(0.0, 90.0, 0.0);
+			recyclingBins[i]:get_transform().rot = Vector3.new(0.0, 90.0, 0.0);
+		end
+	end
 
 	for i = 1, 4 do
 		tables[i]:get_transform().pos = tablePositions[i];

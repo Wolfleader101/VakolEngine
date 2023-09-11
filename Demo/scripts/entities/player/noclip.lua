@@ -29,7 +29,11 @@ function update()
         dir.x = 1;
     end
 
-    velocity = 10 * Time.delta_time;
+    if (Input:get_key(KEYS["KEY_LEFT_SHIFT"])) then
+        velocity = (10 * Time.delta_time) * 4;
+    else
+        velocity = 10 * Time.delta_time;
+    end
 
     if (Input:get_key_down(KEYS["KEY_Z"])) then
         flying = not flying
