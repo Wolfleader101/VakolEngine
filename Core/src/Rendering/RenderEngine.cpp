@@ -48,7 +48,7 @@ namespace Vakol::Rendering
         RenderAPI::EnableDepth();
         RenderAPI::EnableMultisample();
         RenderAPI::EnableBlending();
-        RenderAPI::EnableCulling();
+        //RenderAPI::EnableCulling();
 
         RenderAPI::ResizeScreen(0, 0, width, height);
     }
@@ -239,21 +239,6 @@ namespace Vakol::Rendering
         // std::vector<unsigned int>().swap(mesh.indices);
 
         RenderAPI::GenerateVertexCommand(std::move(vertexArray));
-    }
-
-    void RenderEngine::ConvertToPoints(const std::vector<Vertex>& vertices, std::vector<Math::Point>& points)
-    {
-        const int size = static_cast<int>(vertices.size());
-
-        points.reserve(vertices.size()); // it'll never be that large
-
-        for (const Vertex& vertex : vertices)
-        {
-            points.emplace_back(vertex.position);
-        }
-
-        // since points reserved so much memory, we want to resize capacity to fit its actual size
-        points.shrink_to_fit();
     }
 
 } // namespace Vakol::Rendering

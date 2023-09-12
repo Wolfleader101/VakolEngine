@@ -101,8 +101,6 @@ namespace Vakol::Rendering
          */
         static void ResizeScreen(Camera& camera, unsigned int width, unsigned int height);
 
-        static void ConvertToPoints(const std::vector<Vertex>& vertices, std::vector<Math::Point>& points);
-
       private:
         /**
          * \brief generate a vertex array based of the vertices of a skybox
