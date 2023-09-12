@@ -10,7 +10,7 @@ function init()
 	--OBJECT POSITIONS
 	local benchPositions = 
 	{
-		Vector3.new(-35.0, 1.05, 114.7), Vector3.new(-27.6, 1.05, 114.54), Vector3.new(-21.1, 1.05, 114.58),
+		Vector3.new(-27.6, 1.05, 114.54), Vector3.new(-21.1, 1.05, 114.58),
 		Vector3.new(-21.5, 1.05, 123.6), Vector3.new(-27.9, 1.05, 123.7), Vector3.new(-21.5, 1.05, 132.58), 
 		Vector3.new(-28.6, 1.05, 131.8)
 	};
@@ -55,7 +55,7 @@ function init()
 
 	--ENTITY CREATION & SETUP
 	--Digital Twin Prop Entities
-	for i = 1, 7 do
+	for i = 1, 6 do
 		local entityName = "Bench";
 		entityName = entityName .. " " .. i;
 	
@@ -103,9 +103,12 @@ function init()
 		local tablesRigid = tables[i]:add_rigid();
 
 		tablesRigid.type = BodyType.Static;
-
-		tables[i]:add_box_collider(Vector3.new(1.9, 1.03, 2.0));
 	end
+
+	tables[1]:add_box_collider(Vector3.new(1.9, 1.03, 2.0));
+	tables[2]:add_box_collider(Vector3.new(1.9, 1.03, 1.7));
+	tables[3]:add_box_collider(Vector3.new(1.8, 1.03, 1.5));
+	tables[4]:add_box_collider(Vector3.new(1.9, 1.03, 1.6));
 
 	for i = 1, 2 do
 		local entityName = "Rubbish Bin";
