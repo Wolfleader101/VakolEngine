@@ -5,6 +5,10 @@
 
 namespace Vakol
 {
+    /**
+     * @brief Wrapper around sol environment to have a reference to an active script
+     *
+     */
     struct LuaScript
     {
         sol::environment env;
