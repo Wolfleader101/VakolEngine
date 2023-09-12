@@ -40,13 +40,12 @@ namespace Vakol
     BoxCollider PhysicsEngine::CreateBoxCollider(Math::Vec3& halfExtents)
     {
         BoxCollider collider;
-        collider.shape = m_rpCommon.createBoxShape(
-            rp3d::Vector3((double)halfExtents.x, (double)halfExtents.y, (double)halfExtents.z));
+        collider.shape = m_rpCommon.createBoxShape(rp3d::Vector3(halfExtents.x, halfExtents.y, halfExtents.z));
         collider.collider = nullptr;
         return collider;
     }
 
-    SphereCollider PhysicsEngine::CreateSphereCollider(double radius)
+    SphereCollider PhysicsEngine::CreateSphereCollider(const float radius)
     {
         SphereCollider collider;
         collider.shape = m_rpCommon.createSphereShape(radius);
@@ -54,7 +53,7 @@ namespace Vakol
         return collider;
     }
 
-    CapsuleCollider PhysicsEngine::CreateCapsuleCollider(double radius, double height)
+    CapsuleCollider PhysicsEngine::CreateCapsuleCollider(const float radius, const float height)
     {
         CapsuleCollider collider;
         collider.shape = m_rpCommon.createCapsuleShape(radius, height);
@@ -118,9 +117,7 @@ namespace Vakol
         {
             //! THIS IS A HACK TO MAKE SURE THAT THE COLLIDER FOLLOWS THE TRANSFORM
             rb.collisionBody->setTransform(rp3d::Transform(
-                rp3d::Vector3(static_cast<double>(pos.x), static_cast<double>(pos.y), static_cast<double>(pos.z)),
-                rp3d::Quaternion(static_cast<double>(quatRot.x), static_cast<double>(quatRot.y),
-                                 static_cast<double>(quatRot.z), static_cast<double>(quatRot.w))));
+                rp3d::Vector3(pos.x, pos.y, pos.z), rp3d::Quaternion(quatRot.x, quatRot.y, quatRot.z, quatRot.w)));
             return;
         }
 
@@ -128,7 +125,7 @@ namespace Vakol
         static Math::Vec3 gravity(0.0f, -9.8f, 0.0f);
         rb.force += gravity;
 
-        Math::Vec3 linearAcceleration = rb.force / static_cast<float>(rb.mass);
+        Math::Vec3 linearAcceleration = rb.force / rb.mass;
 
         rb.linearVelocity += linearAcceleration * static_cast<float>(m_timeStep);
 
@@ -143,10 +140,8 @@ namespace Vakol
         quatRot = Math::Normalized(quatRot);
 
         // Update transform with new position
-        rb.collisionBody->setTransform(rp3d::Transform(
-            rp3d::Vector3(static_cast<double>(pos.x), static_cast<double>(pos.y), static_cast<double>(pos.z)),
-            rp3d::Quaternion(static_cast<double>(quatRot.x), static_cast<double>(quatRot.y),
-                             static_cast<double>(quatRot.z), static_cast<double>(quatRot.w))));
+        rb.collisionBody->setTransform(rp3d::Transform(rp3d::Vector3(pos.x, pos.y, pos.z),
+                                                       rp3d::Quaternion(quatRot.x, quatRot.y, quatRot.z, quatRot.w)));
 
         // reset the force
         rb.force = Math::Vec3(0.0f, 0.0f, 0.0f);
@@ -199,15 +194,13 @@ namespace Vakol
         }
 
         // Calculate the depenetration vector
-        Math::Vec3 depenetration =
-            -rb.collisionData->worldNormal * static_cast<float>(rb.collisionData->penetrationDepth);
+        Math::Vec3 depenetration = -rb.collisionData->worldNormal * rb.collisionData->penetrationDepth;
 
         pos += depenetration;
 
         // Update transform with new position
-        rb.collisionBody->setTransform(rp3d::Transform(
-            rp3d::Vector3(static_cast<double>(pos.x), static_cast<double>(pos.y), static_cast<double>(pos.z)),
-            rb.collisionBody->getTransform().getOrientation()));
+        rb.collisionBody->setTransform(
+            rp3d::Transform(rp3d::Vector3(pos.x, pos.y, pos.z), rb.collisionBody->getTransform().getOrientation()));
     }
 
     void PhysicsEngine::SetTimeStep(double step)

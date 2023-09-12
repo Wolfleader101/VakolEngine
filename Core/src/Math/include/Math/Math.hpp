@@ -1,38 +1,25 @@
 #pragma once
 
 #include <glm/glm.hpp>
-
 #include <glm/gtc/quaternion.hpp>
 
 namespace Vakol::Math
 {
     //! glm usage is currently just here for backwards compatability reasons
     using Vec2 = glm::vec2;
-
     using Vec3 = glm::vec3;
-
-    // struct Vec3
-    // {
-    //     union {
-    //         float x;
-    //         float y;
-    //         float z;
-    //     };
-    //     glm::vec3 glm;
-    //     float[3] arr;
-    // };
-
     using Vec4 = glm::vec4;
+
     using Point = Vec3;
 
     using Mat3 = glm::mat3;
     using Mat4 = glm::mat4;
     using Quat = glm::quat;
 
-    float DegToRad(const float deg);
+    float DegToRad(float deg);
     Vec3 DegToRad(const Vec3& vec);
 
-    float RadToDeg(const float rad);
+    float RadToDeg(float rad);
     Vec3 RadToDeg(const Vec3& vec);
 
     float Dot(const Vec2& a, const Vec2& b);
@@ -63,19 +50,7 @@ namespace Vakol::Math
 
     Vec3 EulerFromQuat(const Quat& quat);
 
-    Mat4 Translation(const Vec3& pos);
-    Mat4 Scale(const Vec3& scale);
-
     Mat3 Cut(const Mat4& mat, int row, int col);
-
-    // assumes its degrees
-    Mat4 XRotation(float angle);
-    // assumes its degrees
-    Mat4 YRotation(float angle);
-    // assumes its degrees
-    Mat4 ZRotation(float angle);
-
-    Mat4 Rotation(float pitch, float yaw, float roll);
 
     Point MultiplyPoint(const Point& point, const Mat4& mat);
     Vec3 MultiplyVector(const Vec3& vec, const Mat4& mat);
@@ -90,10 +65,11 @@ namespace Vakol::Math
         Point start;
         Point end;
 
-        inline Line()
+        Line()
         {
         }
-        inline Line(const Point& s, const Point& e) : start(s), end(e)
+
+        Line(const Point& s, const Point& e) : start(s), end(e)
         {
         }
     };
@@ -106,15 +82,16 @@ namespace Vakol::Math
         Point origin;
         Vec3 dir;
 
-        inline Ray() : dir(0.0f, 0.0f, 1.0f)
+        Ray() : dir(0.0f, 0.0f, 1.0f)
         {
         }
 
-        inline Ray(const Point& o, const Vec3& d) : origin(o), dir(d)
+        Ray(const Point& o, const Vec3& d) : origin(o), dir(d)
         {
             NormalizeDirection();
         }
-        inline void NormalizeDirection()
+
+        void NormalizeDirection()
         {
             Normalize(dir);
         }
@@ -130,7 +107,7 @@ namespace Vakol::Math
      * @param t The interpolation parameter (between 0 and 1).
      * @return float The interpolated value.
      */
-    float Lerp(const float a, const float b, const float t);
+    float Lerp(float a, float b, float t);
 
     /**
      * @brief Calculate the fraction 't' (between 0 and 1) based on the given value.
@@ -140,7 +117,7 @@ namespace Vakol::Math
      * @param v The value to calculate the fraction for.
      * @return float The calculated fraction.
      */
-    float InverseLerp(const float a, const float b, const float v);
+    float InverseLerp(float a, float b, float v);
 
     /**
      * @brief Map a value from one input range to a corresponding value in an output range.
@@ -152,7 +129,7 @@ namespace Vakol::Math
      * @param v The value to remap.
      * @return float The remapped value.
      */
-    float Remap(const float iMin, const float iMax, const float oMin, const float oMax, const float v);
+    float Remap(float iMin, float iMax, float oMin, float oMax, float v);
 
     Mat4 Perspective(float fovY, float aspect, float zNear, float zFar);
     Mat4 Orthographic(float left, float right, float bottom, float top);

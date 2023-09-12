@@ -24,7 +24,7 @@ namespace Vakol
             Math::Vec3 avgWorldPoint2 = Math::Vec3(0.0f, 0.0f, 0.0f);
             Math::Vec3 avgLocalPoint2 = Math::Vec3(0.0f, 0.0f, 0.0f);
 
-            double avgPenetrationDepth = 0.0;
+            float avgPenetrationDepth = 0.0f;
 
             if (contactPair.getNbContactPoints() == 0u)
             {
@@ -35,28 +35,28 @@ namespace Vakol
             for (unsigned int c = 0; c < contactPair.getNbContactPoints(); c++)
             {
                 // Get the contact point
-                CollisionCallback::ContactPoint contactPoint = contactPair.getContactPoint(c);
+                ContactPoint contactPoint = contactPair.getContactPoint(c);
 
                 rp3d::Vector3 worldPoint1 =
                     contactPair.getCollider1()->getLocalToWorldTransform() * contactPoint.getLocalPointOnCollider1();
 
-                avgWorldPoint1 += Math::Vec3((float)worldPoint1.x, (float)worldPoint1.y, (float)worldPoint1.z);
-                avgLocalPoint1 += Math::Vec3((float)contactPoint.getLocalPointOnCollider1().x,
-                                             (float)contactPoint.getLocalPointOnCollider1().y,
-                                             (float)contactPoint.getLocalPointOnCollider1().z);
+                avgWorldPoint1 += Math::Vec3(worldPoint1.x, worldPoint1.y, worldPoint1.z);
+                avgLocalPoint1 += Math::Vec3(contactPoint.getLocalPointOnCollider1().x,
+                                             contactPoint.getLocalPointOnCollider1().y,
+                                             contactPoint.getLocalPointOnCollider1().z);
 
                 rp3d::Vector3 worldPoint2 =
                     contactPair.getCollider2()->getLocalToWorldTransform() * contactPoint.getLocalPointOnCollider2();
 
-                avgWorldPoint2 += Math::Vec3((float)worldPoint2.x, (float)worldPoint2.y, (float)worldPoint2.z);
-                avgLocalPoint2 += Math::Vec3((float)contactPoint.getLocalPointOnCollider2().x,
-                                             (float)contactPoint.getLocalPointOnCollider2().y,
-                                             (float)contactPoint.getLocalPointOnCollider2().z);
+                avgWorldPoint2 += Math::Vec3(worldPoint2.x, worldPoint2.y, worldPoint2.z);
+                avgLocalPoint2 += Math::Vec3(contactPoint.getLocalPointOnCollider2().x,
+                                             contactPoint.getLocalPointOnCollider2().y,
+                                             contactPoint.getLocalPointOnCollider2().z);
 
                 rp3d::Vector3 rp3dNormal = contactPoint.getWorldNormal();
 
-                Math::Vec3 normal(static_cast<float>(rp3dNormal.x), static_cast<float>(rp3dNormal.y),
-                                  static_cast<float>(rp3dNormal.z));
+                Math::Vec3 normal(rp3dNormal.x, rp3dNormal.y,
+                                  rp3dNormal.z);
 
                 avgNormal += normal;
 
@@ -67,7 +67,7 @@ namespace Vakol
             avgLocalPoint1 /= static_cast<float>(contactPair.getNbContactPoints());
             avgWorldPoint2 /= static_cast<float>(contactPair.getNbContactPoints());
             avgLocalPoint2 /= static_cast<float>(contactPair.getNbContactPoints());
-            avgPenetrationDepth /= static_cast<double>(contactPair.getNbContactPoints());
+            avgPenetrationDepth /= static_cast<float>(contactPair.getNbContactPoints());
 
             if (body1Data)
             {
