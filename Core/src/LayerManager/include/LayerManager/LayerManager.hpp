@@ -8,6 +8,10 @@ namespace Vakol
     class Event;
     class Layer;
 
+    /**
+     * @brief orders layers as a stack and sends information through as such.
+     *
+     */
     class LayerManager
     {
       public:

@@ -12,57 +12,101 @@ namespace Vakol
     /**
      * @brief Physics scene class
      *
+     * This class represents a physics scene where rigid bodies can exist, move, and interact according to the laws of
+     * physics defined in the scene.
      */
     class PhysicsScene
     {
       public:
         /**
-         * @brief Create a Rigid Body object
+         * @brief Creates a rigid body object with a specified position and orientation.
          *
-         * @param pos of body
-         * @param orientation of body
-         * @return RigidBody created
+         * @param pos The initial position of the body in the scene.
+         * @param orientation The initial orientation of the body in the scene.
+         * @return RigidBody The rigid body created with the specified position and orientation.
          */
         RigidBody CreateRigidBody(Math::Vec3& pos, Math::Quat& orientation);
 
+        /**
+         * @brief Performs a raycast in the scene from a specified origin in a given direction, up to a maximum
+         * distance.
+         *
+         * The raycast can be used to find objects in the path of the ray. It populates a RayCastHitInfo structure with
+         * information about the hit, if any.
+         *
+         * @param origin The starting point of the ray.
+         * @param direction The direction in which the ray should be cast.
+         * @param maxDistance The maximum distance the ray should be cast.
+         * @param info A structure to hold information about the hit, if any.
+         * @return true If the ray hit an object within maxDistance.
+         * @return false If the ray did not hit any object within maxDistance.
+         */
         bool RayCast(Math::Vec3& origin, Math::Vec3& direction, double maxDistance, RayCastHitInfo& info) const;
 
+        /**
+         * @brief Enables debug mode, providing more detailed information for debugging purposes.
+         *
+         */
         void EnableDebug() const;
+
+        /**
+         * @brief Disables debug mode, reducing the detail of information provided for debugging purposes.
+         *
+         */
         void DisableDebug() const;
 
+        /**
+         * @brief Retrieves the vertices of all the rigid bodies in the scene.
+         *
+         * @param vertices A vector to hold the vertices data.
+         */
         void GetVertices(std::vector<float>& vertices) const;
 
+        /**
+         * @brief Retrieves the unique identifier (GUID) of the physics scene.
+         *
+         * @return const GUID& The GUID of the physics scene.
+         */
         const GUID& GetGuid() const;
 
       private:
         /**
-         * @brief Construct a new Physics Scene object
+         * @brief Constructs a new Physics Scene object with a specified physics world.
          *
-         * @param world to create scene from
+         * @param world The physics world from which to create the scene.
          */
         explicit PhysicsScene(rp3d::PhysicsWorld* world);
 
         /**
-         * @brief update a physics scene
+         * @brief Updates the physics scene with a new timestep, simulating physics for that duration.
          *
-         * @param timeStep to update with
+         * @param timeStep The time interval over which to update the physics simulation.
          */
         void Update(double timeStep);
 
         /**
-         * @brief rp3d physics world ptr
+         * @brief Pointer to the rp3d physics world object representing the physical world of the scene.
          *
          */
         rp3d::PhysicsWorld* m_world = nullptr;
 
         /**
-         * @brief collision listener
+         * @brief The collision listener that handles collision events in the physics scene.
          *
          */
         static CollisionListener m_collisionListener;
 
+        /**
+         * @brief The unique identifier (GUID) for this physics scene.
+         *
+         */
         GUID m_guid;
 
+        /**
+         * @brief Grants PhysicsEngine class access to private members of PhysicsScene class, facilitating tighter
+         * integration between the two classes.
+         *
+         */
         friend class PhysicsEngine;
     };
 } // namespace Vakol
