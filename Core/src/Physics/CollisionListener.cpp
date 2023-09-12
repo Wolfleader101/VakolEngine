@@ -41,22 +41,21 @@ namespace Vakol
                     contactPair.getCollider1()->getLocalToWorldTransform() * contactPoint.getLocalPointOnCollider1();
 
                 avgWorldPoint1 += Math::Vec3(worldPoint1.x, worldPoint1.y, worldPoint1.z);
-                avgLocalPoint1 += Math::Vec3(contactPoint.getLocalPointOnCollider1().x,
-                                             contactPoint.getLocalPointOnCollider1().y,
-                                             contactPoint.getLocalPointOnCollider1().z);
+                avgLocalPoint1 +=
+                    Math::Vec3(contactPoint.getLocalPointOnCollider1().x, contactPoint.getLocalPointOnCollider1().y,
+                               contactPoint.getLocalPointOnCollider1().z);
 
                 rp3d::Vector3 worldPoint2 =
                     contactPair.getCollider2()->getLocalToWorldTransform() * contactPoint.getLocalPointOnCollider2();
 
                 avgWorldPoint2 += Math::Vec3(worldPoint2.x, worldPoint2.y, worldPoint2.z);
-                avgLocalPoint2 += Math::Vec3(contactPoint.getLocalPointOnCollider2().x,
-                                             contactPoint.getLocalPointOnCollider2().y,
-                                             contactPoint.getLocalPointOnCollider2().z);
+                avgLocalPoint2 +=
+                    Math::Vec3(contactPoint.getLocalPointOnCollider2().x, contactPoint.getLocalPointOnCollider2().y,
+                               contactPoint.getLocalPointOnCollider2().z);
 
                 rp3d::Vector3 rp3dNormal = contactPoint.getWorldNormal();
 
-                Math::Vec3 normal(rp3dNormal.x, rp3dNormal.y,
-                                  rp3dNormal.z);
+                Math::Vec3 normal(rp3dNormal.x, rp3dNormal.y, rp3dNormal.z);
 
                 avgNormal += normal;
 
@@ -71,7 +70,7 @@ namespace Vakol
 
             if (body1Data)
             {
-                body1Data->worldNormal += Math::Normalized(avgNormal);
+                body1Data->worldNormal = Math::Normalized(avgNormal);
                 body1Data->worldPoint = avgWorldPoint1;
                 body1Data->localPoint = avgLocalPoint1;
                 body1Data->penetrationDepth += avgPenetrationDepth;
@@ -80,7 +79,7 @@ namespace Vakol
 
             if (body2Data)
             {
-                body2Data->worldNormal += -Math::Normalized(avgNormal);
+                body2Data->worldNormal = -Math::Normalized(avgNormal);
                 body2Data->worldPoint = avgWorldPoint2;
                 body2Data->localPoint = avgLocalPoint2;
                 body2Data->penetrationDepth += avgPenetrationDepth;

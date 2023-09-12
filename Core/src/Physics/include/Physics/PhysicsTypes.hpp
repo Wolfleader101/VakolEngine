@@ -9,17 +9,17 @@ namespace Vakol
 {
     inline Math::Vec3 FromRPVec3(rp3d::Vector3& vec)
     {
-        return Math::Vec3((float)vec.x, (float)vec.y, (float)vec.z);
+        return Math::Vec3(vec.x, vec.y, vec.z);
     }
 
     inline Math::Vec3 FromRPVec3(const rp3d::Vector3& vec)
     {
-        return Math::Vec3((float)vec.x, (float)vec.y, (float)vec.z);
+        return Math::Vec3(vec.x, vec.y, vec.z);
     }
 
     inline rp3d::Vector3 ToRPVec3(Math::Vec3& vec)
     {
-        return rp3d::Vector3((double)vec.x, (double)vec.y, (double)vec.z);
+        return rp3d::Vector3(vec.x, vec.y, vec.z);
     }
 
     struct RayCastHitInfo
