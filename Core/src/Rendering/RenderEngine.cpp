@@ -48,7 +48,7 @@ namespace Vakol::Rendering
         RenderAPI::EnableDepth();
         RenderAPI::EnableMultisample();
         RenderAPI::EnableBlending();
-        //RenderAPI::EnableCulling();
+        // RenderAPI::EnableCulling();
 
         RenderAPI::ResizeScreen(0, 0, width, height);
     }
@@ -114,12 +114,14 @@ namespace Vakol::Rendering
 
     void RenderEngine::GenerateSphere(const float scale, Drawable& drawable)
     {
-        GenerateModel(AssetLoader::GetModel(drawable.ID, "coreAssets/models/sphere.obj", scale), drawable, DEFAULT_SHADER_PATH);
+        GenerateModel(AssetLoader::GetModel(drawable.ID, "coreAssets/models/sphere.obj", scale), drawable,
+                      DEFAULT_SHADER_PATH);
     }
 
     void RenderEngine::GenerateCube(const float scale, Drawable& drawable)
     {
-        GenerateModel(AssetLoader::GetModel(drawable.ID, "coreAssets/models/cube.obj", scale), drawable, DEFAULT_SHADER_PATH);
+        GenerateModel(AssetLoader::GetModel(drawable.ID, "coreAssets/models/cube.obj", scale), drawable,
+                      DEFAULT_SHADER_PATH);
     }
 
     void RenderEngine::GenerateDebugScene(DebugScene& debugScene)
@@ -190,18 +192,18 @@ namespace Vakol::Rendering
             }
             else
             {
-                //std::string path = "coreAssets/textures/white.png";
+                // std::string path = "coreAssets/textures/white.png";
 
-                //std::vector<unsigned int> types;
+                // std::vector<unsigned int> types;
 
-                //for (const auto& texture : material.textures)
+                // for (const auto& texture : material.textures)
                 //{
-                //    types.emplace_back(texture.type);
-                //}
+                //     types.emplace_back(texture.type);
+                // }
 
-                //for (int i = 0; i < 6; ++i)
+                // for (int i = 0; i < 6; ++i)
                 //{
-                //    unsigned int target = Assets::VK_TEXTURE_DIFFUSE + i;
+                //     unsigned int target = Assets::VK_TEXTURE_DIFFUSE + i;
 
                 //    if (!std::count(types.begin(), types.end(), target))
                 //    {

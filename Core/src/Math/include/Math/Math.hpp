@@ -23,7 +23,7 @@ namespace Vakol::Math
      * @return The angle in radians.
      */
     float DegToRad(float deg);
-    
+
     /**
      * @brief Converts each angle in a Vec3 from degrees to radians.
      *

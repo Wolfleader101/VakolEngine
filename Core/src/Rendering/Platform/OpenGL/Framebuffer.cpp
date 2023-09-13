@@ -55,7 +55,6 @@ namespace Vakol::Rendering::OpenGL
         glDisable(GL_BLEND);
     }
 
-
     void BlendFunc()
     {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
