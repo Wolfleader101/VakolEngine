@@ -37,18 +37,26 @@ namespace Vakol
     {
         auto model_type = lua.new_usertype<Rendering::Assets::Model>("Model");
 
-        model_type.set_function("get_material", [](const Rendering::Assets::Model* model, const int index) {
-            if (model->meshes.size() > index)
-                return model->meshes.at(index).material;
-
-            VK_WARN("Invalid material index! Retreiving first available material.");
-
-            return model->meshes.at(0).material;
+        model_type.set_function("get_mesh_count", [](const Rendering::Assets::Model& model) {
+            return static_cast<int>(model.meshes.size());
         });
+
+        model_type.set_function("get_mesh",
+                                [](Rendering::Assets::Model& model, const int index) -> Rendering::Assets::Mesh& {
+                                    if (model.meshes.size() > index)
+                                        return model.meshes.at(index);
+
+                                    VK_ERROR("Unable to fetch mesh at index: {0}", index);
+
+                                    return model.meshes.at(0);
+                                });
     }
 
     void RegisterMesh(sol::state& lua)
     {
+        auto mesh_type = lua.new_usertype<Rendering::Assets::Mesh>("Mesh");
+
+        mesh_type.set("material", &Rendering::Assets::Mesh::material);
     }
 
     void RegisterMaterial(sol::state& lua)
@@ -59,19 +67,19 @@ namespace Vakol
             return Rendering::RenderAPI::GetShader(material.shaderID);
         });
 
+        material_type.set_function("set_ambient_color",
+                                   [](Rendering::Assets::Material& material, const Math::Vec4& ambient) {
+                                       material.properties.ambient_color = ambient;
+                                   });
+
         material_type.set_function("set_diffuse_color",
-                                   [](Rendering::Assets::Material& material, const Math::Vec3& diffuse) {
+                                   [](Rendering::Assets::Material& material, const Math::Vec4& diffuse) {
                                        material.properties.diffuse_color = diffuse;
                                    });
 
         material_type.set_function("set_specular_color",
-                                   [](Rendering::Assets::Material& material, const Math::Vec3& specular) {
+                                   [](Rendering::Assets::Material& material, const Math::Vec4& specular) {
                                        material.properties.specular_color = specular;
-                                   });
-
-        material_type.set_function("set_diffuse_color",
-                                   [](Rendering::Assets::Material& material, const Math::Vec3& diffuse) {
-                                       material.properties.diffuse_color = diffuse;
                                    });
     }
 

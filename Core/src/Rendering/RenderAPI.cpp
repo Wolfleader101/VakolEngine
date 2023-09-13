@@ -39,6 +39,11 @@ namespace Vakol::Rendering
         {
             const auto& material = mesh.material;
 
+            if (material.properties.opacity < 1.0f)
+                OpenGL::EnableBlending();
+            else
+                OpenGL::DisableBlending();
+
             SetMaterial(shader, material);
 
             for (const auto& texture : material.textures)
@@ -428,10 +433,10 @@ namespace Vakol::Rendering
     {
         const auto& properties = material.properties;
 
-        SetVec3(shader, "material.ambient_color", properties.ambient_color, false);
-        SetVec3(shader, "material.diffuse_color", properties.diffuse_color, false);
-        SetVec3(shader, "material.specular_color", properties.specular_color, false);
-        SetVec3(shader, "material.emissive_color", properties.emissive_color, false);
+        SetVec4(shader, "material.ambient_color", properties.ambient_color, false);
+        SetVec4(shader, "material.diffuse_color", properties.diffuse_color, false);
+        SetVec4(shader, "material.specular_color", properties.specular_color, false);
+        SetVec4(shader, "material.emissive_color", properties.emissive_color, false);
 
         SetFloat(shader, "material.shininess", properties.shininess, false);
         SetFloat(shader, "material.shininess_strength", properties.shininess_strength, false);

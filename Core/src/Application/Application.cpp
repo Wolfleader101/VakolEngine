@@ -242,11 +242,14 @@ namespace Vakol
             {
                 activeScene.GetEntityList().Iterate<Components::Transform, Rendering::Drawable>(
                     [&](Components::Transform& transform, const Rendering::Drawable& drawable) {
+                        // activeScene.GetEntityList().Sort<Components::Transform>(
+                        //     [&](const Components::Transform& left, const Components::Transform& right) {
+                        //         return Math::Distance(left.pos, activeScene.GetCamera().GetPos()) >
+                        //                Math::Distance(right.pos, activeScene.GetCamera().GetPos());
+                        //     });
+
                         if (drawable.active)
-                        {
                             Rendering::RenderEngine::Draw(activeScene.GetCamera(), transform, drawable);
-                            transform.rot = Math::Quat(Math::DegToRad(transform.eulerAngles));
-                        }
                     });
 
                 if (activeScene.GetSkybox().active)
@@ -259,6 +262,10 @@ namespace Vakol
                     Rendering::RenderEngine::DrawDebugScene(activeScene.GetCamera(), activeScene.GetDebugScene());
                 }
             }
+
+            activeScene.GetEntityList().Iterate<Components::Transform>([](Components::Transform& transform) {
+                transform.rot = Math::Quat(Math::DegToRad(transform.eulerAngles));
+            });
 
             activeScene.GetCamera().Update();
 

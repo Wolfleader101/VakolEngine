@@ -53,7 +53,7 @@ namespace Vakol
          * @param radius of sphere
          * @return SphereCollider
          */
-        SphereCollider CreateSphereCollider(double radius);
+        SphereCollider CreateSphereCollider(float radius);
 
         /**
          * @brief Create a Capsule Collider object
@@ -62,7 +62,7 @@ namespace Vakol
          * @param height of capsule
          * @return CapsuleCollider
          */
-        CapsuleCollider CreateCapsuleCollider(double radius, double height);
+        CapsuleCollider CreateCapsuleCollider(float radius, float height);
 
         /**
          * @brief Create a Mesh Collider object

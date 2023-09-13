@@ -18,8 +18,6 @@
 #include "AssetLoader/AssetLoader.hpp"
 #include "Rendering/RenderCommand.hpp"
 
-#include <iostream>
-
 using namespace Vakol::Rendering::Assets;
 
 constexpr int ASSIMP_LOADER_OPTIONS =
@@ -46,9 +44,9 @@ namespace Vakol
         return {v.w, v.x, v.y, v.z};
     }
 
-    static Math::Vec3 ToVec3(aiColor3D& v)
+    static Math::Vec4 ToVec4(aiColor3D& v)
     {
-        return {v.r, v.g, v.b};
+        return {v.r, v.g, v.b, 1.0f};
     }
 
     static Math::Vec3 ToVec3(aiVector3D& v)
@@ -205,10 +203,10 @@ namespace Vakol
         material->Get(AI_MATKEY_SHININESS_STRENGTH, properties.shininess_strength);
         material->Get(AI_MATKEY_OPACITY, properties.opacity);
 
-        properties.ambient_color = ToVec3(ambient);
-        properties.diffuse_color = ToVec3(diffuse);
-        properties.specular_color = ToVec3(specular);
-        properties.emissive_color = ToVec3(emissive);
+        properties.ambient_color = ToVec4(ambient);
+        properties.diffuse_color = ToVec4(diffuse);
+        properties.specular_color = ToVec4(specular);
+        properties.emissive_color = ToVec4(emissive);
 
         if (properties.shininess < 1.0f)
             properties.shininess = 1.0f;
@@ -259,12 +257,12 @@ namespace Vakol
                     const auto size = static_cast<int>(embedded_texture->mWidth);
 
                     texture = AssetLoader::GetTexture(embedded_texture->mFilename.C_Str(), GetTextureType(type), size,
-                                                      embedded_texture->pcData, 12);
+                                                      embedded_texture->pcData);
                     textures.emplace_back(texture);
                 }
                 else
                 {
-                    texture = AssetLoader::GetTexture(imported_path.C_Str(), GetTextureType(type), 12);
+                    texture = AssetLoader::GetTexture(imported_path.C_Str(), GetTextureType(type));
 
                     textures.emplace_back(texture);
                 }

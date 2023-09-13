@@ -34,21 +34,18 @@ namespace Vakol
          * \brief
          * \param path
          * \param type
-         * \param levels mipmap levels
          * \return
          */
-        Rendering::Assets::Texture& GetTexture(const std::string& path, unsigned int type, int levels);
+        Rendering::Assets::Texture& GetTexture(const std::string& path, unsigned int type);
         /**
          * \brief
          * \param path the path of the texture
          * \param type the type of texture
          * \param size the size of the image buffer
          * \param data an address of image data embedded in memory
-         * \param levels texture mipmap levels
          * \return
          */
-        Rendering::Assets::Texture& GetTexture(const std::string& path, unsigned int type, int size, const void* data,
-                                               int levels);
+        Rendering::Assets::Texture& GetTexture(const std::string& path, unsigned int type, int size, const void* data);
 
         /**
          * \brief get the texture including it's pixel data.

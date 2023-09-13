@@ -11,6 +11,13 @@
 
 namespace Vakol::Components
 {
+    enum LIGHT_TYPE
+    {
+        DIRECTIONAL_LIGHT,
+        SPOT_LIGHT,
+        POINT_LIGHT
+    };
+
     /**
      * @struct Transform
      *
@@ -127,6 +134,24 @@ namespace Vakol::Components
         {
             ar(cereal::make_nvp("TagType", type));
         }
+    };
+
+    /**
+     * \brief A struct containing information about a light
+     */
+    struct Light
+    {
+        unsigned int LIGHT_TYPE = DIRECTIONAL_LIGHT;
+
+        const float LIGHT_ATTENUATION_CONSTANT = 1.0f;
+        float LIGHT_ATTENUATION_LINEAR = 0.045f;
+        float LIGHT_ATTENUATION_QUADRATIC = 0.0075f;
+
+        float LIGHT_ATTENUATION_CUTOFF = Math::Cos(Math::DegToRad(7.5f));
+        float LIGHT_ATTENUATION_OUTER_CUTOFF = Math::Cos(Math::DegToRad(12.5f));
+
+        Math::Vec4 LIGHT_DIRECTION = Math::Vec4(0.0f);
+        Math::Vec4 LIGHT_POSITION = Math::Vec4(0.0f);
     };
 
     /**

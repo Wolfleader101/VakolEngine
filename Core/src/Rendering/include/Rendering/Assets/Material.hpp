@@ -15,22 +15,22 @@ namespace Vakol::Rendering::Assets
         /**
          * \brief the ambient color
          */
-        Math::Vec3 ambient_color = Math::Vec3(0.0f);
+        Math::Vec4 ambient_color = Math::Vec4(1.0f);
 
         /**
          * \brief the diffuse color
          */
-        Math::Vec3 diffuse_color = Math::Vec3(0.0f);
+        Math::Vec4 diffuse_color = Math::Vec4(1.0f);
 
         /**
          * \brief the specular color
          */
-        Math::Vec3 specular_color = Math::Vec3(0.0f);
+        Math::Vec4 specular_color = Math::Vec4(1.0f);
 
         /**
          * \brief the emission color
          */
-        Math::Vec3 emissive_color = Math::Vec3(0.0f);
+        Math::Vec4 emissive_color = Math::Vec4(1.0f);
 
         float shininess = 32.0f; // the specular exponent (used for Phong shading)
         float shininess_strength = 1.0f;

@@ -19,17 +19,33 @@ namespace Vakol
         entity_type.set_function("get_transform", &Entity::GetComponent<Components::Transform>);
         entity_type.set_function("get_fsm", &Entity::GetComponent<Components::FSM>);
 
-        entity_type.set_function("add_model", [](Entity* ent, const std::string& path, const float scale = 1.0f) {
-            if (!ent->HasComponent<Rendering::Drawable>())
-                ent->AddComponent<Rendering::Drawable>();
+        entity_type.set_function(
+            "add_model",
+            [](Entity* ent, const std::string& path, const float scale = 1.0f) -> Rendering::Assets::Model& {
+                if (!ent->HasComponent<Rendering::Drawable>())
+                    ent->AddComponent<Rendering::Drawable>();
 
-            auto& drawable = ent->GetComponent<Rendering::Drawable>();
+                auto& drawable = ent->GetComponent<Rendering::Drawable>();
 
-            auto& model = AssetLoader::GetModel(drawable.ID, path, scale);
-            Rendering::RenderEngine::GenerateModel(model, drawable);
+                auto& model = AssetLoader::GetModel(drawable.ID, path, scale);
+                Rendering::RenderEngine::GenerateModel(model, drawable, "coreAssets/shaders/default.shader");
 
-            return model;
-        });
+                return model;
+            });
+
+        entity_type.set_function("add_shaded_model",
+                                 [](Entity* ent, const std::string& path, const float scale,
+                                    const std::string& shaderPath) -> Rendering::Assets::Model& {
+                                     if (!ent->HasComponent<Rendering::Drawable>())
+                                         ent->AddComponent<Rendering::Drawable>();
+
+                                     auto& drawable = ent->GetComponent<Rendering::Drawable>();
+
+                                     auto& model = AssetLoader::GetModel(drawable.ID, path, scale);
+                                     Rendering::RenderEngine::GenerateModel(model, drawable, shaderPath);
+
+                                     return model;
+                                 });
 
         entity_type.set_function("replace_texture",
                                  [](const Entity* ent, const std::string& srcPath, const std::string& srcType,

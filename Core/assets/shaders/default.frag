@@ -2,6 +2,10 @@
 
 out vec4 FragColor;
 
+const uint DIRECTIONAL_LIGHT = 1;
+const uint POINT_LIGHT = 2;
+const uint SPOT_LIGHT = 3;
+
 in VS_OUT {
     vec3 FragPos;
     vec2 TexCoords;
@@ -13,10 +17,10 @@ in VS_OUT {
 
 struct Material
 {
-	vec3 ambient_color;
-	vec3 diffuse_color;
-	vec3 specular_color;
-	vec3 emissive_color;
+    vec4 ambient_color;
+    vec4 diffuse_color;
+    vec4 specular_color;
+    vec4 emissive_color;
 
     float shininess;
     float shininess_strength;
@@ -31,6 +35,27 @@ struct Material
 	sampler2D emissive_map;
 	sampler2D height_map;
 	sampler2D normal_map;
+};
+
+struct Light
+{
+    uint type;
+
+    float LIGHT_ATTENUATION_CONSTANT;
+    float LIGHT_ATTENUATION_LINEAR;
+    float LIGHT_ATTENUATION_QUADRATIC;
+
+    float LIGHT_ATTENUATION_CUTOFF;
+    float LIGHT_ATTENUATION_OUTER_CUTOFF;
+
+    vec4 direction;
+    vec4 position;
+};
+
+layout (std430, binding = 1) buffer Lights
+{
+    int nLights;
+    Light[] lights;
 };
 
 uniform Material material;
@@ -63,7 +88,7 @@ void main()
     vec4 color = texture(material.diffuse_map, fs_in.TexCoords);
 
     if ((color.r >= 0.99 && color.g >= 0.99 && color.b >= 0.99) || !material.use_textures)
-        color = vec4(material.diffuse_color, 1.0);
+        color = material.diffuse_color;
 
     vec3 normal = texture(material.normal_map, fs_in.TexCoords).rgb;
 

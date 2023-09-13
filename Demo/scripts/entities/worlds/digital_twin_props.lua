@@ -10,15 +10,15 @@ function init()
 	--OBJECT POSITIONS
 	local benchPositions = 
 	{
-		Vector3.new(-35.0, 1.02, 114.7), Vector3.new(-27.6, 1.02, 114.54), Vector3.new(-21.1, 1.02, 114.58),
-		Vector3.new(-21.5, 1.02, 123.6), Vector3.new(-27.9, 1.02, 123.7), Vector3.new(-21.5, 1.02, 132.58), 
-		Vector3.new(-28.6, 1.02, 131.8)
+		Vector3.new(-27.6, 1.05, 114.54), Vector3.new(-21.1, 1.05, 114.58),
+		Vector3.new(-21.5, 1.05, 123.6), Vector3.new(-27.9, 1.05, 123.7), Vector3.new(-21.5, 1.05, 132.58), 
+		Vector3.new(-28.6, 1.05, 131.8)
 	};
 
 	local tablePositions = 
 	{
-		Vector3.new(-17.9, 1.04, 44.2), Vector3.new(-21.2, 1.04, 48.7), Vector3.new(-21.3, 1.04, 54.1),
-		Vector3.new(-20.9, 1.04, 60.8)
+		Vector3.new(-17.9, 1.051, 44.2), Vector3.new(-21.2, 1.051, 48.7), Vector3.new(-21.3, 1.051, 54.1),
+		Vector3.new(-20.9, 1.051, 60.8)
 	};
 
 	local chairRotations = 
@@ -45,17 +45,23 @@ function init()
 
 	local rubbishBinPositions = 
 	{
-		Vector3.new(33.0, 1.21, 39.0), Vector3.new(-16.3, 1.21, 84.0)
+		Vector3.new(33.0, 1.221, 39.0), Vector3.new(-16.3, 1.221, 84.0)
 	}
 
 	local recyclingBinPositions = 
 	{
-		Vector3.new(31.4, 1.21, 39.0), Vector3.new(-16.3, 1.21, 85.6)
+		Vector3.new(31.4, 1.221, 39.0), Vector3.new(-16.3, 1.221, 85.6)
 	}
+
+	local extra = scene:create_entity("Chairs Collider", "");
+	extra:get_transform().pos = Vector3.new(-17.2, 1.1, 59.3);
+	local rb = extra:add_rigid();
+	rb.type = BodyType.Static;
+	extra:add_box_collider(Vector3.new(0.6, 1.0, 3.2));
 
 	--ENTITY CREATION & SETUP
 	--Digital Twin Prop Entities
-	for i = 1, 7 do
+	for i = 1, 6 do
 		local entityName = "Bench";
 		entityName = entityName .. " " .. i;
 	
@@ -83,11 +89,11 @@ function init()
 		chairs[i]:get_transform().pos = chairPositions[i];
 		chairs[i]:get_transform().rot = chairRotations[i];
 
-		local chairsRigid = chairs[i]:add_rigid();
+		--local chairsRigid = chairs[i]:add_rigid();
 
-		chairsRigid.type = BodyType.Static;
+		--chairsRigid.type = BodyType.Static;
 
-		chairs[i]:add_box_collider(Vector3.new(0.7, 1.15, 0.5));
+		--chairs[i]:add_box_collider(Vector3.new(0.7, 1.15, 0.5));
 	end
 
 	for i = 1, 4 do
@@ -103,9 +109,12 @@ function init()
 		local tablesRigid = tables[i]:add_rigid();
 
 		tablesRigid.type = BodyType.Static;
-
-		tables[i]:add_box_collider(Vector3.new(1.9, 1.03, 1.0));
 	end
+
+	tables[1]:add_box_collider(Vector3.new(1.9, 1.03, 2.0));
+	tables[2]:add_box_collider(Vector3.new(1.9, 1.03, 1.7));
+	tables[3]:add_box_collider(Vector3.new(1.8, 1.03, 1.5));
+	tables[4]:add_box_collider(Vector3.new(1.9, 1.03, 1.6));
 
 	for i = 1, 2 do
 		local entityName = "Rubbish Bin";

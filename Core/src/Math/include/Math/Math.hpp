@@ -1,28 +1,15 @@
 #pragma once
 
 #include <glm/glm.hpp>
-
 #include <glm/gtc/quaternion.hpp>
 
 namespace Vakol::Math
 {
     //! glm usage is currently just here for backwards compatability reasons
     using Vec2 = glm::vec2;
-
     using Vec3 = glm::vec3;
-
-    // struct Vec3
-    // {
-    //     union {
-    //         float x;
-    //         float y;
-    //         float z;
-    //     };
-    //     glm::vec3 glm;
-    //     float[3] arr;
-    // };
-
     using Vec4 = glm::vec4;
+
     using Point = Vec3;
 
     using Mat3 = glm::mat3;
@@ -35,7 +22,7 @@ namespace Vakol::Math
      * @param deg Angle in degrees.
      * @return The angle in radians.
      */
-    float DegToRad(const float deg);
+    float DegToRad(float deg);
 
     /**
      * @brief Converts each angle in a Vec3 from degrees to radians.
@@ -51,7 +38,7 @@ namespace Vakol::Math
      * @param rad Angle in radians.
      * @return The angle in degrees.
      */
-    float RadToDeg(const float rad);
+    float RadToDeg(float rad);
 
     /**
      * @brief Converts each angle in a Vec3 from radians to degrees.
@@ -223,73 +210,8 @@ namespace Vakol::Math
      */
     Vec3 EulerFromQuat(const Quat& quat);
 
-    /**
-     * @brief Creates a translation matrix from a 3D vector.
-     *
-     * @param pos The 3D position vector.
-     * @return The translation matrix.
-     */
-    Mat4 Translation(const Vec3& pos);
-
-    /**
-     * @brief Creates a scaling matrix from a 3D vector.
-     *
-     * @param scale The 3D scale vector.
-     * @return The scaling matrix.
-     */
-    Mat4 Scale(const Vec3& scale);
-
-    /**
-     * @brief Creates a 3x3 matrix by removing a specified row and column from a 4x4 matrix.
-     *
-     * @param mat The original 4x4 matrix.
-     * @param row The row to remove.
-     * @param col The column to remove.
-     * @return The 3x3 matrix.
-     */
     Mat3 Cut(const Mat4& mat, int row, int col);
 
-    /**
-     * @brief Creates a rotation matrix representing a rotation around the X-axis.
-     *
-     * @param angle The angle of rotation in degrees.
-     * @return The X-axis rotation matrix.
-     */
-    Mat4 XRotation(float angle);
-
-    /**
-     * @brief Creates a rotation matrix representing a rotation around the Y-axis.
-     *
-     * @param angle The angle of rotation in degrees.
-     * @return The Y-axis rotation matrix.
-     */
-    Mat4 YRotation(float angle);
-
-    /**
-     * @brief Creates a rotation matrix representing a rotation around the Z-axis.
-     *
-     * @param angle The angle of rotation in degrees.
-     * @return The Z-axis rotation matrix.
-     */
-    Mat4 ZRotation(float angle);
-
-    /**
-     * @brief Creates a rotation matrix representing a rotation defined by pitch, yaw, and roll angles.
-     *
-     * @param pitch The pitch angle in degrees.
-     * @param yaw The yaw angle in degrees.
-     * @param roll The roll angle in degrees.
-     * @return The rotation matrix.
-     */
-    Mat4 Rotation(float pitch, float yaw, float roll);
-
-    /**
-     * @brief Multiplies a point by a 4x4 matrix, typically used to transform the point in 3D space.
-     *
-     * @param point The point to be multiplied.
-     * @param mat The 4x4 transformation matrix.
-     * @return The transformed point.
-     */
     Point MultiplyPoint(const Point& point, const Mat4& mat);
 
     /**
@@ -420,7 +342,7 @@ namespace Vakol::Math
      * @param t The interpolation parameter (between 0 and 1).
      * @return float The interpolated value.
      */
-    float Lerp(const float a, const float b, const float t);
+    float Lerp(float a, float b, float t);
 
     /**
      * @brief Calculate the fraction 't' (between 0 and 1) based on the given value.
@@ -430,7 +352,7 @@ namespace Vakol::Math
      * @param v The value to calculate the fraction for.
      * @return float The calculated fraction.
      */
-    float InverseLerp(const float a, const float b, const float v);
+    float InverseLerp(float a, float b, float v);
 
     /**
      * @brief Map a value from one input range to a corresponding value in an output range.
@@ -442,7 +364,7 @@ namespace Vakol::Math
      * @param v The value to remap.
      * @return float The remapped value.
      */
-    float Remap(const float iMin, const float iMax, const float oMin, const float oMax, const float v);
+    float Remap(float iMin, float iMax, float oMin, float oMax, float v);
 
     /**
      * @brief Creates a perspective projection matrix.
