@@ -53,6 +53,12 @@ function init()
 		Vector3.new(31.4, 1.221, 39.0), Vector3.new(-16.3, 1.221, 85.6)
 	}
 
+	local extra = scene:create_entity("Chairs Collider", "");
+	extra:get_transform().pos = Vector3.new(-17.2, 1.1, 59.3);
+	local rb = extra:add_rigid();
+	rb.type = BodyType.Static;
+	extra:add_box_collider(Vector3.new(0.6, 1.0, 3.2));
+
 	--ENTITY CREATION & SETUP
 	--Digital Twin Prop Entities
 	for i = 1, 6 do

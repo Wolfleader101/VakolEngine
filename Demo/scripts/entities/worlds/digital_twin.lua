@@ -310,7 +310,7 @@ function create_barrier_colliders()
 	colliders[11]:add_box_collider(Vector3.new(0.3, 1.3, 34.0));
 
 	colliders[12]:get_transform().pos = Vector3.new(-45.4, -9.2, 108.3);
-	colliders[12]:add_box_collider(Vector3.new(1.6, 1.3, 0.3));
+	colliders[12]:add_box_collider(Vector3.new(16.1, 1.3, 0.3));
 end
 
 function create_stair_colliders()
@@ -323,8 +323,8 @@ function create_stair_colliders()
 		rigid.type = BodyType.Static;
 	end
 
-	colliders[1]:get_transform().pos = Vector3.new(-45.5, -2.4, 24.3);
-	colliders[1]:get_transform().rot = Vector3.new(-46.2, 0.0, 0.0);
+	colliders[1]:get_transform().pos = Vector3.new(-45.0, 1.3, 22.2);
+	colliders[1]:get_transform().rot = Vector3.new(0.0, 0.0, 0.0);
 	colliders[1]:add_box_collider(Vector3.new(16.5, 3.5, 0.1));
 
 	colliders[2]:get_transform().pos = Vector3.new(-45.5, -8.2, 37.7);
