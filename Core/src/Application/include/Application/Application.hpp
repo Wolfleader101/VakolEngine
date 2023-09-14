@@ -48,12 +48,6 @@ namespace Vakol
         Application();
 
         /**
-         * @brief Init function for application
-         *
-         */
-        void Init();
-
-        /**
          * @brief destructor of the application
          */
         ~Application() = default;
@@ -192,6 +186,13 @@ namespace Vakol
         bool IsSystemActive(SystemFlag system) const;
 
       private:
+
+        /**
+         * @brief Init function for application
+         *
+         */
+        void Init();
+
         /**
          * @brief on window close event
          * @param ev event of windowClose
