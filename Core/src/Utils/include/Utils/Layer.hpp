@@ -4,6 +4,7 @@ namespace Vakol
 {
     class SceneManager;
     class Event;
+    class Application;
 
     /**
      * @brief Interface for layers
@@ -16,7 +17,7 @@ namespace Vakol
          * @brief Construct a new Layer object
          *
          */
-        Layer() : m_SceneManager(nullptr)
+        Layer(Application& app) : m_app(app), m_SceneManager(nullptr)
         {
         }
 
@@ -64,5 +65,11 @@ namespace Vakol
          *
          */
         SceneManager* m_SceneManager;
+
+        /**
+         * @brief injected application reference
+         *
+         */
+        Application& m_app;
     };
 } // namespace Vakol

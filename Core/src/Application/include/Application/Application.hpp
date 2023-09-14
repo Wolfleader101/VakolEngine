@@ -35,7 +35,7 @@ namespace Vakol
 
     /**
      * @class Application
-     * @brief The main application class to launch the game engine, expected use is a singleton
+     * @brief The main application class to launch the game engine
      *
      */
     class Application

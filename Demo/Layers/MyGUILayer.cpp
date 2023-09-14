@@ -12,7 +12,6 @@
 #include <Input/Input.hpp>
 
 #include <Application/Application.hpp>
-#include <Utils/Singleton.hpp>
 
 #include <imgui_impl_glfw.h>
 #include <imgui_internal.h>
@@ -60,29 +59,26 @@ void MyGUILayer::OnUpdate()
 
                 if (ImGui::Button("Run Scripts"))
                 {
-                    if (Vakol::Singleton<Vakol::Application>::GetInstance().IsSystemActive(
-                            Vakol::SystemFlag::Scripting) == false)
-                        Vakol::Singleton<Vakol::Application>::GetInstance().ToggleSystem(Vakol::SystemFlag::Scripting);
+                    if (m_app.IsSystemActive(Vakol::SystemFlag::Scripting) == false)
+                        m_app.ToggleSystem(Vakol::SystemFlag::Scripting);
                 }
 
                 if (ImGui::Button("Pause Scripts"))
                 {
-                    if (Vakol::Singleton<Vakol::Application>::GetInstance().IsSystemActive(
-                            Vakol::SystemFlag::Scripting))
-                        Vakol::Singleton<Vakol::Application>::GetInstance().ToggleSystem(Vakol::SystemFlag::Scripting);
+                    if (m_app.IsSystemActive(Vakol::SystemFlag::Scripting))
+                        m_app.ToggleSystem(Vakol::SystemFlag::Scripting);
                 }
 
                 if (ImGui::Button("Run Physics"))
                 {
-                    if (Vakol::Singleton<Vakol::Application>::GetInstance().IsSystemActive(
-                            Vakol::SystemFlag::Physics) == false)
-                        Vakol::Singleton<Vakol::Application>::GetInstance().ToggleSystem(Vakol::SystemFlag::Physics);
+                    if (m_app.IsSystemActive(Vakol::SystemFlag::Physics) == false)
+                        m_app.ToggleSystem(Vakol::SystemFlag::Physics);
                 }
 
                 if (ImGui::Button("Pause Physics"))
                 {
-                    if (Vakol::Singleton<Vakol::Application>::GetInstance().IsSystemActive(Vakol::SystemFlag::Physics))
-                        Vakol::Singleton<Vakol::Application>::GetInstance().ToggleSystem(Vakol::SystemFlag::Physics);
+                    if (m_app.IsSystemActive(Vakol::SystemFlag::Physics))
+                        m_app.ToggleSystem(Vakol::SystemFlag::Physics);
                 }
 
                 if (ImGui::Button("Toggle Physics Wireframe"))
@@ -373,11 +369,8 @@ void MyGUILayer::OnUpdate()
 
                                 Vakol::Math::Vec3 extents = Vakol::Math::Vec3(1.0f);
 
-                                Vakol::BoxCollider collider = Vakol::Singleton<Vakol::Application>::GetInstance()
-                                                                  .GetPhysicsEngine()
-                                                                  .CreateBoxCollider(extents);
-                                Vakol::Singleton<Vakol::Application>::GetInstance().GetPhysicsEngine().AttachCollider(
-                                    rb, collider);
+                                Vakol::BoxCollider collider = m_app.GetPhysicsEngine().CreateBoxCollider(extents);
+                                m_app.GetPhysicsEngine().AttachCollider(rb, collider);
 
                                 entity.AddComponent<Vakol::BoxCollider>(collider);
                             }
@@ -388,11 +381,8 @@ void MyGUILayer::OnUpdate()
 
                                 double radius = 1.0;
 
-                                Vakol::SphereCollider collider = Vakol::Singleton<Vakol::Application>::GetInstance()
-                                                                     .GetPhysicsEngine()
-                                                                     .CreateSphereCollider(radius);
-                                Vakol::Singleton<Vakol::Application>::GetInstance().GetPhysicsEngine().AttachCollider(
-                                    rb, collider);
+                                Vakol::SphereCollider collider = m_app.GetPhysicsEngine().CreateSphereCollider(radius);
+                                m_app.GetPhysicsEngine().AttachCollider(rb, collider);
 
                                 entity.AddComponent<Vakol::SphereCollider>(collider);
                             }
@@ -404,11 +394,9 @@ void MyGUILayer::OnUpdate()
                                 double radius = 0.5;
                                 double height = 1.0;
 
-                                Vakol::CapsuleCollider collider = Vakol::Singleton<Vakol::Application>::GetInstance()
-                                                                      .GetPhysicsEngine()
-                                                                      .CreateCapsuleCollider(radius, height);
-                                Vakol::Singleton<Vakol::Application>::GetInstance().GetPhysicsEngine().AttachCollider(
-                                    rb, collider);
+                                Vakol::CapsuleCollider collider =
+                                    m_app.GetPhysicsEngine().CreateCapsuleCollider(radius, height);
+                                m_app.GetPhysicsEngine().AttachCollider(rb, collider);
 
                                 entity.AddComponent<Vakol::CapsuleCollider>(collider);
                             }
@@ -424,7 +412,7 @@ void MyGUILayer::OnUpdate()
         }
         else
         {
-            Vakol::Singleton<Vakol::Application>::GetInstance().SetActiveMouse(m_Show);
+            m_app.SetActiveMouse(m_Show);
         }
 
         ImGui::End();            // Moved this outside the if-check.
@@ -443,11 +431,10 @@ void MyGUILayer::OnEvent(Vakol::Event& event) // toggle editor view
         {
             m_Show = !m_Show;
 
-            Vakol::Singleton<Vakol::Application>::GetInstance().SetActiveMouse(m_Show);
+            m_app.SetActiveMouse(m_Show);
             event.Handled = true;
 
-            Vakol::Singleton<Vakol::Application>::GetInstance().SetGameState(m_Show ? Vakol::GameState::Paused
-                                                                                    : Vakol::GameState::Running);
+            m_app.SetGameState(m_Show ? Vakol::GameState::Paused : Vakol::GameState::Running);
 
             return;
         }
@@ -457,8 +444,8 @@ void MyGUILayer::OnEvent(Vakol::Event& event) // toggle editor view
             if (keyEvent.GetKeyCode() == static_cast<int>(Vakol::Input::KEY::KEY_ESCAPE))
             {
                 m_Show = false;
-                Vakol::Singleton<Vakol::Application>::GetInstance().SetActiveMouse(m_Show);
-                Vakol::Singleton<Vakol::Application>::GetInstance().SetGameState(Vakol::GameState::Running);
+                m_app.SetActiveMouse(m_Show);
+                m_app.SetGameState(Vakol::GameState::Running);
             }
             event.Handled = true;
         }
