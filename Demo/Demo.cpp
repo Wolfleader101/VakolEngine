@@ -1,4 +1,4 @@
-﻿// core.cpp : Defines the entry point for the application.
+﻿#include <memory>
 
 #include "Layers/MyGUILayer.hpp"
 #include "Vakol/core.hpp"
@@ -8,9 +8,13 @@ int main()
 
     Vakol::Init();
 
-    Vakol::PushLayer(std::make_shared<MyGUILayer>());
+    Vakol::Application app = Vakol::Application();
 
-    Vakol::Run();
+    //app.Init();
+
+    app.PushLayer(std::make_shared<MyGUILayer>(app));
+
+    app.Run();
 
     return 0;
 }

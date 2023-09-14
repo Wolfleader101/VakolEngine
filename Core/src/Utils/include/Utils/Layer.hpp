@@ -2,8 +2,8 @@
 
 namespace Vakol
 {
-    class SceneManager;
     class Event;
+    class Application;
 
     /**
      * @brief Interface for layers
@@ -16,7 +16,7 @@ namespace Vakol
          * @brief Construct a new Layer object
          *
          */
-        Layer() : m_SceneManager(nullptr)
+        Layer(Application& app) : m_app(app)
         {
         }
 
@@ -28,10 +28,8 @@ namespace Vakol
 
         /**
          * @brief Called when the layer is attached to the scene manager
-         *
-         * @param SM scene manager to attach to
          */
-        virtual void OnAttach(SceneManager* SM) = 0;
+        virtual void OnAttach() = 0;
 
         /**
          * @brief Called when the layer is detached from the scene manager
@@ -60,9 +58,9 @@ namespace Vakol
 
       protected:
         /**
-         * @brief Pointer to the scene manager
+         * @brief injected application reference
          *
          */
-        SceneManager* m_SceneManager;
+        Application& m_app;
     };
 } // namespace Vakol

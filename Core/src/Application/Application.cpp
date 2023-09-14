@@ -15,7 +15,10 @@ namespace Vakol
 
     Application::Application()
         : m_window(nullptr), m_scriptEngine(), m_sceneManager(m_scriptEngine, m_physicsEngine), m_running(false),
-          m_gameState(GameState::Running), m_activeSystems(0), m_input(){};
+          m_gameState(GameState::Running), m_activeSystems(0), m_input()
+    {
+        Init();
+    };
 
     void Application::Init()
     {
@@ -399,7 +402,7 @@ namespace Vakol
 
         if (layer)
         {
-            layer->OnAttach(&m_sceneManager);
+            layer->OnAttach();
             m_layerManager.PushLayer(layer);
         }
     }

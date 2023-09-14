@@ -35,7 +35,7 @@ namespace Vakol
 
     /**
      * @class Application
-     * @brief The main application class to launch the game engine, expected use is a singleton
+     * @brief The main application class to launch the game engine
      *
      */
     class Application
@@ -46,12 +46,6 @@ namespace Vakol
          *
          */
         Application();
-
-        /**
-         * @brief Init function for application
-         *
-         */
-        void Init();
 
         /**
          * @brief destructor of the application
@@ -135,6 +129,16 @@ namespace Vakol
         }
 
         /**
+         * @brief Get the Scene Manager object
+         *
+         * @return SceneManager&
+         */
+        SceneManager& GetSceneManager()
+        {
+            return m_sceneManager;
+        }
+
+        /**
          * @brief Set the Active Mouse object
          *
          * @param active mouse is active or not
@@ -192,6 +196,12 @@ namespace Vakol
         bool IsSystemActive(SystemFlag system) const;
 
       private:
+        /**
+         * @brief Init function for application
+         *
+         */
+        void Init();
+
         /**
          * @brief on window close event
          * @param ev event of windowClose
