@@ -14,7 +14,7 @@ class MyGUILayer : public Vakol::Layer
 
     ~MyGUILayer() = default;
 
-    void OnAttach(Vakol::SceneManager* SM) override;
+    void OnAttach() override;
     void OnDetach() override;
     void OnUpdate() override;
     void OnEvent(Vakol::Event& event) override;

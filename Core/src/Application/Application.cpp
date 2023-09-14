@@ -402,7 +402,7 @@ namespace Vakol
 
         if (layer)
         {
-            layer->OnAttach(&m_sceneManager);
+            layer->OnAttach();
             m_layerManager.PushLayer(layer);
         }
     }

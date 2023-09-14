@@ -26,9 +26,8 @@ static rp3d::Vector3 Vec3(const Vakol::Math::Vec3& v)
     return {v.x, v.y, v.z};
 }
 
-void MyGUILayer::OnAttach(Vakol::SceneManager* SM)
+void MyGUILayer::OnAttach()
 {
-    m_SceneManager = SM;
 }
 
 void MyGUILayer::OnDetach()
@@ -83,7 +82,8 @@ void MyGUILayer::OnUpdate()
 
                 if (ImGui::Button("Toggle Physics Wireframe"))
                 {
-                    m_SceneManager->GetActiveScene().SetDebug(!m_SceneManager->GetActiveScene().IsDebugEnabled());
+                    m_app.GetSceneManager().GetActiveScene().SetDebug(
+                        !m_app.GetSceneManager().GetActiveScene().IsDebugEnabled());
                 }
             }
 
@@ -96,12 +96,12 @@ void MyGUILayer::OnUpdate()
 
                 if (ImGui::Button("Add Empty Entity"))
                 {
-                    m_SceneManager->GetActiveScene().CreateEntity("New Entity");
+                    m_app.GetSceneManager().GetActiveScene().CreateEntity("New Entity");
                 }
 
                 if (ImGui::Button("Add Entity with Sphere"))
                 {
-                    Vakol::Entity entity = m_SceneManager->GetActiveScene().CreateEntity("Default Sphere");
+                    Vakol::Entity entity = m_app.GetSceneManager().GetActiveScene().CreateEntity("Default Sphere");
 
                     entity.AddComponent<Vakol::Rendering::Drawable>();
 
@@ -112,7 +112,7 @@ void MyGUILayer::OnUpdate()
                 if (ImGui::Button("Add Entity with Cube"))
                 {
 
-                    Vakol::Entity entity = m_SceneManager->GetActiveScene().CreateEntity("Default Cube");
+                    Vakol::Entity entity = m_app.GetSceneManager().GetActiveScene().CreateEntity("Default Cube");
 
                     entity.AddComponent<Vakol::Rendering::Drawable>();
 
@@ -124,7 +124,7 @@ void MyGUILayer::OnUpdate()
 
                 ImGui::BeginChild("Entity List Child", ImVec2(0, 0), true);
 
-                auto& EL = m_SceneManager->GetActiveScene().GetEntityList();
+                auto& EL = m_app.GetSceneManager().GetActiveScene().GetEntityList();
 
                 EL.IterateEntities([&](auto handle) {
                     Vakol::Entity entity = EL.GetEntity(static_cast<uint32_t>(handle));
@@ -353,8 +353,9 @@ void MyGUILayer::OnUpdate()
                             Vakol::Components::Transform& transform =
                                 entity.GetComponent<Vakol::Components::Transform>();
 
-                            Vakol::RigidBody rb = m_SceneManager->GetActiveScene().GetPhysicsScene().CreateRigidBody(
-                                transform.pos, transform.rot);
+                            Vakol::RigidBody rb =
+                                m_app.GetSceneManager().GetActiveScene().GetPhysicsScene().CreateRigidBody(
+                                    transform.pos, transform.rot);
 
                             entity.AddComponent<Vakol::RigidBody>(rb);
                         }

@@ -129,6 +129,16 @@ namespace Vakol
         }
 
         /**
+         * @brief Get the Scene Manager object
+         *
+         * @return SceneManager&
+         */
+        SceneManager& GetSceneManager()
+        {
+            return m_sceneManager;
+        }
+
+        /**
          * @brief Set the Active Mouse object
          *
          * @param active mouse is active or not
@@ -186,7 +196,6 @@ namespace Vakol
         bool IsSystemActive(SystemFlag system) const;
 
       private:
-
         /**
          * @brief Init function for application
          *
