@@ -2,7 +2,6 @@
 
 namespace Vakol
 {
-    class SceneManager;
     class Event;
     class Application;
 
