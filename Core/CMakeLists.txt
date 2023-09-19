@@ -8,7 +8,9 @@ find_package(OpenGL REQUIRED)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Add source and test directories
 add_subdirectory(src)
+add_subdirectory(tests)
 
 # Add source to this project's executable.
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
@@ -31,6 +33,16 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     cereal
     crossguid
 )
+
+# Create a test executable
+add_executable(VakolTests tests/tests.cpp)
+
+# Add test sources to the test executable
+target_sources(VakolTests PRIVATE ${TESTS_SRC})
+
+# Link Catch2 and your engine to the test executable
+target_link_libraries(VakolTests PRIVATE Catch2::Catch2)
+target_link_libraries(VakolTests PRIVATE ${PROJECT_NAME})
 
 # Set compile flags.
 target_compile_options(${PROJECT_NAME} PRIVATE

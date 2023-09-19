@@ -1,0 +1,11 @@
+SET(APPLICATION_TESTS_SRC
+    ${CMAKE_CURRENT_SOURCE_DIR}/AssetLoaderTests.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/FileLoaderTests.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/ModelLoaderTests.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/ShaderLoaderTests.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/TextureLoaderTests.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/ModelLibraryTests.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/TextureLibraryTests.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/ShaderLibraryTests.cpp
+    PARENT_SCOPE
+)

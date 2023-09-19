@@ -1,0 +1,6 @@
+SET(APPLICATION_TESTS_SRC
+    ${CMAKE_CURRENT_SOURCE_DIR}/RenderAPITests.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/RenderCommandTests.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/RenderEngineTests.cpp
+    PARENT_SCOPE
+)
