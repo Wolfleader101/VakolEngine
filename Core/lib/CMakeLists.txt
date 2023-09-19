@@ -36,6 +36,7 @@ add_subdirectory(lua)
 add_subdirectory(assimp)
 add_subdirectory(cereal)
 add_subdirectory(crossguid)
+add_subdirectory(catch2)
 
 target_include_directories(imgui PUBLIC glfw/include)
 

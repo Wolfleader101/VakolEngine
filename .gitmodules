@@ -29,3 +29,6 @@
 [submodule "Core/lib/crossguid"]
 	path = Core/lib/crossguid
 	url = https://github.com/graeme-hill/crossguid.git
+[submodule "Core/lib/catch2"]
+	path = Core/lib/catch2
+	url = https://github.com/catchorg/Catch2
