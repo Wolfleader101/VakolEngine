@@ -13,8 +13,6 @@ namespace Vakol
 
         scene_type.set("globals", sol::property([](Scene& self) { return self.GetScript().env; }));
 
-        // scene_type.set_function("create_entity", &Scene::CreateEntity);
-
         scene_type.set_function("create_entity", [&](Scene* scene, const std::string tag, const std::string& sname) {
             auto ent = scene->CreateEntity(tag);
 
@@ -39,14 +37,18 @@ namespace Vakol
             scene->SetSkybox(skybox);
         });
 
-        scene_type.set_function("create_debug_scene", [](Scene* scene) { scene->CreateDebugScene(); });
         scene_type.set_function("enable_debug", [](Scene* scene) { scene->SetDebug(true); });
         scene_type.set_function("disable_debug", [](Scene* scene) { scene->SetDebug(false); });
 
-        // scene_type.set_function("set_active", [](Scene* scene, const bool active) { scene->active = active; });
-
         scene_type.set_function("get_camera", &Scene::GetCamera);
         scene_type.set_function("get_entity", &Scene::GetEntity);
+
+        scene_type.set_function("raycast", [](Scene& scene, Math::Vec3& origin, Math::Vec3& direction,
+                                              double maxDistance, RayCastHitInfo& info) {
+            PhysicsScene& physicsScene = scene.GetPhysicsScene();
+
+            return physicsScene.RayCast(origin, direction, maxDistance, info);
+        });
 
         scene_type.set_function("serialize",
                                 &Scene::Serialize); // Give it folder assets/scenes. will create subfolder for scene

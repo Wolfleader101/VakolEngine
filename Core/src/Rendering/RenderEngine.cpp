@@ -48,9 +48,7 @@ namespace Vakol::Rendering
         RenderAPI::EnableDepth();
         RenderAPI::EnableMultisample();
         RenderAPI::EnableBlending();
-        RenderAPI::EnableCulling();
-
-        RenderAPI::CullFaces();
+        // RenderAPI::EnableCulling();
 
         RenderAPI::ResizeScreen(0, 0, width, height);
     }
@@ -116,12 +114,14 @@ namespace Vakol::Rendering
 
     void RenderEngine::GenerateSphere(const float scale, Drawable& drawable)
     {
-        GenerateModel(AssetLoader::GetModel(drawable.ID, "coreAssets/models/sphere.obj", scale), drawable);
+        GenerateModel(AssetLoader::GetModel(drawable.ID, "coreAssets/models/sphere.obj", scale), drawable,
+                      DEFAULT_SHADER_PATH);
     }
 
     void RenderEngine::GenerateCube(const float scale, Drawable& drawable)
     {
-        GenerateModel(AssetLoader::GetModel(drawable.ID, "coreAssets/models/cube.obj", scale), drawable);
+        GenerateModel(AssetLoader::GetModel(drawable.ID, "coreAssets/models/cube.obj", scale), drawable,
+                      DEFAULT_SHADER_PATH);
     }
 
     void RenderEngine::GenerateDebugScene(DebugScene& debugScene)
@@ -160,10 +160,10 @@ namespace Vakol::Rendering
         RenderAPI::GenerateVertexCommand(std::move(vertexArray));
     }
 
-    void RenderEngine::GenerateModel(Assets::Model& model, Drawable& drawable)
+    void RenderEngine::GenerateModel(Assets::Model& model, Drawable& drawable, const std::string& shaderPath)
     {
         bool success = true;
-        auto shader = ImportShader(DEFAULT_SHADER_PATH, success);
+        auto shader = ImportShader(shaderPath, success);
 
         if (success)
             RenderAPI::GenerateShader(std::move(shader), drawable);
@@ -192,26 +192,26 @@ namespace Vakol::Rendering
             }
             else
             {
-                std::string path = "coreAssets/textures/white.png";
+                // std::string path = "coreAssets/textures/white.png";
 
-                std::vector<unsigned int> types;
+                // std::vector<unsigned int> types;
 
-                for (const auto& texture : material.textures)
-                {
-                    types.emplace_back(texture.type);
-                }
+                // for (const auto& texture : material.textures)
+                //{
+                //     types.emplace_back(texture.type);
+                // }
 
-                for (int i = 0; i < 6; ++i)
-                {
-                    unsigned int target = Assets::VK_TEXTURE_DIFFUSE + i;
+                // for (int i = 0; i < 6; ++i)
+                //{
+                //     unsigned int target = Assets::VK_TEXTURE_DIFFUSE + i;
 
-                    if (!std::count(types.begin(), types.end(), target))
-                    {
-                        const unsigned int type = target;
+                //    if (!std::count(types.begin(), types.end(), target))
+                //    {
+                //        const unsigned int type = target;
 
-                        material.textures.emplace_back(AssetLoader::GetTexture(path, type));
-                    }
-                }
+                //        material.textures.emplace_back(AssetLoader::GetTexture(path, type));
+                //    }
+                //}
             }
 
             std::sort(textures.begin(), textures.end(), compare);
@@ -241,21 +241,6 @@ namespace Vakol::Rendering
         // std::vector<unsigned int>().swap(mesh.indices);
 
         RenderAPI::GenerateVertexCommand(std::move(vertexArray));
-    }
-
-    void RenderEngine::ConvertToPoints(const std::vector<Vertex>& vertices, std::vector<Math::Point>& points)
-    {
-        const int size = static_cast<int>(vertices.size());
-
-        points.reserve(vertices.size()); // it'll never be that large
-
-        for (const Vertex& vertex : vertices)
-        {
-            points.emplace_back(vertex.position);
-        }
-
-        // since points reserved so much memory, we want to resize capacity to fit its actual size
-        points.shrink_to_fit();
     }
 
 } // namespace Vakol::Rendering

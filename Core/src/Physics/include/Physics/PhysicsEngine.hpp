@@ -43,9 +43,9 @@ namespace Vakol
          * @brief create an AABB collider
          *
          * @param halfExtents of AABB
-         * @return AABBCollider created
+         * @return BoxCollider created
          */
-        AABBCollider CreateAABBCollider(Math::Vec3& halfExtents);
+        BoxCollider CreateBoxCollider(Math::Vec3& halfExtents);
 
         /**
          * @brief Create a Sphere Collider object
@@ -53,7 +53,7 @@ namespace Vakol
          * @param radius of sphere
          * @return SphereCollider
          */
-        SphereCollider CreateSphereCollider(double radius);
+        SphereCollider CreateSphereCollider(float radius);
 
         /**
          * @brief Create a Capsule Collider object
@@ -62,7 +62,7 @@ namespace Vakol
          * @param height of capsule
          * @return CapsuleCollider
          */
-        CapsuleCollider CreateCapsuleCollider(double radius, double height);
+        CapsuleCollider CreateCapsuleCollider(float radius, float height);
 
         /**
          * @brief Create a Mesh Collider object
@@ -79,7 +79,7 @@ namespace Vakol
          * @param rb body to attach too
          * @param collider to attach
          */
-        void AttachCollider(RigidBody& rb, AABBCollider& collider);
+        void AttachCollider(RigidBody& rb, BoxCollider& collider);
 
         /**
          * @brief Attach a collider to a rigidbody
@@ -122,27 +122,34 @@ namespace Vakol
         /**
          * @brief handle collision resolution for a rigidbody
          *
+         * @param pos pos of body
          * @param rb to handle resolution
          */
         void ResolveCollisions(Math::Vec3& pos, RigidBody& rb);
 
-        void Depenetration(Math::Vec3& pos, RigidBody& rb);
+        static float SolveLambda(RigidBody& rb1, RigidBody& rb2);
 
-        static double SolveLambda(RigidBody& rb1, RigidBody& rb2);
+        /**
+         * @brief handle depenetration for a rigidbody
+         *
+         * @param pos pos of body
+         * @param rb rigidbody
+         */
+        void Depenetration(Math::Vec3& pos, RigidBody& rb);
 
         /**
          * @brief Set the Time Step object
          *
          * @param step to set
          */
-        void SetTimeStep(double step);
+        void SetTimeStep(float step);
 
         /**
          * @brief Get the Time Step object
          *
          * @return double time step
          */
-        double GetTimeStep() const;
+        float GetTimeStep() const;
 
       private:
         /**
@@ -155,7 +162,7 @@ namespace Vakol
          * @brief time step value
          *
          */
-        double m_timeStep = 1.0 / 120.0;
+        float m_timeStep = 1.0f / 120.0f;
 
         /**
          * @brief react physics common object

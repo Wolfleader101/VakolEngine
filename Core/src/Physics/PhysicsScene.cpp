@@ -2,6 +2,24 @@
 
 #include <reactphysics3d/reactphysics3d.h>
 
+class RayCastCallback : public rp3d::RaycastCallback
+{
+
+  public:
+    virtual rp3d::decimal notifyRaycastHit(const rp3d::RaycastInfo& info)
+    {
+        hit.distance = info.hitFraction;
+        hit.point = Vakol::Math::Vec3(info.worldPoint.x, info.worldPoint.y, info.worldPoint.z);
+        hit.normal = Vakol::Math::Vec3(info.worldNormal.x, info.worldNormal.y, info.worldNormal.z);
+        hit.hit = true;
+
+        // Return a fraction of 1.0 to gather all hits
+        return rp3d::decimal(1.0);
+    }
+
+    Vakol::RayCastHitInfo hit;
+};
+
 namespace Vakol
 {
     CollisionListener PhysicsScene::m_collisionListener;
@@ -28,6 +46,20 @@ namespace Vakol
         m_rigidBodies.back()->collisionData->parentBody = m_rigidBodies.back().get();
 
         return *m_rigidBodies.back();
+    }
+
+    bool PhysicsScene::RayCast(Math::Vec3& origin, Math::Vec3& direction, double maxDistance,
+                               RayCastHitInfo& info) const
+    {
+        rp3d::Ray ray(ToRPVec3(origin), ToRPVec3(direction), maxDistance);
+
+        RayCastCallback callback;
+
+        m_world->raycast(ray, &callback);
+
+        info = callback.hit;
+
+        return info.hit;
     }
 
     void PhysicsScene::EnableDebug() const

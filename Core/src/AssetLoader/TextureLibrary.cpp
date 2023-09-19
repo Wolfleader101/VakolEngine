@@ -12,11 +12,12 @@ namespace Vakol
 {
     const std::string ERROR_TEXTURE_PATH = "coreAssets/textures/error.png";
 
-    Rendering::Assets::Texture& TextureLibrary::GetTexture(const std::string& path, const unsigned int type,
-                                                           const int levels)
+    Rendering::Assets::Texture& TextureLibrary::GetTexture(const std::string& path, const unsigned int type)
     {
         if (!FileExists(path))
         {
+            VK_ERROR("Texture at path: {0} could not be found!", path);
+
             return GetErrorTexture(type);
         }
 
@@ -31,8 +32,20 @@ namespace Vakol
             unsigned char* pixels = nullptr;
 
             ImportTexture(path, texture.width, texture.height, texture.channels, pixels);
-            texture.ID =
-                Rendering::RenderAPI::GenerateTexture(levels, texture.width, texture.height, texture.channels, pixels);
+
+            int levelX = texture.width;
+            int levelY = texture.height;
+
+            while (levelX != 1 && levelY != 1)
+            {
+                levelX = static_cast<int>(floor(levelX / 2));
+                levelY = static_cast<int>(floor(levelY / 2));
+
+                texture.levels++;
+            }
+
+            texture.ID = Rendering::RenderAPI::GenerateTexture(texture.levels, texture.width, texture.height,
+                                                               texture.channels, pixels);
 
             m_textures[std::make_pair(path, type)] = std::move(texture);
         }
@@ -41,7 +54,7 @@ namespace Vakol
     }
 
     Rendering::Assets::Texture& TextureLibrary::GetTexture(const std::string& path, const unsigned int type,
-                                                           const int size, const void* data, const int levels)
+                                                           const int size, const void* data)
     {
         if (!FindTexture(path, type))
         {
@@ -55,13 +68,26 @@ namespace Vakol
 
             ImportTexture(data, size, texture.width, texture.height, texture.channels, pixels);
 
+            int levelX = texture.width;
+            int levelY = texture.height;
+
+            while (levelX != 1 && levelY != 1)
+            {
+                levelX = static_cast<int>(floor(levelX / 2));
+                levelY = static_cast<int>(floor(levelY / 2));
+
+                texture.levels++;
+            }
+
             if (!pixels)
             {
+                VK_ERROR("Unable to import texture at path: {0}", path);
+
                 return GetErrorTexture(type);
             }
 
-            texture.ID =
-                Rendering::RenderAPI::GenerateTexture(levels, texture.width, texture.height, texture.channels, pixels);
+            texture.ID = Rendering::RenderAPI::GenerateTexture(texture.levels, texture.width, texture.height,
+                                                               texture.channels, pixels);
 
             m_textures[std::make_pair(path, type)] = std::move(texture);
         }
@@ -86,6 +112,17 @@ namespace Vakol
             texture.height = height;
             texture.channels = channels;
 
+            int levelX = texture.width;
+            int levelY = texture.height;
+
+            while (levelX != 1 && levelY != 1)
+            {
+                levelX = static_cast<int>(floor(levelX / 2));
+                levelY = static_cast<int>(floor(levelY / 2));
+
+                texture.levels++;
+            }
+
             if (!pixels)
             {
                 m_textures[std::make_pair(path, type)] = GetErrorTexture(type);
@@ -102,7 +139,7 @@ namespace Vakol
 
         for (const auto& path : paths)
         {
-            const auto& texture = GetTexture(path, Rendering::Assets::VK_TEXTURE_DIFFUSE, 1);
+            const auto& texture = GetTexture(path, Rendering::Assets::VK_TEXTURE_DIFFUSE);
             textures.emplace_back(texture);
         }
 
@@ -111,7 +148,7 @@ namespace Vakol
 
     Rendering::Assets::Texture& TextureLibrary::GetErrorTexture(const unsigned int type)
     {
-        const auto& error = GetTexture(ERROR_TEXTURE_PATH, type, 1);
+        const auto& error = GetTexture(ERROR_TEXTURE_PATH, type);
 
         if (!FindTexture(ERROR_TEXTURE_PATH, type))
         {

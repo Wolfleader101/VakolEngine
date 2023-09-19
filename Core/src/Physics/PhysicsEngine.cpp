@@ -8,21 +8,6 @@
 
 namespace Vakol
 {
-    static Math::Vec3 FromRPVec3(rp3d::Vector3& vec)
-    {
-        return Math::Vec3((float)vec.x, (float)vec.y, (float)vec.z);
-    }
-
-    static Math::Vec3 FromRPVec3(const rp3d::Vector3& vec)
-    {
-        return Math::Vec3((float)vec.x, (float)vec.y, (float)vec.z);
-    }
-
-    static rp3d::Vector3 ToRPVec3(Math::Vec3& vec)
-    {
-        return rp3d::Vector3((double)vec.x, (double)vec.y, (double)vec.z);
-    }
-
     PhysicsEngine::PhysicsEngine()
     {
     }
@@ -53,16 +38,15 @@ namespace Vakol
         }
     }
 
-    AABBCollider PhysicsEngine::CreateAABBCollider(Math::Vec3& halfExtents)
+    BoxCollider PhysicsEngine::CreateBoxCollider(Math::Vec3& halfExtents)
     {
-        AABBCollider collider;
-        collider.shape = m_rpCommon.createBoxShape(
-            rp3d::Vector3((double)halfExtents.x, (double)halfExtents.y, (double)halfExtents.z));
+        BoxCollider collider;
+        collider.shape = m_rpCommon.createBoxShape(rp3d::Vector3(halfExtents.x, halfExtents.y, halfExtents.z));
         collider.collider = nullptr;
         return collider;
     }
 
-    SphereCollider PhysicsEngine::CreateSphereCollider(double radius)
+    SphereCollider PhysicsEngine::CreateSphereCollider(const float radius)
     {
         SphereCollider collider;
         collider.shape = m_rpCommon.createSphereShape(radius);
@@ -70,7 +54,7 @@ namespace Vakol
         return collider;
     }
 
-    CapsuleCollider PhysicsEngine::CreateCapsuleCollider(double radius, double height)
+    CapsuleCollider PhysicsEngine::CreateCapsuleCollider(const float radius, const float height)
     {
         CapsuleCollider collider;
         collider.shape = m_rpCommon.createCapsuleShape(radius, height);
@@ -83,22 +67,22 @@ namespace Vakol
     {
         MeshCollider collider;
 
-        // rp3d::TriangleVertexArray* triangleArray = new rp3d::TriangleVertexArray(
-        //     vertices.size(),          // number of vertices
-        //     vertices.data(),          // start of vertex data
-        //     sizeof(Math::Point),      // stride of vertex data (3 floats per vertex)
-        //     indices.size() / 3,       // number of triangles (assuming 3 indices per triangle)
-        //     indices.data(),           // start of index data
-        //     sizeof(unsigned int) * 3, // stride of index data (3 indices per triangle)
-        //     rp3d::TriangleVertexArray::VertexDataType::VERTEX_FLOAT_TYPE, // vertex data type
-        //     rp3d::TriangleVertexArray::IndexDataType::INDEX_INTEGER_TYPE  // index data type
-        //);
+        rp3d::TriangleVertexArray* triangleArray = new rp3d::TriangleVertexArray(
+            vertices.size(),          // number of vertices
+            vertices.data(),          // start of vertex data
+            sizeof(Math::Point),      // stride of vertex data (3 floats per vertex)
+            indices.size() / 3,       // number of triangles (assuming 3 indices per triangle)
+            indices.data(),           // start of index data
+            sizeof(unsigned int) * 3, // stride of index data (3 indices per triangle)
+            rp3d::TriangleVertexArray::VertexDataType::VERTEX_FLOAT_TYPE, // vertex data type
+            rp3d::TriangleVertexArray::IndexDataType::INDEX_INTEGER_TYPE  // index data type
+        );
 
-        // rp3d::TriangleMesh* triangleMesh = m_rpCommon.createTriangleMesh();
+        rp3d::TriangleMesh* triangleMesh = m_rpCommon.createTriangleMesh();
 
-        // triangleMesh->addSubpart(triangleArray);
+        triangleMesh->addSubpart(triangleArray);
 
-        // collider.shape = m_rpCommon.createConcaveMeshShape(triangleMesh);
+        collider.shape = m_rpCommon.createConcaveMeshShape(triangleMesh);
         collider.collider = nullptr;
 
         VK_WARN("Mesh Collider not supported!");
@@ -106,16 +90,16 @@ namespace Vakol
         return collider;
     }
 
-    void PhysicsEngine::AttachCollider(RigidBody& rb, AABBCollider& collider)
+    void PhysicsEngine::AttachCollider(RigidBody& rb, BoxCollider& collider)
     {
         collider.collider = rb.collisionBody->addCollider(collider.shape, rp3d::Transform::identity());
 
         rb.centerOfMass = Math::Vec3(0.0f); // FromRPVec3(collider.collider->getLocalToBodyTransform().getPosition());
         Math::Vec3 h = FromRPVec3(collider.shape->getHalfExtents());
 
-        rb.inertiaTensor[0][0] = (1.0 / 12.0) * rb.mass * ((h.y * h.y) + (h.z * h.z));
-        rb.inertiaTensor[1][1] = (1.0 / 12.0) * rb.mass * ((h.x * h.x) + (h.z * h.z));
-        rb.inertiaTensor[2][2] = (1.0 / 12.0) * rb.mass * ((h.x * h.x) + (h.y * h.y));
+        rb.inertiaTensor[0][0] = (1.0f / 12.0f) * rb.mass * ((h.y * h.y) + (h.z * h.z));
+        rb.inertiaTensor[1][1] = (1.0f / 12.0f) * rb.mass * ((h.x * h.x) + (h.z * h.z));
+        rb.inertiaTensor[2][2] = (1.0f / 12.0f) * rb.mass * ((h.x * h.x) + (h.y * h.y));
     }
 
     void PhysicsEngine::AttachCollider(RigidBody& rb, SphereCollider& collider)
@@ -143,54 +127,46 @@ namespace Vakol
         {
             //! THIS IS A HACK TO MAKE SURE THAT THE COLLIDER FOLLOWS THE TRANSFORM
             rb.collisionBody->setTransform(rp3d::Transform(
-                rp3d::Vector3(static_cast<double>(pos.x), static_cast<double>(pos.y), static_cast<double>(pos.z)),
-                rp3d::Quaternion(static_cast<double>(quatRot.x), static_cast<double>(quatRot.y),
-                                 static_cast<double>(quatRot.z), static_cast<double>(quatRot.w))));
+                rp3d::Vector3(pos.x, pos.y, pos.z), rp3d::Quaternion(quatRot.x, quatRot.y, quatRot.z, quatRot.w)));
             return;
         }
 
         // can be assumed as static, can be moved later
         static Math::Vec3 gravity(0.0f, -9.8f, 0.0f);
+        rb.force += gravity;
 
-        Math::Vec3 linearAcceleration = rb.force / static_cast<float>(rb.mass);
-        linearAcceleration += gravity;
+        Math::Vec3 linearAcceleration = rb.force / rb.mass;
 
-        rb.linearVelocity += linearAcceleration * static_cast<float>(m_timeStep);
+        rb.linearVelocity += linearAcceleration * m_timeStep;
 
-        pos += rb.linearVelocity * static_cast<float>(m_timeStep);
+        pos += rb.linearVelocity * m_timeStep;
 
         // Update angular velocity
         Math::Vec3 angularAcceleration = rb.worldInertiaTensor * rb.torque;
-        rb.angularVelocity += angularAcceleration * static_cast<float>(m_timeStep);
+        rb.angularVelocity += angularAcceleration * m_timeStep;
 
-        quatRot = quatRot + (Math::Quat(0.0f, rb.angularVelocity * static_cast<float>(m_timeStep) * 0.5f) * quatRot);
+        quatRot = quatRot + (Math::Quat(0.0f, rb.angularVelocity * m_timeStep * 0.5f) * quatRot);
 
         quatRot = Math::Normalized(quatRot);
 
-        rb.rotationMatrix = Math::Mat3Cast(quatRot); // Convert the quaternion to a 3x3 rotation matrix
-
-        // Update the world inertia tensor
-        rb.worldInertiaTensor = rb.rotationMatrix * rb.inertiaTensor * Math::Transpose(rb.rotationMatrix);
-
-        // rb.inertiaTensor = Math::Transpose(rb.rotationMatrix) * rb.worldInertiaTensor * rb.rotationMatrix;
-
         // Update transform with new position
-        rb.collisionBody->setTransform(rp3d::Transform(
-            rp3d::Vector3(static_cast<double>(pos.x), static_cast<double>(pos.y), static_cast<double>(pos.z)),
-            rp3d::Quaternion(static_cast<double>(quatRot.x), static_cast<double>(quatRot.y),
-                             static_cast<double>(quatRot.z), static_cast<double>(quatRot.w))));
+        rb.collisionBody->setTransform(rp3d::Transform(rp3d::Vector3(pos.x, pos.y, pos.z),
+                                                       rp3d::Quaternion(quatRot.x, quatRot.y, quatRot.z, quatRot.w)));
 
         // reset the force
         rb.force = Math::Vec3(0.0f, 0.0f, 0.0f);
         rb.torque = Math::Vec3(0.0f, 0.0f, 0.0f);
+        rb.rotationMatrix = Math::Mat3Cast(quatRot); // Convert the quaternion to a 3x3 rotation matrix
+        rb.worldInertiaTensor = rb.rotationMatrix * rb.inertiaTensor * Math::Transpose(rb.rotationMatrix);
+        // rb.inertiaTensor = Math::Transpose(rb.rotationMatrix) * rb.worldInertiaTensor * rb.rotationMatrix;
     }
 
     void PhysicsEngine::DetectCollisions(PhysicsScene& scene)
     {
-        scene.Update(m_timeStep);
+        scene.Update(static_cast<double>(m_timeStep));
     }
 
-    double PhysicsEngine::SolveLambda(RigidBody& rb1, RigidBody& rb2)
+    float PhysicsEngine::SolveLambda(RigidBody& rb1, RigidBody& rb2)
     {
         // lambda calcuations
         // w = angular velocity
@@ -226,22 +202,22 @@ namespace Vakol
         Math::Vec3 r2CrossN = Math::Cross(r2, n);
 
         // n . (v1 - v2)
-        double nv = static_cast<double>(Math::Dot(n, Math::Vec3(rb1.linearVelocity - rb2.linearVelocity)));
+        float nv = Math::Dot(n, Math::Vec3(rb1.linearVelocity - rb2.linearVelocity));
 
         // w1 . (r1 x n)
-        double wr1 = static_cast<double>(Math::Dot(rb1.angularVelocity, r1CrossN));
+        float wr1 = Math::Dot(rb1.angularVelocity, r1CrossN);
 
         // w2 . (r2 x n)
-        double wr2 = static_cast<double>(Math::Dot(rb2.angularVelocity, r2CrossN));
+        float wr2 = Math::Dot(rb2.angularVelocity, r2CrossN);
 
-        double e = (rb1.bounciness + rb2.bounciness) / 2.0; // average
+        float e = (rb1.bounciness + rb2.bounciness) / 2.0f; // average
 
         // top =  -(1 + e) * (n . (v1 - v2) + w1 . (r1 x n) - w2 . (r2 x n))
-        double top = -(1.0 + e) * (nv + wr1 - wr2);
+        float top = -(1.0f + e) * (nv + wr1 - wr2);
 
         // 1/m1 + 1/m2
-        double rb2MassInv = rb2.type == BodyType::Static ? 0.0 : 1.0 / rb2.mass;
-        double masses = (1 / rb1.mass) + rb2MassInv;
+        float rb2MassInv = rb2.type == BodyType::Static ? 0.0f : 1.0f / rb2.mass;
+        float masses = (1.0f / rb1.mass) + rb2MassInv;
 
         // J1^-1
         Math::Mat3 j1Inverse = rb1.type == BodyType::Static ? Math::Mat3(0.0f) : Math::Inverse(rb1.worldInertiaTensor);
@@ -253,22 +229,22 @@ namespace Vakol
         VK_ERROR("j2Inverse: {0} {1} {2}", j2Inverse[0][0], j2Inverse[0][1], j2Inverse[0][2]);
 
         // (r1 x n)^T * J1^-1 * (r1 x n)
-        double r1j = static_cast<double>(Math::Dot(r1CrossN, j1Inverse * r1CrossN));
+        float r1j = Math::Dot(r1CrossN, j1Inverse * r1CrossN);
         VK_WARN("r1crossN: {0} {1} {2}", r1CrossN.x, r1CrossN.y, r1CrossN.z);
 
         // (r2 x n)^T . J2^-1 * (r2 x n)
-        double r2j = static_cast<double>(Math::Dot(r2CrossN, j2Inverse * r2CrossN));
+        float r2j = Math::Dot(r2CrossN, j2Inverse * r2CrossN);
 
         VK_CRITICAL("r1j: {0}", r1j);
         VK_CRITICAL("r2j: {0}", r2j);
 
         // bottom = 1/m1 + 1/m2 + ((r1 x n)^T J1^-1 . (r1 x n) + (r2 x n)^T . J2^-1 . (r2 x n))
-        double bottom = masses + (r1j + r2j);
+        float bottom = masses + (r1j + r2j);
 
         VK_WARN("Bottom: {0}", bottom);
 
         // lambda = top/bottom
-        double Lambda = top / bottom;
+        float Lambda = top / bottom;
 
         return Lambda;
     }
@@ -292,17 +268,17 @@ namespace Vakol
 
         // Transform the world-space normal to object-local space using the transpose of the rotation matrix
 
-        double Lambda = rb.collisionData->lambda;
+        float Lambda = rb.collisionData->lambda;
         VK_INFO("Lambda: {0}", Lambda);
         VK_TRACE("Local Normal: {0} {1} {2}", n.x, n.y, n.z);
 
-        Math::Vec3 impulse = static_cast<float>(Lambda) * n;
+        Math::Vec3 impulse = Lambda * n;
         VK_INFO("Impulse: {0} {1} {2}", impulse.x, impulse.y, impulse.z);
 
         VK_ERROR("Linear Velocity Before: {0} {1} {2}", rb.linearVelocity.x, rb.linearVelocity.y, rb.linearVelocity.z);
 
         // Update linear velocities
-        rb.linearVelocity += impulse / static_cast<float>(rb.mass);
+        rb.linearVelocity += impulse / rb.mass;
 
         VK_ERROR("Linear Velocity After: {0} {1} {2}", rb.linearVelocity.x, rb.linearVelocity.y, rb.linearVelocity.z);
 
@@ -339,23 +315,21 @@ namespace Vakol
         }
 
         // Calculate the depenetration vector
-        Math::Vec3 depenetration =
-            -rb.collisionData->worldNormal * static_cast<float>(rb.collisionData->penetrationDepth);
+        Math::Vec3 depenetration = -rb.collisionData->worldNormal * rb.collisionData->penetrationDepth;
 
         pos += depenetration;
 
         // Update transform with new position
-        rb.collisionBody->setTransform(rp3d::Transform(
-            rp3d::Vector3(static_cast<double>(pos.x), static_cast<double>(pos.y), static_cast<double>(pos.z)),
-            rb.collisionBody->getTransform().getOrientation()));
+        rb.collisionBody->setTransform(
+            rp3d::Transform(rp3d::Vector3(pos.x, pos.y, pos.z), rb.collisionBody->getTransform().getOrientation()));
     }
 
-    void PhysicsEngine::SetTimeStep(double step)
+    void PhysicsEngine::SetTimeStep(float step)
     {
         m_timeStep = step;
     }
 
-    double PhysicsEngine::GetTimeStep() const
+    float PhysicsEngine::GetTimeStep() const
     {
         return m_timeStep;
     }

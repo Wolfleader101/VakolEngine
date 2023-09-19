@@ -15,7 +15,10 @@ namespace Vakol
 
     Application::Application()
         : m_window(nullptr), m_scriptEngine(), m_sceneManager(m_scriptEngine, m_physicsEngine), m_running(false),
-          m_gameState(GameState::Running), m_activeSystems(0), m_input(){};
+          m_gameState(GameState::Running), m_activeSystems(0), m_input()
+    {
+        Init();
+    };
 
     void Application::Init()
     {
@@ -61,6 +64,7 @@ namespace Vakol
         m_scriptEngine.SetGlobalVariable("Time", &m_time);
         m_scriptEngine.SetGlobalVariable("Input", &m_input);
         m_scriptEngine.SetGlobalVariable("GUI", &m_gui);
+        m_scriptEngine.SetGlobalVariable("PhysicsEngine", &m_physicsEngine);
 
         m_scriptEngine.SetGlobalFunction("app_run", &Application::SetRunning, this);
 
@@ -68,8 +72,6 @@ namespace Vakol
         m_scriptEngine.SetGlobalFunction("get_scene", &SceneManager::GetScene, &m_sceneManager);
         m_scriptEngine.SetGlobalFunction("remove_scene", &SceneManager::RemoveScene, &m_sceneManager);
         m_scriptEngine.SetGlobalFunction("change_scene", &SceneManager::ChangeActiveScene, &m_sceneManager);
-        // m_scriptEngine.SetGlobalFunction("set_current_scene", &SceneManager::SetactiveScene, &m_sceneManager);
-        // dont think we need get_current_scene as that's more for backend
 
         m_scriptEngine.SetGlobalFunction("set_active_mouse", &Application::SetActiveMouse, this);
     }
@@ -143,8 +145,6 @@ namespace Vakol
     {
         double physicsAccumulator = 0.0;
 
-        bool set = false;
-
         while (m_running)
         {
             m_time.Update();
@@ -153,8 +153,10 @@ namespace Vakol
 
             if (m_sceneManager.SceneChanged())
             {
+
                 m_sceneManager.GetActiveScene().GetCamera().SetAspect(
                     static_cast<float>(GetWidth()) / (GetHeight() != 0 ? static_cast<float>(GetHeight()) : 1.0f));
+
                 // ignore the current frame, and next frame on scene change
                 // on scene change, ignore rest of the current frame, delta time will be low (current frame)
                 // the next frame, the delta time will be large because of how long it took to initialise the scene
@@ -162,7 +164,6 @@ namespace Vakol
             }
 
             m_time.accumulator += m_time.deltaTime;
-
             m_gui.CreateNewFrame();
 
             if (IsSystemActive(SystemFlag::Rendering))
@@ -171,100 +172,6 @@ namespace Vakol
             }
 
             Scene& activeScene = m_sceneManager.GetActiveScene();
-            if (activeScene.getName() == "sandbox" && !set)
-            {
-                // BALL
-                {
-
-                    Entity ent = activeScene.CreateEntity("Ball");
-
-                    ent.AddComponent<Rendering::Drawable>();
-                    auto& drawable = ent.GetComponent<Rendering::Drawable>();
-
-                    auto& model = AssetLoader::GetModel(drawable.ID, "coreAssets/models/cube.obj", 1);
-
-                    Rendering::RenderEngine::GenerateModel(model, drawable);
-
-                    auto& trans = ent.GetComponent<Components::Transform>();
-                    trans.pos = Math::Vec3(7.0f, 15.0f, 0.0f);
-
-                    RigidBody& rb = activeScene.GetPhysicsScene().CreateRigidBody(trans.pos, trans.rot);
-                    rb.mass = 20.0;
-                    rb.bounciness = 0.2;
-
-                    // SphereCollider collider = m_physicsEngine.CreateSphereCollider(1.0);
-                    // m_physicsEngine.AttachCollider(rb, collider);
-
-                    // ent.AddComponent<RigidBody>(rb);
-                    // ent.AddComponent<SphereCollider>(collider);
-
-                    Math::Vec3 halfExts = trans.scale;
-                    AABBCollider collider = m_physicsEngine.CreateAABBCollider(halfExts);
-                    m_physicsEngine.AttachCollider(rb, collider);
-
-                    ent.AddComponent<RigidBody>(rb);
-                    ent.AddComponent<AABBCollider>(collider);
-                }
-
-                // BOX
-                {
-                    Entity ent = activeScene.CreateEntity("Box");
-
-                    ent.AddComponent<Rendering::Drawable>();
-                    auto& drawable = ent.GetComponent<Rendering::Drawable>();
-
-                    auto& model = AssetLoader::GetModel(drawable.ID, "coreAssets/models/cube.obj", 1);
-
-                    Rendering::RenderEngine::GenerateModel(model, drawable);
-
-                    auto& trans = ent.GetComponent<Components::Transform>();
-                    trans.pos = Math::Vec3(7.5f, 10.0f, 0.0f);
-                    trans.eulerAngles = Math::Vec3(0.0f, 0.0f, 0.0f);
-                    trans.rot = Math::Quat(Math::DegToRad(trans.eulerAngles));
-
-                    RigidBody& rb = activeScene.GetPhysicsScene().CreateRigidBody(trans.pos, trans.rot);
-                    // rb.type = BodyType::Static;
-                    rb.mass = 10.0;
-                    rb.bounciness = 0.95;
-
-                    Math::Vec3 halfExts = trans.scale;
-                    AABBCollider collider = m_physicsEngine.CreateAABBCollider(halfExts);
-                    m_physicsEngine.AttachCollider(rb, collider);
-
-                    ent.AddComponent<RigidBody>(rb);
-                    ent.AddComponent<AABBCollider>(collider);
-                }
-
-                // Floor
-                {
-                    Entity ent = activeScene.CreateEntity("Floor");
-
-                    ent.AddComponent<Rendering::Drawable>();
-                    auto& drawable = ent.GetComponent<Rendering::Drawable>();
-
-                    auto& model = AssetLoader::GetModel(drawable.ID, "coreAssets/models/cube.obj", 1);
-                    model.meshes[0].material.properties.diffuse_color = Math::Vec3(0.0f, 0.50f, 0.4f);
-
-                    Rendering::RenderEngine::GenerateModel(model, drawable);
-
-                    auto& trans = ent.GetComponent<Components::Transform>();
-                    trans.pos = Math::Vec3(0.0f, 0.0f, 0.0f);
-                    trans.scale = Math::Vec3(100.0f, 1.0f, 100.0f);
-
-                    RigidBody& rb = activeScene.GetPhysicsScene().CreateRigidBody(trans.pos, trans.rot);
-                    rb.type = BodyType::Static;
-                    rb.bounciness = 0.95;
-
-                    Math::Vec3 halfExts = trans.scale;
-                    AABBCollider collider = m_physicsEngine.CreateAABBCollider(halfExts);
-                    m_physicsEngine.AttachCollider(rb, collider);
-
-                    ent.AddComponent<RigidBody>(rb);
-                    ent.AddComponent<AABBCollider>(collider);
-                }
-
-                set = true;
-            }
 
             if (IsSystemActive(SystemFlag::Physics))
             {
@@ -275,7 +182,15 @@ namespace Vakol
                 // While there is enough accumulated time take one or several physics steps
                 while (physicsAccumulator >= m_physicsEngine.GetTimeStep())
                 {
-                    constexpr int numIterations = 2;
+                    constexpr int numIterations = 1;
+
+                    if (IsSystemActive(SystemFlag::Scripting))
+                    {
+                        activeScene.GetEntityList().Iterate<LuaScript>(
+                            [&](auto& script) { m_scriptEngine.PhysUpdateScript(script); });
+
+                        m_scriptEngine.PhysUpdateScript(activeScene.GetScript());
+                    }
                     // apply forces
                     activeScene.GetEntityList().Iterate<Components::Transform, RigidBody>(
                         [&](Components::Transform& transform, RigidBody& rb) {
@@ -335,6 +250,12 @@ namespace Vakol
             {
                 activeScene.GetEntityList().Iterate<Components::Transform, Rendering::Drawable>(
                     [&](Components::Transform& transform, const Rendering::Drawable& drawable) {
+                        // activeScene.GetEntityList().Sort<Components::Transform>(
+                        //     [&](const Components::Transform& left, const Components::Transform& right) {
+                        //         return Math::Distance(left.pos, activeScene.GetCamera().GetPos()) >
+                        //                Math::Distance(right.pos, activeScene.GetCamera().GetPos());
+                        //     });
+
                         if (drawable.active)
                             Rendering::RenderEngine::Draw(activeScene.GetCamera(), transform, drawable);
                     });
@@ -349,6 +270,10 @@ namespace Vakol
                     Rendering::RenderEngine::DrawDebugScene(activeScene.GetCamera(), activeScene.GetDebugScene());
                 }
             }
+
+            activeScene.GetEntityList().Iterate<Components::Transform>([](Components::Transform& transform) {
+                transform.rot = Math::Quat(Math::DegToRad(transform.eulerAngles));
+            });
 
             activeScene.GetCamera().Update();
 
@@ -483,7 +408,7 @@ namespace Vakol
 
         if (layer)
         {
-            layer->OnAttach(&m_sceneManager);
+            layer->OnAttach();
             m_layerManager.PushLayer(layer);
         }
     }

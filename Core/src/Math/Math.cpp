@@ -1,7 +1,6 @@
 #include "Math/Math.hpp"
 
 #include <glm/gtc/type_ptr.hpp>
-
 #include <glm/gtx/norm.hpp>
 
 namespace Vakol::Math
@@ -48,17 +47,18 @@ namespace Vakol::Math
 
     float MagnitudeSq(const Vec2& v)
     {
-        return Dot(v, v);
+        return glm::length2(v);
     }
 
     float MagnitudeSq(const Vec3& v)
     {
-        return Dot(v, v);
+        return glm::length2(v);
     }
 
     float Distance(const Point& p1, const Point& p2)
     {
         Vec3 t = p1 - p2;
+
         return Magnitude(t);
     }
 
@@ -66,6 +66,7 @@ namespace Vakol::Math
     {
         v = glm::normalize(v);
     }
+
     void Normalize(Vec3& v)
     {
         v = glm::normalize(v);
@@ -75,6 +76,7 @@ namespace Vakol::Math
     {
         return glm::normalize(v);
     }
+
     Vec3 Normalized(const Vec3& v)
     {
         return glm::normalize(v);
@@ -106,6 +108,7 @@ namespace Vakol::Math
     {
         float dot = Dot(length, direction);
         float magSq = MagnitudeSq(direction);
+
         return direction * (dot / magSq);
     }
 
@@ -120,6 +123,7 @@ namespace Vakol::Math
     {
         return len - Project(len, dir);
     }
+
     Vec3 Perpendicular(const Vec3& len, const Vec3& dir)
     {
         return len - Project(len, dir);
@@ -129,6 +133,7 @@ namespace Vakol::Math
     {
         return Magnitude(line.start - line.end);
     }
+
     float LengthSq(const Line& line)
     {
         return MagnitudeSq(line.start - line.end);
@@ -154,42 +159,6 @@ namespace Vakol::Math
         return glm::transpose(mat);
     }
 
-    Mat4 Translation(const Vec3& pos)
-    {
-        return Mat4(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, pos.x, pos.y, pos.z, 1.0f);
-    }
-
-    Mat4 Scale(const Vec3& scale)
-    {
-        return Mat4(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, scale.x, scale.y, scale.z,
-                    1.0f);
-    }
-
-    Mat4 XRotation(float angle)
-    {
-        angle = glm::radians(angle);
-        return Mat4(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, cosf(angle), sinf(angle), 0.0f, 0.0f, -sinf(angle), cos(angle), 0.0f,
-                    0.0f, 0.0f, 0.0f, 1.0f);
-    }
-    Mat4 YRotation(float angle)
-    {
-        angle = glm::radians(angle);
-        return Mat4(cosf(angle), 0.0f, -sinf(angle), 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, sinf(angle), 0.0f, cosf(angle), 0.0f,
-                    0.0f, 0.0f, 0.0f, 1.0f);
-    }
-
-    Mat4 ZRotation(float angle)
-    {
-        angle = glm::radians(angle);
-        return Mat4(cosf(angle), sinf(angle), 0.0f, 0.0f, -sinf(angle), cosf(angle), 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-                    0.0f, 0.0f, 0.0f, 1.0f);
-    }
-
-    Mat4 Rotation(float pitch, float yaw, float roll)
-    {
-        return ZRotation(roll) * XRotation(pitch) * YRotation(yaw);
-    }
-
     Point MultiplyPoint(const Point& point, const Mat4& mat)
     {
         Math::Vec4 tempPoint(point, 1.0f);
@@ -204,7 +173,7 @@ namespace Vakol::Math
         return Vec3(temp);
     }
 
-    Mat3 Cut(const Mat4& mat, int row, int col)
+    Mat3 Cut(const Mat4& mat, const int row, const int col)
     {
         Mat3 res;
         int targetRow = 0;
@@ -249,7 +218,7 @@ namespace Vakol::Math
     /// takes a value within a given input range into a given output range
     float Remap(const float iMin, const float iMax, const float oMin, const float oMax, const float v)
     {
-        float t = InverseLerp(iMin, iMax, v);
+        const float t = InverseLerp(iMin, iMax, v);
 
         return Lerp(oMin, oMax, t);
     }
@@ -273,28 +242,33 @@ namespace Vakol::Math
     {
         return glm::value_ptr(v);
     }
+
     const float* AsArray(const Vec3& v)
     {
         return glm::value_ptr(v);
     }
+
     const float* AsArray(const Vec4& v)
     {
         return glm::value_ptr(v);
     }
+
     const float* AsArray(const Mat3& m)
     {
         return glm::value_ptr(m);
     }
+
     const float* AsArray(const Mat4& m)
     {
         return glm::value_ptr(m);
     }
+
     const float* AsArray(const Quat& q)
     {
         return glm::value_ptr(q);
     }
 
-    float Cos(float val)
+    float Cos(const float val)
     {
         return glm::cos(val);
     }
@@ -309,12 +283,12 @@ namespace Vakol::Math
         return glm::scale(mat, vec);
     }
 
-    Mat4 Rotate(const Mat4& mat, float angle, const Vec3& axis)
+    Mat4 Rotate(const Mat4& mat, const float angle, const Vec3& axis)
     {
         return glm::rotate(mat, angle, axis);
     }
 
-    Quat Slerp(const Quat& x, const Quat& y, float a)
+    Quat Slerp(const Quat& x, const Quat& y, const float a)
     {
         return glm::slerp(x, y, a);
     }

@@ -85,10 +85,10 @@ namespace Vakol
       private:
         void ThrowRuntime(const std::string& str) const;
 
-        Scene* m_activeScene;
-        Scene* m_nextScene;
-        bool m_sceneChanged;
-        int m_counter;
+        Scene* m_activeScene = nullptr;
+        Scene* m_nextScene = nullptr;
+        bool m_sceneChanged = false;
+        int m_counter = 0;
 
         /**
          * @brief The map of scenes.

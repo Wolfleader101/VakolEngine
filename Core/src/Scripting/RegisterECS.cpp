@@ -4,6 +4,8 @@
 #include "LuaAccess.hpp"
 #include "SceneManager/Scene.hpp"
 
+#include "Physics/PhysicsEngine.hpp"
+#include "Physics/PhysicsTypes.hpp"
 #include "Rendering/RenderEngine.hpp"
 
 namespace Vakol
@@ -17,18 +19,33 @@ namespace Vakol
         entity_type.set_function("get_transform", &Entity::GetComponent<Components::Transform>);
         entity_type.set_function("get_fsm", &Entity::GetComponent<Components::FSM>);
 
-        entity_type.set_function("add_model", [](Entity* ent, const std::string& path, const float scale = 1.0f) {
-            if (!ent->HasComponent<Rendering::Drawable>())
-                ent->AddComponent<Rendering::Drawable>();
+        entity_type.set_function(
+            "add_model",
+            [](Entity* ent, const std::string& path, const float scale = 1.0f) -> Rendering::Assets::Model& {
+                if (!ent->HasComponent<Rendering::Drawable>())
+                    ent->AddComponent<Rendering::Drawable>();
 
-            auto& drawable = ent->GetComponent<Rendering::Drawable>();
-            drawable.ID.GenNewGUID();
+                auto& drawable = ent->GetComponent<Rendering::Drawable>();
 
-            auto& model = AssetLoader::GetModel(drawable.ID, path, scale);
-            Rendering::RenderEngine::GenerateModel(model, drawable);
+                auto& model = AssetLoader::GetModel(drawable.ID, path, scale);
+                Rendering::RenderEngine::GenerateModel(model, drawable, "coreAssets/shaders/default.shader");
 
-            return model;
-        });
+                return model;
+            });
+
+        entity_type.set_function("add_shaded_model",
+                                 [](Entity* ent, const std::string& path, const float scale,
+                                    const std::string& shaderPath) -> Rendering::Assets::Model& {
+                                     if (!ent->HasComponent<Rendering::Drawable>())
+                                         ent->AddComponent<Rendering::Drawable>();
+
+                                     auto& drawable = ent->GetComponent<Rendering::Drawable>();
+
+                                     auto& model = AssetLoader::GetModel(drawable.ID, path, scale);
+                                     Rendering::RenderEngine::GenerateModel(model, drawable, shaderPath);
+
+                                     return model;
+                                 });
 
         entity_type.set_function("replace_texture",
                                  [](const Entity* ent, const std::string& srcPath, const std::string& srcType,
@@ -50,51 +67,64 @@ namespace Vakol
                 ent->GetComponent<Rendering::Drawable>().active = active;
         });
 
-        // entity_type.set_function("add_rigid", [](Entity* ent) -> Components::RigidBody& {
-        //     if (!ent->HasComponent<Components::RigidBody>())
-        //         ent->AddComponent<Components::RigidBody>();
+        entity_type.set_function("add_rigid", [&](Entity* ent) -> RigidBody& {
+            Scene& scene = lua["scene"];
 
-        //     return ent->GetComponent<Components::RigidBody>();
-        // });
+            RigidBody rb = scene.GetPhysicsScene().CreateRigidBody(ent->GetComponent<Components::Transform>().pos,
+                                                                   ent->GetComponent<Components::Transform>().rot);
+            ent->AddComponent<RigidBody>(rb);
 
-        // entity_type.set_function("get_rigid", [](const Entity* ent) -> Components::RigidBody& {
-        //     if (ent->HasComponent<Components::RigidBody>())
-        //         return ent->GetComponent<Components::RigidBody>();
+            // TODO implement this
+            auto& newRb = ent->GetComponent<RigidBody>();
+            newRb.collisionData->parentBody = &newRb;
 
-        //     VK_CRITICAL("No rigid body component found on entity");
-        //     assert(0);
-        // });
+            return newRb;
+        });
 
-        // entity_type.set_function("add_collider", [](Entity* ent) -> Components::Collider& {
-        //     if (!ent->HasComponent<Components::Collider>())
-        //         ent->AddComponent<Components::Collider>();
-        //     return ent->GetComponent<Components::Collider>();
-        // });
+        entity_type.set_function("get_rigid", [](const Entity* ent) {
+            if (ent->HasComponent<RigidBody>())
+                return &ent->GetComponent<RigidBody>();
 
-        // entity_type.set_function("get_collider", [](const Entity* ent) -> Components::Collider& {
-        //     if (ent->HasComponent<Components::Collider>())
-        //         return ent->GetComponent<Components::Collider>();
+            VK_CRITICAL("No rigid body component found on entity");
 
-        //     VK_CRITICAL("No collider component found on entity");
-        //     assert(0);
-        // });
+            return static_cast<RigidBody*>(nullptr);
+        });
 
-        /* Changed by Caleb */
-        // entity_type.set_function("get_bounds_from_model", [](const Entity* ent) -> void {
-        //     if (ent->HasComponent<Rendering::Drawable, Components::Collider>())
-        //     {
-        //         const auto& model = ent->GetComponent<Rendering::Drawable>();
+        entity_type.set_function("add_sphere_collider", [&](Entity* ent, const double radius) {
+            PhysicsEngine& physEngine = lua["PhysicsEngine"];
 
-        //        auto& collider = ent->GetComponent<Components::Collider>();
+            if (!ent->HasComponent<RigidBody>())
+            {
+                VK_CRITICAL("No rigid body component found on entity");
 
-        //        collider.bounds = GetBounds(model, ent->GetComponent<Components::Transform>());
-        //    }
-        //    else
-        //    {
-        //        VK_CRITICAL("drawable and collider must be present to get bounds from");
-        //        assert(0);
-        //    }
-        //});
+                return static_cast<SphereCollider*>(nullptr);
+            }
+
+            SphereCollider collider = physEngine.CreateSphereCollider(radius);
+
+            ent->AddComponent<SphereCollider>(collider);
+            physEngine.AttachCollider(ent->GetComponent<RigidBody>(), collider);
+
+            return &ent->GetComponent<SphereCollider>();
+        });
+
+        entity_type.set_function("add_box_collider", [&](Entity* ent, Math::Vec3& halfExtents) {
+            PhysicsEngine& physEngine = lua["PhysicsEngine"];
+
+            if (!ent->HasComponent<RigidBody>())
+            {
+                VK_CRITICAL("No rigid body component found on entity");
+
+                return static_cast<BoxCollider*>(nullptr);
+            }
+
+            BoxCollider collider = physEngine.CreateBoxCollider(halfExtents);
+
+            ent->AddComponent<BoxCollider>(collider);
+            physEngine.AttachCollider(ent->GetComponent<RigidBody>(), collider);
+
+            return &ent->GetComponent<BoxCollider>();
+        });
 
         // TODO remove FSM component
         entity_type.set_function("add_fsm", [&](Entity* ent) -> Components::FSM& {

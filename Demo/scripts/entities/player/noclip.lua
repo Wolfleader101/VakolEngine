@@ -1,4 +1,4 @@
-local flying = false;
+local is_sprinting = false;
 
 function init()
     print("Initialising NoClip");
@@ -10,9 +10,8 @@ function init()
         pos = Vector3.new(0.0, 0.0, 0.0)
         }
     local camera = scene:get_camera();
-    camera:set_pos(-9.5, 14, 18.5);
-    camera:set_yaw(-35);
-    camera:set_pitch(-10);
+    camera:set_pos(3, 5, -22);
+    camera:set_yaw(90);
     entity:get_transform().pos = camera:get_pos();
     scene.globals.player.pos = entity:get_transform().pos;
 end
@@ -34,10 +33,14 @@ function update()
         dir.x = 1;
     end
 
-    velocity = 10 * Time.delta_time;
+    if (Input:get_key(KEYS["KEY_LEFT_SHIFT"])) then
+        velocity = (10 * Time.delta_time) * 4;
+    else
+        velocity = 10 * Time.delta_time;
+    end
 
-    if (Input:get_key_down(KEYS["KEY_Z"])) then
-        flying = not flying
+    if (Input:get_key(KEYS["KEY_LEFT_SHIFT"])) then
+        velocity = velocity * 10;
     end
 
     local camera = scene:get_camera();
@@ -50,11 +53,6 @@ function update()
         old_pos.y + (forward.y * dir.z + right.y * dir.x) * velocity,
         old_pos.z + (forward.z * dir.z + right.z * dir.x) * velocity
     )
-
-    --if (not flying) then
-    --    local terr_scale = scene.globals.terrain.transform.scale;
-    --    new_pos.y = (scene.globals.terrain.terr:get_height(new_pos.x / terr_scale.x, new_pos.z / terr_scale.z) * terr_scale.y) + 0.5;
-    --end
 
     entity:get_transform().pos = Vector3.new(new_pos.x, new_pos.y, new_pos.z);
 
