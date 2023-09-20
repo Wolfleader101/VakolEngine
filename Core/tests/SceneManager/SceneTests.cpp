@@ -13,7 +13,7 @@ TEST_CASE("Scene getName and setName", "[Scene]")
     Vakol::PhysicsScene ps = pe.CreateScene();
     Vakol::ScriptEngine se;
 
-    Vakol::LuaScript script = se.CreateScript("scripts/test/unit_test_scene.lua");
+    Vakol::LuaScript script = se.CreateScript("Demo/scripts/test/unit_test_scene.lua");
     //    replace with proper initialization
 
     Vakol::Scene scene("TestScene", script, ps);
