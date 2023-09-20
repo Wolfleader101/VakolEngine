@@ -4,6 +4,7 @@
 #include <Physics/PhysicsEngine.hpp>
 #include <SceneManager/Scene.hpp>
 #include <Scripting/ScriptEngine.hpp>
+#include <iostream>
 
 TEST_CASE("Scene getName and setName", "[Scene]")
 {
@@ -12,10 +13,10 @@ TEST_CASE("Scene getName and setName", "[Scene]")
     Vakol::PhysicsScene ps = pe.CreateScene();
     Vakol::ScriptEngine se;
 
-    Vakol::LuaScript script; //= se.CreateScript("scripts/test/unit_test_scene.lua");
+    Vakol::LuaScript script = se.CreateScript("scripts/test/unit_test_scene.lua");
     //    replace with proper initialization
 
-    // Vakol::Scene scene("TestScene", script, ps);
+    Vakol::Scene scene("TestScene", script, ps);
 
     // SECTION("getName returns the correct name")
     // {

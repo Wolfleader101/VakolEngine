@@ -11,10 +11,12 @@
 //     return 0;
 // }
 
+#include <Logger/Logger.hpp>
 #include <catch2/catch_all.hpp>
 
 TEST_CASE("BASE CASE")
 {
+    Vakol::Logger::Init(); // need this or engine dies
     int a = 3;
     int b = 2;
 

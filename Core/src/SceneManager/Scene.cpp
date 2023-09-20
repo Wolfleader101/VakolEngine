@@ -16,7 +16,7 @@
 namespace Vakol
 {
     Scene::Scene(const std::string& name, LuaScript& script, PhysicsScene& physicsScene)
-        : m_script(std::move(script)), m_name(name), m_physicsScene(physicsScene)
+        : m_script(script), m_name(name), m_physicsScene(physicsScene)
     {
         Rendering::RenderEngine::GenerateDebugScene(m_debugScene);
     }
