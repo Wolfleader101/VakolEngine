@@ -1,6 +1,5 @@
 add_subdirectory(Application)
 add_subdirectory(AssetLoader)
-add_subdirectory(Animation)
 add_subdirectory(Camera)
 add_subdirectory(ECS)
 add_subdirectory(GUI)
@@ -20,7 +19,6 @@ add_subdirectory(Window)
 SET(TESTS_SRC
     ${APPLICATION_TESTS_SRC}
     ${ASSET_LOADER_TESTS_SRC}
-    ${ANIMATION_TESTS_SRC}
     ${CAMERA_TESTS_SRC}
     ${ECS_TESTS_SRC}
     ${GUI_TESTS_SRC}
