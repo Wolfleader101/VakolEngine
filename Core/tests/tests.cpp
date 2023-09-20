@@ -1,11 +1,26 @@
-#include "../include/Vakol/core.hpp"
+// #include "../include/Vakol/core.hpp"
 
-#include "Application/Application.hpp"
-#include <iostream>
+// #include "Application/Application.hpp"
+// #include <iostream>
 
-int main()
+// #include <catch2/catch_all.hpp>
+
+// int main()
+// {
+
+//     return 0;
+// }
+
+#define CATCH_CONFIG_MAIN
+#include <catch2/catch_all.hpp>
+
+TEST_CASE("BASE CASE")
 {
+    int a = 3;
+    int b = 2;
 
-
-    return 0;
+    REQUIRE(a + b == 5);
+    REQUIRE(a - b == 1);
+    REQUIRE(a * b == 6);
+    REQUIRE(a / b == 1);
 }
