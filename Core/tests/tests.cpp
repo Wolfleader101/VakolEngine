@@ -16,7 +16,7 @@
 
 TEST_CASE("BASE CASE")
 {
-    Vakol::Logger::Init(); // need this or engine dies
+    Vakol::Logger::Init(); // need this or dies
     int a = 3;
     int b = 2;
 

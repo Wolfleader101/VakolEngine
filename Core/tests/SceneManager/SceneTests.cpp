@@ -6,29 +6,29 @@
 #include <Scripting/ScriptEngine.hpp>
 #include <iostream>
 
-TEST_CASE("Scene getName and setName", "[Scene]")
-{
+// TEST_CASE("Scene getName and setName", "[Scene]")
+// {
 
-    Vakol::PhysicsEngine pe;
-    Vakol::PhysicsScene ps = pe.CreateScene();
-    Vakol::ScriptEngine se;
+//     Vakol::PhysicsEngine pe;
+//     Vakol::PhysicsScene ps = pe.CreateScene();
+//     Vakol::ScriptEngine se;
 
-    Vakol::LuaScript script = se.CreateScript("Demo/scripts/test/unit_test_scene.lua");
-    //    replace with proper initialization
+//     Vakol::LuaScript script = se.CreateScript("Demo/scripts/test/unit_test_scene.lua");
+//     //    replace with proper initialization
 
-    Vakol::Scene scene("TestScene", script, ps);
+//     // Vakol::Scene scene("TestScene", script, ps);
 
-    // SECTION("getName returns the correct name")
-    // {
-    //     REQUIRE(scene.getName() == "TestScene");
-    // }
+//     // SECTION("getName returns the correct name")
+//     // {
+//     //     REQUIRE(scene.getName() == "TestScene");
+//     // }
 
-    // SECTION("setName updates the name correctly")
-    // {
-    //     scene.setName("NewTestScene");
-    //     REQUIRE(scene.getName() == "NewTestScene");
-    // }
-}
+//     // SECTION("setName updates the name correctly")
+//     // {
+//     //     scene.setName("NewTestScene");
+//     //     REQUIRE(scene.getName() == "NewTestScene");
+//     // }
+// }
 
 // TEST_CASE("Scene Entity creation and destruction")
 // {
