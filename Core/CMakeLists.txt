@@ -10,7 +10,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Add source and test directories
 add_subdirectory(src)
-add_subdirectory(tests)
 
 # Add source to this project's executable.
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
@@ -34,6 +33,32 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     crossguid
 )
 
+# Set compile flags.
+target_compile_options(${PROJECT_NAME} PRIVATE
+
+    # Clang
+    $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>:
+    -Weverything -fcolor-diagnostics
+
+    # Disable specific warnings.
+    -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded
+    -Wno-deprecated-declarations -Wno-exit-time-destructors
+    -Wno-switch-enum -Wno-weak-vtables -Wno-global-constructors
+    -Wno-newline-eof>
+
+    # GCC
+    $<$<CXX_COMPILER_ID:GNU>:-Wall -Wextra -Wpedantic -fdiagnostics-color=always>
+
+    # Visual Studio
+    $<$<CXX_COMPILER_ID:MSVC>:/W4>
+)
+
+
+########### TESTING ###########
+
+
+add_subdirectory(tests)
+
 # Create a test executable
 add_executable(VakolTests tests/tests.cpp)
 
@@ -41,11 +66,11 @@ add_executable(VakolTests tests/tests.cpp)
 target_sources(VakolTests PRIVATE ${TESTS_SRC})
 
 # Link Catch2 and your engine to the test executable
-target_link_libraries(VakolTests PRIVATE Catch2::Catch2)
+target_link_libraries(VakolTests PRIVATE Catch2::Catch2WithMain)
 target_link_libraries(VakolTests PRIVATE ${PROJECT_NAME})
 
 # Set compile flags.
-target_compile_options(${PROJECT_NAME} PRIVATE
+target_compile_options(VakolTests PRIVATE
 
     # Clang
     $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>:
