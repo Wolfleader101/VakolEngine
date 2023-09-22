@@ -68,6 +68,10 @@ namespace Vakol
         void StartWindowCreation(const std::string& windowName, bool centerX, bool centerY, float width, float height,
                                  const float xOffset, float yOffset) const;
         /**
+         * @brief Checks to see if the most recent window has been created and is displayed
+         */
+        bool IsWindowCreated() const;
+        /**
          * @brief Returns the FPS of the current window
          */
         float GetFramesPerSecond() const;

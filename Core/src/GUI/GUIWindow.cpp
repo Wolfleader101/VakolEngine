@@ -1,5 +1,5 @@
-#include "Window/Window.hpp" 
 #include "GUI/GUIWindow.hpp"
+#include "Window/Window.hpp"
 
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
@@ -127,6 +127,11 @@ namespace Vakol
                          ImGuiWindowFlags_NoDocking);
 
         ImGui::SetWindowSize({width, height}, ImGuiCond_Always);
+    }
+
+    bool GUIWindow::IsWindowCreated() const
+    {
+        return ImGui::IsWindowAppearing();
     }
 
     float GUIWindow::GetFramesPerSecond() const
