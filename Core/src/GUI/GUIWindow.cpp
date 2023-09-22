@@ -56,19 +56,21 @@ namespace Vakol
         ImGui_ImplGlfw_InitForOpenGL(window->GetWindow(), true); // Takes in the GLFW Window
         ImGui_ImplOpenGL3_Init("#version 460");                  // Sets the version of GLSL being used
 
-        ImGuiStyle& style = ImGui::GetStyle(); // Gets the current style of the ImGui window
-        style.Colors[ImGuiCol_WindowBg] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
-        style.Colors[ImGuiCol_Border] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
-        style.Colors[ImGuiCol_BorderShadow] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
-        style.Colors[ImGuiCol_FrameBg] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
-        style.Colors[ImGuiCol_FrameBgHovered] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
-        style.Colors[ImGuiCol_FrameBgActive] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
-        style.Colors[ImGuiCol_TitleBg] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
-        style.Colors[ImGuiCol_TitleBgCollapsed] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
-        style.Colors[ImGuiCol_TitleBgActive] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
-        style.Colors[ImGuiCol_ResizeGrip] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
-        style.Colors[ImGuiCol_ResizeGripHovered] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
-        style.Colors[ImGuiCol_ResizeGripActive] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
+        m_style = &ImGui::GetStyle(); // Gets the current style of the ImGui window
+
+        // Sets the styling options for the ImGui window
+        m_style->Colors[ImGuiCol_WindowBg] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
+        m_style->Colors[ImGuiCol_Border] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
+        m_style->Colors[ImGuiCol_BorderShadow] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
+        m_style->Colors[ImGuiCol_FrameBg] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
+        m_style->Colors[ImGuiCol_FrameBgHovered] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
+        m_style->Colors[ImGuiCol_FrameBgActive] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
+        m_style->Colors[ImGuiCol_TitleBg] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
+        m_style->Colors[ImGuiCol_TitleBgCollapsed] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
+        m_style->Colors[ImGuiCol_TitleBgActive] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
+        m_style->Colors[ImGuiCol_ResizeGrip] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
+        m_style->Colors[ImGuiCol_ResizeGripHovered] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
+        m_style->Colors[ImGuiCol_ResizeGripActive] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
 
         ChangeFontDefault("coreAssets/fonts/GidoleFont/Gidole-Regular.ttf");
     }
@@ -321,13 +323,17 @@ namespace Vakol
     void GUIWindow::WindowBackgroundStyle(const float inputRed, const float inputGreen, const float inputBlue,
                                           const float inputAlpha) const
     {
-        ImGui::GetStyle().Colors[ImGuiCol_WindowBg] =
+        m_style->Colors[ImGuiCol_WindowBg] =
             ImVec4(inputRed, inputGreen, inputBlue, inputAlpha); // Sets the background colour of the window
+
+        ImGui::GetStyle() = *m_style; // Sets the ImGui Style to the current style
     }
 
     void GUIWindow::WindowRoundingStyle(const float inputValue) const
     {
-        ImGui::GetStyle().WindowRounding = inputValue;
+        m_style->WindowRounding = inputValue; // Sets the rounding style of the window
+
+        ImGui::GetStyle() = *m_style; // Sets the ImGui Style to the current style
     }
 
     void GUIWindow::EndWindowCreation() const

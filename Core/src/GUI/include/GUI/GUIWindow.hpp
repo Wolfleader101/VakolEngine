@@ -2,10 +2,10 @@
 
 #include <imgui.h>
 
+#include <fstream>
 #include <functional>
 #include <memory>
 #include <string>
-#include <fstream>
 
 #include "Window/Window.hpp"
 
@@ -195,5 +195,6 @@ namespace Vakol
         bool is_initialised = false; /**< Flag indicating whether the GUI window is initialized */
         std::string scriptName;      /**< Name of the script */
         ImGuiContext* m_context;     /**< The context of the GUI window */
+        ImGuiStyle* m_style;         /**< The style of the GUI window */
     };
 } // namespace Vakol
