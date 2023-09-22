@@ -64,7 +64,7 @@ TEST_CASE("GUI Window class tests", "[GUIWindow]")
         REQUIRE(guiWindow1.IsWindowCreated() == true); // Check the window is created
     }
 
-    SECTION("Check if the font has been changed")
+    SECTION("Check if the font default has been changed")
     {
         // HANDLED/CALLED IN 'Application.cpp'
         auto window1 = std::make_shared<Vakol::Window>("Test Window 1", 800,
@@ -82,10 +82,10 @@ TEST_CASE("GUI Window class tests", "[GUIWindow]")
 
         guiWindow1.EndWindowCreation(); // End the window creation
 
-        REQUIRE(fontChanged == true); // Check that the font change was successful
+        REQUIRE(fontChanged == true); // Check that the font default change was successful
     }
 
-    SECTION("Check if the font change has failed")
+    SECTION("Check if the font default change has failed")
     {
         // HANDLED/CALLED IN 'Application.cpp'
         auto window1 = std::make_shared<Vakol::Window>("Test Window 1", 800,
@@ -103,6 +103,6 @@ TEST_CASE("GUI Window class tests", "[GUIWindow]")
 
         guiWindow1.EndWindowCreation(); // End the window creation
 
-        REQUIRE(fontChanged == false); // Check that the font change failed
+        REQUIRE(fontChanged == false); // Check that the font default change failed
     }
 }
