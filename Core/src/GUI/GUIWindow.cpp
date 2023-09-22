@@ -1,3 +1,4 @@
+#include "Window/Window.hpp" 
 #include "GUI/GUIWindow.hpp"
 
 #include <imgui_impl_glfw.h>
@@ -127,6 +128,7 @@ namespace Vakol
 
         ImGui::SetWindowSize({width, height}, ImGuiCond_Always);
     }
+
     float GUIWindow::GetFramesPerSecond() const
     {
         return ImGui::GetIO().Framerate;
