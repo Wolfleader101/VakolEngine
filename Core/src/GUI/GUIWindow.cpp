@@ -19,8 +19,18 @@ namespace Vakol
         font_cfg.OversampleH = 8;
         font_cfg.OversampleV = 8;
 
-        ImGui::GetIO().FontDefault = ImGui::GetIO().Fonts->AddFontFromFileTTF(inputPath.c_str(), 16.0f, &font_cfg);
-    };
+        ImFont* newFont = ImGui::GetIO().Fonts->AddFontFromFileTTF(inputPath.c_str(), 16.0f, &font_cfg);
+
+        if (newFont != nullptr)
+        {
+            ImGui::GetIO().FontDefault = newFont;
+        }
+        else
+        {
+            // Log a warning or something to indicate the font couldn't be loaded
+            VK_WARN("Failed to load font from " + inputPath + ". Using default font."); 
+        }
+    }
 
     void GUIWindow::Init(const std::shared_ptr<Window>& window)
     {
