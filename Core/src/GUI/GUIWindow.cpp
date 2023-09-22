@@ -13,28 +13,31 @@ namespace Vakol
         IMGUI_CHECKVERSION(); // Checks the version of IMGUI
     };
 
-    void GUIWindow::ChangeFontDefault(std::string inputPath) const
+    bool GUIWindow::ChangeFontDefault(std::string inputPath) const
     {
-        ImFontConfig font_cfg;
+        std::ifstream infile(inputPath); // Check if the file exists
+
+        if (!infile.good()) // If the file does not exist, use the default font
+        {
+            VK_WARN("Font file not found at " + inputPath + ". Using default font.");
+
+            return false; // Returns false if the font was not successfully changed
+        }
+
+        ImFontConfig font_cfg; // Configures the font
+
         font_cfg.OversampleH = 8;
         font_cfg.OversampleV = 8;
 
-        ImFont* newFont = ImGui::GetIO().Fonts->AddFontFromFileTTF(inputPath.c_str(), 16.0f, &font_cfg);
+        ImGui::GetIO().FontDefault =
+            ImGui::GetIO().Fonts->AddFontFromFileTTF(inputPath.c_str(), 16.0f, &font_cfg); // Adds the font to the UI
 
-        if (newFont != nullptr)
-        {
-            ImGui::GetIO().FontDefault = newFont;
-        }
-        else
-        {
-            // Log a warning or something to indicate the font couldn't be loaded
-            VK_WARN("Failed to load font from " + inputPath + ". Using default font."); 
-        }
+        return true; // Returns true if the font was successfully changed
     }
 
     void GUIWindow::Init(const std::shared_ptr<Window>& window)
     {
-        m_context = ImGui::CreateContext();
+        m_context = ImGui::CreateContext(); // Creates a new context (Window)
 
         if (!m_context)
         {
@@ -42,7 +45,7 @@ namespace Vakol
             return;
         }
 
-        SetAsContext();
+        SetAsContext(); // Sets the current context (Window)
 
         ImGuiIO& io = ImGui::GetIO();
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;   // Enable Docking

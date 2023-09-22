@@ -5,6 +5,7 @@
 #include <functional>
 #include <memory>
 #include <string>
+#include <fstream>
 
 #include "Window/Window.hpp"
 
@@ -32,11 +33,11 @@ namespace Vakol
          */
         void CreateNewFrame() const;
         /**
-         * @brief Changes the default font being used in Dear ImGui
+         * @brief Changes the default font of the UI window and returns whether it was successful
          *
          * @param inputPath The path to the font file
          */
-        void ChangeFontDefault(std::string inputPath) const;
+        bool ChangeFontDefault(std::string inputPath) const;
         /**
          * @brief Ends the current frame
          */
