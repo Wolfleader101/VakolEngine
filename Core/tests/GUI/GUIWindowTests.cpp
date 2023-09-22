@@ -46,7 +46,7 @@ TEST_CASE("GUI Window class tests", "[GUIWindow]")
         REQUIRE(height == 600); // Check the height is correct
     }
 
-    SECTION("Check if window is created & displaying")
+    SECTION("Check if most recent window is created")
     {
         // HANDLED/CALLED IN 'Application.cpp'
         auto window1 = std::make_shared<Vakol::Window>("Test Window 1", 800,
