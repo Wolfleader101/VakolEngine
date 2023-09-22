@@ -154,6 +154,11 @@ namespace Vakol
         return ImGui::GetIO().Framerate;
     };
 
+    ImGuiStyle* GUIWindow::GetStyle() const
+    {
+		return m_style;
+	}
+
     void GUIWindow::Update() const
     {
         ImGui::Render(); // Renders the UI

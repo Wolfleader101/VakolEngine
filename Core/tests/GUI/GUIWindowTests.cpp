@@ -1,3 +1,5 @@
+#include <cmath> // for std::fabs
+
 #include <catch2/catch_all.hpp>
 
 #include <GUI/GUIWindow.hpp>
@@ -8,15 +10,14 @@ TEST_CASE("GUI Window class tests", "[GUIWindow]")
 
     SECTION("DisplayWindowWidth returns correct width")
     {
-        // HANDLED/CALLED IN 'Application.cpp'
-        auto window1 = std::make_shared<Vakol::Window>("Test Window 1", 800,
-                                                       600); // Create a window for the GUI to be displayed in
+        std::shared_ptr<Vakol::Window> window1 =
+            std::make_shared<Vakol::Window>("DisplayWindowWidth Test", 800,
+                                            600); // Create a window for the GUI to be displayed in
 
         guiWindow1.Init(window1); // Initialise the window
 
         guiWindow1.CreateNewFrame(); // Create a new frame
 
-        // HANDLED/CALLED IN 'GUIWindow.cpp'
         guiWindow1.StartWindowCreation("Test Window 1", true, true, 800, 600, 0, 0); // Create a window
 
         float width = guiWindow1.DisplayWindowWidth(); // Get the width of the window
@@ -28,15 +29,14 @@ TEST_CASE("GUI Window class tests", "[GUIWindow]")
 
     SECTION("DisplayWindowHeight returns correct height")
     {
-        // HANDLED/CALLED IN 'Application.cpp'
-        auto window1 = std::make_shared<Vakol::Window>("Test Window 1", 800,
-                                                       600); // Create a window for the GUI to be displayed in
+        std::shared_ptr<Vakol::Window> window1 =
+            std::make_shared<Vakol::Window>("DisplayWindowHeight Test", 800,
+                                            600); // Create a window for the GUI to be displayed in
 
         guiWindow1.Init(window1); // Initialise the window
 
         guiWindow1.CreateNewFrame(); // Create a new frame
 
-        // HANDLED/CALLED IN 'GUIWindow.cpp'
         guiWindow1.StartWindowCreation("Test Window 2", true, true, 800, 600, 0, 0); // Create a window
 
         float height = guiWindow1.DisplayWindowHeight(); // Get the height of the window
@@ -48,15 +48,14 @@ TEST_CASE("GUI Window class tests", "[GUIWindow]")
 
     SECTION("Check if most recent window is created")
     {
-        // HANDLED/CALLED IN 'Application.cpp'
-        auto window1 = std::make_shared<Vakol::Window>("Test Window 1", 800,
-                                                       600); // Create a window for the GUI to be displayed in
+        std::shared_ptr<Vakol::Window> window1 =
+            std::make_shared<Vakol::Window>("ImGui Window Creation Test", 800,
+                                            600); // Create a window for the GUI to be displayed in
 
         guiWindow1.Init(window1); // Initialise the window
 
         guiWindow1.CreateNewFrame(); // Create a new frame
 
-        // HANDLED/CALLED IN 'GUIWindow.cpp'
         guiWindow1.StartWindowCreation("Test Window 3", true, true, 800, 600, 0, 0); // Create a window
 
         guiWindow1.EndWindowCreation(); // End the window creation
@@ -66,9 +65,9 @@ TEST_CASE("GUI Window class tests", "[GUIWindow]")
 
     SECTION("Check if the font default has been changed")
     {
-        // HANDLED/CALLED IN 'Application.cpp'
-        auto window1 = std::make_shared<Vakol::Window>("Test Window 1", 800,
-                                                       600); // Create a window for the GUI to be displayed in
+        std::shared_ptr<Vakol::Window> window1 =
+            std::make_shared<Vakol::Window>("Default Font Success Test", 800,
+                                            600); // Create a window for the GUI to be displayed in
 
         guiWindow1.Init(window1); // Initialise the window
 
@@ -77,7 +76,6 @@ TEST_CASE("GUI Window class tests", "[GUIWindow]")
 
         guiWindow1.CreateNewFrame(); // Create a new frame
 
-        // HANDLED/CALLED IN 'GUIWindow.cpp'
         guiWindow1.StartWindowCreation("Test Window 4", true, true, 800, 600, 0, 0); // Create a window
 
         guiWindow1.EndWindowCreation(); // End the window creation
@@ -87,9 +85,9 @@ TEST_CASE("GUI Window class tests", "[GUIWindow]")
 
     SECTION("Check if the font default change has failed")
     {
-        // HANDLED/CALLED IN 'Application.cpp'
-        auto window1 = std::make_shared<Vakol::Window>("Test Window 1", 800,
-                                                       600); // Create a window for the GUI to be displayed in
+        std::shared_ptr<Vakol::Window> window1 =
+            std::make_shared<Vakol::Window>("Default Font Failed Test Window", 800,
+                                            600); // Create a window for the GUI to be displayed in
 
         guiWindow1.Init(window1); // Initialise the window
 
@@ -98,11 +96,29 @@ TEST_CASE("GUI Window class tests", "[GUIWindow]")
 
         guiWindow1.CreateNewFrame(); // Create a new frame
 
-        // HANDLED/CALLED IN 'GUIWindow.cpp'
-        guiWindow1.StartWindowCreation("Test Window 4", true, true, 800, 600, 0, 0); // Create a window
+        guiWindow1.StartWindowCreation("Test Window 5", true, true, 800, 600, 0, 0); // Create a window
 
         guiWindow1.EndWindowCreation(); // End the window creation
 
         REQUIRE(fontChanged == false); // Check that the font default change failed
+    }
+
+    SECTION("Check if window rounding changes")
+    {
+        std::shared_ptr<Vakol::Window> window1 = std::make_shared<Vakol::Window>(
+            "Window Rounding Test", 800, 600); // Create a window for the GUI to be displayed in
+
+        guiWindow1.Init(window1); // Initialise the window
+
+        guiWindow1.WindowRoundingStyle(5.5f); // Change the window rounding style to 5.5f
+
+        guiWindow1.CreateNewFrame();                                                 // Create a new frame
+        guiWindow1.StartWindowCreation("Test Window 6", true, true, 800, 600, 0, 0); // Create a window
+
+        guiWindow1.EndWindowCreation(); // End the window creation
+
+        float newRounding = guiWindow1.GetStyle()->WindowRounding; // Get the new window rounding value
+
+        REQUIRE(std::fabs(newRounding - 5.5f) < 0.01f); // Check that the window rounding was successfully changed
     }
 }

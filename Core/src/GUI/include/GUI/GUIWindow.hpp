@@ -77,6 +77,10 @@ namespace Vakol
          */
         float GetFramesPerSecond() const;
         /**
+         * @brief Returns the current ImGui style
+         */
+        ImGuiStyle* GetStyle() const;
+        /**
          * @brief An update function to call new frame
          *
          */
