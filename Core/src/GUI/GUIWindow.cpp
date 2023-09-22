@@ -19,7 +19,7 @@ namespace Vakol
 
         if (!infile.good()) // If the file does not exist, use the default font
         {
-            VK_WARN("Font file not found at " + inputPath + ". Using default font.");
+            VK_WARN("Font file not found at '" + inputPath + "'. Using default font.");
 
             return false; // Returns false if the font was not successfully changed
         }
