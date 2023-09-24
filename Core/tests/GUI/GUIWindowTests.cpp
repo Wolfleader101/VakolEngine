@@ -20,13 +20,13 @@ TEST_CASE("GUI Window class tests", "[GUIWindow]")
 
         guiWindow1.StartWindowCreation("Test Window 1", true, true, 800, 600, 0, 0); // Create a window
 
-        float width = guiWindow1.DisplayWindowWidth(); // Get the width of the window
+        float width = guiWindow1.DisplayWindowWidth();   // Get the width of the window
         float height = guiWindow1.DisplayWindowHeight(); // Get the height of the window
 
         guiWindow1.EndWindowCreation(); // End the window creation
 
-        REQUIRE(width == 800); // Check the width is correct
-        REQUIRE(height == 600); // Check the height is correct 
+        REQUIRE(width == 800);  // Check the width is correct
+        REQUIRE(height == 600); // Check the height is correct
     }
 
     SECTION("Check if most recent window is created")
@@ -93,7 +93,7 @@ TEST_CASE("GUI Window class tests", "[GUIWindow]")
 
         guiWindow1.Init(window1); // Initialise the window
 
-        guiWindow1.WindowRoundingStyle(5.5f); // Change the window rounding style to 5.5f
+        guiWindow1.WindowRoundingStyle(5.5f);                     // Change the window rounding style to 5.5f
         guiWindow1.WindowBackgroundStyle(1.0f, 0.0f, 0.0f, 1.0f); // Change the window background style to red
 
         guiWindow1.CreateNewFrame();                                                 // Create a new frame
@@ -111,7 +111,7 @@ TEST_CASE("GUI Window class tests", "[GUIWindow]")
         REQUIRE(col.x == 1.0f);
         REQUIRE(col.y == 0.0f);
         REQUIRE(col.z == 0.0f);
-        REQUIRE(col.w == 1.0f); 
+        REQUIRE(col.w == 1.0f);
     }
 
     SECTION("GetFramesPerSecond returns a valid value")
@@ -124,10 +124,10 @@ TEST_CASE("GUI Window class tests", "[GUIWindow]")
         guiWindow1.CreateNewFrame();                                                 // Create a new frame
         guiWindow1.StartWindowCreation("Test Window 6", true, true, 800, 600, 0, 0); // Create a window
 
-        guiWindow1.EndWindowCreation(); // End the window creation 
-        
+        guiWindow1.EndWindowCreation(); // End the window creation
+
         float fps = guiWindow1.GetFramesPerSecond(); // Get the FPS
 
         REQUIRE(fps > 0); // Check that the FPS is valid (i.e. greater than 0)
-    } 
+    }
 }
