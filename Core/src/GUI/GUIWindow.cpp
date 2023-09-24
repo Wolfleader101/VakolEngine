@@ -156,8 +156,8 @@ namespace Vakol
 
     ImGuiStyle* GUIWindow::GetStyle() const
     {
-		return m_style;
-	}
+        return m_style;
+    }
 
     void GUIWindow::Update() const
     {
