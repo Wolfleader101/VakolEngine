@@ -49,12 +49,15 @@ namespace Vakol
      */
     struct CollisionData
     {
-        Math::Vec3 worldNormal = Math::Vec3(0.0f, 0.0f, 0.0f);
-        Math::Vec3 worldPoint = Math::Vec3(0.0f, 0.0f, 0.0f);
-        Math::Vec3 localPoint = Math::Vec3(0.0f, 0.0f, 0.0f);
-        float penetrationDepth = 0.0;
+        Math::Vec3 worldPoint = Math::Vec3(0.0f);
+        Math::Vec3 localPoint = Math::Vec3(0.0f);
+
+        Math::Vec3 worldNormal = Math::Vec3(0.0f);
+        Math::Vec3 localNormal = Math::Vec3(0.0f);
+
+        float penetrationDepth = 0.0f;
+
         bool isColliding = false;
-        float lambda = 0.0;
 
         RigidBody* parentBody = nullptr;
     };
@@ -66,24 +69,21 @@ namespace Vakol
     struct RigidBody
     {
         BodyType type = BodyType::Dynamic;
-        float mass = 1.0;
-        // double bounciness = 0.3;
-        Math::Vec3 bounciness = Math::Vec3(0.8f, 0.3f, 0.8f);
-        bool hasGravity = true;
+        float mass = 1.0f;
 
-        Math::Vec3 centerOfMass = Math::Vec3(0.0f, 0.0f, 0.0f); // will have to be calculated
+        bool useGravity = true;
 
-        Math::Vec3 force = Math::Vec3(0.0f, 0.0f, 0.0f);
-        Math::Vec3 torque = Math::Vec3(0.0f, 0.0f, 0.0f);
-        Math::Vec3 linearVelocity = Math::Vec3(0.0f, 0.0f, 0.0f);
-        Math::Vec3 angularVelocity = Math::Vec3(0.0f, 0.0f, 0.0f);
-        Math::Mat3 rotationMatrix = Math::Mat3(0.0f);
+        Math::Vec3 inertiaTensor = Math::Vec3(0.0f);
 
-        Math::Mat3 worldInertiaTensor = Math::Mat3(0.0f);
-        Math::Mat3 inertiaTensor = Math::Mat3(0.0f);
+        Math::Vec3 linearVelocity = Math::Vec3(0.0f);
+        Math::Vec3 angularVelocity = Math::Vec3(0.0f);
+
+        Math::Vec3 localCentreOfMass = Math::Vec3(0.0f);
+        Math::Vec3 worldCentreOfMass = Math::Vec3(0.0f);
+
+        Math::IVec3 constraints = Math::IVec3(0);
 
         rp3d::CollisionBody* collisionBody = nullptr;
-
         std::shared_ptr<CollisionData> collisionData = nullptr;
     };
 

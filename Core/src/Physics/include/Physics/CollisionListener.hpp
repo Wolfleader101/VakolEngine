@@ -19,6 +19,6 @@ namespace Vakol
          *
          * @param data from react physics
          */
-        virtual void onContact(const rp3d::CollisionCallback::CallbackData& data) override;
+        virtual void onContact(const CallbackData& data) override;
     };
 } // namespace Vakol

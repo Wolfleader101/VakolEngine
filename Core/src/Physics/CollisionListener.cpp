@@ -4,94 +4,72 @@
 namespace Vakol
 {
 
-    void CollisionListener::onContact(const rp3d::CollisionCallback::CallbackData& data)
+    void CollisionListener::onContact(const CallbackData& data)
     {
         for (unsigned int p = 0; p < data.getNbContactPairs(); p++)
         {
-            const ContactPair& contactPair = data.getContactPair(p);
+            const ContactPair& pair = data.getContactPair(p);
 
-            rp3d::CollisionBody* body1 = contactPair.getBody1();
-            rp3d::CollisionBody* body2 = contactPair.getBody2();
+            rp3d::CollisionBody* body1 = pair.getBody1();
+            rp3d::CollisionBody* body2 = pair.getBody2();
 
-            CollisionData* body1Data = static_cast<CollisionData*>(body1->getUserData());
-            CollisionData* body2Data = static_cast<CollisionData*>(body2->getUserData());
+            auto* b1Data = static_cast<CollisionData*>(body1->getUserData());
+            auto* b2Data = static_cast<CollisionData*>(body2->getUserData());
 
-            Math::Vec3 avgNormal = Math::Vec3(0.0f, 0.0f, 0.0f);
+            rp3d::Vector3 worldPoint1 = rp3d::Vector3::zero();
+            rp3d::Vector3 worldPoint2 = rp3d::Vector3::zero();
 
-            Math::Vec3 avgWorldPoint1 = Math::Vec3(0.0f, 0.0f, 0.0f);
-            Math::Vec3 avgLocalPoint1 = Math::Vec3(0.0f, 0.0f, 0.0f);
+            rp3d::Vector3 worldNormal = rp3d::Vector3::zero();
 
-            Math::Vec3 avgWorldPoint2 = Math::Vec3(0.0f, 0.0f, 0.0f);
-            Math::Vec3 avgLocalPoint2 = Math::Vec3(0.0f, 0.0f, 0.0f);
+            rp3d::Vector3 localPoint1 = rp3d::Vector3::zero();
+            rp3d::Vector3 localPoint2 = rp3d::Vector3::zero();
 
-            float avgPenetrationDepth = 0.0f;
+            rp3d::Vector3 localNormal1 = rp3d::Vector3::zero();
+            rp3d::Vector3 localNormal2 = rp3d::Vector3::zero();
 
-            if (contactPair.getNbContactPoints() == 0u)
+            float penetrationDepth = 0.0f;
+
+            for (unsigned int c = 0; c < pair.getNbContactPoints(); ++c)
             {
-                continue;
+                const ContactPoint& point = pair.getContactPoint(c);
+
+                worldPoint1 = pair.getCollider1()->getLocalToWorldTransform() * point.getLocalPointOnCollider1();
+                worldPoint2 = pair.getCollider2()->getLocalToWorldTransform() * point.getLocalPointOnCollider2();
+
+                localPoint1 = point.getLocalPointOnCollider1();
+                localPoint2 = point.getLocalPointOnCollider2();
+
+                worldNormal = point.getWorldNormal();
+
+                localNormal1 = pair.getCollider1()->getLocalToWorldTransform().getInverse() * point.getWorldNormal();
+                localNormal2 = pair.getCollider2()->getLocalToWorldTransform().getInverse() * point.getWorldNormal();
+
+                penetrationDepth = point.getPenetrationDepth();
             }
 
-            // For each contact point of the contact pair
-            for (unsigned int c = 0; c < contactPair.getNbContactPoints(); c++)
+            if (b1Data)
             {
-                // Get the contact point
-                ContactPoint contactPoint = contactPair.getContactPoint(c);
+                b1Data->worldPoint = FromRPVec3(worldPoint1);
+                b1Data->localPoint = FromRPVec3(localPoint1);
 
-                rp3d::Vector3 worldPoint1 =
-                    contactPair.getCollider1()->getLocalToWorldTransform() * contactPoint.getLocalPointOnCollider1();
+                b1Data->worldNormal = FromRPVec3(worldNormal);
+                b1Data->localNormal = FromRPVec3(localNormal1);
 
-                avgWorldPoint1 += Math::Vec3(worldPoint1.x, worldPoint1.y, worldPoint1.z);
-                avgLocalPoint1 +=
-                    Math::Vec3(contactPoint.getLocalPointOnCollider1().x, contactPoint.getLocalPointOnCollider1().y,
-                               contactPoint.getLocalPointOnCollider1().z);
-
-                rp3d::Vector3 worldPoint2 =
-                    contactPair.getCollider2()->getLocalToWorldTransform() * contactPoint.getLocalPointOnCollider2();
-
-                avgWorldPoint2 += Math::Vec3(worldPoint2.x, worldPoint2.y, worldPoint2.z);
-                avgLocalPoint2 +=
-                    Math::Vec3(contactPoint.getLocalPointOnCollider2().x, contactPoint.getLocalPointOnCollider2().y,
-                               contactPoint.getLocalPointOnCollider2().z);
-
-                rp3d::Vector3 rp3dNormal = contactPoint.getWorldNormal();
-
-                Math::Vec3 normal(rp3dNormal.x, rp3dNormal.y, rp3dNormal.z);
-
-                avgNormal += normal;
-
-                avgPenetrationDepth += contactPoint.getPenetrationDepth();
+                b1Data->penetrationDepth = penetrationDepth;
+                b1Data->isColliding = true;
             }
 
-            avgWorldPoint1 /= static_cast<float>(contactPair.getNbContactPoints());
-            avgLocalPoint1 /= static_cast<float>(contactPair.getNbContactPoints());
-            avgWorldPoint2 /= static_cast<float>(contactPair.getNbContactPoints());
-            avgLocalPoint2 /= static_cast<float>(contactPair.getNbContactPoints());
-            avgPenetrationDepth /= static_cast<float>(contactPair.getNbContactPoints());
-
-            if (body1Data)
+            if (b2Data)
             {
-                body1Data->worldNormal = Math::Normalized(avgNormal);
-                body1Data->worldPoint = avgWorldPoint1;
-                body1Data->localPoint = avgLocalPoint1;
-                body1Data->penetrationDepth += avgPenetrationDepth;
-                body1Data->isColliding = true;
-            }
+                b2Data->worldPoint = FromRPVec3(worldPoint2);
+                b2Data->localPoint = FromRPVec3(localPoint2);
 
-            if (body2Data)
-            {
-                body2Data->worldNormal = -Math::Normalized(avgNormal);
-                body2Data->worldPoint = avgWorldPoint2;
-                body2Data->localPoint = avgLocalPoint2;
-                body2Data->penetrationDepth += avgPenetrationDepth;
-                body2Data->isColliding = true;
-            }
+                b2Data->worldNormal = FromRPVec3(worldNormal);
+                b2Data->localNormal = FromRPVec3(localNormal2);
 
-            // if (body1Data && body2Data)
-            // {
-            //     double lambda = PhysicsEngine::SolveLambda(*body1Data->parentBody, *body2Data->parentBody);
-            //     body1Data->lambda += lambda;
-            //     body2Data->lambda += lambda;
-            // }
+                b2Data->penetrationDepth = penetrationDepth;
+                b2Data->isColliding = true;
+            }
         }
     }
 } // namespace Vakol

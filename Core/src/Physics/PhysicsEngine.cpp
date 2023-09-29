@@ -7,6 +7,8 @@
 
 namespace Vakol
 {
+    constexpr Math::Vec3 GRAVITY = Math::Vec3(0.0f, -9.81f, 0.0f);
+
     PhysicsEngine::PhysicsEngine()
     {
     }
@@ -40,24 +42,30 @@ namespace Vakol
     BoxCollider PhysicsEngine::CreateBoxCollider(Math::Vec3& halfExtents)
     {
         BoxCollider collider;
+
         collider.shape = m_rpCommon.createBoxShape(rp3d::Vector3(halfExtents.x, halfExtents.y, halfExtents.z));
         collider.collider = nullptr;
+
         return collider;
     }
 
     SphereCollider PhysicsEngine::CreateSphereCollider(const float radius)
     {
         SphereCollider collider;
+
         collider.shape = m_rpCommon.createSphereShape(radius);
         collider.collider = nullptr;
+
         return collider;
     }
 
     CapsuleCollider PhysicsEngine::CreateCapsuleCollider(const float radius, const float height)
     {
         CapsuleCollider collider;
+
         collider.shape = m_rpCommon.createCapsuleShape(radius, height);
         collider.collider = nullptr;
+
         return collider;
     }
 
@@ -109,43 +117,21 @@ namespace Vakol
         collider.collider = rb.collisionBody->addCollider(collider.shape, rp3d::Transform::identity());
     }
 
-    void PhysicsEngine::ApplyForces(Math::Vec3& pos, Math::Quat& quatRot, RigidBody& rb)
+    void PhysicsEngine::ApplyForces(Math::Vec3& pos, Math::Quat& rot, RigidBody& rb)
     {
-        rb.collisionData->parentBody = &rb;
-
         if (rb.type == BodyType::Static)
         {
-            //! THIS IS A HACK TO MAKE SURE THAT THE COLLIDER FOLLOWS THE TRANSFORM
             rb.collisionBody->setTransform(rp3d::Transform(
-                rp3d::Vector3(pos.x, pos.y, pos.z), rp3d::Quaternion(quatRot.x, quatRot.y, quatRot.z, quatRot.w)));
+                rp3d::Vector3(pos.x, pos.y, pos.z), rp3d::Quaternion(rot.x, rot.y, rot.z, rot.w)));
+
             return;
         }
 
-        // can be assumed as static, can be moved later
-        static Math::Vec3 gravity(0.0f, -9.8f, 0.0f);
-        rb.force += gravity;
+        rb.linearVelocity = rb.linearVelocity + GRAVITY * static_cast<float>(m_timeStep);
 
-        Math::Vec3 linearAcceleration = rb.force / rb.mass;
+        pos = pos + rb.linearVelocity * static_cast<float>(m_timeStep);
 
-        rb.linearVelocity += linearAcceleration * static_cast<float>(m_timeStep);
-
-        pos += rb.linearVelocity * static_cast<float>(m_timeStep);
-
-        // Update angular velocity
-        Math::Vec3 angularAcceleration = rb.worldInertiaTensor * rb.torque;
-        rb.angularVelocity += angularAcceleration * static_cast<float>(m_timeStep);
-
-        quatRot = quatRot + (Math::Quat(0.0f, rb.angularVelocity * static_cast<float>(m_timeStep) * 0.5f) * quatRot);
-
-        quatRot = Math::Normalized(quatRot);
-
-        // Update transform with new position
-        rb.collisionBody->setTransform(rp3d::Transform(rp3d::Vector3(pos.x, pos.y, pos.z),
-                                                       rp3d::Quaternion(quatRot.x, quatRot.y, quatRot.z, quatRot.w)));
-
-        // reset the force
-        rb.force = Math::Vec3(0.0f, 0.0f, 0.0f);
-        rb.torque = Math::Vec3(0.0f, 0.0f, 0.0f);
+        rb.collisionBody->setTransform(rp3d::Transform(ToRPVec3(pos), rp3d::Quaternion(rot.x, rot.y, rot.z, rot.w)));
     }
 
     void PhysicsEngine::DetectCollisions(PhysicsScene& scene)
@@ -157,50 +143,20 @@ namespace Vakol
     {
         // Exit if there's no collision data or if the body is static
         if (!rb.collisionData || rb.type == BodyType::Static)
-        {
             return;
-        }
 
         if (!rb.collisionData->isColliding)
             return;
-
-        // Get the world-space normal and normalize it
-        Math::Vec3 n = -Math::Normalized(rb.collisionData->worldNormal);
-
-        Math::Vec3 reflectedVelocity = rb.linearVelocity - (2.0f * Math::Dot(rb.linearVelocity, n) * n);
-
-        // Update linear velocities
-        rb.linearVelocity = reflectedVelocity * rb.bounciness;
-
-        Depenetration(pos, rb);
-
-        // reset the collision data
-        rb.collisionData->penetrationDepth = 0.0;
-        rb.collisionData->worldNormal = Math::Vec3(0.0f, 0.0f, 0.0f);
-        rb.collisionData->worldPoint = Math::Vec3(0.0f, 0.0f, 0.0f);
-        rb.collisionData->isColliding = false;
     }
 
     void PhysicsEngine::Depenetration(Math::Vec3& pos, RigidBody& rb)
     {
         if (!rb.collisionData || rb.type == BodyType::Static)
-        {
             return;
-        }
 
         if (!rb.collisionData->isColliding)
-        {
             return;
-        }
 
-        // Calculate the depenetration vector
-        Math::Vec3 depenetration = -rb.collisionData->worldNormal * rb.collisionData->penetrationDepth;
-
-        pos += depenetration;
-
-        // Update transform with new position
-        rb.collisionBody->setTransform(
-            rp3d::Transform(rp3d::Vector3(pos.x, pos.y, pos.z), rb.collisionBody->getTransform().getOrientation()));
     }
 
     void PhysicsEngine::SetTimeStep(double step)

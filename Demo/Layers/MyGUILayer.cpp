@@ -232,56 +232,24 @@ void MyGUILayer::OnUpdate()
                                 ImGui::EndCombo();
                             }
 
-                            ImGui::Checkbox("Has Gravity", &rb.hasGravity);
-                            ImGui::DragScalar("Mass", ImGuiDataType_Double, &rb.mass, 0.1f);
+                            //ImGui::Checkbox("Use Gravity", &rb.useGravity);
+                            ImGui::DragFloat("Mass", &rb.mass, 0.1f);
                             // ImGui::DragScalar("Bounciness", ImGuiDataType_Double, &rb.bounciness, 0.1f);
-                            ImGui::DragFloat3("Bounciness", &rb.bounciness.x, 0.1f);
-                            ImGui::DragFloat3("Center of Mass", &rb.centerOfMass.x, 0.1f);
+                            // ImGui::DragFloat3("Bounciness", &rb.bounciness.x, 0.1f);
+                            // ImGui::DragFloat3("Center of Mass", &rb.centerOfMass.x, 0.1f);
 
-                            ImGui::DragFloat3("Force", &rb.force.x, 0.1f);
-                            ImGui::DragFloat3("Torque", &rb.torque.x, 0.1f);
                             ImGui::DragFloat3("Linear Velocity", &rb.linearVelocity.x, 0.1f);
                             ImGui::DragFloat3("Angular Velocity", &rb.angularVelocity.x, 0.1f);
 
-                            ImGui::Spacing();
-                            ImGui::SeparatorText("Rotiation Matrix");
-
-                            // ImGui::Text("Rotation Matrix");
-                            ImGui::Text("x: %f, %f, %f", rb.rotationMatrix[0][0], rb.rotationMatrix[0][1],
-                                        rb.rotationMatrix[0][2]);
-                            ImGui::Text("y: %f, %f, %f", rb.rotationMatrix[1][0], rb.rotationMatrix[1][1],
-                                        rb.rotationMatrix[1][2]);
-                            ImGui::Text("z: %f, %f, %f", rb.rotationMatrix[2][0], rb.rotationMatrix[2][1],
-                                        rb.rotationMatrix[2][2]);
-
-                            ImGui::Spacing();
-                            ImGui::SeparatorText("World Interia Tensor");
-
-                            ImGui::Text("x: %f, %f, %f", rb.worldInertiaTensor[0][0], rb.worldInertiaTensor[0][1],
-                                        rb.worldInertiaTensor[0][2]);
-                            ImGui::Text("y: %f, %f, %f", rb.worldInertiaTensor[1][0], rb.worldInertiaTensor[1][1],
-                                        rb.worldInertiaTensor[1][2]);
-                            ImGui::Text("z: %f, %f, %f", rb.worldInertiaTensor[2][0], rb.worldInertiaTensor[2][1],
-                                        rb.worldInertiaTensor[2][2]);
-
-                            ImGui::Spacing();
-                            ImGui::SeparatorText("Interia Tensor");
-
-                            ImGui::Text("x: %f, %f, %f", rb.inertiaTensor[0][0], rb.inertiaTensor[0][1],
-                                        rb.inertiaTensor[0][2]);
-                            ImGui::Text("y: %f, %f, %f", rb.inertiaTensor[1][0], rb.inertiaTensor[1][1],
-                                        rb.inertiaTensor[1][2]);
-                            ImGui::Text("z: %f, %f, %f", rb.inertiaTensor[2][0], rb.inertiaTensor[2][1],
-                                        rb.inertiaTensor[2][2]);
-
                             if (rb.collisionData)
                             {
-                                // ImGui::DragFloat3("World Normal", &rb.collisionData->worldNormal.x, 0.1f);
-                                // ImGui::DragFloat3("World Point", &rb.collisionData->worldPoint.x, 0.1f);
-                                // ImGui::DragFloat3("Local Point", &rb.collisionData->localPoint.x, 0.1f);
-                                // ImGui::DragScalar("Penetration Depth", ImGuiDataType_Double,
-                                //                   &rb.collisionData->penetrationDepth, 0.1f);
-                                // ImGui::Checkbox("Is Colliding", &rb.collisionData->isColliding);
+                                ImGui::DragFloat3("World Normal", &rb.collisionData->worldNormal.x, 0.1f);
+                                ImGui::DragFloat3("Local Normal", &rb.collisionData->localNormal.x, 0.1f);
+                                ImGui::DragFloat3("World Point", &rb.collisionData->worldPoint.x, 0.1f);
+                                ImGui::DragFloat3("Local Point", &rb.collisionData->localPoint.x, 0.1f);
+                                ImGui::DragScalar("Penetration Depth", ImGuiDataType_Double,
+                                                  &rb.collisionData->penetrationDepth, 0.1f);
+                                ImGui::Checkbox("Is Colliding", &rb.collisionData->isColliding);
                             }
                         }
 

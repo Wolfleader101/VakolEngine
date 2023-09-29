@@ -206,9 +206,6 @@ namespace Vakol
                             m_physicsEngine.ResolveCollisions(trans.pos, rb);
                         });
 
-                    activeScene.GetEntityList().Iterate<RigidBody>(
-                        [&](RigidBody& rb) { rb.collisionData->lambda = 0.0; });
-
                     // Decrease the accumulated time
                     physicsAccumulator -= m_physicsEngine.GetTimeStep();
                 }

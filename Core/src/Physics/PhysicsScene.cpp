@@ -41,7 +41,7 @@ namespace Vakol
                               rp3d::Quaternion(orientation.x, orientation.y, orientation.z, orientation.w));
         rb.collisionBody = m_world->createCollisionBody(trans);
 
-        rb.collisionBody->setUserData(static_cast<void*>(rb.collisionData.get()));
+        rb.collisionBody->setUserData(rb.collisionData.get());
 
         return rb;
     }

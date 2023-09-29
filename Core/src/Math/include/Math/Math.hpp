@@ -10,6 +10,8 @@ namespace Vakol::Math
     using Vec3 = glm::vec3;
     using Vec4 = glm::vec4;
 
+    using IVec3 = glm::ivec3;
+
     using Point = Vec3;
 
     using Mat3 = glm::mat3;
