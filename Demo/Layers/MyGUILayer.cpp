@@ -120,6 +120,58 @@ void MyGUILayer::OnUpdate()
                                                                  entity.GetComponent<Vakol::Rendering::Drawable>());
                 }
 
+                if (ImGui::Button("Add Sphere Rigidbody"))
+                {
+                    Vakol::Entity entity = m_app.GetSceneManager().GetActiveScene().CreateEntity("Sphere Rigidbody");
+
+                    entity.AddComponent<Vakol::Rendering::Drawable>();
+
+                    Vakol::Rendering::RenderEngine::GenerateSphere(1.0f,
+                                                                   entity.GetComponent<Vakol::Rendering::Drawable>());
+
+                    Vakol::Components::Transform& transform = entity.GetComponent<Vakol::Components::Transform>();
+
+                    Vakol::RigidBody rb = m_app.GetSceneManager().GetActiveScene().GetPhysicsScene().CreateRigidBody(
+                        transform.pos, transform.rot);
+
+                    entity.AddComponent<Vakol::RigidBody>(rb);
+
+                    rb.collisionData->parentBody = &rb;
+
+                    float radius = 1.0f;
+
+                    Vakol::SphereCollider collider = m_app.GetPhysicsEngine().CreateSphereCollider(radius);
+                    m_app.GetPhysicsEngine().AttachCollider(rb, collider);
+
+                    entity.AddComponent<Vakol::SphereCollider>(collider);
+                }
+
+                if (ImGui::Button("Add Box Rigidbody"))
+                {
+                    Vakol::Entity entity = m_app.GetSceneManager().GetActiveScene().CreateEntity("Box Rigidbody");
+
+                    entity.AddComponent<Vakol::Rendering::Drawable>();
+
+                    Vakol::Rendering::RenderEngine::GenerateCube(1.0f,
+                                                                 entity.GetComponent<Vakol::Rendering::Drawable>());
+
+                    Vakol::Components::Transform& transform = entity.GetComponent<Vakol::Components::Transform>();
+
+                    Vakol::RigidBody rb = m_app.GetSceneManager().GetActiveScene().GetPhysicsScene().CreateRigidBody(
+                        transform.pos, transform.rot);
+
+                    entity.AddComponent<Vakol::RigidBody>(rb);
+
+                    rb.collisionData->parentBody = &rb;
+
+                    Vakol::Math::Vec3 extents = Vakol::Math::Vec3(1.0f);
+
+                    Vakol::BoxCollider collider = m_app.GetPhysicsEngine().CreateBoxCollider(extents);
+                    m_app.GetPhysicsEngine().AttachCollider(rb, collider);
+
+                    entity.AddComponent<Vakol::BoxCollider>(collider);
+                }
+
                 ImGui::SeparatorText("Entities");
 
                 ImGui::BeginChild("Entity List Child", ImVec2(0, 0), true);
@@ -232,24 +284,55 @@ void MyGUILayer::OnUpdate()
                                 ImGui::EndCombo();
                             }
 
-                            //ImGui::Checkbox("Use Gravity", &rb.useGravity);
-                            ImGui::DragFloat("Mass", &rb.mass, 0.1f);
-                            // ImGui::DragScalar("Bounciness", ImGuiDataType_Double, &rb.bounciness, 0.1f);
-                            // ImGui::DragFloat3("Bounciness", &rb.bounciness.x, 0.1f);
-                            // ImGui::DragFloat3("Center of Mass", &rb.centerOfMass.x, 0.1f);
+                            ImGui::Checkbox("Use Gravity", &rb.useGravity);
 
-                            ImGui::DragFloat3("Linear Velocity", &rb.linearVelocity.x, 0.1f);
-                            ImGui::DragFloat3("Angular Velocity", &rb.angularVelocity.x, 0.1f);
+                            ImGui::DragFloat("Mass (kg)", &rb.mass, 0.1f);
+                            ImGui::DragFloat("Bounciness", &rb.bounciness, 0.1f);
+
+                            ImGui::Spacing();
+
+                            ImGui::Text("Local Center of Mass: [x: %.3f, y: %.3f z: %.3f]", rb.localCentreOfMass.x, rb.localCentreOfMass.y, rb.localCentreOfMass.z);
+                            ImGui::Text("World Center of Mass: [x: %.3f, y: %.3f z: %.3f]", rb.worldCentreOfMass.x, rb.worldCentreOfMass.y, rb.worldCentreOfMass.z);
+
+                            ImGui::Spacing();
+
+                            ImGui::Text("Linear Velocity: [x: %.3f, y: %.3f z: %.3f]", rb.linearVelocity.x, rb.linearVelocity.y, rb.linearVelocity.z);
+                            ImGui::Text("Angular Velocity:  [x: %.3f, y: %.3f z: %.3f]", rb.angularVelocity.x, rb.angularVelocity.y, rb.angularVelocity.z);
+
+                            ImGui::Spacing();
+
+                            //ImGui::DragFloat3("Force", &rb.force.x, 0.1f);
+                            //ImGui::DragFloat3("Torque", &rb.torque.x, 0.1f);
+
+                            ImGui::Spacing();
+                            ImGui::SeparatorText("Interia Tensor");
+
+                            ImGui::Text("x: %f, %f, %f", rb.inertiaTensor[0][0], rb.inertiaTensor[0][1],
+                                        rb.inertiaTensor[0][2]);
+                            ImGui::Text("y: %f, %f, %f", rb.inertiaTensor[1][0], rb.inertiaTensor[1][1],
+                                        rb.inertiaTensor[1][2]);
+                            ImGui::Text("z: %f, %f, %f", rb.inertiaTensor[2][0], rb.inertiaTensor[2][1],
+                                        rb.inertiaTensor[2][2]);
+
+                            ImGui::Separator();
+                            ImGui::Spacing();
 
                             if (rb.collisionData)
                             {
-                                ImGui::DragFloat3("World Normal", &rb.collisionData->worldNormal.x, 0.1f);
-                                ImGui::DragFloat3("Local Normal", &rb.collisionData->localNormal.x, 0.1f);
-                                ImGui::DragFloat3("World Point", &rb.collisionData->worldPoint.x, 0.1f);
-                                ImGui::DragFloat3("Local Point", &rb.collisionData->localPoint.x, 0.1f);
-                                ImGui::DragScalar("Penetration Depth", ImGuiDataType_Double,
-                                                  &rb.collisionData->penetrationDepth, 0.1f);
+                                ImGui::Text("World Normal: [x: %.3f, y: %.3f z: %.3f]", rb.collisionData->worldContactNormal.x, rb.collisionData->worldContactNormal.y, rb.collisionData->worldContactNormal.z);
+
+                                ImGui::Spacing();
+
+                                ImGui::Text("World Point: [x: %.3f, y: %.3f z: %.3f]", rb.collisionData->worldContactPoint.x, rb.collisionData->worldContactPoint.y, rb.collisionData->worldContactPoint.z);
+                                ImGui::Text("Local Point: [x: %.3f, y: %.3f z: %.3f]", rb.collisionData->localContactPoint.x, rb.collisionData->localContactPoint.y, rb.collisionData->localContactPoint.z);
+
+                                ImGui::Spacing();
+
+                                ImGui::Text("Penetration Depth: %.3f", rb.collisionData->penetrationDepth);
+
+                                ImGui::BeginDisabled();
                                 ImGui::Checkbox("Is Colliding", &rb.collisionData->isColliding);
+                                ImGui::EndDisabled();
                             }
                         }
 
@@ -269,13 +352,13 @@ void MyGUILayer::OnUpdate()
                         {
                             Vakol::SphereCollider& collider = entity.GetComponent<Vakol::SphereCollider>();
 
-                            double min = 0.01;
-                            double max = 100.0;
+                            float min = 0.01f;
+                            float max = 100.0f;
 
-                            double radius = collider.shape->getRadius();
+                            float radius = collider.shape->getRadius();
 
                             ImGui::SeparatorText("Size");
-                            ImGui::DragScalar("Radius", ImGuiDataType_Double, &radius, 0.1f);
+                            ImGui::DragFloat("Radius", &radius, 0.1f);
 
                             if (radius < min)
                                 radius = min;
@@ -290,15 +373,15 @@ void MyGUILayer::OnUpdate()
                         {
                             Vakol::CapsuleCollider& collider = entity.GetComponent<Vakol::CapsuleCollider>();
 
-                            double min = 0.01;
-                            double max = 100.0;
+                            float min = 0.01f;
+                            float max = 100.0f;
 
-                            double radius = collider.shape->getRadius();
-                            double height = collider.shape->getHeight();
+                            float radius = collider.shape->getRadius();
+                            float height = collider.shape->getHeight();
 
                             ImGui::SeparatorText("Size");
-                            ImGui::DragScalar("Radius", ImGuiDataType_Double, &radius, 0.1f);
-                            ImGui::DragScalar("Height", ImGuiDataType_Double, &height, 0.1f);
+                            ImGui::DragFloat("Radius", &radius, 0.1f);
+                            ImGui::DragFloat("Height", &height, 0.1f);
 
                             if (radius < min)
                                 radius = min;

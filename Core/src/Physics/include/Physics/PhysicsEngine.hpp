@@ -106,6 +106,20 @@ namespace Vakol
         void AttachCollider(RigidBody& rb, MeshCollider& collider);
 
         /**
+         * \brief calculate the inertia tensor of a rigidbody
+         * \param mass the mass of the rigidbody
+         * \param collider the box collider
+         */
+        Math::Mat3 CalculateInertiaTensor(float mass, const BoxCollider& collider);
+
+        /**
+         * \brief calculate the inertia tensor of a rigidbody
+         * \param mass the mass of the rigidbody
+         * \param collider the sphere collider
+         */
+        Math::Mat3 CalculateInertiaTensor(float mass, const SphereCollider& collider);
+
+        /**
          * @brief Apply forces to a rigidbody
          *
          * @param rb to apply forces

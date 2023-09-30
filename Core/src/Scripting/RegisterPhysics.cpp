@@ -17,9 +17,10 @@ namespace Vakol
 
         rbT.set("type", &RigidBody::type);
         rbT.set("mass", &RigidBody::mass);
-        //rbT.set("bounciness", &RigidBody::bounciness);
+        rbT.set("bounciness", &RigidBody::bounciness);
         rbT.set("useGravity", &RigidBody::useGravity);
-        //rbT.set("centerOfMass", &RigidBody::centerOfMass);
+        rbT.set("localCenterOfMass", &RigidBody::localCentreOfMass);
+        rbT.set("worldCenterOfMass", &RigidBody::worldCentreOfMass);
         //rbT.set("force", &RigidBody::force);
         //rbT.set("torque", &RigidBody::torque);
         rbT.set("linearVelocity", &RigidBody::linearVelocity);

@@ -100,11 +100,13 @@ namespace Vakol
     void PhysicsEngine::AttachCollider(RigidBody& rb, BoxCollider& collider)
     {
         collider.collider = rb.collisionBody->addCollider(collider.shape, rp3d::Transform::identity());
+        rb.inertiaTensor = CalculateInertiaTensor(rb.mass, collider);
     }
 
     void PhysicsEngine::AttachCollider(RigidBody& rb, SphereCollider& collider)
     {
         collider.collider = rb.collisionBody->addCollider(collider.shape, rp3d::Transform::identity());
+        rb.inertiaTensor = CalculateInertiaTensor(rb.mass, collider);
     }
 
     void PhysicsEngine::AttachCollider(RigidBody& rb, CapsuleCollider& collider)
@@ -117,46 +119,95 @@ namespace Vakol
         collider.collider = rb.collisionBody->addCollider(collider.shape, rp3d::Transform::identity());
     }
 
+    Math::Mat3 PhysicsEngine::CalculateInertiaTensor(const float mass, const BoxCollider& collider)
+    {
+        Math::Vec3 i = Math::Vec3(0.0f);
+
+        constexpr float K = 1.0f / 12.0f;
+
+        // get extents by multiplying the half-extents by 2
+        Math::Vec3 extents = FromRPVec3(collider.shape->getHalfExtents()) * 2.0f;
+
+        // extents squared
+        extents *= extents;
+
+        i.x = (extents.y + extents.z) * mass * K;
+        i.y = (extents.x + extents.z) * mass * K;
+        i.z = (extents.x + extents.y) * mass * K;
+
+        return {i.x, 0.0f, 0.0f, 0.0f, i.y, 0.0f, 0.0f, 0.0f, i.z};
+    }
+
+    Math::Mat3 PhysicsEngine::CalculateInertiaTensor(const float mass, const SphereCollider& collider)
+    {
+        Math::Vec3 i = Math::Vec3(0.0f);
+
+        constexpr float K = 2.0f / 5.0f;
+
+        // radius squared
+        float r2 = collider.shape->getRadius() * collider.shape->getRadius();
+
+        i.x = r2 * mass * K;
+        i.y = r2 * mass * K;
+        i.z = r2 * mass * K;
+
+        return {i.x, 0.0f, 0.0f, 0.0f, i.y, 0.0f, 0.0f, 0.0f, i.z};
+    }
+
     void PhysicsEngine::ApplyForces(Math::Vec3& pos, Math::Quat& rot, RigidBody& rb)
     {
+        rb.collisionData->parentBody = &rb;
+
+        // Don't apply forces to static bodies
         if (rb.type == BodyType::Static)
         {
-            rb.collisionBody->setTransform(rp3d::Transform(
-                rp3d::Vector3(pos.x, pos.y, pos.z), rp3d::Quaternion(rot.x, rot.y, rot.z, rot.w)));
+            rb.collisionBody->setTransform(
+                rp3d::Transform(ToRPVec3(pos), rp3d::Quaternion(rot.x, rot.y, rot.z, rot.w)));
 
             return;
         }
 
-        rb.linearVelocity = rb.linearVelocity + GRAVITY * static_cast<float>(m_timeStep);
+        // F = ma
+        Math::Vec3 force = rb.mass * GRAVITY;
 
-        pos = pos + rb.linearVelocity * static_cast<float>(m_timeStep);
+        // a = F / m
+        Math::Vec3 linearAcceleration = force / rb.mass;
+
+        // Vf = Vi + a(t)
+        rb.linearVelocity += linearAcceleration * static_cast<float>(m_timeStep);
+
+        pos += rb.linearVelocity * static_cast<float>(m_timeStep);
 
         rb.collisionBody->setTransform(rp3d::Transform(ToRPVec3(pos), rp3d::Quaternion(rot.x, rot.y, rot.z, rot.w)));
     }
 
     void PhysicsEngine::DetectCollisions(PhysicsScene& scene)
     {
+        // Let reactphysics3d handle the collision detection
         scene.Update(m_timeStep);
     }
 
     void PhysicsEngine::ResolveCollisions(Math::Vec3& pos, RigidBody& rb)
     {
-        // Exit if there's no collision data or if the body is static
-        if (!rb.collisionData || rb.type == BodyType::Static)
+        if (!rb.collisionData->isColliding || rb.type == BodyType::Static)
             return;
 
-        if (!rb.collisionData->isColliding)
+        const Math::Vec3 normal = Math::Normalized(rb.collisionData->worldContactNormal);
+        const float relativeNormalVelocity = Math::Dot(rb.collisionData->relativeVelocity, normal);
+
+        if (relativeNormalVelocity > 0.0f)
             return;
+
+        const float impulseMagnitude = -(1.0f + rb.bounciness) * relativeNormalVelocity;
+
+        const Math::Vec3 impulse = impulseMagnitude * -normal;
+        const Math::Vec3 depenetration = rb.collisionData->penetrationDepth * -normal;
+
+        rb.linearVelocity += impulse / rb.mass + depenetration;
     }
 
     void PhysicsEngine::Depenetration(Math::Vec3& pos, RigidBody& rb)
     {
-        if (!rb.collisionData || rb.type == BodyType::Static)
-            return;
-
-        if (!rb.collisionData->isColliding)
-            return;
-
     }
 
     void PhysicsEngine::SetTimeStep(double step)

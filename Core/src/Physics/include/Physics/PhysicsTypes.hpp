@@ -17,7 +17,7 @@ namespace Vakol
         return Math::Vec3(vec.x, vec.y, vec.z);
     }
 
-    inline rp3d::Vector3 ToRPVec3(Math::Vec3& vec)
+    inline rp3d::Vector3 ToRPVec3(const Math::Vec3& vec)
     {
         return rp3d::Vector3(vec.x, vec.y, vec.z);
     }
@@ -49,17 +49,20 @@ namespace Vakol
      */
     struct CollisionData
     {
-        Math::Vec3 worldPoint = Math::Vec3(0.0f);
-        Math::Vec3 localPoint = Math::Vec3(0.0f);
+        RigidBody* parentBody = nullptr;
+        RigidBody* otherBody = nullptr; // the rigidbody that was collided with.
 
-        Math::Vec3 worldNormal = Math::Vec3(0.0f);
-        Math::Vec3 localNormal = Math::Vec3(0.0f);
+        Math::Vec3 localContactPoint = Math::Vec3(0.0f);
+        Math::Vec3 worldContactPoint = Math::Vec3(0.0f);
+
+        Math::Vec3 worldContactNormal = Math::Vec3(0.0f);
+
+        Math::Vec3 relativeVelocity = Math::Vec3(0.0f);
 
         float penetrationDepth = 0.0f;
+        unsigned int contactCount = 0u;
 
         bool isColliding = false;
-
-        RigidBody* parentBody = nullptr;
     };
 
     /**
@@ -69,11 +72,13 @@ namespace Vakol
     struct RigidBody
     {
         BodyType type = BodyType::Dynamic;
+
         float mass = 1.0f;
+        float bounciness = 0.65f;
 
         bool useGravity = true;
 
-        Math::Vec3 inertiaTensor = Math::Vec3(0.0f);
+        Math::Mat3 inertiaTensor = Math::Mat3(1.0f);
 
         Math::Vec3 linearVelocity = Math::Vec3(0.0f);
         Math::Vec3 angularVelocity = Math::Vec3(0.0f);
@@ -86,6 +91,20 @@ namespace Vakol
         rp3d::CollisionBody* collisionBody = nullptr;
         std::shared_ptr<CollisionData> collisionData = nullptr;
     };
+
+    inline Math::Quat ApplyRotation(const Math::Quat& curRot, const Math::Vec3& angularVelocity, const double dt)
+    {
+        const float magnitude = Math::Magnitude(angularVelocity);
+        const float angle = magnitude * static_cast<float>(dt);
+
+        if (angle < 1e-6f)
+            return curRot;
+
+        const Math::Vec3 axis = angularVelocity / magnitude;
+        const Math::Quat rotChange = Math::AngleAxis(angle, axis);
+
+        return rotChange * curRot;
+    }
 
     /**
      * @brief A structure representing a box collider.

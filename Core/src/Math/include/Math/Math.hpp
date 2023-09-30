@@ -212,6 +212,14 @@ namespace Vakol::Math
      */
     Vec3 EulerFromQuat(const Quat& quat);
 
+    /**
+     * \brief converts an angle and an axis into a quaternion
+     * \param angle the angle
+     * \param axis the axis
+     * \return a quaternion
+     */
+    Quat AngleAxis(float angle, const Vec3& axis);
+
     Mat3 Cut(const Mat4& mat, int row, int col);
 
     Point MultiplyPoint(const Point& point, const Mat4& mat);

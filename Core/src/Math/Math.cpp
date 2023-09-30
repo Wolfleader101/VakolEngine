@@ -99,7 +99,7 @@ namespace Vakol::Math
         return acos(Dot(a, b) / m);
     }
 
-    Quat AngleAxis(float angle, const Vec3& axis)
+    Quat AngleAxis(const float angle, const Vec3& axis)
     {
         return glm::angleAxis(angle, axis);
     }
