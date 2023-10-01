@@ -1,27 +1,39 @@
 function init()
-	local floor = scene:create_entity("Floor", "");
+	add_floor();
+	add_cube();
+	add_sphere();
+end
 
+function add_sphere()
 	local sphere = scene:create_entity("Sphere", "");
-	local cube = scene:create_entity("Cube", "");
-
 	sphere:add_model("coreAssets/models/sphere.obj", 1.0);
 
-	sphere:get_transform().pos.y = 10.0;
-	cube:get_transform().pos = Vector3.new(4.0, 5.0, 0.0);
+	sphere:get_transform().pos.y = 5.0;
 
-    sphere:add_rigid();
+	sphere:add_rigid();
 	sphere:add_sphere_collider(1.0);
+end
+
+function add_cube()
+	local cube = scene:create_entity("Cube", "");
+
+	cube:get_transform().pos = Vector3.new(0.0, 10.0, 1.5);
+	cube:get_transform().rot = Vector3.new(0.0, 0.0, 0.0);
+
+	cube:add_model("coreAssets/models/cube.obj", 1.0);
+
+	local rb = cube:add_rigid();
+	cube:add_box_collider(Vector3.new(1.0, 1.0, 1.0));
+end
+
+function add_floor()
+	local floor = scene:create_entity("Floor", "");
 
 	floor:add_model("assets/models/digital_twin/GROUND.fbx", 0.02);
-	cube:add_model("coreAssets/models/cube.obj", 1.0);
-	
 	local rb = floor:add_rigid();
+	
 	rb.type = BodyType.Static;
-
 	floor:add_box_collider(Vector3.new(20.0, 0.1, 50.0));
-
-	rb = cube:add_rigid();
-	cube:add_box_collider(Vector3.new(1.0, 1.0, 1.0));
 end
 
 function update()

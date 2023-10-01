@@ -35,13 +35,14 @@ namespace Vakol
     {
         RigidBody rb;
 
-        rb.collisionData = std::make_shared<CollisionData>();
+        rb.contactData = std::make_shared<ContactData>();
 
         rp3d::Transform trans(rp3d::Vector3(pos.x, pos.y, pos.z),
                               rp3d::Quaternion(orientation.x, orientation.y, orientation.z, orientation.w));
+
         rb.collisionBody = m_world->createCollisionBody(trans);
 
-        rb.collisionBody->setUserData(rb.collisionData.get());
+        rb.collisionBody->setUserData(rb.contactData.get());
 
         return rb;
     }

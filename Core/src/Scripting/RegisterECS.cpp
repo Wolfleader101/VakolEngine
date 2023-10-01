@@ -75,7 +75,7 @@ namespace Vakol
             ent->AddComponent<RigidBody>(rb);
 
             auto& parentBody = ent->GetComponent<RigidBody>();
-            parentBody.collisionData->parentBody = &parentBody;
+            parentBody.contactData->parentBody = &parentBody;
 
             return parentBody;
         });

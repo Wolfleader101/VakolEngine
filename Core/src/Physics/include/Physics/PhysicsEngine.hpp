@@ -133,6 +133,8 @@ namespace Vakol
          */
         void DetectCollisions(PhysicsScene& scene);
 
+        static Math::Vec3 SolveImpulse(const ContactPair& contactPair);
+
         /**
          * @brief handle collision resolution for a rigidbody
          *

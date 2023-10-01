@@ -135,8 +135,7 @@ void MyGUILayer::OnUpdate()
                         transform.pos, transform.rot);
 
                     entity.AddComponent<Vakol::RigidBody>(rb);
-
-                    rb.collisionData->parentBody = &rb;
+                    rb.contactData->parentBody = &rb;
 
                     float radius = 1.0f;
 
@@ -161,8 +160,7 @@ void MyGUILayer::OnUpdate()
                         transform.pos, transform.rot);
 
                     entity.AddComponent<Vakol::RigidBody>(rb);
-
-                    rb.collisionData->parentBody = &rb;
+                    rb.contactData->parentBody = &rb;
 
                     Vakol::Math::Vec3 extents = Vakol::Math::Vec3(1.0f);
 
@@ -291,49 +289,70 @@ void MyGUILayer::OnUpdate()
 
                             ImGui::Spacing();
 
-                            ImGui::Text("Local Center of Mass: [x: %.3f, y: %.3f z: %.3f]", rb.localCentreOfMass.x, rb.localCentreOfMass.y, rb.localCentreOfMass.z);
-                            ImGui::Text("World Center of Mass: [x: %.3f, y: %.3f z: %.3f]", rb.worldCentreOfMass.x, rb.worldCentreOfMass.y, rb.worldCentreOfMass.z);
+                            ImGui::Text("Center of Mass: [x: %.3f, y: %.3f z: %.3f]", rb.centreOfMass.x,
+                                        rb.centreOfMass.y, rb.centreOfMass.z);
 
                             ImGui::Spacing();
 
-                            ImGui::Text("Linear Velocity: [x: %.3f, y: %.3f z: %.3f]", rb.linearVelocity.x, rb.linearVelocity.y, rb.linearVelocity.z);
-                            ImGui::Text("Angular Velocity:  [x: %.3f, y: %.3f z: %.3f]", rb.angularVelocity.x, rb.angularVelocity.y, rb.angularVelocity.z);
+                            ImGui::Text("Linear Velocity: [x: %.3f, y: %.3f z: %.3f]", rb.linearVelocity.x,
+                                        rb.linearVelocity.y, rb.linearVelocity.z);
+                            ImGui::Text("Angular Velocity:  [x: %.3f, y: %.3f z: %.3f]", rb.angularVelocity.x,
+                                        rb.angularVelocity.y, rb.angularVelocity.z);
 
                             ImGui::Spacing();
 
-                            //ImGui::DragFloat3("Force", &rb.force.x, 0.1f);
-                            //ImGui::DragFloat3("Torque", &rb.torque.x, 0.1f);
+                            // ImGui::DragFloat3("Force", &rb.force.x, 0.1f);
+                            // ImGui::DragFloat3("Torque", &rb.torque.x, 0.1f);
 
                             ImGui::Spacing();
-                            ImGui::SeparatorText("Interia Tensor");
+                            ImGui::SeparatorText("Local Inertia Tensor");
 
-                            ImGui::Text("x: %f, %f, %f", rb.inertiaTensor[0][0], rb.inertiaTensor[0][1],
-                                        rb.inertiaTensor[0][2]);
-                            ImGui::Text("y: %f, %f, %f", rb.inertiaTensor[1][0], rb.inertiaTensor[1][1],
-                                        rb.inertiaTensor[1][2]);
-                            ImGui::Text("z: %f, %f, %f", rb.inertiaTensor[2][0], rb.inertiaTensor[2][1],
-                                        rb.inertiaTensor[2][2]);
+                            ImGui::Text("x: %f, %f, %f", rb.localInertiaTensor[0][0], rb.localInertiaTensor[0][1],
+                                        rb.localInertiaTensor[0][2]);
+                            ImGui::Text("y: %f, %f, %f", rb.localInertiaTensor[1][0], rb.localInertiaTensor[1][1],
+                                        rb.localInertiaTensor[1][2]);
+                            ImGui::Text("z: %f, %f, %f", rb.localInertiaTensor[2][0], rb.localInertiaTensor[2][1],
+                                        rb.localInertiaTensor[2][2]);
 
                             ImGui::Separator();
                             ImGui::Spacing();
 
-                            if (rb.collisionData)
-                            {
-                                ImGui::Text("World Normal: [x: %.3f, y: %.3f z: %.3f]", rb.collisionData->worldContactNormal.x, rb.collisionData->worldContactNormal.y, rb.collisionData->worldContactNormal.z);
+                            //if (rb.collisionData)
+                            //{
+                            //    ImGui::Text(
+                            //        "World Contact Normal: [x: %.3f, y: %.3f z: %.3f]", rb.collisionData->worldContactNormal.x,
+                            //        rb.collisionData->worldContactNormal.y, rb.collisionData->worldContactNormal.z);
 
-                                ImGui::Spacing();
+                            //    ImGui::Spacing();
 
-                                ImGui::Text("World Point: [x: %.3f, y: %.3f z: %.3f]", rb.collisionData->worldContactPoint.x, rb.collisionData->worldContactPoint.y, rb.collisionData->worldContactPoint.z);
-                                ImGui::Text("Local Point: [x: %.3f, y: %.3f z: %.3f]", rb.collisionData->localContactPoint.x, rb.collisionData->localContactPoint.y, rb.collisionData->localContactPoint.z);
+                            //    ImGui::Text("Local Contact Point: [x: %.3f, y: %.3f z: %.3f]",
+                            //                rb.collisionData->localContactPoint.x,
+                            //                rb.collisionData->localContactPoint.y,
+                            //                rb.collisionData->localContactPoint.z);
 
-                                ImGui::Spacing();
+                            //    ImGui::Text("World Contact Point: [x: %.3f, y: %.3f z: %.3f]",
+                            //                rb.collisionData->worldContactPoint.x,
+                            //                rb.collisionData->worldContactPoint.y,
+                            //                rb.collisionData->worldContactPoint.z);
 
-                                ImGui::Text("Penetration Depth: %.3f", rb.collisionData->penetrationDepth);
+                            //    ImGui::Text("Relative Local Contact Point: [x: %.3f, y: %.3f z: %.3f]",
+                            //                rb.collisionData->relativeLocalContactPoint.x,
+                            //                rb.collisionData->relativeLocalContactPoint.y,
+                            //                rb.collisionData->relativeLocalContactPoint.z);
 
-                                ImGui::BeginDisabled();
-                                ImGui::Checkbox("Is Colliding", &rb.collisionData->isColliding);
-                                ImGui::EndDisabled();
-                            }
+                            //    ImGui::Text("Relative World Contact Point: [x: %.3f, y: %.3f z: %.3f]",
+                            //                rb.collisionData->relativeWorldContactPoint.x,
+                            //                rb.collisionData->relativeWorldContactPoint.y,
+                            //                rb.collisionData->relativeWorldContactPoint.z);
+
+                            //    ImGui::Spacing();
+
+                            //    ImGui::Text("Penetration Depth: %.3f", rb.collisionData->penetrationDepth);
+
+                            //    ImGui::BeginDisabled();
+                            //    ImGui::Checkbox("Is Colliding", &rb.collisionData->isColliding);
+                            //    ImGui::EndDisabled();
+                            //}
                         }
 
                         if (entity.HasComponent<Vakol::BoxCollider>() && ImGui::CollapsingHeader("Box Collider"))

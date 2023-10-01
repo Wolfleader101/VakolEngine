@@ -258,6 +258,21 @@ namespace Vakol::Math
     Mat4 Mat4Cast(const Quat& quaternion);
 
     /**
+     * @brief Converts a quaternion to a 3x3 matrix.
+     *
+     * @param quaternion The quaternion to convert.
+     * @return The resulting 3x3 matrix.
+     */
+    Mat3 Mat3Cast(const Quat& quaternion);
+
+    /**
+     * \brief transpose a 3x3 matrix
+     * \param mat the matrix to be transposed
+     * \return a transposed matrix
+     */
+    Mat3 Transpose(const Mat3& mat);
+
+    /**
      * @brief Represents a line in 3D space defined by two points.
      */
     struct Line

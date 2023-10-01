@@ -1,18 +1,24 @@
 #include "Physics/CollisionListener.hpp"
+#include "Physics/PhysicsEngine.hpp"
+
 #include "Logger/Logger.hpp"
 
 namespace Vakol
 {
-    void Reset(CollisionData* data);
+    void Reset(ContactPair& contactPair);
+    void Reset(ContactData* contactData);
+
+    Math::Vec3 impulse = Math::Vec3(0.0f);
 
     void CollisionListener::onContact(const CallbackData& data)
     {
         for (unsigned int p = 0; p < data.getNbContactPairs(); ++p)
         {
             const ContactPair& pair = data.getContactPair(p);
+            Vakol::ContactPair contactPair = {};
 
-            auto* b1Data = static_cast<CollisionData*>(pair.getBody1()->getUserData());
-            auto* b2Data = static_cast<CollisionData*>(pair.getBody2()->getUserData());
+            auto* contactA = static_cast<ContactData*>(pair.getBody1()->getUserData());
+            auto* contactB = static_cast<ContactData*>(pair.getBody2()->getUserData());
 
             rp3d::Vector3 worldContactPoint1 = rp3d::Vector3::zero();
             rp3d::Vector3 worldContactPoint2 = rp3d::Vector3::zero();
@@ -35,106 +41,101 @@ namespace Vakol
                 worldContactPoint2 = pair.getCollider2()->getLocalToWorldTransform() * point.getLocalPointOnCollider2();
 
                 worldContactNormal = point.getWorldNormal();
-
                 penetrationDepth = point.getPenetrationDepth();
-            }
 
-            if (pair.getEventType() == ContactPair::EventType::ContactStart)
-            {
-                //VK_TRACE("ENTER");
-            }
-            else if (pair.getEventType() == ContactPair::EventType::ContactStart || pair.getEventType() == ContactPair::EventType::ContactStay)
-            {
-                if (b1Data)
+                if (pair.getEventType() == ContactPair::EventType::ContactStart)
                 {
-                    b1Data->otherBody = b2Data->parentBody;
-
-                    if (b1Data->parentBody->type == BodyType::Dynamic && b1Data->otherBody->type == BodyType::Static)
-                    {
-                        // Calculate relative velocity with body1 as reference
-                        b1Data->relativeVelocity =
-                            b1Data->parentBody->linearVelocity - b1Data->otherBody->linearVelocity;
-                    }
-                    else if (b1Data->parentBody->type == BodyType::Static && b1Data->otherBody->type == BodyType::Dynamic)
-                    {
-                        // Calculate relative velocity with body2 as reference
-                        b1Data->relativeVelocity =
-                            b1Data->otherBody->linearVelocity - b1Data->parentBody->linearVelocity;
-                    }
-                    b1Data->relativeVelocity = b1Data->otherBody->linearVelocity - b1Data->parentBody->linearVelocity;
-
-                    b1Data->localContactPoint = FromRPVec3(localContactPoint1);
-                    b1Data->worldContactPoint = FromRPVec3(worldContactPoint1);
-
-                    b1Data->worldContactNormal = FromRPVec3(worldContactNormal);
-
-                    b1Data->penetrationDepth = penetrationDepth;
-                    b1Data->contactCount = pair.getNbContactPoints();
-
-                    b1Data->isColliding = true;
+                    impulse = Math::Vec3(0.0f);
                 }
-
-                if (b2Data)
+                if (pair.getEventType() == ContactPair::EventType::ContactStart || pair.getEventType() == ContactPair::EventType::ContactStay)
                 {
-                    b2Data->otherBody = b1Data->parentBody;
+                    if (contactA)
+                    {
+                        contactA->localContactPoint = FromRPVec3(localContactPoint1);
+                        contactA->worldContactPoint = FromRPVec3(worldContactPoint1);
 
-                    if (b2Data->parentBody->type == BodyType::Dynamic && b2Data->otherBody->type == BodyType::Static)
-                    {
-                        // Calculate relative velocity with body1 as reference
-                        b2Data->relativeVelocity =
-                            b2Data->parentBody->linearVelocity - b2Data->otherBody->linearVelocity;
-                    }
-                    else if (b2Data->parentBody->type == BodyType::Static && b2Data->otherBody->type == BodyType::Dynamic)
-                    {
-                        // Calculate relative velocity with body2 as reference
-                        b2Data->relativeVelocity =
-                            b2Data->otherBody->linearVelocity - b2Data->parentBody->linearVelocity;
+                        contactA->relativeLocalContactPoint = contactA->parentBody->centreOfMass - contactA->localContactPoint;
+                        contactA->relativeWorldContactPoint = contactA->parentBody->centreOfMass - contactA->worldContactPoint;
+
+                        contactA->velocity = contactA->parentBody->linearVelocity + Math::Cross(contactA->parentBody->angularVelocity, contactA->localContactPoint);
                     }
 
-                    b2Data->localContactPoint = FromRPVec3(localContactPoint2);
-                    b2Data->worldContactPoint = FromRPVec3(worldContactPoint2);
+                    if (contactB)
+                    {
+                        contactB->localContactPoint = FromRPVec3(localContactPoint2);
+                        contactB->worldContactPoint = FromRPVec3(worldContactPoint2);
 
-                    b2Data->worldContactNormal = FromRPVec3(worldContactNormal);
+                        contactB->relativeLocalContactPoint = contactB->parentBody->centreOfMass - contactB->localContactPoint;
+                        contactB->relativeWorldContactPoint = contactB->parentBody->centreOfMass - contactB->worldContactPoint;
 
-                    b2Data->penetrationDepth = penetrationDepth;
-                    b2Data->contactCount = pair.getNbContactPoints();
+                        contactB->velocity = contactB->parentBody->linearVelocity + Math::Cross(contactB->parentBody->angularVelocity, contactB->localContactPoint);
+                    }
 
-                    b2Data->isColliding = true;
+                    if (contactA && contactB)
+                    {
+                        contactPair.contactA = contactA;
+                        contactPair.contactB = contactB;
+
+                        contactPair.relativeVelocity = contactB->velocity - contactA->velocity;
+
+                        contactPair.worldContactNormal = FromRPVec3(worldContactNormal);
+
+                        contactPair.penetrationDepth = penetrationDepth;
+
+                        contactPair.contactCount = pair.getNbContactPoints();
+                        contactPair.isColliding = true;
+
+                        impulse += Vakol::PhysicsEngine::SolveImpulse(contactPair);
+
+                        if (contactA->parentBody->type != BodyType::Static)
+                            contactA->parentBody->linearVelocity -= impulse * 1.0f;
+                        if (contactB->parentBody->type != BodyType::Static)
+                            contactB->parentBody->linearVelocity += impulse * 1.0f;
+                    }
                 }
-
-                // VK_TRACE("Entering!");
-            }
-            else if (pair.getEventType() == ContactPair::EventType::ContactExit)
-            {
-                if (b1Data)
+                else if (pair.getEventType() == ContactPair::EventType::ContactStay)
                 {
-                    Reset(b1Data);
                 }
-
-                if (b2Data)
+                else if (pair.getEventType() == ContactPair::EventType::ContactExit)
                 {
-                    Reset(b2Data);
-                }
+                    if (contactA)
+                        Reset(contactA);
 
-                //VK_TRACE("EXIT");
+                    if (contactB)
+                        Reset(contactB);
+
+                    if (contactA && contactB)
+                        Reset(contactPair);
+
+                    impulse = Math::Vec3(0.0f);
+                }
             }
         }
     }
 
-    void Reset(CollisionData* data)
+    void Reset(ContactPair& contactPair)
     {
-        data->otherBody = nullptr;
+        contactPair.contactA = nullptr;
+        contactPair.contactB = nullptr;
 
-        data->relativeVelocity = Math::Vec3(0.0f);
+        contactPair.worldContactNormal = Math::Vec3(0.0f);
 
-        data->localContactPoint = Math::Vec3(0.0f);
-        data->worldContactPoint = Math::Vec3(0.0f);
+        contactPair.relativeVelocity = Math::Vec3(0.0f);
 
-        data->worldContactNormal = Math::Vec3(0.0f);
+        contactPair.penetrationDepth = 0.0f;
 
-        data->penetrationDepth = 0.0f;
-        data->contactCount = 0u;
+        contactPair.contactCount = 0u;
+        contactPair.isColliding = false;
+    }
 
-        data->isColliding = false;
+    void Reset(ContactData* contactData)
+    {
+        contactData->localContactPoint = Math::Vec3(0.0f);
+        contactData->worldContactPoint = Math::Vec3(0.0f);
+
+        contactData->relativeLocalContactPoint = Math::Vec3(0.0f);
+        contactData->relativeWorldContactPoint = Math::Vec3(0.0f);
+
+        contactData->velocity = Math::Vec3(0.0f);
     }
 } // namespace Vakol

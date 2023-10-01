@@ -19,15 +19,13 @@ namespace Vakol
         rbT.set("mass", &RigidBody::mass);
         rbT.set("bounciness", &RigidBody::bounciness);
         rbT.set("useGravity", &RigidBody::useGravity);
-        rbT.set("localCenterOfMass", &RigidBody::localCentreOfMass);
-        rbT.set("worldCenterOfMass", &RigidBody::worldCentreOfMass);
-        //rbT.set("force", &RigidBody::force);
-        //rbT.set("torque", &RigidBody::torque);
+        rbT.set("centreOfMass", &RigidBody::centreOfMass);
+        rbT.set("force", &RigidBody::force);
+        rbT.set("torque", &RigidBody::torque);
         rbT.set("linearVelocity", &RigidBody::linearVelocity);
         rbT.set("angularVelocity", &RigidBody::angularVelocity);
-        rbT.set("is_colliding", sol::property([](RigidBody& rb) { return rb.collisionData->isColliding; }));
 
-        //rbT.set_function("add_force", [](RigidBody& rb, Math::Vec3& force) { rb.force += force; });
+        rbT.set_function("add_force", [](RigidBody& rb, Math::Vec3& force) { rb.force += force; });
 
         auto rct = lua.new_usertype<RayCastHitInfo>("RayCastHitInfo");
 
