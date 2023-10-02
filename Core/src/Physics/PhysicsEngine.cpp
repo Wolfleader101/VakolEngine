@@ -243,12 +243,15 @@ namespace Vakol
         const auto& contactB = contactPair->contactB;
 
         const Math::Vec3 depenatration = -contactPair->worldContactNormal * contactPair->penetrationDepth;
-     
-        contactA->parentBody->linearVelocity += contactPair->impulseSum / contactA->parentBody->mass + depenatration;
-        contactA->parentBody->angularVelocity += Math::Cross(contactPair->contactA->relativeLocalContactPoint, contactPair->impulseSum) * Math::Inverse(contactA->parentBody->localInertiaTensor);
 
-        contactB->parentBody->linearVelocity -= contactPair->impulseSum / contactB->parentBody->mass + depenatration;
-        contactB->parentBody->angularVelocity -= Math::Cross(contactPair->contactB->relativeLocalContactPoint, contactPair->impulseSum) * Math::Inverse(contactB->parentBody->localInertiaTensor);
+        rb.linearVelocity += contactPair->impulseSum / rb.mass + depenatration;
+        rb.angularVelocity += Math::Cross(contactA->relativeLocalContactPoint, contactPair->impulseSum) * Math::Inverse(rb.localInertiaTensor);
+
+        //contactA->parentBody->linearVelocity += contactPair->impulseSum / contactA->parentBody->mass + depenatration;
+        //contactA->parentBody->angularVelocity += Math::Cross(contactPair->contactA->relativeLocalContactPoint, contactPair->impulseSum) * Math::Inverse(contactA->parentBody->localInertiaTensor);
+
+        //contactB->parentBody->linearVelocity -= contactPair->impulseSum / contactB->parentBody->mass + depenatration;
+        //contactB->parentBody->angularVelocity -= Math::Cross(contactPair->contactB->relativeLocalContactPoint, contactPair->impulseSum) * Math::Inverse(contactB->parentBody->localInertiaTensor);
     }
 
     void PhysicsEngine::Depenetration(Math::Vec3& pos, RigidBody& rb)

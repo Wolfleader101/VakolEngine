@@ -1,6 +1,6 @@
 function init()
 	add_floor();
-	--add_cube();
+	add_cube();
 	--add_cube2();
 	add_sphere();
 end
