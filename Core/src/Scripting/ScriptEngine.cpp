@@ -186,7 +186,6 @@ namespace Vakol
         RegisterGUIWindow(m_state);
         RegisterRigidBody(m_state);
         RegisterCollider(m_state);
-        RegisterPhysics(m_state);
     }
 
     void ScriptEngine::RegisterFunctions()

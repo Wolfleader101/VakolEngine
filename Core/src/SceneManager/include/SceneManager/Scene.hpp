@@ -3,7 +3,6 @@
 #include "Camera/Camera.hpp"
 #include "ECS/Entity.hpp"
 #include "ECS/EntityList.hpp"
-#include "Physics/PhysicsScene.hpp"
 #include "Rendering/RenderData.hpp"
 #include "Scripting/ScriptTypes.hpp"
 #include "Time/Time.hpp"
@@ -22,9 +21,8 @@ namespace Vakol
          *
          * @param name The name of the scene.
          * @param script The Lua script associated with the scene.
-         * @param physicsScene The physics scene associated with the scene.
          */
-        Scene(const std::string& name, LuaScript& script, PhysicsScene& physicsScene);
+        Scene(const std::string& name, LuaScript& script); 
 
         Scene(const Scene& other) = delete;
         Scene(Scene&& other) = default;
@@ -149,13 +147,6 @@ namespace Vakol
         void SetDebug(bool enabled);
         bool IsDebugEnabled() const;
 
-        /**
-         * @brief Get the Physics Scene object
-         *
-         * @return PhysicsScene& to get
-         */
-        PhysicsScene& GetPhysicsScene();
-
       private:
         bool m_debugEnabled = false;
 
@@ -186,11 +177,5 @@ namespace Vakol
          * \brief the (physics) debug scene for a scene
          */
         Rendering::DebugScene m_debugScene;
-
-        /**
-         * @brief physics scene for a scene
-         *
-         */
-        PhysicsScene& m_physicsScene;
     };
 } // namespace Vakol

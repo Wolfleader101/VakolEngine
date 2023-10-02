@@ -4,7 +4,6 @@
 
 #include "GUI/GUIWindow.hpp"
 #include "Input/Input.hpp"
-#include "Physics/PhysicsEngine.hpp"
 #include "SceneManager/SceneManager.hpp"
 #include "Scripting/ScriptEngine.hpp"
 #include "Time/Time.hpp"
@@ -117,15 +116,6 @@ namespace Vakol
         const Input& GetInput() const
         {
             return m_input;
-        }
-
-        /**
-         * \brief Get the physics engine.
-         * \return the physics engine
-         */
-        PhysicsEngine& GetPhysicsEngine()
-        {
-            return m_physicsEngine;
         }
 
         /**
@@ -278,12 +268,6 @@ namespace Vakol
          *
          */
         ScriptEngine m_scriptEngine;
-
-        /**
-         * @brief physics engine instance
-         *
-         */
-        PhysicsEngine m_physicsEngine;
 
         /**
          * @brief Scene manager instance

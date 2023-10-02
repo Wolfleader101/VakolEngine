@@ -15,8 +15,8 @@
 
 namespace Vakol
 {
-    Scene::Scene(const std::string& name, LuaScript& script, PhysicsScene& physicsScene)
-        : m_script(std::move(script)), m_name(name), m_physicsScene(physicsScene)
+    Scene::Scene(const std::string& name, LuaScript& script)
+        : m_script(std::move(script)), m_name(name) 
     {
         Rendering::RenderEngine::GenerateDebugScene(m_debugScene);
     }
@@ -63,7 +63,6 @@ namespace Vakol
     const Rendering::DebugScene& Scene::GetDebugScene() const
     {
         std::vector<float> vertices;
-        m_physicsScene.GetVertices(vertices);
 
         Rendering::RenderAPI::SetDebugVertexArray(std::move(vertices), m_debugScene);
 
@@ -75,19 +74,9 @@ namespace Vakol
         return m_debugEnabled;
     }
 
-    PhysicsScene& Scene::GetPhysicsScene()
-    {
-        return m_physicsScene;
-    }
-
     void Scene::SetDebug(bool enabled)
     {
-        m_debugEnabled = enabled;
-
-        if (m_debugEnabled)
-            m_physicsScene.EnableDebug();
-        else
-            m_physicsScene.DisableDebug();
+        m_debugEnabled = enabled; 
     }
 
     namespace fs = std::filesystem;

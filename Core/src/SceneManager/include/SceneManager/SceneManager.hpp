@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Physics/PhysicsEngine.hpp"
 #include "Scene.hpp"
 #include "Scripting/ScriptEngine.hpp"
 
@@ -19,9 +18,8 @@ namespace Vakol
          * @brief Construct a new Scene Manager object.
          *
          * @param scriptEngine The script engine.
-         * @param physicsEngine The physics engine.
          */
-        SceneManager(ScriptEngine& scriptEngine, PhysicsEngine& physicsEngine);
+        SceneManager(ScriptEngine& scriptEngine);
 
         /**
          * @brief Destroy the Scene Manager object.
@@ -99,11 +97,5 @@ namespace Vakol
          * @brief The script engine.
          */
         ScriptEngine& m_scriptEngine;
-
-        /**
-         * @brief the physics engine
-         *
-         */
-        PhysicsEngine& m_physicsEngine;
     };
 } // namespace Vakol

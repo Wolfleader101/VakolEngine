@@ -1,7 +1,5 @@
 SET(PHYSICS_SRC
-    ${CMAKE_CURRENT_SOURCE_DIR}/PhysicsEngine.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/PhysicsScene.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/CollisionListener.cpp
+    
     PARENT_SCOPE
 )
 

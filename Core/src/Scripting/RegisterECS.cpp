@@ -4,8 +4,6 @@
 #include "LuaAccess.hpp"
 #include "SceneManager/Scene.hpp"
 
-#include "Physics/PhysicsEngine.hpp"
-#include "Physics/PhysicsTypes.hpp"
 #include "Rendering/RenderEngine.hpp"
 
 namespace Vakol
@@ -65,65 +63,6 @@ namespace Vakol
         entity_type.set_function("active_model", [](const Entity* ent, const bool active) {
             if (ent->HasComponent<Rendering::Drawable>())
                 ent->GetComponent<Rendering::Drawable>().active = active;
-        });
-
-        entity_type.set_function("add_rigid", [&](Entity* ent) -> RigidBody& {
-            Scene& scene = lua["scene"];
-
-            RigidBody rb = scene.GetPhysicsScene().CreateRigidBody(ent->GetComponent<Components::Transform>().pos,
-                                                                   ent->GetComponent<Components::Transform>().rot);
-            ent->AddComponent<RigidBody>(rb);
-
-            // TODO implement this
-            auto& newRb = ent->GetComponent<RigidBody>();
-            newRb.collisionData->parentBody = &newRb;
-
-            return newRb;
-        });
-
-        entity_type.set_function("get_rigid", [](const Entity* ent) {
-            if (ent->HasComponent<RigidBody>())
-                return &ent->GetComponent<RigidBody>();
-
-            VK_CRITICAL("No rigid body component found on entity");
-
-            return static_cast<RigidBody*>(nullptr);
-        });
-
-        entity_type.set_function("add_sphere_collider", [&](Entity* ent, const double radius) {
-            PhysicsEngine& physEngine = lua["PhysicsEngine"];
-
-            if (!ent->HasComponent<RigidBody>())
-            {
-                VK_CRITICAL("No rigid body component found on entity");
-
-                return static_cast<SphereCollider*>(nullptr);
-            }
-
-            SphereCollider collider = physEngine.CreateSphereCollider(radius);
-
-            ent->AddComponent<SphereCollider>(collider);
-            physEngine.AttachCollider(ent->GetComponent<RigidBody>(), collider);
-
-            return &ent->GetComponent<SphereCollider>();
-        });
-
-        entity_type.set_function("add_box_collider", [&](Entity* ent, Math::Vec3& halfExtents) {
-            PhysicsEngine& physEngine = lua["PhysicsEngine"];
-
-            if (!ent->HasComponent<RigidBody>())
-            {
-                VK_CRITICAL("No rigid body component found on entity");
-
-                return static_cast<BoxCollider*>(nullptr);
-            }
-
-            BoxCollider collider = physEngine.CreateBoxCollider(halfExtents);
-
-            ent->AddComponent<BoxCollider>(collider);
-            physEngine.AttachCollider(ent->GetComponent<RigidBody>(), collider);
-
-            return &ent->GetComponent<BoxCollider>();
         });
 
         // TODO remove FSM component

@@ -118,13 +118,6 @@ namespace Vakol
     void RegisterGUIWindow(sol::state& lua);
 
     /**
-     * @brief Register the physics system in Lua.
-     *
-     * @param lua The Lua state.
-     */
-    void RegisterPhysics(sol::state& lua);
-
-    /**
      * @brief Register the scene in Lua.
      *
      * @param lua The Lua state.

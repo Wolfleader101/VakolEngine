@@ -4,8 +4,8 @@
 
 namespace Vakol
 {
-    SceneManager::SceneManager(ScriptEngine& scriptEngine, PhysicsEngine& physicsEngine)
-        : m_scriptEngine(scriptEngine), m_physicsEngine(physicsEngine)
+    SceneManager::SceneManager(ScriptEngine& scriptEngine)
+        : m_scriptEngine(scriptEngine) 
     {
     }
 
@@ -52,8 +52,7 @@ namespace Vakol
 
         auto script = m_scriptEngine.CreateScript("scripts/" + scriptName);
 
-        PhysicsScene& PhysicsScene = m_physicsEngine.CreateScene();
-        m_scenes.emplace(name, new Scene(name, script, PhysicsScene));
+        m_scenes.emplace(name, new Scene(name, script));
 
         if (m_scenes.size() == 1)
             m_activeScene = m_scenes.at(name);
