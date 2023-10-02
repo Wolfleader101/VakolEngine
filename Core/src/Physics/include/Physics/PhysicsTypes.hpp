@@ -42,6 +42,7 @@ namespace Vakol
     };
 
     struct RigidBody;
+    struct ContactPair;
 
     /**
      * @brief Collision data of rigidbody
@@ -50,6 +51,8 @@ namespace Vakol
     struct ContactData
     {
         RigidBody* parentBody = nullptr;
+
+        std::shared_ptr<ContactPair> contactPair = nullptr;
 
         Math::Vec3 localContactPoint = Math::Vec3(0.0f);
         Math::Vec3 worldContactPoint = Math::Vec3(0.0f);
@@ -69,6 +72,8 @@ namespace Vakol
 
         Math::Vec3 relativeVelocity = Math::Vec3(0.0f);
 
+        Math::Vec3 impulseSum = Math::Vec3(0.0f);
+
         float penetrationDepth = 0.0f;
 
         unsigned int contactCount = 0u;
@@ -84,12 +89,11 @@ namespace Vakol
         BodyType type = BodyType::Dynamic;
 
         float mass = 1.0f;
-        float bounciness = 0.65f;
+        float bounciness = 0.80f;
 
         bool useGravity = true;
 
         Math::Mat3 localInertiaTensor = Math::Mat3(1.0f);
-        Math::Mat3 worldInertiaTensor = Math::Mat3(1.0f);
 
         Math::Mat3 rotationMatrix = Math::Mat3(1.0f);
 

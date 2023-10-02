@@ -194,6 +194,7 @@ namespace Vakol
                         [&](Components::Transform& transform, RigidBody& rb) {
                             m_physicsEngine.ApplyForces(transform.pos, transform.rot, rb);
 
+                            // avoid converting back and forth (changed by Caleb - Physics Branch)
                             transform.eulerAngles = Math::RadToDeg(Math::EulerFromQuat(transform.rot));
                         });
 

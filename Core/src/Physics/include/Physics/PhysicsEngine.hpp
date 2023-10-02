@@ -108,16 +108,16 @@ namespace Vakol
         /**
          * \brief calculate the inertia tensor of a rigidbody
          * \param mass the mass of the rigidbody
-         * \param collider the box collider
+         * \param halfExtents the half extents of the solid cube
          */
-        Math::Mat3 CalculateInertiaTensor(float mass, const BoxCollider& collider);
+        Math::Mat3 CalculateInertiaTensor(float mass, const Math::Vec3& halfExtents);
 
         /**
          * \brief calculate the inertia tensor of a rigidbody
          * \param mass the mass of the rigidbody
-         * \param collider the sphere collider
+         * \param radius the radius of the sphere
          */
-        Math::Mat3 CalculateInertiaTensor(float mass, const SphereCollider& collider);
+        Math::Mat3 CalculateInertiaTensor(float mass, float radius);
 
         /**
          * @brief Apply forces to a rigidbody

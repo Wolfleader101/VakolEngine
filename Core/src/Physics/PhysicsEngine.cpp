@@ -100,13 +100,13 @@ namespace Vakol
     void PhysicsEngine::AttachCollider(RigidBody& rb, BoxCollider& collider)
     {
         collider.collider = rb.collisionBody->addCollider(collider.shape, rp3d::Transform::identity());
-        rb.localInertiaTensor = CalculateInertiaTensor(rb.mass, collider);
+        rb.localInertiaTensor = CalculateInertiaTensor(rb.mass, FromRPVec3(collider.shape->getHalfExtents()));
     }
 
     void PhysicsEngine::AttachCollider(RigidBody& rb, SphereCollider& collider)
     {
         collider.collider = rb.collisionBody->addCollider(collider.shape, rp3d::Transform::identity());
-        rb.localInertiaTensor = CalculateInertiaTensor(rb.mass, collider);
+        rb.localInertiaTensor = CalculateInertiaTensor(rb.mass, collider.shape->getRadius());
     }
 
     void PhysicsEngine::AttachCollider(RigidBody& rb, CapsuleCollider& collider)
@@ -119,33 +119,33 @@ namespace Vakol
         collider.collider = rb.collisionBody->addCollider(collider.shape, rp3d::Transform::identity());
     }
 
-    Math::Mat3 PhysicsEngine::CalculateInertiaTensor(const float mass, const BoxCollider& collider)
+    Math::Mat3 PhysicsEngine::CalculateInertiaTensor(const float mass, const Math::Vec3& halfExtents)
     {
         Math::Vec3 i = Math::Vec3(0.0f);
 
         constexpr float K = 1.0f / 12.0f;
 
         // get extents by multiplying the half-extents by 2
-        Math::Vec3 extents = FromRPVec3(collider.shape->getHalfExtents()) * 2.0f;
+        Math::Vec3 extents = halfExtents;
 
         // extents squared
         extents *= extents;
 
-        i.x = (extents.y + extents.z) * mass * K;
-        i.y = (extents.x + extents.z) * mass * K;
-        i.z = (extents.x + extents.y) * mass * K;
+        i.x = K * mass * (extents.y + extents.z);
+        i.y = K * mass * (extents.x + extents.z);
+        i.z = K * mass * (extents.x + extents.y);
 
         return {i.x, 0.0f, 0.0f, 0.0f, i.y, 0.0f, 0.0f, 0.0f, i.z};
     }
 
-    Math::Mat3 PhysicsEngine::CalculateInertiaTensor(const float mass, const SphereCollider& collider)
+    Math::Mat3 PhysicsEngine::CalculateInertiaTensor(const float mass, const float radius)
     {
         Math::Vec3 i = Math::Vec3(0.0f);
 
         constexpr float K = 2.0f / 5.0f;
 
         // radius squared
-        float r2 = collider.shape->getRadius() * collider.shape->getRadius();
+        float r2 = radius * radius;
 
         i.x = r2 * mass * K;
         i.y = r2 * mass * K;
@@ -158,10 +158,6 @@ namespace Vakol
     {
         rb.contactData->parentBody = &rb;
 
-        rb.centreOfMass = pos;
-        rb.rotationMatrix = Math::Mat3Cast(rot);
-        rb.worldInertiaTensor = rb.rotationMatrix * rb.localInertiaTensor * Math::Transpose(rb.rotationMatrix);
-
         // Don't apply forces to static bodies
         if (rb.type == BodyType::Static)
         {
@@ -172,22 +168,26 @@ namespace Vakol
         }
 
         // F = ma
-        rb.force += rb.mass * GRAVITY;
+        if (rb.useGravity)
+            rb.force += rb.mass * GRAVITY;
 
         // a = F / m
         const Math::Vec3 linearAcceleration = rb.force / rb.mass;
 
         // α = Iτ
-        const Math::Vec3 angularAcceleration = rb.worldInertiaTensor * rb.torque;
+        const Math::Vec3 angularAcceleration = rb.localInertiaTensor * rb.torque;
 
         // Vf = Vi + a(t)
         rb.linearVelocity += linearAcceleration * static_cast<float>(m_timeStep);
         rb.angularVelocity += angularAcceleration * static_cast<float>(m_timeStep);
 
         pos += rb.linearVelocity * static_cast<float>(m_timeStep);
-        rot = Math::Normalized(rot + Math::Quat(0.0f, rb.angularVelocity * static_cast<float>(m_timeStep)) * rot);
+        rot = Math::Normalized(rot + Math::Quat(0.0f, rb.angularVelocity * static_cast<float>(m_timeStep) * 0.5f) * rot);
 
         rb.collisionBody->setTransform(rp3d::Transform(ToRPVec3(pos), rp3d::Quaternion(rot.x, rot.y, rot.z, rot.w)));
+
+        rb.centreOfMass = pos;
+        rb.rotationMatrix = Math::Mat3Cast(rot);
 
         // Reset forces and torques
         rb.force = Math::Vec3(0.0f);
@@ -202,47 +202,53 @@ namespace Vakol
 
     Math::Vec3 PhysicsEngine::SolveImpulse(const ContactPair& contactPair)
     {
-        const Math::Vec3 contactNormal = Math::Normalized(contactPair.worldContactNormal);
+        auto& bodyA = contactPair.contactA;
+        auto& bodyB = contactPair.contactB;
 
-        // (v2 - v1) . n (relative velocity along normal)
-        const float rNV = Math::Dot(contactPair.relativeVelocity, contactNormal);
+        const Math::Vec3 n = Math::Normalized(contactPair.worldContactNormal);
 
-        // (r1 x n) (relative local contact point 1 along normal)
-        const Math::Vec3 r1N = Math::Cross(contactPair.contactA->relativeLocalContactPoint, contactNormal);
+        // relative velocity along normal
+        const float rVN = Math::Dot(contactPair.relativeVelocity, n);
 
-        // (r2 x n) (relative local contact point 2 along normal)
-        const Math::Vec3 r2N = Math::Cross(contactPair.contactB->relativeLocalContactPoint, contactNormal);
+        // epsilon coefficient of restitution
+        const float e = fminf(bodyA->parentBody->bounciness, bodyB->parentBody->bounciness);
 
-        // minimum coefficient of restitution
-        const float e = fminf(contactPair.contactA->parentBody->bounciness, contactPair.contactB->parentBody->bounciness);
+        // numerator of lambda (impulse magnitude)
+        const float numerator = -(1.0f + e) * rVN;
 
-        const float numerator = -(1.0f + e) * rNV;
+        // first part of the denominator of lambda
+        const float d1a = 1.0f / bodyA->parentBody->mass;
+        const float d1b = 1.0f / bodyB->parentBody->mass;
+        const float d1 = d1a + d1b;
 
-        // first part of the denominator
-        const float d1 = 2.0f; // inverse mass sum (assume both masses are 1)
+        // second part of the denominator of lambda
+        const Math::Vec3 d2a = Math::Inverse(bodyA->parentBody->localInertiaTensor) * Math::Cross(Math::Cross(bodyA->relativeLocalContactPoint, n), bodyA->relativeLocalContactPoint);
+        const Math::Vec3 d2b = Math::Inverse(bodyB->parentBody->localInertiaTensor) * Math::Cross(Math::Cross(bodyB->relativeLocalContactPoint, n), bodyB->relativeLocalContactPoint);
 
-        // second part of the denominator
-        const Math::Vec3 d2 = Math::Cross(r1N * Math::Inverse(contactPair.contactA->parentBody->worldInertiaTensor),
-                                    contactPair.contactA->relativeLocalContactPoint);
+        // denominator of lambda
+        const float denominator = d1 + Math::Dot(d2a + d2b, n);
 
-        // third part of the denominator
-        const Math::Vec3 d3 = Math::Cross(r2N * Math::Inverse(contactPair.contactB->parentBody->worldInertiaTensor),
-                                    contactPair.contactB->relativeLocalContactPoint);
+        const float lambda = numerator / denominator;
 
-        const float denominator = d1 + Math::Dot(contactNormal, d2 + d3);
-
-        float lambda = (denominator == 0.0f) ? 0.0f : numerator / denominator;
-
-        if (contactPair.contactCount > 0 && lambda != 0.0f)
-            lambda /= static_cast<float>(contactPair.contactCount);
-
-        return contactNormal * lambda;
+        return lambda * n;
     }
 
     void PhysicsEngine::ResolveCollisions(Math::Vec3& pos, RigidBody& rb)
     {
-        if (!rb.contactData || rb.type == BodyType::Static)
+        if (!rb.contactData || !rb.contactData->contactPair || !rb.contactData->contactPair->isColliding)
             return;
+
+        const auto& contactPair = rb.contactData->contactPair;
+        const auto& contactA = contactPair->contactA;
+        const auto& contactB = contactPair->contactB;
+
+        const Math::Vec3 depenatration = -contactPair->worldContactNormal * contactPair->penetrationDepth;
+     
+        contactA->parentBody->linearVelocity += contactPair->impulseSum / contactA->parentBody->mass + depenatration;
+        contactA->parentBody->angularVelocity += Math::Cross(contactPair->contactA->relativeLocalContactPoint, contactPair->impulseSum) * Math::Inverse(contactA->parentBody->localInertiaTensor);
+
+        contactB->parentBody->linearVelocity -= contactPair->impulseSum / contactB->parentBody->mass + depenatration;
+        contactB->parentBody->angularVelocity -= Math::Cross(contactPair->contactB->relativeLocalContactPoint, contactPair->impulseSum) * Math::Inverse(contactB->parentBody->localInertiaTensor);
     }
 
     void PhysicsEngine::Depenetration(Math::Vec3& pos, RigidBody& rb)
