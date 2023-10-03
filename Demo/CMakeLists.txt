@@ -34,13 +34,3 @@ else()
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_SOURCE_DIR}/Demo/assets $<TARGET_FILE_DIR:${PROJECT_NAME}>/assets)
 endif()
-
-if(NOT CopyResources)
-    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E create_symlink
-        ${CMAKE_SOURCE_DIR}/Core/assets $<TARGET_FILE_DIR:${PROJECT_NAME}>/coreAssets)
-else()
-    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_SOURCE_DIR}/Core/assets $<TARGET_FILE_DIR:${PROJECT_NAME}>/coreAssets)
-endif()

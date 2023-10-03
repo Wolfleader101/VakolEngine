@@ -24,7 +24,7 @@ TEST_CASE("Script Engine Tests", "[ScriptEngine]")
     SECTION("Test Creating Scripts")
     {
         Vakol::LuaScript script = scriptEngine.CreateScript("testScripts/test.lua");
-        REQUIRE(script.path == "test.lua");
+        REQUIRE(script.path == "testScripts/test.lua");
 
         scriptEngine.SetGlobalVariable("test", 1);
         REQUIRE(script.env["test"] == 1);

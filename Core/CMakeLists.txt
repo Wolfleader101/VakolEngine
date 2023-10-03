@@ -53,6 +53,19 @@ target_compile_options(${PROJECT_NAME} PRIVATE
     $<$<CXX_COMPILER_ID:MSVC>:/W4>
 )
 
+SET(CopyResources FALSE)
+
+function(setup_mylib_resources target_name)
+    if(NOT CopyResources)
+        add_custom_command(TARGET ${target_name} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E create_symlink
+            ${CMAKE_CURRENT_SOURCE_DIR}/assets $<TARGET_FILE_DIR:${target_name}>/coreAssets)
+    else()
+        add_custom_command(TARGET ${target_name} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_directory
+            ${CMAKE_CURRENT_SOURCE_DIR}/assets $<TARGET_FILE_DIR:${target_name}>/coreAssets)
+    endif()
+endfunction()
 
 ########### TESTING ###########
 
@@ -88,6 +101,8 @@ target_compile_options(VakolTests PRIVATE
     # Visual Studio
     $<$<CXX_COMPILER_ID:MSVC>:/W4>
 )
+
+setup_mylib_resources(VakolTests)
 
 if(NOT CopyResources)
     add_custom_command(TARGET VakolTests POST_BUILD
