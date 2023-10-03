@@ -7,12 +7,18 @@ find_package(OpenGL REQUIRED)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(SUPPRESS_LOGS TRUE)
+
 
 # Add source and test directories
 add_subdirectory(src)
 
 # Add source to this project's executable.
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
+
+if(SUPPRESS_LOGS)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE SUPPRESS_LOGS)
+endif()
 
 add_subdirectory(lib)
 
@@ -74,6 +80,7 @@ add_subdirectory(tests)
 
 # Create a test executable
 add_executable(VakolTests tests/tests.cpp)
+target_compile_definitions(VakolTests PRIVATE UNIT_TESTING)
 
 # Add test sources to the test executable
 target_sources(VakolTests PRIVATE ${TESTS_SRC})

@@ -25,8 +25,8 @@ TEST_CASE("GUI Window class tests", "[GUIWindow]")
 
         guiWindow1.EndWindowCreation(); // End the window creation
 
-        REQUIRE(width == 1);  // Check the width is correct
-        REQUIRE(height == 1); // Check the height is correct
+        REQUIRE(width == 1.0f);  // Check the width is correct
+        REQUIRE(height == 1.0f); // Check the height is correct
     }
 
     SECTION("Check if most recent window is created")
@@ -128,6 +128,6 @@ TEST_CASE("GUI Window class tests", "[GUIWindow]")
 
         float fps = guiWindow1.GetFramesPerSecond(); // Get the FPS
 
-        REQUIRE(fps > 0); // Check that the FPS is valid (i.e. greater than 0)
+        REQUIRE(fps > 0.0f); // Check that the FPS is valid (i.e. greater than 0)
     }
 }
