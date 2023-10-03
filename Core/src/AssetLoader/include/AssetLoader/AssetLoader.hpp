@@ -80,8 +80,8 @@ namespace Vakol
          * \param channels
          * \param pixels
          */
-        static void GetTexture(const std::string& path, unsigned int type, int& width, int& height, int& channels,
-                               unsigned char*& pixels);
+        static Rendering::Assets::Texture& GetTexture(const std::string& path, unsigned int type, int& width,
+                                                      int& height, int& channels, unsigned char*& pixels);
 
         /**
          * \brief

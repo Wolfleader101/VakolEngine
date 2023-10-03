@@ -58,8 +58,8 @@ namespace Vakol
          * \param channels the number of color channels of the image texture
          * \param pixels the pixels of the texture
          */
-        void GetTexture(const std::string& path, unsigned int type, int& width, int& height, int& channels,
-                        unsigned char*& pixels);
+        Rendering::Assets::Texture& GetTexture(const std::string& path, unsigned int type, int& width, int& height,
+                                               int& channels, unsigned char*& pixels);
 
         /**
          * \brief get the textures from a series of paths from a cubemap

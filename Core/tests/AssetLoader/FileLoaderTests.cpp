@@ -1,5 +1,5 @@
-#include <catch2/catch_all.hpp>
 #include <AssetLoader/FileLoader.hpp>
+#include <catch2/catch_all.hpp>
 
 TEST_CASE("Testing Loading Files", "[FileLoader]")
 {

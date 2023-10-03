@@ -99,8 +99,8 @@ namespace Vakol
         return m_textures.at(std::make_pair(path, type));
     }
 
-    void TextureLibrary::GetTexture(const std::string& path, const unsigned int type, int& width, int& height,
-                                    int& channels, unsigned char*& pixels)
+    Rendering::Assets::Texture& TextureLibrary::GetTexture(const std::string& path, const unsigned int type, int& width,
+                                                           int& height, int& channels, unsigned char*& pixels)
     {
         if (!FindTexture(path, type))
         {
@@ -119,22 +119,28 @@ namespace Vakol
             int levelX = texture.width;
             int levelY = texture.height;
 
-            while (levelX != 1 && levelY != 1)
+            if (width > 0 && height > 0)
             {
-                levelX = static_cast<int>(floor(levelX / 2));
-                levelY = static_cast<int>(floor(levelY / 2));
+                while (levelX != 1 && levelY != 1)
+                {
+                    levelX = static_cast<int>(floor(levelX / 2));
+                    levelY = static_cast<int>(floor(levelY / 2));
 
-                texture.levels++;
+                    texture.levels++;
+                }
             }
 
             if (!pixels)
             {
-                m_textures[std::make_pair(path, type)] = GetErrorTexture(type);
-                return;
+                VK_ERROR("Unable to get texture pixels!");
+
+                return GetErrorTexture(type);
             }
 
             m_textures[std::make_pair(path, type)] = std::move(texture);
         }
+
+        return m_textures.at(std::make_pair(path, type));
     }
 
     std::vector<Rendering::Assets::Texture> TextureLibrary::GetTextures(std::vector<std::string>&& paths)
