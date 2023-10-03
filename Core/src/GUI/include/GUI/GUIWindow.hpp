@@ -212,8 +212,8 @@ namespace Vakol
          * @param valueName The name of the variable
          * @param windowName The name of the window
          */
-        void ValidateGUIVaraibles(float& inputValue, float minValue, float maxValue, const std::string& valueName,
-                                  const std::string& windowName) const;
+        void ValidateGUIFloatVaraibles(float& inputValue, float minValue, float maxValue, const std::string& valueName,
+                                       const std::string& windowName) const;
         void SetAsContext() const;
 
         std::vector<ImFont*> fonts;              /**< Fonts used in the GUI window */
