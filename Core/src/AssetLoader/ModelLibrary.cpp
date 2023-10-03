@@ -79,4 +79,9 @@ namespace Vakol
         return m_models.find(ID) != m_models.end();
     }
 
+    bool ModelLibrary::IsEmpty() const
+    {
+        return m_models.empty();
+    }
+
 } // namespace Vakol

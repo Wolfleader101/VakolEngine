@@ -2,7 +2,7 @@
 
 #include <AssetLoader/AssetLoader.hpp>
 
-TEST_CASE("Asset Loader Tests", "[AssetLoader]")
+TEST_CASE("AssetLoader Initialization", "[AssetLoader]")
 {
     SECTION("Check initial paths")
     {
@@ -10,4 +10,9 @@ TEST_CASE("Asset Loader Tests", "[AssetLoader]")
         REQUIRE(Vakol::AssetLoader::texture_path == "assets/textures/");
         REQUIRE(Vakol::AssetLoader::AssetLoader::shader_path == "assets/shaders/");
     }
+}
+
+TEST_CASE("Test Something", "[AssetLoader]")
+{
+    
 }

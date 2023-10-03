@@ -27,7 +27,7 @@ TEST_CASE("Testing The Existence of Files", "[FileLoader]")
     SECTION("IsExists Non-Existant Files")
     {
         const bool output = FileExists("testAssets/invalid.txt");
-        REQUIRE(!output);
+        REQUIRE_FALSE(output);
     }
 }
 

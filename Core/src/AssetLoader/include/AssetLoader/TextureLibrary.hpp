@@ -22,6 +22,8 @@ struct PairHash
 
 namespace Vakol
 {
+    const std::string ERROR_TEXTURE_PATH = "coreAssets/textures/error.png";
+
     namespace Rendering::Assets
     {
         struct Texture;
@@ -38,39 +40,45 @@ namespace Vakol
          */
         Rendering::Assets::Texture& GetTexture(const std::string& path, unsigned int type);
         /**
-         * \brief
+         * \brief get a texture froma  path
          * \param path the path of the texture
          * \param type the type of texture
          * \param size the size of the image buffer
          * \param data an address of image data embedded in memory
-         * \return
+         * \return the texture
          */
         Rendering::Assets::Texture& GetTexture(const std::string& path, unsigned int type, int size, const void* data);
 
         /**
          * \brief get the texture including it's pixel data.
-         * \param path
-         * \param type
-         * \param width
-         * \param height
-         * \param channels
-         * \param pixels
+         * \param path the path of the image texture
+         * \param type the type of image texture
+         * \param width the width of the image texture
+         * \param height the height of the image texture
+         * \param channels the number of color channels of the image texture
+         * \param pixels the pixels of the texture
          */
         void GetTexture(const std::string& path, unsigned int type, int& width, int& height, int& channels,
                         unsigned char*& pixels);
 
         /**
-         * \brief
-         * \param paths
-         * \return
+         * \brief get the textures from a series of paths from a cubemap
+         * \param paths the paths of a cubemap's faces
+         * \return a vector of textures for each face of a cubemap
          */
         std::vector<Rendering::Assets::Texture> GetTextures(std::vector<std::string>&& paths);
 
+        /**
+         * \brief checks if a texture library is empty or not.
+         * \return whether or not the texture library is empty
+         */
+        bool IsEmpty() const;
+
       private:
         /**
-         * \brief
-         * \param type
-         * \return
+         * \brief Get the error texture
+         * \param type the type of texture
+         * \return the error texture
          */
         Rendering::Assets::Texture& GetErrorTexture(unsigned int type);
         /**

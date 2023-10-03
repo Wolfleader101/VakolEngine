@@ -39,6 +39,12 @@ namespace Vakol
          */
         Rendering::Assets::Model& GetModel(const GUID& ID, const std::string& path, float scale = 1.0f);
 
+        /**
+         * \brief Check whether a model library is empty or not.
+         * \return whether the model library contains no models in its map
+         */
+        bool IsEmpty() const;
+
       private:
         /**
          * @brief Check if a model exists in the library with the specified GUID.

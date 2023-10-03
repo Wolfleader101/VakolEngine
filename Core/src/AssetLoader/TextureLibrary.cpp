@@ -10,8 +10,6 @@
 
 namespace Vakol
 {
-    const std::string ERROR_TEXTURE_PATH = "coreAssets/textures/error.png";
-
     Rendering::Assets::Texture& TextureLibrary::GetTexture(const std::string& path, const unsigned int type)
     {
         if (!FileExists(path))
@@ -65,6 +63,12 @@ namespace Vakol
             texture.embedded = true;
 
             unsigned char* pixels = nullptr;
+
+            if (!data || size <= 0)
+            {
+                VK_ERROR("Invalid Texture Data!");
+                return GetErrorTexture(type);
+            }
 
             ImportTexture(data, size, texture.width, texture.height, texture.channels, pixels);
 
@@ -162,4 +166,10 @@ namespace Vakol
     {
         return m_textures.find(std::make_pair(path, type)) != m_textures.end();
     }
+
+    bool TextureLibrary::IsEmpty() const
+    {
+        return m_textures.empty();
+    }
+
 } // namespace Vakol
