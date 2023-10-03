@@ -265,6 +265,7 @@ namespace Vakol
         const auto& contactA = contactPair->contactA;
         const auto& contactB = contactPair->contactB;
 
+        rb.linearVelocity -= contactPair->impulseSum / rb.mass;
         //contactA->parentBody->linearVelocity += contactPair->impulseSum / contactA->parentBody->mass;
         //contactB->parentBody->linearVelocity -= contactPair->impulseSum / contactB->parentBody->mass;
     }

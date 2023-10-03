@@ -48,10 +48,8 @@ namespace Vakol
                         contactA->localContactPoint = FromRPVec3(localContactPoint1);
                         contactA->worldContactPoint = FromRPVec3(worldContactPoint1);
 
-                        contactA->relativeLocalContactPoint =
-                            contactA->localContactPoint - contactA->parentBody->centreOfMass;
-                        contactA->relativeWorldContactPoint =
-                            contactA->worldContactPoint - contactA->parentBody->centreOfMass;
+                        contactA->relativeLocalContactPoint = contactA->parentBody->centreOfMass - contactA->localContactPoint;
+                        contactA->relativeWorldContactPoint = contactA->parentBody->centreOfMass - contactA->worldContactPoint;
 
                         contactA->velocity = contactA->parentBody->linearVelocity;
                     }
@@ -61,8 +59,8 @@ namespace Vakol
                         contactB->localContactPoint = FromRPVec3(localContactPoint2);
                         contactB->worldContactPoint = FromRPVec3(worldContactPoint2);
 
-                        contactB->relativeLocalContactPoint = contactB->localContactPoint - contactB->parentBody->centreOfMass;
-                        contactB->relativeWorldContactPoint = contactB->worldContactPoint - contactB->parentBody->centreOfMass;
+                        contactB->relativeLocalContactPoint = contactB->parentBody->centreOfMass - contactB->localContactPoint;
+                        contactB->relativeWorldContactPoint = contactB->parentBody->centreOfMass - contactB->worldContactPoint;
 
                         contactB->velocity = contactB->parentBody->linearVelocity;
                     }
