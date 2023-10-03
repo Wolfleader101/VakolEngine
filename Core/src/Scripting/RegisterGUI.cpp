@@ -12,6 +12,9 @@ namespace Vakol
         gui_window_type.set_function("get_display_window_width", &GUIWindow::DisplayWindowWidth);
         gui_window_type.set_function("get_display_window_height", &GUIWindow::DisplayWindowHeight);
 
+        gui_window_type.set_function("get_gui_window_width", &GUIWindow::GUIWindowWidth);
+        gui_window_type.set_function("get_gui_window_height", &GUIWindow::GUIWindowHeight);
+
         gui_window_type.set_function("start_window", &GUIWindow::StartWindowCreation);
 
         gui_window_type.set_function("update", &GUIWindow::Update);
