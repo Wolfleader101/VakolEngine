@@ -123,20 +123,20 @@ namespace Vakol
         // Check if window variables have valid values
         if (std::abs(height - 0.0f) > 1e-5f) // If the height is not 0.0f
         {
-            ValidateGUIFloatVaraibles(height, 32.0f, DisplayWindowHeight(), "Height", windowName);
+            ValidateGUIFloatVariables(height, 32.0f, DisplayWindowHeight(), "Height", windowName);
         }
 
         if (std::abs(width - 0.0f) > 1e-5f) // If the width is not 0.0f
         {
-            ValidateGUIFloatVaraibles(width, 32.0f, DisplayWindowWidth(), "Width", windowName);
+            ValidateGUIFloatVariables(width, 32.0f, DisplayWindowWidth(), "Width", windowName);
         }
 
         // Check if the offsets are valid
         float minXOffset = 0.0f - (GUIWindowWidth() / 2.0f);
         float minYOffset = 0.0f - (GUIWindowHeight(true) / 2.0f);
 
-        ValidateGUIFloatVaraibles(xOffset, minXOffset, DisplayWindowWidth() - GUIWindowWidth(), "X-Offset", windowName);
-        ValidateGUIFloatVaraibles(yOffset, minYOffset, DisplayWindowHeight() - GUIWindowHeight(true), "Y-Offset",
+        ValidateGUIFloatVariables(xOffset, minXOffset, DisplayWindowWidth() - GUIWindowWidth(), "X-Offset", windowName);
+        ValidateGUIFloatVariables(yOffset, minYOffset, DisplayWindowHeight() - GUIWindowHeight(true), "Y-Offset",
                                   windowName);
 
         ImGuiViewport* main_viewport = ImGui::GetMainViewport(); // Gets the main viewport that the GUI is displayed in
@@ -371,7 +371,7 @@ namespace Vakol
         ImGui::End(); // Ends the creation of the window
     };
 
-    void GUIWindow::ValidateGUIFloatVaraibles(float& inputValue, float minValue, float maxValue,
+    void GUIWindow::ValidateGUIFloatVariables(float& inputValue, float minValue, float maxValue,
                                               const std::string& valueName, const std::string& windowName) const
     {
         if (inputValue < minValue)
