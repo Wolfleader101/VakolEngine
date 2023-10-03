@@ -72,13 +72,13 @@ namespace Vakol
         void Update();
 
         /**
-         * @brief Used to check if scene manager is valid to use.
+         * @brief Checks if scene manager is valid to use.
          *        Checks if empty, and if current scene is set.
          *
          * @return true
          * @return false
          */
-        bool operator!() const;
+        bool IsValid() const;
 
         bool SceneChanged() const;
 

@@ -48,7 +48,7 @@ namespace Vakol
     void SceneManager::CreateScene(const std::string& name, const std::string& scriptName)
     {
         if (m_scenes.find(name) != m_scenes.end())
-            VK_ERROR("Scene with name: {0} already exists. Skipping...", name);
+            ThrowRuntime("Scene with name: " + name + " already exists.");
 
         auto script = m_scriptEngine.CreateScript("scripts/" + scriptName);
 
@@ -73,6 +73,9 @@ namespace Vakol
 
     void SceneManager::Update()
     {
+        if (!(this->IsValid()))
+            ThrowRuntime("SceneManager is not valid to use.");
+
         if (m_nextScene != nullptr)
         {
             m_activeScene = m_nextScene;
@@ -103,12 +106,12 @@ namespace Vakol
         return m_sceneChanged;
     }
 
-    bool SceneManager::operator!() const
+    bool SceneManager::IsValid() const
     {
         bool empty = m_scenes.empty();
         bool currentNull = !m_activeScene;
 
-        return empty || currentNull;
+        return !empty && !currentNull;
     }
 
     void SceneManager::ThrowRuntime(const std::string& str) const // probably should be its own class but I'm lazy
