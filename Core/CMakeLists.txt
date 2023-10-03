@@ -88,3 +88,24 @@ target_compile_options(VakolTests PRIVATE
     # Visual Studio
     $<$<CXX_COMPILER_ID:MSVC>:/W4>
 )
+
+if(NOT CopyResources)
+    add_custom_command(TARGET VakolTests POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E create_symlink
+        ${CMAKE_CURRENT_SOURCE_DIR}/tests/scripts $<TARGET_FILE_DIR:VakolTests>/testScripts)
+else()
+    add_custom_command(TARGET VakolTests POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_CURRENT_SOURCE_DIR}/tests/scripts $<TARGET_FILE_DIR:VakolTests>/testScripts)
+
+endif()
+
+if(NOT CopyResources)
+    add_custom_command(TARGET VakolTests POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E create_symlink
+        ${CMAKE_CURRENT_SOURCE_DIR}/tests/assets $<TARGET_FILE_DIR:VakolTests>/testAssets)
+else()
+    add_custom_command(TARGET VakolTests POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_CURRENT_SOURCE_DIR}/tests/assets $<TARGET_FILE_DIR:VakolTests>/testAssets)
+endif()
