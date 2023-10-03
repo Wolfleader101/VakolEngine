@@ -61,8 +61,10 @@ namespace Vakol
         float GUIWindow::GUIWindowWidth() const;
         /**
          * @brief Returns the height of the GUI window
+         * 
+         * @param addTitleBarHeight Whether to add the title bar height to the height or not
          */
-        float GUIWindow::GUIWindowHeight() const;
+        float GUIWindow::GUIWindowHeight(bool addTitleBarHeight) const;
         /**
          * @brief Starts the creation of a GUI window
          *

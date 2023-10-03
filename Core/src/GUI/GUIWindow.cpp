@@ -107,9 +107,14 @@ namespace Vakol
         return (ImGui::GetWindowWidth());
     }
 
-    float GUIWindow::GUIWindowHeight() const
+    float GUIWindow::GUIWindowHeight(bool addTitleBarHeight) const
     {
-        return (ImGui::GetWindowHeight());
+        if (addTitleBarHeight)
+        {
+            return (ImGui::GetWindowHeight() + ImGui::GetFrameHeight());
+        }
+        else
+            return (ImGui::GetWindowHeight());
     }
 
     void GUIWindow::StartWindowCreation(const std::string& windowName, bool centerX, bool centerY, float width,
