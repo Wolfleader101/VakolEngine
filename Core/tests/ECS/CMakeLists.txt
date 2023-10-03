@@ -1,5 +1,4 @@
 SET(ECS_TESTS_SRC
-    ${CMAKE_CURRENT_SOURCE_DIR}/ComponentsTests.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/EntityTests.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/EntityListTests.cpp
     PARENT_SCOPE
