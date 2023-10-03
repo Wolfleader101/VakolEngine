@@ -12,7 +12,6 @@ namespace Vakol
 {
 
     class Entity; // pre declared to prevent recursive include
-    class System;
     class Scene;
 
     /**
@@ -174,7 +173,6 @@ namespace Vakol
         }
 
         friend class Entity; // friend to allow the API for entities to be clean.
-        friend class System;
         friend class Scene;
     };
 

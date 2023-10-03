@@ -134,7 +134,7 @@ namespace Vakol
     template <typename... Types>
     bool Entity::HasAnyComponent() const
     {
-        return m_EntityList->m_Registry.all_of<Types..>(m_entityHandle);
+        return m_EntityList->m_Registry.any_of<Types...>(m_entityHandle);
     }
 
     template <class T, typename... Args>
