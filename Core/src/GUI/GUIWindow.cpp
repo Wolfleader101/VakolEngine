@@ -92,19 +92,43 @@ namespace Vakol
         ImGui::EndFrame();
     }
 
-    const float GUIWindow::DisplayWindowWidth() const
+    float GUIWindow::DisplayWindowWidth() const
     {
-        return ((float)m_window->GetWidth()); 
+        return ((float)m_window->GetWidth());
     }
 
-    const float GUIWindow::DisplayWindowHeight() const
+    float GUIWindow::DisplayWindowHeight() const
     {
-        return ((float)m_window->GetHeight()); 
+        return ((float)m_window->GetHeight());
     }
 
-    void GUIWindow::StartWindowCreation(const std::string& windowName, bool centerX, bool centerY, const float width,
-                                        const float height, const float xOffset, float yOffset) const
+    float GUIWindow::GUIWindowWidth() const
     {
+        return (ImGui::GetWindowWidth());
+    }
+
+    float GUIWindow::GUIWindowHeight() const
+    {
+        return (ImGui::GetWindowHeight());
+    }
+
+    void GUIWindow::StartWindowCreation(const std::string& windowName, bool centerX, bool centerY, float width,
+                                        float height, const float xOffset, float yOffset) const
+    {
+        if (height < 32.0f)
+        {
+            VK_WARN("Height of window is less than 32.0f. Setting height to 32.0f.");
+
+            height = 32.0f;
+        }
+
+        if (width < 32.0f)
+        {
+            VK_WARN("Width of window is less than 32.0f. Setting width to 32.0f.");
+
+            width = 32.0f;
+        }
+
         ImGuiViewport* main_viewport = ImGui::GetMainViewport();
 
         // We will calculate the final position first
@@ -137,13 +161,12 @@ namespace Vakol
 
         // Now set the final position
         ImGui::SetNextWindowPos(finalPosition);
+        ImGui::SetNextWindowSize({width, height}, ImGuiCond_Always);
 
         // Begin the window
         ImGui::Begin(windowName.c_str(), nullptr,
                      ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize |
                          ImGuiWindowFlags_NoDocking);
-
-        ImGui::SetWindowSize({width, height}, ImGuiCond_Always);
     }
 
     bool GUIWindow::IsWindowCreated() const

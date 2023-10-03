@@ -8,9 +8,11 @@ TEST_CASE("GUI Window class tests", "[GUIWindow]")
 {
     Vakol::GUIWindow guiWindow1;
 
+    float width = 0.0f, height = 0.0f;
+
     SECTION("DisplayWindowWidth and DisplayWindowHeight returns correct width") // Check the display window width/height
     {
-        float width = 0.0f, height = 0.0f;
+        width = 0.0f, height = 0.0f;
 
         std::shared_ptr<Vakol::Window> window1 =
             std::make_shared<Vakol::Window>("DisplayWindowWidth and DisplayWindowHeight Test", 1.0f,
@@ -20,7 +22,7 @@ TEST_CASE("GUI Window class tests", "[GUIWindow]")
 
         guiWindow1.CreateNewFrame(); // Create a new frame
 
-        guiWindow1.StartWindowCreation("Test Window 1", true, true, 1.0f, 1.0f, 0.0f, 0.0f); // Create a window
+        guiWindow1.StartWindowCreation("Test Window 1", true, true, 5.0f, 6.0f, 0.0f, 0.0f); // Create a window
 
         width = guiWindow1.DisplayWindowWidth();   // Get the width of the window
         height = guiWindow1.DisplayWindowHeight(); // Get the height of the window
@@ -29,6 +31,54 @@ TEST_CASE("GUI Window class tests", "[GUIWindow]")
 
         REQUIRE(width == window1->GetWidth());   // Check the display width is correct
         REQUIRE(height == window1->GetHeight()); // Check the display height is correct
+    }
+
+    SECTION("GUIWindowWidth and GUIWindowHeight returns correct width") // Check the GUI window width/height
+    {
+        width = 0.0f, height = 0.0f;
+
+        std::shared_ptr<Vakol::Window> window1 =
+            std::make_shared<Vakol::Window>("GUIWindowWidth and GUIWindowHeight Test", 500.0f,
+                                            500.0f); // Create a window for the GUI to be displayed in
+
+        guiWindow1.Init(window1); // Initialise the window
+
+        guiWindow1.CreateNewFrame(); // Create a new frame
+
+        guiWindow1.StartWindowCreation("Test Window 2", true, true, 34.0f, 43.0f, 0.0f, 0.0f); // Create a window
+
+        width = guiWindow1.GUIWindowWidth();   // Get the width of the GUI window
+        height = guiWindow1.GUIWindowHeight(); // Get the height of the GUI window
+
+        guiWindow1.EndWindowCreation(); // End the window creation
+
+        REQUIRE(width == 34.0f);  // Check the display width is correct
+        REQUIRE(height == 43.0f); // Check the display height is correct
+    }
+
+    SECTION("GUIWindowWidth and GUIWindowHeight lower than 32") // Check what happens to the the GUI window width/height
+                                                                // if it is lower than 32
+    {
+        width = 0.0f, height = 0.0f;
+
+        std::shared_ptr<Vakol::Window> window1 =
+            std::make_shared<Vakol::Window>("GUIWindowWidth and GUIWindowHeight 32 Test", 500.0f,
+                                            500.0f); // Create a window for the GUI to be displayed in
+
+        guiWindow1.Init(window1); // Initialise the window
+
+        guiWindow1.CreateNewFrame(); // Create a new frame
+
+        guiWindow1.StartWindowCreation("Test Window 3", true, true, 23.0f, 12.0f, 0.0f,
+                                       0.0f); // Create a window with a width/height lower than 32
+
+        width = guiWindow1.GUIWindowWidth();   // Get the width of the GUI window
+        height = guiWindow1.GUIWindowHeight(); // Get the height of the GUI window
+
+        guiWindow1.EndWindowCreation(); // End the window creation
+
+        REQUIRE(width == 32.0f);  // Check the display width is correct (i.e. 32.0f)
+        REQUIRE(height == 32.0f); // Check the display height is correct (i.e. 32.0f)
     }
 
     SECTION("Check if most recent window is created")
@@ -41,7 +91,7 @@ TEST_CASE("GUI Window class tests", "[GUIWindow]")
 
         guiWindow1.CreateNewFrame(); // Create a new frame
 
-        guiWindow1.StartWindowCreation("Test Window 2", true, true, 1.0f, 1.0f, 0.0f, 0.0f); // Create a window
+        guiWindow1.StartWindowCreation("Test Window 4", true, true, 1.0f, 1.0f, 0.0f, 0.0f); // Create a window
 
         guiWindow1.EndWindowCreation(); // End the window creation
 
@@ -61,7 +111,7 @@ TEST_CASE("GUI Window class tests", "[GUIWindow]")
 
         guiWindow1.CreateNewFrame(); // Create a new frame
 
-        guiWindow1.StartWindowCreation("Test Window 3", true, true, 1.0f, 1.0f, 0.0f, 0.0f); // Create a window
+        guiWindow1.StartWindowCreation("Test Window 5", true, true, 1.0f, 1.0f, 0.0f, 0.0f); // Create a window
 
         guiWindow1.EndWindowCreation(); // End the window creation
 
@@ -81,7 +131,7 @@ TEST_CASE("GUI Window class tests", "[GUIWindow]")
 
         guiWindow1.CreateNewFrame(); // Create a new frame
 
-        guiWindow1.StartWindowCreation("Test Window 4", true, true, 1.0f, 1.0f, 0.0f, 0.0f); // Create a window
+        guiWindow1.StartWindowCreation("Test Window 6", true, true, 1.0f, 1.0f, 0.0f, 0.0f); // Create a window
 
         guiWindow1.EndWindowCreation(); // End the window creation
 
@@ -99,7 +149,7 @@ TEST_CASE("GUI Window class tests", "[GUIWindow]")
         guiWindow1.WindowBackgroundStyle(1.0f, 0.0f, 0.0f, 1.0f); // Change the window background style to red
 
         guiWindow1.CreateNewFrame();                                                         // Create a new frame
-        guiWindow1.StartWindowCreation("Test Window 5", true, true, 1.0f, 1.0f, 0.0f, 0.0f); // Create a window
+        guiWindow1.StartWindowCreation("Test Window 7", true, true, 1.0f, 1.0f, 0.0f, 0.0f); // Create a window
 
         guiWindow1.EndWindowCreation(); // End the window creation
 
@@ -124,7 +174,7 @@ TEST_CASE("GUI Window class tests", "[GUIWindow]")
         guiWindow1.Init(window1); // Initialise the window
 
         guiWindow1.CreateNewFrame();                                                         // Create a new frame
-        guiWindow1.StartWindowCreation("Test Window 6", true, true, 1.0f, 1.0f, 0.0f, 0.0f); // Create a window
+        guiWindow1.StartWindowCreation("Test Window 8", true, true, 1.0f, 1.0f, 0.0f, 0.0f); // Create a window
 
         guiWindow1.EndWindowCreation(); // End the window creation
 

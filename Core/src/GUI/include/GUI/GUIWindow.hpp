@@ -50,11 +50,19 @@ namespace Vakol
         /**
          * @brief Returns the width of the display window
          */
-        const float DisplayWindowWidth() const;
+        float DisplayWindowWidth() const;
         /**
          * @brief Returns the height of the display window
          */
-        const float DisplayWindowHeight() const;
+        float DisplayWindowHeight() const;
+        /**
+         * @brief Returns the width of the GUI window
+         */
+        float GUIWindow::GUIWindowWidth() const;
+        /**
+         * @brief Returns the height of the GUI window
+         */
+        float GUIWindow::GUIWindowHeight() const;
         /**
          * @brief Starts the creation of a GUI window
          *
