@@ -23,7 +23,7 @@ TEST_CASE("Create Entity With Suggested Handle", "[EntityList]")
 {
     Vakol::EntityList entityList;
     Vakol::Entity entity = entityList.CreateEntity(13);
-    REQUIRE(entity.GetHandle() == 13);
+    REQUIRE((entity.GetHandle() == 13 && entityList.CheckEntityExistence(13)));
 }
 
 TEST_CASE("GetEntity", "[EntityList]")
@@ -41,15 +41,6 @@ TEST_CASE("RemoveEntity", "[EntityList]")
     REQUIRE_FALSE(entityList.CheckEntityExistence(entity.GetHandle()));
 }
 
-TEST_CASE("Clear", "[EntityList]")
-{
-    Vakol::EntityList entityList;
-    entityList.CreateEntity();
-    entityList.CreateEntity();
-    entityList.Clear();
-    REQUIRE(entityList.GetEntityVec().size() == 0);
-}
-
 TEST_CASE("GetEntityVec", "[EntityList]")
 {
     Vakol::EntityList entityList;
@@ -58,4 +49,14 @@ TEST_CASE("GetEntityVec", "[EntityList]")
         entityList.CreateEntity();
     }
     REQUIRE(entityList.GetEntityVec().size() == 37);
+}
+
+TEST_CASE("Clear", "[EntityList]")
+{
+    Vakol::EntityList entityList;
+    entityList.CreateEntity();
+    entityList.CreateEntity();
+    REQUIRE(entityList.GetEntityVec().size() == 2);
+    entityList.Clear();
+    REQUIRE(entityList.GetEntityVec().size() == 0);
 }
