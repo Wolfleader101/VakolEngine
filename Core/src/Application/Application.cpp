@@ -13,18 +13,11 @@ namespace Vakol
 
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
-    Application::Application()
+    Application::Application(const std::string& configPath)
         : m_window(nullptr), m_scriptEngine(), m_sceneManager(m_scriptEngine, m_physicsEngine), m_running(false),
           m_gameState(GameState::Running), m_activeSystems(0), m_input()
     {
-        Init();
-    };
-
-    void Application::Init()
-    {
-        RegisterLua();
-
-        std::optional<GameConfig> config = LoadConfig();
+        std::optional<GameConfig> config = LoadConfig(configPath);
 
         if (!config)
         {
@@ -32,8 +25,14 @@ namespace Vakol
             return;
         }
 
-        m_window =
-            std::make_shared<Window>(config.value().name, config.value().windowWidth, config.value().windowHeight);
+        Init(config.value());
+    };
+
+    void Application::Init(GameConfig& config)
+    {
+        RegisterLua();
+
+        m_window = std::make_shared<Window>(config.name, config.windowWidth, config.windowHeight);
 
         if (!m_window)
         {
@@ -44,8 +43,7 @@ namespace Vakol
 
         m_window->SetEventCallback(BIND_EVENT_FN(OnEvent));
 
-        Rendering::RenderEngine::Init(config.value().windowWidth, config.value().windowHeight,
-                                      config.value().rendererType);
+        Rendering::RenderEngine::Init(config.windowWidth, config.windowHeight, config.rendererType);
 
         m_gui.Init(m_window);
 
@@ -76,11 +74,11 @@ namespace Vakol
         m_scriptEngine.SetGlobalFunction("set_active_mouse", &Application::SetActiveMouse, this);
     }
 
-    std::optional<GameConfig> Application::LoadConfig()
+    std::optional<GameConfig> Application::LoadConfig(const std::string& configPath)
     {
         VK_INFO("Loading game_config.lua...");
 
-        LuaScript configScript = m_scriptEngine.CreateScript("scripts/game_config.lua");
+        LuaScript configScript = m_scriptEngine.CreateScript(configPath);
 
         LuaType configVar = m_scriptEngine.GetScriptVariable(configScript, "game_config");
 
@@ -406,7 +404,6 @@ namespace Vakol
 
     void Application::PushLayer(std::shared_ptr<Layer> layer)
     {
-
         if (layer)
         {
             m_layerManager.PushLayer(layer);
