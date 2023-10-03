@@ -2,6 +2,7 @@
 
 #include <imgui.h>
 
+#include <fstream>
 #include <functional>
 #include <memory>
 #include <string>
@@ -32,11 +33,11 @@ namespace Vakol
          */
         void CreateNewFrame() const;
         /**
-         * @brief Changes the default font being used in Dear ImGui
+         * @brief Changes the default font of the UI window and returns whether it was successful
          *
          * @param inputPath The path to the font file
          */
-        void ChangeFontDefault(std::string inputPath) const;
+        bool ChangeFontDefault(std::string inputPath) const;
         /**
          * @brief Ends the current frame
          */
@@ -75,6 +76,10 @@ namespace Vakol
          * @brief Returns the FPS of the current window
          */
         float GetFramesPerSecond() const;
+        /**
+         * @brief Returns the current ImGui style
+         */
+        ImGuiStyle* GetStyle() const;
         /**
          * @brief An update function to call new frame
          *
@@ -194,5 +199,6 @@ namespace Vakol
         bool is_initialised = false; /**< Flag indicating whether the GUI window is initialized */
         std::string scriptName;      /**< Name of the script */
         ImGuiContext* m_context;     /**< The context of the GUI window */
+        ImGuiStyle* m_style;         /**< The style of the GUI window */
     };
 } // namespace Vakol

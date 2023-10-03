@@ -101,6 +101,10 @@ namespace Vakol::Rendering
          */
         static void ResizeScreen(Camera& camera, unsigned int width, unsigned int height);
 
+        static inline const RenderConfig& GetAPIConfig()
+        {
+            return RenderAPI::GetConfig();
+        }
       private:
         /**
          * \brief generate a vertex array based of the vertices of a skybox
