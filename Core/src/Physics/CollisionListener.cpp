@@ -40,63 +40,60 @@ namespace Vakol
 
                 worldContactNormal = point.getWorldNormal();
                 penetrationDepth = point.getPenetrationDepth();
+
+                if (pair.getEventType() == ContactPair::EventType::ContactStart || pair.getEventType() == ContactPair::EventType::ContactStay)
+                {
+                    if (contactA)
+                    {
+                        contactA->localContactPoint = FromRPVec3(localContactPoint1);
+                        contactA->worldContactPoint = FromRPVec3(worldContactPoint1);
+
+                        contactA->relativeLocalContactPoint =
+                            contactA->localContactPoint - contactA->parentBody->centreOfMass;
+                        contactA->relativeWorldContactPoint =
+                            contactA->worldContactPoint - contactA->parentBody->centreOfMass;
+
+                        contactA->velocity = contactA->parentBody->linearVelocity;
+                    }
+
+                    if (contactB)
+                    {
+                        contactB->localContactPoint = FromRPVec3(localContactPoint2);
+                        contactB->worldContactPoint = FromRPVec3(worldContactPoint2);
+
+                        contactB->relativeLocalContactPoint = contactB->localContactPoint - contactB->parentBody->centreOfMass;
+                        contactB->relativeWorldContactPoint = contactB->worldContactPoint - contactB->parentBody->centreOfMass;
+
+                        contactB->velocity = contactB->parentBody->linearVelocity;
+                    }
+
+                    if (contactA && contactB)
+                    {
+                        contactPair.contactA = contactA;
+                        contactPair.contactB = contactB;
+
+                        contactPair.relativeVelocity = contactA->velocity - contactB->velocity;
+
+                        contactPair.worldContactNormal = FromRPVec3(worldContactNormal);
+
+                        contactPair.penetrationDepth = penetrationDepth;
+
+                        contactPair.impulseSum += PhysicsEngine::SolveImpulse(contactPair);
+
+                        contactPair.contactCount = pair.getNbContactPoints();
+                        contactPair.isColliding = true;
+                    }
+                }
             }
 
             if (pair.getEventType() == ContactPair::EventType::ContactStart)
             {
-
-            }
-            if (pair.getEventType() == ContactPair::EventType::ContactStart || pair.getEventType() == ContactPair::EventType::ContactStay)
-            {
-                if (contactA)
-                {
-                    contactA->localContactPoint = FromRPVec3(localContactPoint1);
-                    contactA->worldContactPoint = FromRPVec3(worldContactPoint1);
-
-                    contactA->relativeLocalContactPoint = contactA->localContactPoint - contactA->parentBody->centreOfMass;
-                    contactA->relativeWorldContactPoint = contactA->worldContactPoint - contactA->parentBody->centreOfMass;
-
-                    contactA->velocity = contactA->parentBody->linearVelocity + Math::Cross(contactA->parentBody->angularVelocity, contactA->relativeLocalContactPoint);
-                }
-
-                if (contactB)
-                {
-                    contactB->localContactPoint = FromRPVec3(localContactPoint2);
-                    contactB->worldContactPoint = FromRPVec3(worldContactPoint2);
-   
-                    contactB->relativeLocalContactPoint = contactB->localContactPoint - contactB->parentBody->centreOfMass;
-                    contactB->relativeWorldContactPoint = contactB->worldContactPoint - contactB->parentBody->centreOfMass;
-
-                    contactB->velocity = contactB->parentBody->linearVelocity - Math::Cross(contactB->parentBody->angularVelocity, contactB->relativeLocalContactPoint);
-                }
-
-                if (contactA && contactB)
-                {
-                    contactPair.contactA = contactA;
-                    contactPair.contactB = contactB;
-
-                    contactPair.relativeVelocity = contactA->velocity - contactB->velocity;
-
-                    contactPair.worldContactNormal = FromRPVec3(worldContactNormal);
-
-                    contactPair.penetrationDepth = penetrationDepth;
-
-                    contactPair.impulseSum += PhysicsEngine::SolveImpulse(contactPair);
-
-                    contactPair.contactCount = pair.getNbContactPoints();
-                    contactPair.isColliding = true;
-                }
-
-                if (contactA)
-                    contactA->contactPair = std::make_shared<Vakol::ContactPair>(contactPair);
-                if (contactB)
-                    contactB->contactPair = std::make_shared<Vakol::ContactPair>(contactPair);
-            }
-            else if (pair.getEventType() == ContactPair::EventType::ContactStay)
-            {
+                VK_TRACE("ENTER COLLISION");
             }
             else if (pair.getEventType() == ContactPair::EventType::ContactExit)
             {
+                VK_TRACE("EXIT COLLISION");
+
                 if (contactA)
                     Reset(contactA);
 

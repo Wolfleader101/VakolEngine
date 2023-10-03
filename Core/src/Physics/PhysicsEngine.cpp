@@ -207,28 +207,51 @@ namespace Vakol
 
         const Math::Vec3 n = Math::Normalized(contactPair.worldContactNormal);
 
-        // relative velocity along normal
-        const float rVN = Math::Dot(contactPair.relativeVelocity, n);
+        // r1 x n
+        const Math::Vec3 r1xN = Math::Cross(bodyA->relativeLocalContactPoint, n);
 
-        // epsilon coefficient of restitution
+        // r2 x n
+        const Math::Vec3 r2xN = Math::Cross(bodyB->relativeLocalContactPoint, n);
+
+        // coefficient of restitution
         const float e = fminf(bodyA->parentBody->bounciness, bodyB->parentBody->bounciness);
 
-        // numerator of lambda (impulse magnitude)
-        const float numerator = -(1.0f + e) * rVN;
+        // first part of the numerator
+        const float n1 = -(1.0f + e);
 
-        // first part of the denominator of lambda
-        const float d1a = 1.0f / bodyA->parentBody->mass;
-        const float d1b = 1.0f / bodyB->parentBody->mass;
+        // n . (v1 - v2)
+        const float n2 = Math::Dot(n, contactPair.relativeVelocity);
+
+        // w1 . (r1 x n)
+        const float n3a = Math::Dot(bodyA->parentBody->angularVelocity, r1xN);
+
+        // w2 . (r2 x n)
+        const float n3b = Math::Dot(bodyB->parentBody->angularVelocity, r2xN);
+
+        // -(1 + e)(n . (v1 - v2) + w1 . (r1 x n) - w2 . (r2 x n))
+        const float numerator = n1 * (n2 + n3a - n3b);
+
+        // 1 / m1
+        const float d1a = bodyA->parentBody->mass != 0.0f ? 1 / bodyA->parentBody->mass : 0.0f;
+
+        // 1 / m2
+        const float d1b = bodyB->parentBody->mass != 0.0f ? 1 / bodyB->parentBody->mass : 0.0f;
+
+        // 1 / m1 + 1 / m2
         const float d1 = d1a + d1b;
 
-        // second part of the denominator of lambda
-        const Math::Vec3 d2a = Math::Inverse(bodyA->parentBody->localInertiaTensor) * Math::Cross(Math::Cross(bodyA->relativeLocalContactPoint, n), bodyA->relativeLocalContactPoint);
-        const Math::Vec3 d2b = Math::Inverse(bodyB->parentBody->localInertiaTensor) * Math::Cross(Math::Cross(bodyB->relativeLocalContactPoint, n), bodyB->relativeLocalContactPoint);
+        // (r1 x n) . (TJ1-1 * (r1 x n))
+        const float d2a = Math::Dot(r1xN, Math::Inverse(bodyA->parentBody->localInertiaTensor) * r1xN);
 
-        // denominator of lambda
-        const float denominator = d1 + Math::Dot(d2a + d2b, n);
+        // (r2 x n) . (TJ2-1 * (r2 x n))
+        const float d2b = Math::Dot(r2xN, Math::Inverse(bodyB->parentBody->localInertiaTensor) * r2xN);
+
+        // (1 / m1) + (1 / m2) * ((r1 x n) * TJ-1 * (r1 x n) + (r2 x n) * TJ2-1 * (r2 x n))
+        const float denominator = d1 + (d2a + d2b);
 
         const float lambda = numerator / denominator;
+
+        VK_TRACE(lambda);
 
         return lambda * n;
     }
@@ -242,16 +265,8 @@ namespace Vakol
         const auto& contactA = contactPair->contactA;
         const auto& contactB = contactPair->contactB;
 
-        const Math::Vec3 depenatration = -contactPair->worldContactNormal * contactPair->penetrationDepth;
-
-        rb.linearVelocity += contactPair->impulseSum / rb.mass + depenatration;
-        rb.angularVelocity += Math::Cross(contactA->relativeLocalContactPoint, contactPair->impulseSum) * Math::Inverse(rb.localInertiaTensor);
-
-        //contactA->parentBody->linearVelocity += contactPair->impulseSum / contactA->parentBody->mass + depenatration;
-        //contactA->parentBody->angularVelocity += Math::Cross(contactPair->contactA->relativeLocalContactPoint, contactPair->impulseSum) * Math::Inverse(contactA->parentBody->localInertiaTensor);
-
-        //contactB->parentBody->linearVelocity -= contactPair->impulseSum / contactB->parentBody->mass + depenatration;
-        //contactB->parentBody->angularVelocity -= Math::Cross(contactPair->contactB->relativeLocalContactPoint, contactPair->impulseSum) * Math::Inverse(contactB->parentBody->localInertiaTensor);
+        //contactA->parentBody->linearVelocity += contactPair->impulseSum / contactA->parentBody->mass;
+        //contactB->parentBody->linearVelocity -= contactPair->impulseSum / contactB->parentBody->mass;
     }
 
     void PhysicsEngine::Depenetration(Math::Vec3& pos, RigidBody& rb)
