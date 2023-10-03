@@ -61,7 +61,7 @@ namespace Vakol
         float GUIWindow::GUIWindowWidth() const;
         /**
          * @brief Returns the height of the GUI window
-         * 
+         *
          * @param addTitleBarHeight Whether to add the title bar height to the height or not
          */
         float GUIWindow::GUIWindowHeight(bool addTitleBarHeight) const;
@@ -77,7 +77,7 @@ namespace Vakol
          * @param yOffset The y position of the window will be offset by
          */
         void StartWindowCreation(const std::string& windowName, bool centerX, bool centerY, float width, float height,
-                                 const float xOffset, float yOffset) const;
+                                 float xOffset, float yOffset) const;
         /**
          * @brief Checks to see if the most recent window has been created and is displayed
          */
@@ -203,6 +203,17 @@ namespace Vakol
         ~GUIWindow();
 
       private:
+        /**
+         * @brief Validates the GUI variables to ensure they are within the given range
+         *
+         * @param inputValue The value to be validated
+         * @param minValue The minimum value of the variable
+         * @param maxValue The maximum value of the variable
+         * @param valueName The name of the variable
+         * @param windowName The name of the window
+         */
+        void ValidateGUIVaraibles(float& inputValue, float minValue, float maxValue, const std::string& valueName,
+                                  const std::string& windowName) const;
         void SetAsContext() const;
 
         std::vector<ImFont*> fonts;              /**< Fonts used in the GUI window */

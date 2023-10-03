@@ -6,6 +6,8 @@
 
 #include <Logger/Logger.hpp>
 
+#include <iostream>
+
 namespace Vakol
 {
     GUIWindow::GUIWindow()
@@ -118,23 +120,28 @@ namespace Vakol
     }
 
     void GUIWindow::StartWindowCreation(const std::string& windowName, bool centerX, bool centerY, float width,
-                                        float height, const float xOffset, float yOffset) const
+                                        float height, float xOffset, float yOffset) const
     {
-        if (height < 32.0f)
+        // Check if window variables have valid values
+        if (std::abs(height - 0.0f) > 1e-5f) // If the height is not 0.0f
         {
-            VK_WARN("Height of GUI window '" + windowName + "' is less than 32.0f. Setting height to 32.0f.");
-
-            height = 32.0f;
+            ValidateGUIVaraibles(height, 32.0f, DisplayWindowHeight(), "Height", windowName);
         }
 
-        if (width < 32.0f)
+        if (std::abs(width - 0.0f) > 1e-5f) // If the width is not 0.0f
         {
-            VK_WARN("Width of GUI window '" + windowName + "' is less than 32.0f. Setting height to 32.0f.");
-
-            width = 32.0f;
+            ValidateGUIVaraibles(width, 32.0f, DisplayWindowWidth(), "Width", windowName);
         }
 
-        ImGuiViewport* main_viewport = ImGui::GetMainViewport();
+        // Check if the offsets are valid
+        float minXOffset = 0.0f - (GUIWindowWidth() / 2.0f);
+        float minYOffset = 0.0f - (GUIWindowHeight(true) / 2.0f);
+
+        ValidateGUIVaraibles(xOffset, minXOffset, DisplayWindowWidth() - GUIWindowWidth(), "X-Offset", windowName);
+        ValidateGUIVaraibles(yOffset, minYOffset, DisplayWindowHeight() - GUIWindowHeight(true), "Y-Offset",
+                             windowName);
+
+        ImGuiViewport* main_viewport = ImGui::GetMainViewport(); // Gets the main viewport that the GUI is displayed in
 
         // We will calculate the final position first
         ImVec2 finalPosition = {main_viewport->Pos.x + xOffset, main_viewport->Pos.y + yOffset};
@@ -142,16 +149,16 @@ namespace Vakol
         // Adjust finalPosition based on centering flags
         if (centerX && centerY)
         {
-            finalPosition.x = main_viewport->Pos.x + (DisplayWindowWidth() - width) / 2 + xOffset;
-            finalPosition.y = main_viewport->Pos.y + (DisplayWindowHeight() - height) / 2 + yOffset;
+            finalPosition.x = ((DisplayWindowWidth() - width) / 2.0f) + xOffset;
+            finalPosition.y = ((DisplayWindowHeight() - height) / 2.0f) + yOffset;
         }
         else if (centerX)
         {
-            finalPosition.x = main_viewport->Pos.x + (DisplayWindowWidth() - width) / 2 + xOffset;
+            finalPosition.x = ((DisplayWindowWidth() - width) / 2.0f) + xOffset;
         }
         else if (centerY)
         {
-            finalPosition.y = main_viewport->Pos.y + (DisplayWindowHeight() - height) / 2 + yOffset;
+            finalPosition.y = ((DisplayWindowHeight() - height) / 2.0f) + yOffset;
         }
 
         // Now set the final position
@@ -366,6 +373,30 @@ namespace Vakol
         ImGui::End(); // Ends the creation of the window
     };
 
+    void GUIWindow::ValidateGUIVaraibles(float& inputValue, float minValue, float maxValue,
+                                         const std::string& valueName, const std::string& windowName) const
+    {
+        if (inputValue < minValue)
+        {
+            VK_WARN(valueName + " of GUI window '" + windowName + "' is less than " + std::to_string(minValue) +
+                    ". Setting " + valueName + " to " + std::to_string(minValue) + ".");
+
+            inputValue = minValue;
+        }
+        else if (inputValue > maxValue)
+        {
+            VK_WARN(valueName + " of GUI window '" + windowName + "' is greater than " + std::to_string(maxValue) +
+                    ". Setting " + valueName + " to " + std::to_string(maxValue) + ".");
+
+            inputValue = maxValue;
+        }
+    }
+
+    void GUIWindow::SetAsContext() const
+    {
+        ImGui::SetCurrentContext(m_context); // Sets the current context (Window)
+    }
+
     GUIWindow::~GUIWindow()
     {
         if (!is_initialised)
@@ -381,9 +412,4 @@ namespace Vakol
         ImGui_ImplGlfw_Shutdown();        // Shuts down GLFW support
         ImGui::DestroyContext(m_context); // Destroys the Window
     };
-
-    void GUIWindow::SetAsContext() const
-    {
-        ImGui::SetCurrentContext(m_context); // Sets the current context (Window)
-    }
 } // namespace Vakol
