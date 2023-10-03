@@ -62,11 +62,17 @@ TEST_CASE("Get Texture", "[TextureLibrary]")
     }
 }
 
-TEST_CASE("Get Textures (Cubemap)", "[TextureLibrary]")
+TEST_CASE("Get Non-Existant Textures (Cubemap)", "[TextureLibrary]")
 {
     std::vector<std::string> input = {"left.png", "right.png", "up.png", "down.png", "back.png", "front.png"};
 
-    std::vector<Vakol::Rendering::Assets::Texture> output;
+    std::vector<Vakol::Rendering::Assets::Texture> output = textureLibrary.GetTextures(std::move(input));
 
-
+    for (auto& texture : output)
+    {
+        REQUIRE_FALSE(textureLibrary.IsEmpty());
+        REQUIRE_FALSE(texture.width == 0);
+        REQUIRE_FALSE(texture.height == 0);
+        REQUIRE_FALSE(texture.channels == 0);
+    }
 }
