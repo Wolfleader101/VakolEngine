@@ -82,7 +82,14 @@ namespace Vakol
 
         LuaScript configScript = m_scriptEngine.CreateScript("scripts/game_config.lua");
 
-        sol::table config = m_scriptEngine.GetScriptVariable(configScript, "game_config");
+        LuaType configVar = m_scriptEngine.GetScriptVariable(configScript, "game_config");
+
+        if (!configVar.valid() || configVar.get_type() != sol::type::table)
+        {
+            return std::nullopt;
+        }
+
+        LuaTable config = configVar.as<LuaTable>();
 
         sol::optional<std::string> name = config["name"];
         if (!name)
@@ -402,7 +409,6 @@ namespace Vakol
 
         if (layer)
         {
-            layer->OnAttach();
             m_layerManager.PushLayer(layer);
         }
     }

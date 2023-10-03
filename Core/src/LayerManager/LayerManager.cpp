@@ -9,6 +9,7 @@ namespace Vakol
 
     void LayerManager::PushLayer(std::shared_ptr<Layer> layer)
     {
+        layer->OnAttach();
         m_layers.push_front(layer);
     }
 

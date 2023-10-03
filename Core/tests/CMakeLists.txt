@@ -3,7 +3,6 @@ add_subdirectory(AssetLoader)
 add_subdirectory(Camera)
 add_subdirectory(ECS)
 add_subdirectory(GUI)
-add_subdirectory(Input)
 add_subdirectory(LayerManager)
 add_subdirectory(Logger)
 add_subdirectory(Math)
@@ -22,7 +21,6 @@ SET(TESTS_SRC
     ${CAMERA_TESTS_SRC}
     ${ECS_TESTS_SRC}
     ${GUI_TESTS_SRC}
-    ${INPUT_TESTS_SRC}
     ${LAYER_MANAGER_TESTS_SRC}
     ${LOGGER_TESTS_SRC}
     ${MATH_TESTS_SRC}
