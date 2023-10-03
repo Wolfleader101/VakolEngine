@@ -73,6 +73,8 @@ namespace Vakol
         m_style->Colors[ImGuiCol_ResizeGripActive] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
 
         ChangeFontDefault("coreAssets/fonts/GidoleFont/Gidole-Regular.ttf");
+
+        m_window = window; // Sets the window to the given window
     }
 
     void GUIWindow::CreateNewFrame() const
@@ -90,14 +92,14 @@ namespace Vakol
         ImGui::EndFrame();
     }
 
-    float GUIWindow::DisplayWindowWidth() const
+    const float GUIWindow::DisplayWindowWidth() const
     {
-        return (ImGui::GetIO().DisplaySize.x);
+        return ((float)m_window->GetWidth()); 
     }
 
-    float GUIWindow::DisplayWindowHeight() const
+    const float GUIWindow::DisplayWindowHeight() const
     {
-        return (ImGui::GetIO().DisplaySize.y);
+        return ((float)m_window->GetHeight()); 
     }
 
     void GUIWindow::StartWindowCreation(const std::string& windowName, bool centerX, bool centerY, const float width,

@@ -50,11 +50,11 @@ namespace Vakol
         /**
          * @brief Returns the width of the display window
          */
-        float DisplayWindowWidth() const;
+        const float DisplayWindowWidth() const;
         /**
          * @brief Returns the height of the display window
          */
-        float DisplayWindowHeight() const;
+        const float DisplayWindowHeight() const;
         /**
          * @brief Starts the creation of a GUI window
          *
@@ -195,10 +195,11 @@ namespace Vakol
       private:
         void SetAsContext() const;
 
-        std::vector<ImFont*> fonts;  /**< Fonts used in the GUI window */
-        bool is_initialised = false; /**< Flag indicating whether the GUI window is initialized */
-        std::string scriptName;      /**< Name of the script */
-        ImGuiContext* m_context;     /**< The context of the GUI window */
-        ImGuiStyle* m_style;         /**< The style of the GUI window */
+        std::vector<ImFont*> fonts;              /**< Fonts used in the GUI window */
+        bool is_initialised = false;             /**< Flag indicating whether the GUI window is initialized */
+        std::string scriptName;                  /**< Name of the script */
+        ImGuiContext* m_context;                 /**< The context of the GUI window */
+        ImGuiStyle* m_style;                     /**< The style of the GUI window */
+        std::shared_ptr<Vakol::Window> m_window; /**< The window the GUI is displayed in */
     };
 } // namespace Vakol

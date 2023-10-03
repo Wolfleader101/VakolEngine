@@ -8,38 +8,40 @@ TEST_CASE("GUI Window class tests", "[GUIWindow]")
 {
     Vakol::GUIWindow guiWindow1;
 
-    SECTION("DisplayWindowWidth and DisplayWindowHeight returns correct width")
+    SECTION("DisplayWindowWidth and DisplayWindowHeight returns correct width") // Check the display window width/height
     {
+        float width = 0.0f, height = 0.0f;
+
         std::shared_ptr<Vakol::Window> window1 =
-            std::make_shared<Vakol::Window>("DisplayWindowWidth and DisplayWindowHeight Test", 1,
-                                            1); // Create a window for the GUI to be displayed in
+            std::make_shared<Vakol::Window>("DisplayWindowWidth and DisplayWindowHeight Test", 1.0f,
+                                            1.0f); // Create a window for the GUI to be displayed in
 
         guiWindow1.Init(window1); // Initialise the window
 
         guiWindow1.CreateNewFrame(); // Create a new frame
 
-        guiWindow1.StartWindowCreation("Test Window 1", true, true, 1, 1, 0, 0); // Create a window
+        guiWindow1.StartWindowCreation("Test Window 1", true, true, 1.0f, 1.0f, 0.0f, 0.0f); // Create a window
 
-        float width = guiWindow1.DisplayWindowWidth();   // Get the width of the window
-        float height = guiWindow1.DisplayWindowHeight(); // Get the height of the window
+        width = guiWindow1.DisplayWindowWidth();   // Get the width of the window
+        height = guiWindow1.DisplayWindowHeight(); // Get the height of the window
 
         guiWindow1.EndWindowCreation(); // End the window creation
 
-        REQUIRE(width == 1.0f);  // Check the width is correct
-        REQUIRE(height == 1.0f); // Check the height is correct
+        REQUIRE(width == window1->GetWidth());   // Check the display width is correct
+        REQUIRE(height == window1->GetHeight()); // Check the display height is correct
     }
 
     SECTION("Check if most recent window is created")
     {
         std::shared_ptr<Vakol::Window> window1 =
-            std::make_shared<Vakol::Window>("ImGui Window Creation Test", 1,
-                                            1); // Create a window for the GUI to be displayed in
+            std::make_shared<Vakol::Window>("ImGui Window Creation Test", 1.0f,
+                                            1.0f); // Create a window for the GUI to be displayed in
 
         guiWindow1.Init(window1); // Initialise the window
 
         guiWindow1.CreateNewFrame(); // Create a new frame
 
-        guiWindow1.StartWindowCreation("Test Window 2", true, true, 1, 1, 0, 0); // Create a window
+        guiWindow1.StartWindowCreation("Test Window 2", true, true, 1.0f, 1.0f, 0.0f, 0.0f); // Create a window
 
         guiWindow1.EndWindowCreation(); // End the window creation
 
@@ -49,8 +51,8 @@ TEST_CASE("GUI Window class tests", "[GUIWindow]")
     SECTION("Check if the font default has been changed")
     {
         std::shared_ptr<Vakol::Window> window1 =
-            std::make_shared<Vakol::Window>("Default Font Success Test", 1,
-                                            1); // Create a window for the GUI to be displayed in
+            std::make_shared<Vakol::Window>("Default Font Success Test", 1.0f,
+                                            1.0f); // Create a window for the GUI to be displayed in
 
         guiWindow1.Init(window1); // Initialise the window
 
@@ -59,7 +61,7 @@ TEST_CASE("GUI Window class tests", "[GUIWindow]")
 
         guiWindow1.CreateNewFrame(); // Create a new frame
 
-        guiWindow1.StartWindowCreation("Test Window 3", true, true, 1, 1, 0, 0); // Create a window
+        guiWindow1.StartWindowCreation("Test Window 3", true, true, 1.0f, 1.0f, 0.0f, 0.0f); // Create a window
 
         guiWindow1.EndWindowCreation(); // End the window creation
 
@@ -69,8 +71,8 @@ TEST_CASE("GUI Window class tests", "[GUIWindow]")
     SECTION("Check if the font default change has failed")
     {
         std::shared_ptr<Vakol::Window> window1 =
-            std::make_shared<Vakol::Window>("Default Font Failed Test Window", 1,
-                                            1); // Create a window for the GUI to be displayed in
+            std::make_shared<Vakol::Window>("Default Font Failed Test Window", 1.0f,
+                                            1.0f); // Create a window for the GUI to be displayed in
 
         guiWindow1.Init(window1); // Initialise the window
 
@@ -79,7 +81,7 @@ TEST_CASE("GUI Window class tests", "[GUIWindow]")
 
         guiWindow1.CreateNewFrame(); // Create a new frame
 
-        guiWindow1.StartWindowCreation("Test Window 4", true, true, 1, 1, 0, 0); // Create a window
+        guiWindow1.StartWindowCreation("Test Window 4", true, true, 1.0f, 1.0f, 0.0f, 0.0f); // Create a window
 
         guiWindow1.EndWindowCreation(); // End the window creation
 
@@ -89,15 +91,15 @@ TEST_CASE("GUI Window class tests", "[GUIWindow]")
     SECTION("Check if window style changes")
     {
         std::shared_ptr<Vakol::Window> window1 = std::make_shared<Vakol::Window>(
-            "Window Style Test", 1, 1); // Create a window for the GUI to be displayed in
+            "Window Style Test", 1.0f, 1.0f); // Create a window for the GUI to be displayed in
 
         guiWindow1.Init(window1); // Initialise the window
 
         guiWindow1.WindowRoundingStyle(5.5f);                     // Change the window rounding style to 5.5f
         guiWindow1.WindowBackgroundStyle(1.0f, 0.0f, 0.0f, 1.0f); // Change the window background style to red
 
-        guiWindow1.CreateNewFrame();                                             // Create a new frame
-        guiWindow1.StartWindowCreation("Test Window 5", true, true, 1, 1, 0, 0); // Create a window
+        guiWindow1.CreateNewFrame();                                                         // Create a new frame
+        guiWindow1.StartWindowCreation("Test Window 5", true, true, 1.0f, 1.0f, 0.0f, 0.0f); // Create a window
 
         guiWindow1.EndWindowCreation(); // End the window creation
 
@@ -117,12 +119,12 @@ TEST_CASE("GUI Window class tests", "[GUIWindow]")
     SECTION("GetFramesPerSecond returns a valid value")
     {
         std::shared_ptr<Vakol::Window> window1 = std::make_shared<Vakol::Window>(
-            "FPS Validity Test", 1, 1); // Create a window for the GUI to be displayed in
+            "FPS Validity Test", 1.0f, 1.0f); // Create a window for the GUI to be displayed in
 
         guiWindow1.Init(window1); // Initialise the window
 
-        guiWindow1.CreateNewFrame();                                             // Create a new frame
-        guiWindow1.StartWindowCreation("Test Window 6", true, true, 1, 1, 0, 0); // Create a window
+        guiWindow1.CreateNewFrame();                                                         // Create a new frame
+        guiWindow1.StartWindowCreation("Test Window 6", true, true, 1.0f, 1.0f, 0.0f, 0.0f); // Create a window
 
         guiWindow1.EndWindowCreation(); // End the window creation
 
