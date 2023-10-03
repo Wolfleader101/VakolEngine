@@ -4,14 +4,12 @@ add_subdirectory(Camera)
 add_subdirectory(ECS)
 add_subdirectory(GUI)
 add_subdirectory(LayerManager)
-add_subdirectory(Logger)
 add_subdirectory(Math)
 add_subdirectory(Physics)
 add_subdirectory(Rendering)
 add_subdirectory(SceneManager)
 add_subdirectory(Scripting)
 add_subdirectory(Serialisation)
-add_subdirectory(Time)
 add_subdirectory(Utils)
 add_subdirectory(Window)
 
@@ -22,14 +20,12 @@ SET(TESTS_SRC
     ${ECS_TESTS_SRC}
     ${GUI_TESTS_SRC}
     ${LAYER_MANAGER_TESTS_SRC}
-    ${LOGGER_TESTS_SRC}
     ${MATH_TESTS_SRC}
     ${PHYSICS_TESTS_SRC}
     ${RENDERING_TESTS_SRC}
     ${SCENE_MANAGER_TESTS_SRC}
     ${SCRIPTING_TESTS_SRC}
     ${SERIALISATION_TESTS_SRC}
-    ${TIME_TESTS_SRC}
     ${UTILS_TESTS_SRC}
     ${WINDOW_TESTS_SRC}
     tests/tests.cpp

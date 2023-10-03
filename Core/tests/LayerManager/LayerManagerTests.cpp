@@ -57,7 +57,7 @@ class TestLayer : public Vakol::Layer
 
 TEST_CASE("LayerManager Functionality", "[LayerManager]")
 {
-    Vakol::Application app = Vakol::Application();
+    Vakol::Application app("testScripts/game_config.lua");
 
     Vakol::LayerManager layerManager;
 
