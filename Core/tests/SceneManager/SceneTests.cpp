@@ -6,71 +6,95 @@
 #include <Scripting/ScriptEngine.hpp>
 #include <iostream>
 
-// TEST_CASE("Scene getName and setName", "[Scene]")
-// {
+TEST_CASE("Scene getName and setName", "[Scene]")
+{
 
-//     Vakol::PhysicsEngine pe;
-//     Vakol::PhysicsScene ps = pe.CreateScene();
-//     Vakol::ScriptEngine se;
+    Vakol::PhysicsEngine pe;
+    Vakol::PhysicsScene ps = pe.CreateScene();
+    Vakol::ScriptEngine se;
 
-//     Vakol::LuaScript script = se.CreateScript("Demo/scripts/test/unit_test_scene.lua");
-//     //    replace with proper initialization
+    Vakol::LuaScript script = se.CreateScript("Demo/scripts/test/unit_test_scene.lua");
 
-//     // Vakol::Scene scene("TestScene", script, ps);
+    Vakol::Scene scene("TestScene", script, ps);
 
-//     // SECTION("getName returns the correct name")
-//     // {
-//     //     REQUIRE(scene.getName() == "TestScene");
-//     // }
+    SECTION("getName returns the correct name")
+    {
+        REQUIRE(scene.getName() == "TestScene");
+    }
 
-//     // SECTION("setName updates the name correctly")
-//     // {
-//     //     scene.setName("NewTestScene");
-//     //     REQUIRE(scene.getName() == "NewTestScene");
-//     // }
-// }
+    SECTION("setName updates the name correctly")
+    {
+        scene.setName("NewTestScene");
+        REQUIRE(scene.getName() == "NewTestScene");
+    }
+}
 
-// TEST_CASE("Scene Entity creation and destruction")
-// {
+TEST_CASE("Scene Entity creation and destruction")
+{
 
-//     Vakol::PhysicsScene ps = pe.CreateScene();
+    Vakol::PhysicsEngine pe;
+    Vakol::ScriptEngine se;
 
-//     Vakol::LuaScript script = se.CreateScript("test/unit_test_scene.lua");
+    Vakol::PhysicsScene ps = pe.CreateScene();
 
-//     Vakol::Scene scene("TestScene", script, ps);
+    Vakol::LuaScript script = se.CreateScript("test/unit_test_scene.lua");
 
-//     SECTION("CreateEntity creates an entity with the correct tag")
-//     {
-//         Vakol::Entity entity = scene.CreateEntity("TestEntity");
-//         // Replace with the correct way to get the entity's tag
-//         REQUIRE(entity.GetComponent<Vakol::Components::Tag>().tag == "TestEntity");
-//     }
+    Vakol::Scene scene("TestScene", script, ps);
 
-//     SECTION("DestroyEntity destroys the entity")
-//     {
-//         Vakol::Entity entity = scene.CreateEntity("TestEntity");
-//         scene.DestroyEntity(entity);
+    SECTION("CreateEntity creates an entity with the correct tag")
+    {
+        Vakol::Entity entity = scene.CreateEntity("TestEntity");
+        // Replace with the correct way to get the entity's tag
+        REQUIRE(entity.GetComponent<Vakol::Components::Tag>().tag == "TestEntity");
+    }
 
-//         REQUIRE(!scene.GetEntityList().CheckEntityExistence(entity));
-//     }
-// }
+    SECTION("DestroyEntity destroys the entity")
+    {
+        Vakol::Entity entity = scene.CreateEntity("TestEntity");
+        scene.DestroyEntity(entity);
 
-// TEST_CASE("Scene serialization and deserialization", "[Scene]") lmfao
-// {
+        REQUIRE(!scene.GetEntityList().CheckEntityExistence(entity));
+    }
+}
 
-//     Vakol::Scene scene("TestScene", script, ps);
+TEST_CASE("Scene serialization and deserialization", "[Scene]")
+{
 
-//     std::string folder = "TestFolder"; // Adjust as necessary
+    Vakol::PhysicsEngine pe;
+    Vakol::ScriptEngine se;
+    Vakol::PhysicsScene ps = pe.CreateScene();
+    Vakol::LuaScript script = se.CreateScript("test/unit_test_scene.lua");
 
-//     SECTION("Serialization does not throw exceptions")
-//     {
-//         REQUIRE_NOTHROW(scene.Serialize(folder));
-//     }
+    Vakol::Scene scene("TestScene", script, ps);
 
-//     SECTION("Deserialization does not throw exceptions")
-//     {
-//         REQUIRE_NOTHROW(scene.Deserialize(folder));
-//     }
+    std::string folder = "TestFolder"; // Adjust as necessary
 
-//     // You might also want to add tests checking the correctness of the serialization/deserialization
-// }
+    SECTION("Serialization does not throw exceptions")
+    {
+        REQUIRE_NOTHROW(scene.Serialize(folder));
+    }
+
+    SECTION("Deserialization does not throw exceptions")
+    {
+        REQUIRE_NOTHROW(scene.Deserialize(folder));
+    }
+}
+
+TEST_CASE("Scene GetEntityList", "[Scene]")
+{
+    Vakol::PhysicsEngine pe;
+    Vakol::ScriptEngine se;
+    Vakol::PhysicsScene ps = pe.CreateScene();
+    Vakol::LuaScript script = se.CreateScript("test/unit_test_scene.lua");
+
+    Vakol::Scene scene("TestScene", script, ps);
+
+    SECTION("GetEntityList returns the correct entity list")
+    {
+        Vakol::EntityList& entityList = scene.GetEntityList();
+        REQUIRE(entityList.GetEntityCount() == 0);
+    }
+}
+
+// I would just be testing getters/setters for the scene class.
+// As this class is just a container I think its time better spent on actual modules.

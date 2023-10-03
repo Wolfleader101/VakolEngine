@@ -180,6 +180,10 @@ namespace Vakol
          */
         EntityList m_entityList;
 
+        /**
+         * @brief skybox of scene
+         *
+         */
         Rendering::Skybox m_skybox;
 
         /**

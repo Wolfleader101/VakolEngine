@@ -74,6 +74,11 @@ namespace Vakol
         }
     }
 
+    unsigned int EntityList::GetEntityCount() const
+    {
+        return m_Registry.size();
+    }
+
     void EntityList::Clear()
     {
         m_Registry.clear();

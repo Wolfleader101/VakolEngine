@@ -63,6 +63,13 @@ namespace Vakol
         void Clear();
 
         /**
+         * @brief Get the number of entities in the list.
+         *
+         * @return unsigned int Number of entities.
+         */
+        unsigned int GetEntityCount() const;
+
+        /**
          * @brief Checks the registry for the existence of an entity handle.
          *
          * @param Handle Handle to check.
