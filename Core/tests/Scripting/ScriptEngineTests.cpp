@@ -32,6 +32,19 @@ TEST_CASE("Script Engine - Variable Manipulation", "[ScriptEngine]")
         scriptEngine.SetScriptVariable(script, "ABC", 1);
         REQUIRE(script.env["ABC"] == 1);
     }
+
+    SECTION("Test Getting Invalid Global Variables")
+    {
+        Vakol::LuaType var = scriptEngine.GetGlobalVariable("invalid");
+        REQUIRE(var.valid() == false);
+    }
+
+    SECTION("Test Getting Invalid Script Variables")
+    {
+        Vakol::LuaScript script = scriptEngine.CreateScript("testScripts/test.lua");
+        Vakol::LuaType var = scriptEngine.GetScriptVariable(script, "invalid");
+        REQUIRE(var.valid() == false);
+    }
 }
 
 TEST_CASE("Script Engine - Script Creation", "[ScriptEngine]")
@@ -45,6 +58,14 @@ TEST_CASE("Script Engine - Script Creation", "[ScriptEngine]")
 
         scriptEngine.SetGlobalVariable("test", 1);
         REQUIRE(script.env["test"] == 1);
+    }
+
+    SECTION("Test Creating Invalid Scripts")
+    {
+        Vakol::LuaScript script = scriptEngine.CreateScript("testScripts/invalid.lua");
+        REQUIRE(script.path == "testScripts/invalid.lua");
+
+        REQUIRE(script.env.valid() == true); // environment should still be valid
     }
 }
 
