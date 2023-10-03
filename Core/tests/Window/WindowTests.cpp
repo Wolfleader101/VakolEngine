@@ -1,6 +1,3 @@
-#include "Window/Events/KeyEvent.hpp"
-#include "Window/Events/MouseEvent.hpp"
-#include "Window/Events/WindowEvent.hpp"
 #include "Window/Window.hpp"
 
 #include <catch2/catch_all.hpp>
