@@ -6,8 +6,6 @@
 
 #include <Logger/Logger.hpp>
 
-#include <iostream>
-
 namespace Vakol
 {
     GUIWindow::GUIWindow()
