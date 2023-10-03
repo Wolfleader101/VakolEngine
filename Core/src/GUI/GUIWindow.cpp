@@ -117,14 +117,14 @@ namespace Vakol
     {
         if (height < 32.0f)
         {
-            VK_WARN("Height of window is less than 32.0f. Setting height to 32.0f.");
+            VK_WARN("Height of GUI window '" + windowName + "' is less than 32.0f. Setting height to 32.0f.");
 
             height = 32.0f;
         }
 
         if (width < 32.0f)
         {
-            VK_WARN("Width of window is less than 32.0f. Setting width to 32.0f.");
+            VK_WARN("Width of GUI window '" + windowName + "' is less than 32.0f. Setting height to 32.0f.");
 
             width = 32.0f;
         }
@@ -133,16 +133,6 @@ namespace Vakol
 
         // We will calculate the final position first
         ImVec2 finalPosition = {main_viewport->Pos.x + xOffset, main_viewport->Pos.y + yOffset};
-
-        // Only consider centering if width and height are not zero
-        if (width == 0)
-        {
-            centerX = false;
-        }
-        if (height == 0)
-        {
-            centerY = false;
-        }
 
         // Adjust finalPosition based on centering flags
         if (centerX && centerY)
