@@ -53,6 +53,22 @@ void MyGUILayer::OnUpdate()
 
         if (open) // Check if window is open
         {
+
+            if (ImGui::CollapsingHeader("File"))
+            {
+                if (ImGui::Button("Quick Save Scene"))
+                {
+                    m_app.GetSceneManager().GetActiveScene().Serialize(
+                        "assets/scenes/" + m_app.GetSceneManager().GetActiveScene().getName());
+                }
+
+                if (ImGui::Button("Quick Load Scene"))
+                {
+                    m_app.GetSceneManager().GetActiveScene().Deserialize(
+                        "assets/scenes/" + m_app.GetSceneManager().GetActiveScene().getName());
+                }
+            }
+
             if (ImGui::CollapsingHeader("Systems Control"))
             {
 

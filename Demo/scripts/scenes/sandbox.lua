@@ -26,7 +26,7 @@ function update()
     end
 
     if(Input:get_key_down(KEYS["KEY_P"])) then
-        scene:serialize("assets/scenes");
+        scene:serialize("assets/scenes/".. scene:get_name());
     end
 
     if(Input:get_key_down(KEYS["KEY_O"])) then

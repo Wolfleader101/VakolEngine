@@ -94,28 +94,31 @@ namespace Vakol
 
     void Scene::Serialize(const std::string& folder) const
     {
+
         std::string temp = folder;
         std::replace(temp.begin(), temp.end(), '/', '\\'); // replace / with \\ for filesystem
 
-        const std::string folderPath = "\\" + temp + "\\" + m_name;
+        const std::string folderPath = "\\" + temp;
+
+        VK_TRACE("Scene::Serialize: Serializing scene to {}", folderPath);
 
         fs::path currentPath = fs::current_path();
 
         try
         {
             currentPath += folderPath;
-            fs::create_directories(currentPath); // creates directory for scene if it doesnt exist
+            fs::create_directories(currentPath); // creates directory if it doesn't exist
         }
         catch (...)
         {
             // directory already exists
         }
 
-        const std::string FinalFolder = folder + "/" + m_name;
-        m_entityList.Serialize<Components::Transform, Components::Tag, GUID>(FinalFolder + "/EntityList.json");
+        
+        m_entityList.Serialize<Components::Transform, Components::Tag, GUID>(folder + "/EntityList.json");
 
         //-- Serialize Scene info
-        std::ofstream output(FinalFolder + "/Scene.json");
+        std::ofstream output(folder + "/Scene.json");
 
         if (output.good())
         {
@@ -126,7 +129,7 @@ namespace Vakol
             json(cereal::make_nvp("camera", m_cam));
         }
 
-        std::ofstream globalOutput(FinalFolder + "/Globals.json");
+        std::ofstream globalOutput(folder + "/Globals.json");
 
         // if (globalOutput.good())
         // {
