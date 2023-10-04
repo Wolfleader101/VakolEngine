@@ -122,7 +122,6 @@ namespace Vakol
          */
         std::vector<Entity> ActiveEntityList;
 
-        template <typename Archive, typename... Args>
         /**
          * @brief Private function to serialize the entity list using a specified archive and component types.
          *
@@ -130,12 +129,13 @@ namespace Vakol
          * @tparam Args The component types to serialize.
          * @param file The file path to serialize to.
          */
+        template <typename... Args>
         void Serialize(const std::string& file) const
         {
             std::ofstream out(file);
             if (out.good())
             {
-                Archive json(out);
+                cereal::JSONOutputArchive json(out);
 
                 json(CEREAL_NVP(ActiveEntityList));
 
@@ -148,7 +148,6 @@ namespace Vakol
             }
         }
 
-        template <typename Archive, typename... Args>
         /**
          * @brief Private function to deserialize the entity list using a specified archive and component types.
          *
@@ -156,6 +155,7 @@ namespace Vakol
          * @tparam Args The component types to deserialize.
          * @param file The file path to deserialize from.
          */
+        template <typename... Args>
         void Deserialize(const std::string& file)
         {
             std::ifstream inp(file);

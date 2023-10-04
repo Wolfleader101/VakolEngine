@@ -112,8 +112,7 @@ namespace Vakol
         }
 
         const std::string FinalFolder = folder + "/" + m_name;
-        m_entityList.Serialize<cereal::JSONOutputArchive, Components::Transform, Components::Tag, GUID>(
-            FinalFolder + "/EntityList.json");
+        m_entityList.Serialize<Components::Transform, Components::Tag, GUID>(FinalFolder + "/EntityList.json");
 
         //-- Serialize Scene info
         std::ofstream output(FinalFolder + "/Scene.json");
@@ -153,8 +152,7 @@ namespace Vakol
         //     // ConvertMapToSol(lua, globals, sceneGlobals);
         // }
 
-        m_entityList.Deserialize<cereal::JSONInputArchive, Components::Transform, Components::Tag, GUID>(
-            folder + "/EntityList.json");
+        m_entityList.Deserialize<Components::Transform, Components::Tag, GUID>(folder + "/EntityList.json");
 
         std::ifstream input(folder + "/Scene.json");
 

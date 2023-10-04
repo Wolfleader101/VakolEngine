@@ -30,9 +30,7 @@ function update()
     end
 
     if(Input:get_key_down(KEYS["KEY_O"])) then
-        print("Deserializing scene");
-        scene:deserialize("assets/scenes/" .. scene:get_name());
-        print("done");
+        scene:deserialize("assets/scenes/" .. scene:get_name()); 
     end
     
     GUI:start_window("Stats", false, false, 0.0, 0.0 , 25, 25); 
