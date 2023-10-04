@@ -4,6 +4,7 @@
 #include <cereal/types/vector.hpp>
 #include <entt/entt.hpp>
 #include <memory>
+#include <set>
 #include <vector>
 
 #include "Logger/Logger.hpp"
@@ -161,20 +162,52 @@ namespace Vakol
 
             if (inp.good())
             {
-                m_Registry.clear();
-                Archive json(inp);
-                json(ActiveEntityList); // fills vector again
+                std::set<uint32_t> entitiesFromSerializedData;
 
-                entt::snapshot_loader snapLoad(m_Registry);
+                entt::registry tempRegistry;
+                cereal::JSONInputArchive json(inp);
+
+                // Deserialize ActiveEntityList first
+                json(ActiveEntityList);
+
+                // Build the set of entities from the serialized data for reconciliation
+                for (const auto& entry : ActiveEntityList)
+                {
+                    entitiesFromSerializedData.insert(entry.GetHandle());
+                }
+
+                // Reconciliation: Remove entities from m_Registry not in the serialized list
+                m_Registry.each([&](auto entity) {
+                    if (entitiesFromSerializedData.find(static_cast<uint32_t>(entity)) ==
+                        entitiesFromSerializedData.end())
+                    {
+                        m_Registry.destroy(entity);
+                    }
+                });
+
+                entt::snapshot_loader snapLoad(tempRegistry);
                 snapLoad.entities(json);
-                snapLoad.component<Args...>(json);
+                snapLoad.component<Components::Transform, Components::Tag, GUID>(json);
+
+                // This is super ugly but leshgo
+                tempRegistry.view<Components::Transform>().each([&](auto entity, Components::Transform& transform) {
+                    m_Registry.emplace_or_replace<Components::Transform>(entity, transform);
+                });
+
+                // Copying Components::Tag
+                tempRegistry.view<Components::Tag>().each([&](auto entity, Components::Tag& tag) {
+                    m_Registry.emplace_or_replace<Components::Tag>(entity, tag);
+                });
+
+                // Copying GUID
+                tempRegistry.view<GUID>().each(
+                    [&](auto entity, GUID& guid) { m_Registry.emplace_or_replace<GUID>(entity, guid); });
 
                 inp.close();
             }
         }
 
-        friend class Entity; // friend to allow the API for entities to be clean.
-        friend class System;
+        friend class Entity; // friend to allow the API for entities to be clean
         friend class Scene;
     };
 

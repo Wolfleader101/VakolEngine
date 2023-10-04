@@ -126,31 +126,31 @@ namespace Vakol
             json(cereal::make_nvp("camera", m_cam));
         }
 
-        std::ofstream globalOutput(FinalFolder + "/Globals.json");
+        // std::ofstream globalOutput(FinalFolder + "/Globals.json");
 
-        if (globalOutput.good())
-        {
-            cereal::JSONOutputArchive json(globalOutput);
+        // if (globalOutput.good())
+        // {
+        //     cereal::JSONOutputArchive json(globalOutput);
 
-            // SolTableData globals;
-            // ConvertSolToMap(sceneGlobals, globals);
-            // json(CEREAL_NVP(globals));
-        }
+        //     SolTableData globals;
+        //     ConvertSolToMap(sceneGlobals, globals);
+        //     json(CEREAL_NVP(globals));
+        // }
     }
 
     void Scene::Deserialize(const std::string& folder)
     {
-        std::ifstream globalInput(folder + "/Globals.json");
+        //std::ifstream globalInput(folder + "/Globals.json");
 
-        if (globalInput.good())
-        {
-            // cereal::JSONInputArchive json(globalInput);
+        //if (globalInput.good())
+        //{
+        //    cereal::JSONInputArchive json(globalInput);
 
-            // SolTableData globals;
-            // json(globals);
+        //    SolTableData globals;
+        //    json(globals);
 
-            // ConvertMapToSol(lua, globals, sceneGlobals);
-        }
+        //    // ConvertMapToSol(lua, globals, sceneGlobals);
+        //}
 
         m_entityList.Deserialize(folder + "/EntityList.json");
 

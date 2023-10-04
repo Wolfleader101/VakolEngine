@@ -24,6 +24,16 @@ function update()
     if (Input:get_key_down(KEYS["KEY_ESC"])) then
         change_scene("test menu");
     end
+
+    if(Input:get_key_down(KEYS["KEY_P"])) then
+        scene:serialize("assets/scenes");
+    end
+
+    if(Input:get_key_down(KEYS["KEY_O"])) then
+        print("Deserializing scene");
+        scene:deserialize("assets/scenes/" .. scene:get_name());
+        print("done");
+    end
     
     GUI:start_window("Stats", false, false, 0.0, 0.0 , 25, 25); 
 
