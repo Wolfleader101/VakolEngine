@@ -196,7 +196,7 @@ namespace Vakol
         /**
          * @brief Ends the creation of a GUI window
          */
-        void EndWindowCreation() const;
+        void EndWindowCreation();
         /**
          * @brief A basic deconstructor for the GUI
          */
@@ -222,5 +222,7 @@ namespace Vakol
         ImGuiContext* m_context;                 /**< The context of the GUI window */
         ImGuiStyle* m_style;                     /**< The style of the GUI window */
         std::shared_ptr<Vakol::Window> m_window; /**< The window the GUI is displayed in */
+        float m_currentGUIWidth;                 /**< The current width of the GUI window */
+        float m_currentGUIHeight;                /**< The current height of the GUI window */
     };
 } // namespace Vakol

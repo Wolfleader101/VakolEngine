@@ -11,6 +11,9 @@ namespace Vakol
     GUIWindow::GUIWindow()
     {
         IMGUI_CHECKVERSION(); // Checks the version of IMGUI
+
+        m_currentGUIWidth = 0.0f;
+        m_currentGUIHeight = 0.0f;
     };
 
     bool GUIWindow::ChangeFontDefault(std::string inputPath) const
@@ -117,50 +120,64 @@ namespace Vakol
             return (ImGui::GetWindowHeight()); // Return the window height without the title bar height
     }
 
-    void GUIWindow::StartWindowCreation(const std::string& windowName, bool centerX, bool centerY, float width,
-                                        float height, float xOffset, float yOffset) const
+    void GUIWindow::StartWindowCreation(const std::string& windowName, bool centerX, bool centerY, float width = 0.0f,
+                                        float height = 0.0f, float xOffset = 0.0f, float yOffset = 0.0f) const
     {
-        // Check if window variables have valid values
-        if (std::abs(height - 0.0f) > 1e-5f) // If the height is not 0.0f
-        {
-            ValidateGUIFloatVariables(height, 32.0f, DisplayWindowHeight(), "Height", windowName);
-        }
+        ImGuiIO& io = ImGui::GetIO(); // Gets the ImGui IO
+        float buffer = 35.0f;         // The buffer between the GUI window and the edge of the screen
 
-        if (std::abs(width - 0.0f) > 1e-5f) // If the width is not 0.0f
-        {
-            ValidateGUIFloatVariables(width, 32.0f, DisplayWindowWidth(), "Width", windowName);
-        }
+        // Get the position of the window
+        int windowX = 0, windowY = 0;
+        m_window->GetPosition(windowX, windowY);
 
-        // Check if the offsets are valid
-        float minXOffset = 0.0f - (GUIWindowWidth() / 2.0f);
-        float minYOffset = 0.0f - (GUIWindowHeight(true) / 2.0f);
+        ValidateGUIFloatVariables(height, 0.0f, DisplayWindowHeight(), "Height", windowName);
+        ValidateGUIFloatVariables(width, 0.0f, DisplayWindowWidth(), "Width", windowName);
 
-        ValidateGUIFloatVariables(xOffset, minXOffset, DisplayWindowWidth() - GUIWindowWidth(), "X-Offset", windowName);
-        ValidateGUIFloatVariables(yOffset, minYOffset, DisplayWindowHeight() - GUIWindowHeight(true), "Y-Offset",
-                                  windowName);
-
-        ImGuiViewport* main_viewport = ImGui::GetMainViewport(); // Gets the main viewport that the GUI is displayed in
-
-        // We will calculate the final position first
-        ImVec2 finalPosition = {main_viewport->Pos.x + xOffset, main_viewport->Pos.y + yOffset};
+        // Create a final position variable
+        ImVec2 finalPosition = {0.0f, 0.0f};
 
         // Adjust finalPosition based on centering flags
         if (centerX && centerY)
         {
-            finalPosition.x = ((DisplayWindowWidth() - width) / 2.0f) + xOffset;
-            finalPosition.y = ((DisplayWindowHeight() - height) / 2.0f) + yOffset;
+            finalPosition.x = (io.DisplaySize.x * 0.5f) + xOffset;
+            finalPosition.y = (io.DisplaySize.y * 0.5f) + yOffset;
         }
         else if (centerX)
         {
-            finalPosition.x = ((DisplayWindowWidth() - width) / 2.0f) + xOffset;
+            finalPosition.x = (io.DisplaySize.x * 0.5f) + xOffset;
         }
         else if (centerY)
         {
-            finalPosition.y = ((DisplayWindowHeight() - height) / 2.0f) + yOffset;
+            finalPosition.y = (io.DisplaySize.y * 0.5f) + yOffset;
         }
 
-        // Now set the final position
-        ImGui::SetNextWindowPos(finalPosition);
+        // Add the window position to the final position
+        finalPosition.x += (float)windowX;
+        finalPosition.y += (float)windowY;
+
+        // Validate the GUI variables and adjust them if they are invalid
+        if (m_currentGUIWidth == 0.0f)
+        {
+            ValidateGUIFloatVariables(finalPosition.x, 0.0f + (width / 2.0f) + buffer,
+                                      DisplayWindowWidth() - (width / 2.0f) - buffer, "X-Position", windowName);
+        }
+        else
+            ValidateGUIFloatVariables(finalPosition.x, 0.0f + (m_currentGUIWidth / 2.0f) + buffer,
+                                      DisplayWindowWidth() - (m_currentGUIWidth / 2.0f) - buffer, "X-Position",
+                                      windowName);
+
+        if (m_currentGUIHeight == 0.0f)
+        {
+            ValidateGUIFloatVariables(finalPosition.y, 0.0f + (height / 2.0f) + buffer,
+                                      DisplayWindowHeight() - (height / 2.0f) - buffer, "Y-Position", windowName);
+        }
+        else
+            ValidateGUIFloatVariables(finalPosition.y, 0.0f + (m_currentGUIHeight / 2.0f) + buffer,
+                                      DisplayWindowHeight() - (m_currentGUIHeight / 2.0f) - buffer, "Y-Position",
+                                      windowName);
+
+        // Set the next window position and size (Sets the pivot point to the center of the GUI window)
+        ImGui::SetNextWindowPos(finalPosition, ImGuiCond_Always, {0.5f, 0.5f});
         ImGui::SetNextWindowSize({width, height}, ImGuiCond_Always);
 
         // Begin the window
@@ -366,8 +383,11 @@ namespace Vakol
         ImGui::GetStyle() = *m_style; // Sets the ImGui Style to the current style
     }
 
-    void GUIWindow::EndWindowCreation() const
+    void GUIWindow::EndWindowCreation()
     {
+        m_currentGUIWidth = GUIWindow::GUIWindowWidth();
+        m_currentGUIHeight = GUIWindow::GUIWindowHeight(false);
+
         ImGui::End(); // Ends the creation of the window
     };
 

@@ -15,7 +15,13 @@ namespace Vakol
         gui_window_type.set_function("get_gui_window_width", &GUIWindow::GUIWindowWidth);
         gui_window_type.set_function("get_gui_window_height", &GUIWindow::GUIWindowHeight);
 
-        gui_window_type.set_function("start_window", &GUIWindow::StartWindowCreation);
+        gui_window_type.set_function("start_window", [](GUIWindow& self, const std::string& windowName, bool centerX,
+                                                        bool centerY, sol::optional<float> width,
+                                                        sol::optional<float> height, sol::optional<float> xOffset,
+                                                        sol::optional<float> yOffset) {
+            self.StartWindowCreation(windowName, centerX, centerY, width.value_or(0.0f), height.value_or(0.0f),
+                                     xOffset.value_or(0.0f), yOffset.value_or(0.0f));
+        });
 
         gui_window_type.set_function("update", &GUIWindow::Update);
 
