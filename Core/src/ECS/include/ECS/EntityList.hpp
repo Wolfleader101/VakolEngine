@@ -130,7 +130,7 @@ namespace Vakol
          * @tparam Args The component types to serialize.
          * @param file The file path to serialize to.
          */
-        void privateSerialize(const std::string& file) const
+        void Serialize(const std::string& file) const
         {
             std::ofstream out(file);
             if (out.good())
@@ -156,7 +156,7 @@ namespace Vakol
          * @tparam Args The component types to deserialize.
          * @param file The file path to deserialize from.
          */
-        void privateDeserialize(const std::string& file)
+        void Deserialize(const std::string& file)
         {
             std::ifstream inp(file);
 
@@ -170,13 +170,13 @@ namespace Vakol
                 // Deserialize ActiveEntityList first
                 json(ActiveEntityList);
 
-                // Build the set of entities from the serialized data for reconciliation
+                // Used for deleting entities that are not in the serialized data
                 for (const auto& entry : ActiveEntityList)
                 {
                     entitiesFromSerializedData.insert(entry.GetHandle());
                 }
 
-                // Reconciliation: Remove entities from m_Registry not in the serialized list
+                // Reconciliation
                 m_Registry.each([&](auto entity) {
                     if (entitiesFromSerializedData.find(static_cast<uint32_t>(entity)) ==
                         entitiesFromSerializedData.end())
@@ -187,21 +187,14 @@ namespace Vakol
 
                 entt::snapshot_loader snapLoad(tempRegistry);
                 snapLoad.entities(json);
-                snapLoad.component<Components::Transform, Components::Tag, GUID>(json);
 
-                // This is super ugly but leshgo
-                tempRegistry.view<Components::Transform>().each([&](auto entity, Components::Transform& transform) {
-                    m_Registry.emplace_or_replace<Components::Transform>(entity, transform);
-                });
+                // Deserialize Components using fold expression
+                (snapLoad.component<Args>(json), ...);
 
-                // Copying Components::Tag
-                tempRegistry.view<Components::Tag>().each([&](auto entity, Components::Tag& tag) {
-                    m_Registry.emplace_or_replace<Components::Tag>(entity, tag);
-                });
-
-                // Copying GUID
-                tempRegistry.view<GUID>().each(
-                    [&](auto entity, GUID& guid) { m_Registry.emplace_or_replace<GUID>(entity, guid); });
+                // Copy Components using fold expression
+                (tempRegistry.view<Args>().each(
+                     [&](auto entity, Args& comp) { m_Registry.emplace_or_replace<Args>(entity, comp); }),
+                 ...);
 
                 inp.close();
             }

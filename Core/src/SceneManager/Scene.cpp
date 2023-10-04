@@ -112,7 +112,8 @@ namespace Vakol
         }
 
         const std::string FinalFolder = folder + "/" + m_name;
-        m_entityList.Serialize(FinalFolder + "/EntityList.json");
+        m_entityList.Serialize<cereal::JSONOutputArchive, Components::Transform, Components::Tag, GUID>(
+            FinalFolder + "/EntityList.json");
 
         //-- Serialize Scene info
         std::ofstream output(FinalFolder + "/Scene.json");
@@ -126,7 +127,7 @@ namespace Vakol
             json(cereal::make_nvp("camera", m_cam));
         }
 
-        // std::ofstream globalOutput(FinalFolder + "/Globals.json");
+        std::ofstream globalOutput(FinalFolder + "/Globals.json");
 
         // if (globalOutput.good())
         // {
@@ -140,21 +141,20 @@ namespace Vakol
 
     void Scene::Deserialize(const std::string& folder)
     {
-        //std::ifstream globalInput(folder + "/Globals.json");
+        std::ifstream globalInput(folder + "/Globals.json");
 
-        //if (globalInput.good())
-        //{
-        //    cereal::JSONInputArchive json(globalInput);
+        // if (globalInput.good())
+        // {
+        //     cereal::JSONInputArchive json(globalInput);
 
-        //    SolTableData globals;
-        //    json(globals);
+        //     SolTableData globals;
+        //     json(globals);
 
-        //    // ConvertMapToSol(lua, globals, sceneGlobals);
-        //}
+        //     // ConvertMapToSol(lua, globals, sceneGlobals);
+        // }
 
-        m_entityList.Deserialize(folder + "/EntityList.json");
-
-        // System::Script_Deserialize(lua, entityList, this);
+        m_entityList.Deserialize<cereal::JSONInputArchive, Components::Transform, Components::Tag, GUID>(
+            folder + "/EntityList.json");
 
         std::ifstream input(folder + "/Scene.json");
 
