@@ -32,12 +32,6 @@ namespace Vakol
                     Math::Vec3(contactPoint.getLocalPointOnCollider1().x, contactPoint.getLocalPointOnCollider1().y,
                                contactPoint.getLocalPointOnCollider1().z);
 
-                Math::Vec3 worldPoint1 = FromRPVec3(contactPair.getCollider1()->getLocalToWorldTransform() *
-                                                    contactPoint.getLocalPointOnCollider1());
-
-                Math::Vec3 worldPoint2 = FromRPVec3(contactPair.getCollider2()->getLocalToWorldTransform() *
-                                                    contactPoint.getLocalPointOnCollider2());
-
                 Math::Vec3 localPoint2 =
                     Math::Vec3(contactPoint.getLocalPointOnCollider2().x, contactPoint.getLocalPointOnCollider2().y,
                                contactPoint.getLocalPointOnCollider2().z);
@@ -49,7 +43,6 @@ namespace Vakol
                 if (body1Data)
                 {
                     body1Data->worldNormal = normal;
-                    body1Data->worldPoint = worldPoint1;
                     body1Data->localPoint = localPoint1;
                     body1Data->penetrationDepth = penetrationDepth;
                     body1Data->isColliding = true;
@@ -58,7 +51,6 @@ namespace Vakol
                 if (body2Data)
                 {
                     body2Data->worldNormal = normal;
-                    body2Data->worldPoint = worldPoint2;
                     body2Data->localPoint = localPoint2;
                     body2Data->penetrationDepth = penetrationDepth;
                     body2Data->isColliding = true;

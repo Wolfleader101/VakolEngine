@@ -131,17 +131,22 @@ namespace Vakol
             return;
         }
 
+        rb.rotationMatrix = Math::Mat3Cast(quatRot); // Convert the quaternion to a 3x3 rotation matrix
+        rb.worldInertiaTensor = rb.rotationMatrix * rb.inertiaTensor * Math::Transpose(rb.rotationMatrix);
+
         // can be assumed as static, can be moved later
         static Math::Vec3 gravity(0.0f, -9.8f, 0.0f);
-        rb.force += gravity;
 
-        Math::Vec3 linearAcceleration = rb.force * rb.mass;
+        Math::Vec3 weight = rb.mass * gravity;
+        rb.force += weight;
+
+        Math::Vec3 linearAcceleration = rb.force / rb.mass;
 
         rb.linearVelocity += linearAcceleration * m_timeStep;
         pos += rb.linearVelocity * m_timeStep;
 
         // Update angular velocity
-        Math::Vec3 angularAcceleration = rb.worldInertiaTensor * rb.torque;
+        Math::Vec3 angularAcceleration = Math::Inverse(rb.worldInertiaTensor) * rb.torque;
         rb.angularVelocity += angularAcceleration * m_timeStep;
 
         quatRot = quatRot + (Math::Quat(0.0f, rb.angularVelocity * m_timeStep * 0.5f) * quatRot);
@@ -155,9 +160,6 @@ namespace Vakol
         // reset the force
         rb.force = Math::Vec3(0.0f, 0.0f, 0.0f);
         rb.torque = Math::Vec3(0.0f, 0.0f, 0.0f);
-        rb.rotationMatrix = Math::Mat3Cast(quatRot); // Convert the quaternion to a 3x3 rotation matrix
-        rb.worldInertiaTensor = rb.rotationMatrix * rb.inertiaTensor * Math::Transpose(rb.rotationMatrix);
-        // rb.inertiaTensor = Math::Transpose(rb.rotationMatrix) * rb.worldInertiaTensor * rb.rotationMatrix;
     }
 
     void PhysicsEngine::DetectCollisions(PhysicsScene& scene)
@@ -196,16 +198,12 @@ namespace Vakol
         // r1 = rb1.rotationMatrix * r1;
         // r2 = rb2.rotationMatrix * r2;
         VK_ERROR("r1: {0} {1} {2}", r1.x, r1.y, r1.z);
+        VK_ERROR("r2: {0} {1} {2}", r2.x, r2.y, r2.z);
 
-        // Math::Vec3 localLinVel1 = rb1.rotationMatrix * rb1.linearVelocity;
-        // Math::Vec3 localLinVel2 = rb2.rotationMatrix * rb2.linearVelocity;
-        // Math::Vec3 localAngVel1 = rb1.rotationMatrix * rb1.angularVelocity;
-        // Math::Vec3 localAngVel2 = rb2.rotationMatrix * rb2.angularVelocity;
-
-        Math::Vec3 localLinVel1 = rb1.linearVelocity;
-        Math::Vec3 localLinVel2 = rb2.linearVelocity;
-        Math::Vec3 localAngVel1 = rb1.angularVelocity;
-        Math::Vec3 localAngVel2 = rb2.angularVelocity;
+        Math::Vec3 v1 = rb1.linearVelocity;
+        Math::Vec3 v2 = rb2.linearVelocity;
+        Math::Vec3 w1 = rb1.angularVelocity;
+        Math::Vec3 w2 = rb2.angularVelocity;
 
         // (r1 x n)
         Math::Vec3 r1CrossN = Math::Cross(r1, n);
@@ -213,16 +211,20 @@ namespace Vakol
         // (r2 x n)
         Math::Vec3 r2CrossN = Math::Cross(r2, n);
 
+        VK_INFO("r1crossN: {0} {1} {2}", r1CrossN.x, r1CrossN.y, r1CrossN.z);
+        VK_INFO("r2crossN: {0} {1} {2}", r2CrossN.x, r2CrossN.y, r2CrossN.z);
+
         // n . (v1 - v2)
-        float nv = Math::Dot(n, Math::Vec3(localLinVel1 - localLinVel2));
+        float nv = Math::Dot(n, Math::Vec3(v1 - v2));
 
         // w1 . (r1 x n)
-        float wr1 = Math::Dot(localAngVel1, r1CrossN);
+        float wr1 = Math::Dot(w1, r1CrossN);
 
         // w2 . (r2 x n)
-        float wr2 = Math::Dot(localAngVel2, r2CrossN);
+        float wr2 = Math::Dot(w2, r2CrossN);
 
         float e = (rb1.bounciness + rb2.bounciness) / 2.0f; // average
+        VK_ERROR("Bounciness: {0}", e);
 
         // top =  -(1 + e) * (n . (v1 - v2) + w1 . (r1 x n) - w2 . (r2 x n))
         float top = -(1.0f + e) * (nv + wr1 - wr2);
@@ -240,13 +242,9 @@ namespace Vakol
 
         // (r1 x n)^T * J1^-1 * (r1 x n)
         float r1j = Math::Dot(r1CrossN, j1Inverse * r1CrossN);
-        VK_INFO("r1crossN: {0} {1} {2}", r1CrossN.x, r1CrossN.y, r1CrossN.z);
 
         // (r2 x n)^T . J2^-1 * (r2 x n)
         float r2j = Math::Dot(r2CrossN, j2Inverse * r2CrossN);
-
-        VK_CRITICAL("r1j: {0}", r1j);
-        VK_CRITICAL("r2j: {0}", r2j);
 
         // bottom = 1/m1 + 1/m2 + ((r1 x n)^T J1^-1 . (r1 x n) + (r2 x n)^T . J2^-1 . (r2 x n))
         float bottom = masses + (r1j + r2j);
@@ -287,13 +285,6 @@ namespace Vakol
 
         VK_ERROR("Linear Velocity After: {0} {1} {2}", rb.linearVelocity.x, rb.linearVelocity.y, rb.linearVelocity.z);
 
-        VK_CRITICAL("Local Interia Tensor: {0} {1} {2}", rb.inertiaTensor[0][0], rb.inertiaTensor[1][1],
-                    rb.inertiaTensor[2][2]);
-        Math::Mat3 inverseTensor = Math::Inverse(rb.inertiaTensor);
-
-        VK_CRITICAL("Inverse Local Interia Tensor: {0} {1} {2}", inverseTensor[0][0], inverseTensor[1][1],
-                    inverseTensor[2][2]);
-
         VK_WARN("Angular Velocity Before: {0} {1} {2}", rb.angularVelocity.x, rb.angularVelocity.y,
                 rb.angularVelocity.z);
 
@@ -307,7 +298,6 @@ namespace Vakol
         // reset the collision data
         rb.collisionData->penetrationDepth = 0.0;
         rb.collisionData->worldNormal = Math::Vec3(0.0f, 0.0f, 0.0f);
-        rb.collisionData->worldPoint = Math::Vec3(0.0f, 0.0f, 0.0f);
         rb.collisionData->isColliding = false;
         rb.impulse = Math::Vec3(0.0f, 0.0f, 0.0f);
     }
