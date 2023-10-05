@@ -125,7 +125,7 @@ namespace Vakol
          * @param pos pos of body
          * @param rb to handle resolution
          */
-        void ResolveCollisions(Math::Vec3& pos, RigidBody& rb);
+        static void ResolveCollisions(Math::Vec3& pos, RigidBody& rb);
 
         static float SolveLambda(RigidBody& rb1, RigidBody& rb2);
 
@@ -135,7 +135,7 @@ namespace Vakol
          * @param pos pos of body
          * @param rb rigidbody
          */
-        void Depenetration(Math::Vec3& pos, RigidBody& rb);
+        static void Depenetration(Math::Vec3& pos, RigidBody& rb);
 
         /**
          * @brief Set the Time Step object

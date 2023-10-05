@@ -144,265 +144,267 @@ void MyGUILayer::OnUpdate()
                             ImGui::DragFloat3("Position", &trans.pos.x, 0.1f);
                             ImGui::DragFloat3("Rotation", &trans.eulerAngles.x, 0.1f);
                             ImGui::DragFloat3("Scale", &trans.scale.x, 0.1f);
+
+                            trans.rot = Vakol::Math::Quat(Vakol::Math::DegToRad(trans.eulerAngles));
                         }
 
-                        trans.rot = Vakol::Math::Quat(Vakol::Math::DegToRad(trans.eulerAngles));
-                    }
-
-                    if (entity.HasComponent<Vakol::Rendering::Drawable>() && ImGui::CollapsingHeader("Drawable"))
-                    {
-                        Vakol::Rendering::Drawable& drawable = entity.GetComponent<Vakol::Rendering::Drawable>();
-
-                        ImGui::Text("Drawable ID: %s", drawable.ID.ToString().c_str());
-                        ImGui::Spacing();
-
-                        ImGui::SeparatorText("Material");
-
-                        Vakol::Rendering::Assets::Model& model = Vakol::AssetLoader::FindModel(drawable.ID);
-
-                        for (Vakol::Rendering::Assets::Mesh& mesh : model.meshes)
+                        if (entity.HasComponent<Vakol::Rendering::Drawable>() && ImGui::CollapsingHeader("Drawable"))
                         {
-                            ImGui::Text("Mesh ID: %s", mesh.ID.c_str());
+                            Vakol::Rendering::Drawable& drawable = entity.GetComponent<Vakol::Rendering::Drawable>();
 
-                            Vakol::Rendering::Assets::Material& material = mesh.material;
+                            ImGui::Text("Drawable ID: %s", drawable.ID.ToString().c_str());
+                            ImGui::Spacing();
 
-                            ImGui::Text("Material ID: %s", material.ID.c_str());
+                            ImGui::SeparatorText("Material");
 
-                            ImGui::Checkbox(("Use Lighting##" + material.ID).c_str(),
-                                            &material.properties.use_lighting);
-                            ImGui::Checkbox(("Use Textures##" + material.ID).c_str(),
-                                            &material.properties.use_textures);
+                            Vakol::Rendering::Assets::Model& model = Vakol::AssetLoader::FindModel(drawable.ID);
 
-                            ImGui::ColorEdit4(("Ambient Color##" + material.ID).c_str(),
-                                              &material.properties.ambient_color.x);
-                            ImGui::ColorEdit4(("Diffuse Color##" + material.ID).c_str(),
-                                              &material.properties.diffuse_color.x);
-                        }
-                    }
+                            for (Vakol::Rendering::Assets::Mesh& mesh : model.meshes)
+                            {
+                                ImGui::Text("Mesh ID: %s", mesh.ID.c_str());
 
-                    if (entity.HasComponent<Vakol::RigidBody>() && ImGui::CollapsingHeader("RigidBody"))
-                    {
-                        Vakol::RigidBody& rb = entity.GetComponent<Vakol::RigidBody>();
-                        const char* preview_label;
+                                Vakol::Rendering::Assets::Material& material = mesh.material;
 
-                        switch (rb.type)
-                        {
-                        case Vakol::BodyType::Static:
-                            preview_label = "Static";
-                            break;
-                        case Vakol::BodyType::Kinematic:
-                            preview_label = "Kinematic";
-                            break;
-                        case Vakol::BodyType::Dynamic:
-                            preview_label = "Dynamic";
-                            break;
+                                ImGui::Text("Material ID: %s", material.ID.c_str());
+
+                                ImGui::Checkbox(("Use Lighting##" + material.ID).c_str(),
+                                                &material.properties.use_lighting);
+                                ImGui::Checkbox(("Use Textures##" + material.ID).c_str(),
+                                                &material.properties.use_textures);
+
+                                ImGui::ColorEdit4(("Ambient Color##" + material.ID).c_str(),
+                                                  &material.properties.ambient_color.x);
+                                ImGui::ColorEdit4(("Diffuse Color##" + material.ID).c_str(),
+                                                  &material.properties.diffuse_color.x);
+                            }
                         }
 
-                        if (ImGui::BeginCombo("BodyType", preview_label))
-                        {
-                            bool is_selected = (rb.type == Vakol::BodyType::Static);
-                            if (ImGui::Selectable("Static", is_selected))
-                            {
-                                rb.type = Vakol::BodyType::Static;
-                            }
-                            if (is_selected)
-                            {
-                                ImGui::SetItemDefaultFocus();
-                            }
-
-                            is_selected = (rb.type == Vakol::BodyType::Kinematic);
-                            if (ImGui::Selectable("Kinematic", is_selected))
-                            {
-                                rb.type = Vakol::BodyType::Kinematic;
-                            }
-                            if (is_selected)
-                            {
-                                ImGui::SetItemDefaultFocus();
-                            }
-
-                            is_selected = (rb.type == Vakol::BodyType::Dynamic);
-                            if (ImGui::Selectable("Dynamic", is_selected))
-                            {
-                                rb.type = Vakol::BodyType::Dynamic;
-                            }
-                            if (is_selected)
-                            {
-                                ImGui::SetItemDefaultFocus();
-                            }
-
-                            ImGui::EndCombo();
-                        }
-
-                        ImGui::Checkbox("Has Gravity", &rb.hasGravity);
-                        ImGui::DragFloat("Mass", &rb.mass, 0.1f);
-                        ImGui::DragFloat("Bounciness", &rb.bounciness, 0.1f);
-                        ImGui::DragFloat3("Center of Mass", &rb.centerOfMass.x, 0.1f);
-
-                        ImGui::DragFloat3("Force", &rb.force.x, 0.1f);
-                        ImGui::DragFloat3("Torque", &rb.torque.x, 0.1f);
-                        ImGui::DragFloat3("Linear Velocity", &rb.linearVelocity.x, 0.1f);
-                        ImGui::DragFloat3("Angular Velocity", &rb.angularVelocity.x, 0.1f);
-
-                        ImGui::Spacing();
-                        ImGui::SeparatorText("Rotiation Matrix");
-
-                        // ImGui::Text("Rotation Matrix");
-                        ImGui::Text("x: %f, %f, %f", rb.rotationMatrix[0][0], rb.rotationMatrix[0][1],
-                                    rb.rotationMatrix[0][2]);
-                        ImGui::Text("y: %f, %f, %f", rb.rotationMatrix[1][0], rb.rotationMatrix[1][1],
-                                    rb.rotationMatrix[1][2]);
-                        ImGui::Text("z: %f, %f, %f", rb.rotationMatrix[2][0], rb.rotationMatrix[2][1],
-                                    rb.rotationMatrix[2][2]);
-
-                        ImGui::Spacing();
-                        ImGui::SeparatorText("World Interia Tensor");
-
-                        ImGui::Text("x: %f, %f, %f", rb.worldInertiaTensor[0][0], rb.worldInertiaTensor[0][1],
-                                    rb.worldInertiaTensor[0][2]);
-                        ImGui::Text("y: %f, %f, %f", rb.worldInertiaTensor[1][0], rb.worldInertiaTensor[1][1],
-                                    rb.worldInertiaTensor[1][2]);
-                        ImGui::Text("z: %f, %f, %f", rb.worldInertiaTensor[2][0], rb.worldInertiaTensor[2][1],
-                                    rb.worldInertiaTensor[2][2]);
-
-                        ImGui::Spacing();
-                        ImGui::SeparatorText("Interia Tensor");
-
-                        ImGui::Text("x: %f, %f, %f", rb.inertiaTensor[0][0], rb.inertiaTensor[0][1],
-                                    rb.inertiaTensor[0][2]);
-                        ImGui::Text("y: %f, %f, %f", rb.inertiaTensor[1][0], rb.inertiaTensor[1][1],
-                                    rb.inertiaTensor[1][2]);
-                        ImGui::Text("z: %f, %f, %f", rb.inertiaTensor[2][0], rb.inertiaTensor[2][1],
-                                    rb.inertiaTensor[2][2]);
-
-                        if (rb.collisionData)
-                        {
-                            // ImGui::DragFloat3("World Normal", &rb.collisionData->worldNormal.x, 0.1f);
-                            // ImGui::DragFloat3("World Point", &rb.collisionData->worldPoint.x, 0.1f);
-                            // ImGui::DragFloat3("Local Point", &rb.collisionData->localPoint.x, 0.1f);
-                            // ImGui::DragScalar("Penetration Depth", ImGuiDataType_Double,
-                            //                   &rb.collisionData->penetrationDepth, 0.1f);
-                            // ImGui::Checkbox("Is Colliding", &rb.collisionData->isColliding);
-                        }
-                    }
-
-                    if (entity.HasComponent<Vakol::BoxCollider>() && ImGui::CollapsingHeader("Box Collider"))
-                    {
-                        Vakol::BoxCollider& collider = entity.GetComponent<Vakol::BoxCollider>();
-
-                        Vakol::Math::Vec3 halfExtents = Vec3(collider.shape->getHalfExtents());
-
-                        ImGui::SeparatorText("Size");
-                        ImGui::DragFloat3("Half Extents", &halfExtents.x, 0.1f);
-
-                        collider.shape->setHalfExtents(Vec3(halfExtents));
-                    }
-
-                    if (entity.HasComponent<Vakol::SphereCollider>() && ImGui::CollapsingHeader("Sphere Collider"))
-                    {
-                        Vakol::SphereCollider& collider = entity.GetComponent<Vakol::SphereCollider>();
-
-                        double min = 0.01;
-                        double max = 100.0;
-
-                        double radius = collider.shape->getRadius();
-
-                        ImGui::SeparatorText("Size");
-                        ImGui::DragScalar("Radius", ImGuiDataType_Double, &radius, 0.1f);
-
-                        if (radius < min)
-                            radius = min;
-                        if (radius > max)
-                            radius = max;
-
-                        collider.shape->setRadius(radius);
-                    }
-
-                    if (entity.HasComponent<Vakol::CapsuleCollider>() && ImGui::CollapsingHeader("Capsule Collider"))
-                    {
-                        Vakol::CapsuleCollider& collider = entity.GetComponent<Vakol::CapsuleCollider>();
-
-                        double min = 0.01;
-                        double max = 100.0;
-
-                        double radius = collider.shape->getRadius();
-                        double height = collider.shape->getHeight();
-
-                        ImGui::SeparatorText("Size");
-                        ImGui::DragScalar("Radius", ImGuiDataType_Double, &radius, 0.1f);
-                        ImGui::DragScalar("Height", ImGuiDataType_Double, &height, 0.1f);
-
-                        if (radius < min)
-                            radius = min;
-                        if (radius > max)
-                            radius = max;
-
-                        if (height < min)
-                            height = min;
-                        if (height > max)
-                            height = max;
-
-                        collider.shape->setRadius(radius);
-                        collider.shape->setHeight(height);
-                    }
-
-                    ImGui::Spacing();
-
-                    if (!entity.HasComponent<Vakol::RigidBody>() && ImGui::Button("Add Rigidbody"))
-                    {
-                        Vakol::Components::Transform& transform = entity.GetComponent<Vakol::Components::Transform>();
-
-                        Vakol::RigidBody rb =
-                            m_app.GetSceneManager().GetActiveScene().GetPhysicsScene().CreateRigidBody(transform.pos,
-                                                                                                       transform.rot);
-
-                        entity.AddComponent<Vakol::RigidBody>(rb);
-                    }
-
-                    ImGui::Spacing();
-
-                    if (entity.HasComponent<Vakol::RigidBody>())
-                    {
-                        if (!entity.HasComponent<Vakol::BoxCollider>() && ImGui::Button("Add Box Collider"))
+                        if (entity.HasComponent<Vakol::RigidBody>() && ImGui::CollapsingHeader("RigidBody"))
                         {
                             Vakol::RigidBody& rb = entity.GetComponent<Vakol::RigidBody>();
+                            const char* preview_label;
 
-                            Vakol::Math::Vec3 extents = Vakol::Math::Vec3(1.0f);
+                            switch (rb.type)
+                            {
+                            case Vakol::BodyType::Static:
+                                preview_label = "Static";
+                                break;
+                            case Vakol::BodyType::Kinematic:
+                                preview_label = "Kinematic";
+                                break;
+                            case Vakol::BodyType::Dynamic:
+                                preview_label = "Dynamic";
+                                break;
+                            }
 
-                            Vakol::BoxCollider collider = m_app.GetPhysicsEngine().CreateBoxCollider(extents);
-                            m_app.GetPhysicsEngine().AttachCollider(rb, collider);
+                            if (ImGui::BeginCombo("BodyType", preview_label))
+                            {
+                                bool is_selected = (rb.type == Vakol::BodyType::Static);
+                                if (ImGui::Selectable("Static", is_selected))
+                                {
+                                    rb.type = Vakol::BodyType::Static;
+                                }
+                                if (is_selected)
+                                {
+                                    ImGui::SetItemDefaultFocus();
+                                }
 
-                            entity.AddComponent<Vakol::BoxCollider>(collider);
+                                is_selected = (rb.type == Vakol::BodyType::Kinematic);
+                                if (ImGui::Selectable("Kinematic", is_selected))
+                                {
+                                    rb.type = Vakol::BodyType::Kinematic;
+                                }
+                                if (is_selected)
+                                {
+                                    ImGui::SetItemDefaultFocus();
+                                }
+
+                                is_selected = (rb.type == Vakol::BodyType::Dynamic);
+                                if (ImGui::Selectable("Dynamic", is_selected))
+                                {
+                                    rb.type = Vakol::BodyType::Dynamic;
+                                }
+                                if (is_selected)
+                                {
+                                    ImGui::SetItemDefaultFocus();
+                                }
+
+                                ImGui::EndCombo();
+                            }
+
+                            ImGui::Checkbox("Has Gravity", &rb.hasGravity);
+                            ImGui::DragFloat("Mass", &rb.mass, 0.1f);
+                            ImGui::DragFloat("Bounciness", &rb.bounciness, 0.1f);
+                            ImGui::DragFloat3("Center of Mass", &rb.centerOfMass.x, 0.1f);
+
+                            ImGui::DragFloat3("Force", &rb.force.x, 0.1f);
+                            ImGui::DragFloat3("Torque", &rb.torque.x, 0.1f);
+                            ImGui::DragFloat3("Linear Velocity", &rb.linearVelocity.x, 0.1f);
+                            ImGui::DragFloat3("Angular Velocity", &rb.angularVelocity.x, 0.1f);
+
+                            ImGui::Spacing();
+                            ImGui::SeparatorText("Rotiation Matrix");
+
+                            // ImGui::Text("Rotation Matrix");
+                            ImGui::Text("x: %f, %f, %f", rb.rotationMatrix[0][0], rb.rotationMatrix[0][1],
+                                        rb.rotationMatrix[0][2]);
+                            ImGui::Text("y: %f, %f, %f", rb.rotationMatrix[1][0], rb.rotationMatrix[1][1],
+                                        rb.rotationMatrix[1][2]);
+                            ImGui::Text("z: %f, %f, %f", rb.rotationMatrix[2][0], rb.rotationMatrix[2][1],
+                                        rb.rotationMatrix[2][2]);
+
+                            ImGui::Spacing();
+                            ImGui::SeparatorText("World Interia Tensor");
+
+                            ImGui::Text("x: %f, %f, %f", rb.worldInertiaTensor[0][0], rb.worldInertiaTensor[0][1],
+                                        rb.worldInertiaTensor[0][2]);
+                            ImGui::Text("y: %f, %f, %f", rb.worldInertiaTensor[1][0], rb.worldInertiaTensor[1][1],
+                                        rb.worldInertiaTensor[1][2]);
+                            ImGui::Text("z: %f, %f, %f", rb.worldInertiaTensor[2][0], rb.worldInertiaTensor[2][1],
+                                        rb.worldInertiaTensor[2][2]);
+
+                            ImGui::Spacing();
+                            ImGui::SeparatorText("Interia Tensor");
+
+                            ImGui::Text("x: %f, %f, %f", rb.inertiaTensor[0][0], rb.inertiaTensor[0][1],
+                                        rb.inertiaTensor[0][2]);
+                            ImGui::Text("y: %f, %f, %f", rb.inertiaTensor[1][0], rb.inertiaTensor[1][1],
+                                        rb.inertiaTensor[1][2]);
+                            ImGui::Text("z: %f, %f, %f", rb.inertiaTensor[2][0], rb.inertiaTensor[2][1],
+                                        rb.inertiaTensor[2][2]);
+
+                            if (rb.collisionData)
+                            {
+                                // ImGui::DragFloat3("World Normal", &rb.collisionData->worldNormal.x, 0.1f);
+                                // ImGui::DragFloat3("World Point", &rb.collisionData->worldPoint.x, 0.1f);
+                                // ImGui::DragFloat3("Local Point", &rb.collisionData->localPoint.x, 0.1f);
+                                // ImGui::DragScalar("Penetration Depth", ImGuiDataType_Double,
+                                //                   &rb.collisionData->penetrationDepth, 0.1f);
+                                // ImGui::Checkbox("Is Colliding", &rb.collisionData->isColliding);
+                            }
                         }
 
-                        if (!entity.HasComponent<Vakol::SphereCollider>() && ImGui::Button("Add Sphere Collider"))
+                        if (entity.HasComponent<Vakol::BoxCollider>() && ImGui::CollapsingHeader("Box Collider"))
                         {
-                            Vakol::RigidBody& rb = entity.GetComponent<Vakol::RigidBody>();
+                            Vakol::BoxCollider& collider = entity.GetComponent<Vakol::BoxCollider>();
 
-                            double radius = 1.0;
+                            Vakol::Math::Vec3 halfExtents = Vec3(collider.shape->getHalfExtents());
 
-                            Vakol::SphereCollider collider = m_app.GetPhysicsEngine().CreateSphereCollider(radius);
-                            m_app.GetPhysicsEngine().AttachCollider(rb, collider);
+                            ImGui::SeparatorText("Size");
+                            ImGui::DragFloat3("Half Extents", &halfExtents.x, 0.1f);
 
-                            entity.AddComponent<Vakol::SphereCollider>(collider);
+                            collider.shape->setHalfExtents(Vec3(halfExtents));
                         }
 
-                        if (!entity.HasComponent<Vakol::CapsuleCollider>() && ImGui::Button("Add Capsule Collider"))
+                        if (entity.HasComponent<Vakol::SphereCollider>() && ImGui::CollapsingHeader("Sphere Collider"))
                         {
-                            Vakol::RigidBody& rb = entity.GetComponent<Vakol::RigidBody>();
+                            Vakol::SphereCollider& collider = entity.GetComponent<Vakol::SphereCollider>();
 
-                            double radius = 0.5;
-                            double height = 1.0;
+                            double min = 0.01;
+                            double max = 100.0;
 
-                            Vakol::CapsuleCollider collider =
-                                m_app.GetPhysicsEngine().CreateCapsuleCollider(radius, height);
-                            m_app.GetPhysicsEngine().AttachCollider(rb, collider);
+                            double radius = collider.shape->getRadius();
 
-                            entity.AddComponent<Vakol::CapsuleCollider>(collider);
+                            ImGui::SeparatorText("Size");
+                            ImGui::DragScalar("Radius", ImGuiDataType_Double, &radius, 0.1f);
+
+                            if (radius < min)
+                                radius = min;
+                            if (radius > max)
+                                radius = max;
+
+                            collider.shape->setRadius(radius);
                         }
+
+                        if (entity.HasComponent<Vakol::CapsuleCollider>() &&
+                            ImGui::CollapsingHeader("Capsule Collider"))
+                        {
+                            Vakol::CapsuleCollider& collider = entity.GetComponent<Vakol::CapsuleCollider>();
+
+                            double min = 0.01;
+                            double max = 100.0;
+
+                            double radius = collider.shape->getRadius();
+                            double height = collider.shape->getHeight();
+
+                            ImGui::SeparatorText("Size");
+                            ImGui::DragScalar("Radius", ImGuiDataType_Double, &radius, 0.1f);
+                            ImGui::DragScalar("Height", ImGuiDataType_Double, &height, 0.1f);
+
+                            if (radius < min)
+                                radius = min;
+                            if (radius > max)
+                                radius = max;
+
+                            if (height < min)
+                                height = min;
+                            if (height > max)
+                                height = max;
+
+                            collider.shape->setRadius(radius);
+                            collider.shape->setHeight(height);
+                        }
+
+                        ImGui::Spacing();
+
+                        if (!entity.HasComponent<Vakol::RigidBody>() && ImGui::Button("Add Rigidbody"))
+                        {
+                            Vakol::Components::Transform& transform =
+                                entity.GetComponent<Vakol::Components::Transform>();
+
+                            Vakol::RigidBody rb =
+                                m_app.GetSceneManager().GetActiveScene().GetPhysicsScene().CreateRigidBody(
+                                    transform.pos, transform.rot);
+
+                            entity.AddComponent<Vakol::RigidBody>(rb);
+                        }
+
+                        ImGui::Spacing();
+
+                        if (entity.HasComponent<Vakol::RigidBody>())
+                        {
+                            if (!entity.HasComponent<Vakol::BoxCollider>() && ImGui::Button("Add Box Collider"))
+                            {
+                                Vakol::RigidBody& rb = entity.GetComponent<Vakol::RigidBody>();
+
+                                Vakol::Math::Vec3 extents = Vakol::Math::Vec3(1.0f);
+
+                                Vakol::BoxCollider collider = m_app.GetPhysicsEngine().CreateBoxCollider(extents);
+                                m_app.GetPhysicsEngine().AttachCollider(rb, collider);
+
+                                entity.AddComponent<Vakol::BoxCollider>(collider);
+                            }
+
+                            if (!entity.HasComponent<Vakol::SphereCollider>() && ImGui::Button("Add Sphere Collider"))
+                            {
+                                Vakol::RigidBody& rb = entity.GetComponent<Vakol::RigidBody>();
+
+                                double radius = 1.0;
+
+                                Vakol::SphereCollider collider = m_app.GetPhysicsEngine().CreateSphereCollider(radius);
+                                m_app.GetPhysicsEngine().AttachCollider(rb, collider);
+
+                                entity.AddComponent<Vakol::SphereCollider>(collider);
+                            }
+
+                            if (!entity.HasComponent<Vakol::CapsuleCollider>() && ImGui::Button("Add Capsule Collider"))
+                            {
+                                Vakol::RigidBody& rb = entity.GetComponent<Vakol::RigidBody>();
+
+                                double radius = 0.5;
+                                double height = 1.0;
+
+                                Vakol::CapsuleCollider collider =
+                                    m_app.GetPhysicsEngine().CreateCapsuleCollider(radius, height);
+                                m_app.GetPhysicsEngine().AttachCollider(rb, collider);
+
+                                entity.AddComponent<Vakol::CapsuleCollider>(collider);
+                            }
+                        }
+
+                        ImGui::PopStyleColor();
+                        ImGui::Unindent(20.0f);
                     }
-
-                    ImGui::PopStyleColor();
-                    ImGui::Unindent(20.0f);
                 });
 
                 ImGui::EndChild(); // End of child frame

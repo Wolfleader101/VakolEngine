@@ -67,10 +67,13 @@ namespace Vakol
     struct RigidBody
     {
         BodyType type = BodyType::Dynamic;
-        float mass = 1.0;
-        float bounciness = 0.3;
+        float mass = 1.0f;
+        float bounciness = 0.3f;
 
         bool hasGravity = true;
+
+        Math::Vec3 position = Math::Vec3(0.0f, 0.0f, 0.0f);
+        Math::Vec3 impulse = Math::Vec3(0.0f, 0.0f, 0.0f);
 
         Math::Vec3 centerOfMass = Math::Vec3(0.0f, 0.0f, 0.0f); // will have to be calculated
 

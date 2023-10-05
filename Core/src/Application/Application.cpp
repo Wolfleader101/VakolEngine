@@ -143,7 +143,7 @@ namespace Vakol
 
     void Application::Run()
     {
-        double physicsAccumulator = 0.0;
+        float physicsAccumulator = 0.0;
 
         while (m_running)
         {
@@ -182,7 +182,6 @@ namespace Vakol
                 // While there is enough accumulated time take one or several physics steps
                 while (physicsAccumulator >= m_physicsEngine.GetTimeStep())
                 {
-                    constexpr int numIterations = 1;
 
                     if (IsSystemActive(SystemFlag::Scripting))
                     {
@@ -197,22 +196,27 @@ namespace Vakol
                             m_physicsEngine.ApplyForces(transform.pos, transform.rot, rb);
 
                             transform.eulerAngles = Math::RadToDeg(Math::EulerFromQuat(transform.rot));
+
+                            if (rb.type == BodyType::Static)
+                                return;
+                            rb.position = transform.pos;
                         });
 
-                    for (int i = 0; i < numIterations; ++i)
-                    {
-                        // detect collisions
-                        m_physicsEngine.DetectCollisions(activeScene.GetPhysicsScene());
+                    // detect collisions
+                    m_physicsEngine.DetectCollisions(activeScene.GetPhysicsScene());
 
-                        // resolve collisions
-                        activeScene.GetEntityList().Iterate<Components::Transform, RigidBody>(
-                            [&](Components::Transform& trans, RigidBody& rb) {
-                                m_physicsEngine.ResolveCollisions(trans.pos, rb);
-                            });
+                    // resolve collisions
+                    activeScene.GetEntityList().Iterate<Components::Transform, RigidBody>(
+                        [&](Components::Transform& trans, RigidBody& rb) {
+                            // PhysicsEngine::ResolveCollisions(trans.pos, rb);
+                            if (rb.type == BodyType::Static)
+                                return;
 
-                        activeScene.GetEntityList().Iterate<RigidBody>(
-                            [&](RigidBody& rb) { rb.collisionData->lambda = 0.0; });
-                    }
+                            trans.pos = rb.position;
+                        });
+
+                    activeScene.GetEntityList().Iterate<RigidBody>(
+                        [&](RigidBody& rb) { rb.collisionData->lambda = 0.0; });
 
                     // Decrease the accumulated time
                     physicsAccumulator -= m_physicsEngine.GetTimeStep();
