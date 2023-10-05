@@ -153,6 +153,11 @@ void MyGUILayer::OnUpdate()
                         ImGui::Indent(20.0f);
                         ImGui::PushStyleColor(ImGuiCol_Header, ImVec4(0.9f, 0.4f, 0.f, 1.0f));
 
+                        if (ImGui::Button("Delete Entity"))
+                        {
+                            m_app.GetSceneManager().GetActiveScene().DestroyEntity(entity);
+                        }
+
                         if (ImGui::CollapsingHeader("Transform"))
                         {
                             ImGui::SeparatorText("Transform");
