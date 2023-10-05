@@ -133,15 +133,19 @@ namespace Vakol
          */
         void DetectCollisions(PhysicsScene& scene);
 
-        static Math::Vec3 SolveImpulse(const ContactPair& contactPair);
+        /**
+         * \brief Solves the lambda scalar of impulse in a collision contact
+         * \param pair the contact pair
+         * \return the lambda
+         */
+        static float SolveLambda(const ContactPair& pair);
 
         /**
          * @brief handle collision resolution for a rigidbody
          *
-         * @param pos pos of body
-         * @param rb to handle resolution
+         * @param pair the contact pair to resolve collisions
          */
-        void ResolveCollisions(Math::Vec3& pos, RigidBody& rb);
+        static void ResolveCollisions(const ContactPair& pair);
 
         /**
          * @brief handle depenetration for a rigidbody

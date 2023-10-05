@@ -5,7 +5,8 @@ function init()
     --scene:create_entity("Digital Twin", "entities/worlds/digital_twin.lua");
     --scene:create_entity("290 World", "entities/worlds/290_world.lua");
 
-    scene:create_entity("Test Physics", "entities/test/physics.lua");
+    scene:create_entity("Test Physics", "entities/test/physics_1.lua");
+    --scene:create_entity("Test Physics", "entities/test/physics_2.lua");
 
     local path = "coreAssets/textures/Skybox/";
 	local extension = ".png";

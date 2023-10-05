@@ -297,11 +297,11 @@ void MyGUILayer::OnUpdate()
 
                             ImGui::Spacing();
 
-                            //ImGui::Text("Linear Velocity: [x: %.3f, y: %.3f z: %.3f]", rb.linearVelocity.x,
-                            //            rb.linearVelocity.y, rb.linearVelocity.z);
+                            // ImGui::Text("Linear Velocity: [x: %.3f, y: %.3f z: %.3f]", rb.linearVelocity.x,
+                            //             rb.linearVelocity.y, rb.linearVelocity.z);
 
-                            //ImGui::Text("Angular Velocity:  [x: %.3f, y: %.3f z: %.3f]", rb.angularVelocity.x,
-                            //            rb.angularVelocity.y, rb.angularVelocity.z);
+                            // ImGui::Text("Angular Velocity:  [x: %.3f, y: %.3f z: %.3f]", rb.angularVelocity.x,
+                            //             rb.angularVelocity.y, rb.angularVelocity.z);
 
                             ImGui::Spacing();
 
@@ -319,6 +319,16 @@ void MyGUILayer::OnUpdate()
                                         rb.localInertiaTensor[2][2]);
 
                             ImGui::Spacing();
+                            ImGui::SeparatorText("Local Inverse Inertia Tensor");
+
+                            ImGui::Text("x: %f, %f, %f", rb.localInverseInertiaTensor[0][0],
+                                        rb.localInverseInertiaTensor[0][1], rb.localInverseInertiaTensor[0][2]);
+                            ImGui::Text("y: %f, %f, %f", rb.localInverseInertiaTensor[1][0],
+                                        rb.localInverseInertiaTensor[1][1], rb.localInverseInertiaTensor[1][2]);
+                            ImGui::Text("z: %f, %f, %f", rb.localInertiaTensor[2][0],
+                                        rb.localInverseInertiaTensor[2][1], rb.localInverseInertiaTensor[2][2]);
+
+                            ImGui::Spacing();
                             ImGui::SeparatorText("Rotation Matrix");
 
                             ImGui::Text("x: %f, %f, %f", rb.rotationMatrix[0][0], rb.rotationMatrix[0][1],
@@ -331,54 +341,54 @@ void MyGUILayer::OnUpdate()
                             ImGui::Separator();
                             ImGui::Spacing();
 
-                            ImGui::SeparatorText("Contact Info");
+                            // ImGui::SeparatorText("Contact Info");
 
-                            if (rb.contactData)
-                            {
-                                ImGui::Text("Local Contact Point: [x: %.3f, y: %.3f z: %.3f]",
-                                            rb.contactData->localContactPoint.x, rb.contactData->localContactPoint.y,
-                                            rb.contactData->localContactPoint.z);
+                            // if (rb.contactData)
+                            //{
+                            //     ImGui::Text("Local Contact Point: [x: %.3f, y: %.3f z: %.3f]",
+                            //                 rb.contactData->localContactPoint.x, rb.contactData->localContactPoint.y,
+                            //                 rb.contactData->localContactPoint.z);
 
-                                ImGui::Text("World Contact Point: [x: %.3f, y: %.3f z: %.3f]",
-                                            rb.contactData->worldContactPoint.x, rb.contactData->worldContactPoint.y,
-                                            rb.contactData->worldContactPoint.z);
+                            //    ImGui::Text("World Contact Point: [x: %.3f, y: %.3f z: %.3f]",
+                            //                rb.contactData->worldContactPoint.x, rb.contactData->worldContactPoint.y,
+                            //                rb.contactData->worldContactPoint.z);
 
-                                ImGui::Text("Relative Local Contact Point: [x: %.3f, y: %.3f z: %.3f]",
-                                            rb.contactData->relativeLocalContactPoint.x,
-                                            rb.contactData->relativeLocalContactPoint.y,
-                                            rb.contactData->relativeLocalContactPoint.z);
+                            //    ImGui::Text("Relative Local Contact Point: [x: %.3f, y: %.3f z: %.3f]",
+                            //                rb.contactData->relativeLocalContactPoint.x,
+                            //                rb.contactData->relativeLocalContactPoint.y,
+                            //                rb.contactData->relativeLocalContactPoint.z);
 
-                                ImGui::Text("Relative World Contact Point: [x: %.3f, y: %.3f z: %.3f]",
-                                            rb.contactData->relativeWorldContactPoint.x,
-                                            rb.contactData->relativeWorldContactPoint.y,
-                                            rb.contactData->relativeWorldContactPoint.z);
-                            }
+                            //    ImGui::Text("Relative World Contact Point: [x: %.3f, y: %.3f z: %.3f]",
+                            //                rb.contactData->relativeWorldContactPoint.x,
+                            //                rb.contactData->relativeWorldContactPoint.y,
+                            //                rb.contactData->relativeWorldContactPoint.z);
+                            //}
 
-                            ImGui::Spacing();
-                            ImGui::SeparatorText("Contact Pair Info");
+                            // ImGui::Spacing();
+                            // ImGui::SeparatorText("Contact Pair Info");
 
-                            if (rb.contactData->contactPair)
-                            {
-                                ImGui::Text("World Contact Normal: [x: %.3f, y: %.3f z: %.3f]",
-                                            rb.contactData->contactPair->worldContactNormal.x,
-                                            rb.contactData->contactPair->worldContactNormal.y,
-                                            rb.contactData->contactPair->worldContactNormal.z);
+                            // if (rb.contactData->contactPair)
+                            //{
+                            //     ImGui::Text("World Contact Normal: [x: %.3f, y: %.3f z: %.3f]",
+                            //                 rb.contactData->contactPair->worldContactNormal.x,
+                            //                 rb.contactData->contactPair->worldContactNormal.y,
+                            //                 rb.contactData->contactPair->worldContactNormal.z);
 
-                                ImGui::Spacing();
+                            //    ImGui::Spacing();
 
-                                ImGui::Text("Relative Velocity: [x: %.3f, y: %.3f z: %.3f]",
-                                            rb.contactData->contactPair->relativeVelocity.x,
-                                            rb.contactData->contactPair->relativeVelocity.y,
-                                            rb.contactData->contactPair->relativeVelocity.z);
+                            //    ImGui::Text("Relative Velocity: [x: %.3f, y: %.3f z: %.3f]",
+                            //                rb.contactData->contactPair->relativeVelocity.x,
+                            //                rb.contactData->contactPair->relativeVelocity.y,
+                            //                rb.contactData->contactPair->relativeVelocity.z);
 
-                                ImGui::Spacing();
+                            //    ImGui::Spacing();
 
-                                ImGui::Text("Penetration Depth: %.3f", rb.contactData->contactPair->penetrationDepth);
+                            //    ImGui::Text("Penetration Depth: %.3f", rb.contactData->contactPair->penetrationDepth);
 
-                                ImGui::BeginDisabled();
-                                ImGui::Checkbox("Is Colliding", &rb.contactData->contactPair->isColliding);
-                                ImGui::EndDisabled();
-                            }
+                            //    ImGui::BeginDisabled();
+                            //    ImGui::Checkbox("Is Colliding", &rb.contactData->contactPair->isColliding);
+                            //    ImGui::EndDisabled();
+                            //}
                         }
 
                         if (entity.HasComponent<Vakol::BoxCollider>() && ImGui::CollapsingHeader("Box Collider"))

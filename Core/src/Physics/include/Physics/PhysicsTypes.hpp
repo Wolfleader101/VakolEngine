@@ -52,15 +52,14 @@ namespace Vakol
     {
         RigidBody* parentBody = nullptr;
 
-        std::shared_ptr<ContactPair> contactPair = nullptr;
+        Math::Vec3 velocity = Math::Vec3(0.0f);
+        Math::Vec3 position = Math::Vec3(0.0f);
 
         Math::Vec3 localContactPoint = Math::Vec3(0.0f);
         Math::Vec3 worldContactPoint = Math::Vec3(0.0f);
 
-        Math::Vec3 relativeLocalContactPoint = Math::Vec3(0.0f);
-        Math::Vec3 relativeWorldContactPoint = Math::Vec3(0.0f);
-
-        Math::Vec3 velocity = Math::Vec3(0.0f);
+        Math::Vec3 relativeLocalContactDistance = Math::Vec3(0.0f);
+        Math::Vec3 relativeWorldContactDistance = Math::Vec3(0.0f);
     };
 
     struct ContactPair
@@ -68,15 +67,16 @@ namespace Vakol
         ContactData* contactA = nullptr;
         ContactData* contactB = nullptr;
 
-        Math::Vec3 worldContactNormal = Math::Vec3(0.0f);
+        Math::Vec3 contactNormal = Math::Vec3(0.0f);
 
         Math::Vec3 relativeVelocity = Math::Vec3(0.0f);
 
-        Math::Vec3 impulseSum = Math::Vec3(0.0f);
+        Math::Vec3 impulse = Math::Vec3(0.0f);
+        float lambda = 0.0f;
 
         float penetrationDepth = 0.0f;
-
         unsigned int contactCount = 0u;
+
         bool isColliding = false;
     };
 
@@ -89,11 +89,12 @@ namespace Vakol
         BodyType type = BodyType::Dynamic;
 
         float mass = 1.0f;
-        float bounciness = 0.80f;
+        float bounciness = 0.95f;
 
         bool useGravity = true;
 
         Math::Mat3 localInertiaTensor = Math::Mat3(1.0f);
+        Math::Mat3 localInverseInertiaTensor = Math::Mat3(1.0f);
 
         Math::Mat3 rotationMatrix = Math::Mat3(1.0f);
 
@@ -101,6 +102,7 @@ namespace Vakol
         Math::Vec3 angularVelocity = Math::Vec3(0.0f);
 
         Math::Vec3 centreOfMass = Math::Vec3(0.0f);
+        Math::Vec3 position = Math::Vec3(0.0f);
 
         Math::Vec3 force = Math::Vec3(0.0f);
         Math::Vec3 torque = Math::Vec3(0.0f);
