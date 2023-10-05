@@ -114,7 +114,6 @@ namespace Vakol
             // directory already exists
         }
 
-        
         m_entityList.Serialize<Components::Transform, Components::Tag, GUID>(folder + "/EntityList.json");
 
         //-- Serialize Scene info
