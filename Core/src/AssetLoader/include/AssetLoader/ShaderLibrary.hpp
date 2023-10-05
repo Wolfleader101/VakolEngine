@@ -6,10 +6,7 @@
 
 #include "Math/Math.hpp"
 
-namespace Vakol::Rendering
-{
-    struct Uniform;
-} // namespace Vakol::Rendering
+#include "Rendering/RenderData.hpp"
 
 namespace Vakol
 {
@@ -100,6 +97,12 @@ namespace Vakol
          */
         void SetMat4(unsigned int shader, const char* name, bool transpose, const Math::Mat4& value,
                      bool binding = true);
+
+        /**
+         * \brief function that returns if a shader map is empty
+         * \return whether the shader map is empty
+         */
+        bool IsEmpty() const;
 
       private:
         /**
