@@ -249,14 +249,17 @@ namespace Vakol
 
     void PhysicsEngine::Depenetration(Math::Vec3& pos, RigidBody& rb)
     {
-        if (!rb.contactData || rb.type == BodyType::Static)
-            return;
+        //if (!rb.contactData || rb.type == BodyType::Static)
+        //    return;
 
-        const Math::Vec3 depenetration = -rb.contactData->contactNormal * rb.contactData->penetrationDepth;
+        //if (!rb.contactData->isColliding)
+        //    return;
 
-        pos += depenetration;
+        //const Math::Vec3 depenetration = -rb.contactData->contactNormal * rb.contactData->penetrationDepth;
 
-        rb.SetPosition(pos);
+        //pos += depenetration;
+
+        //rb.SetPosition(pos);
     }
 
     void PhysicsEngine::SetTimeStep(double step)

@@ -71,7 +71,7 @@ namespace Vakol
         Math::Vec3 relativeWorldContactDistance = Math::Vec3(0.0f);
 
         Math::Vec3 velocity = Math::Vec3(0.0f);
-        float penetrationDepth = 0.0f;
+        float penetrationDepth = 0.0f; // shouldn't be here
         
         bool isColliding = false;
     };
@@ -103,7 +103,7 @@ namespace Vakol
         float mass = 1.0f;
         float bounciness = 0.1f;
 
-        bool useGravity = true;
+        bool useGravity = false;
 
         Math::Mat3 localInertiaTensor = Math::Mat3(1.0f);
         Math::Mat3 localInverseInertiaTensor = Math::Mat3(1.0f);
