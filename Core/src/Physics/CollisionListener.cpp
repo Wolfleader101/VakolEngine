@@ -51,7 +51,7 @@ namespace Vakol
                         contactA->relativeLocalContactDistance = contactA->localContactPoint - contactA->parentBody->centreOfMass;
                         contactA->relativeWorldContactDistance = contactA->worldContactPoint - contactA->parentBody->centreOfMass;
 
-                        contactA->velocity = contactA->parentBody->linearVelocity;
+                        contactA->velocity = contactA->parentBody->linearVelocity + Math::Cross(contactA->parentBody->angularVelocity, contactA->relativeLocalContactDistance);
                         contactA->penetrationDepth = penetrationDepth;
 
                         contactA->isColliding = true;
@@ -65,7 +65,7 @@ namespace Vakol
                         contactB->relativeLocalContactDistance = contactB->localContactPoint - contactB->parentBody->centreOfMass;
                         contactB->relativeWorldContactDistance = contactB->worldContactPoint - contactB->parentBody->centreOfMass;
 
-                        contactB->velocity = contactB->parentBody->linearVelocity;
+                        contactB->velocity = contactB->parentBody->linearVelocity + Math::Cross(contactB->parentBody->angularVelocity, contactB->relativeLocalContactDistance);
                         contactB->penetrationDepth = penetrationDepth;
 
                         contactB->isColliding = true;
@@ -91,14 +91,14 @@ namespace Vakol
 
                         if (contactA->parentBody->type != BodyType::Static)
                         {
-                            contactA->parentBody->linearVelocity += contactPair.impulse / contactA->parentBody->GetInverseMass();
-                            contactA->parentBody->angularVelocity += contactPair.impulse * contactA->parentBody->localInverseInertiaTensor * Math::Cross(contactA->relativeLocalContactDistance, contactPair.contactNormal);
+                            contactA->parentBody->linearVelocity += contactPair.impulse * contactA->parentBody->GetInverseMass();
+                            contactA->parentBody->angularVelocity += contactA->parentBody->localInverseInertiaTensor * Math::Cross(contactA->relativeLocalContactDistance, contactPair.contactNormal);
                         }
 
                         if (contactB->parentBody->type != BodyType::Static)
                         {
-                            contactB->parentBody->linearVelocity -= contactPair.impulse / contactB->parentBody->GetInverseMass();
-                            contactB->parentBody->angularVelocity -= contactPair.impulse * contactB->parentBody->localInverseInertiaTensor * Math::Cross(contactB->relativeLocalContactDistance, contactPair.contactNormal);
+                            contactB->parentBody->linearVelocity -= contactPair.impulse * contactB->parentBody->GetInverseMass();
+                            contactB->parentBody->angularVelocity -= contactB->parentBody->localInverseInertiaTensor * Math::Cross(contactB->relativeLocalContactDistance, contactPair.contactNormal);
                         }
                     }
                 }

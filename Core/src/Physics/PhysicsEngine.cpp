@@ -165,6 +165,7 @@ namespace Vakol
     void PhysicsEngine::ApplyForces(Math::Vec3& pos, Math::Quat& rot, RigidBody& rb)
     {
         rb.contactData->parentBody = &rb;
+        //rb.centreOfMass = pos;
 
         // Don't apply forces to static bodies
         if (rb.type == BodyType::Static)

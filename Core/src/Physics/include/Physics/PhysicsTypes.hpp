@@ -101,9 +101,9 @@ namespace Vakol
         BodyType type = BodyType::Dynamic;
 
         float mass = 1.0f;
-        float bounciness = 0.1f;
+        float bounciness = 0.5f;
 
-        bool useGravity = false;
+        bool useGravity = true;
 
         Math::Mat3 localInertiaTensor = Math::Mat3(1.0f);
         Math::Mat3 localInverseInertiaTensor = Math::Mat3(1.0f);
