@@ -328,6 +328,16 @@ void MyGUILayer::OnUpdate()
                             ImGui::Text("z: %f, %f, %f", rb.localInertiaTensor[2][0],
                                         rb.localInverseInertiaTensor[2][1], rb.localInverseInertiaTensor[2][2]);
 
+                            //ImGui::Spacing();
+                            //ImGui::SeparatorText("World Inertia Tensor");
+
+                            //ImGui::Text("x: %f, %f, %f", rb.worldInertiaTensor[0][0],
+                            //            rb.worldInertiaTensor[0][1], rb.worldInertiaTensor[0][2]);
+                            //ImGui::Text("y: %f, %f, %f", rb.worldInertiaTensor[1][0],
+                            //            rb.worldInertiaTensor[1][1], rb.worldInertiaTensor[1][2]);
+                            //ImGui::Text("z: %f, %f, %f", rb.worldInertiaTensor[2][0],
+                            //            rb.worldInertiaTensor[2][1], rb.worldInertiaTensor[2][2]);
+
                             ImGui::Spacing();
                             ImGui::SeparatorText("Rotation Matrix");
 

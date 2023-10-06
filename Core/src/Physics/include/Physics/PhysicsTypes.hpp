@@ -9,17 +9,27 @@ namespace Vakol
 {
     inline Math::Vec3 FromRPVec3(rp3d::Vector3& vec)
     {
-        return Math::Vec3(vec.x, vec.y, vec.z);
+        return {vec.x, vec.y, vec.z};
     }
 
     inline Math::Vec3 FromRPVec3(const rp3d::Vector3& vec)
     {
-        return Math::Vec3(vec.x, vec.y, vec.z);
+        return {vec.x, vec.y, vec.z};
+    }
+
+    inline Math::Quat FromRPVec3(const rp3d::Quaternion& quat)
+    {
+        return {quat.w, quat.x, quat.y, quat.z};
     }
 
     inline rp3d::Vector3 ToRPVec3(const Math::Vec3& vec)
     {
-        return rp3d::Vector3(vec.x, vec.y, vec.z);
+        return {vec.x, vec.y, vec.z};
+    }
+
+    inline rp3d::Quaternion ToRPVec3(const Math::Quat& quat)
+    {
+        return {quat.x, quat.y, quat.z, quat.w};
     }
 
     struct RayCastHitInfo
@@ -52,14 +62,18 @@ namespace Vakol
     {
         RigidBody* parentBody = nullptr;
 
-        Math::Vec3 velocity = Math::Vec3(0.0f);
-        Math::Vec3 position = Math::Vec3(0.0f);
+        Math::Vec3 contactNormal = Math::Vec3(0.0f);
 
         Math::Vec3 localContactPoint = Math::Vec3(0.0f);
         Math::Vec3 worldContactPoint = Math::Vec3(0.0f);
 
         Math::Vec3 relativeLocalContactDistance = Math::Vec3(0.0f);
         Math::Vec3 relativeWorldContactDistance = Math::Vec3(0.0f);
+
+        Math::Vec3 velocity = Math::Vec3(0.0f);
+        float penetrationDepth = 0.0f;
+        
+        bool isColliding = false;
     };
 
     struct ContactPair
@@ -76,8 +90,6 @@ namespace Vakol
 
         float penetrationDepth = 0.0f;
         unsigned int contactCount = 0u;
-
-        bool isColliding = false;
     };
 
     /**
@@ -89,12 +101,15 @@ namespace Vakol
         BodyType type = BodyType::Dynamic;
 
         float mass = 1.0f;
-        float bounciness = 0.95f;
+        float bounciness = 0.1f;
 
         bool useGravity = true;
 
         Math::Mat3 localInertiaTensor = Math::Mat3(1.0f);
         Math::Mat3 localInverseInertiaTensor = Math::Mat3(1.0f);
+
+        Math::Vec3 position = Math::Vec3(0.0f);
+        Math::Quat rotation = Math::Quat(1.0f, Math::Vec3(0.0f));
 
         Math::Mat3 rotationMatrix = Math::Mat3(1.0f);
 
@@ -102,7 +117,6 @@ namespace Vakol
         Math::Vec3 angularVelocity = Math::Vec3(0.0f);
 
         Math::Vec3 centreOfMass = Math::Vec3(0.0f);
-        Math::Vec3 position = Math::Vec3(0.0f);
 
         Math::Vec3 force = Math::Vec3(0.0f);
         Math::Vec3 torque = Math::Vec3(0.0f);
@@ -111,6 +125,55 @@ namespace Vakol
 
         rp3d::CollisionBody* collisionBody = nullptr;
         std::shared_ptr<ContactData> contactData = nullptr;
+
+        rp3d::Collider* collider = nullptr;
+
+        inline void SetPosition(const Math::Vec3& pos)
+        {
+            collisionBody->setTransform(
+                rp3d::Transform(ToRPVec3(position), collisionBody->getTransform().getOrientation()));
+
+            position = pos;
+        }
+
+        inline Math::Vec3 GetPosition() const
+        {
+            return FromRPVec3(collisionBody->getTransform().getPosition());
+        }
+
+        inline void SetRotation(const Math::Quat& rot)
+        {
+            collisionBody->setTransform(
+                rp3d::Transform(collisionBody->getTransform().getPosition(), ToRPVec3(rot)));
+
+            rotation = rot;
+        }
+
+        inline Math::Quat GetRotation() const
+        {
+            return FromRPVec3(collisionBody->getTransform().getOrientation());
+        }
+
+        inline void SetTransform(const Math::Vec3& pos, const Math::Quat& rot)
+        {
+            collisionBody->setTransform(rp3d::Transform(ToRPVec3(pos), ToRPVec3(rot)));
+
+            position = pos;
+            rotation = rot;
+        }
+
+        inline float GetInverseMass() const
+        {
+            if (mass == 0.0f || mass == 1.0f)
+                return mass;
+
+            return 1.0f / mass;
+        }
+
+        inline void UpdateRotationMatrix()
+        {
+            rotationMatrix = Math::Mat3Cast(rotation);
+        }
     };
 
     /**

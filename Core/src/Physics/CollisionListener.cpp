@@ -40,30 +40,35 @@ namespace Vakol
                 worldContactNormal = point.getWorldNormal();
                 penetrationDepth = point.getPenetrationDepth();
 
+                // Per Contact Point
                 if (pair.getEventType() == ContactPair::EventType::ContactStart)
                 {
                     if (contactA)
                     {
-                        contactA->velocity = contactA->parentBody->linearVelocity;
-                        contactA->position = contactA->parentBody->position;
-
                         contactA->localContactPoint = FromRPVec3(localContactPoint1);
                         contactA->worldContactPoint = FromRPVec3(worldContactPoint1);
 
                         contactA->relativeLocalContactDistance = contactA->localContactPoint - contactA->parentBody->centreOfMass;
                         contactA->relativeWorldContactDistance = contactA->worldContactPoint - contactA->parentBody->centreOfMass;
+
+                        contactA->velocity = contactA->parentBody->linearVelocity;
+                        contactA->penetrationDepth = penetrationDepth;
+
+                        contactA->isColliding = true;
                     }
 
                     if (contactB)
                     {
-                        contactB->velocity = contactB->parentBody->linearVelocity;
-                        contactB->position = contactB->parentBody->position;
-
                         contactB->localContactPoint = FromRPVec3(localContactPoint2);
                         contactB->worldContactPoint = FromRPVec3(worldContactPoint2);
 
                         contactB->relativeLocalContactDistance = contactB->localContactPoint - contactB->parentBody->centreOfMass;
                         contactB->relativeWorldContactDistance = contactB->worldContactPoint - contactB->parentBody->centreOfMass;
+
+                        contactB->velocity = contactB->parentBody->linearVelocity;
+                        contactB->penetrationDepth = penetrationDepth;
+
+                        contactB->isColliding = true;
                     }
 
                     if (contactA && contactB)
@@ -75,12 +80,26 @@ namespace Vakol
                         contactPair.relativeVelocity = contactA->velocity - contactB->velocity;
 
                         contactPair.lambda = PhysicsEngine::SolveLambda(contactPair);
-                        contactPair.impulse += contactPair.lambda * contactPair.contactNormal * static_cast<float>(contactPair.contactCount);
+                        contactPair.impulse += contactPair.lambda * contactPair.contactNormal;
 
                         contactPair.penetrationDepth = penetrationDepth;
 
                         contactPair.contactCount = pair.getNbContactPoints();
-                        contactPair.isColliding = true;
+
+                        contactA->contactNormal = contactPair.contactNormal;
+                        contactB->contactNormal = contactPair.contactNormal;
+
+                        if (contactA->parentBody->type != BodyType::Static)
+                        {
+                            contactA->parentBody->linearVelocity += contactPair.impulse / contactA->parentBody->GetInverseMass();
+                            contactA->parentBody->angularVelocity += contactPair.impulse * contactA->parentBody->localInverseInertiaTensor * Math::Cross(contactA->relativeLocalContactDistance, contactPair.contactNormal);
+                        }
+
+                        if (contactB->parentBody->type != BodyType::Static)
+                        {
+                            contactB->parentBody->linearVelocity -= contactPair.impulse / contactB->parentBody->GetInverseMass();
+                            contactB->parentBody->angularVelocity -= contactPair.impulse * contactB->parentBody->localInverseInertiaTensor * Math::Cross(contactB->relativeLocalContactDistance, contactPair.contactNormal);
+                        }
                     }
                 }
                 else if (pair.getEventType() == ContactPair::EventType::ContactExit)
@@ -92,28 +111,32 @@ namespace Vakol
                 }
             }
 
+            // Per Contact Pair
             if (pair.getEventType() == ContactPair::EventType::ContactStart)
             {
-                VK_TRACE("ENTER CONTACT");
-                PhysicsEngine::ResolveCollisions(contactPair);
             }
-
-            if (pair.getEventType() == ContactPair::EventType::ContactExit)
+            else if (pair.getEventType() == ContactPair::EventType::ContactStart || pair.getEventType() == ContactPair::EventType::ContactStay)
             {
-                VK_TRACE("EXIT CONTACT");
+            }
+            else if (pair.getEventType() == ContactPair::EventType::ContactExit)
+            {
             }
         }
     }
 
     void Reset(ContactData* data)
     {
-        data->velocity = Math::Vec3(0.0f);
-        data->position = Math::Vec3(0.0f);
+        data->contactNormal = Math::Vec3(0.0f);
 
         data->localContactPoint = Math::Vec3(0.0f);
         data->worldContactPoint = Math::Vec3(0.0f);
 
         data->relativeLocalContactDistance = Math::Vec3(0.0f);
         data->relativeWorldContactDistance = Math::Vec3(0.0f);
+
+        data->velocity = Math::Vec3(0.0f);
+        data->penetrationDepth = 0.0f;
+
+        data->isColliding = false;
     }
 } // namespace Vakol

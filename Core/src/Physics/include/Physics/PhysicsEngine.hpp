@@ -150,7 +150,7 @@ namespace Vakol
         /**
          * @brief handle depenetration for a rigidbody
          *
-         * @param pos pos of body
+         * @param pos the position
          * @param rb rigidbody
          */
         void Depenetration(Math::Vec3& pos, RigidBody& rb);

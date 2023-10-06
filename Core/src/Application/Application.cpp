@@ -202,6 +202,12 @@ namespace Vakol
                     // detect collisions
                     m_physicsEngine.DetectCollisions(activeScene.GetPhysicsScene());
 
+                    // apply depenetration correction
+                    activeScene.GetEntityList().Iterate<Components::Transform, RigidBody>(
+                        [&](Components::Transform& transform, RigidBody& rb) {
+                            m_physicsEngine.Depenetration(transform.pos, rb);
+                        });
+
                     // Decrease the accumulated time
                     physicsAccumulator -= m_physicsEngine.GetTimeStep();
                 }

@@ -100,27 +100,31 @@ namespace Vakol
     void PhysicsEngine::AttachCollider(RigidBody& rb, BoxCollider& collider)
     {
         collider.collider = rb.collisionBody->addCollider(collider.shape, rp3d::Transform::identity());
+        rb.collider = collider.collider;
 
-        rb.localInertiaTensor = CalculateInertiaTensor(rb.mass, FromRPVec3(collider.shape->getHalfExtents()));
+        rb.localInertiaTensor = CalculateInertiaTensor(rb.GetInverseMass(), FromRPVec3(collider.shape->getHalfExtents()));
         rb.localInverseInertiaTensor = Math::Inverse(rb.localInertiaTensor);
     }
 
     void PhysicsEngine::AttachCollider(RigidBody& rb, SphereCollider& collider)
     {
         collider.collider = rb.collisionBody->addCollider(collider.shape, rp3d::Transform::identity());
+        rb.collider = collider.collider;
 
-        rb.localInertiaTensor = CalculateInertiaTensor(rb.mass, collider.shape->getRadius());
+        rb.localInertiaTensor = CalculateInertiaTensor(rb.GetInverseMass(), collider.shape->getRadius());
         rb.localInverseInertiaTensor = Math::Inverse(rb.localInertiaTensor);
     }
 
     void PhysicsEngine::AttachCollider(RigidBody& rb, CapsuleCollider& collider)
     {
         collider.collider = rb.collisionBody->addCollider(collider.shape, rp3d::Transform::identity());
+        rb.collider = collider.collider;
     }
 
     void PhysicsEngine::AttachCollider(RigidBody& rb, MeshCollider& collider)
     {
         collider.collider = rb.collisionBody->addCollider(collider.shape, rp3d::Transform::identity());
+        rb.collider = collider.collider;
     }
 
     Math::Mat3 PhysicsEngine::CalculateInertiaTensor(const float mass, const Math::Vec3& halfExtents)
@@ -130,7 +134,7 @@ namespace Vakol
         constexpr float K = 1.0f / 12.0f;
 
         // get extents by multiplying the half-extents by 2
-        Math::Vec3 extents = halfExtents;
+        Math::Vec3 extents = halfExtents * 2.0f;
 
         // extents squared
         extents *= extents;
@@ -149,7 +153,7 @@ namespace Vakol
         constexpr float K = 2.0f / 5.0f;
 
         // radius squared
-        float r2 = radius * radius;
+        const float r2 = radius * radius;
 
         i.x = r2 * mass * K;
         i.y = r2 * mass * K;
@@ -161,13 +165,11 @@ namespace Vakol
     void PhysicsEngine::ApplyForces(Math::Vec3& pos, Math::Quat& rot, RigidBody& rb)
     {
         rb.contactData->parentBody = &rb;
-        //rb.centreOfMass = pos;
 
         // Don't apply forces to static bodies
         if (rb.type == BodyType::Static)
         {
-            rb.collisionBody->setTransform(
-                rp3d::Transform(ToRPVec3(pos), rp3d::Quaternion(rot.x, rot.y, rot.z, rot.w)));
+            rb.SetTransform(pos, rot);
 
             return;
         }
@@ -189,11 +191,9 @@ namespace Vakol
         pos += rb.linearVelocity * static_cast<float>(m_timeStep);
         rot = Math::Normalized(rot + Math::Quat(0.0f, rb.angularVelocity * static_cast<float>(m_timeStep) * 0.5f) * rot);
 
-        rb.position = pos;
+        rb.SetTransform(pos, rot);
 
-        rb.collisionBody->setTransform(rp3d::Transform(ToRPVec3(rb.position), rp3d::Quaternion(rot.x, rot.y, rot.z, rot.w)));
-
-        rb.rotationMatrix = Math::Mat3Cast(rot);
+        rb.UpdateRotationMatrix();
 
         // Reset forces and torques
         rb.force = Math::Vec3(0.0f);
@@ -219,10 +219,8 @@ namespace Vakol
 
         const float numerator = n1 * (n2 + n3);
 
-        const float d1a = contactA->parentBody->mass != 0.0f ? 1.0f / contactA->parentBody->mass : 0.0f;
-        const float d1b = contactB->parentBody->mass != 0.0f ? 1.0f / contactB->parentBody->mass : 0.0f;
-
-        const float d1 = d1a + d1b;
+        // inverse mass sum
+        const float d1 = contactA->parentBody->GetInverseMass() + contactB->parentBody->GetInverseMass();
 
         const float d2a = Math::Dot(r1xN, contactA->parentBody->localInverseInertiaTensor * r1xN);
         const float d2b = Math::Dot(r2xN, contactB->parentBody->localInverseInertiaTensor * r2xN);
@@ -231,12 +229,6 @@ namespace Vakol
         const float denominator = d1 + d2;
 
         const float lambda = numerator / denominator;
-        
-        //VK_TRACE("r1: {0} {1} {2}", contactA->relativeLocalContactDistance.x, contactA->relativeLocalContactDistance.y, contactA->relativeLocalContactDistance.z);
-        //VK_TRACE("r2: {0} {1} {2}", contactB->relativeLocalContactDistance.x, contactB->relativeLocalContactDistance.y, contactB->relativeLocalContactDistance.z);
-        //VK_TRACE("r1crossN: {0} {1} {2}", r1xN.x, r1xN.y, r1xN.z);
-        //VK_TRACE("r2crossN: {0} {1} {2}", r2xN.x, r2xN.y, r2xN.z);
-        //VK_TRACE("lambda: {0}", lambda);
 
         return lambda;
     }
@@ -249,49 +241,22 @@ namespace Vakol
 
     void PhysicsEngine::ResolveCollisions(const ContactPair& pair)
     {
-        if (!pair.contactA || !pair.contactB)
-            return;
-
         const auto& bodyA = pair.contactA->parentBody;
         const auto& bodyB = pair.contactB->parentBody;
 
-        const Math::Vec3 r1xN = Math::Cross(pair.contactA->relativeLocalContactDistance, pair.contactNormal);
-        const Math::Vec3 r2xN = Math::Cross(pair.contactB->relativeLocalContactDistance, pair.contactNormal);
-
-        const Math::Vec3 depenetration = -pair.contactNormal * pair.penetrationDepth;
-
-        VK_TRACE("lambda: {0}", pair.lambda);
-        VK_TRACE("impulse: {0} {1} {2}", pair.impulse.x, pair.impulse.y, pair.impulse.z);
-
-        //VK_TRACE("(Body 1): Linear Velocity Before: {0} {1} {2}", bodyA->linearVelocity.x, bodyA->linearVelocity.y, bodyA->linearVelocity.z);
-
-        if (bodyA->type != BodyType::Static)
-        {
-            bodyA->linearVelocity += pair.impulse / bodyA->mass;
-            //bodyA->angularVelocity += pair.lambda * bodyA->localInverseInertiaTensor * r1xN;
-        }
-
-        //VK_TRACE("(Body 1): Linear Velocity After: {0} {1} {2}", bodyA->linearVelocity.x, bodyA->linearVelocity.y, bodyA->linearVelocity.z);
-
-        VK_TRACE("(Body 2): Linear Velocity Before: {0} {1} {2}", bodyB->linearVelocity.x, bodyB->linearVelocity.y, bodyB->linearVelocity.z);
-
-        if (bodyB->type != BodyType::Static)
-        {
-            bodyB->linearVelocity -= pair.impulse / bodyB->mass;
-            //bodyB->angularVelocity -= pair.lambda * bodyB->localInverseInertiaTensor * r2xN;
-        }
-
-        VK_TRACE("(Body 2): Linear Velocity After: {0} {1} {2}", bodyB->linearVelocity.x, bodyB->linearVelocity.y, bodyB->linearVelocity.z);
-
-        //bodyA->position += depenetration;
-        //bodyB->position += depenetration;
-
-        //bodyA->collisionBody->setTransform(rp3d::Transform(ToRPVec3(bodyA->position), bodyA->collisionBody->getTransform().getOrientation()));
-        //bodyB->collisionBody->setTransform(rp3d::Transform(ToRPVec3(bodyB->position), bodyB->collisionBody->getTransform().getOrientation()));
+        const float invMassSum = bodyA->GetInverseMass() + bodyB->GetInverseMass();
     }
 
     void PhysicsEngine::Depenetration(Math::Vec3& pos, RigidBody& rb)
     {
+        if (!rb.contactData || rb.type == BodyType::Static)
+            return;
+
+        const Math::Vec3 depenetration = -rb.contactData->contactNormal * rb.contactData->penetrationDepth;
+
+        pos += depenetration;
+
+        rb.SetPosition(pos);
     }
 
     void PhysicsEngine::SetTimeStep(double step)

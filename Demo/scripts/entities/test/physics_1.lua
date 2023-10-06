@@ -1,8 +1,8 @@
 function init()
     add_floor();
     add_cube();
-    --add_cube2();
-    add_sphere();
+    add_cube2();
+    --add_sphere();
 end
 
 function add_sphere()
@@ -16,10 +16,10 @@ function add_sphere()
 end
 
 function add_cube()
-    local cube = scene:create_entity("Cube", "");
+    local cube = scene:create_entity("Cube 1", "");
 
     cube:get_transform().pos = Vector3.new(0.0, 5.0, 0.0);
-    cube:get_transform().rot = Vector3.new(0.0, 5.0, 0.0);
+    cube:get_transform().rot = Vector3.new(0.0, 0.0, 0.0);
 
     cube:add_model("coreAssets/models/cube.obj", 1.0);
 
@@ -30,8 +30,8 @@ end
 function add_cube2()
     local cube2 = scene:create_entity("Cube 2", "");
 
-    cube2:get_transform().pos = Vector3.new(0.0, 10.0, 1.5);
-    cube2:get_transform().rot = Vector3.new(25.0, 0.0, 0.0);
+    cube2:get_transform().pos = Vector3.new(5.0, 5.0, 0.0);
+    cube2:get_transform().rot = Vector3.new(0.0, 0.0, 0.0);
 
     cube2:add_model("coreAssets/models/cube.obj", 1.0);
 
