@@ -237,8 +237,12 @@ namespace Vakol
         //! THESE CAN BE STORED AS CONSTANTS
         Math::Mat3 j1Inverse = rb1.type == BodyType::Static ? Math::Mat3(0.0f) : Math::Inverse(rb1.inertiaTensor);
 
+        VK_CRITICAL("J1^-1: {0} {1} {2}", j1Inverse[0][0], j1Inverse[1][1], j1Inverse[2][2]);
+
         // j2^-1
         Math::Mat3 j2Inverse = rb2.type == BodyType::Static ? Math::Mat3(0.0f) : Math::Inverse(rb2.inertiaTensor);
+
+        VK_CRITICAL("J2^-1: {0} {1} {2}", j2Inverse[0][0], j2Inverse[1][1], j2Inverse[2][2]);
 
         // (r1 x n)^T * J1^-1 * (r1 x n)
         float r1j = Math::Dot(r1CrossN, j1Inverse * r1CrossN);
@@ -292,8 +296,6 @@ namespace Vakol
 
         VK_WARN("Angular Velocity After: {0} {1} {2}", rb.angularVelocity.x, rb.angularVelocity.y,
                 rb.angularVelocity.z);
-
-        Depenetration(pos, rb);
 
         // reset the collision data
         rb.collisionData->penetrationDepth = 0.0;

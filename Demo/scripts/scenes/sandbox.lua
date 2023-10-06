@@ -24,6 +24,7 @@ function init()
 
     local rb1 = floor:add_rigid();
     rb1.mass = 1;
+    rb1.bounciness = 0.9;
     rb1.type = BodyType.Static;
     floor:add_box_collider(Vector3.new(100.0, 1.0, 100.0));
     
@@ -34,9 +35,21 @@ function init()
 
     local rb = cube:add_rigid();
     rb.mass = 1;
-    rb.bounciness = 0.7;
+    rb.bounciness = 0.9;
     rb.type = BodyType.Dynamic;
     cube:add_box_collider(Vector3.new(1.0, 1.0, 1.0));
+
+
+    local cube2 = scene:create_entity("Cube2", "");
+    cube2:get_transform().pos = Vector3.new(9.5, 5.0, 0.0);
+    cube2:get_transform().rot = Vector3.new(0.0, 0.0, 0.0);
+    cube2:add_model("coreAssets/models/cube.obj", 1);
+
+    local rb2 = cube2:add_rigid();
+    rb2.mass = 1;
+    rb2.bounciness = 0.9;
+    rb2.type = BodyType.Dynamic;
+    cube2:add_box_collider(Vector3.new(1.0, 1.0, 1.0));
     
 end
 
