@@ -55,6 +55,7 @@ namespace Vakol
         scene_type.set_function(
             "deserialize",
             &Scene::Deserialize); // needs to be given folder assets/scenes/scene_name .ie assets/scenes/Test Scene
+
         scene_type.set_function("get_name", &Scene::getName);
     }
 
