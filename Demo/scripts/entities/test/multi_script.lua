@@ -1,3 +1,4 @@
+CALEB = "CALEB"
 function init()
     print("Multi Script Root");
     entity:add_script("cube", "entities/test/cube.lua");
@@ -7,7 +8,6 @@ function init()
 	print(cube.BLAKE)
 end
 
-CALEB = "IS GAY"
 
 function phys_update()
 	-- local rb = entity:get_rigid();

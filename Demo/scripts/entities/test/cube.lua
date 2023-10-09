@@ -1,4 +1,4 @@
-BLAKE = "GAY"
+BLAKE = "IS GAY"
 
 function init()
 	print("cube")
