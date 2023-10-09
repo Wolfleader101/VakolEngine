@@ -63,4 +63,15 @@ namespace Vakol
          */
         Application& m_app;
     };
+
+    /**
+     * @brief enum class for layer subscriptions
+     *
+     */
+    enum LayerFlags : unsigned int
+    {
+        UPDATES = 1 << 0,
+        TICKS = 1 << 1,
+        EVENTS = 1 << 2
+    };
 } // namespace Vakol

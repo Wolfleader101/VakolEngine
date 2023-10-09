@@ -397,13 +397,13 @@ namespace Vakol
         return m_running;
     }
 
-    void Application::PushLayer(std::shared_ptr<Layer> layer)
+    void Application::PushLayer(std::shared_ptr<Layer> layer, LayerSubscription flags)
     {
 
         if (layer)
         {
             layer->OnAttach();
-            m_layerManager.PushLayer(layer);
+            m_layerManager.PushLayer(layer, flags);
         }
     }
 
