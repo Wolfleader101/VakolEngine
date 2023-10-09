@@ -29,5 +29,5 @@ TEST_CASE("Model Loader Tests", "[ModelLoader]")
     {
         REQUIRE(!Vakol::ImportModel(model, "coreAssets/models/invalid.fbx", 1.0f));
         REQUIRE(model.meshes.size() == 0);
-    }   
+    }
 }
