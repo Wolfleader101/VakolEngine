@@ -31,10 +31,11 @@ namespace Vakol
         /**
          * @brief Creates a Lua script from a file path. (Deprecated)
          * @warning Global access to the Lua state through this method is deprecated.
+         * @param name The name of the Lua script.
          * @param scriptPath Path to the Lua script file.
          * @return LuaScript object representing the Lua script.
          */
-        LuaScript CreateScript(const std::string& scriptPath);
+        LuaScript CreateScript(const std::string& name, const std::string& scriptPath);
 
         /**
          * @brief Creates a new Lua table.

@@ -108,7 +108,7 @@ namespace Vakol
      *
      * @param lua The Lua state.
      */
-    void RegisterEntity(sol::state& lua);
+    void RegisterEntity(sol::state& lua, ScriptEngine& scriptEngine);
 
     /**
      * @brief Register the GUI window in Lua.

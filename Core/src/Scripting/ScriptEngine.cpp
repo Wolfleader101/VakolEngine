@@ -62,10 +62,11 @@ namespace Vakol
         RunFunction(script.env, "phys_update", true);
     }
 
-    LuaScript ScriptEngine::CreateScript(const std::string& scriptPath)
+    LuaScript ScriptEngine::CreateScript(const std::string& name, const std::string& scriptPath)
     {
         LuaScript script;
 
+        script.name = name;
         script.path = scriptPath;
 
         script.env = sol::environment(m_state, sol::create, m_state.globals());
@@ -177,7 +178,7 @@ namespace Vakol
         RegisterMesh(m_state);
         RegisterMaterial(m_state);
         RegisterShader(m_state);
-        RegisterEntity(m_state);
+        RegisterEntity(m_state, *this);
         RegisterTransform(m_state);
         RegisterTerrain(m_state);
         RegisterFSM(m_state);
