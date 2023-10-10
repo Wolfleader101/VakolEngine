@@ -1,5 +1,7 @@
 #pragma once
 
+#include "RenderData.hpp"
+#include "AssetLoader/ShaderLibrary.hpp"
 #include "Math/Math.hpp"
 
 #include <map>
@@ -220,6 +222,11 @@ namespace Vakol::Rendering
         inline static const RenderConfig& GetConfig()
         {
             return m_config;
+        }
+
+        inline static bool IsExistingShader(const std::string& shaderID)
+        {
+            return m_shaderLibrary.GetShader(shaderID) != 0u;
         }
 
 #pragma region Shader Uniforms

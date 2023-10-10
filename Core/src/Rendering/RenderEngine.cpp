@@ -71,6 +71,9 @@ namespace Vakol::Rendering
 
     void RenderEngine::Draw(const Camera& camera, Components::Transform& transform, const Drawable& drawable)
     {
+        if (!RenderAPI::IsExistingShader(drawable.shaderID) || !AssetLoader::IsExistingModel(drawable.ID))
+            return;
+
         RenderAPI::BeginDraw(drawable.ID, drawable.shaderID);
 
         RenderAPI::SetMat4(RenderAPI::GetShader(drawable.shaderID), "PV_MATRIX", false,

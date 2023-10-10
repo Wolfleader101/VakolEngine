@@ -412,7 +412,6 @@ namespace Vakol
 
     void Application::PopLayer()
     {
-
         m_layerManager.PopLayer();
     }
 

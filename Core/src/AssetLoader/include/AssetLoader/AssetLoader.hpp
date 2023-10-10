@@ -94,6 +94,16 @@ namespace Vakol
         static void ReplaceTexture(const GUID& modelID, const std::string& srcPath, unsigned int srcType,
                                    const std::string& dstPath, unsigned int dstType);
 
+        /**
+         * \brief returns the status of a model, whether it exists or not.
+         * \param modelID the model id
+         * \return true or false
+         */
+        inline static bool IsExistingModel(const GUID& modelID)
+        {
+            return m_modelLibrary.ModelExists(modelID);
+        }
+
       private:
         /**
          * \brief the model library containing a map of models to their paths
