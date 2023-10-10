@@ -6,6 +6,8 @@
 #include "ECS/Components.hpp"
 #include "Utils/GUID.hpp"
 
+#include "Rendering/Assets/Shader.hpp"
+
 #include <iostream>
 
 TEST_CASE("Setup Config", "[RenderAPI]")
@@ -128,20 +130,94 @@ TEST_CASE("Get Model Matrix", "[RenderAPI]")
 
     SECTION("Scale Component at zero")
     {
+        constexpr Vakol::Math::Vec3 pos = Vakol::Math::Vec3(1.0f, 1.0f, 1.0f);
+        constexpr Vakol::Math::Vec3 scale = Vakol::Math::Vec3(0.0f, 0.0f, 0.0f);
 
-        constexpr Vakol::Math::Vec3 scale = Vakol::Math::Vec3(0.0f);
-
+        transform.pos = pos;
         transform.scale = scale;
 
         Vakol::Math::Mat4 modelMatrix = Vakol::Rendering::RenderAPI::GetModelMatrix(transform);
 
-        // 4x4 matrix = 16 components
-        for (int i = 0; i < 4; ++i)
-        {
-            for (int j = 0; j < 4; ++j)
-            {
-                
-            }
-        }
+        REQUIRE(modelMatrix[3][0] == 1.0f);
+        REQUIRE(modelMatrix[3][1] == 1.0f);
+        REQUIRE(modelMatrix[3][2] == 1.0f);
     }
+}
+
+TEST_CASE("Generate Vertex Command (Normal Models)", "[RenderAPI]")
+{
+    Vakol::Rendering::VertexArray vao;
+
+    Vakol::Rendering::RenderAPI::GenerateVertexCommand(std::move(vao));
+}
+
+TEST_CASE("Generate Vertex Command (Skybox)", "[RenderAPI]")
+{
+    Vakol::Rendering::SkyboxVertexArray vao;
+
+    Vakol::Rendering::RenderAPI::GenerateVertexCommand(std::move(vao));
+}
+
+TEST_CASE("Generate Empty Debug Vertex Command (Debug Scene)", "[RenderAPI]")
+{
+    const Vakol::Rendering::DebugScene debugScene;
+
+    Vakol::Rendering::RenderAPI::GenerateEmptyDebugVertexCommand(debugScene);
+}
+
+TEST_CASE("Set Debug Vertex Array", "[RenderAPI]")
+{
+    std::vector<float> vertices;
+    const Vakol::Rendering::DebugScene debugScene;
+
+    Vakol::Rendering::RenderAPI::SetDebugVertexArray(std::move(vertices), debugScene);
+}
+
+TEST_CASE("Generate Shader", "[RenderAPI]")
+{
+    Vakol::Rendering::Assets::Shader shader;
+    Vakol::Rendering::Drawable drawable;
+
+    Vakol::Rendering::RenderAPI::GenerateShader(std::move(shader), drawable);
+
+    REQUIRE(drawable.shaderID.empty());
+}
+
+TEST_CASE("Generate Skybox Shader", "[RenderAPI]")
+{
+    Vakol::Rendering::Assets::Shader shader;
+    Vakol::Rendering::Skybox skybox;
+
+    Vakol::Rendering::RenderAPI::GenerateSkyboxShader(std::move(shader), skybox);
+
+    REQUIRE(skybox.shaderID.empty());
+}
+
+TEST_CASE("Generate Debug Shader", "[RenderAPI]")
+{
+    Vakol::Rendering::Assets::Shader shader;
+    Vakol::Rendering::DebugScene debugScene;
+
+    Vakol::Rendering::RenderAPI::GenerateDebugShader(std::move(shader), debugScene);
+
+    REQUIRE(debugScene.shaderID.empty());
+}
+
+TEST_CASE("Generate Texture", "[RenderAPI]")
+{
+    constexpr int levels = 1;
+    constexpr int width = 0;
+    constexpr int height = 0;
+    constexpr int channels = 1;
+    const unsigned char* pixels = nullptr;
+
+    unsigned int texture = Vakol::Rendering::RenderAPI::GenerateTexture(levels, width, height, channels, pixels);
+
+    REQUIRE(pixels == nullptr);
+    REQUIRE(texture == 0u);
+}
+
+TEST_CASE("Generate Texture (Cubemap)", "[RenderAPI]")
+{
+    
 }

@@ -219,6 +219,9 @@ namespace Vakol::Rendering
 
     void RenderAPI::GenerateShader(Assets::Shader&& shader, Drawable& drawable)
     {
+        if (shader.vertSrc.empty() || shader.fragSrc.empty())
+            return;
+
         drawable.shaderID = GenerateID();
 
         const unsigned int program =
@@ -229,6 +232,9 @@ namespace Vakol::Rendering
 
     void RenderAPI::GenerateSkyboxShader(Assets::Shader&& shader, Skybox& skybox)
     {
+        if (shader.vertSrc.empty() || shader.fragSrc.empty())
+            return;
+
         skybox.shaderID = GenerateID();
 
         const unsigned int program =
@@ -239,6 +245,9 @@ namespace Vakol::Rendering
 
     void RenderAPI::GenerateDebugShader(Assets::Shader&& shader, DebugScene& debugScene)
     {
+        if (shader.vertSrc.empty() || shader.fragSrc.empty())
+            return;
+
         debugScene.shaderID = GenerateID();
 
         const unsigned int program =
@@ -250,6 +259,9 @@ namespace Vakol::Rendering
     unsigned int RenderAPI::GenerateTexture(const int levels, const int width, const int height, const int channels,
                                             const unsigned char* pixels)
     {
+        if (pixels == nullptr || (width <= 0 && height <= 0) || channels < 1)
+            return 0u;
+
         return OpenGL::GenerateTexture(levels, width, height, channels, pixels);
     }
 
