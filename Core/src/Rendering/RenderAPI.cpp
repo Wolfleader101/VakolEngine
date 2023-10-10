@@ -52,6 +52,9 @@ namespace Vakol::Rendering
                 OpenGL::BindTexture(texture.ID);
             }
 
+            if (!IsExistingVertexArray(mesh.ID))
+                return;
+
             const auto& vertexArray = m_vertexLibrary.at(mesh.ID);
 
             OpenGL::BindVertexArray(vertexArray.vertexArray);
@@ -68,6 +71,9 @@ namespace Vakol::Rendering
     void RenderAPI::BeginSkyboxDraw(const std::string& vertexID, const std::string& shaderID,
                                     const unsigned int textureID)
     {
+        if (!IsExistingVertexArray(vertexID))
+            return;
+
         OpenGL::BindShaderProgram(GetShader(shaderID));
 
         OpenGL::DepthLEQUAL();
@@ -86,6 +92,9 @@ namespace Vakol::Rendering
 
     void RenderAPI::BeginDebugSceneDraw(const std::string& vertexID, const std::string& shaderID)
     {
+        if (!IsExistingVertexArray(vertexID))
+            return;
+
         OpenGL::BindShaderProgram(GetShader(shaderID));
 
         const auto& vertexArray = m_vertexLibrary.at(vertexID);
@@ -427,6 +436,21 @@ namespace Vakol::Rendering
         transform_matrix = Math::Scale(transform_matrix, transform.scale);
 
         return transform_matrix;
+    }
+
+    const RenderConfig& RenderAPI::GetConfig()
+    {
+        return m_config;   
+    }
+
+    bool RenderAPI::IsExistingVertexArray(const std::string& vertexArrayID)
+    {
+        return m_vertexLibrary.find(vertexArrayID) != m_vertexLibrary.end();
+    }
+
+    bool RenderAPI::IsExistingShader(const std::string& shaderID)
+    {
+        return m_shaderLibrary.GetShader(shaderID) != 0u;   
     }
 
     void RenderAPI::SetMaterial(const unsigned int shader, const Assets::Material& material)

@@ -219,15 +219,11 @@ namespace Vakol::Rendering
          * \brief retrieves the configuration for RenderAPI
          * \return m_config the configuration for RenderAPI
          */
-        inline static const RenderConfig& GetConfig()
-        {
-            return m_config;
-        }
+        static const RenderConfig& GetConfig();
 
-        inline static bool IsExistingShader(const std::string& shaderID)
-        {
-            return m_shaderLibrary.GetShader(shaderID) != 0u;
-        }
+        static bool IsExistingShader(const std::string& shaderID);
+
+        static bool IsExistingVertexArray(const std::string& vertexArrayID);
 
 #pragma region Shader Uniforms
         /**
