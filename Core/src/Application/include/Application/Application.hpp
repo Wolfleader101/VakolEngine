@@ -158,7 +158,7 @@ namespace Vakol
          *
          * @return ScriptEngine&
          */
-        void PushLayer(std::shared_ptr<Layer> layer);
+        void PushLayer(std::shared_ptr<Layer> layer, LayerSubscription flags);
 
         /**
          * @brief Pop the top layer
