@@ -92,7 +92,9 @@ namespace Vakol
                     VK_TRACE("Lambda: {}", lambda);
 
                     body1Data->parentBody->impulse += lambda * normal;
+                    body1Data->parentBody->collisionData->lambda += lambda;
                     body2Data->parentBody->impulse += -lambda * normal;
+                    body2Data->parentBody->collisionData->lambda += -lambda;
 
                     if (body1Data->parentBody->type != BodyType::Static)
                     {

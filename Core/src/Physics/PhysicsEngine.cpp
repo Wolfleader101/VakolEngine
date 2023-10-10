@@ -308,7 +308,9 @@ namespace Vakol
         VK_WARN("Angular Velocity Before: {0} {1} {2}", rb.angularVelocity.x, rb.angularVelocity.y,
                 rb.angularVelocity.z);
 
-        rb.angularVelocity += impulse * Math::Inverse(rb.inertiaTensor) * Math::Cross(r1, n);
+        glm::vec3 torque = glm::cross(r1, n);
+
+        rb.angularVelocity += rb.collisionData->lambda * Math::Inverse(rb.inertiaTensor) * torque;
 
         VK_WARN("Angular Velocity After: {0} {1} {2}", rb.angularVelocity.x, rb.angularVelocity.y,
                 rb.angularVelocity.z);
@@ -318,6 +320,7 @@ namespace Vakol
         rb.collisionData->worldNormal = Math::Vec3(0.0f, 0.0f, 0.0f);
         rb.collisionData->isColliding = false;
         rb.impulse = Math::Vec3(0.0f, 0.0f, 0.0f);
+        rb.collisionData->lambda = 0.0f;
     }
 
     void PhysicsEngine::Depenetration(Math::Vec3& pos, RigidBody& rb)
