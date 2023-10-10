@@ -455,7 +455,7 @@ namespace Vakol::Rendering
 
     const RenderConfig& RenderAPI::GetConfig()
     {
-        return m_config;   
+        return m_config;
     }
 
     bool RenderAPI::IsExistingVertexArray(const std::string& vertexArrayID)
@@ -465,7 +465,7 @@ namespace Vakol::Rendering
 
     bool RenderAPI::IsExistingShader(const std::string& shaderID)
     {
-        return m_shaderLibrary.GetShader(shaderID) != 0u;   
+        return m_shaderLibrary.GetShader(shaderID) != 0u;
     }
 
     void RenderAPI::SetMaterial(const unsigned int shader, const Assets::Material& material)

@@ -154,11 +154,12 @@ namespace Vakol
         const std::shared_ptr<Window> GetWindow() const;
 
         /**
-         * @brief Get the Script Engine object
+         * @brief Push a layer to the top of the stack
          *
-         * @return ScriptEngine&
+         * @param layer to push
+         * @param flags to subscribe to
          */
-        void PushLayer(std::shared_ptr<Layer> layer);
+        void PushLayer(std::shared_ptr<Layer> layer, LayerSubscription flags);
 
         /**
          * @brief Pop the top layer

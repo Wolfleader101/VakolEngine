@@ -100,11 +100,11 @@ TEST_CASE("Application Construction and Basic Operations", "[Application]")
         auto layer1 = std::make_shared<TestLayer>(app);
         auto layer2 = std::make_shared<TestLayer>(app);
 
-        app.PushLayer(layer1);
+        app.PushLayer(layer1, 0);
 
         REQUIRE(layer1->attached == true);
 
-        app.PushLayer(layer2);
+        app.PushLayer(layer2, 0);
 
         REQUIRE(layer2->attached == true);
 
