@@ -48,6 +48,11 @@ namespace Vakol::Components
          */
         Transform(const Math::Vec3& pos, const Math::Quat& rot, const Math::Vec3& scale);
 
+        void Update();
+
+        const Math::Mat4& GetModelMatrix() const;
+        const Math::Mat4& GetWorldMatrix() const;
+
         Math::Vec3 pos = Math::Vec3(0.0f, 0.0f, 0.0f); /**< XYZ position */
 
         Math::Vec3 eulerAngles = Math::Vec3(0.0f, 0.0f, 0.0f);
@@ -67,6 +72,9 @@ namespace Vakol::Components
                cereal::make_nvp("scale.x", scale.x), cereal::make_nvp("scale.y", scale.y),
                cereal::make_nvp("scale.z", scale.z));
         }
+
+      private:
+        Math::Mat4 worldMatrix = Math::Mat4(1.0f);
     };
 
     /**

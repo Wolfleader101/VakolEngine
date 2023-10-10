@@ -89,17 +89,17 @@ namespace Vakol
                         contactA->contactNormal = contactPair.contactNormal;
                         contactB->contactNormal = contactPair.contactNormal;
 
-                        if (contactA->parentBody->type != BodyType::Static)
-                        {
-                            contactA->parentBody->linearVelocity += contactPair.impulse * contactA->parentBody->GetInverseMass();
-                            contactA->parentBody->angularVelocity += contactA->parentBody->localInverseInertiaTensor * Math::Cross(contactA->relativeLocalContactDistance, contactPair.contactNormal);
-                        }
+                        //if (contactA->parentBody->type != BodyType::Static)
+                        //{
+                        //    contactA->parentBody->linearVelocity += contactPair.impulse * contactA->parentBody->GetInverseMass();
+                        //    contactA->parentBody->angularVelocity += contactA->parentBody->localInverseInertiaTensor * Math::Cross(contactA->relativeLocalContactDistance, contactPair.contactNormal);
+                        //}
 
-                        if (contactB->parentBody->type != BodyType::Static)
-                        {
-                            contactB->parentBody->linearVelocity -= contactPair.impulse * contactB->parentBody->GetInverseMass();
-                            contactB->parentBody->angularVelocity -= contactB->parentBody->localInverseInertiaTensor * Math::Cross(contactB->relativeLocalContactDistance, contactPair.contactNormal);
-                        }
+                        //if (contactB->parentBody->type != BodyType::Static)
+                        //{
+                        //    contactB->parentBody->linearVelocity -= contactPair.impulse * contactB->parentBody->GetInverseMass();
+                        //    contactB->parentBody->angularVelocity -= contactB->parentBody->localInverseInertiaTensor * Math::Cross(contactB->relativeLocalContactDistance, contactPair.contactNormal);
+                        //}
                     }
                 }
                 else if (pair.getEventType() == ContactPair::EventType::ContactExit)

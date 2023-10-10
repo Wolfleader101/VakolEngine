@@ -2,14 +2,14 @@ function init()
     add_floor();
     add_cube();
     --add_cube2();
-    add_sphere();
+    --add_sphere();
 end
 
 function add_sphere()
     local sphere = scene:create_entity("Sphere", "");
     sphere:add_model("coreAssets/models/sphere.obj", 1.0);
 
-    sphere:get_transform().pos = Vector3.new(0.0, 15.0, 0.0);
+    sphere:get_transform().pos = Vector3.new(0.0, 10.0, 0.0);
 
     sphere:add_rigid();
     sphere:add_sphere_collider(1.0);

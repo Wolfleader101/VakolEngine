@@ -195,7 +195,6 @@ namespace Vakol
                         [&](Components::Transform& transform, RigidBody& rb) {
                             m_physicsEngine.ApplyForces(transform.pos, transform.rot, rb);
 
-                            // avoid converting back and forth (changed by Caleb - Physics Branch)
                             transform.eulerAngles = Math::RadToDeg(Math::EulerFromQuat(transform.rot));
                         });
 
@@ -267,6 +266,7 @@ namespace Vakol
 
             activeScene.GetEntityList().Iterate<Components::Transform>([](Components::Transform& transform) {
                 transform.rot = Math::Quat(Math::DegToRad(transform.eulerAngles));
+                transform.Update();
             });
 
             activeScene.GetCamera().Update();

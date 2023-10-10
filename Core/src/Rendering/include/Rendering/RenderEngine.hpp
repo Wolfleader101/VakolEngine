@@ -50,7 +50,7 @@ namespace Vakol::Rendering
          * \param transform the transform component of an object.
          * \param drawable the drawable component of an object
          */
-        static void Draw(const Camera& camera, Components::Transform& transform, const Drawable& drawable);
+        static void Draw(const Camera& camera, const Components::Transform& transform, const Drawable& drawable);
         /**
          * \brief called after drawing an object.
          */

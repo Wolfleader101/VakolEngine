@@ -9,6 +9,29 @@ namespace Vakol::Components
     {
     }
 
+    void Transform::Update()
+    {
+        auto transform_matrix = Math::Mat4(1.0f);
+
+        transform_matrix = Math::Translate(transform_matrix, pos);
+
+        transform_matrix *= Math::Mat4Cast(rot);
+
+        transform_matrix = Math::Scale(transform_matrix, scale);
+
+        worldMatrix = transform_matrix;
+    }
+
+    const Math::Mat4& Transform::GetWorldMatrix() const
+    {
+        return worldMatrix;
+    }
+
+    const Math::Mat4& Transform::GetModelMatrix() const
+    {
+        return worldMatrix;
+    }
+
     FSM::FSM(LuaTable table) : states(table)
     {
     }

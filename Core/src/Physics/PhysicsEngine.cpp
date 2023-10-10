@@ -131,17 +131,16 @@ namespace Vakol
     {
         Math::Vec3 i = Math::Vec3(0.0f);
 
-        constexpr float K = 1.0f / 12.0f;
+        const float K = 1.0f / 12.0f * mass;
 
-        // get extents by multiplying the half-extents by 2
-        Math::Vec3 extents = halfExtents * 2.0f;
+        Math::Vec3 extents = halfExtents;
 
         // extents squared
         extents *= extents;
 
-        i.x = K * mass * (extents.y + extents.z);
-        i.y = K * mass * (extents.x + extents.z);
-        i.z = K * mass * (extents.x + extents.y);
+        i.x = K * (extents.y + extents.z);
+        i.y = K * (extents.x + extents.z);
+        i.z = K * (extents.x + extents.y);
 
         return {i.x, 0.0f, 0.0f, 0.0f, i.y, 0.0f, 0.0f, 0.0f, i.z};
     }
@@ -187,6 +186,7 @@ namespace Vakol
 
         // Vf = Vi + a(t)
         rb.linearVelocity += linearAcceleration * static_cast<float>(m_timeStep);
+        // w = α(t)
         rb.angularVelocity += angularAcceleration * static_cast<float>(m_timeStep);
 
         pos += rb.linearVelocity * static_cast<float>(m_timeStep);

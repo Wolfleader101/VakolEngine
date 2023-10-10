@@ -142,13 +142,6 @@ namespace Vakol::Rendering
         static void BeginDebugSceneDraw(const std::string& vertexID, const std::string& shaderID);
 
         /**
-         * \brief Get the model matrix based on a model's transform.
-         * \param transform
-         * \return the model-transform matrix
-         */
-        static Math::Mat4 GetModelMatrix(const Components::Transform& transform);
-
-        /**
          * \brief Generates a vertex command that contains the necessary info to render an item's vertices.
          * \param vertexArray the vertexArray consisting of the vertices and indices of a mesh
          */

@@ -16,12 +16,12 @@
 #include <imgui_impl_glfw.h>
 #include <imgui_internal.h>
 
-static Vakol::Math::Vec3 Vec3(const rp3d::Vector3& v)
+static Vakol::Math::Vec3 FromRPVec3(const rp3d::Vector3& v)
 {
     return {v.x, v.y, v.z};
 }
 
-static rp3d::Vector3 Vec3(const Vakol::Math::Vec3& v)
+static rp3d::Vector3 ToRPVec3(const Vakol::Math::Vec3& v)
 {
     return {v.x, v.y, v.z};
 }
@@ -195,7 +195,23 @@ void MyGUILayer::OnUpdate()
                             ImGui::DragFloat3("Rotation", &trans.eulerAngles.x, 0.1f);
                             ImGui::DragFloat3("Scale", &trans.scale.x, 0.1f);
 
-                            trans.rot = Vakol::Math::Quat(Vakol::Math::DegToRad(trans.eulerAngles));
+                            ImGui::Spacing();
+
+                            Vakol::Math::Mat4 worldMatrix = trans.GetWorldMatrix();
+
+                            ImGui::Spacing();
+                            ImGui::SeparatorText("World Transform Matrix");
+
+                            ImGui::Text("x: %f, %f, %f, %f", worldMatrix[0][0], worldMatrix[0][1], worldMatrix[0][2],
+                                        worldMatrix[0][3]);
+                            ImGui::Text("y: %f, %f, %f, %f", worldMatrix[1][0], worldMatrix[1][1], worldMatrix[1][2],
+                                        worldMatrix[1][3]);
+                            ImGui::Text("z: %f, %f, %f, %f", worldMatrix[2][0], worldMatrix[2][1], worldMatrix[2][2],
+                                        worldMatrix[2][3]);
+                            ImGui::Text("w: %f, %f, %f, %f", worldMatrix[3][0], worldMatrix[3][1], worldMatrix[3][2],
+                                        worldMatrix[3][3]);
+
+                            // trans.rot = Vakol::Math::Quat(Vakol::Math::DegToRad(trans.eulerAngles));
                         }
 
                         if (entity.HasComponent<Vakol::Rendering::Drawable>() && ImGui::CollapsingHeader("Drawable"))
@@ -328,15 +344,15 @@ void MyGUILayer::OnUpdate()
                             ImGui::Text("z: %f, %f, %f", rb.localInertiaTensor[2][0],
                                         rb.localInverseInertiaTensor[2][1], rb.localInverseInertiaTensor[2][2]);
 
-                            //ImGui::Spacing();
-                            //ImGui::SeparatorText("World Inertia Tensor");
+                            // ImGui::Spacing();
+                            // ImGui::SeparatorText("World Inertia Tensor");
 
-                            //ImGui::Text("x: %f, %f, %f", rb.worldInertiaTensor[0][0],
-                            //            rb.worldInertiaTensor[0][1], rb.worldInertiaTensor[0][2]);
-                            //ImGui::Text("y: %f, %f, %f", rb.worldInertiaTensor[1][0],
-                            //            rb.worldInertiaTensor[1][1], rb.worldInertiaTensor[1][2]);
-                            //ImGui::Text("z: %f, %f, %f", rb.worldInertiaTensor[2][0],
-                            //            rb.worldInertiaTensor[2][1], rb.worldInertiaTensor[2][2]);
+                            // ImGui::Text("x: %f, %f, %f", rb.worldInertiaTensor[0][0],
+                            //             rb.worldInertiaTensor[0][1], rb.worldInertiaTensor[0][2]);
+                            // ImGui::Text("y: %f, %f, %f", rb.worldInertiaTensor[1][0],
+                            //             rb.worldInertiaTensor[1][1], rb.worldInertiaTensor[1][2]);
+                            // ImGui::Text("z: %f, %f, %f", rb.worldInertiaTensor[2][0],
+                            //             rb.worldInertiaTensor[2][1], rb.worldInertiaTensor[2][2]);
 
                             ImGui::Spacing();
                             ImGui::SeparatorText("Rotation Matrix");
@@ -405,20 +421,20 @@ void MyGUILayer::OnUpdate()
                         {
                             Vakol::BoxCollider& collider = entity.GetComponent<Vakol::BoxCollider>();
 
-                            Vakol::Math::Vec3 halfExtents = Vec3(collider.shape->getHalfExtents());
+                            Vakol::Math::Vec3 halfExtents = FromRPVec3(collider.shape->getHalfExtents());
 
                             ImGui::SeparatorText("Size");
                             ImGui::DragFloat3("Half Extents", &halfExtents.x, 0.1f);
 
-                            collider.shape->setHalfExtents(Vec3(halfExtents));
+                            collider.shape->setHalfExtents(ToRPVec3(halfExtents));
                         }
 
                         if (entity.HasComponent<Vakol::SphereCollider>() && ImGui::CollapsingHeader("Sphere Collider"))
                         {
                             Vakol::SphereCollider& collider = entity.GetComponent<Vakol::SphereCollider>();
 
-                            float min = 0.01f;
-                            float max = 100.0f;
+                            const float min = 0.01f;
+                            const float max = 100.0f;
 
                             float radius = collider.shape->getRadius();
 
@@ -438,8 +454,8 @@ void MyGUILayer::OnUpdate()
                         {
                             Vakol::CapsuleCollider& collider = entity.GetComponent<Vakol::CapsuleCollider>();
 
-                            float min = 0.01f;
-                            float max = 100.0f;
+                            const float min = 0.01f;
+                            const float max = 100.0f;
 
                             float radius = collider.shape->getRadius();
                             float height = collider.shape->getHeight();
@@ -496,7 +512,7 @@ void MyGUILayer::OnUpdate()
                             {
                                 Vakol::RigidBody& rb = entity.GetComponent<Vakol::RigidBody>();
 
-                                double radius = 1.0;
+                                float radius = 1.0f;
 
                                 Vakol::SphereCollider collider = m_app.GetPhysicsEngine().CreateSphereCollider(radius);
                                 m_app.GetPhysicsEngine().AttachCollider(rb, collider);
@@ -508,11 +524,12 @@ void MyGUILayer::OnUpdate()
                             {
                                 Vakol::RigidBody& rb = entity.GetComponent<Vakol::RigidBody>();
 
-                                double radius = 0.5;
-                                double height = 1.0;
+                                float radius = 0.5f;
+                                float height = 1.0f;
 
                                 Vakol::CapsuleCollider collider =
                                     m_app.GetPhysicsEngine().CreateCapsuleCollider(radius, height);
+
                                 m_app.GetPhysicsEngine().AttachCollider(rb, collider);
 
                                 entity.AddComponent<Vakol::CapsuleCollider>(collider);
