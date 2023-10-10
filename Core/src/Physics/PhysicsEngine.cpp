@@ -94,29 +94,44 @@ namespace Vakol
     {
         collider.collider = rb.collisionBody->addCollider(collider.shape, rp3d::Transform::identity());
 
-        rb.centerOfMass = Math::Vec3(0.0f); // FromRPVec3(collider.collider->getLocalToBodyTransform().getPosition());
-        Math::Vec3 h = FromRPVec3(collider.shape->getHalfExtents());
+        Math::Vec3 rpJ = FromRPVec3(collider.shape->getLocalInertiaTensor(rb.mass));
 
-        rb.inertiaTensor[0][0] = (1.0f / 12.0f) * rb.mass * ((h.y * h.y) + (h.z * h.z));
-        rb.inertiaTensor[1][1] = (1.0f / 12.0f) * rb.mass * ((h.x * h.x) + (h.z * h.z));
-        rb.inertiaTensor[2][2] = (1.0f / 12.0f) * rb.mass * ((h.x * h.x) + (h.y * h.y));
+        rb.inertiaTensor[0][0] = rpJ.x;
+        rb.inertiaTensor[1][1] = rpJ.y;
+        rb.inertiaTensor[2][2] = rpJ.z;
     }
 
     void PhysicsEngine::AttachCollider(RigidBody& rb, SphereCollider& collider)
     {
         collider.collider = rb.collisionBody->addCollider(collider.shape, rp3d::Transform::identity());
 
-        rb.centerOfMass = FromRPVec3(collider.collider->getLocalToBodyTransform().getPosition());
+        Math::Vec3 rpJ = FromRPVec3(collider.shape->getLocalInertiaTensor(rb.mass));
+
+        rb.inertiaTensor[0][0] = rpJ.x;
+        rb.inertiaTensor[1][1] = rpJ.y;
+        rb.inertiaTensor[2][2] = rpJ.z;
     }
 
     void PhysicsEngine::AttachCollider(RigidBody& rb, CapsuleCollider& collider)
     {
         collider.collider = rb.collisionBody->addCollider(collider.shape, rp3d::Transform::identity());
+
+        Math::Vec3 rpJ = FromRPVec3(collider.shape->getLocalInertiaTensor(rb.mass));
+
+        rb.inertiaTensor[0][0] = rpJ.x;
+        rb.inertiaTensor[1][1] = rpJ.y;
+        rb.inertiaTensor[2][2] = rpJ.z;
     }
 
     void PhysicsEngine::AttachCollider(RigidBody& rb, MeshCollider& collider)
     {
         collider.collider = rb.collisionBody->addCollider(collider.shape, rp3d::Transform::identity());
+
+        Math::Vec3 rpJ = FromRPVec3(collider.shape->getLocalInertiaTensor(rb.mass));
+
+        rb.inertiaTensor[0][0] = rpJ.x;
+        rb.inertiaTensor[1][1] = rpJ.y;
+        rb.inertiaTensor[2][2] = rpJ.z;
     }
 
     void PhysicsEngine::ApplyForces(Math::Vec3& pos, Math::Quat& quatRot, RigidBody& rb)
@@ -236,7 +251,8 @@ namespace Vakol
         // J1^-1
         //! THESE CAN BE STORED AS CONSTANTS
         Math::Mat3 j1Inverse = rb1.type == BodyType::Static ? Math::Mat3(0.0f) : Math::Inverse(rb1.inertiaTensor);
-
+        VK_CRITICAL("J1 (inertia tensor): {0} {1} {2}", rb1.inertiaTensor[0][0], rb1.inertiaTensor[1][1],
+                    rb1.inertiaTensor[2][2]);
         VK_CRITICAL("J1^-1: {0} {1} {2}", j1Inverse[0][0], j1Inverse[1][1], j1Inverse[2][2]);
 
         // j2^-1
