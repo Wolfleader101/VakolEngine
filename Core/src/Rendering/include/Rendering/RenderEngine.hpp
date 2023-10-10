@@ -105,6 +105,7 @@ namespace Vakol::Rendering
         {
             return RenderAPI::GetConfig();
         }
+
       private:
         /**
          * \brief generate a vertex array based of the vertices of a skybox

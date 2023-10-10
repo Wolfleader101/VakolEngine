@@ -33,8 +33,8 @@ namespace Vakol
         return m_textureLibrary.GetTexture(path, type);
     }
 
-    Rendering::Assets::Texture& AssetLoader::GetTexture(const std::string& path, const unsigned int type, int& width, int& height,
-                                 int& channels, unsigned char*& pixels)
+    Rendering::Assets::Texture& AssetLoader::GetTexture(const std::string& path, const unsigned int type, int& width,
+                                                        int& height, int& channels, unsigned char*& pixels)
     {
         return m_textureLibrary.GetTexture(path, type, width, height, channels, pixels);
     }
