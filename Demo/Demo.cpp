@@ -10,9 +10,7 @@ int main()
 
     Vakol::Application app = Vakol::Application();
 
-    //app.Init();
-
-    app.PushLayer(std::make_shared<MyGUILayer>(app));
+    app.PushLayer(std::make_shared<MyGUILayer>(app), Vakol::LayerFlags::UPDATES | Vakol::LayerFlags::EVENTS);
 
     app.Run();
 
