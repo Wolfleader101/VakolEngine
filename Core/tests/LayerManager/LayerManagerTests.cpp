@@ -64,7 +64,7 @@ TEST_CASE("LayerManager Functionality", "[LayerManager]")
     SECTION("Push and Pop Layer")
     {
         std::shared_ptr<TestLayer> layer = std::make_shared<TestLayer>(app);
-        layerManager.PushLayer(layer);
+        layerManager.PushLayer(layer, 0);
         REQUIRE(layer->attached == true); // confirm OnAttach was called
 
         layerManager.PopLayer();
@@ -74,7 +74,7 @@ TEST_CASE("LayerManager Functionality", "[LayerManager]")
     SECTION("Update Layers")
     {
         auto layer = std::make_shared<TestLayer>(app);
-        layerManager.PushLayer(layer);
+        layerManager.PushLayer(layer, Vakol::LayerFlags::UPDATES);
         layerManager.OnUpdate();
 
         REQUIRE(layer->updated == true); // confirm OnUpdate was called
@@ -83,7 +83,7 @@ TEST_CASE("LayerManager Functionality", "[LayerManager]")
     SECTION("Event Handling")
     {
         auto layer = std::make_shared<TestLayer>(app);
-        layerManager.PushLayer(layer);
+        layerManager.PushLayer(layer, Vakol::LayerFlags::EVENTS);
         Vakol::TestEvent event;
         layerManager.OnEvent(event);
 
@@ -94,7 +94,7 @@ TEST_CASE("LayerManager Functionality", "[LayerManager]")
     SECTION("Tick Handling")
     {
         auto layer = std::make_shared<TestLayer>(app);
-        layerManager.PushLayer(layer);
+        layerManager.PushLayer(layer, Vakol::LayerFlags::TICKS);
         layerManager.OnTick();
 
         REQUIRE(layer->ticked == true); // confirm OnTick was called
