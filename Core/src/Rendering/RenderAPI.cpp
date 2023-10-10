@@ -265,8 +265,17 @@ namespace Vakol::Rendering
         return OpenGL::GenerateTexture(levels, width, height, channels, pixels);
     }
 
-    unsigned RenderAPI::GenerateTexture(std::vector<std::string>&& faces)
+    unsigned int RenderAPI::GenerateTexture(std::vector<std::string>&& faces)
     {
+        for (const std::string& face : faces)
+        {
+            if (face.empty())
+                return 0u;
+        }
+
+        if (faces.empty())
+            return 0u;
+
         return OpenGL::GenerateTexture(std::move(faces));
     }
 
@@ -470,6 +479,9 @@ namespace Vakol::Rendering
 
     void RenderAPI::SetMaterial(const unsigned int shader, const Assets::Material& material)
     {
+        if (shader == 0u)
+            return;
+
         const auto& properties = material.properties;
 
         SetVec4(shader, "material.ambient_color", properties.ambient_color, false);

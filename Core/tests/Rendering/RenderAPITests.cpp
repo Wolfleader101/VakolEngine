@@ -7,8 +7,7 @@
 #include "Utils/GUID.hpp"
 
 #include "Rendering/Assets/Shader.hpp"
-
-#include <iostream>
+#include "Rendering/Assets/Material.hpp"
 
 TEST_CASE("Setup Config", "[RenderAPI]")
 {
@@ -219,5 +218,26 @@ TEST_CASE("Generate Texture", "[RenderAPI]")
 
 TEST_CASE("Generate Texture (Cubemap)", "[RenderAPI]")
 {
-    
+    std::vector<std::string> faces;
+
+    const unsigned int texture = Vakol::Rendering::RenderAPI::GenerateTexture(std::move(faces));
+
+    REQUIRE(texture == 0u);
+}
+
+TEST_CASE("Add Shader", "[RenderAPI]")
+{
+    const std::string shaderID = "hello world!";
+    constexpr unsigned int shader = 0u;
+
+    Vakol::Rendering::RenderAPI::AddShader(shaderID, shader);
+}
+
+TEST_CASE("Get Shader", "[RenderAPI]")
+{
+    const std::string shaderID = "testing 123";
+
+    const unsigned int shader = Vakol::Rendering::RenderAPI::GetShader(shaderID);
+
+    REQUIRE(shader == 0u);
 }
