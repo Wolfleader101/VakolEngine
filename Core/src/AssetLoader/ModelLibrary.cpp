@@ -32,9 +32,7 @@ namespace Vakol
                 GetModel(path, scale); // load the model and put it into the loaded models map
 
             for (Rendering::Assets::Mesh& mesh : model.meshes)
-            {
                 mesh.material.ID = Rendering::GenerateID();
-            }
 
             m_models[ID] = model;
         }

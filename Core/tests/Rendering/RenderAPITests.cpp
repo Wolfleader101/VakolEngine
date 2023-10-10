@@ -1,13 +1,13 @@
 #include <catch2/catch_all.hpp>
 
-#include "Rendering/RenderData.hpp"
 #include "Rendering/RenderAPI.hpp"
+#include "Rendering/RenderData.hpp"
 
 #include "ECS/Components.hpp"
 #include "Utils/GUID.hpp"
 
-#include "Rendering/Assets/Shader.hpp"
 #include "Rendering/Assets/Material.hpp"
+#include "Rendering/Assets/Shader.hpp"
 
 TEST_CASE("Setup Config", "[RenderAPI]")
 {
@@ -63,7 +63,7 @@ TEST_CASE("Clear Color", "[RenderAPI]")
 
     SECTION("Invalid Color")
     {
-        Vakol::Rendering::RenderAPI::ClearColor(100.0f, -12.0f, blue, alpha);   
+        Vakol::Rendering::RenderAPI::ClearColor(100.0f, -12.0f, blue, alpha);
     }
 
     SECTION("Valid Color")

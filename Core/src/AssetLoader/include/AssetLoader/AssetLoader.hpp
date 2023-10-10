@@ -99,10 +99,7 @@ namespace Vakol
          * \param modelID the model id
          * \return true or false
          */
-        inline static bool IsExistingModel(const GUID& modelID)
-        {
-            return m_modelLibrary.ModelExists(modelID);
-        }
+        static bool IsExistingModel(const GUID& modelID);
 
       private:
         /**

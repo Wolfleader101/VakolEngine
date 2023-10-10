@@ -63,4 +63,9 @@ namespace Vakol
         }
     }
 
+    bool AssetLoader::IsExistingModel(const GUID& modelID)
+    {
+        return m_modelLibrary.ModelExists(modelID);
+    }
+
 } // namespace Vakol

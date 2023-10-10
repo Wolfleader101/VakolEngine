@@ -6,6 +6,7 @@
 #include "Logger/Logger.hpp"
 
 #include <stb_image.h>
+#include <iostream>
 
 namespace Vakol
 {
@@ -19,6 +20,7 @@ namespace Vakol
         }
 
         pixels = stbi_load(path.c_str(), &width, &height, &channels, 0);
+
 
         if (!pixels)
         {
