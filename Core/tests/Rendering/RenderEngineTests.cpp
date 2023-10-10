@@ -8,7 +8,7 @@
 
 #include "Window/Window.hpp"
 
-#include <Logger/Logger.hpp>
+#include "Logger/Logger.hpp"
 
 
 TEST_CASE("Testing Render Engine", "[RenderEngine]")
@@ -35,6 +35,11 @@ TEST_CASE("Testing Render Engine", "[RenderEngine]")
     {
         constexpr unsigned int resizeWidth = 800;
         constexpr unsigned int resizeHeight = 600;
+
+        SECTION("Test Height at 0")
+        {
+            Vakol::Rendering::RenderEngine::ResizeScreen(camera, resizeWidth, 0u);
+        }
 
         Vakol::Rendering::RenderEngine::ResizeScreen(camera, resizeWidth, resizeHeight);
         REQUIRE(camera.GetAspect() == static_cast<float>(resizeWidth) / static_cast<float>(resizeHeight));

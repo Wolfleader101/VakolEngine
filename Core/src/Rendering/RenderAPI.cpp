@@ -31,6 +31,9 @@ namespace Vakol::Rendering
 
     void RenderAPI::BeginDraw(const GUID& modelID, const std::string& shaderID)
     {
+        if (!IsExistingShader(shaderID) || !AssetLoader::IsExistingModel(modelID))
+            return;
+
         const auto shader = GetShader(shaderID);
 
         OpenGL::BindShaderProgram(shader);
@@ -71,7 +74,7 @@ namespace Vakol::Rendering
     void RenderAPI::BeginSkyboxDraw(const std::string& vertexID, const std::string& shaderID,
                                     const unsigned int textureID)
     {
-        if (!IsExistingVertexArray(vertexID))
+        if (!IsExistingVertexArray(vertexID) || !IsExistingShader(shaderID) || textureID == 0u)
             return;
 
         OpenGL::BindShaderProgram(GetShader(shaderID));
@@ -92,7 +95,7 @@ namespace Vakol::Rendering
 
     void RenderAPI::BeginDebugSceneDraw(const std::string& vertexID, const std::string& shaderID)
     {
-        if (!IsExistingVertexArray(vertexID))
+        if (!IsExistingVertexArray(vertexID) || !IsExistingShader(shaderID))
             return;
 
         OpenGL::BindShaderProgram(GetShader(shaderID));
