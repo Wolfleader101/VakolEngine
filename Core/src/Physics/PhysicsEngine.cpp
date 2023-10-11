@@ -152,8 +152,8 @@ namespace Vakol
         // can be assumed as static, can be moved later
         static Math::Vec3 gravity(0.0f, -9.8f, 0.0f);
 
-        Math::Vec3 weight = rb.mass * gravity;
-        rb.force += weight;
+        // Math::Vec3 weight = rb.mass * gravity;
+        // rb.force += weight;
 
         Math::Vec3 linearAcceleration = rb.force / rb.mass;
 

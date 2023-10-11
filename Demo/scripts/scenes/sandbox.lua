@@ -6,14 +6,14 @@ function init()
     -- scene:create_entity("290 World", "entities/worlds/290_world.lua");
 
     local path = "coreAssets/textures/Skybox/";
-	local extension = ".png";
+    local extension = ".png";
 
-	local faces = { path .. "right"  .. extension, 
-					path .. "left"   .. extension, 
-					path .. "top"    .. extension, 
-					path .. "bottom" .. extension, 
-					path .. "front"  .. extension, 
-					path .. "back"   .. extension};
+    local faces = { path .. "right" .. extension,
+        path .. "left" .. extension,
+        path .. "top" .. extension,
+        path .. "bottom" .. extension,
+        path .. "front" .. extension,
+        path .. "back" .. extension };
 
     scene:generate_skybox(faces);
 
@@ -27,17 +27,21 @@ function init()
     rb1.bounciness = 0.5;
     rb1.type = BodyType.Static;
     floor:add_box_collider(Vector3.new(100.0, 1.0, 100.0));
-    
-    local cube = scene:create_entity("Cube", "");
-    cube:get_transform().pos = Vector3.new(10.0, 20.0, 0.0);
-    cube:get_transform().rot = Vector3.new(0.0, 0.0, 0.0);
-    cube:add_model("coreAssets/models/cube.obj", 1);
 
-    local rb = cube:add_rigid();
-    rb.mass = 1;
-    rb.bounciness = 0.5;
-    rb.type = BodyType.Dynamic;
-    cube:add_box_collider(Vector3.new(1.0, 1.0, 1.0));
+    phys_objs();
+
+    -- local cube = scene:create_entity("Cube", "");
+    -- cube:get_transform().pos = Vector3.new(10.0, 20.0, 0.0);
+    -- cube:get_transform().rot = Vector3.new(90.0, 0.0, 0.0);
+    -- cube:get_transform().scale = Vector3.new(4.0, 0.5, 4.0);
+    -- cube:add_model("coreAssets/models/cube.obj", 1);
+
+    -- local rb = cube:add_rigid();
+    -- rb.mass = 1;
+    -- rb.bounciness = 0.5;
+    -- rb.type = BodyType.Dynamic;
+    -- cube:add_box_collider(Vector3.new(4.0, 0.5, 4.0));
+
 
 
     -- local cube2 = scene:create_entity("Cube2", "");
@@ -50,7 +54,44 @@ function init()
     -- rb2.bounciness = 0.5;
     -- rb2.type = BodyType.Dynamic;
     -- cube2:add_box_collider(Vector3.new(1.0, 1.0, 1.0));
-    
+end
+
+
+function phys_objs()
+    local sphere = scene:create_entity("Sphere", "");
+    sphere:get_transform().pos = Vector3.new(60.0, 25.0, 0.0);
+    sphere:get_transform().rot = Vector3.new(0.0, 0.0, 0.0);
+    sphere:add_model("coreAssets/models/sphere.obj", 1);
+
+    local rb1 = sphere:add_rigid();
+    rb1.mass = 5;
+    rb1.bounciness = 0.5;
+    rb1.type = BodyType.Dynamic;
+    sphere:add_sphere_collider(1.0);
+
+    local wall1 = scene:create_entity("Wall 1", "");
+    wall1:get_transform().pos = Vector3.new(50.0, 20.0, 0.0);
+    wall1:get_transform().rot = Vector3.new(90.0, 90.0, 0.0);
+    wall1:get_transform().scale = Vector3.new(4.0, 0.25, 4.0);
+    wall1:add_model("coreAssets/models/cube.obj", 1);
+
+    local rb2 = wall1:add_rigid();
+    rb2.mass = 1;
+    rb2.bounciness = 0.5;
+    rb2.type = BodyType.Dynamic;
+    wall1:add_box_collider(Vector3.new(4.0, 0.25, 4.0));
+
+    local wall2 = scene:create_entity("wall 2", "");
+    wall2:get_transform().pos = Vector3.new(45.0, 20.0, 0.0);
+    wall2:get_transform().rot = Vector3.new(90.0, 90.0, 0.0);
+    wall2:get_transform().scale = Vector3.new(4.0, 0.25, 4.0);
+    wall2:add_model("coreAssets/models/cube.obj", 1);
+
+    local rb2 = wall2:add_rigid();
+    rb2.mass = 1;
+    rb2.bounciness = 0.5;
+    rb2.type = BodyType.Dynamic;
+    wall2:add_box_collider(Vector3.new(4.0, 0.25, 4.0));
 end
 
 function update()
