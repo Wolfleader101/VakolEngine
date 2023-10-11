@@ -79,7 +79,7 @@ namespace Vakol
         BodyType type = BodyType::Dynamic;
 
         float mass = 1.0f;
-        float bounciness = 0.5f;
+        float bounciness = 0.95f;
 
         bool useGravity = true;
 

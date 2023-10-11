@@ -220,7 +220,7 @@ namespace Vakol
         scene.Update(m_timeStep);
     }
 
-    void PhysicsEngine::ResolveCollisions(RigidBody& bodyA, RigidBody& bodyB, const Math::Vec3& normal, const Math::Vec3& cPointA, const Math::Vec3& cPointB)
+    void PhysicsEngine::ResolveCollisions(RigidBody& bodyA, RigidBody& bodyB, const Math::Vec3& normal, const Math::Vec3& cPointA, const Math::Vec3& cPointB, Math::Vec3& impulse)
     {
         Math::Vec3 v1 = bodyA.linearVelocity;
         Math::Vec3 v2 = bodyB.linearVelocity;
@@ -267,7 +267,7 @@ namespace Vakol
         if (lambda > 0.0f)
             return;
 
-        const Math::Vec3 impulse = lambda * normal;
+        impulse += lambda * normal;
 
         if (bodyA.type != BodyType::Static)
         {

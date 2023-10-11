@@ -134,15 +134,16 @@ namespace Vakol
         void DetectCollisions(PhysicsScene& scene);
 
         /**
-         * @brief handle collision resolution for a rigidbody
+         * @brief handle collision resolution for two colliding rigidbodies
          *
          * @param bodyA
          * @param bodyB
          * @param normal
          * @param cPointA
          * @param cPointB
+         * @param impulse the resulting impulse from the two colding bodies
          */
-        static void ResolveCollisions(RigidBody& bodyA, RigidBody& bodyB, const Math::Vec3& normal, const Math::Vec3& cPointA, const Math::Vec3& cPointB);
+        static void ResolveCollisions(RigidBody& bodyA, RigidBody& bodyB, const Math::Vec3& normal, const Math::Vec3& cPointA, const Math::Vec3& cPointB, Math::Vec3& impulse);
 
         /**
          * @brief handle depenetration for two bodies

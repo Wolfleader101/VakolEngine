@@ -23,6 +23,8 @@ namespace Vakol
             RigidBody& bodyA = *contactA->parentBody;
             RigidBody& bodyB = *contactB->parentBody;
 
+            Math::Vec3 impulse = Math::Vec3(0.0f);
+
             for (unsigned int c = 0; c < pair.getNbContactPoints(); ++c)
             {
                 const ContactPoint& point = pair.getContactPoint(c);
@@ -36,9 +38,14 @@ namespace Vakol
                 Math::Vec3 worldContactNormal = Math::Normalized(FromRPVec3(point.getWorldNormal()));
                 const float penetrationDepth = point.getPenetrationDepth();
 
-                PhysicsEngine::ResolveCollisions(bodyA, bodyB, worldContactNormal, localContactPoint1, localContactPoint2);
+                PhysicsEngine::ResolveCollisions(bodyA, bodyB, worldContactNormal, localContactPoint1, localContactPoint2, impulse);
 
                 PhysicsEngine::Depenetration(bodyA, bodyB, penetrationDepth, worldContactNormal);
+            }
+
+            if (pair.getEventType() == ContactPair::EventType::ContactExit)
+            {
+                impulse = Math::Vec3(0.0f);   
             }
         }
     }
