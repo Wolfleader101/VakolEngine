@@ -134,26 +134,25 @@ namespace Vakol
         void DetectCollisions(PhysicsScene& scene);
 
         /**
-         * \brief Solves the lambda scalar of impulse in a collision contact
-         * \param pair the contact pair
-         * \return the lambda
-         */
-        static float SolveLambda(const ContactPair& pair);
-
-        /**
          * @brief handle collision resolution for a rigidbody
          *
-         * @param pair the contact pair to resolve collisions
+         * @param bodyA
+         * @param bodyB
+         * @param normal
+         * @param cPointA
+         * @param cPointB
          */
-        static void ResolveCollisions(const ContactPair& pair);
+        static void ResolveCollisions(RigidBody& bodyA, RigidBody& bodyB, const Math::Vec3& normal, const Math::Vec3& cPointA, const Math::Vec3& cPointB);
 
         /**
-         * @brief handle depenetration for a rigidbody
+         * @brief handle depenetration for two bodies
          *
-         * @param pos the position
-         * @param rb rigidbody
+         * @param bodyA f
+         * @param bodyB g
+         * @param depth the depth of the depenetration
+         * @param normal the normal of the contact
          */
-        static void Depenetration(const ContactPair& pair);
+        static void Depenetration(RigidBody& bodyA, RigidBody& bodyB, float depth, const Math::Vec3& normal);
 
         /**
          * @brief Set the Time Step object

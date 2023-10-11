@@ -102,8 +102,10 @@ namespace Vakol
         collider.collider = rb.collisionBody->addCollider(collider.shape, rp3d::Transform::identity());
         rb.collider = collider.collider;
 
-        rb.inertiaTensor = rb.type == BodyType::Static ? Math::Mat3(1.0f) : CalculateInertiaTensor(rb.GetInverseMass(), FromRPVec3(collider.shape->getHalfExtents()));
-        rb.inverseInertiaTensor = rb.inertiaTensor != Math::Mat3(1.0f) ? Math::Inverse(rb.inertiaTensor) : Math::Mat3(1.0f);
+        rb.inertiaTensor = FromRPMat3(collider.shape->getLocalInertiaTensor(rb.mass));
+        rb.inverseInertiaTensor = Math::Inverse(rb.inertiaTensor);
+
+        rb.mass = rb.type == BodyType::Static ? 0.0f : rb.mass;
     }
 
     void PhysicsEngine::AttachCollider(RigidBody& rb, SphereCollider& collider)
@@ -111,20 +113,32 @@ namespace Vakol
         collider.collider = rb.collisionBody->addCollider(collider.shape, rp3d::Transform::identity());
         rb.collider = collider.collider;
 
-        rb.inertiaTensor = rb.type == BodyType::Static ? Math::Mat3(1.0f) : CalculateInertiaTensor(rb.GetInverseMass(), collider.shape->getRadius());
-        rb.inverseInertiaTensor = rb.inertiaTensor != Math::Mat3(1.0f) ? Math::Inverse(rb.inertiaTensor) : Math::Mat3(1.0f);
+        rb.inertiaTensor = FromRPMat3(collider.shape->getLocalInertiaTensor(rb.mass));
+        rb.inverseInertiaTensor = Math::Inverse(rb.inertiaTensor);
+
+        rb.mass = rb.type == BodyType::Static ? 0.0f : rb.mass;
     }
 
     void PhysicsEngine::AttachCollider(RigidBody& rb, CapsuleCollider& collider)
     {
         collider.collider = rb.collisionBody->addCollider(collider.shape, rp3d::Transform::identity());
         rb.collider = collider.collider;
+
+        rb.inertiaTensor = FromRPMat3(collider.shape->getLocalInertiaTensor(rb.mass));
+        rb.inverseInertiaTensor = Math::Inverse(rb.inertiaTensor);
+
+        rb.mass = rb.type == BodyType::Static ? 0.0f : rb.mass;
     }
 
     void PhysicsEngine::AttachCollider(RigidBody& rb, MeshCollider& collider)
     {
         collider.collider = rb.collisionBody->addCollider(collider.shape, rp3d::Transform::identity());
         rb.collider = collider.collider;
+
+        rb.inertiaTensor = FromRPMat3(collider.shape->getLocalInertiaTensor(rb.mass));
+        rb.inverseInertiaTensor = Math::Inverse(rb.inertiaTensor);
+
+        rb.mass = rb.type == BodyType::Static ? 0.0f : rb.mass;
     }
 
     Math::Mat3 PhysicsEngine::CalculateInertiaTensor(const float mass, const Math::Vec3& halfExtents)
@@ -173,8 +187,6 @@ namespace Vakol
             return;
         }
 
-        rb.UpdateRotationMatrix();
-
         // F = ma
         if (rb.useGravity)
             rb.force += rb.mass * GRAVITY;
@@ -187,10 +199,12 @@ namespace Vakol
 
         // Vf = Vi + a(t)
         rb.linearVelocity += linearAcceleration * static_cast<float>(m_timeStep);
+
         // w = α(t)
         rb.angularVelocity += angularAcceleration * static_cast<float>(m_timeStep);
 
         pos += rb.linearVelocity * static_cast<float>(m_timeStep);
+
         rot = Math::Normalized(rot + Math::Quat(0.0f, rb.angularVelocity * static_cast<float>(m_timeStep) * 0.5f) * rot);
 
         rb.SetTransform(pos, rot);
@@ -200,65 +214,90 @@ namespace Vakol
         rb.ResetTorques();
     }
 
-    float PhysicsEngine::SolveLambda(const ContactPair& pair)
-    {
-        auto& contactA = pair.contactA;
-        auto& contactB = pair.contactB;
-
-        const auto& bodyA = contactA->parentBody;
-        const auto& bodyB = contactB->parentBody;
-
-        const Math::Vec3 r1xN = Math::Cross(contactA->relativeLocalContactDistance, pair.contactNormal);
-        const Math::Vec3 r2xN = Math::Cross(contactB->relativeLocalContactDistance, pair.contactNormal);
-
-        const float e = (bodyA->bounciness + bodyB->bounciness) / 2.0f;
-        const float n1 = -(1.0f + e);
-
-        const float n2 = Math::Dot(pair.contactNormal, pair.relativeVelocity);
-
-        const float n3a = Math::Dot(bodyA->angularVelocity, r1xN);
-        const float n3b = Math::Dot(bodyB->angularVelocity, r2xN);
-        const float n3 = n3a - n3b;
-
-        const float numerator = n1 * (n2 + n3);
-
-        // inverse mass sum
-        const float d1 = bodyA->GetInverseMass() + bodyB->GetInverseMass();
-
-        const float d2a = Math::Dot(r1xN, bodyA->inverseInertiaTensor * r1xN);
-        const float d2b = Math::Dot(r2xN, bodyB->inverseInertiaTensor * r2xN);
-        const float d2 = d2a + d2b;
-
-        const float denominator = d1 + d2;
-
-        const float lambda = numerator / denominator;
-
-        return lambda;
-    }
-
     void PhysicsEngine::DetectCollisions(PhysicsScene& scene)
     {
         // Let reactphysics3d handle the collision detection
         scene.Update(m_timeStep);
     }
 
-    void PhysicsEngine::ResolveCollisions(const ContactPair& pair)
+    void PhysicsEngine::ResolveCollisions(RigidBody& bodyA, RigidBody& bodyB, const Math::Vec3& normal, const Math::Vec3& cPointA, const Math::Vec3& cPointB)
     {
+        Math::Vec3 v1 = bodyA.linearVelocity;
+        Math::Vec3 v2 = bodyB.linearVelocity;
+
+        Math::Vec3 w1 = bodyA.angularVelocity;
+        Math::Vec3 w2 = bodyB.angularVelocity;
+
+        Math::Vec3 r1 = cPointA - bodyA.centreOfMass;
+        Math::Vec3 r2 = cPointB - bodyB.centreOfMass;
+
+        Math::Vec3 rVelA = v1 + Math::Cross(w1, r1);
+        Math::Vec3 rVelB = v2 + Math::Cross(w2, r2);
+
+        const Math::Vec3 rVel = rVelB - rVelA;
+
+        if (Math::Dot(rVel, normal) > 0.0f)
+            return;
+
+        const Math::Vec3 r1xN = Math::Cross(r1, normal);
+        const Math::Vec3 r2xN = Math::Cross(r2, normal);
+
+        const float e = (bodyA.bounciness + bodyB.bounciness) / 2.0f;
+        const float n1 = -(1.0f + e);
+
+        const float n2 = Math::Dot(normal, v1 - v2);
+
+        const float n3a = Math::Dot(w1, r1xN);
+        const float n3b = Math::Dot(w2, r2xN);
+        const float n3 = n3a - n3b;
+
+        const float numerator = n1 * (n2 + n3);
+
+        //inverse mass sum
+        const float d1 = bodyA.GetInverseMass() + bodyB.GetInverseMass();
+
+        const float d2a = Math::Dot(r1xN, bodyA.inverseInertiaTensor * r1xN);
+        const float d2b = Math::Dot(r2xN, bodyB.inverseInertiaTensor * r2xN);
+        const float d2 = d2a + d2b;
+
+        const float denominator = d1 + d2;
+
+        const float lambda = numerator / denominator;
+
+        if (lambda > 0.0f)
+            return;
+
+        const Math::Vec3 impulse = lambda * normal;
+
+        if (bodyA.type != BodyType::Static)
+        {
+            bodyA.linearVelocity = v1 + impulse * bodyA.GetInverseMass();
+            bodyA.angularVelocity = w1 + lambda * bodyA.inverseInertiaTensor * r1xN;
+        }
+
+        if (bodyB.type != BodyType::Static)
+        {
+            bodyB.linearVelocity = v2 - impulse * bodyB.GetInverseMass();
+            bodyB.angularVelocity = w2 - lambda * bodyB.inverseInertiaTensor * r2xN;
+        }
     }
 
-    void PhysicsEngine::Depenetration(const ContactPair& pair)
+    void PhysicsEngine::Depenetration(RigidBody& bodyA, RigidBody& bodyB, const float depth, const Math::Vec3& normal)
     {
-        //if (!rb.contactData || rb.type == BodyType::Static)
-        //    return;
+        if (bodyA.type == BodyType::Static && bodyB.type == BodyType::Static)
+            return;
 
-        //if (!rb.contactData->isColliding)
-        //    return;
+        if (bodyA.type != BodyType::Static)
+        {
+            bodyA.position += -(depth / 2) * normal;
+            bodyA.SetPosition(bodyA.position);
+        }
 
-        //const Math::Vec3 depenetration = -rb.contactData->contactNormal * rb.contactData->penetrationDepth;
-
-        //pos += depenetration;
-
-        //rb.SetPosition(pos);
+        if (bodyB.type != BodyType::Static)
+        {
+            bodyB.position += depth / 2 * normal;
+            bodyB.SetPosition(bodyB.position);
+        }
     }
 
     void PhysicsEngine::SetTimeStep(double step)

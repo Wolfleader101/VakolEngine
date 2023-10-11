@@ -32,6 +32,11 @@ namespace Vakol
         return {quat.x, quat.y, quat.z, quat.w};
     }
 
+    inline Math::Mat3 FromRPMat3(const rp3d::Vector3& vec)
+    {
+        return {vec.x, 0.0f, 0.0f, 0.0f, vec.y, 0.0f, 0.0f, 0.0f, vec.z};
+    }
+
     struct RayCastHitInfo
     {
         Math::Vec3 point = Math::Vec3(0.0f, 0.0f, 0.0f);
@@ -61,32 +66,8 @@ namespace Vakol
     struct ContactData
     {
         RigidBody* parentBody = nullptr;
-
-        Math::Vec3 localContactPoint = Math::Vec3(0.0f);
-        Math::Vec3 worldContactPoint = Math::Vec3(0.0f);
-
-        Math::Vec3 relativeLocalContactDistance = Math::Vec3(0.0f);
-        Math::Vec3 relativeWorldContactDistance = Math::Vec3(0.0f);
-
-        Math::Vec3 velocity = Math::Vec3(0.0f);
         
         bool isColliding = false;
-    };
-
-    struct ContactPair
-    {
-        ContactData* contactA = nullptr;
-        ContactData* contactB = nullptr;
-
-        Math::Vec3 contactNormal = Math::Vec3(0.0f);
-
-        Math::Vec3 relativeVelocity = Math::Vec3(0.0f);
-
-        Math::Vec3 impulse = Math::Vec3(0.0f);
-        float lambda = 0.0f;
-
-        float penetrationDepth = 0.0f;
-        unsigned int contactCount = 0u;
     };
 
     /**
@@ -165,6 +146,8 @@ namespace Vakol
 
             position = pos;
             rotation = rot;
+
+            UpdateRotationMatrix();
         }
 
         inline float GetInverseMass() const
