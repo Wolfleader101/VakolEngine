@@ -319,6 +319,24 @@ void MyGUILayer::OnUpdate()
                             // ImGui::Text("Angular Velocity:  [x: %.3f, y: %.3f z: %.3f]", rb.angularVelocity.x,
                             //             rb.angularVelocity.y, rb.angularVelocity.z);
 
+                            ImGui::SeparatorText("Constraints");
+                            ImGui::Text("Position");
+                            ImGui::Checkbox("X##posX", reinterpret_cast<bool*>(&rb.constraints[0][0]));
+                            ImGui::SameLine();
+                            ImGui::Checkbox("Y##posY", reinterpret_cast<bool*>(&rb.constraints[0][1]));
+                            ImGui::SameLine();
+                            ImGui::Checkbox("Z##posZ", reinterpret_cast<bool*>(&rb.constraints[0][2]));
+
+                            ImGui::Spacing();
+
+                            ImGui::Text("Rotation");
+                            ImGui::Checkbox("X##rotX", reinterpret_cast<bool*>(&rb.constraints[1][0]));
+                            ImGui::SameLine();
+                            ImGui::Checkbox("Y##rotY", reinterpret_cast<bool*>(&rb.constraints[1][1]));
+                            ImGui::SameLine();
+                            ImGui::Checkbox("Z##rotZ", reinterpret_cast<bool*>(&rb.constraints[1][2]));
+
+                            ImGui::Separator();
                             ImGui::Spacing();
 
                             ImGui::DragFloat3("Force", &rb.force.x, 0.1f);

@@ -175,6 +175,23 @@ namespace Vakol
         return {i.x, 0.0f, 0.0f, 0.0f, i.y, 0.0f, 0.0f, 0.0f, i.z};
     }
 
+    void PhysicsEngine::ApplyConstraints(RigidBody& rb)
+    {
+        if (rb.constraints[0][0] == 1)
+            rb.linearVelocity.x = 0.0f;
+        if (rb.constraints[0][1] == 1)
+            rb.linearVelocity.y = 0.0f;
+        if (rb.constraints[0][2] == 1)
+            rb.linearVelocity.z = 0.0f;
+
+        if (rb.constraints[1][0] == 1)
+            rb.angularVelocity.x = 0.0f;
+        if (rb.constraints[1][1] == 1)
+            rb.angularVelocity.y = 0.0f;
+        if (rb.constraints[1][2] == 1)
+            rb.angularVelocity.z = 0.0f;
+    }
+
     void PhysicsEngine::ApplyForces(Math::Vec3& pos, Math::Quat& rot, RigidBody& rb)
     {
         rb.contactData->parentBody = &rb;
@@ -201,7 +218,9 @@ namespace Vakol
         rb.linearVelocity += linearAcceleration * static_cast<float>(m_timeStep);
 
         // w = α(t)
-        rb.angularVelocity += angularAcceleration * static_cast<float>(m_timeStep);
+        rb.angularVelocity += angularAcceleration * static_cast<float>(m_timeStep) * 0.98f;
+
+        ApplyConstraints(rb);
 
         pos += rb.linearVelocity * static_cast<float>(m_timeStep);
 
@@ -347,7 +366,7 @@ namespace Vakol
 
         if (bodyB.type != BodyType::Static)
         {
-            bodyB.position += depth / 2 * normal;
+            bodyB.position -= depth / 2 * normal;
             bodyB.SetPosition(bodyB.position);
         }
     }

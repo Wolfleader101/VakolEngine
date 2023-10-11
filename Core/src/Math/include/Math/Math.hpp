@@ -11,6 +11,9 @@ namespace Vakol::Math
     using Vec4 = glm::vec4;
 
     using IVec3 = glm::ivec3;
+    using BVec3 = glm::bvec3;
+
+    using IMat2x3 = glm::imat2x3;
 
     using Point = Vec3;
 

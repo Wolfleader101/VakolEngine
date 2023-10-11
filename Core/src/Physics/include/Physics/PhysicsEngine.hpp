@@ -120,6 +120,12 @@ namespace Vakol
         Math::Mat3 CalculateInertiaTensor(float mass, float radius);
 
         /**
+         * \brief apply constraints to a rigidbody
+         * \param rb the rigidbody to apply the constraints to
+         */
+        void ApplyConstraints(RigidBody& rb);
+
+        /**
          * @brief Apply forces to a rigidbody
          *
          * @param rb to apply forces

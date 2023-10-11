@@ -104,7 +104,7 @@ namespace Vakol
         float bounciness = 0.95f;
         float friction = 0.85f;
 
-        bool useGravity = true;
+        bool useGravity = false;
 
         Math::Mat3 inertiaTensor = Math::Mat3(1.0f);
         Math::Mat3 inverseInertiaTensor = Math::Mat3(1.0f);
@@ -122,7 +122,7 @@ namespace Vakol
         Math::Vec3 force = Math::Vec3(0.0f);
         Math::Vec3 torque = Math::Vec3(0.0f);
 
-        Math::IVec3 constraints = Math::IVec3(0);
+        Math::IMat2x3 constraints = Math::IMat2x3(0.0f);
 
         rp3d::CollisionBody* collisionBody = nullptr;
         std::shared_ptr<ContactData> contactData = nullptr;
