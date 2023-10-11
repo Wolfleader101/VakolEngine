@@ -31,28 +31,30 @@ namespace Vakol
             return;
         }
 
-        float rb1MassInv = rb1.type == BodyType::Static ? 0.0f : 1.0f / rb1.mass;
-        float rb2MassInv = rb2.type == BodyType::Static ? 0.0f : 1.0f / rb2.mass;
+        // float rb1MassInv = rb1.type == BodyType::Static ? 0.0f : 1.0f / rb1.mass;
+        // float rb2MassInv = rb2.type == BodyType::Static ? 0.0f : 1.0f / rb2.mass;
 
-        float masses = rb1MassInv + rb2MassInv;
+        // float masses = rb1MassInv + rb2MassInv;
 
-        if (masses == 0.0f)
-        {
-            return;
-        }
+        // if (masses == 0.0f)
+        // {
+        //     return;
+        // }
 
-        float depth = fmaxf(penetrationDepth - 0.01f, 0.0f);
-        float scalar = depth / masses;
-        Math::Vec3 correction = scalar * normal * 0.45f;
+        // float depth = fmaxf(penetrationDepth - 0.01f, 0.0f);
+        // float scalar = depth / masses;
+        // Math::Vec3 correction = scalar * normal * 0.45f;
 
-        rb1.position -= correction * rb1MassInv;
-        rb2.position += correction * rb2MassInv;
+        // rb1.position -= correction * rb1MassInv;
+        // rb2.position += correction * rb2MassInv;
 
-        rb1.collisionBody->setTransform(rp3d::Transform(rp3d::Vector3(rb1.position.x, rb1.position.y, rb1.position.z),
-                                                        rb1.collisionBody->getTransform().getOrientation()));
+        // rb1.collisionBody->setTransform(rp3d::Transform(rp3d::Vector3(rb1.position.x, rb1.position.y,
+        // rb1.position.z),
+        //                                                 rb1.collisionBody->getTransform().getOrientation()));
 
-        rb2.collisionBody->setTransform(rp3d::Transform(rp3d::Vector3(rb2.position.x, rb2.position.y, rb2.position.z),
-                                                        rb2.collisionBody->getTransform().getOrientation()));
+        // rb2.collisionBody->setTransform(rp3d::Transform(rp3d::Vector3(rb2.position.x, rb2.position.y,
+        // rb2.position.z),
+        //                                                 rb2.collisionBody->getTransform().getOrientation()));
     }
 
     void CollisionListener::onContact(const rp3d::CollisionCallback::CallbackData& data)
@@ -155,8 +157,6 @@ namespace Vakol
 
                     float lambda = PhysicsEngine::SolveLambda(*body1Data->parentBody, *body2Data->parentBody);
 
-                    // lambda /= (float)contactPair.getNbContactPoints();
-
                     body1Data->lambda = lambda;
                     body2Data->lambda = lambda;
                     VK_TRACE("Lambda: {}", lambda);
@@ -177,35 +177,7 @@ namespace Vakol
                         PhysicsEngine::IntegrateImpulse(*body1Data->parentBody);
                         PhysicsEngine::IntegrateImpulse(*body2Data->parentBody);
 
-                        Depenetration(rb1, rb2, normal, penetrationDepth);
-                        // if (rb1.type == BodyType::Static && rb2.type == BodyType::Static)
-                        // {
-                        //     return;
-                        // }
-
-                        // float rb1MassInv = rb1.type == BodyType::Static ? 0.0f : 1.0f / rb1.mass;
-                        // float rb2MassInv = rb2.type == BodyType::Static ? 0.0f : 1.0f / rb2.mass;
-
-                        // float masses = rb1MassInv + rb2MassInv;
-
-                        // if (masses == 0.0f)
-                        // {
-                        //     return;
-                        // }
-
-                        // float depth = fmaxf(penetrationDepth - 0.01f, 0.0f);
-                        // float scalar = depth / masses;
-                        // Math::Vec3 correction = scalar * normal * 0.45f;
-
-                        // rb1.position -= correction * rb1MassInv;
-                        // rb2.position += correction * rb2MassInv;
-
-                        // body1->setTransform(
-                        //     rp3d::Transform(rp3d::Vector3(rb1.position.x, rb1.position.y, rb1.position.z),
-                        //                     body1->getTransform().getOrientation()));
-                        // body2->setTransform(
-                        //     rp3d::Transform(rp3d::Vector3(rb2.position.x, rb2.position.y, rb2.position.z),
-                        //                     body2->getTransform().getOrientation()));
+                        // Depenetration(rb1, rb2, normal, penetrationDepth);
                     }
                 }
             }
