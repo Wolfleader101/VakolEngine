@@ -325,34 +325,24 @@ void MyGUILayer::OnUpdate()
                             ImGui::DragFloat3("Torque", &rb.torque.x, 0.1f);
 
                             ImGui::Spacing();
-                            ImGui::SeparatorText("Local Inertia Tensor");
+                            ImGui::SeparatorText("Inertia Tensor");
 
-                            ImGui::Text("x: %f, %f, %f", rb.localInertiaTensor[0][0], rb.localInertiaTensor[0][1],
-                                        rb.localInertiaTensor[0][2]);
-                            ImGui::Text("y: %f, %f, %f", rb.localInertiaTensor[1][0], rb.localInertiaTensor[1][1],
-                                        rb.localInertiaTensor[1][2]);
-                            ImGui::Text("z: %f, %f, %f", rb.localInertiaTensor[2][0], rb.localInertiaTensor[2][1],
-                                        rb.localInertiaTensor[2][2]);
+                            ImGui::Text("x: %f, %f, %f", rb.inertiaTensor[0][0], rb.inertiaTensor[0][1],
+                                        rb.inertiaTensor[0][2]);
+                            ImGui::Text("y: %f, %f, %f", rb.inertiaTensor[1][0], rb.inertiaTensor[1][1],
+                                        rb.inertiaTensor[1][2]);
+                            ImGui::Text("z: %f, %f, %f", rb.inertiaTensor[2][0], rb.inertiaTensor[2][1],
+                                        rb.inertiaTensor[2][2]);
 
                             ImGui::Spacing();
-                            ImGui::SeparatorText("Local Inverse Inertia Tensor");
+                            ImGui::SeparatorText("Inverse Inertia Tensor");
 
-                            ImGui::Text("x: %f, %f, %f", rb.localInverseInertiaTensor[0][0],
-                                        rb.localInverseInertiaTensor[0][1], rb.localInverseInertiaTensor[0][2]);
-                            ImGui::Text("y: %f, %f, %f", rb.localInverseInertiaTensor[1][0],
-                                        rb.localInverseInertiaTensor[1][1], rb.localInverseInertiaTensor[1][2]);
-                            ImGui::Text("z: %f, %f, %f", rb.localInertiaTensor[2][0],
-                                        rb.localInverseInertiaTensor[2][1], rb.localInverseInertiaTensor[2][2]);
-
-                            // ImGui::Spacing();
-                            // ImGui::SeparatorText("World Inertia Tensor");
-
-                            // ImGui::Text("x: %f, %f, %f", rb.worldInertiaTensor[0][0],
-                            //             rb.worldInertiaTensor[0][1], rb.worldInertiaTensor[0][2]);
-                            // ImGui::Text("y: %f, %f, %f", rb.worldInertiaTensor[1][0],
-                            //             rb.worldInertiaTensor[1][1], rb.worldInertiaTensor[1][2]);
-                            // ImGui::Text("z: %f, %f, %f", rb.worldInertiaTensor[2][0],
-                            //             rb.worldInertiaTensor[2][1], rb.worldInertiaTensor[2][2]);
+                            ImGui::Text("x: %f, %f, %f", rb.inverseInertiaTensor[0][0],
+                                        rb.inverseInertiaTensor[0][1], rb.inverseInertiaTensor[0][2]);
+                            ImGui::Text("y: %f, %f, %f", rb.inverseInertiaTensor[1][0],
+                                        rb.inverseInertiaTensor[1][1], rb.inverseInertiaTensor[1][2]);
+                            ImGui::Text("z: %f, %f, %f", rb.inertiaTensor[2][0],
+                                        rb.inverseInertiaTensor[2][1], rb.inverseInertiaTensor[2][2]);
 
                             ImGui::Spacing();
                             ImGui::SeparatorText("Rotation Matrix");

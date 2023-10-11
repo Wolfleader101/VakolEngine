@@ -153,7 +153,7 @@ namespace Vakol
          * @param pos the position
          * @param rb rigidbody
          */
-        void Depenetration(Math::Vec3& pos, RigidBody& rb);
+        static void Depenetration(const ContactPair& pair);
 
         /**
          * @brief Set the Time Step object

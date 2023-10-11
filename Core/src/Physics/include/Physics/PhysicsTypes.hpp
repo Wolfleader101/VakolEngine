@@ -62,8 +62,6 @@ namespace Vakol
     {
         RigidBody* parentBody = nullptr;
 
-        Math::Vec3 contactNormal = Math::Vec3(0.0f);
-
         Math::Vec3 localContactPoint = Math::Vec3(0.0f);
         Math::Vec3 worldContactPoint = Math::Vec3(0.0f);
 
@@ -71,7 +69,6 @@ namespace Vakol
         Math::Vec3 relativeWorldContactDistance = Math::Vec3(0.0f);
 
         Math::Vec3 velocity = Math::Vec3(0.0f);
-        float penetrationDepth = 0.0f; // shouldn't be here
         
         bool isColliding = false;
     };
@@ -105,8 +102,8 @@ namespace Vakol
 
         bool useGravity = true;
 
-        Math::Mat3 localInertiaTensor = Math::Mat3(1.0f);
-        Math::Mat3 localInverseInertiaTensor = Math::Mat3(1.0f);
+        Math::Mat3 inertiaTensor = Math::Mat3(1.0f);
+        Math::Mat3 inverseInertiaTensor = Math::Mat3(1.0f);
 
         Math::Vec3 position = Math::Vec3(0.0f);
         Math::Quat rotation = Math::Quat(1.0f, Math::Vec3(0.0f));
@@ -128,12 +125,20 @@ namespace Vakol
 
         rp3d::Collider* collider = nullptr;
 
+        inline void ResetForces()
+        {
+            force = Math::Vec3(0.0f);
+        }
+
+        inline void ResetTorques()
+        {
+            torque = Math::Vec3(0.0f);
+        }
+
         inline void SetPosition(const Math::Vec3& pos)
         {
             collisionBody->setTransform(
                 rp3d::Transform(ToRPVec3(position), collisionBody->getTransform().getOrientation()));
-
-            position = pos;
         }
 
         inline Math::Vec3 GetPosition() const

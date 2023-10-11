@@ -196,15 +196,23 @@ namespace Vakol
                             m_physicsEngine.ApplyForces(transform.pos, transform.rot, rb);
 
                             transform.eulerAngles = Math::RadToDeg(Math::EulerFromQuat(transform.rot));
+
+                            if (rb.type == BodyType::Static)
+                                return;
+
+                            rb.position = transform.pos;
                         });
 
                     // detect collisions
                     m_physicsEngine.DetectCollisions(activeScene.GetPhysicsScene());
 
-                    // apply depenetration correction
+                    // resolve collisions
                     activeScene.GetEntityList().Iterate<Components::Transform, RigidBody>(
-                        [&](Components::Transform& transform, RigidBody& rb) {
-                            m_physicsEngine.Depenetration(transform.pos, rb);
+                        [&](Components::Transform& trans, RigidBody& rb) {
+                            if (rb.type == BodyType::Static)
+                                return;
+
+                            trans.pos = rb.position;
                         });
 
                     // Decrease the accumulated time
