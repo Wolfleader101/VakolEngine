@@ -163,7 +163,7 @@ namespace Vakol
 
         // can be assumed as static, can be moved later
         static const Math::Vec3 gravity(0.0f, -9.8f, 0.0f);
-        static const float damping = 0.98f;
+        static const float damping = 0.99f;
 
         Math::Vec3 weight = rb.mass * gravity;
         rb.force += weight;
@@ -188,7 +188,7 @@ namespace Vakol
 
         Math::Vec3 angularAcceleration = rb.invInertiaTensor * rb.torque;
         rb.angularVelocity += angularAcceleration * m_timeStep;
-        rb.angularVelocity = rb.angularVelocity * 0.99f;
+        rb.angularVelocity = rb.angularVelocity * damping;
 
         if (fabsf(rb.angularVelocity.x) < 0.001f)
         {

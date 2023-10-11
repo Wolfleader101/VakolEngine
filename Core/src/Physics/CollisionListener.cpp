@@ -54,23 +54,6 @@ namespace Vakol
 
                 float penetrationDepth = contactPoint.getPenetrationDepth();
 
-                // VK_CRITICAL("N {0}, {1}, {2}", normal.x, normal.y, normal.z);
-
-                // VK_CRITICAL("V1 {0}, {1}, {2}", body1Data->parentBody->linearVelocity.x,
-                //             body1Data->parentBody->linearVelocity.y, body1Data->parentBody->linearVelocity.z);
-
-                // VK_CRITICAL("V2 {0}, {1}, {2}", body2Data->parentBody->linearVelocity.x,
-                //             body2Data->parentBody->linearVelocity.y, body2Data->parentBody->linearVelocity.z);
-
-                // VK_CRITICAL("M1 {0}", body1Data->parentBody->mass);
-                // VK_CRITICAL("M2 {0}", body2Data->parentBody->mass);
-
-                // VK_CRITICAL("W1 {0}, {1}, {2}", body1Data->parentBody->angularVelocity.x,
-                //             body1Data->parentBody->angularVelocity.y, body1Data->parentBody->angularVelocity.z);
-
-                // VK_CRITICAL("W2 {0}, {1}, {2}", body2Data->parentBody->angularVelocity.x,
-                //             body2Data->parentBody->angularVelocity.y, body2Data->parentBody->angularVelocity.z);
-
                 Math::Vec3 r1 = localPoint1 - body1Data->parentBody->centerOfMass;
                 Math::Vec3 r2 = localPoint2 - body2Data->parentBody->centerOfMass;
 
@@ -87,6 +70,8 @@ namespace Vakol
                 }
 
                 Resolution(rb1, rb2, normal, localPoint1, localPoint2);
+
+                Depenetration(rb1, rb2, normal, penetrationDepth);
             }
 
             VK_TRACE("Collision");
@@ -227,11 +212,6 @@ namespace Vakol
         Math::Vec3 impulse = lambda * n;
         VK_CRITICAL("Impulse: {0} {1} {2}", impulse.x, impulse.y, impulse.z);
 
-        // VK_ERROR("Rb1 Linear Velocity Before: {0} {1} {2}", rb1.linearVelocity.x, rb1.linearVelocity.y,
-        //          rb1.linearVelocity.z);
-
-        // Update linear velocities
-
         if (rb1.type != BodyType::Static)
         {
             rb1.linearVelocity += impulse * rb1.invMass;
@@ -243,17 +223,5 @@ namespace Vakol
             rb2.linearVelocity -= impulse * rb2.invMass;
             rb2.angularVelocity -= lambda * rb2.invInertiaTensor * r2CrossN;
         }
-
-        // VK_ERROR("Linear Velocity After: {0} {1} {2}", rb.linearVelocity.x, rb.linearVelocity.y,
-        // rb.linearVelocity.z);
-
-        // VK_WARN("Angular Velocity Before: {0} {1} {2}", rb.angularVelocity.x, rb.angularVelocity.y,
-        //         rb.angularVelocity.z);
-
-        // VK_CRITICAL("R Cross N: {0} {1} {2}", rb.collisionData->rCrossN.x, rb.collisionData->rCrossN.y,
-        //             rb.collisionData->rCrossN.z);
-
-        // VK_WARN("Angular Velocity After: {0} {1} {2}", rb.angularVelocity.x, rb.angularVelocity.y,
-        //         rb.angularVelocity.z);
     }
 } // namespace Vakol
