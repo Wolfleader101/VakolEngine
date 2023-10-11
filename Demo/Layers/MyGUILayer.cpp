@@ -254,16 +254,6 @@ void MyGUILayer::OnUpdate()
                                         rb.rotationMatrix[2][2]);
 
                             ImGui::Spacing();
-                            ImGui::SeparatorText("World Interia Tensor");
-
-                            ImGui::Text("x: %f, %f, %f", rb.worldInertiaTensor[0][0], rb.worldInertiaTensor[0][1],
-                                        rb.worldInertiaTensor[0][2]);
-                            ImGui::Text("y: %f, %f, %f", rb.worldInertiaTensor[1][0], rb.worldInertiaTensor[1][1],
-                                        rb.worldInertiaTensor[1][2]);
-                            ImGui::Text("z: %f, %f, %f", rb.worldInertiaTensor[2][0], rb.worldInertiaTensor[2][1],
-                                        rb.worldInertiaTensor[2][2]);
-
-                            ImGui::Spacing();
                             ImGui::SeparatorText("Interia Tensor");
 
                             ImGui::Text("x: %f, %f, %f", rb.inertiaTensor[0][0], rb.inertiaTensor[0][1],

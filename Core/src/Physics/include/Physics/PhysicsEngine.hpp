@@ -120,15 +120,6 @@ namespace Vakol
         void DetectCollisions(PhysicsScene& scene);
 
         /**
-         * @brief integrate collision impulse impulse
-         *
-         * @param rb to integrate
-         */
-        static void IntegrateImpulse(RigidBody& rb);
-
-        static float SolveLambda(RigidBody& rb1, RigidBody& rb2);
-
-        /**
          * @brief Set the Time Step object
          *
          * @param step to set
