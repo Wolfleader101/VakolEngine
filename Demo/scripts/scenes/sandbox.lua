@@ -30,7 +30,7 @@ function init()
     
     local cube = scene:create_entity("Cube", "");
     cube:get_transform().pos = Vector3.new(10.0, 20.0, 0.0);
-    cube:get_transform().rot = Vector3.new(0.0, 0.0, 45.0);
+    cube:get_transform().rot = Vector3.new(0.0, 0.0, 10.0);
     cube:add_model("coreAssets/models/cube.obj", 1);
 
     local rb = cube:add_rigid();

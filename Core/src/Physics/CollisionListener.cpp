@@ -86,24 +86,6 @@ namespace Vakol
                     VK_CRITICAL("W2 {0}, {1}, {2}", body2Data->parentBody->angularVelocity.x,
                                 body2Data->parentBody->angularVelocity.y, body2Data->parentBody->angularVelocity.z);
 
-                    float lambda = PhysicsEngine::SolveLambda(*body1Data->parentBody, *body2Data->parentBody);
-                    body1Data->lambda = lambda;
-                    body2Data->lambda = lambda;
-                    VK_TRACE("Lambda: {}", lambda);
-
-                    body1Data->parentBody->impulse = lambda * normal;
-                    body1Data->parentBody->collisionData->lambda = lambda;
-                    body2Data->parentBody->impulse = -lambda * normal;
-                    body2Data->parentBody->collisionData->lambda = -lambda;
-
-                    Math::Vec3 r1 = localPoint1 - body1Data->parentBody->centerOfMass;
-
-                    body1Data->parentBody->torque = Math::Cross(r1, normal);
-
-                    Math::Vec3 r2 = localPoint2 - body2Data->parentBody->centerOfMass;
-
-                    body2Data->parentBody->torque = Math::Cross(r2, normal);
-
                     if (body1Data->parentBody->type != BodyType::Static)
                     {
 
@@ -127,10 +109,30 @@ namespace Vakol
                                                             body2->getTransform().getOrientation()));
                     }
 
+                    float lambda = PhysicsEngine::SolveLambda(*body1Data->parentBody, *body2Data->parentBody);
+                    body1Data->lambda = lambda;
+                    body2Data->lambda = lambda;
+                    VK_TRACE("Lambda: {}", lambda);
+
+                    body1Data->parentBody->impulse = lambda * normal;
+                    body1Data->parentBody->collisionData->lambda = lambda;
+                    body2Data->parentBody->impulse = -lambda * normal;
+                    body2Data->parentBody->collisionData->lambda = -lambda;
+
+                    Math::Vec3 r1 = localPoint1 - body1Data->parentBody->centerOfMass;
+
+                    body1Data->r = r1;
+                    body1Data->rCrossN = Math::Cross(r1, normal);
+
+                    Math::Vec3 r2 = localPoint2 - body2Data->parentBody->centerOfMass;
+
+                    body2Data->r = r2;
+                    body2Data->rCrossN = Math::Cross(r2, normal);
+
                     if (body1Data && body2Data)
                     {
-                        PhysicsEngine::ResolveCollisions(body1Data->parentBody->position, *body1Data->parentBody);
-                        PhysicsEngine::ResolveCollisions(body2Data->parentBody->position, *body2Data->parentBody);
+                        PhysicsEngine::IntegrateImpulse(*body1Data->parentBody);
+                        PhysicsEngine::IntegrateImpulse(*body2Data->parentBody);
                     }
                 }
             }

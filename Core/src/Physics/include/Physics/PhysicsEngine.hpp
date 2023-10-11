@@ -120,12 +120,11 @@ namespace Vakol
         void DetectCollisions(PhysicsScene& scene);
 
         /**
-         * @brief handle collision resolution for a rigidbody
+         * @brief integrate collision impulse impulse
          *
-         * @param pos pos of body
-         * @param rb to handle resolution
+         * @param rb to integrate
          */
-        static void ResolveCollisions(Math::Vec3& pos, RigidBody& rb);
+        static void IntegrateImpulse(RigidBody& rb);
 
         static float SolveLambda(RigidBody& rb1, RigidBody& rb2);
 

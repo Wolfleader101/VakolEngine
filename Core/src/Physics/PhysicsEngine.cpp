@@ -275,7 +275,7 @@ namespace Vakol
         return Lambda;
     }
 
-    void PhysicsEngine::ResolveCollisions(Math::Vec3& pos, RigidBody& rb)
+    void PhysicsEngine::IntegrateImpulse(RigidBody& rb)
     {
         // Exit if there's no collision data or if the body is static
         if (!rb.collisionData || rb.type == BodyType::Static)
@@ -299,9 +299,10 @@ namespace Vakol
         VK_WARN("Angular Velocity Before: {0} {1} {2}", rb.angularVelocity.x, rb.angularVelocity.y,
                 rb.angularVelocity.z);
 
-        VK_CRITICAL("Torque: {0} {1} {2}", rb.torque.x, rb.torque.y, rb.torque.z);
+        VK_CRITICAL("R Cross N: {0} {1} {2}", rb.collisionData->rCrossN.x, rb.collisionData->rCrossN.y,
+                    rb.collisionData->rCrossN.z);
 
-        rb.angularVelocity += rb.collisionData->lambda * Math::Inverse(rb.inertiaTensor) * rb.torque;
+        rb.angularVelocity += rb.collisionData->lambda * Math::Inverse(rb.inertiaTensor) * rb.collisionData->rCrossN;
 
         VK_WARN("Angular Velocity After: {0} {1} {2}", rb.angularVelocity.x, rb.angularVelocity.y,
                 rb.angularVelocity.z);
@@ -312,7 +313,7 @@ namespace Vakol
         rb.collisionData->isColliding = false;
         rb.impulse = Math::Vec3(0.0f, 0.0f, 0.0f);
         rb.collisionData->lambda = 0.0f;
-        // rb.torque = Math::Vec3(0.0f, 0.0f, 0.0f);
+        rb.collisionData->rCrossN = Math::Vec3(0.0f, 0.0f, 0.0f);
     }
 
     void PhysicsEngine::SetTimeStep(float step)
