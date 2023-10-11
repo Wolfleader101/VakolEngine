@@ -100,7 +100,8 @@ namespace Vakol
         rb.inertiaTensor[1][1] = rpJ.y;
         rb.inertiaTensor[2][2] = rpJ.z;
 
-        rb.inverseInertiaTensor = rb.type == BodyType::Static ? Math::Mat3(0.0f) : Math::Inverse(rb.inertiaTensor);
+        rb.invInertiaTensor = rb.type == BodyType::Static ? Math::Mat3(0.0f) : Math::Inverse(rb.inertiaTensor);
+        rb.invMass = rb.type == BodyType::Static ? 0.0f : 1.0f / rb.mass;
     }
 
     void PhysicsEngine::AttachCollider(RigidBody& rb, SphereCollider& collider)
@@ -113,7 +114,8 @@ namespace Vakol
         rb.inertiaTensor[1][1] = rpJ.y;
         rb.inertiaTensor[2][2] = rpJ.z;
 
-        rb.inverseInertiaTensor = rb.type == BodyType::Static ? Math::Mat3(0.0f) : Math::Inverse(rb.inertiaTensor);
+        rb.invInertiaTensor = rb.type == BodyType::Static ? Math::Mat3(0.0f) : Math::Inverse(rb.inertiaTensor);
+        rb.invMass = rb.type == BodyType::Static ? 0.0f : 1.0f / rb.mass;
     }
 
     void PhysicsEngine::AttachCollider(RigidBody& rb, CapsuleCollider& collider)
@@ -126,7 +128,8 @@ namespace Vakol
         rb.inertiaTensor[1][1] = rpJ.y;
         rb.inertiaTensor[2][2] = rpJ.z;
 
-        rb.inverseInertiaTensor = rb.type == BodyType::Static ? Math::Mat3(0.0f) : Math::Inverse(rb.inertiaTensor);
+        rb.invInertiaTensor = rb.type == BodyType::Static ? Math::Mat3(0.0f) : Math::Inverse(rb.inertiaTensor);
+        rb.invMass = rb.type == BodyType::Static ? 0.0f : 1.0f / rb.mass;
     }
 
     void PhysicsEngine::AttachCollider(RigidBody& rb, MeshCollider& collider)
@@ -139,7 +142,8 @@ namespace Vakol
         rb.inertiaTensor[1][1] = rpJ.y;
         rb.inertiaTensor[2][2] = rpJ.z;
 
-        rb.inverseInertiaTensor = rb.type == BodyType::Static ? Math::Mat3(0.0f) : Math::Inverse(rb.inertiaTensor);
+        rb.invInertiaTensor = rb.type == BodyType::Static ? Math::Mat3(0.0f) : Math::Inverse(rb.inertiaTensor);
+        rb.invMass = rb.type == BodyType::Static ? 0.0f : 1.0f / rb.mass;
     }
 
     void PhysicsEngine::ApplyForces(Math::Vec3& pos, Math::Quat& quatRot, RigidBody& rb)
@@ -158,20 +162,48 @@ namespace Vakol
         // Math::Mat3 worldInertiaTensor = rb.rotationMatrix * rb.inertiaTensor * Math::Transpose(rb.rotationMatrix);
 
         // can be assumed as static, can be moved later
-        static Math::Vec3 gravity(0.0f, -9.8f, 0.0f);
+        static const Math::Vec3 gravity(0.0f, -9.8f, 0.0f);
+        static const float damping = 0.98f;
 
         Math::Vec3 weight = rb.mass * gravity;
         rb.force += weight;
 
-        Math::Vec3 linearAcceleration = rb.force / rb.mass;
+        Math::Vec3 linearAcceleration = rb.force * rb.invMass;
 
         rb.linearVelocity += linearAcceleration * m_timeStep;
-        pos += rb.linearVelocity * m_timeStep;
+        rb.linearVelocity = rb.linearVelocity * damping;
 
-        // Update angular velocity
-        Math::Vec3 angularAcceleration = rb.inverseInertiaTensor * rb.torque;
+        if (fabsf(rb.linearVelocity.x) < 0.001f)
+        {
+            rb.linearVelocity.x = 0.0f;
+        }
+        if (fabsf(rb.linearVelocity.y) < 0.001f)
+        {
+            rb.linearVelocity.y = 0.0f;
+        }
+        if (fabsf(rb.linearVelocity.z) < 0.001f)
+        {
+            rb.linearVelocity.z = 0.0f;
+        }
+
+        Math::Vec3 angularAcceleration = rb.invInertiaTensor * rb.torque;
         rb.angularVelocity += angularAcceleration * m_timeStep;
+        rb.angularVelocity = rb.angularVelocity * 0.99f;
 
+        if (fabsf(rb.angularVelocity.x) < 0.001f)
+        {
+            rb.angularVelocity.x = 0.0f;
+        }
+        if (fabsf(rb.angularVelocity.y) < 0.001f)
+        {
+            rb.angularVelocity.y = 0.0f;
+        }
+        if (fabsf(rb.angularVelocity.z) < 0.001f)
+        {
+            rb.angularVelocity.z = 0.0f;
+        }
+
+        pos += rb.linearVelocity * m_timeStep;
         quatRot = quatRot + (Math::Quat(0.0f, rb.angularVelocity * m_timeStep * 0.5f) * quatRot);
 
         quatRot = Math::Normalized(quatRot);

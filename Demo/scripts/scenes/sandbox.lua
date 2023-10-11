@@ -37,13 +37,13 @@ function init()
     cube:add_model("coreAssets/models/cube.obj", 1);
 
     local rb = cube:add_rigid();
-    rb.mass = 1;
+    rb.mass = 10;
     rb.bounciness = 0.5;
     rb.type = BodyType.Dynamic;
     cube:add_box_collider(Vector3.new(1.0, 1.0, 1.0));
 
     local sphere = scene:create_entity("Sphere", "");
-    sphere:get_transform().pos = Vector3.new(60.0, 25.0, 0.0);
+    sphere:get_transform().pos = Vector3.new(15.0, 25.0, 0.0);
     sphere:get_transform().rot = Vector3.new(0.0, 0.0, 0.0);
     sphere:add_model("coreAssets/models/sphere.obj", 1);
 
@@ -54,18 +54,16 @@ function init()
     sphere:add_sphere_collider(1.0);
 
 
+    local cube2 = scene:create_entity("Cube2", "");
+    cube2:get_transform().pos = Vector3.new(9.25, 5.0, 0.0);
+    cube2:get_transform().rot = Vector3.new(0.0, 0.0, 0.0);
+    cube2:add_model("coreAssets/models/cube.obj", 1);
 
-
-    -- local cube2 = scene:create_entity("Cube2", "");
-    -- cube2:get_transform().pos = Vector3.new(9.5, 5.0, 0.0);
-    -- cube2:get_transform().rot = Vector3.new(0.0, 0.0, 0.0);
-    -- cube2:add_model("coreAssets/models/cube.obj", 1);
-
-    -- local rb2 = cube2:add_rigid();
-    -- rb2.mass = 1;
-    -- rb2.bounciness = 0.5;
-    -- rb2.type = BodyType.Dynamic;
-    -- cube2:add_box_collider(Vector3.new(1.0, 1.0, 1.0));
+    local rb2 = cube2:add_rigid();
+    rb2.mass = 10;
+    rb2.bounciness = 0.5;
+    rb2.type = BodyType.Dynamic;
+    cube2:add_box_collider(Vector3.new(1.0, 1.0, 1.0));
 end
 
 

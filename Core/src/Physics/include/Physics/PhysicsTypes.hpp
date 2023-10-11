@@ -62,6 +62,7 @@ namespace Vakol
     {
         BodyType type = BodyType::Dynamic;
         float mass = 1.0f;
+        float invMass = 1.0f;
         float bounciness = 0.3f;
 
         bool hasGravity = true;
@@ -78,7 +79,7 @@ namespace Vakol
         Math::Mat3 rotationMatrix = Math::Mat3(0.0f);
 
         Math::Mat3 inertiaTensor = Math::Mat3(0.0f);
-        Math::Mat3 inverseInertiaTensor = Math::Mat3(0.0f);
+        Math::Mat3 invInertiaTensor = Math::Mat3(0.0f);
 
         rp3d::CollisionBody* collisionBody = nullptr;
 

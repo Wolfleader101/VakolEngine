@@ -207,14 +207,13 @@ namespace Vakol
         float top = -(1.0f + e) * (nv + wr1 - wr2);
 
         // 1/m1 + 1/m2
-        float rb2MassInv = rb2.type == BodyType::Static ? 0.0f : 1.0f / rb2.mass;
-        float masses = (1.0f / rb1.mass) + rb2MassInv;
+        float masses = rb1.invMass + rb2.invMass;
 
         // (r1 x n)^T * J1^-1 * (r1 x n)
-        float r1j = Math::Dot(r1CrossN, rb1.inverseInertiaTensor * r1CrossN);
+        float r1j = Math::Dot(r1CrossN, rb1.invInertiaTensor * r1CrossN);
 
         // (r2 x n)^T . J2^-1 * (r2 x n)
-        float r2j = Math::Dot(r2CrossN, rb2.inverseInertiaTensor * r2CrossN);
+        float r2j = Math::Dot(r2CrossN, rb2.invInertiaTensor * r2CrossN);
 
         // bottom = 1/m1 + 1/m2 + ((r1 x n)^T J1^-1 . (r1 x n) + (r2 x n)^T . J2^-1 . (r2 x n))
         float bottom = masses + (r1j + r2j);
@@ -235,14 +234,14 @@ namespace Vakol
 
         if (rb1.type != BodyType::Static)
         {
-            rb1.linearVelocity += impulse / rb1.mass;
-            rb1.angularVelocity += lambda * rb1.inverseInertiaTensor * r1CrossN;
+            rb1.linearVelocity += impulse * rb1.invMass;
+            rb1.angularVelocity += lambda * rb1.invInertiaTensor * r1CrossN;
         }
 
         if (rb2.type != BodyType::Static)
         {
-            rb2.linearVelocity -= impulse / rb2.mass;
-            rb2.angularVelocity -= lambda * rb2.inverseInertiaTensor * r2CrossN;
+            rb2.linearVelocity -= impulse * rb2.invMass;
+            rb2.angularVelocity -= lambda * rb2.invInertiaTensor * r2CrossN;
         }
 
         // VK_ERROR("Linear Velocity After: {0} {1} {2}", rb.linearVelocity.x, rb.linearVelocity.y,
