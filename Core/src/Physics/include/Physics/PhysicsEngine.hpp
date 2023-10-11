@@ -134,6 +134,12 @@ namespace Vakol
         void DetectCollisions(PhysicsScene& scene);
 
         /**
+         * \brief 
+         * \return 
+         */
+        static Math::Vec3 CalculateFrictionImpulse(const CollisionPair& cpair, const Math::Vec3& normal, float frictionA, float frictionB);
+
+        /**
          * @brief handle collision resolution for two colliding rigidbodies
          *
          * @param bodyA
@@ -141,9 +147,8 @@ namespace Vakol
          * @param normal
          * @param cPointA
          * @param cPointB
-         * @param impulse the resulting impulse from the two colding bodies
          */
-        static void ResolveCollisions(RigidBody& bodyA, RigidBody& bodyB, const Math::Vec3& normal, const Math::Vec3& cPointA, const Math::Vec3& cPointB, Math::Vec3& impulse);
+        static void ResolveCollisions(RigidBody& bodyA, RigidBody& bodyB, const Math::Vec3& normal, const Math::Vec3& cPointA, const Math::Vec3& cPointB);
 
         /**
          * @brief handle depenetration for two bodies

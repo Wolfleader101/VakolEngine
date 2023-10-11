@@ -19,13 +19,13 @@ function add_cube()
     local cube = scene:create_entity("Cube 1", "");
 
     cube:get_transform().pos = Vector3.new(0.0, 10.0, 0.0);
-    cube:get_transform().rot = Vector3.new(0.0, 0.0, 0.0);
-    cube:get_transform().scale = Vector3.new(0.5, 7.5, 7.5);
+    cube:get_transform().rot = Vector3.new(0.0, 0.0, 45.0);
+    cube:get_transform().scale = Vector3.new(1.0, 1.0, 1.0);
 
     cube:add_model("coreAssets/models/cube.obj", 1.0);
 
     local rb = cube:add_rigid();
-    cube:add_box_collider(Vector3.new(0.5, 7.5, 7.5));
+    cube:add_box_collider(Vector3.new(1.0, 1.0, 1.0));
 end
 
 function add_cube2()

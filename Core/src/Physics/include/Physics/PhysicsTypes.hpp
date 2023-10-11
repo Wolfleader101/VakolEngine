@@ -70,6 +70,28 @@ namespace Vakol
         bool isColliding = false;
     };
 
+    struct CollisionPair
+    {
+        Math::Vec3 v1 = Math::Vec3(0.0f);
+        Math::Vec3 v2 = Math::Vec3(0.0f);
+
+        Math::Vec3 w1 = Math::Vec3(0.0f);
+        Math::Vec3 w2 = Math::Vec3(0.0f);
+
+        Math::Vec3 r1 = Math::Vec3(0.0f);
+        Math::Vec3 r2 = Math::Vec3(0.0f);
+
+        Math::Vec3 relativeVelocity = Math::Vec3(0.0f);
+
+        Math::Mat3 J1 = Math::Mat3(1.0f); // inertia tensor for body 1
+        Math::Mat3 J2 = Math::Mat3(1.0f); // inertia tensor for body 2
+
+        float mSum = 0.0f; // inverse mass sum
+        float rVN = 0.0f; // relative velocity along normal (dot prod)
+
+        float lambda = 0.0f; // the impulse magnitude
+    };
+
     /**
      * @brief Rigidbody object
      *
@@ -80,6 +102,7 @@ namespace Vakol
 
         float mass = 1.0f;
         float bounciness = 0.95f;
+        float friction = 0.85f;
 
         bool useGravity = true;
 
