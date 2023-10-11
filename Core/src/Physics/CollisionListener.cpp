@@ -4,8 +4,8 @@
 #include "Logger/Logger.hpp"
 namespace Vakol
 {
-    constexpr float SLEEP_LINEAR_THRESHOLD = 0.1f;
-    constexpr float SLEEP_ANGULAR_THRESHOLD = 0.1f;
+    constexpr float SLEEP_LINEAR_THRESHOLD = 0.5f;
+    constexpr float SLEEP_ANGULAR_THRESHOLD = 0.5f;
     constexpr int SLEEP_COUNTER_THRESHOLD = 60;
 
     void Depenetration(RigidBody& rb1, RigidBody& rb2, Math::Vec3& normal, float penetrationDepth);
@@ -72,12 +72,14 @@ namespace Vakol
                 // if moving away from each other dont apply impulse
                 if (Math::Dot(relativeVel, normal) > 0.0f)
                 {
-                    return;
+                    continue;
                 }
 
                 Resolution(rb1, rb2, normal, localPoint1, localPoint2);
 
-                Depenetration(rb1, rb2, normal, penetrationDepth);
+                VK_CRITICAL("Linear Vel Magnitude Sq: {}", Math::MagnitudeSq(rb2.linearVelocity));
+
+                VK_WARN("Angular Vel Magnitude Sq: {}", Math::MagnitudeSq(rb2.angularVelocity));
 
                 // Check for rb1
                 if (Math::MagnitudeSq(rb1.linearVelocity) < SLEEP_LINEAR_THRESHOLD &&

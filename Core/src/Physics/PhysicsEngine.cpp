@@ -211,10 +211,6 @@ namespace Vakol
             rb.angularVelocity.z = 0.0f;
         }
 
-        VK_CRITICAL("Linear Vel Magnitude Sq: {}", Math::MagnitudeSq(rb.linearVelocity));
-
-        VK_WARN("Angular Vel Magnitude Sq: {}", Math::MagnitudeSq(rb.angularVelocity));
-
         pos += rb.linearVelocity * m_timeStep;
         quatRot = quatRot + (Math::Quat(0.0f, rb.angularVelocity * m_timeStep * 0.5f) * quatRot);
 

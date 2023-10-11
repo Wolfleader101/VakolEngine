@@ -67,6 +67,19 @@ function falling_objs()
     rb1.type = BodyType.Dynamic;
     sphere:add_sphere_collider(1.0);
 
+
+
+    local sphere2 = scene:create_entity("Sphere", "");
+    sphere2:get_transform().pos = Vector3.new(10.0, 70.0, 0.0);
+    sphere2:get_transform().rot = Vector3.new(0.0, 0.0, 0.0);
+    sphere2:add_model("coreAssets/models/sphere.obj", 1);
+
+    local rb3 = sphere2:add_rigid();
+    rb3.mass = 5;
+    rb3.bounciness = 0.9;
+    rb3.type = BodyType.Dynamic;
+    sphere2:add_sphere_collider(1.0);
+
 end
 
 
