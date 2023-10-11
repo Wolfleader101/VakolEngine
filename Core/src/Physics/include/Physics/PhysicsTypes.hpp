@@ -66,6 +66,8 @@ namespace Vakol
         float bounciness = 0.3f;
 
         bool hasGravity = true;
+        bool isSleeping = false;
+        int sleepCounter = 0;
 
         Math::Vec3 position = Math::Vec3(0.0f, 0.0f, 0.0f);
         Math::Vec3 impulse = Math::Vec3(0.0f, 0.0f, 0.0f);

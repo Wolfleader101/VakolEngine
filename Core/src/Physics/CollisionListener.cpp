@@ -4,6 +4,10 @@
 #include "Logger/Logger.hpp"
 namespace Vakol
 {
+    constexpr float SLEEP_LINEAR_THRESHOLD = 0.1f;
+    constexpr float SLEEP_ANGULAR_THRESHOLD = 0.1f;
+    constexpr int SLEEP_COUNTER_THRESHOLD = 60;
+
     void Depenetration(RigidBody& rb1, RigidBody& rb2, Math::Vec3& normal, float penetrationDepth);
     void Resolution(RigidBody& rb1, RigidBody& rb2, Math::Vec3& normal, Math::Vec3& localPoint1,
                     Math::Vec3& localPoint2);
@@ -35,6 +39,8 @@ namespace Vakol
 
             rb1.collisionData->isColliding = true;
             rb2.collisionData->isColliding = true;
+            rb1.isSleeping = false;
+            rb2.isSleeping = false;
 
             // For each contact point of the contact pair
             for (unsigned int c = 0; c < contactPair.getNbContactPoints(); c++)
@@ -72,6 +78,40 @@ namespace Vakol
                 Resolution(rb1, rb2, normal, localPoint1, localPoint2);
 
                 Depenetration(rb1, rb2, normal, penetrationDepth);
+
+                // Check for rb1
+                if (Math::MagnitudeSq(rb1.linearVelocity) < SLEEP_LINEAR_THRESHOLD &&
+                    Math::MagnitudeSq(rb1.angularVelocity) < SLEEP_ANGULAR_THRESHOLD)
+                {
+                    rb1.sleepCounter++;
+                    if (rb1.sleepCounter >= SLEEP_COUNTER_THRESHOLD)
+                    {
+                        rb1.isSleeping = true;
+                        rb1.linearVelocity = Math::Vec3(0.0f, 0.0f, 0.0f);
+                        rb1.angularVelocity = Math::Vec3(0.0f, 0.0f, 0.0f);
+                    }
+                }
+                else
+                {
+                    rb1.sleepCounter = 0;
+                }
+
+                // Check for rb2
+                if (Math::MagnitudeSq(rb2.linearVelocity) < SLEEP_LINEAR_THRESHOLD &&
+                    Math::MagnitudeSq(rb2.angularVelocity) < SLEEP_ANGULAR_THRESHOLD)
+                {
+                    rb2.sleepCounter++;
+                    if (rb2.sleepCounter >= SLEEP_COUNTER_THRESHOLD)
+                    {
+                        rb2.isSleeping = true;
+                        rb2.linearVelocity = Math::Vec3(0.0f, 0.0f, 0.0f);
+                        rb2.angularVelocity = Math::Vec3(0.0f, 0.0f, 0.0f);
+                    }
+                }
+                else
+                {
+                    rb2.sleepCounter = 0;
+                }
             }
 
             VK_TRACE("Collision");
