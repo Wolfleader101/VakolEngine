@@ -91,10 +91,18 @@ namespace Vakol
                     body2Data->lambda = lambda;
                     VK_TRACE("Lambda: {}", lambda);
 
-                    body1Data->parentBody->impulse += lambda * normal;
-                    body1Data->parentBody->collisionData->lambda += lambda;
-                    body2Data->parentBody->impulse += -lambda * normal;
-                    body2Data->parentBody->collisionData->lambda += -lambda;
+                    body1Data->parentBody->impulse = lambda * normal;
+                    body1Data->parentBody->collisionData->lambda = lambda;
+                    body2Data->parentBody->impulse = -lambda * normal;
+                    body2Data->parentBody->collisionData->lambda = -lambda;
+
+                    Math::Vec3 r1 = localPoint1 - body1Data->parentBody->centerOfMass;
+
+                    body1Data->parentBody->torque = Math::Cross(r1, normal);
+
+                    Math::Vec3 r2 = localPoint2 - body2Data->parentBody->centerOfMass;
+
+                    body2Data->parentBody->torque = Math::Cross(r2, normal);
 
                     if (body1Data->parentBody->type != BodyType::Static)
                     {
@@ -118,14 +126,15 @@ namespace Vakol
                         body2->setTransform(rp3d::Transform(rp3d::Vector3(pos.x, pos.y, pos.z),
                                                             body2->getTransform().getOrientation()));
                     }
+
+                    if (body1Data && body2Data)
+                    {
+                        PhysicsEngine::ResolveCollisions(body1Data->parentBody->position, *body1Data->parentBody);
+                        PhysicsEngine::ResolveCollisions(body2Data->parentBody->position, *body2Data->parentBody);
+                    }
                 }
             }
 
-            if (body1Data && body2Data)
-            {
-                PhysicsEngine::ResolveCollisions(body1Data->parentBody->position, *body1Data->parentBody);
-                PhysicsEngine::ResolveCollisions(body2Data->parentBody->position, *body2Data->parentBody);
-            }
             VK_TRACE("Collision");
         }
     }

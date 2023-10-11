@@ -286,15 +286,6 @@ namespace Vakol
         if (!rb.collisionData->isColliding)
             return;
 
-        // distance from collision point to center of mass
-        Math::Vec3 r1 = rb.centerOfMass - rb.collisionData->localPoint;
-
-        // if in local space, dont want this one
-        // Math::Vec3 r1 = rb.collisionData->localPoint - rb.centerOfMass;
-
-        // Get the world-space normal and normalize it
-        Math::Vec3 n = Math::Normalized(rb.collisionData->worldNormal);
-
         Math::Vec3& impulse = rb.impulse;
         VK_CRITICAL("Impulse: {0} {1} {2}", impulse.x, impulse.y, impulse.z);
 
@@ -308,9 +299,9 @@ namespace Vakol
         VK_WARN("Angular Velocity Before: {0} {1} {2}", rb.angularVelocity.x, rb.angularVelocity.y,
                 rb.angularVelocity.z);
 
-        glm::vec3 torque = glm::cross(r1, n);
+        VK_CRITICAL("Torque: {0} {1} {2}", rb.torque.x, rb.torque.y, rb.torque.z);
 
-        rb.angularVelocity += rb.collisionData->lambda * Math::Inverse(rb.inertiaTensor) * torque;
+        rb.angularVelocity += rb.collisionData->lambda * Math::Inverse(rb.inertiaTensor) * rb.torque;
 
         VK_WARN("Angular Velocity After: {0} {1} {2}", rb.angularVelocity.x, rb.angularVelocity.y,
                 rb.angularVelocity.z);
@@ -321,28 +312,7 @@ namespace Vakol
         rb.collisionData->isColliding = false;
         rb.impulse = Math::Vec3(0.0f, 0.0f, 0.0f);
         rb.collisionData->lambda = 0.0f;
-    }
-
-    void PhysicsEngine::Depenetration(Math::Vec3& pos, RigidBody& rb)
-    {
-        if (!rb.collisionData || rb.type == BodyType::Static)
-        {
-            return;
-        }
-
-        if (!rb.collisionData->isColliding)
-        {
-            return;
-        }
-
-        // Calculate the depenetration vector
-        Math::Vec3 depenetration = -rb.collisionData->worldNormal * rb.collisionData->penetrationDepth;
-
-        pos += depenetration;
-
-        // Update transform with new position
-        rb.collisionBody->setTransform(
-            rp3d::Transform(rp3d::Vector3(pos.x, pos.y, pos.z), rb.collisionBody->getTransform().getOrientation()));
+        // rb.torque = Math::Vec3(0.0f, 0.0f, 0.0f);
     }
 
     void PhysicsEngine::SetTimeStep(float step)

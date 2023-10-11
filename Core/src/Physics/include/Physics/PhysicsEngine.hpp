@@ -130,14 +130,6 @@ namespace Vakol
         static float SolveLambda(RigidBody& rb1, RigidBody& rb2);
 
         /**
-         * @brief handle depenetration for a rigidbody
-         *
-         * @param pos pos of body
-         * @param rb rigidbody
-         */
-        static void Depenetration(Math::Vec3& pos, RigidBody& rb);
-
-        /**
          * @brief Set the Time Step object
          *
          * @param step to set
