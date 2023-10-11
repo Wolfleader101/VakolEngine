@@ -308,7 +308,6 @@ namespace Vakol
                 rb.angularVelocity.z);
 
         // reset the collision data
-        rb.collisionData->penetrationDepth = 0.0;
         rb.collisionData->worldNormal = Math::Vec3(0.0f, 0.0f, 0.0f);
         rb.collisionData->isColliding = false;
         rb.impulse = Math::Vec3(0.0f, 0.0f, 0.0f);

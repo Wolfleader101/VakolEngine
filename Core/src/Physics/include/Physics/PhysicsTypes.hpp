@@ -54,7 +54,6 @@ namespace Vakol
         Math::Vec3 worldPoint = Math::Vec3(0.0f, 0.0f, 0.0f);
         Math::Vec3 rCrossN = Math::Vec3(0.0f, 0.0f, 0.0f);
         Math::Vec3 r = Math::Vec3(0.0f, 0.0f, 0.0f);
-        float penetrationDepth = 0.0f;
         bool isColliding = false;
         float lambda = 0.0f;
 
