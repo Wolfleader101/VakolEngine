@@ -27,11 +27,11 @@ local weights = {
 }
 
 function print_emotions()
-    
-    
+    local output = ""
     for i = 1, 8 do
-        io.write(emotion_names[i] .. ": " .. emotion_concepts[i] .. " | ")
+        output = output .. emotion_names[i] .. ": " .. emotion_concepts[i] .. " | "
     end
+    print(output)
 end
 
 
@@ -57,9 +57,9 @@ function set_emotion(emotion_index, value)
 end
 
 local function tanh(x) --activation function. bounds between -1 and 1
-    local e_pos = math.exp(x)     
-    local e_neg = math.exp(-x)    
-    return (e_pos - e_neg) / (e_pos + e_neg)
+    local e_pos = math.exp(x);  
+    local e_neg = math.exp(-x);
+    return (e_pos - e_neg) / (e_pos + e_neg);
 end
 
 local function iterate()
@@ -78,7 +78,7 @@ local function iterate()
 
     for i = 1, 8 do
         emotion_concepts[i] = new_concepts[i]
-
+    end
 end
 
 
@@ -97,6 +97,7 @@ end
 
 function tick()
     iterate();
+    print_emotions();
 end
 
 function phys_update()
