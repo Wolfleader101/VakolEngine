@@ -28,5 +28,7 @@ jobs:
         run: cmake --build ${{github.workspace}}/build --target VakolTests --config ${{env.BUILD_TYPE}}
 
       - name: Run Tests
-        run: ${{github.workspace}}/build/Release/VakolTests.exe
+        run: |
+          $output = & "${{ github.workspace }}/build/Release/VakolTests.exe"
+          Write-Output $output
         shell: powershell
