@@ -78,7 +78,7 @@ namespace Vakol
     {
         VK_INFO("Loading game_config.lua...");
 
-        LuaScript configScript = m_scriptEngine.CreateScript(configPath);
+        LuaScript configScript = m_scriptEngine.CreateScript("config", configPath);
 
         LuaType configVar = m_scriptEngine.GetScriptVariable(configScript, "game_config");
 

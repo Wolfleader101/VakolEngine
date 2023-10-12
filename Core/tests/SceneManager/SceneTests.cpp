@@ -13,7 +13,7 @@ TEST_CASE("Scene getName and setName", "[Scene]")
     Vakol::PhysicsScene ps = pe.CreateScene();
     Vakol::ScriptEngine se;
 
-    Vakol::LuaScript script = se.CreateScript("Demo/scripts/test/unit_test_scene.lua");
+    Vakol::LuaScript script = se.CreateScript("test get set name", "Demo/scripts/test/unit_test_scene.lua");
 
     Vakol::Scene scene("TestScene", script, ps);
 
@@ -37,7 +37,7 @@ TEST_CASE("Scene Entity creation and destruction")
 
     Vakol::PhysicsScene ps = pe.CreateScene();
 
-    Vakol::LuaScript script = se.CreateScript("test/unit_test_scene.lua");
+    Vakol::LuaScript script = se.CreateScript("test entity", "test/unit_test_scene.lua");
 
     Vakol::Scene scene("TestScene", script, ps);
 
@@ -63,7 +63,7 @@ TEST_CASE("Scene serialization and deserialization", "[Scene]")
     Vakol::PhysicsEngine pe;
     Vakol::ScriptEngine se;
     Vakol::PhysicsScene ps = pe.CreateScene();
-    Vakol::LuaScript script = se.CreateScript("test/unit_test_scene.lua");
+    Vakol::LuaScript script = se.CreateScript("test serialization", "test/unit_test_scene.lua");
 
     Vakol::Scene scene("TestScene", script, ps);
 
@@ -85,7 +85,7 @@ TEST_CASE("Scene GetEntityList", "[Scene]")
     Vakol::PhysicsEngine pe;
     Vakol::ScriptEngine se;
     Vakol::PhysicsScene ps = pe.CreateScene();
-    Vakol::LuaScript script = se.CreateScript("test/unit_test_scene.lua");
+    Vakol::LuaScript script = se.CreateScript("test entity list", "test/unit_test_scene.lua");
 
     Vakol::Scene scene("TestScene", script, ps);
 

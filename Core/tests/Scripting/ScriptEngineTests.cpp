@@ -23,7 +23,7 @@ TEST_CASE("Script Engine - Variable Manipulation", "[ScriptEngine]")
 
     SECTION("Test Getting/Setting Script Variables")
     {
-        Vakol::LuaScript script = scriptEngine.CreateScript("testScripts/test.lua");
+        Vakol::LuaScript script = scriptEngine.CreateScript("test variables", "testScripts/test.lua");
         Vakol::LuaType val = scriptEngine.GetScriptVariable(script, "abc");
 
         REQUIRE(val.as<int>() == 123);
@@ -41,7 +41,7 @@ TEST_CASE("Script Engine - Variable Manipulation", "[ScriptEngine]")
 
     SECTION("Test Getting Invalid Script Variables")
     {
-        Vakol::LuaScript script = scriptEngine.CreateScript("testScripts/test.lua");
+        Vakol::LuaScript script = scriptEngine.CreateScript("test invalid", "testScripts/test.lua");
         Vakol::LuaType var = scriptEngine.GetScriptVariable(script, "invalid");
         REQUIRE(var.valid() == false);
     }
@@ -53,7 +53,7 @@ TEST_CASE("Script Engine - Script Creation", "[ScriptEngine]")
 
     SECTION("Test Creating Scripts")
     {
-        Vakol::LuaScript script = scriptEngine.CreateScript("testScripts/test.lua");
+        Vakol::LuaScript script = scriptEngine.CreateScript("test creation", "testScripts/test.lua");
         REQUIRE(script.path == "testScripts/test.lua");
 
         scriptEngine.SetGlobalVariable("test", 1);
@@ -62,7 +62,7 @@ TEST_CASE("Script Engine - Script Creation", "[ScriptEngine]")
 
     SECTION("Test Creating Invalid Scripts")
     {
-        Vakol::LuaScript script = scriptEngine.CreateScript("testScripts/invalid.lua");
+        Vakol::LuaScript script = scriptEngine.CreateScript("test invalid scripts", "testScripts/invalid.lua");
         REQUIRE(script.path == "testScripts/invalid.lua");
 
         REQUIRE(script.env.valid() == true); // environment should still be valid
@@ -75,7 +75,7 @@ TEST_CASE("Script Engine - Script Function Tests", "[ScriptEngine]")
 
     SECTION("Test Init Function")
     {
-        Vakol::LuaScript script = scriptEngine.CreateScript("testScripts/test.lua");
+        Vakol::LuaScript script = scriptEngine.CreateScript("test init", "testScripts/test.lua");
 
         scriptEngine.InitScript(script);
 
@@ -84,7 +84,7 @@ TEST_CASE("Script Engine - Script Function Tests", "[ScriptEngine]")
 
     SECTION("Test Update Function")
     {
-        Vakol::LuaScript script = scriptEngine.CreateScript("testScripts/test.lua");
+        Vakol::LuaScript script = scriptEngine.CreateScript("test update", "testScripts/test.lua");
 
         scriptEngine.UpdateScript(script);
 
@@ -93,7 +93,7 @@ TEST_CASE("Script Engine - Script Function Tests", "[ScriptEngine]")
 
     SECTION("Test Tick Function")
     {
-        Vakol::LuaScript script = scriptEngine.CreateScript("testScripts/test.lua");
+        Vakol::LuaScript script = scriptEngine.CreateScript("test tick", "testScripts/test.lua");
 
         scriptEngine.TickScript(script);
 
@@ -102,7 +102,7 @@ TEST_CASE("Script Engine - Script Function Tests", "[ScriptEngine]")
 
     SECTION("Test Phys Update Function")
     {
-        Vakol::LuaScript script = scriptEngine.CreateScript("testScripts/test.lua");
+        Vakol::LuaScript script = scriptEngine.CreateScript("test phys update", "testScripts/test.lua");
 
         scriptEngine.PhysUpdateScript(script);
 
@@ -119,7 +119,7 @@ TEST_CASE("Script Engine - Function Definitions", "[ScriptEngine]")
 
         scriptEngine.SetGlobalFunction("global_add", [](int a, int b) -> int { return a + b; });
 
-        Vakol::LuaScript script = scriptEngine.CreateScript("testScripts/global.lua");
+        Vakol::LuaScript script = scriptEngine.CreateScript("test global func", "testScripts/global.lua");
         scriptEngine.InitScript(script); // used to set the result variable
 
         int result = scriptEngine.GetScriptVariable(script, "result").as<int>();
@@ -128,7 +128,7 @@ TEST_CASE("Script Engine - Function Definitions", "[ScriptEngine]")
 
     SECTION("Test Set Script Function")
     {
-        Vakol::LuaScript script = scriptEngine.CreateScript("testScripts/test.lua");
+        Vakol::LuaScript script = scriptEngine.CreateScript("test script func", "testScripts/test.lua");
         scriptEngine.SetScriptFunction(script, "script_multiply", [](int a, int b) -> int { return a * b; });
 
         // Access the function via the script's environment
@@ -136,7 +136,7 @@ TEST_CASE("Script Engine - Function Definitions", "[ScriptEngine]")
         REQUIRE(result == 12);
 
         // Ensure the function isn't globally available
-        Vakol::LuaScript script2 = scriptEngine.CreateScript("testScripts/global.lua");
+        Vakol::LuaScript script2 = scriptEngine.CreateScript("test script func not global", "testScripts/global.lua");
 
         bool hasGlobalFunction = script2.env["script_multiply"].valid();
 
