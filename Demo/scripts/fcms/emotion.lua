@@ -8,22 +8,22 @@ SURPRISE = 6;
 SADNESS = 7;
 DISGUST = 8;
 
-
+local tickSkips <const> = 3;
 local emotion_names = {"Anger", "Anticipation", "Joy", "Trust", "Fear", "Surprise", "Sadness", "Disgust"};
-local emotion_concepts = { -0.4  ,     0  ,    0.96  ,   0.5  ,  -0.9  ,    0  ,      0.1  ,     -0.9   };
+local emotion_concepts = { -0.4  ,     0  ,    0.04  ,   0.5  ,  -0.1  ,    0  ,      0.1  ,     -0.5   };
 
-local decays           = { 0.05, 0.03, 0.1, 0.001, 0.01, 0.15, 0.025, 0.01 };
+local decays           = { 0.05, 0.003, 0.01, 0.001, 0.001, 0.0015, 0.0025, 0.001 };
 
 --whipped these values out me dot
 local weights = {
-    {  0     ,  0.02  , -0.0525, -0.03  , -0.08  ,  0.01  ,  0.02  ,  0.03  },
-    { -0.01  ,  0     ,  0.01  ,  0     ,  0.05  , -0.08  ,  0     , -0.02  },
-    { -0.03  ,  0.005 ,  0     ,  0.0175, -0.03  ,  0.02  , -0.08  , -0.05  },
-    { -0.06  ,  0     ,  0.04  ,  0     , -0.06  , -0.01  , -0.03  , -0.08  },
-    { -0.08  ,  0.005 ,  0     , -0.02  ,  0     ,  0     ,  0.015 ,  0.03  },
-    {  0     , -0.08  ,  0.025 ,  0     ,  0.03  ,  0     , -0.03  ,  0     },
-    {  0.05  ,  0     , -0.08  , -0.01  ,  0.02  ,  0     ,  0     ,  0.015 },
-    {  0.01  ,  0.02  , -0.045 , -0.08  ,  0.01  ,  0     ,  0.01  ,  0     }
+    {  -0.1  ,  0.02  , -0.05, -0.03  , -0.08  ,  0.01  ,  0.02  ,  0.03  },
+    { -0.01  ,  -0.1  ,  0.01  ,  0     ,  0.05  , -0.08  ,  0     , -0.02  },
+    { -0.05  ,  0.005 ,  -0.1  ,  0.0175, -0.03  ,  0.02  , -0.08  , -0.05  },
+    { -0.06  ,  0     ,  0.04  ,  -0.1  , -0.06  , -0.01  , -0.03  , -0.08  },
+    { -0.08  ,  0.005 ,  0     , -0.02  ,  -0.1  ,  0     ,  0.015 ,  0.03  },
+    {  0     , -0.08  ,  0.025 ,  0     ,  0.03  ,  -0.1  , -0.03  ,  0     },
+    {  0.05  ,  0     , -0.08  , -0.01  ,  0.02  ,  0     ,  -0.1  ,  0.015 },
+    {  0.01  ,  0.02  , -0.045 , -0.08  ,  0.01  ,  0     ,  0.01  ,  -0.1  }
 }
 
 function print_emotions()
@@ -81,6 +81,16 @@ local function normalize()
     end
 end
 
+function clamp(value, min, max)
+    if value < min then
+        return min
+    elseif value > max then
+        return max
+    else
+        return value
+    end
+end
+
 local function iterate()
 
     new_concepts = {};
@@ -96,10 +106,10 @@ local function iterate()
     end
 
     for i = 1, 8 do
-        emotion_concepts[i] = new_concepts[i]
+        emotion_concepts[i] = clamp(new_concepts[i], -1, 1)
     end
 
-    normalize()
+    --normalize()
 end
 
 
@@ -113,6 +123,13 @@ end
 
 function update()
 
+    if (Input:get_key_down(KEYS["KEY_Z"])) then
+        set_emotion(ANGER, 0.8);
+    end
+
+    if (Input:get_key_down(KEYS["KEY_X"])) then
+        set_emotion(JOY, 0.8);
+    end
 end
 
 
