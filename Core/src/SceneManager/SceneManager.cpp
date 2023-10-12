@@ -50,7 +50,7 @@ namespace Vakol
         if (m_scenes.find(name) != m_scenes.end())
             VK_ERROR("Scene with name: {0} already exists. Skipping...", name);
 
-        auto script = m_scriptEngine.CreateScript("scripts/" + scriptName);
+        auto script = m_scriptEngine.CreateScript(name, "scripts/" + scriptName);
 
         m_scenes.emplace(name, new Scene(name, script));
 
