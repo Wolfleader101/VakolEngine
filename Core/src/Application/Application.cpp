@@ -12,9 +12,9 @@ namespace Vakol
 {
 
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
-
+    // ADD PHSYCIS HERE
     Application::Application()
-        : m_window(nullptr), m_scriptEngine(), m_sceneManager(m_scriptEngine, m_physicsEngine), m_running(false),
+        : m_window(nullptr), m_scriptEngine(), m_sceneManager(m_scriptEngine), m_running(false),
           m_gameState(GameState::Running), m_activeSystems(0), m_input()
     {
         Init();
@@ -64,8 +64,7 @@ namespace Vakol
         m_scriptEngine.SetGlobalVariable("Time", &m_time);
         m_scriptEngine.SetGlobalVariable("Input", &m_input);
         m_scriptEngine.SetGlobalVariable("GUI", &m_gui);
-        m_scriptEngine.SetGlobalVariable("PhysicsEngine", &m_physicsEngine);
-
+        // ADD PHSYCIS HERE
         m_scriptEngine.SetGlobalFunction("app_run", &Application::SetRunning, this);
 
         m_scriptEngine.SetGlobalFunction("add_scene", &SceneManager::CreateScene, &m_sceneManager);
@@ -174,47 +173,7 @@ namespace Vakol
 
             Scene& activeScene = m_sceneManager.GetActiveScene();
 
-            // While there is enough accumulated time take one or several physics steps
-            if (IsSystemActive(SystemFlag::Physics))
-            {
-                // Add the time difference in the accumulator
-                physicsAccumulator += m_time.deltaTime;
-
-                while (physicsAccumulator >= m_physicsEngine.GetTimeStep())
-                {
-                    if (IsSystemActive(SystemFlag::Scripting))
-                    {
-                        activeScene.GetEntityList().Iterate<ScriptComp>([&](auto& scriptComp) {
-                            for (auto& script : scriptComp.scripts)
-                                m_scriptEngine.PhysUpdateScript(script);
-                        });
-
-                        m_scriptEngine.PhysUpdateScript(activeScene.GetScript());
-                    }
-                    // apply forces
-                    activeScene.GetEntityList().Iterate<Components::Transform, RigidBody>(
-                        [&](Components::Transform& transform, RigidBody& rb) {
-                            m_physicsEngine.ApplyForces(transform.pos, transform.rot, rb);
-
-                            transform.eulerAngles = Math::RadToDeg(Math::EulerFromQuat(transform.rot));
-                        });
-
-                    // detect collisions
-                    m_physicsEngine.DetectCollisions(activeScene.GetPhysicsScene());
-
-                    // resolve collisions
-                    activeScene.GetEntityList().Iterate<Components::Transform, RigidBody>(
-                        [&](Components::Transform& trans, RigidBody& rb) {
-                            m_physicsEngine.ResolveCollisions(trans.pos, rb);
-                        });
-
-                    activeScene.GetEntityList().Iterate<RigidBody>(
-                        [&](RigidBody& rb) { rb.collisionData->lambda = 0.0; });
-
-                    // Decrease the accumulated time
-                    physicsAccumulator -= m_physicsEngine.GetTimeStep();
-                }
-            }
+            // ADD PHSYCIS HERE
 
             while (m_time.accumulator >= m_time.tickRate)
             {
