@@ -3,6 +3,7 @@ function init()
     print("Multi Script Root");
     entity:add_script("cube", "entities/test/cube.lua");
 
+    entity:add_script("emotion", "fcms/emotion.lua");
     	
     local cube = entity:get_script("cube")
 	print(cube.BLAKE)
