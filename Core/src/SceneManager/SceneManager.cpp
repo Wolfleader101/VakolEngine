@@ -50,7 +50,7 @@ namespace Vakol
         if (m_scenes.find(name) != m_scenes.end())
             ThrowRuntime("Scene with name: " + name + " already exists.");
 
-        auto script = m_scriptEngine.CreateScript("scripts/" + scriptName);
+        auto script = m_scriptEngine.CreateScript(name, "scripts/" + scriptName);
 
         PhysicsScene& PhysicsScene = m_physicsEngine.CreateScene();
         m_scenes.emplace(name, new Scene(name, script, PhysicsScene));

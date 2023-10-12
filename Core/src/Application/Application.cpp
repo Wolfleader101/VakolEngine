@@ -49,7 +49,7 @@ namespace Vakol
 
         VK_INFO("Calling main.lua...");
 
-        LuaScript mainScript = m_scriptEngine.CreateScript("scripts/main.lua");
+        LuaScript mainScript = m_scriptEngine.CreateScript("main", "scripts/main.lua");
 
         m_running = true;
 
@@ -189,8 +189,10 @@ namespace Vakol
                 {
                     if (IsSystemActive(SystemFlag::Scripting))
                     {
-                        activeScene.GetEntityList().Iterate<LuaScript>(
-                            [&](auto& script) { m_scriptEngine.PhysUpdateScript(script); });
+                        activeScene.GetEntityList().Iterate<ScriptComp>([&](auto& scriptComp) {
+                            for (auto& script : scriptComp.scripts)
+                                m_scriptEngine.PhysUpdateScript(script);
+                        });
 
                         m_scriptEngine.PhysUpdateScript(activeScene.GetScript());
                     }
@@ -223,8 +225,10 @@ namespace Vakol
             {
                 if (IsSystemActive(SystemFlag::Scripting))
                 {
-                    activeScene.GetEntityList().Iterate<LuaScript>(
-                        [&](auto& script) { m_scriptEngine.TickScript(script); });
+                    activeScene.GetEntityList().Iterate<ScriptComp>([&](auto& scriptComp) {
+                        for (auto& script : scriptComp.scripts)
+                            m_scriptEngine.TickScript(script);
+                    });
 
                     m_scriptEngine.TickScript(activeScene.GetScript());
                 }
@@ -240,8 +244,10 @@ namespace Vakol
 
             if (IsSystemActive(SystemFlag::Scripting))
             {
-                activeScene.GetEntityList().Iterate<LuaScript>(
-                    [&](auto& script) { m_scriptEngine.UpdateScript(script); });
+                activeScene.GetEntityList().Iterate<ScriptComp>([&](auto& scriptComp) {
+                    for (auto& script : scriptComp.scripts)
+                        m_scriptEngine.UpdateScript(script);
+                });
 
                 m_scriptEngine.UpdateScript(activeScene.GetScript());
             }
