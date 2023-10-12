@@ -72,6 +72,11 @@ namespace Vakol::Math
         v = glm::normalize(v);
     }
 
+    void Normalize(Quat& q)
+    {
+        q = glm::normalize(q);
+    }
+
     Vec2 Normalized(const Vec2& v)
     {
         return glm::normalize(v);
@@ -80,6 +85,11 @@ namespace Vakol::Math
     Vec3 Normalized(const Vec3& v)
     {
         return glm::normalize(v);
+    }
+
+    Quat Normalized(const Quat& q)
+    {
+        return glm::normalize(q); 
     }
 
     Vec3 Cross(const Vec3& a, const Vec3& b)
