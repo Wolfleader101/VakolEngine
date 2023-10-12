@@ -16,14 +16,14 @@ local decays           = { 0.05, 0.03, 0.1, 0.001, 0.01, 0.15, 0.025, 0.01 };
 
 --whipped these values out me dot
 local weights = {
-    {  0   ,  0.2  , -0.525, -0.3  , -0.8  ,  0.1  ,  0.2  ,  0.3  },
-    { -0.1 ,  0    ,  0.1  ,  0    ,  0.5  , -0.8  ,  0    , -0.2  },
-    { -0.3 ,  0.05 ,  0    ,  0.175, -0.3  ,  0.2  , -0.8  , -0.5  },
-    { -0.6 ,  0    ,  0.4  ,  0    , -0.6  , -0.1  , -0.3  , -0.8  },
-    { -0.8 ,  0.05 ,  0    , -0.2  ,  0    ,  0    ,  0.15 ,  0.3  },
-    {  0   , -0.8  ,  0.25 ,  0    ,  0.3  ,  0    , -0.3  ,  0    },
-    {  0.5 ,  0    , -0.8  , -0.1  ,  0.2  ,  0    ,  0    ,  0.15 },
-    {  0.1 ,  0.2  , -0.45 , -0.8  ,  0.1  ,  0    ,  0.1  ,  0    }
+    {  0     ,  0.02  , -0.0525, -0.03  , -0.08  ,  0.01  ,  0.02  ,  0.03  },
+    { -0.01  ,  0     ,  0.01  ,  0     ,  0.05  , -0.08  ,  0     , -0.02  },
+    { -0.03  ,  0.005 ,  0     ,  0.0175, -0.03  ,  0.02  , -0.08  , -0.05  },
+    { -0.06  ,  0     ,  0.04  ,  0     , -0.06  , -0.01  , -0.03  , -0.08  },
+    { -0.08  ,  0.005 ,  0     , -0.02  ,  0     ,  0     ,  0.015 ,  0.03  },
+    {  0     , -0.08  ,  0.025 ,  0     ,  0.03  ,  0     , -0.03  ,  0     },
+    {  0.05  ,  0     , -0.08  , -0.01  ,  0.02  ,  0     ,  0     ,  0.015 },
+    {  0.01  ,  0.02  , -0.045 , -0.08  ,  0.01  ,  0     ,  0.01  ,  0     }
 }
 
 function print_emotions()
@@ -62,6 +62,25 @@ local function tanh(x) --activation function. bounds between -1 and 1
     return (e_pos - e_neg) / (e_pos + e_neg);
 end
 
+local function normalize()
+    local max_val = emotion_concepts[1]
+    local min_val = max_val
+
+    for i = 1, 8 do
+        if emotion_concepts[i] > max_val then
+            max_val = emotion_concepts[i]
+        elseif emotion_concepts[i] < min_val then
+            min_val = emotion_concepts[i]
+        end
+    end
+
+    local range = max_val - min_val
+    
+    for i = 1, 8 do
+        emotion_concepts[i] = 2 * ((emotion_concepts[i] - min_val) / range) - 1
+    end
+end
+
 local function iterate()
 
     new_concepts = {};
@@ -79,6 +98,8 @@ local function iterate()
     for i = 1, 8 do
         emotion_concepts[i] = new_concepts[i]
     end
+
+    normalize()
 end
 
 
