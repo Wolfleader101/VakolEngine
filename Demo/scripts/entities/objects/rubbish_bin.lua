@@ -1,6 +1,6 @@
 function init()
 
-	entity:add_model("assets/models/imported/OpenGameArt/PagDev/Trashcan/rubbishBin_Rubbish.fbx", 0.02);
+    entity:add_model("assets/models/imported/OpenGameArt/PagDev/Trashcan/rubbishBin_Rubbish.fbx", 0.02);
 
 	local rb = entity:add_rigid();
 
@@ -13,6 +13,5 @@ function init()
     local affordComp = entity:get_script("affordance");
 
     affordComp.AFFORDANCES = {
-        SITTABLE = 1.0
     }
 end

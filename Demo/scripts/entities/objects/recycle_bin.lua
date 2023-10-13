@@ -13,6 +13,5 @@ function init()
     local affordComp = entity:get_script("affordance");
 
     affordComp.AFFORDANCES = {
-        SITTABLE = 1.0
     }
 end
