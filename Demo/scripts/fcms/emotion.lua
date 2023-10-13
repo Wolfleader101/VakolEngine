@@ -10,9 +10,9 @@ DISGUST = 8;
 
 local tickSkips <const> = 3;
 local emotion_names = {"Anger", "Anticipation", "Joy", "Trust", "Fear", "Surprise", "Sadness", "Disgust"};
-local emotion_concepts = { 0.1  ,     0.1   ,    0.6  ,   0.3  ,  0.1  ,    0.1  ,      0.1  ,     0.1   };
+local emotion_concepts = { 0.2  ,     0.1   ,    0.6  ,   0.3  ,  -0.4  ,    0.1  ,      0.1  ,     0.1   };
 
-local decays           = { 0.3  ,     0.3   ,    0.3  ,   0.3  ,  0.3  ,    0.3   ,     0.3  ,     0.3 };
+local decays           = { 0.01  ,     0.03   ,    0.03  ,   0.03  ,  0.03  ,    0.2   ,     0.01  ,     0.001 };
 
 --whipped these values out me dot
 -- local weights = {
@@ -26,27 +26,27 @@ local decays           = { 0.3  ,     0.3   ,    0.3  ,   0.3  ,  0.3  ,    0.3 
 --     {  0.01  ,  0.02  , -0.045 , -0.08  ,  0.01  ,  0     ,  0.01  ,  -0.1  }
 -- }
 
--- local weights = { --symmetrical matrix
---     {  -0.1   ,  0.02  , -0.05  , -0.03  , -0.08  ,  0.01  ,  0.02  ,  0.03  },
---     {  0.02  , -0.1   ,  0.01  ,  0     ,  0.05  , -0.08  ,  0     , -0.02  },
---     { -0.05  ,  0.01  , -0.1   ,  0.0175, -0.03  ,  0.02  , -0.08  , -0.05  },
---     { -0.03  ,  0     ,  0.0175, -0.1   , -0.06  , -0.01  , -0.03  , -0.08  },
---     { -0.08  ,  0.05  , -0.03  , -0.06  , -0.1   ,  0     ,  0.015 ,  0.03  },
---     {  0.01  , -0.08  ,  0.02  , -0.01  ,  0     , -0.1   , -0.03  ,  0     },
---     {  0.02  ,  0     , -0.08  , -0.03  ,  0.015 , -0.03  , -0.1   ,  0.015 },
---     {  0.03  , -0.02  , -0.05  , -0.08  ,  0.03  ,  0     ,  0.015 , -0.1   }
--- }
-
-local weights = {
-    {   0   ,  0.02  , -0.05  , -0.03  , -0.08  ,  0.01  ,  0.02  ,  0.03  },
-    {  0.02  ,  0  ,  0.01  ,  0     ,  0.05  , -0.08  ,  0     , -0.02  },
-    { -0.05  ,  0.01  ,  0,  0.0175, -0.03  ,  0.02  , -0.08  , -0.05  },
-    { -0.03  ,  0     ,  0.0175,  0 , -0.06  , -0.01  , -0.03  , -0.08  },
-    { -0.08  ,  0.05  , -0.03  , -0.06  ,  0  ,  0     ,  0.015 ,  0.03  },
-    {  0.01  , -0.08  ,  0.02  , -0.01  ,  0     ,  0  , -0.03  ,  0     },
-    {  0.02  ,  0     , -0.08  , -0.03  ,  0.015 , -0.03  ,  0 ,  0.015 },
-    {  0.03  , -0.02  , -0.05  , -0.08  ,  0.03  ,  0     ,  0.015 ,  0 }
+local weights = { --symmetrical matrix
+    {  0.1   ,  0.02  , -0.05  , -0.03  , -0.08  ,  0.01  ,  0.02  ,  0.03  },
+    {  0.02  , 0.1    ,  0.01  ,  0     ,  0.05  , -0.08  ,  0     , -0.02  },
+    { -0.05  ,  0.01  ,    0   ,  0.0175, -0.03  ,  0.02  , -0.08  , -0.05  },
+    { -0.03  ,  0     ,  0.0175,    0   , -0.06  , -0.01  , -0.03  , -0.08  },
+    { -0.08  ,  0.05  , -0.03  , -0.06  , -0.1   ,  0     ,  0.015 ,  0.03  },
+    {  0.01  , -0.08  ,  0.02  , -0.01  ,  0     , -0.2   , -0.03  ,  0     },
+    {  0.02  ,  0     , -0.08  , -0.03  ,  0.015 , -0.03  , -0.1   ,  0.015 },
+    {  0.03  , -0.02  , -0.05  , -0.08  ,  0.03  ,  0     ,  0.015 , -0.1   }
 }
+
+-- local weights = {
+--     {   0   ,  0.02  , -0.05  , -0.03  , -0.08  ,  0.01  ,  0.02  ,  0.03  },
+--     {  0.02  ,  0  ,  0.01  ,  0     ,  0.05  , -0.08  ,  0     , -0.02  },
+--     { -0.05  ,  0.01  ,  0,  0.0175, -0.03  ,  0.02  , -0.08  , -0.05  },
+--     { -0.03  ,  0     ,  0.0175,  0 , -0.06  , -0.01  , -0.03  , -0.08  },
+--     { -0.08  ,  0.05  , -0.03  , -0.06  ,  0  ,  0     ,  0.015 ,  0.03  },
+--     {  0.01  , -0.08  ,  0.02  , -0.01  ,  0     ,  0  , -0.03  ,  0     },
+--     {  0.02  ,  0     , -0.08  , -0.03  ,  0.015 , -0.03  ,  0 ,  0.015 },
+--     {  0.03  , -0.02  , -0.05  , -0.08  ,  0.03  ,  0     ,  0.015 ,  0 }
+-- }
 
 function print_emotions()
     local output = ""
@@ -84,24 +84,24 @@ function tanh(x)
     return (epx - enx) / (epx + enx)
 end
 
--- local function normalize()
---     local max_val = emotion_concepts[1]
---     local min_val = max_val
+local function normalize()
+    local max_val = emotion_concepts[1]
+    local min_val = max_val
 
---     for i = 1, 8 do
---         if emotion_concepts[i] > max_val then
---             max_val = emotion_concepts[i]
---         elseif emotion_concepts[i] < min_val then
---             min_val = emotion_concepts[i]
---         end
---     end
+    for i = 1, 8 do
+        if emotion_concepts[i] > max_val then
+            max_val = emotion_concepts[i]
+        elseif emotion_concepts[i] < min_val then
+            min_val = emotion_concepts[i]
+        end
+    end
 
---     local range = max_val - min_val
+    local range = max_val - min_val
     
---     for i = 1, 8 do
---         emotion_concepts[i] = 2 * ((emotion_concepts[i] - min_val) / range) - 1
---     end
--- end
+    for i = 1, 8 do
+        emotion_concepts[i] = 2 * ((emotion_concepts[i] - min_val) / range) - 1
+    end
+end
 
 local function L2Normalize()
     
@@ -115,16 +115,6 @@ local function L2Normalize()
 
     for i = 1, #emotion_concepts do
          emotion_concepts[i] = (emotion_concepts[i] / L2Norm);
-    end
-end
-
-function clamp(value, min, max)
-    if value < min then
-        return min
-    elseif value > max then
-        return max
-    else
-        return value
     end
 end
 
@@ -161,42 +151,50 @@ end
 function update()
 
     if (Input:get_key_down(KEYS["KEY_Z"])) then
-        set_emotion(ANGER, 0.8);
+        set_emotion(ANGER, 0.5);
     end
 
     if (Input:get_key_down(KEYS["KEY_X"])) then
-        set_emotion(ANTICIPATION, 0.8);
+        set_emotion(ANTICIPATION, 5);
     end
 
     if (Input:get_key_down(KEYS["KEY_C"])) then
-        set_emotion(JOY, 0.8);
+        set_emotion(JOY, 5);
     end
 
     if (Input:get_key_down(KEYS["KEY_V"])) then
-        set_emotion(TRUST, 0.8);
+        set_emotion(TRUST, 5);
     end
 
     if (Input:get_key_down(KEYS["KEY_B"])) then
-        set_emotion(FEAR, 0.8);
+        set_emotion(FEAR, 5);
     end
 
     if (Input:get_key_down(KEYS["KEY_N"])) then
-        set_emotion(SURPRISE, 0.8);
+        set_emotion(SURPRISE, 5);
     end
 
     if (Input:get_key_down(KEYS["KEY_M"])) then
-        set_emotion(SADNESS, 0.8);
+        set_emotion(SADNESS, 5);
     end
 
     if (Input:get_key_down(KEYS["KEY_L"])) then
-        set_emotion(DISGUST, 0.8);
+        set_emotion(DISGUST, 10);
     end
 end
 
+local slow = 0;
 
 function tick()
-    iterate();
-    print_emotions();
+
+    if (slow == 5) then
+        iterate();
+        print_emotions();
+        slow = 0;
+    else
+        slow = slow + 1;
+
+    end
 end
 
 function phys_update()
