@@ -1,5 +1,5 @@
 SET(PHYSICS_SRC
-    
+    ${CMAKE_CURRENT_SOURCE_DIR}/PhysicsMath.cpp
     PARENT_SCOPE
 )
 

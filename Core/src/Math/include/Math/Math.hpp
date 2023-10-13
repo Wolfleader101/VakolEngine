@@ -124,6 +124,13 @@ namespace Vakol::Math
     void Normalize(Vec3& v);
 
     /**
+     * @brief Normalizes a quaternion, making its length equal to 1.
+     *
+     * @param q A quaternion. The quaternion is modified to be a unit quaternion.
+     */
+    void Normalize(Quat& q);
+
+    /**
      * @brief Creates a new normalized 2D vector based on the input vector.
      *
      * @param v A 2D vector.
@@ -138,6 +145,14 @@ namespace Vakol::Math
      * @return A new 3D vector that is a normalized version of the input vector.
      */
     Vec3 Normalized(const Vec3& v);
+
+    /**
+     * @brief Creates a new normalized quaternion based on the input quaternion.
+     *
+     * @param q A quaternion.
+     * @return A new quaternion that is a normalized version of the input quaternion.
+     */
+    Quat Normalized(const Quat& q);
 
     /**
      * @brief Calculates the cross product of two 3D vectors.
