@@ -70,7 +70,7 @@ namespace Vakol
         int sleepCounter = 0;
 
         Math::Vec3 position = Math::Vec3(0.0f, 0.0f, 0.0f);
-        Math::Vec3 impulse = Math::Vec3(0.0f, 0.0f, 0.0f);
+        Math::Quat rotation = Math::Quat(1.0f, 0.0f, 0.0f, 0.0f);
 
         Math::Vec3 centerOfMass = Math::Vec3(0.0f, 0.0f, 0.0f); // will have to be calculated
 
@@ -78,7 +78,6 @@ namespace Vakol
         Math::Vec3 torque = Math::Vec3(0.0f, 0.0f, 0.0f);
         Math::Vec3 linearVelocity = Math::Vec3(0.0f, 0.0f, 0.0f);
         Math::Vec3 angularVelocity = Math::Vec3(0.0f, 0.0f, 0.0f);
-        Math::Mat3 rotationMatrix = Math::Mat3(0.0f);
 
         Math::Mat3 inertiaTensor = Math::Mat3(0.0f);
         Math::Mat3 invInertiaTensor = Math::Mat3(0.0f);

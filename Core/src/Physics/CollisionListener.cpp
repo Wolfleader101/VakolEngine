@@ -6,7 +6,7 @@ namespace Vakol
 {
     constexpr float SLEEP_LINEAR_THRESHOLD = 0.5f;
     constexpr float SLEEP_ANGULAR_THRESHOLD = 0.5f;
-    constexpr int SLEEP_COUNTER_THRESHOLD = 60;
+    constexpr int SLEEP_COUNTER_THRESHOLD = 240;
 
     void Depenetration(RigidBody& rb1, RigidBody& rb2, Math::Vec3& normal, float penetrationDepth);
     void Resolution(RigidBody& rb1, RigidBody& rb2, Math::Vec3& normal, Math::Vec3& localPoint1,
@@ -170,9 +170,6 @@ namespace Vakol
 
         // normal
         Math::Vec3 n = Math::Normalized(normal);
-
-        // convert normal to object-local space using the transpose of the rotation matrix
-        // n = rb1.rotationMatrix * n;
 
         // distance from collision point to center of mass in local space
         Math::Vec3 r1 = localPoint1 - rb1.centerOfMass;

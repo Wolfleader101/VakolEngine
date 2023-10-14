@@ -243,16 +243,16 @@ void MyGUILayer::OnUpdate()
                             ImGui::DragFloat3("Linear Velocity", &rb.linearVelocity.x, 0.1f);
                             ImGui::DragFloat3("Angular Velocity", &rb.angularVelocity.x, 0.1f);
 
-                            ImGui::Spacing();
-                            ImGui::SeparatorText("Rotiation Matrix");
+                            // ImGui::Spacing();
+                            // ImGui::SeparatorText("Rotiation Matrix");
 
                             // ImGui::Text("Rotation Matrix");
-                            ImGui::Text("x: %f, %f, %f", rb.rotationMatrix[0][0], rb.rotationMatrix[0][1],
-                                        rb.rotationMatrix[0][2]);
-                            ImGui::Text("y: %f, %f, %f", rb.rotationMatrix[1][0], rb.rotationMatrix[1][1],
-                                        rb.rotationMatrix[1][2]);
-                            ImGui::Text("z: %f, %f, %f", rb.rotationMatrix[2][0], rb.rotationMatrix[2][1],
-                                        rb.rotationMatrix[2][2]);
+                            // ImGui::Text("x: %f, %f, %f", rb.rotationMatrix[0][0], rb.rotationMatrix[0][1],
+                            //             rb.rotationMatrix[0][2]);
+                            // ImGui::Text("y: %f, %f, %f", rb.rotationMatrix[1][0], rb.rotationMatrix[1][1],
+                            //             rb.rotationMatrix[1][2]);
+                            // ImGui::Text("z: %f, %f, %f", rb.rotationMatrix[2][0], rb.rotationMatrix[2][1],
+                            //             rb.rotationMatrix[2][2]);
 
                             ImGui::Spacing();
                             ImGui::SeparatorText("Interia Tensor");

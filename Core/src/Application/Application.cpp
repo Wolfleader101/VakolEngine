@@ -175,7 +175,6 @@ namespace Vakol
 
             if (IsSystemActive(SystemFlag::Physics))
             {
-
                 // Add the time difference in the accumulator
                 physicsAccumulator += m_time.deltaTime;
 
@@ -195,26 +194,17 @@ namespace Vakol
                         [&](Components::Transform& transform, RigidBody& rb) {
                             if (rb.isSleeping)
                                 return;
-                            m_physicsEngine.ApplyForces(transform.pos, transform.rot, rb);
+                            m_physicsEngine.ApplyForces(rb.position, transform.rot, rb);
 
                             transform.eulerAngles = Math::RadToDeg(Math::EulerFromQuat(transform.rot));
 
                             if (rb.type == BodyType::Static)
                                 return;
-                            rb.position = transform.pos;
+                            transform.pos = rb.position;
                         });
 
                     // detect collisions
                     m_physicsEngine.DetectCollisions(activeScene.GetPhysicsScene());
-
-                    // resolve collisions
-                    activeScene.GetEntityList().Iterate<Components::Transform, RigidBody>(
-                        [&](Components::Transform& trans, RigidBody& rb) {
-                            if (rb.type == BodyType::Static || rb.isSleeping || rb.collisionData->isColliding == false)
-                                return;
-
-                            trans.pos = rb.position;
-                        });
 
                     // Decrease the accumulated time
                     physicsAccumulator -= m_physicsEngine.GetTimeStep();

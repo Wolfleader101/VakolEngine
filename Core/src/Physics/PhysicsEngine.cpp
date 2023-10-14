@@ -161,10 +161,8 @@ namespace Vakol
             return;
         }
 
-        rb.rotationMatrix = Math::Mat3Cast(quatRot); // Convert the quaternion to a 3x3 rotation matrix
-
         // can be assumed as static, can be moved later
-        static const float damping = 0.99f;
+        static const float damping = 0.995f;
 
         if (rb.hasGravity)
         {
