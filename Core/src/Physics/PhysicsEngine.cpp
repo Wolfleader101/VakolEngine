@@ -168,7 +168,6 @@ namespace Vakol
 
         if (rb.hasGravity)
         {
-
             // can be assumed as static, can be moved later
             static const Math::Vec3 gravity(0.0f, -9.8f, 0.0f);
 
@@ -181,35 +180,9 @@ namespace Vakol
         rb.linearVelocity += linearAcceleration * m_timeStep;
         rb.linearVelocity = rb.linearVelocity * damping;
 
-        if (fabsf(rb.linearVelocity.x) < 0.01f)
-        {
-            rb.linearVelocity.x = 0.0f;
-        }
-        if (fabsf(rb.linearVelocity.y) < 0.01f)
-        {
-            rb.linearVelocity.y = 0.0f;
-        }
-        if (fabsf(rb.linearVelocity.z) < 0.01f)
-        {
-            rb.linearVelocity.z = 0.0f;
-        }
-
         Math::Vec3 angularAcceleration = rb.invInertiaTensor * rb.torque;
         rb.angularVelocity += angularAcceleration * m_timeStep;
         rb.angularVelocity = rb.angularVelocity * damping;
-
-        if (fabsf(rb.angularVelocity.x) < 0.01f)
-        {
-            rb.angularVelocity.x = 0.0f;
-        }
-        if (fabsf(rb.angularVelocity.y) < 0.01f)
-        {
-            rb.angularVelocity.y = 0.0f;
-        }
-        if (fabsf(rb.angularVelocity.z) < 0.01f)
-        {
-            rb.angularVelocity.z = 0.0f;
-        }
 
         pos += rb.linearVelocity * m_timeStep;
         quatRot = quatRot + (Math::Quat(0.0f, rb.angularVelocity * m_timeStep * 0.5f) * quatRot);

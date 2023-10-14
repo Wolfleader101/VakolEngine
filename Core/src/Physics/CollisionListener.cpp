@@ -77,9 +77,9 @@ namespace Vakol
 
                 Resolution(rb1, rb2, normal, localPoint1, localPoint2);
 
-                VK_CRITICAL("Linear Vel Magnitude Sq: {}", Math::MagnitudeSq(rb2.linearVelocity));
+                // VK_CRITICAL("Linear Vel Magnitude Sq: {}", Math::MagnitudeSq(rb2.linearVelocity));
 
-                VK_WARN("Angular Vel Magnitude Sq: {}", Math::MagnitudeSq(rb2.angularVelocity));
+                // VK_WARN("Angular Vel Magnitude Sq: {}", Math::MagnitudeSq(rb2.angularVelocity));
 
                 // Check for rb1
                 if (Math::MagnitudeSq(rb1.linearVelocity) < SLEEP_LINEAR_THRESHOLD &&
@@ -115,61 +115,38 @@ namespace Vakol
                     rb2.sleepCounter = 0;
                 }
             }
-
-            VK_TRACE("Collision");
         }
     }
 
     void Depenetration(RigidBody& rb1, RigidBody& rb2, Math::Vec3& normal, float penetrationDepth)
     {
-        if (rb1.type != BodyType::Static)
-        {
-
-            rb1.position += ((-(penetrationDepth / 2)) * normal);
-
-            rb1.collisionBody->setTransform(
-                rp3d::Transform(rp3d::Vector3(rb1.position.x, rb1.position.y, rb1.position.z),
-                                rb1.collisionBody->getTransform().getOrientation()));
-        }
-
-        if (rb2.type != BodyType::Static)
-        {
-            rb2.position -= ((penetrationDepth / 2) * normal);
-
-            rb2.collisionBody->setTransform(
-                rp3d::Transform(rp3d::Vector3(rb2.position.x, rb2.position.y, rb2.position.z),
-                                rb2.collisionBody->getTransform().getOrientation()));
-        }
-
         if (rb1.type == BodyType::Static && rb2.type == BodyType::Static)
         {
             return;
         }
 
-        // float rb1MassInv = rb1.type == BodyType::Static ? 0.0f : 1.0f / rb1.mass;
-        // float rb2MassInv = rb2.type == BodyType::Static ? 0.0f : 1.0f / rb2.mass;
+        float rb1MassInv = rb1.type == BodyType::Static ? 0.0f : 1.0f / rb1.mass;
+        float rb2MassInv = rb2.type == BodyType::Static ? 0.0f : 1.0f / rb2.mass;
 
-        // float masses = rb1MassInv + rb2MassInv;
+        float masses = rb1MassInv + rb2MassInv;
 
-        // if (masses == 0.0f)
-        // {
-        //     return;
-        // }
+        if (masses == 0.0f)
+        {
+            return;
+        }
 
-        // float depth = fmaxf(penetrationDepth - 0.01f, 0.0f);
-        // float scalar = depth / masses;
-        // Math::Vec3 correction = scalar * normal * 0.45f;
+        float depth = fmaxf(penetrationDepth - 0.01f, 0.0f);
+        float scalar = depth / masses;
+        Math::Vec3 correction = scalar * normal * 0.45f;
 
-        // rb1.position -= correction * rb1MassInv;
-        // rb2.position += correction * rb2MassInv;
+        rb1.position -= correction * rb1MassInv;
+        rb2.position += correction * rb2MassInv;
 
-        // rb1.collisionBody->setTransform(rp3d::Transform(rp3d::Vector3(rb1.position.x, rb1.position.y,
-        // rb1.position.z),
-        //                                                 rb1.collisionBody->getTransform().getOrientation()));
+        rb1.collisionBody->setTransform(rp3d::Transform(rp3d::Vector3(rb1.position.x, rb1.position.y, rb1.position.z),
+                                                        rb1.collisionBody->getTransform().getOrientation()));
 
-        // rb2.collisionBody->setTransform(rp3d::Transform(rp3d::Vector3(rb2.position.x, rb2.position.y,
-        // rb2.position.z),
-        //                                                 rb2.collisionBody->getTransform().getOrientation()));
+        rb2.collisionBody->setTransform(rp3d::Transform(rp3d::Vector3(rb2.position.x, rb2.position.y, rb2.position.z),
+                                                        rb2.collisionBody->getTransform().getOrientation()));
     }
 
     void Resolution(RigidBody& rb1, RigidBody& rb2, Math::Vec3& normal, Math::Vec3& localPoint1,
@@ -201,8 +178,8 @@ namespace Vakol
         Math::Vec3 r1 = localPoint1 - rb1.centerOfMass;
         Math::Vec3 r2 = localPoint2 - rb2.centerOfMass;
 
-        VK_ERROR("r1: {0} {1} {2}", r1.x, r1.y, r1.z);
-        VK_ERROR("r2: {0} {1} {2}", r2.x, r2.y, r2.z);
+        // VK_ERROR("r1: {0} {1} {2}", r1.x, r1.y, r1.z);
+        // VK_ERROR("r2: {0} {1} {2}", r2.x, r2.y, r2.z);
 
         Math::Vec3 v1 = rb1.linearVelocity;
         Math::Vec3 v2 = rb2.linearVelocity;
@@ -215,8 +192,8 @@ namespace Vakol
         // (r2 x n)
         Math::Vec3 r2CrossN = Math::Cross(r2, n);
 
-        VK_INFO("r1crossN: {0} {1} {2}", r1CrossN.x, r1CrossN.y, r1CrossN.z);
-        VK_INFO("r2crossN: {0} {1} {2}", r2CrossN.x, r2CrossN.y, r2CrossN.z);
+        // VK_INFO("r1crossN: {0} {1} {2}", r1CrossN.x, r1CrossN.y, r1CrossN.z);
+        // VK_INFO("r2crossN: {0} {1} {2}", r2CrossN.x, r2CrossN.y, r2CrossN.z);
 
         // n . (v1 - v2)
         float nv = Math::Dot(n, Math::Vec3(v1 - v2));
@@ -228,7 +205,7 @@ namespace Vakol
         float wr2 = Math::Dot(w2, r2CrossN);
 
         float e = (rb1.bounciness + rb2.bounciness) / 2.0f; // average
-        VK_ERROR("Bounciness: {0}", e);
+        // VK_ERROR("Bounciness: {0}", e);
 
         // top =  -(1 + e) * (n . (v1 - v2) + w1 . (r1 x n) - w2 . (r2 x n))
         float top = -(1.0f + e) * (nv + wr1 - wr2);
@@ -252,7 +229,7 @@ namespace Vakol
             return;
 
         Math::Vec3 impulse = lambda * n;
-        VK_CRITICAL("Impulse: {0} {1} {2}", impulse.x, impulse.y, impulse.z);
+        // VK_CRITICAL("Impulse: {0} {1} {2}", impulse.x, impulse.y, impulse.z);
 
         if (rb1.type != BodyType::Static)
         {

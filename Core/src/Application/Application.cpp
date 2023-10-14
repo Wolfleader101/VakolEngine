@@ -193,6 +193,8 @@ namespace Vakol
                     // apply forces
                     activeScene.GetEntityList().Iterate<Components::Transform, RigidBody>(
                         [&](Components::Transform& transform, RigidBody& rb) {
+                            if (rb.isSleeping)
+                                return;
                             m_physicsEngine.ApplyForces(transform.pos, transform.rot, rb);
 
                             transform.eulerAngles = Math::RadToDeg(Math::EulerFromQuat(transform.rot));
@@ -208,8 +210,7 @@ namespace Vakol
                     // resolve collisions
                     activeScene.GetEntityList().Iterate<Components::Transform, RigidBody>(
                         [&](Components::Transform& trans, RigidBody& rb) {
-                            // PhysicsEngine::ResolveCollisions(trans.pos, rb);
-                            if (rb.type == BodyType::Static)
+                            if (rb.type == BodyType::Static || rb.isSleeping || rb.collisionData->isColliding == false)
                                 return;
 
                             trans.pos = rb.position;
