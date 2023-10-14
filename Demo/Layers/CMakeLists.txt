@@ -1,5 +1,8 @@
 SET(LAYERS
     ${CMAKE_CURRENT_SOURCE_DIR}/MyGUILayer.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/MyGUILayer.cpp
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/EmotionLayer.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/EmotionLayer.cpp
     PARENT_SCOPE
 )

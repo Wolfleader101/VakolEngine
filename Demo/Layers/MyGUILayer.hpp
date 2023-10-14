@@ -18,7 +18,6 @@ class MyGUILayer : public Vakol::Layer
     void OnDetach() override;
     void OnUpdate() override;
     void OnEvent(Vakol::Event& event) override;
-    void OnTick() override;
 
   private:
     bool m_Show = false;
