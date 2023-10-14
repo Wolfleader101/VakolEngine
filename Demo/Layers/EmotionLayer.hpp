@@ -30,7 +30,7 @@ class EmotionLayer : public Vakol::Layer
     const int tickSkips = 5;
     int tickCount = 0;
 
-    const unsigned m_BuffSize = 15;
+    const unsigned m_BuffSize = 50;
     std::unordered_map<uint32_t, std::array<std::deque<float>, 8>> m_EmotionData;
 
     const std::array<std::string, 8> m_EmotionNames = {"Anger", "Anticipation", "Joy",     "Trust",

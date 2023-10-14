@@ -5,14 +5,18 @@
 
 #include <imgui.h>
 
+#include "implot.h"
+
 #include <Logger/Logger.hpp>
 
 void EmotionLayer::OnAttach()
 {
+    ImPlot::CreateContext();
 }
 
 void EmotionLayer::OnDetach()
 {
+    ImPlot::DestroyContext();
 }
 
 void EmotionLayer::OnUpdate()
@@ -35,10 +39,18 @@ void EmotionLayer::OnUpdate()
 
             if (ImGui::CollapsingHeader(entityName.c_str()))
             {
-                for (int i = 0; i < 8; i++)
+
+                if (ImPlot::BeginPlot("##EmotionPlot", nullptr, nullptr, ImVec2(-1, 0), 0, ImPlotAxisFlags_NoTickLabels,
+                                      ImPlotAxisFlags_NoTickLabels))
                 {
-                    std::vector<float> vec(iter.second[i].begin(), iter.second[i].end());
-                    ImGui::PlotLines(m_EmotionNames[i].c_str(), vec.data(), vec.size());
+                    ImPlot::SetupAxesLimits(0, m_BuffSize, -1.0, 1.0);
+                    for (int i = 0; i < 8; i++)
+                    {
+                        std::vector<float> vec(iter.second[i].begin(), iter.second[i].end());
+                        ImPlot::PlotLine(m_EmotionNames[i].c_str(), vec.data(), vec.size());
+                    }
+
+                    ImPlot::EndPlot();
                 }
             }
         }
@@ -46,10 +58,6 @@ void EmotionLayer::OnUpdate()
         ImGui::End();
         ImGui::PopStyleColor(4);
     }
-}
-
-void EmotionLayer::AddEmotionData(uint32_t EntityHandle, const std::array<float, 8>& data)
-{
 }
 
 void EmotionLayer::OnTick()
@@ -68,7 +76,6 @@ void EmotionLayer::OnTick()
             if (script.name == "emotions") // under assumption but does the job
             {
                 auto func = script.env["get_emotion"];
-                std::array<float, 8> tempArr;
 
                 for (int i = 0; i < 8; i++)
                 {
