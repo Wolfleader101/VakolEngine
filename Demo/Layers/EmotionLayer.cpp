@@ -17,7 +17,7 @@ void EmotionLayer::OnDetach()
 
 void EmotionLayer::OnUpdate()
 {
-    if (m_app.GetGameState() == Vakol::GameState::Paused)
+    if (m_show)
     {
         auto& EL = m_app.GetSceneManager().GetActiveScene().GetEntityList();
 
@@ -55,6 +55,11 @@ void EmotionLayer::AddEmotionData(uint32_t EntityHandle, const std::array<float,
 void EmotionLayer::OnTick()
 {
 
+    if (tickCount != tickSkips)
+    {
+        tickCount++;
+        return;
+    }
     auto& EL = m_app.GetSceneManager().GetActiveScene().GetEntityList();
 
     EL.Iterate<Vakol::ScriptComp>([&](auto handle, Vakol::ScriptComp& scripts) {
@@ -78,4 +83,27 @@ void EmotionLayer::OnTick()
             }
         }
     });
+
+    tickCount = 0;
+}
+
+void EmotionLayer::OnEvent(Vakol::Event& event)
+{
+    if (event.GetEventType() == Vakol::EventType::KeyPressed)
+    {
+        auto& keyEvent = dynamic_cast<Vakol::KeyPressedEvent&>(event);
+
+        if (keyEvent.GetKeyCode() == static_cast<int>(Vakol::Input::KEY::KEY_0))
+        {
+            m_show = !m_show;
+            event.Handled = true;
+            return;
+        }
+
+        if (keyEvent.GetKeyCode() == static_cast<int>(Vakol::Input::KEY::KEY_ESCAPE))
+        {
+            m_show = false;
+            m_app.SetGameState(Vakol::GameState::Running);
+        }
+    }
 }

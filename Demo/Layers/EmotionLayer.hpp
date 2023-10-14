@@ -20,11 +20,17 @@ class EmotionLayer : public Vakol::Layer
     void OnDetach() override;
     void OnUpdate() override;
     void OnTick() override;
+    void OnEvent(Vakol::Event& event) override;
 
   private:
     void AddEmotionData(uint32_t EntityHandle, const std::array<float, 8>& data);
 
-    unsigned m_BuffSize = 30;
+    bool m_show;
+
+    const int tickSkips = 5;
+    int tickCount = 0;
+
+    const unsigned m_BuffSize = 15;
     std::unordered_map<uint32_t, std::array<std::deque<float>, 8>> m_EmotionData;
 
     const std::array<std::string, 8> m_EmotionNames = {"Anger", "Anticipation", "Joy",     "Trust",

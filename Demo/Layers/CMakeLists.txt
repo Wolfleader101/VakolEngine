@@ -4,5 +4,6 @@ SET(LAYERS
 
     ${CMAKE_CURRENT_SOURCE_DIR}/EmotionLayer.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/EmotionLayer.cpp
+
     PARENT_SCOPE
 )
