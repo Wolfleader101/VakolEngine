@@ -189,7 +189,7 @@ function tick()
 
     if (slow == 5) then
         iterate();
-        print_emotions();
+        --print_emotions();
         slow = 0;
     else
         slow = slow + 1;
