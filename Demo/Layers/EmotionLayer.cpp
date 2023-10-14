@@ -19,7 +19,7 @@ void EmotionLayer::OnUpdate()
 {
     if (m_app.GetGameState() == Vakol::GameState::Paused)
     {
-        float m_values[7] = {0.5f, 0.9f, 0.2f, 0.8f, 0.1f, 0.7f, 0.6f};
+        auto& EL = m_app.GetSceneManager().GetActiveScene().GetEntityList();
 
         constexpr ImVec4 dark(0.15f, 0.15f, 0.15f, 1.0f);
         ImGui::PushStyleColor(ImGuiCol_WindowBg, dark);
@@ -29,7 +29,19 @@ void EmotionLayer::OnUpdate()
 
         ImGui::Begin("Entity Emotion Data");
 
-        ImGui::PlotLines("Emotion", m_values, IM_ARRAYSIZE(m_values));
+        for (const auto& iter : m_EmotionData)
+        {
+            const std::string& entityName = EL.GetEntity(iter.first).GetComponent<Vakol::Components::Tag>().tag;
+
+            if (ImGui::CollapsingHeader(entityName.c_str()))
+            {
+                for (int i = 0; i < 8; i++)
+                {
+                    std::vector<float> vec(iter.second[i].begin(), iter.second[i].end());
+                    ImGui::PlotLines(m_EmotionNames[i].c_str(), vec.data(), vec.size());
+                }
+            }
+        }
 
         ImGui::End();
         ImGui::PopStyleColor(4);
@@ -45,11 +57,24 @@ void EmotionLayer::OnTick()
 
     auto& EL = m_app.GetSceneManager().GetActiveScene().GetEntityList();
 
-    EL.Iterate<Vakol::ScriptComp>([&](auto handle, auto& scripts) {
-        for (const Vakol::LuaScript& script : scripts)
+    EL.Iterate<Vakol::ScriptComp>([&](auto handle, Vakol::ScriptComp& scripts) {
+        for (const Vakol::LuaScript& script : scripts.scripts)
         {
-            if (script.name = "emotions") // under assumption but does the job
+            if (script.name == "emotions") // under assumption but does the job
             {
+                auto func = script.env["get_emotion"];
+                std::array<float, 8> tempArr;
+
+                for (int i = 0; i < 8; i++)
+                {
+                    auto& emotion_arr = m_EmotionData[static_cast<uint32_t>(handle)];
+                    emotion_arr[i].push_back(func(i + 1));
+
+                    if (emotion_arr[i].size() > m_BuffSize)
+                    {
+                        emotion_arr[i].pop_front();
+                    }
+                }
             }
         }
     });

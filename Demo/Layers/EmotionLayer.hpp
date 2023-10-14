@@ -25,8 +25,7 @@ class EmotionLayer : public Vakol::Layer
     void AddEmotionData(uint32_t EntityHandle, const std::array<float, 8>& data);
 
     unsigned m_BuffSize = 30;
-    std::unordered_map<uint32_t, std::deque<std::array<float, 8>>> m_EmotionData;
-    // hows that for a data structure adlay
+    std::unordered_map<uint32_t, std::array<std::deque<float>, 8>> m_EmotionData;
 
     const std::array<std::string, 8> m_EmotionNames = {"Anger", "Anticipation", "Joy",     "Trust",
                                                        "Fear",  "Surprise",     "Sadness", "Disgust"};
