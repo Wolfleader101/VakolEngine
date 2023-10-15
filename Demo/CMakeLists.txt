@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 SET(CopyResources FALSE)
 
 add_subdirectory(Layers)
+add_subdirectory(lib)
 
 # Add source to this project's executable.
 add_executable(${PROJECT_NAME} "Demo.cpp" ${LAYERS})
@@ -15,6 +16,7 @@ target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
     VakolCore
+    implot
 )
 
 if(NOT CopyResources)

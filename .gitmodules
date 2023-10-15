@@ -29,3 +29,6 @@
 [submodule "Core/lib/crossguid"]
 	path = Core/lib/crossguid
 	url = https://github.com/graeme-hill/crossguid.git
+[submodule "Demo/lib/implot"]
+	path = Demo/lib/implot
+	url = https://github.com/epezent/implot.git
