@@ -42,78 +42,89 @@ namespace Vakol
             rb1.isSleeping = false;
             rb2.isSleeping = false;
 
+            Math::Vec3 averageLocalPoint1(0.0f, 0.0f, 0.0f);
+            Math::Vec3 averageLocalPoint2(0.0f, 0.0f, 0.0f);
+            Math::Vec3 averageNormal(0.0f, 0.0f, 0.0f);
+            float averagePenetrationDepth = 0.0f;
+
+            unsigned int numContactPoints = contactPair.getNbContactPoints();
+
             // For each contact point of the contact pair
             for (unsigned int c = 0; c < contactPair.getNbContactPoints(); c++)
             {
                 // Get the contact point
                 CollisionCallback::ContactPoint contactPoint = contactPair.getContactPoint(c);
 
-                Math::Vec3 localPoint1 =
+                averageLocalPoint1 +=
                     Math::Vec3(contactPoint.getLocalPointOnCollider1().x, contactPoint.getLocalPointOnCollider1().y,
                                contactPoint.getLocalPointOnCollider1().z);
 
-                Math::Vec3 localPoint2 =
+                averageLocalPoint2 +=
                     Math::Vec3(contactPoint.getLocalPointOnCollider2().x, contactPoint.getLocalPointOnCollider2().y,
                                contactPoint.getLocalPointOnCollider2().z);
 
-                Math::Vec3 normal = Math::Normalized(FromRPVec3(contactPoint.getWorldNormal()));
+                averageNormal += Math::Normalized(FromRPVec3(contactPoint.getWorldNormal()));
 
-                float penetrationDepth = contactPoint.getPenetrationDepth();
+                averagePenetrationDepth += contactPoint.getPenetrationDepth();
+            }
 
-                Math::Vec3 r1 = localPoint1 - body1Data->parentBody->centerOfMass;
-                Math::Vec3 r2 = localPoint2 - body2Data->parentBody->centerOfMass;
+            averageLocalPoint1 /= static_cast<float>(numContactPoints);
+            averageLocalPoint2 /= static_cast<float>(numContactPoints);
+            averageNormal = Math::Normalized(averageNormal);
+            averagePenetrationDepth /= static_cast<float>(numContactPoints);
 
-                Math::Vec3 relativeVel =
-                    (body2Data->parentBody->linearVelocity + Math::Cross(body2Data->parentBody->angularVelocity, r2)) -
-                    (body1Data->parentBody->linearVelocity + Math::Cross(body1Data->parentBody->angularVelocity, r1));
+            Math::Vec3 r1 = averageLocalPoint1 - rb1.centerOfMass;
+            Math::Vec3 r2 = averageLocalPoint2 - rb2.centerOfMass;
 
-                Depenetration(rb1, rb2, normal, penetrationDepth);
+            Math::Vec3 relativeVel = (rb2.linearVelocity + Math::Cross(rb2.angularVelocity, r2)) -
+                                     (rb1.linearVelocity + Math::Cross(rb1.angularVelocity, r1));
 
-                // if moving away from each other dont apply impulse
-                if (Math::Dot(relativeVel, normal) > 0.0f)
+            Depenetration(rb1, rb2, averageNormal, averagePenetrationDepth);
+
+            // if moving away from each other dont apply impulse
+            if (Math::Dot(relativeVel, averageNormal) > 0.0f)
+            {
+                continue;
+            }
+
+            Resolution(rb1, rb2, averageNormal, averageLocalPoint1, averageLocalPoint2);
+
+            // VK_CRITICAL("Linear Vel Magnitude Sq: {}", Math::MagnitudeSq(rb2.linearVelocity));
+
+            // VK_WARN("Angular Vel Magnitude Sq: {}", Math::MagnitudeSq(rb2.angularVelocity));
+
+            // Check for rb1
+            if (Math::MagnitudeSq(rb1.linearVelocity) < SLEEP_LINEAR_THRESHOLD &&
+                Math::MagnitudeSq(rb1.angularVelocity) < SLEEP_ANGULAR_THRESHOLD)
+            {
+                rb1.sleepCounter++;
+                if (rb1.sleepCounter >= SLEEP_COUNTER_THRESHOLD)
                 {
-                    continue;
+                    rb1.isSleeping = true;
+                    rb1.linearVelocity = Math::Vec3(0.0f, 0.0f, 0.0f);
+                    rb1.angularVelocity = Math::Vec3(0.0f, 0.0f, 0.0f);
                 }
+            }
+            else
+            {
+                rb1.sleepCounter = 0;
+            }
 
-                Resolution(rb1, rb2, normal, localPoint1, localPoint2);
-
-                // VK_CRITICAL("Linear Vel Magnitude Sq: {}", Math::MagnitudeSq(rb2.linearVelocity));
-
-                // VK_WARN("Angular Vel Magnitude Sq: {}", Math::MagnitudeSq(rb2.angularVelocity));
-
-                // Check for rb1
-                if (Math::MagnitudeSq(rb1.linearVelocity) < SLEEP_LINEAR_THRESHOLD &&
-                    Math::MagnitudeSq(rb1.angularVelocity) < SLEEP_ANGULAR_THRESHOLD)
+            // Check for rb2
+            if (Math::MagnitudeSq(rb2.linearVelocity) < SLEEP_LINEAR_THRESHOLD &&
+                Math::MagnitudeSq(rb2.angularVelocity) < SLEEP_ANGULAR_THRESHOLD)
+            {
+                rb2.sleepCounter++;
+                if (rb2.sleepCounter >= SLEEP_COUNTER_THRESHOLD)
                 {
-                    rb1.sleepCounter++;
-                    if (rb1.sleepCounter >= SLEEP_COUNTER_THRESHOLD)
-                    {
-                        rb1.isSleeping = true;
-                        rb1.linearVelocity = Math::Vec3(0.0f, 0.0f, 0.0f);
-                        rb1.angularVelocity = Math::Vec3(0.0f, 0.0f, 0.0f);
-                    }
+                    rb2.isSleeping = true;
+                    rb2.linearVelocity = Math::Vec3(0.0f, 0.0f, 0.0f);
+                    rb2.angularVelocity = Math::Vec3(0.0f, 0.0f, 0.0f);
                 }
-                else
-                {
-                    rb1.sleepCounter = 0;
-                }
-
-                // Check for rb2
-                if (Math::MagnitudeSq(rb2.linearVelocity) < SLEEP_LINEAR_THRESHOLD &&
-                    Math::MagnitudeSq(rb2.angularVelocity) < SLEEP_ANGULAR_THRESHOLD)
-                {
-                    rb2.sleepCounter++;
-                    if (rb2.sleepCounter >= SLEEP_COUNTER_THRESHOLD)
-                    {
-                        rb2.isSleeping = true;
-                        rb2.linearVelocity = Math::Vec3(0.0f, 0.0f, 0.0f);
-                        rb2.angularVelocity = Math::Vec3(0.0f, 0.0f, 0.0f);
-                    }
-                }
-                else
-                {
-                    rb2.sleepCounter = 0;
-                }
+            }
+            else
+            {
+                rb2.sleepCounter = 0;
             }
         }
     }
@@ -162,7 +173,7 @@ namespace Vakol
         // T = transpose
         // J = intertia tensor, 3x3 matrix
 
-        // v1 is body1 velocity
+        // v1 is body 1 velocity
         // v2 is body 2 velocity
 
         // lamba = -(1 + e) * (n . (v1 - v2) + w1 . (r1 x n) - w2 . (r2 x n)) / 1/m1 + 1/m2 + ((r1 x n)^T . J1^-1 * (r1

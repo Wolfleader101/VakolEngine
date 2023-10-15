@@ -25,7 +25,7 @@ namespace Vakol
          * @param orientation The initial orientation of the body in the scene.
          * @return RigidBody The rigid body created with the specified position and orientation.
          */
-        RigidBody& CreateRigidBody(Math::Vec3& pos, Math::Quat& orientation);
+        RigidBody CreateRigidBody(Math::Vec3& pos, Math::Quat& orientation);
 
         /**
          * @brief Performs a raycast in the scene from a specified origin in a given direction, up to a maximum
@@ -101,8 +101,6 @@ namespace Vakol
          *
          */
         GUID m_guid;
-
-        std::vector<std::shared_ptr<RigidBody>> m_rigidBodies;
 
         friend class PhysicsEngine;
     };

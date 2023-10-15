@@ -167,7 +167,7 @@ namespace Vakol
         if (rb.hasGravity)
         {
             // can be assumed as static, can be moved later
-            static const Math::Vec3 gravity(0.0f, -9.8f, 0.0f);
+            static const Math::Vec3 gravity(0.0f, -9.82f, 0.0f);
 
             Math::Vec3 weight = rb.mass * gravity;
             rb.force += weight;

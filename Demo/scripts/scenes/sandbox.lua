@@ -31,24 +31,46 @@ function init()
     -- phys_objs();
     -- falling_objs();
 
-    for i = 1, 1000 do
-        local entityName = "Cube" .. " " .. i;
+    -- for i = 1, 1000 do
+    --     local entityName = "Cube" .. " " .. i;
 
-        local cube = scene:create_entity(entityName, "");
-        cube:get_transform().pos = Vector3.new(randomFloat(-100, 100), randomFloat(10, 50), randomFloat(-100, 100));
-        cube:get_transform().rot = Vector3.new(randomFloat(-365, 365), randomFloat(-365, 365), randomFloat(-365, 365));
-        local mdl = cube:add_model("coreAssets/models/cube.obj", 1);
+    --     local cube = scene:create_entity(entityName, "");
+    --     cube:get_transform().pos = Vector3.new(randomFloat(-100, 100), randomFloat(10, 50), randomFloat(-100, 100));
+    --     cube:get_transform().rot = Vector3.new(randomFloat(-365, 365), randomFloat(-365, 365), randomFloat(-365, 365));
+    --     local mdl = cube:add_model("coreAssets/models/cube.obj", 1);
 
-        local mesh = mdl:get_mesh(0);
+    --     local mesh = mdl:get_mesh(0);
 
-        mesh.material:set_diffuse_color(Vector4.new(randomFloat(0, 1), randomFloat(0, 1), randomFloat(0, 1), 1.0));
+    --     mesh.material:set_diffuse_color(Vector4.new(randomFloat(0, 1), randomFloat(0, 1), randomFloat(0, 1), 1.0));
 
-        local rb = cube:add_rigid();
-        rb.mass = 10;
-        rb.bounciness = 0.5;
-        rb.type = BodyType.Dynamic;
-        cube:add_box_collider(Vector3.new(1.0, 1.0, 1.0));
-    end
+    --     local rb = cube:add_rigid();
+    --     rb.mass = randomFloat(5,100);
+    --     rb.bounciness = randomFloat(0, 1);
+    --     rb.type = BodyType.Dynamic;
+    --     cube:add_box_collider(Vector3.new(1.0, 1.0, 1.0));
+    -- end
+
+        local cube = scene:create_entity("Cube", "");
+    cube:get_transform().pos = Vector3.new(10.0, 20.0, 0.0);
+    cube:get_transform().rot = Vector3.new(00.0, 0.0, 45.0);
+    cube:add_model("coreAssets/models/cube.obj", 1);
+
+    local rb = cube:add_rigid();
+    rb.mass = 100;
+    rb.bounciness = 0.3;
+    rb.type = BodyType.Dynamic;
+    cube:add_box_collider(Vector3.new(1.0, 1.0, 1.0));
+
+    local cube2 = scene:create_entity("Cube2", "");
+    cube2:get_transform().pos = Vector3.new(15, 20.0, 0.0);
+    cube2:get_transform().rot = Vector3.new(0.0, 0.0, 0.0);
+    cube2:add_model("coreAssets/models/cube.obj", 1);
+
+    local rb2 = cube2:add_rigid();
+    rb2.mass = 10;
+    rb2.bounciness = 0.3;
+    rb2.type = BodyType.Dynamic;
+    cube2:add_box_collider(Vector3.new(1.0, 1.0, 1.0));
 end
 
 function randomFloat(lower, greater)
