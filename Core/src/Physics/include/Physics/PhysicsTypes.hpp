@@ -104,7 +104,7 @@ namespace Vakol
         float bounciness = 0.95f;
         float friction = 0.85f;
 
-        bool useGravity = false;
+        bool useGravity = true;
 
         Math::Mat3 inertiaTensor = Math::Mat3(1.0f);
         Math::Mat3 inverseInertiaTensor = Math::Mat3(1.0f);

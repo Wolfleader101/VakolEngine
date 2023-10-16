@@ -161,10 +161,10 @@ namespace Vakol
          *
          * @param bodyA f
          * @param bodyB g
-         * @param depth the depth of the depenetration
+         * @param penetrationDepth the depth of the depenetration
          * @param normal the normal of the contact
          */
-        static void Depenetration(RigidBody& bodyA, RigidBody& bodyB, float depth, const Math::Vec3& normal);
+        static void Depenetration(RigidBody& bodyA, RigidBody& bodyB, float penetrationDepth, const Math::Vec3& normal);
 
         /**
          * @brief Set the Time Step object

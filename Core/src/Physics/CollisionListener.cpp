@@ -36,9 +36,9 @@ namespace Vakol
                 Math::Vec3 worldContactNormal = Math::Normalized(FromRPVec3(point.getWorldNormal()));
                 const float penetrationDepth = point.getPenetrationDepth();
 
-                PhysicsEngine::ResolveCollisions(bodyA, bodyB, worldContactNormal, localContactPoint1, localContactPoint2);
-
                 PhysicsEngine::Depenetration(bodyA, bodyB, penetrationDepth, worldContactNormal);
+
+                PhysicsEngine::ResolveCollisions(bodyA, bodyB, worldContactNormal, localContactPoint1, localContactPoint2);
             }
         }
     }

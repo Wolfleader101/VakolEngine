@@ -353,20 +353,38 @@ namespace Vakol
         }
     }
 
-    void PhysicsEngine::Depenetration(RigidBody& bodyA, RigidBody& bodyB, const float depth, const Math::Vec3& normal)
+    // Derived from Game Physics Cookbook http://ndl.ethernet.edu.et/bitstream/123456789/24446/1/Gabor%20Szauer_2017.pdf
+    void PhysicsEngine::Depenetration(RigidBody& bodyA, RigidBody& bodyB, const float penetrationDepth, const Math::Vec3& normal)
     {
         if (bodyA.type == BodyType::Static && bodyB.type == BodyType::Static)
             return;
 
+        
+        const float invMassSum = bodyA.GetInverseMass() + bodyB.GetInverseMass();
+
+        if (invMassSum == 0.0f)
+            return;
+
+        // How much positional correction to apply. Smaller values will allow more penetration to occur.
+        constexpr float linearProjectionPercent = 0.45f;
+
+        // Determines how much to allow objects to penetrate.
+        constexpr float penetrationSlack = 0.01f; // Keep value between 0.01 and 0.1
+
+        const float depth = fmaxf(penetrationDepth - penetrationSlack, 0.0f);
+        const float scalar = depth / invMassSum;
+
+        const Math::Vec3 correction = normal * scalar * linearProjectionPercent;
+
         if (bodyA.type != BodyType::Static)
         {
-            bodyA.position += -(depth / 2) * normal;
+            bodyA.position -= correction * bodyA.GetInverseMass();
             bodyA.SetPosition(bodyA.position);
         }
 
         if (bodyB.type != BodyType::Static)
         {
-            bodyB.position -= depth / 2 * normal;
+            bodyB.position += correction * bodyB.GetInverseMass();
             bodyB.SetPosition(bodyB.position);
         }
     }
