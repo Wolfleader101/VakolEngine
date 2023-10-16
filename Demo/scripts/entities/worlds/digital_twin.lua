@@ -31,34 +31,34 @@ function init()
 	barriers[7] = scene:create_entity("Glass Barrier 5", "");
 
 	--Add Props to Digital Twin
-	local props = scene:create_entity("Props", "entities/worlds/digital_twin_props.lua");
+	--local props = scene:create_entity("Props", "entities/worlds/digital_twin_props.lua");
 
 	--MODEL FILE ACQUISITION
 	--Digital Twin Geometry Models
 	floor:add_model("assets/models/digital_twin/GROUND.fbx", GLOBAL_SCALE);
 
-	roof:add_model("assets/models/digital_twin/ROOF.fbx", GLOBAL_SCALE);
-	roof_supports:add_model("assets/models/digital_twin/ROOF-SUPPORTS.fbx", GLOBAL_SCALE);
+	--roof:add_model("assets/models/digital_twin/ROOF.fbx", GLOBAL_SCALE);
+	--roof_supports:add_model("assets/models/digital_twin/ROOF-SUPPORTS.fbx", GLOBAL_SCALE);
 
-	building:add_model("assets/models/digital_twin/BUILDING.fbx", GLOBAL_SCALE);
+	--building:add_model("assets/models/digital_twin/BUILDING.fbx", GLOBAL_SCALE);
 
-	barriers[1]:add_model("assets/models/digital_twin/GLASS-BARRIERS-LEFT.fbx", GLOBAL_SCALE);
-	barriers[2]:add_model("assets/models/digital_twin/GLASS-BARRIERS-RIGHT.fbx", GLOBAL_SCALE);
+	--barriers[1]:add_model("assets/models/digital_twin/GLASS-BARRIERS-LEFT.fbx", GLOBAL_SCALE);
+	--barriers[2]:add_model("assets/models/digital_twin/GLASS-BARRIERS-RIGHT.fbx", GLOBAL_SCALE);
 
-	barriers[3]:add_model("assets/models/digital_twin/GLASS-BARRIERS-LEFT.fbx", GLOBAL_SCALE);
-	barriers[4]:add_model("assets/models/digital_twin/GLASS-BARRIERS-LEFT.fbx", GLOBAL_SCALE);
-	barriers[5]:add_model("assets/models/digital_twin/GLASS-BARRIERS-LEFT.fbx", GLOBAL_SCALE);
-	barriers[6]:add_model("assets/models/digital_twin/GLASS-BARRIERS-LEFT.fbx", GLOBAL_SCALE);
-	barriers[7]:add_model("assets/models/digital_twin/GLASS-BARRIERS-LEFT.fbx", GLOBAL_SCALE);
+	--barriers[3]:add_model("assets/models/digital_twin/GLASS-BARRIERS-LEFT.fbx", GLOBAL_SCALE);
+	--barriers[4]:add_model("assets/models/digital_twin/GLASS-BARRIERS-LEFT.fbx", GLOBAL_SCALE);
+	--barriers[5]:add_model("assets/models/digital_twin/GLASS-BARRIERS-LEFT.fbx", GLOBAL_SCALE);
+	--barriers[6]:add_model("assets/models/digital_twin/GLASS-BARRIERS-LEFT.fbx", GLOBAL_SCALE);
+	--barriers[7]:add_model("assets/models/digital_twin/GLASS-BARRIERS-LEFT.fbx", GLOBAL_SCALE);
 
-	left_pillars:add_model("assets/models/digital_twin/WOODEN-PILLARS-LEFT.fbx", GLOBAL_SCALE);
-	right_pillars:add_model("assets/models/digital_twin/WOODEN-PILLARS-RIGHT.fbx", GLOBAL_SCALE);
+	--left_pillars:add_model("assets/models/digital_twin/WOODEN-PILLARS-LEFT.fbx", GLOBAL_SCALE);
+	--right_pillars:add_model("assets/models/digital_twin/WOODEN-PILLARS-RIGHT.fbx", GLOBAL_SCALE);
 
-	balcony:add_model("assets/models/digital_twin/BALCONY.fbx", GLOBAL_SCALE);
+	--balcony:add_model("assets/models/digital_twin/BALCONY.fbx", GLOBAL_SCALE);
 
-	table_top:add_model("assets/models/digital_twin/TABLE-TOP.fbx", GLOBAL_SCALE);
+	--table_top:add_model("assets/models/digital_twin/TABLE-TOP.fbx", GLOBAL_SCALE);
 
-	windowsill:add_model("assets/models/digital_twin/WINDOWSILL.fbx", GLOBAL_SCALE);
+	--windowsill:add_model("assets/models/digital_twin/WINDOWSILL.fbx", GLOBAL_SCALE);
 
 	--COLLIDER FUNCTIONS
 	create_pillar_colliders();

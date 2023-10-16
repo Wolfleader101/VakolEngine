@@ -1,18 +1,17 @@
-BLAKE = "IS GAY"
+INTERACTABLE = nil;
 
 function init()
-	print("cube")
 	entity:add_model("coreAssets/models/cube.obj", 1);
+	entity:get_transform().pos = Vector3.new(0.0, 2.0, -5.0);
 
-    local rb = entity:add_rigid();
-	rb.mass = 1;
-    entity:add_box_collider(Vector3.new(1.0, 1.0, 1.0));
-	
-    local root = entity:get_script("root")
-	print(root.CALEB)
+	entity:add_script("throwable", "components/throwable.lua");
+	local throwableScript = entity:get_script("throwable");
+	INTERACTABLE = throwableScript.THROWABLE;
 end
 
+function update()
 
+end
 
 function phys_update()
 	-- local rb = entity:get_rigid();
