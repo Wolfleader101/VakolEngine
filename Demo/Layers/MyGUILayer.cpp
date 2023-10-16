@@ -1,5 +1,7 @@
 #include "MyGUILayer.hpp"
 
+#include <cstring>
+
 #include "AssetLoader/AssetLoader.hpp"
 #include "Rendering/RenderEngine.hpp"
 
@@ -421,6 +423,54 @@ void MyGUILayer::OnUpdate()
                                 m_app.GetPhysicsEngine().AttachCollider(rb, collider);
 
                                 entity.AddComponent<Vakol::CapsuleCollider>(collider);
+                            }
+                        }
+
+                        if (entity.HasComponent<Vakol::ScriptComp>() && ImGui::CollapsingHeader("Scripts"))
+                        {
+                            Vakol::ScriptComp& scriptComp = entity.GetComponent<Vakol::ScriptComp>();
+
+                            for (auto& script : scriptComp.scripts)
+                            {
+                                ImGui::SeparatorText(script.name.c_str());
+
+                                for (const auto& kv : script.env)
+                                {
+                                    if (!kv.first.valid() || !kv.second.valid())
+                                        continue;
+
+                                    if (kv.first.is<std::string>())
+                                    {
+                                        if (kv.second.is<std::string>())
+                                        {
+                                            ImGui::TextColored(ImVec4(0.37f, 0.66f, 0.69f, 1.0f), "%s",
+                                                               kv.first.as<std::string>().c_str());
+                                            ImGui::Text("%s", kv.second.as<std::string>().c_str());
+                                            ImGui::Dummy(ImVec2(0.0f, 10.0f));
+                                        }
+                                        else if (kv.second.is<float>())
+                                        {
+                                            ImGui::TextColored(ImVec4(1.f, 0.33f, 0.33f, 1.0f), "%s",
+                                                               kv.first.as<std::string>().c_str());
+                                            ImGui::Text("%.2f", kv.second.as<float>());
+                                            ImGui::Dummy(ImVec2(0.0f, 10.0f));
+                                        }
+                                        else if (kv.second.is<int>())
+                                        {
+                                            ImGui::TextColored(ImVec4(0.83f, 0.88f, 0.18f, 1.0f), "%s",
+                                                               kv.first.as<std::string>().c_str());
+                                            ImGui::Text("%d", kv.second.as<int>());
+                                            ImGui::Dummy(ImVec2(0.0f, 10.0f));
+                                        }
+                                        else if (kv.second.is<bool>())
+                                        {
+                                            ImGui::TextColored(ImVec4(0.28f, 0.88f, 0.35f, 1.0f), "%s",
+                                                               kv.first.as<std::string>().c_str());
+                                            ImGui::Text("%s", kv.second.as<bool>() ? "true" : "false");
+                                            ImGui::Dummy(ImVec2(0.0f, 10.0f));
+                                        }
+                                    }
+                                }
                             }
                         }
 
