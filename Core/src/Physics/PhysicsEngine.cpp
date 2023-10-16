@@ -100,10 +100,13 @@ namespace Vakol
     void PhysicsEngine::AttachCollider(RigidBody& rb, BoxCollider& collider)
     {
         collider.collider = rb.collisionBody->addCollider(collider.shape, rp3d::Transform::identity());
-        rb.collider = collider.collider;
+        //rb.collider = collider.collider;
 
-        rb.inertiaTensor = FromRPMat3(collider.shape->getLocalInertiaTensor(rb.mass));
-        rb.inverseInertiaTensor = Math::Inverse(rb.inertiaTensor);
+        auto inertiaTensor = FromRPMat3(collider.shape->getLocalInertiaTensor(rb.mass));
+        auto invIT = Math::Inverse(inertiaTensor);
+
+        rb.inertiaTensor = {inertiaTensor[0][0], inertiaTensor[1][1], inertiaTensor[2][2]};
+        rb.inverseInertiaTensor = {invIT[0][0], invIT[1][1], invIT[2][2]};
 
         rb.mass = rb.type == BodyType::Static ? 0.0f : rb.mass;
     }
@@ -111,10 +114,13 @@ namespace Vakol
     void PhysicsEngine::AttachCollider(RigidBody& rb, SphereCollider& collider)
     {
         collider.collider = rb.collisionBody->addCollider(collider.shape, rp3d::Transform::identity());
-        rb.collider = collider.collider;
+        //rb.collider = collider.collider;
 
-        rb.inertiaTensor = FromRPMat3(collider.shape->getLocalInertiaTensor(rb.mass));
-        rb.inverseInertiaTensor = Math::Inverse(rb.inertiaTensor);
+        auto inertiaTensor = FromRPMat3(collider.shape->getLocalInertiaTensor(rb.mass));
+        auto invIT = Math::Inverse(inertiaTensor);
+
+        rb.inertiaTensor = {inertiaTensor[0][0], inertiaTensor[1][1], inertiaTensor[2][2]};
+        rb.inverseInertiaTensor = {invIT[0][0], invIT[1][1], invIT[2][2]};
 
         rb.mass = rb.type == BodyType::Static ? 0.0f : rb.mass;
     }
@@ -122,10 +128,13 @@ namespace Vakol
     void PhysicsEngine::AttachCollider(RigidBody& rb, CapsuleCollider& collider)
     {
         collider.collider = rb.collisionBody->addCollider(collider.shape, rp3d::Transform::identity());
-        rb.collider = collider.collider;
+        //rb.collider = collider.collider;
 
-        rb.inertiaTensor = FromRPMat3(collider.shape->getLocalInertiaTensor(rb.mass));
-        rb.inverseInertiaTensor = Math::Inverse(rb.inertiaTensor);
+        auto inertiaTensor = FromRPMat3(collider.shape->getLocalInertiaTensor(rb.mass));
+        auto invIT = Math::Inverse(inertiaTensor);
+
+        rb.inertiaTensor = {inertiaTensor[0][0], inertiaTensor[1][1], inertiaTensor[2][2]};
+        rb.inverseInertiaTensor = {invIT[0][0], invIT[1][1], invIT[2][2]};
 
         rb.mass = rb.type == BodyType::Static ? 0.0f : rb.mass;
     }
@@ -133,10 +142,13 @@ namespace Vakol
     void PhysicsEngine::AttachCollider(RigidBody& rb, MeshCollider& collider)
     {
         collider.collider = rb.collisionBody->addCollider(collider.shape, rp3d::Transform::identity());
-        rb.collider = collider.collider;
+        //rb.collider = collider.collider;
 
-        rb.inertiaTensor = FromRPMat3(collider.shape->getLocalInertiaTensor(rb.mass));
-        rb.inverseInertiaTensor = Math::Inverse(rb.inertiaTensor);
+        auto inertiaTensor = FromRPMat3(collider.shape->getLocalInertiaTensor(rb.mass));
+        auto invIT = Math::Inverse(inertiaTensor);
+
+        rb.inertiaTensor = {inertiaTensor[0][0], inertiaTensor[1][1], inertiaTensor[2][2]};
+        rb.inverseInertiaTensor = {invIT[0][0], invIT[1][1], invIT[2][2]};
 
         rb.mass = rb.type == BodyType::Static ? 0.0f : rb.mass;
     }
@@ -163,14 +175,14 @@ namespace Vakol
     {
         Math::Vec3 i = Math::Vec3(0.0f);
 
-        constexpr float K = 2.0f / 5.0f;
+        const float K = 2.0f / 5.0f * mass;
 
         // radius squared
         const float r2 = radius * radius;
 
-        i.x = r2 * mass * K;
-        i.y = r2 * mass * K;
-        i.z = r2 * mass * K;
+        i.x = K * r2;
+        i.y = K * r2;
+        i.z = K * r2;
 
         return {i.x, 0.0f, 0.0f, 0.0f, i.y, 0.0f, 0.0f, 0.0f, i.z};
     }

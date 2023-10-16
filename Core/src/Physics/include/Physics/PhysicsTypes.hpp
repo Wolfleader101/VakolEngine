@@ -83,8 +83,8 @@ namespace Vakol
 
         Math::Vec3 relativeVelocity = Math::Vec3(0.0f);
 
-        Math::Mat3 J1 = Math::Mat3(1.0f); // inertia tensor for body 1
-        Math::Mat3 J2 = Math::Mat3(1.0f); // inertia tensor for body 2
+        Math::Vec3 J1 = Math::Vec3(0.0f); // inertia tensor for body 1
+        Math::Vec3 J2 = Math::Vec3(0.0f); // inertia tensor for body 2
 
         float mSum = 0.0f; // inverse mass sum
         float rVN = 0.0f; // relative velocity along normal (dot prod)
@@ -106,8 +106,8 @@ namespace Vakol
 
         bool useGravity = true;
 
-        Math::Mat3 inertiaTensor = Math::Mat3(1.0f);
-        Math::Mat3 inverseInertiaTensor = Math::Mat3(1.0f);
+        Math::Vec3 inertiaTensor = Math::Vec3(0.0f);
+        Math::Vec3 inverseInertiaTensor = Math::Vec3(0.0f);
 
         Math::Vec3 position = Math::Vec3(0.0f);
         Math::Quat rotation = Math::Quat(1.0f, Math::Vec3(0.0f));
@@ -126,8 +126,6 @@ namespace Vakol
 
         rp3d::CollisionBody* collisionBody = nullptr;
         std::shared_ptr<ContactData> contactData = nullptr;
-
-        rp3d::Collider* collider = nullptr;
 
         inline void ResetForces()
         {

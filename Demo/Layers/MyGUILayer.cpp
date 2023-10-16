@@ -343,24 +343,14 @@ void MyGUILayer::OnUpdate()
                             ImGui::DragFloat3("Torque", &rb.torque.x, 0.1f);
 
                             ImGui::Spacing();
-                            ImGui::SeparatorText("Inertia Tensor");
 
-                            ImGui::Text("x: %f, %f, %f", rb.inertiaTensor[0][0], rb.inertiaTensor[0][1],
-                                        rb.inertiaTensor[0][2]);
-                            ImGui::Text("y: %f, %f, %f", rb.inertiaTensor[1][0], rb.inertiaTensor[1][1],
-                                        rb.inertiaTensor[1][2]);
-                            ImGui::Text("z: %f, %f, %f", rb.inertiaTensor[2][0], rb.inertiaTensor[2][1],
-                                        rb.inertiaTensor[2][2]);
+                            ImGui::Text("Inertia Tensor: [x: %.3f, y: %.3f z: %.3f]", rb.inertiaTensor.x,
+                                        rb.inertiaTensor.y, rb.inertiaTensor.z);
 
                             ImGui::Spacing();
-                            ImGui::SeparatorText("Inverse Inertia Tensor");
 
-                            ImGui::Text("x: %f, %f, %f", rb.inverseInertiaTensor[0][0],
-                                        rb.inverseInertiaTensor[0][1], rb.inverseInertiaTensor[0][2]);
-                            ImGui::Text("y: %f, %f, %f", rb.inverseInertiaTensor[1][0],
-                                        rb.inverseInertiaTensor[1][1], rb.inverseInertiaTensor[1][2]);
-                            ImGui::Text("z: %f, %f, %f", rb.inertiaTensor[2][0],
-                                        rb.inverseInertiaTensor[2][1], rb.inverseInertiaTensor[2][2]);
+                            ImGui::Text("Inverse Inertia Tensor: [x: %.3f, y: %.3f z: %.3f]", rb.inverseInertiaTensor.x,
+                                        rb.inverseInertiaTensor.y, rb.inverseInertiaTensor.z);
 
                             ImGui::Spacing();
                             ImGui::SeparatorText("Rotation Matrix");
