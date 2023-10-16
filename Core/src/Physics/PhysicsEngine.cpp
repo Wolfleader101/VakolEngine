@@ -95,12 +95,21 @@ namespace Vakol
         collider.collider = rb.collisionBody->addCollider(collider.shape, rp3d::Transform::identity());
 
         Math::Vec3 rpJ = FromRPVec3(collider.shape->getLocalInertiaTensor(rb.mass));
+        Math::Mat3 inertiaTensor = Math::Mat3(0.0f);
+        inertiaTensor[0][0] = rpJ.x;
+        inertiaTensor[1][1] = rpJ.y;
+        inertiaTensor[2][2] = rpJ.z;
 
-        rb.inertiaTensor[0][0] = rpJ.x;
-        rb.inertiaTensor[1][1] = rpJ.y;
-        rb.inertiaTensor[2][2] = rpJ.z;
+        if (rb.type == BodyType::Static)
+        {
+            rb.invInertiaTensor = Math::Vec3(0.0f);
+        }
+        else
+        {
+            Math::Mat3 invMat = Math::Inverse(inertiaTensor);
+            rb.invInertiaTensor = Math::Vec3(invMat[0][0], invMat[1][1], invMat[2][2]);
+        }
 
-        rb.invInertiaTensor = rb.type == BodyType::Static ? Math::Mat3(0.0f) : Math::Inverse(rb.inertiaTensor);
         rb.invMass = rb.type == BodyType::Static ? 0.0f : 1.0f / rb.mass;
     }
 
@@ -109,12 +118,21 @@ namespace Vakol
         collider.collider = rb.collisionBody->addCollider(collider.shape, rp3d::Transform::identity());
 
         Math::Vec3 rpJ = FromRPVec3(collider.shape->getLocalInertiaTensor(rb.mass));
+        Math::Mat3 inertiaTensor = Math::Mat3(0.0f);
+        inertiaTensor[0][0] = rpJ.x;
+        inertiaTensor[1][1] = rpJ.y;
+        inertiaTensor[2][2] = rpJ.z;
 
-        rb.inertiaTensor[0][0] = rpJ.x;
-        rb.inertiaTensor[1][1] = rpJ.y;
-        rb.inertiaTensor[2][2] = rpJ.z;
+        if (rb.type == BodyType::Static)
+        {
+            rb.invInertiaTensor = Math::Vec3(0.0f);
+        }
+        else
+        {
+            Math::Mat3 invMat = Math::Inverse(inertiaTensor);
+            rb.invInertiaTensor = Math::Vec3(invMat[0][0], invMat[1][1], invMat[2][2]);
+        }
 
-        rb.invInertiaTensor = rb.type == BodyType::Static ? Math::Mat3(0.0f) : Math::Inverse(rb.inertiaTensor);
         rb.invMass = rb.type == BodyType::Static ? 0.0f : 1.0f / rb.mass;
     }
 
@@ -123,12 +141,21 @@ namespace Vakol
         collider.collider = rb.collisionBody->addCollider(collider.shape, rp3d::Transform::identity());
 
         Math::Vec3 rpJ = FromRPVec3(collider.shape->getLocalInertiaTensor(rb.mass));
+        Math::Mat3 inertiaTensor = Math::Mat3(0.0f);
+        inertiaTensor[0][0] = rpJ.x;
+        inertiaTensor[1][1] = rpJ.y;
+        inertiaTensor[2][2] = rpJ.z;
 
-        rb.inertiaTensor[0][0] = rpJ.x;
-        rb.inertiaTensor[1][1] = rpJ.y;
-        rb.inertiaTensor[2][2] = rpJ.z;
+        if (rb.type == BodyType::Static)
+        {
+            rb.invInertiaTensor = Math::Vec3(0.0f);
+        }
+        else
+        {
+            Math::Mat3 invMat = Math::Inverse(inertiaTensor);
+            rb.invInertiaTensor = Math::Vec3(invMat[0][0], invMat[1][1], invMat[2][2]);
+        }
 
-        rb.invInertiaTensor = rb.type == BodyType::Static ? Math::Mat3(0.0f) : Math::Inverse(rb.inertiaTensor);
         rb.invMass = rb.type == BodyType::Static ? 0.0f : 1.0f / rb.mass;
     }
 
@@ -137,12 +164,21 @@ namespace Vakol
         collider.collider = rb.collisionBody->addCollider(collider.shape, rp3d::Transform::identity());
 
         Math::Vec3 rpJ = FromRPVec3(collider.shape->getLocalInertiaTensor(rb.mass));
+        Math::Mat3 inertiaTensor = Math::Mat3(0.0f);
+        inertiaTensor[0][0] = rpJ.x;
+        inertiaTensor[1][1] = rpJ.y;
+        inertiaTensor[2][2] = rpJ.z;
 
-        rb.inertiaTensor[0][0] = rpJ.x;
-        rb.inertiaTensor[1][1] = rpJ.y;
-        rb.inertiaTensor[2][2] = rpJ.z;
+        if (rb.type == BodyType::Static)
+        {
+            rb.invInertiaTensor = Math::Vec3(0.0f);
+        }
+        else
+        {
+            Math::Mat3 invMat = Math::Inverse(inertiaTensor);
+            rb.invInertiaTensor = Math::Vec3(invMat[0][0], invMat[1][1], invMat[2][2]);
+        }
 
-        rb.invInertiaTensor = rb.type == BodyType::Static ? Math::Mat3(0.0f) : Math::Inverse(rb.inertiaTensor);
         rb.invMass = rb.type == BodyType::Static ? 0.0f : 1.0f / rb.mass;
     }
 

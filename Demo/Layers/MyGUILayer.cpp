@@ -255,14 +255,9 @@ void MyGUILayer::OnUpdate()
                             //             rb.rotationMatrix[2][2]);
 
                             ImGui::Spacing();
-                            ImGui::SeparatorText("Interia Tensor");
+                            ImGui::SeparatorText("Inverse Interia Tensor");
 
-                            ImGui::Text("x: %f, %f, %f", rb.inertiaTensor[0][0], rb.inertiaTensor[0][1],
-                                        rb.inertiaTensor[0][2]);
-                            ImGui::Text("y: %f, %f, %f", rb.inertiaTensor[1][0], rb.inertiaTensor[1][1],
-                                        rb.inertiaTensor[1][2]);
-                            ImGui::Text("z: %f, %f, %f", rb.inertiaTensor[2][0], rb.inertiaTensor[2][1],
-                                        rb.inertiaTensor[2][2]);
+                            ImGui::DragFloat3("Inverse Interia Tensor", &rb.invInertiaTensor.x, 0.0f);
 
                             if (rb.collisionData)
                             {

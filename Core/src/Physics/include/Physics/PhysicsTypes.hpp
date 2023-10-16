@@ -79,8 +79,7 @@ namespace Vakol
         Math::Vec3 linearVelocity = Math::Vec3(0.0f, 0.0f, 0.0f);
         Math::Vec3 angularVelocity = Math::Vec3(0.0f, 0.0f, 0.0f);
 
-        Math::Mat3 inertiaTensor = Math::Mat3(0.0f);
-        Math::Mat3 invInertiaTensor = Math::Mat3(0.0f);
+        Math::Vec3 invInertiaTensor = Math::Vec3(0.0f);
 
         rp3d::CollisionBody* collisionBody = nullptr;
 

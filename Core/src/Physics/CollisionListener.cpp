@@ -136,10 +136,7 @@ namespace Vakol
             return;
         }
 
-        float rb1MassInv = rb1.type == BodyType::Static ? 0.0f : 1.0f / rb1.mass;
-        float rb2MassInv = rb2.type == BodyType::Static ? 0.0f : 1.0f / rb2.mass;
-
-        float masses = rb1MassInv + rb2MassInv;
+        float masses = rb1.invMass + rb2.invMass;
 
         if (masses == 0.0f)
         {
@@ -150,8 +147,8 @@ namespace Vakol
         float scalar = depth / masses;
         Math::Vec3 correction = scalar * normal * 0.45f;
 
-        rb1.position -= correction * rb1MassInv;
-        rb2.position += correction * rb2MassInv;
+        rb1.position -= correction * rb1.invMass;
+        rb2.position += correction * rb2.invMass;
 
         rb1.collisionBody->setTransform(rp3d::Transform(rp3d::Vector3(rb1.position.x, rb1.position.y, rb1.position.z),
                                                         rb1.collisionBody->getTransform().getOrientation()));
@@ -171,7 +168,7 @@ namespace Vakol
         // r = distance from center of mass to collision point
         // m = mass
         // T = transpose
-        // J = intertia tensor, 3x3 matrix
+        // J = inertia tensor, 3x3 matrix
 
         // v1 is body 1 velocity
         // v2 is body 2 velocity
