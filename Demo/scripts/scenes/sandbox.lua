@@ -28,11 +28,11 @@ function init()
     rb1.type = BodyType.Static;
     floor:add_box_collider(Vector3.new(100.0, 1.0, 100.0));
 
-    -- phys_objs();
+    phys_objs();
     -- falling_objs();
     -- stress_test();
     -- ramps();
-    particles();
+    -- particles();
 
 
     --     local cube = scene:create_entity("Cube", "");
