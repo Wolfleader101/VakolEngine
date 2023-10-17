@@ -118,7 +118,10 @@ function phys_objs()
     local sphere = scene:create_entity("Sphere", "");
     sphere:get_transform().pos = Vector3.new(60.0, 22.0, 0.0);
     sphere:get_transform().rot = Vector3.new(0.0, 0.0, 0.0);
-    sphere:add_model("coreAssets/models/sphere.obj", 1);
+    local mdl1 =sphere:add_model("coreAssets/models/sphere.obj", 1);
+    local mesh1 = mdl1:get_mesh(0);
+
+    mesh1.material:set_diffuse_color(Vector4.new(randomFloat(0, 1), randomFloat(0, 1), randomFloat(0, 1), 1.0));
 
     sphereRb = sphere:add_rigid();
     sphereRb.mass = 1;
@@ -131,7 +134,10 @@ function phys_objs()
     wall1:get_transform().pos = Vector3.new(50.0, 20.0, 0.0);
     wall1:get_transform().rot = Vector3.new(90.0, 90.0, 0.0);
     wall1:get_transform().scale = Vector3.new(4.0, 0.5, 4.0);
-    wall1:add_model("coreAssets/models/cube.obj", 1);
+    local mdl2 = wall1:add_model("coreAssets/models/cube.obj", 1);
+    local mesh2 = mdl2:get_mesh(0);
+
+    mesh2.material:set_diffuse_color(Vector4.new(randomFloat(0, 1), randomFloat(0, 1), randomFloat(0, 1), 1.0));
 
     local rb2 = wall1:add_rigid();
     rb2.mass = 2;
@@ -145,7 +151,10 @@ function phys_objs()
     wall2:get_transform().pos = Vector3.new(40.0, 20.0, 0.0);
     wall2:get_transform().rot = Vector3.new(90.0, 90.0, 0.0);
     wall2:get_transform().scale = Vector3.new(4.0, 0.5, 4.0);
-    wall2:add_model("coreAssets/models/cube.obj", 1);
+    local mdl3 = wall2:add_model("coreAssets/models/cube.obj", 1);
+    local mesh3 = mdl3:get_mesh(0);
+
+    mesh3.material:set_diffuse_color(Vector4.new(randomFloat(0, 1), randomFloat(0, 1), randomFloat(0, 1), 1.0));
 
     local rb3 = wall2:add_rigid();
     rb3.mass = 1;
@@ -332,13 +341,12 @@ function particles()
 end
 
 function update()
-
     if (Input:get_key_down(KEYS["KEY_ESC"])) then
         change_scene("test menu");
     end
 
     if (sphereRb ~= nil and Input:get_key_down(KEYS["KEY_1"])) then
-        sphereRb:apply_impulse(Vector3.new(-50.0, 0.0, 00.0));
+        sphereRb:apply_impulse(Vector3.new(-75.0, 0.0, 00.0));
     end
     
     if (wallRb ~=nil and Input:get_key_down(KEYS["KEY_2"])) then
