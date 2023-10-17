@@ -114,9 +114,10 @@ end
 
 local wallRb = nil;
 local sphereRb = nil;
+
 function phys_objs()
     local sphere = scene:create_entity("Sphere", "");
-    sphere:get_transform().pos = Vector3.new(60.0, 22.0, 0.0);
+    sphere:get_transform().pos = Vector3.new(60.0, 21.0, 0.0);
     sphere:get_transform().rot = Vector3.new(0.0, 0.0, 0.0);
     local mdl1 = sphere:add_model("coreAssets/models/sphere.obj", 1);
     local mesh1 = mdl1:get_mesh(0);
