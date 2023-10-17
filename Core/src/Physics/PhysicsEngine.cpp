@@ -186,9 +186,6 @@ namespace Vakol
     {
         rb.collisionData->parentBody = &rb;
 
-        if (rb.isSleeping)
-            return;
-
         if (rb.type == BodyType::Static)
         {
             //! THIS IS A HACK TO MAKE SURE THAT THE COLLIDER FOLLOWS THE TRANSFORM
@@ -197,26 +194,29 @@ namespace Vakol
             return;
         }
 
-        // can be assumed as static, can be moved later
-        static const float damping = 0.995f;
-
         if (rb.hasGravity)
         {
-            // can be assumed as static, can be moved later
-            static const Math::Vec3 gravity(0.0f, -9.82f, 0.0f);
-
             Math::Vec3 weight = rb.mass * gravity;
             rb.force += weight;
+        }
+
+        if (rb.isSleeping)
+        {
+            if (Math::MagnitudeSq(rb.force) < 0.01f && Math::MagnitudeSq(rb.torque) < 0.01f)
+                return;
+
+            rb.isSleeping = false;
+            rb.sleepCounter = 0;
         }
 
         Math::Vec3 linearAcceleration = rb.force * rb.invMass;
 
         rb.linearVelocity += linearAcceleration * m_timeStep;
-        rb.linearVelocity = rb.linearVelocity * damping;
+        rb.linearVelocity = rb.linearVelocity * velocityDamping;
 
         Math::Vec3 angularAcceleration = rb.invInertiaTensor * rb.torque;
         rb.angularVelocity += angularAcceleration * m_timeStep;
-        rb.angularVelocity = rb.angularVelocity * damping;
+        rb.angularVelocity = rb.angularVelocity * velocityDamping;
 
         pos += rb.linearVelocity * m_timeStep;
         quatRot = quatRot + (Math::Quat(0.0f, rb.angularVelocity * m_timeStep * 0.5f) * quatRot);

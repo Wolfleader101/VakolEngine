@@ -85,6 +85,8 @@ void MyGUILayer::OnUpdate()
                     m_app.GetSceneManager().GetActiveScene().SetDebug(
                         !m_app.GetSceneManager().GetActiveScene().IsDebugEnabled());
                 }
+                ImGui::DragFloat("Velocity Damping", &m_app.GetPhysicsEngine().velocityDamping, 0.001f);
+                ImGui::DragFloat3("Gravity", &m_app.GetPhysicsEngine().gravity.x, 0.1f);
             }
 
             ImGui::Separator();

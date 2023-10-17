@@ -133,6 +133,18 @@ namespace Vakol
          */
         float GetTimeStep() const;
 
+        /**
+         * @brief damping for velocities
+         *
+         */
+        float velocityDamping = 0.995f;
+
+        /**
+         * @brief gravity vector
+         *
+         */
+        Math::Vec3 gravity = Math::Vec3(0.0f, -9.82f, 0.0f);
+
       private:
         /**
          * @brief scenes vector
