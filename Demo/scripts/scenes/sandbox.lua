@@ -26,7 +26,7 @@ function init()
     rb1.mass = 1;
     rb1.bounciness = 0.4;
     rb1.type = BodyType.Static;
-    floor:add_box_collider(Vector3.new(100.0, 1.0, 100.0));
+    floor:add_box_collider(floor:get_transform().scale / 2);
 
     phys_objs();
     -- falling_objs();
@@ -35,7 +35,7 @@ function init()
     -- particles();
 
 
-    --     local cube = scene:create_entity("Cube", "");
+    -- local cube = scene:create_entity("Cube", "");
     -- cube:get_transform().pos = Vector3.new(10.0, 20.0, 0.0);
     -- cube:get_transform().rot = Vector3.new(00.0, 0.0, 45.0);
     -- cube:add_model("coreAssets/models/cube.obj", 1);
@@ -44,7 +44,7 @@ function init()
     -- rb.mass = 100;
     -- rb.bounciness = 0.3;
     -- rb.type = BodyType.Dynamic;
-    -- cube:add_box_collider(Vector3.new(1.0, 1.0, 1.0));
+    -- cube:add_box_collider(Vector3.new(0.5, 0.5, 0.5));
 
     -- local cube2 = scene:create_entity("Cube2", "");
     -- cube2:get_transform().pos = Vector3.new(15, 20.0, 0.0);
@@ -72,7 +72,7 @@ function falling_objs()
     rb.mass = 10;
     rb.bounciness = 0.3;
     rb.type = BodyType.Dynamic;
-    cube:add_box_collider(Vector3.new(1.0, 1.0, 1.0));
+    cube:add_box_collider(Vector3.new(0.5, 0.5, 0.5));
 
     local cube2 = scene:create_entity("Cube2", "");
     cube2:get_transform().pos = Vector3.new(10, 5.0, 0.0);
@@ -83,7 +83,7 @@ function falling_objs()
     rb2.mass = 10;
     rb2.bounciness = 0.3;
     rb2.type = BodyType.Dynamic;
-    cube2:add_box_collider(Vector3.new(1.0, 1.0, 1.0));
+    cube2:add_box_collider(Vector3.new(0.5, 0.5, 0.5));
 
 
     local sphere = scene:create_entity("Sphere", "");
@@ -95,7 +95,7 @@ function falling_objs()
     rb1.mass = 5;
     rb1.bounciness = 0.9;
     rb1.type = BodyType.Dynamic;
-    sphere:add_sphere_collider(1.0);
+    sphere:add_sphere_collider(0.5);
 
 
 
@@ -108,7 +108,7 @@ function falling_objs()
     rb3.mass = 5;
     rb3.bounciness = 0.9;
     rb3.type = BodyType.Dynamic;
-    sphere2:add_sphere_collider(1.0);
+    sphere2:add_sphere_collider(0.5);
 
 end
 
@@ -118,7 +118,7 @@ function phys_objs()
     local sphere = scene:create_entity("Sphere", "");
     sphere:get_transform().pos = Vector3.new(60.0, 22.0, 0.0);
     sphere:get_transform().rot = Vector3.new(0.0, 0.0, 0.0);
-    local mdl1 =sphere:add_model("coreAssets/models/sphere.obj", 1);
+    local mdl1 = sphere:add_model("coreAssets/models/sphere.obj", 1);
     local mesh1 = mdl1:get_mesh(0);
 
     mesh1.material:set_diffuse_color(Vector4.new(randomFloat(0, 1), randomFloat(0, 1), randomFloat(0, 1), 1.0));
@@ -128,7 +128,7 @@ function phys_objs()
     sphereRb.bounciness = 0.3;
     sphereRb.type = BodyType.Dynamic;
     sphereRb.hasGravity = false;
-    sphere:add_sphere_collider(1.0);
+    sphere:add_sphere_collider(0.5);
 
     local wall1 = scene:create_entity("Wall 1", "");
     wall1:get_transform().pos = Vector3.new(50.0, 20.0, 0.0);
@@ -144,7 +144,7 @@ function phys_objs()
     rb2.bounciness = 0.3;
     rb2.type = BodyType.Dynamic;
     rb2.hasGravity = false;
-    wall1:add_box_collider(wall1:get_transform().scale);
+    wall1:add_box_collider(wall1:get_transform().scale / 2);
     wallRb = rb2;
 
     local wall2 = scene:create_entity("wall 2", "");
@@ -161,7 +161,7 @@ function phys_objs()
     rb3.bounciness = 0.3;
     rb3.type = BodyType.Dynamic;
     rb3.hasGravity = false;
-    wall2:add_box_collider(Vector3.new(4.0, 0.25, 4.0));
+    wall2:add_box_collider(wall2:get_transform().scale / 2);
 end
 
 function stress_test()
@@ -169,7 +169,7 @@ function stress_test()
         local entityName = "Cube" .. " " .. i;
 
         local cube = scene:create_entity(entityName, "");
-        cube:get_transform().pos = Vector3.new(randomFloat(-100, 100), randomFloat(10, 50), randomFloat(-100, 100));
+        cube:get_transform().pos = Vector3.new(randomFloat(-50, 50), randomFloat(10, 50), randomFloat(-50, 50));
         cube:get_transform().rot = Vector3.new(randomFloat(-365, 365), randomFloat(-365, 365), randomFloat(-365, 365));
         local mdl = cube:add_model("coreAssets/models/cube.obj", 1);
 
@@ -181,7 +181,7 @@ function stress_test()
         rb.mass = randomFloat(5, 100);
         rb.bounciness = randomFloat(0, 1);
         rb.type = BodyType.Dynamic;
-        cube:add_box_collider(Vector3.new(1.0, 1.0, 1.0));
+        cube:add_box_collider(cube:get_transform().scale / 2);
     end
 end
 
@@ -197,11 +197,11 @@ function ramps()
     rb1.bounciness = 0.3;
     rb1.type = BodyType.Static;
     rb1.hasGravity = false;
-    ramp1:add_box_collider(ramp1:get_transform().scale);
+    ramp1:add_box_collider(ramp1:get_transform().scale / 2);
     wallRb = rb1;
 
     local ramp2 = scene:create_entity("Ramp 2", "");
-    ramp2:get_transform().pos = Vector3.new(2.0, 120.0, 0.0);
+    ramp2:get_transform().pos = Vector3.new(2.0, 150.0, 0.0);
     ramp2:get_transform().rot = Vector3.new(15, 90.0, 0.0);
     ramp2:get_transform().scale = Vector3.new(75.0, 0.5, 75.0);
     ramp2:add_model("coreAssets/models/cube.obj", 1);
@@ -211,10 +211,10 @@ function ramps()
     rb2.bounciness = 0.3;
     rb2.type = BodyType.Static;
     rb2.hasGravity = false;
-    ramp2:add_box_collider(ramp2:get_transform().scale);
+    ramp2:add_box_collider(ramp2:get_transform().scale / 2);
 
     local ramp3 = scene:create_entity("Ramp 3", "");
-    ramp3:get_transform().pos = Vector3.new(60.0, 70.0, 0.0);
+    ramp3:get_transform().pos = Vector3.new(40.0, 90.0, 0.0);
     ramp3:get_transform().rot = Vector3.new(-45, 90.0, 0.0);
     ramp3:get_transform().scale = Vector3.new(75.0, 0.5, 45.0);
     ramp3:add_model("coreAssets/models/cube.obj", 1);
@@ -224,11 +224,11 @@ function ramps()
     rb3.bounciness = 0.3;
     rb3.type = BodyType.Static;
     rb3.hasGravity = false;
-    ramp3:add_box_collider(ramp3:get_transform().scale);
+    ramp3:add_box_collider(ramp3:get_transform().scale / 2);
 
     local ramp4 = scene:create_entity("Ramp 4", "");
-    ramp4:get_transform().pos = Vector3.new(40.0, 20.0, 0.0);
-    ramp4:get_transform().rot = Vector3.new(5, 90.0, 0.0);
+    ramp4:get_transform().pos = Vector3.new(20.0, 50.0, 0.0);
+    ramp4:get_transform().rot = Vector3.new(10, 90.0, 0.0);
     ramp4:get_transform().scale = Vector3.new(75.0, 0.5, 45.0);
     ramp4:add_model("coreAssets/models/cube.obj", 1);
 
@@ -237,15 +237,15 @@ function ramps()
     rb4.bounciness = 0.3;
     rb4.type = BodyType.Static;
     rb4.hasGravity = false;
-    ramp4:add_box_collider(ramp4:get_transform().scale);
+    ramp4:add_box_collider(ramp4:get_transform().scale / 2);
 
 
 
-    for i = 1, 300 do
+    for i = 1, 400 do
         local entityName = "Cube" .. " " .. i;
 
         local cube = scene:create_entity(entityName, "");
-        cube:get_transform().pos = Vector3.new(randomFloat(-50, 50), randomFloat(220, 300), randomFloat(-30, 30));
+        cube:get_transform().pos = Vector3.new(randomFloat(-25, 50), randomFloat(220, 300), randomFloat(-15, 30));
         cube:get_transform().rot = Vector3.new(randomFloat(-365, 365), randomFloat(-365, 365), randomFloat(-365, 365));
         local mdl = cube:add_model("coreAssets/models/cube.obj", 1);
 
@@ -257,14 +257,14 @@ function ramps()
         rb.mass = randomFloat(5, 100);
         rb.bounciness = randomFloat(0, 1);
         rb.type = BodyType.Dynamic;
-        cube:add_box_collider(Vector3.new(1.0, 1.0, 1.0));
+        cube:add_box_collider(cube:get_transform().scale / 2);
     end
 
-    for i = 1, 300 do
+    for i = 1, 400 do
         local entityName = "Sphere" .. " " .. i;
 
         local sphere = scene:create_entity(entityName, "");
-        sphere:get_transform().pos = Vector3.new(randomFloat(-50, 50), randomFloat(220, 300), randomFloat(-30, 30));
+        sphere:get_transform().pos = Vector3.new(randomFloat(-25, 50), randomFloat(220, 300), randomFloat(-15, 30));
         local mdl = sphere:add_model("coreAssets/models/sphere.obj", 1);
 
         local mesh = mdl:get_mesh(0);
@@ -275,7 +275,7 @@ function ramps()
         rb.mass = randomFloat(5, 100);
         rb.bounciness = randomFloat(0, 1);
         rb.type = BodyType.Dynamic;
-        sphere:add_sphere_collider(1.0);
+        sphere:add_sphere_collider(0.5);
     end
 end
 
@@ -291,7 +291,7 @@ function particles()
     rb1.bounciness = 0.5;
     rb1.type = BodyType.Static;
     rb1.hasGravity = false;
-    ramp1:add_box_collider(ramp1:get_transform().scale);
+    ramp1:add_box_collider(ramp1:get_transform().scale / 2);
     wallRb = rb1;
 
     local ramp2 = scene:create_entity("Ramp 2", "");
@@ -305,7 +305,7 @@ function particles()
     rb2.bounciness = 0.5;
     rb2.type = BodyType.Static;
     rb2.hasGravity = false;
-    ramp2:add_box_collider(ramp2:get_transform().scale);
+    ramp2:add_box_collider(ramp2:get_transform().scale / 2);
 
     local ramp3 = scene:create_entity("Ramp 3", "");
     ramp3:get_transform().pos = Vector3.new(22.0, 20.0, 0.0);
@@ -318,7 +318,7 @@ function particles()
     rb3.bounciness = 0.7;
     rb3.type = BodyType.Static;
     rb3.hasGravity = false;
-    ramp3:add_box_collider(ramp3:get_transform().scale);
+    ramp3:add_box_collider(ramp3:get_transform().scale / 2);
 
     for i = 1, 1000 do
         local entityName = "Sphere" .. " " .. i;
@@ -334,9 +334,9 @@ function particles()
 
         local rb = sphere:add_rigid();
         rb.mass = 1
-        rb.bounciness = randomFloat(0, 1);
+        rb.bounciness = 0.7;
         rb.type = BodyType.Dynamic;
-        sphere:add_sphere_collider(0.1);
+        sphere:add_sphere_collider(0.05);
     end
 end
 
