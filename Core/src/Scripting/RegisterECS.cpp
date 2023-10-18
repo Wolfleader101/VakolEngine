@@ -4,14 +4,16 @@
 #include "LuaAccess.hpp"
 #include "SceneManager/Scene.hpp"
 
+#include "Logger/Logger.hpp"
 #include "Physics/PhysicsEngine.hpp"
 #include "Physics/PhysicsTypes.hpp"
 #include "Rendering/RenderEngine.hpp"
+#include "Scripting/ScriptEngine.hpp"
 
 namespace Vakol
 {
 
-    void RegisterEntity(sol::state& lua)
+    void RegisterEntity(sol::state& lua, ScriptEngine& scriptEngine)
     {
         auto entity_type = lua.new_usertype<Entity>("Entity");
 
@@ -91,7 +93,7 @@ namespace Vakol
             return static_cast<RigidBody*>(nullptr);
         });
 
-        entity_type.set_function("add_sphere_collider", [&](Entity* ent, const double radius) {
+        entity_type.set_function("add_sphere_collider", [&](Entity* ent, const float radius) {
             PhysicsEngine& physEngine = lua["PhysicsEngine"];
 
             if (!ent->HasComponent<RigidBody>())
@@ -127,11 +129,64 @@ namespace Vakol
             return &ent->GetComponent<BoxCollider>();
         });
 
-        // TODO remove FSM component
-        entity_type.set_function("add_fsm", [&](Entity* ent) -> Components::FSM& {
-            if (!ent->HasComponent<Components::FSM>())
-                ent->AddComponent<Components::FSM>(lua.create_table());
-            return ent->GetComponent<Components::FSM>();
+        entity_type.set_function("add_script", [&](Entity* ent, const std::string& name, const std::string& path) {
+            if (!ent->HasComponent<ScriptComp>())
+                ent->AddComponent<ScriptComp>();
+
+            auto& scriptComp = ent->GetComponent<ScriptComp>();
+
+            // if script with name already exists retunr
+            for (auto& script : scriptComp.scripts)
+            {
+                if (script.name == name)
+                {
+                    VK_ERROR("Script with name {} already exists on entity {}", name,
+                             ent->GetComponent<Components::Tag>().tag);
+
+                    return;
+                }
+            }
+
+            LuaScript tScript = scriptEngine.CreateScript(name, "scripts/" + path);
+
+            scriptComp.scripts.push_back(std::move(tScript));
+            LuaScript& script = scriptComp.scripts.back();
+
+            scriptEngine.SetScriptVariable(script, "entity", ent);
+            scriptEngine.InitScript(script);
+        });
+
+        entity_type.set_function("get_script", [&](Entity* ent, const std::string& name) -> LuaTable {
+            if (!ent->HasComponent<ScriptComp>())
+            {
+                VK_ERROR("No script component found on entity {}", ent->GetComponent<Components::Tag>().tag);
+
+                return LuaTable();
+            }
+
+            auto& scriptComp = ent->GetComponent<ScriptComp>();
+
+            for (auto& script : scriptComp.scripts)
+            {
+                if (script.name == name)
+                {
+                    // Retrieve the script's environment using "state"
+                    LuaType luaObj = scriptEngine.GetScriptVariable(script, "state");
+                    if (luaObj.is<LuaTable>()) // Ensure that the retrieved object is a table
+                    {
+                        return luaObj.as<LuaTable>();
+                    }
+                    else
+                    {
+                        VK_ERROR("State variable in script {} is not a table", name);
+                        return LuaTable();
+                    }
+                }
+            }
+
+            VK_ERROR("No script with name {} found on entity {}", name, ent->GetComponent<Components::Tag>().tag);
+
+            return LuaTable(); // Return an empty sol::table or sol::nil
         });
     }
 } // namespace Vakol

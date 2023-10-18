@@ -4,6 +4,7 @@
 #include <cereal/types/vector.hpp>
 #include <entt/entt.hpp>
 #include <memory>
+#include <set>
 #include <vector>
 
 #include "Logger/Logger.hpp"
@@ -121,7 +122,6 @@ namespace Vakol
          */
         std::vector<Entity> ActiveEntityList;
 
-        template <typename Archive, typename... Args>
         /**
          * @brief Private function to serialize the entity list using a specified archive and component types.
          *
@@ -129,12 +129,13 @@ namespace Vakol
          * @tparam Args The component types to serialize.
          * @param file The file path to serialize to.
          */
-        void privateSerialize(const std::string& file) const
+        template <typename... Args>
+        void Serialize(const std::string& file) const
         {
             std::ofstream out(file);
             if (out.good())
             {
-                Archive json(out);
+                cereal::JSONOutputArchive json(out);
 
                 json(CEREAL_NVP(ActiveEntityList));
 
@@ -147,7 +148,6 @@ namespace Vakol
             }
         }
 
-        template <typename Archive, typename... Args>
         /**
          * @brief Private function to deserialize the entity list using a specified archive and component types.
          *
@@ -155,26 +155,52 @@ namespace Vakol
          * @tparam Args The component types to deserialize.
          * @param file The file path to deserialize from.
          */
-        void privateDeserialize(const std::string& file)
+        template <typename... Args>
+        void Deserialize(const std::string& file)
         {
             std::ifstream inp(file);
 
             if (inp.good())
             {
-                m_Registry.clear();
-                Archive json(inp);
-                json(ActiveEntityList); // fills vector again
+                std::set<uint32_t> entitiesFromSerializedData;
 
-                entt::snapshot_loader snapLoad(m_Registry);
+                entt::registry tempRegistry;
+                cereal::JSONInputArchive json(inp);
+
+                // Deserialize ActiveEntityList first
+                json(ActiveEntityList);
+
+                // Used for deleting entities that are not in the serialized data
+                for (const auto& entry : ActiveEntityList)
+                {
+                    entitiesFromSerializedData.insert(entry.GetHandle());
+                }
+
+                // Reconciliation
+                m_Registry.each([&](auto entity) {
+                    if (entitiesFromSerializedData.find(static_cast<uint32_t>(entity)) ==
+                        entitiesFromSerializedData.end())
+                    {
+                        m_Registry.destroy(entity);
+                    }
+                });
+
+                entt::snapshot_loader snapLoad(tempRegistry);
                 snapLoad.entities(json);
-                snapLoad.component<Args...>(json);
+
+                // Deserialize Components using fold expression
+                (snapLoad.component<Args>(json), ...);
+
+                // Copy Components using fold expression
+                (tempRegistry.view<Args>().each(
+                     [&](auto entity, Args& comp) { m_Registry.emplace_or_replace<Args>(entity, comp); }),
+                 ...);
 
                 inp.close();
             }
         }
 
-        friend class Entity; // friend to allow the API for entities to be clean.
-        friend class System;
+        friend class Entity; // friend to allow the API for entities to be clean
         friend class Scene;
     };
 

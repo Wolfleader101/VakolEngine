@@ -13,16 +13,22 @@ namespace Vakol
 
         scene_type.set("globals", sol::property([](Scene& self) { return self.GetScript().env; }));
 
-        scene_type.set_function("create_entity", [&](Scene* scene, const std::string tag, const std::string& sname) {
+        scene_type.set_function("create_entity", [&](Scene* scene, const std::string tag, const std::string& path) {
             auto ent = scene->CreateEntity(tag);
 
-            if (!sname.empty())
+            if (!path.empty())
             {
-                LuaScript script = scriptEngine.CreateScript("scripts/" + sname);
+                ent.AddComponent<ScriptComp>();
+
+                auto& scriptComp = ent.GetComponent<ScriptComp>();
+
+                LuaScript tScript = scriptEngine.CreateScript("root", "scripts/" + path);
+                scriptComp.scripts.push_back(std::move(tScript));
+
+                LuaScript& script = scriptComp.scripts.back();
 
                 scriptEngine.SetScriptVariable(script, "entity", ent);
                 scriptEngine.InitScript(script);
-                ent.AddComponent<LuaScript>(script);
             }
             return ent;
         });
@@ -55,6 +61,7 @@ namespace Vakol
         scene_type.set_function(
             "deserialize",
             &Scene::Deserialize); // needs to be given folder assets/scenes/scene_name .ie assets/scenes/Test Scene
+
         scene_type.set_function("get_name", &Scene::getName);
     }
 

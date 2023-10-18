@@ -354,6 +354,13 @@ function update()
         wallRb:apply_angular_impulse(Vector3.new(0.0, 0.0, 5.0), Vector3.new(0.0, 1.0, 0.0));
     end
     
+    if(Input:get_key_down(KEYS["KEY_P"])) then
+        scene:serialize("assets/scenes/".. scene:get_name());
+    end
+
+    if(Input:get_key_down(KEYS["KEY_O"])) then
+        scene:deserialize("assets/scenes/" .. scene:get_name()); 
+    end
     
     GUI:start_window("Stats", false, false, 0.0, 0.0 , 25, 25); 
 
