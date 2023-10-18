@@ -165,6 +165,7 @@ namespace Vakol::Math
      * @return The angle in radians between the two vectors.
      */
     float Angle(const Vec3& a, const Vec3& b);
+    Quat AngleAxis(float angle, const Vec3& axis);
 
     /**
      * @brief Projects a 2D vector onto another 2D vector.
@@ -246,6 +247,10 @@ namespace Vakol::Math
      * @return The resulting 4x4 matrix.
      */
     Mat4 Mat4Cast(const Quat& quaternion);
+
+    Mat3 Mat3Cast(const Quat& quaternion);
+
+    Mat3 Transpose(const Mat3& mat);
 
     /**
      * @brief Represents a line in 3D space defined by two points.

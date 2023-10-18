@@ -78,6 +78,7 @@ namespace Vakol
 
             // TODO implement this
             auto& newRb = ent->GetComponent<RigidBody>();
+            newRb.position = ent->GetComponent<Components::Transform>().pos;
             newRb.collisionData->parentBody = &newRb;
 
             return newRb;

@@ -120,34 +120,30 @@ namespace Vakol
         void DetectCollisions(PhysicsScene& scene);
 
         /**
-         * @brief handle collision resolution for a rigidbody
-         *
-         * @param pos pos of body
-         * @param rb to handle resolution
-         */
-        void ResolveCollisions(Math::Vec3& pos, RigidBody& rb);
-
-        /**
-         * @brief handle depenetration for a rigidbody
-         *
-         * @param pos pos of body
-         * @param rb rigidbody
-         */
-        void Depenetration(Math::Vec3& pos, RigidBody& rb);
-
-        /**
          * @brief Set the Time Step object
          *
          * @param step to set
          */
-        void SetTimeStep(double step);
+        void SetTimeStep(float step);
 
         /**
          * @brief Get the Time Step object
          *
          * @return double time step
          */
-        double GetTimeStep() const;
+        float GetTimeStep() const;
+
+        /**
+         * @brief damping for velocities
+         *
+         */
+        float velocityDamping = 0.995f;
+
+        /**
+         * @brief gravity vector
+         *
+         */
+        Math::Vec3 gravity = Math::Vec3(0.0f, -9.82f, 0.0f);
 
       private:
         /**
@@ -160,7 +156,7 @@ namespace Vakol
          * @brief time step value
          *
          */
-        double m_timeStep = 1.0 / 60.0;
+        float m_timeStep = 1.0f / 120.0f;
 
         /**
          * @brief react physics common object

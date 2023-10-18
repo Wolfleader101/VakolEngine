@@ -102,11 +102,6 @@ namespace Vakol
          */
         GUID m_guid;
 
-        /**
-         * @brief Grants PhysicsEngine class access to private members of PhysicsScene class, facilitating tighter
-         * integration between the two classes.
-         *
-         */
         friend class PhysicsEngine;
     };
 } // namespace Vakol

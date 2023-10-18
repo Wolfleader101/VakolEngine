@@ -103,6 +103,8 @@ void MyGUILayer::OnUpdate()
                     m_app.GetSceneManager().GetActiveScene().SetDebug(
                         !m_app.GetSceneManager().GetActiveScene().IsDebugEnabled());
                 }
+                ImGui::DragFloat("Velocity Damping", &m_app.GetPhysicsEngine().velocityDamping, 0.001f);
+                ImGui::DragFloat3("Gravity", &m_app.GetPhysicsEngine().gravity.x, 0.1f);
             }
 
             ImGui::Separator();
@@ -175,7 +177,7 @@ void MyGUILayer::OnUpdate()
                         {
                             Vakol::Rendering::Drawable& drawable = entity.GetComponent<Vakol::Rendering::Drawable>();
 
-                            ImGui::Text("Drawable ID: %s", drawable.ID.ConvertToString().c_str());
+                            ImGui::Text("Drawable ID: %s", drawable.ID.ToString().c_str());
                             ImGui::Spacing();
 
                             ImGui::SeparatorText("Material");
@@ -256,9 +258,9 @@ void MyGUILayer::OnUpdate()
                             }
 
                             ImGui::Checkbox("Has Gravity", &rb.hasGravity);
-                            ImGui::DragScalar("Mass", ImGuiDataType_Double, &rb.mass, 0.1f);
-                            // ImGui::DragScalar("Bounciness", ImGuiDataType_Double, &rb.bounciness, 0.1f);
-                            ImGui::DragFloat3("Bounciness", &rb.bounciness.x, 0.1f);
+                            ImGui::Checkbox("Is Sleeping", &rb.isSleeping);
+                            ImGui::DragFloat("Mass", &rb.mass, 0.1f);
+                            ImGui::DragFloat("Bounciness", &rb.bounciness, 0.1f);
                             ImGui::DragFloat3("Center of Mass", &rb.centerOfMass.x, 0.1f);
 
                             ImGui::DragFloat3("Force", &rb.force.x, 0.1f);
@@ -266,36 +268,21 @@ void MyGUILayer::OnUpdate()
                             ImGui::DragFloat3("Linear Velocity", &rb.linearVelocity.x, 0.1f);
                             ImGui::DragFloat3("Angular Velocity", &rb.angularVelocity.x, 0.1f);
 
-                            ImGui::Spacing();
-                            ImGui::SeparatorText("Rotiation Matrix");
+                            // ImGui::Spacing();
+                            // ImGui::SeparatorText("Rotiation Matrix");
 
                             // ImGui::Text("Rotation Matrix");
-                            ImGui::Text("x: %f, %f, %f", rb.rotationMatrix[0][0], rb.rotationMatrix[0][1],
-                                        rb.rotationMatrix[0][2]);
-                            ImGui::Text("y: %f, %f, %f", rb.rotationMatrix[1][0], rb.rotationMatrix[1][1],
-                                        rb.rotationMatrix[1][2]);
-                            ImGui::Text("z: %f, %f, %f", rb.rotationMatrix[2][0], rb.rotationMatrix[2][1],
-                                        rb.rotationMatrix[2][2]);
+                            // ImGui::Text("x: %f, %f, %f", rb.rotationMatrix[0][0], rb.rotationMatrix[0][1],
+                            //             rb.rotationMatrix[0][2]);
+                            // ImGui::Text("y: %f, %f, %f", rb.rotationMatrix[1][0], rb.rotationMatrix[1][1],
+                            //             rb.rotationMatrix[1][2]);
+                            // ImGui::Text("z: %f, %f, %f", rb.rotationMatrix[2][0], rb.rotationMatrix[2][1],
+                            //             rb.rotationMatrix[2][2]);
 
                             ImGui::Spacing();
-                            ImGui::SeparatorText("World Interia Tensor");
+                            ImGui::SeparatorText("Inverse Interia Tensor");
 
-                            ImGui::Text("x: %f, %f, %f", rb.worldInertiaTensor[0][0], rb.worldInertiaTensor[0][1],
-                                        rb.worldInertiaTensor[0][2]);
-                            ImGui::Text("y: %f, %f, %f", rb.worldInertiaTensor[1][0], rb.worldInertiaTensor[1][1],
-                                        rb.worldInertiaTensor[1][2]);
-                            ImGui::Text("z: %f, %f, %f", rb.worldInertiaTensor[2][0], rb.worldInertiaTensor[2][1],
-                                        rb.worldInertiaTensor[2][2]);
-
-                            ImGui::Spacing();
-                            ImGui::SeparatorText("Interia Tensor");
-
-                            ImGui::Text("x: %f, %f, %f", rb.inertiaTensor[0][0], rb.inertiaTensor[0][1],
-                                        rb.inertiaTensor[0][2]);
-                            ImGui::Text("y: %f, %f, %f", rb.inertiaTensor[1][0], rb.inertiaTensor[1][1],
-                                        rb.inertiaTensor[1][2]);
-                            ImGui::Text("z: %f, %f, %f", rb.inertiaTensor[2][0], rb.inertiaTensor[2][1],
-                                        rb.inertiaTensor[2][2]);
+                            ImGui::DragFloat3("Inverse Interia Tensor", &rb.invInertiaTensor.x, 0.0f);
 
                             if (rb.collisionData)
                             {
