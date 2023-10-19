@@ -1,11 +1,11 @@
 function init()
-    --scene:create_entity("Player", "entities/player/noclip.lua")
-    scene:create_entity("Player", "entities/player/phys_player.lua")
+    scene:create_entity("Player", "entities/player/noclip.lua");
+    --scene:create_entity("Player", "entities/player/phys_player.lua");
 
-    scene:create_entity("Digital Twin", "entities/worlds/digital_twin.lua");
-    scene:create_entity("290 World", "entities/worlds/290_world.lua");
+    --scene:create_entity("Digital Twin", "entities/worlds/digital_twin.lua");
+    --scene:create_entity("290 World", "entities/worlds/290_world.lua");
 
-    scene:create_entity("Cube", "entities/test/cube.lua")
+    scene:create_entity("Cube", "entities/test/cube.lua");
 
     local path = "coreAssets/textures/Skybox/";
 	local extension = ".png";
@@ -19,6 +19,14 @@ function init()
 
     scene:generate_skybox(faces);
     
+    local floor = scene:create_entity("Floor", "");
+    floor:get_transform().scale = Vector3.new(10.0, 1.0, 10.0);
+    floor:add_model("coreAssets/models/cube.obj", 1);
+
+    local rb = floor:add_rigid();
+    rb.mass = 1;
+    rb.type = BodyType.Static;
+    floor:add_box_collider(floor:get_transform().scale);
 end
 
 function update()

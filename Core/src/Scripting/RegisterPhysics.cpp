@@ -30,6 +30,7 @@ namespace Vakol
 
         auto rct = lua.new_usertype<RayCastHitInfo>("RayCastHitInfo");
 
+        rct.set("rigidbody", &RayCastHitInfo::rigidbody);
         rct.set("point", &RayCastHitInfo::point);
         rct.set("normal", &RayCastHitInfo::normal);
         rct.set("distance", &RayCastHitInfo::distance);

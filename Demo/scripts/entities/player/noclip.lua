@@ -1,14 +1,12 @@
 local is_sprinting = false;
 
 function init()
-    print("Initialising NoClip");
-
     entity:get_transform().rot = Vector3.new(0.0, 0.0, 0.0);
 
 
-        scene.globals.player = {
+    scene.globals.player = {
         pos = Vector3.new(0.0, 0.0, 0.0)
-        }
+    }
     local camera = scene:get_camera();
     camera:set_pos(3, 5, -22);
     camera:set_yaw(90);
@@ -71,4 +69,16 @@ function update()
     end
 
     camera:set_pitch(pitch);
+
+    if (Input:get_key_down(KEYS["KEY_E"])) then
+        test_raycast(camera:get_forward(), 10.0);
+    end
+end
+
+function test_raycast(direction, max_distance)
+
+    local origin = entity:get_transform().pos;
+    local hit_info = RayCastHitInfo.new();
+
+    local is_hit = scene:raycast(origin, direction, max_distance, hit_info);
 end
