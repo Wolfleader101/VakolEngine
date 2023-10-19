@@ -1,5 +1,5 @@
 function init()
-    entity:add_model("assets/models/Imported/OpenGameArt/LaserDawn/beerCan.fbx", 1.0);
+    entity:add_model("assets/models/Imported/OpenGameArt/LaserDawn/beerCan.fbx", 0.02);
     
     local rb = entity:add_rigid();
 	rb.type = BodyType.Dynamic;

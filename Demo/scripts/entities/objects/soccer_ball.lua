@@ -1,5 +1,5 @@
 function init()
-    entity:add_model("assets/models/objects/balls/soccer/soccerBall.fbx", 1.0);
+    entity:add_model("assets/models/objects/balls/soccer/soccerBall.fbx", 0.02);
     
     local rb = entity:add_rigid();
 	rb.type = BodyType.Dynamic;

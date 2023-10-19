@@ -52,7 +52,6 @@ function init()
 	{
 		Vector3.new(31.4, 1.221, 39.0), Vector3.new(-16.3, 1.221, 85.6)
 	}
-
 	--ENTITY CREATION & SETUP
 	--Digital Twin Prop Entities
 	for i = 1, 6 do
@@ -63,7 +62,7 @@ function init()
 
 		benches[i]:get_transform().pos = benchPositions[i];
 	end
-
+	--[[
 	for i = 1, 20 do
 		local entityName = "Chair";
 		entityName = entityName .. " " .. i;
@@ -102,5 +101,5 @@ function init()
 			rubbishBins[i]:get_transform().rot = Vector3.new(0.0, 90.0, 0.0);
 			recyclingBins[i]:get_transform().rot = Vector3.new(0.0, 90.0, 0.0);
 		end
-	end
+	end--]]
 end

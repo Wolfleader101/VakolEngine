@@ -52,6 +52,7 @@ function init()
 	barriers[7]:add_model("assets/models/digital_twin/GLASS-BARRIERS-LEFT.fbx", GLOBAL_SCALE);
 
 	left_pillars:add_model("assets/models/digital_twin/WOODEN-PILLARS-LEFT.fbx", GLOBAL_SCALE);
+
 	right_pillars:add_model("assets/models/digital_twin/WOODEN-PILLARS-RIGHT.fbx", GLOBAL_SCALE);
 
 	balcony:add_model("assets/models/digital_twin/BALCONY.fbx", GLOBAL_SCALE);
@@ -61,11 +62,11 @@ function init()
 	windowsill:add_model("assets/models/digital_twin/WINDOWSILL.fbx", GLOBAL_SCALE);
 
 	--COLLIDER FUNCTIONS
-	create_pillar_colliders();
-	create_floor_colliders();
-	create_building_colliders();
-	create_barrier_colliders();
-	create_stair_colliders();
+	-- create_pillar_colliders();
+	-- create_floor_colliders();
+	-- create_building_colliders();
+	-- create_barrier_colliders();
+	-- create_stair_colliders();
 
 	--ADDITIONAL MODIFICATIONS
 	barriers[3]:get_transform().pos = Vector3.new(0.0, 0.0, -64.7);
