@@ -1,5 +1,8 @@
 function init()
     scene:create_entity("Player", "entities/player/noclip.lua")
+
+    scene:create_entity("Test Entity", "entities/test/multi_script.lua");
+    scene:create_entity("Nav Test", "entities/test/nav_test.lua");
     -- scene:create_entity("Player", "entities/player/phys_player.lua")
 
     -- scene:create_entity("Digital Twin", "entities/worlds/digital_twin.lua");
@@ -28,7 +31,7 @@ function init()
     rb1.type = BodyType.Static;
     floor:add_box_collider(floor:get_transform().scale / 2);
 
-    phys_objs();
+    --phys_objs();
     -- falling_objs();
     -- stress_test();
     -- ramps();

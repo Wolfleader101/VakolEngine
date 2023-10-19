@@ -3,6 +3,7 @@ BLAKE = "IS GAY"
 function init()
 	print("cube")
 	entity:add_model("coreAssets/models/cube.obj", 1);
+	entity:get_transform().pos = Vector3.new(40, 10, 40);
 
     local rb = entity:add_rigid();
 	rb.mass = 1;
