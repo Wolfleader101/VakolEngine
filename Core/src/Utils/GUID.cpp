@@ -12,7 +12,7 @@ namespace Vakol
         id = xg::newGuid();
     }
 
-    std::string GUID::ConvertToString() const
+    std::string GUID::ToString() const
     {
         return id.str();
     }

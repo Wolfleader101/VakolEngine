@@ -26,7 +26,7 @@ namespace Vakol
         /**
          * @brief Function to convert the GUID to a string.
          */
-        std::string ConvertToString() const;
+        std::string ToString() const;
 
         /**
          * \brief determine if the guid id is valid or not
