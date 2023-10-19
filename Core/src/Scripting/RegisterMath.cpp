@@ -37,6 +37,8 @@ namespace Vakol
                                              sol::meta_function::division, div_overload, sol::meta_function::addition,
                                              add_overload, sol::meta_function::subtraction, sub_overload);
 
+            vec2.set_function("magnitude", [](const Math::Vec2& v) -> float { return Math::Magnitude(v); });
+
             vec2["x"] = &Math::Vec2::x;
             vec2["y"] = &Math::Vec2::y;
 

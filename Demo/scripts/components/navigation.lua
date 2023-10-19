@@ -1,32 +1,17 @@
 
-local en_route = false;
-local dest = Vector3.new();
+NAVIGATE = false;
+DESTINATION = Vector3.new();
 local trans = Transform.new();
 
-local MAX_DIST = 3;
-local speed = 1;
-
-function travel_to(x, y)
-    en_route = true;
-
-    --dest = Vector3.new(x, y, z);
-    -- dest.x = point.x;
-    -- dest.y = point.y;
-    -- dest.z = point.z;
-    print(x)
-    print(y)
-    --print(z)
-
-end
+local MAX_DIST = 5;
+local MAX_SPEED = 5;
 
 local function get_direction()
-    print(type(dest));
-    print(type(trans.pos));
-    return (dest - trans.pos):normalize();
+    return (DESTINATION - trans.pos):normalize();
 end
 
 local function distance()
-    return get_direction():magnitude();
+    return (DESTINATION - trans.pos):magnitude();
 end
 
 function init()
@@ -36,38 +21,36 @@ end
 function tick()
 
 
-    if en_route then
+    if NAVIGATE then
 
-        
+
         trans = entity:get_transform();
-        
 
         dist = distance();
-        print("here");
+
         if dist < MAX_DIST then
             en_route = false;
         else
             dir = get_direction();
 
-            desired_rot = math.atan(dir.x, dir.z);
-
+            local targetRotation = math.atan(dir.x, dir.z);
             targetRotation = targetRotation * (180 / math.pi);  -- Convert from radians to degrees
             entity:get_transform().rot.y = targetRotation; 
 
+            info = RayCastHitInfo.new();
+
+            if scene:raycast(trans.pos, dir, dist, info) then
+                
+            end
+
             
-
-            local newPos = entity:get_transform().pos + direction * speed * Time.delta_time;
-            entity:get_transform().pos.x = newPos.x;
-            entity:get_transform().pos.z = newPos.z;
-
-
-            -- info = RayCastHitInfo.new();
-
-            -- if scene:raycast(trans.pos, dir, dist, info) then
-
-            rigid = entity:get_rigid();
-
-            rigid:apply_impulse();
+            rb = entity:get_rigid();
+            
+            vel = Vector2.new(rb.linearVelocity.x, rb.linearVelocity.z):magnitude();
+            
+            if vel < MAX_SPEED then
+                rb:apply_impulse(dir);
+            end
         end
 
     end

@@ -12,10 +12,14 @@ function init()
     entity:add_script("emotions", "components/emotion.lua");
 
     entity:add_script("navigation", "components/navigation.lua");
-    local nav = entity:get_script("navigation");
+    nav = entity:get_script("navigation");
 
-    --target = Vector3.new(40, 1, 40);
-    nav:travel_to(40.0, 1.0);
+    target = Vector3.new(40, 1, 40);
+
+    nav.NAVIGATE = true
+    nav.DESTINATION.x = target.x
+    nav.DESTINATION.y = target.y
+    nav.DESTINATION.z = target.z
     	
     
 end
