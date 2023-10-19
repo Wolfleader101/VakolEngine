@@ -26,13 +26,13 @@ namespace Vakol
 
     struct RayCastHitInfo
     {
-        RigidBody* rigidbody = nullptr;
-
         Math::Vec3 point = Math::Vec3(0.0f, 0.0f, 0.0f);
         Math::Vec3 normal = Math::Vec3(0.0f, 0.0f, 0.0f);
 
         float distance = 0.0f;
-        bool hit = false;
+        bool isHit = false;
+
+        RigidBody* rigidbody = nullptr;
     };
 
     /**

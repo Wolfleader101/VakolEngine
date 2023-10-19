@@ -82,7 +82,7 @@ namespace Vakol
          *
          * @param timeStep The time interval over which to update the physics simulation.
          */
-        void Update(double timeStep);
+        void Update(float timeStep);
 
         /**
          * @brief Pointer to the rp3d physics world object representing the physical world of the scene.

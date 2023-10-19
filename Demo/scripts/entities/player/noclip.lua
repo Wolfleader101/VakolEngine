@@ -71,7 +71,11 @@ function update()
     camera:set_pitch(pitch);
 
     if (Input:get_key_down(KEYS["KEY_E"])) then
-        test_raycast(camera:get_forward(), 10.0);
+        local hit_info = test_raycast(camera:get_forward(), 10.0);
+
+        if (hit_info ~= nil) then
+            print(hit_info.rigidbody.hasGravity);
+        end
     end
 end
 
@@ -81,4 +85,8 @@ function test_raycast(direction, max_distance)
     local hit_info = RayCastHitInfo.new();
 
     local is_hit = scene:raycast(origin, direction, max_distance, hit_info);
+
+    if (is_hit) then
+        return hit_info;
+    end
 end

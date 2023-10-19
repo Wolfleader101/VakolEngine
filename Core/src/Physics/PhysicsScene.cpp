@@ -10,16 +10,14 @@ class RayCastCallback : public rp3d::RaycastCallback
   public:
     rp3d::decimal notifyRaycastHit(const rp3d::RaycastInfo& info) override
     {
-        hit.rigidbody = static_cast<Vakol::CollisionData*>(info.body->getUserData())->parentBody;
-
         hit.distance = info.hitFraction;
 
         hit.point = Vakol::Math::Vec3(info.worldPoint.x, info.worldPoint.y, info.worldPoint.z);
         hit.normal = Vakol::Math::Vec3(info.worldNormal.x, info.worldNormal.y, info.worldNormal.z);
 
-        hit.hit = true;
+        hit.isHit = true;
 
-        VK_INFO("Hit Point: [{0}, {1}, {2}]", hit.point.x, hit.point.y, hit.point.z);
+        hit.rigidbody = static_cast<Vakol::CollisionData*>(info.body->getUserData())->parentBody;
 
         // Return a fraction of 1.0 to gather all hits
         return 1.0f;
@@ -49,7 +47,7 @@ namespace Vakol
                               rp3d::Quaternion(orientation.x, orientation.y, orientation.z, orientation.w));
         rb.collisionBody = m_world->createCollisionBody(trans);
 
-        rb.collisionBody->setUserData(static_cast<void*>(rb.collisionData.get()));
+        rb.collisionBody->setUserData(rb.collisionData.get());
 
         return rb;
     }
@@ -67,7 +65,7 @@ namespace Vakol
 
         info = callback.hit;
 
-        return info.hit;
+        return info.isHit;
     }
 
     void PhysicsScene::EnableDebug() const
@@ -152,7 +150,7 @@ namespace Vakol
         return m_guid;
     }
 
-    void PhysicsScene::Update(const double timeStep)
+    void PhysicsScene::Update(const float timeStep)
     {
         m_world->update(timeStep);
     }
