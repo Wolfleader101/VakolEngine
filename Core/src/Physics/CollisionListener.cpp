@@ -1,6 +1,7 @@
 #include "Physics/CollisionListener.hpp"
 #include "Physics/PhysicsEngine.hpp"
 
+#include "ECS/Components.hpp" //! EWWW TODO REMOVE THIS
 #include "Logger/Logger.hpp"
 namespace Vakol
 {
@@ -147,14 +148,16 @@ namespace Vakol
         float scalar = depth / masses;
         Math::Vec3 correction = scalar * normal * 0.45f;
 
-        rb1.position -= correction * rb1.invMass;
-        rb2.position += correction * rb2.invMass;
+        rb1.transform->pos -= correction * rb1.invMass;
+        rb2.transform->pos += correction * rb2.invMass;
 
-        rb1.collisionBody->setTransform(rp3d::Transform(rp3d::Vector3(rb1.position.x, rb1.position.y, rb1.position.z),
-                                                        rb1.collisionBody->getTransform().getOrientation()));
+        rb1.collisionBody->setTransform(
+            rp3d::Transform(rp3d::Vector3(rb1.transform->pos.x, rb1.transform->pos.y, rb1.transform->pos.z),
+                            rb1.collisionBody->getTransform().getOrientation()));
 
-        rb2.collisionBody->setTransform(rp3d::Transform(rp3d::Vector3(rb2.position.x, rb2.position.y, rb2.position.z),
-                                                        rb2.collisionBody->getTransform().getOrientation()));
+        rb2.collisionBody->setTransform(
+            rp3d::Transform(rp3d::Vector3(rb2.transform->pos.x, rb2.transform->pos.y, rb2.transform->pos.z),
+                            rb2.collisionBody->getTransform().getOrientation()));
     }
 
     void Resolution(RigidBody& rb1, RigidBody& rb2, Math::Vec3& normal, Math::Vec3& localPoint1,
