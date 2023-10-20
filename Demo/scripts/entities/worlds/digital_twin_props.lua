@@ -62,7 +62,7 @@ function init()
 
 		benches[i]:get_transform().pos = benchPositions[i];
 	end
-	--[[
+
 	for i = 1, 20 do
 		local entityName = "Chair";
 		entityName = entityName .. " " .. i;
@@ -101,5 +101,5 @@ function init()
 			rubbishBins[i]:get_transform().rot = Vector3.new(0.0, 90.0, 0.0);
 			recyclingBins[i]:get_transform().rot = Vector3.new(0.0, 90.0, 0.0);
 		end
-	end--]]
+	end
 end

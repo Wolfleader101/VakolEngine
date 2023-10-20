@@ -62,11 +62,11 @@ function init()
 	windowsill:add_model("assets/models/digital_twin/WINDOWSILL.fbx", GLOBAL_SCALE);
 
 	--COLLIDER FUNCTIONS
-	-- create_pillar_colliders();
-	-- create_floor_colliders();
-	-- create_building_colliders();
-	-- create_barrier_colliders();
-	-- create_stair_colliders();
+	create_pillar_colliders();
+	create_floor_colliders();
+	create_building_colliders();
+	create_barrier_colliders();
+	create_stair_colliders();
 
 	--ADDITIONAL MODIFICATIONS
 	barriers[3]:get_transform().pos = Vector3.new(0.0, 0.0, -64.7);
@@ -324,13 +324,13 @@ function create_stair_colliders()
 		rigid.type = BodyType.Static;
 	end
 
-	colliders[1]:get_transform().pos = Vector3.new(-45.0, 1.3, 22.2);
-	colliders[1]:get_transform().rot = Vector3.new(0.0, 0.0, 0.0);
-	colliders[1]:add_box_collider(Vector3.new(16.5, 3.5, 0.1));
+	colliders[1]:get_transform().pos = Vector3.new(-45.5, -2.9, 24.7);
+	colliders[1]:get_transform().rot = Vector3.new(-46.4, 0.0, 0.0);
+	colliders[1]:add_box_collider(Vector3.new(16.5, 4.0, 0.1));
 
-	colliders[2]:get_transform().pos = Vector3.new(-45.5, -8.2, 37.7);
+	colliders[2]:get_transform().pos = Vector3.new(-45.5, -8.0, 37.7);
 	colliders[2]:get_transform().rot = Vector3.new(-46.4, 0.0, 0.0);
-	colliders[2]:add_box_collider(Vector3.new(16.2, 3.5, 0.1));
+	colliders[2]:add_box_collider(Vector3.new(16.5, 3.8, 0.1));
 end
 
 function update()
