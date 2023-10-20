@@ -7,6 +7,8 @@
 #include "Window/Events/MouseEvent.hpp"
 #include "Window/Events/WindowEvent.hpp"
 
+#include "AssetLoader/TextureLoader.hpp"
+
 using namespace Vakol;
 
 void APIENTRY DebugOutput(const unsigned int source, const unsigned int type, const unsigned int id,
@@ -112,8 +114,19 @@ namespace Vakol
         if (!glfwInit())
             return;
 
+        GLFWimage icon[1];
+
+        int channels = 0;
+        ImportTexture("coreAssets/textures/icon.png", icon->width, icon->height, channels, icon->pixels);
+
         /* Create a windowed mode window and its OpenGL context */
         m_window = glfwCreateWindow(m_width, m_height, m_title.c_str(), nullptr, nullptr);
+
+        if (icon->pixels)
+        {
+            glfwSetWindowIcon(m_window, 1, icon);
+            FreeTexture(icon->pixels);
+        }
 
         if (m_window == nullptr)
         {
