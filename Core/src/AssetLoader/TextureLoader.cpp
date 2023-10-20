@@ -42,4 +42,11 @@ namespace Vakol
             pixels = nullptr;
         }
     }
+
+    void FreeTexture(void* pixels)
+    {
+        stbi_image_free(pixels);
+        pixels = nullptr;
+    }
+
 } // namespace Vakol

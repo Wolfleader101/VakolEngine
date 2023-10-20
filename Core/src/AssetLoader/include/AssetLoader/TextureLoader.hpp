@@ -24,4 +24,10 @@ namespace Vakol
      */
     void ImportTexture(const void* data, int length, int& width, int& height, int& channels,
                        unsigned char*& pixels); // memory location of embedded data
+
+    /**
+     * \brief release a texture from memory
+     * \param pixels the pixels of a texture image
+     */
+    void FreeTexture(void* pixels);
 } // namespace Vakol
