@@ -202,6 +202,7 @@ namespace Vakol
 
                             if (rb.type == BodyType::Static)
                                 return;
+
                             transform.pos = rb.position;
                         });
 

@@ -5,10 +5,9 @@ function init()
 
     local rb = entity:add_rigid();
 
-    rb.mass = 1.0;
-    rb.type = BodyType.Static;
+    rb.hasGravity = false;
 
-    entity:add_box_collider(entity:get_transform().scale);
+    entity:add_box_collider(entity:get_transform().scale / 2);
 end
 
 function update()

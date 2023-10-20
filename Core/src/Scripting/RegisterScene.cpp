@@ -53,7 +53,12 @@ namespace Vakol
                                               const float maxDistance, RayCastHitInfo& info) {
             const PhysicsScene& physicsScene = scene.GetPhysicsScene();
 
-            return physicsScene.RayCast(origin, direction, maxDistance, info);
+            const bool hit = physicsScene.RayCast(origin, direction, maxDistance, info);
+
+            if (hit)
+                return scene.GetEntity(info.rigidbody->tag);
+
+            return std::shared_ptr<Entity>(nullptr);
         });
 
         scene_type.set_function("serialize",

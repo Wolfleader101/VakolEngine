@@ -71,10 +71,14 @@ function update()
     camera:set_pitch(pitch);
 
     if (Input:get_key_down(KEYS["KEY_E"])) then
-        local hit_info = test_raycast(camera:get_forward(), 10.0);
+        local obj = test_raycast(camera:get_forward(), 10.0);
 
-        if (hit_info ~= nil) then
-            print(hit_info.rigidbody.hasGravity);
+        if (obj ~= nil) then
+            local rb = obj:get_rigid();
+
+            if (rb ~= nil and obj:get_tag() ~= "Floor") then
+                rb.position = entity:get_transform().pos;
+            end
         end
     end
 end
@@ -84,9 +88,9 @@ function test_raycast(direction, max_distance)
     local origin = entity:get_transform().pos;
     local hit_info = RayCastHitInfo.new();
 
-    local is_hit = scene:raycast(origin, direction, max_distance, hit_info);
+    local obj = scene:raycast(origin, direction, max_distance, hit_info);
 
-    if (is_hit) then
-        return hit_info;
+    if (obj ~= nil) then
+        return obj;
     end
 end

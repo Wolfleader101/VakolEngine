@@ -73,6 +73,8 @@ namespace Vakol
         bool isSleeping = false;
         int sleepCounter = 0;
 
+        std::string tag;
+
         Math::Vec3 position = Math::Vec3(0.0f, 0.0f, 0.0f);
         Math::Quat rotation = Math::Quat(1.0f, 0.0f, 0.0f, 0.0f);
 
