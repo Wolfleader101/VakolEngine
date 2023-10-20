@@ -3,13 +3,15 @@ local is_sprinting = false;
 function init()
     entity:get_transform().rot = Vector3.new(0.0, 0.0, 0.0);
 
-
-    scene.globals.player = {
+    scene.globals.player = 
+    {
         pos = Vector3.new(0.0, 0.0, 0.0)
     }
+
     local camera = scene:get_camera();
-    camera:set_pos(3, 5, -22);
-    camera:set_yaw(90);
+
+    camera:set_pos(0, 5.0, 0.0);
+
     entity:get_transform().pos = camera:get_pos();
     scene.globals.player.pos = entity:get_transform().pos;
 end
@@ -71,7 +73,7 @@ function update()
     camera:set_pitch(pitch);
 
     if (Input:get_key_down(KEYS["KEY_E"])) then
-        local obj = test_raycast(camera:get_forward(), 10.0);
+        local obj = test_raycast(camera:get_forward(), 1.0);
 
         if (obj ~= nil) then
             local rb = obj:get_rigid();

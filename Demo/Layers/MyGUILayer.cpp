@@ -177,8 +177,8 @@ void MyGUILayer::OnUpdate()
                         {
                             Vakol::Rendering::Drawable& drawable = entity.GetComponent<Vakol::Rendering::Drawable>();
 
-                            ImGui::Text("Drawable ID: %s", drawable.ID.ToString().c_str());
-                            ImGui::Spacing();
+                            //ImGui::Text("Drawable ID: %s", drawable.ID.ToString().c_str());
+                            //ImGui::Spacing();
 
                             ImGui::SeparatorText("Material");
 
@@ -186,11 +186,11 @@ void MyGUILayer::OnUpdate()
 
                             for (Vakol::Rendering::Assets::Mesh& mesh : model.meshes)
                             {
-                                ImGui::Text("Mesh ID: %s", mesh.ID.c_str());
+                                //ImGui::Text("Mesh ID: %s", mesh.ID.c_str());
 
                                 Vakol::Rendering::Assets::Material& material = mesh.material;
 
-                                ImGui::Text("Material ID: %s", material.ID.c_str());
+                                //ImGui::Text("Material ID: %s", material.ID.c_str());
 
                                 ImGui::Checkbox(("Use Lighting##" + material.ID).c_str(),
                                                 &material.properties.use_lighting);
