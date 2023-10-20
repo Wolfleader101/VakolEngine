@@ -15,7 +15,7 @@ namespace Vakol
     {
         if (!ModelExists(ID))
         {
-            VK_ERROR("Unable to find unique model at ID: {0}", ID.ConvertToString());
+            VK_ERROR("Unable to find unique model at ID: {0}", ID.ToString());
             return GetErrorModel(1.0f);
         }
 

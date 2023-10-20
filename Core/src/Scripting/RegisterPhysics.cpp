@@ -3,6 +3,7 @@
 #include "Physics/PhysicsEngine.hpp"
 #include "Physics/PhysicsScene.hpp"
 
+#include "Logger/Logger.hpp"
 namespace Vakol
 {
     void RegisterPhysics(sol::state& lua)
@@ -26,7 +27,30 @@ namespace Vakol
         rbT.set("angularVelocity", &RigidBody::angularVelocity);
         rbT.set("is_colliding", sol::property([](const RigidBody& rb) { return rb.collisionData->isColliding; }));
 
-        rbT.set_function("add_force", [](RigidBody& rb, const Math::Vec3& force) { rb.force += force; });
+        rbT.set_function("add_force", [](RigidBody& rb, Math::Vec3& force) {
+            rb.force += force;
+            rb.isSleeping = false;
+            rb.sleepCounter = 0;
+        });
+
+        rbT.set_function("add_torque", [](RigidBody& rb, Math::Vec3& torque) {
+            rb.torque += torque;
+            rb.isSleeping = false;
+            rb.sleepCounter = 0;
+        });
+
+        rbT.set_function("apply_impulse", [](RigidBody& rb, Math::Vec3& impulse) {
+            rb.linearVelocity += impulse;
+            rb.isSleeping = false;
+            rb.sleepCounter = 0;
+        });
+
+        rbT.set_function("apply_angular_impulse", [](RigidBody& rb, Math::Vec3& impulse, Math::Vec3& point) {
+            Math::Vec3 torque = Math::Cross(point, impulse);
+            rb.angularVelocity += torque * rb.invInertiaTensor;
+            rb.isSleeping = false;
+            rb.sleepCounter = 0;
+        });
 
         auto rct = lua.new_usertype<RayCastHitInfo>("RayCastHitInfo");
 
