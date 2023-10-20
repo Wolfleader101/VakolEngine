@@ -37,7 +37,7 @@ function init()
 
     local rb2 = wall:add_rigid();
     rb2.mass = 1;
-    rb1.bounciness = 0.4;
+    rb2.bounciness = 0.4;
     rb2.type = BodyType.Static;
     wall:add_box_collider(wall:get_transform().scale);
 
