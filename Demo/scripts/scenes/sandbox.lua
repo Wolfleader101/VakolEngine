@@ -33,7 +33,8 @@ function init()
 
     local wall = scene:create_entity("wall", "");
 
-    wall:get_transform().scale = Vector3.new(20, 20, 20);
+    wall:get_transform().scale = Vector3.new(10, 10, 10);
+    wall:get_transform().pos.y = -20;
 
     local rb2 = wall:add_rigid();
     rb2.mass = 1;

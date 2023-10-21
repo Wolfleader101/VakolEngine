@@ -4,7 +4,7 @@ DESTINATION = Vector3.new();
 local trans = Transform.new();
 local dir = Vector3.new();
 
-local CHECK_DIST = 5
+local CHECK_DIST = 1;
 local MAX_DIST = 5;
 MAX_SPEED = 3;
 
@@ -20,16 +20,16 @@ function init()
 	
 end
 
-local waypoints = {};
 local WANDER_TICKS = 300; --5 seconds
 local wanderCount = 0;
+
 
 function tick()
 
     if NAVIGATE then
 
         trans = entity:get_transform();
-        dir = (DESTINATION - trans.pos):normalize();
+        dir = get_direction();
         targetRotation = math.atan(dir.x, dir.z) * (180 / math.pi);  
         entity:get_transform().rot.y = targetRotation; 
 
@@ -40,28 +40,16 @@ function tick()
         else
 
             info = RayCastHitInfo.new();
-            leftInfo = RayCastHitInfo.new();
-            rightInfo = RayCastHitInfo.new();
+            
 
-            -- if scene:raycast(trans.pos, dir, dist, info) then
-            --     slideDir = Vector3.new(-info.normal.z, 0, info.normal.x);
-            --     dir = slideDir;
-            -- else
-            --     leftDir = Vector3.new(-dir.z, 0, dir.x);
-            --     rightDir = Vector3.new(dir.z, 0, -dir.x);
-            --     leftInfo = RayCastHitInfo.new();
-            --     rightInfo = RayCastHitInfo.new();
-    
-            --     if scene:raycast(trans.pos, leftDir, CHECK_DIST, leftInfo) then
-            --         slideDirLeft = Vector3.new(-leftInfo.normal.z, 0, leftInfo.normal.x);
-            --         dir = slideDirLeft;
-            --     elseif scene:raycast(trans.pos, rightDir, CHECK_DIST, rightInfo) then
-            --         slideDirRight = Vector3.new(-rightInfo.normal.z, 0, rightInfo.normal.x);
-            --         dir = slideDirRight;
-            --     end
-            -- end
+            local rayOrigin = trans.pos + Vector3.new(0, 5, 0);  -- so we dont cast from inside agent collider
+
+            if scene:raycast(rayOrigin, dir, 0.25 , info) and info.distance < CHECK_DIST then
+                -- get normal and change dir to follow it. Not the best but will do the job
+                local reflectDir = dir - 2 * (dir:dot(info.normal)) * info.normal;
+                dir = reflectDir:normalize()
+            end
         end
-
     else --wander state
 
         

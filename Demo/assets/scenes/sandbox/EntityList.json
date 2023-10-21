@@ -8,31 +8,39 @@
         },
         {
             "handle": 2
+        },
+        {
+            "handle": 3
+        },
+        {
+            "handle": 4
         }
     ],
-    "value0": 3,
+    "value0": 5,
     "value1": 0,
     "value2": 0,
     "value3": 1,
     "value4": 2,
     "value5": 3,
-    "value6": 0,
-    "value7": {
-        "pos.x": 3.0,
-        "pos.y": 5.0,
-        "pos.z": -22.0,
+    "value6": 4,
+    "value7": 5,
+    "value8": 0,
+    "value9": {
+        "pos.x": 63.63410568237305,
+        "pos.y": 95.70964813232422,
+        "pos.z": -117.42288970947266,
         "rot.x": 0.0,
-        "rot.y": -10.300111770629883,
+        "rot.y": -6.649888515472412,
         "rot.z": 0.0,
         "scale.x": 1.0,
         "scale.y": 1.0,
         "scale.z": 1.0
     },
-    "value8": 1,
-    "value9": {
-        "pos.x": 0.0,
-        "pos.y": 1.5138682126998902,
-        "pos.z": 0.0,
+    "value10": 1,
+    "value11": {
+        "pos.x": 40.0,
+        "pos.y": 1.4888815879821778,
+        "pos.z": 40.0,
         "rot.x": 0.0,
         "rot.y": -0.0,
         "rot.z": 0.0,
@@ -40,8 +48,20 @@
         "scale.y": 1.0,
         "scale.z": 1.0
     },
-    "value10": 2,
-    "value11": {
+    "value12": 2,
+    "value13": {
+        "pos.x": 18.08118438720703,
+        "pos.y": 1.4888815879821778,
+        "pos.z": -40.45510482788086,
+        "rot.x": 6.712755293847295e-7,
+        "rot.y": 15.23954963684082,
+        "rot.z": -0.0000036350277241581354,
+        "scale.x": 1.0,
+        "scale.y": 1.0,
+        "scale.z": 1.0
+    },
+    "value14": 3,
+    "value15": {
         "pos.x": 0.0,
         "pos.y": 0.0,
         "pos.z": 0.0,
@@ -52,30 +72,58 @@
         "scale.y": 1.0,
         "scale.z": 100.0
     },
-    "value12": 3,
-    "value13": 0,
-    "value14": {
+    "value16": 4,
+    "value17": {
+        "pos.x": 0.0,
+        "pos.y": 0.0,
+        "pos.z": 0.0,
+        "rot.x": 0.0,
+        "rot.y": -0.0,
+        "rot.z": 0.0,
+        "scale.x": 20.0,
+        "scale.y": 20.0,
+        "scale.z": 20.0
+    },
+    "value18": 5,
+    "value19": 0,
+    "value20": {
         "tag": "Player"
     },
-    "value15": 1,
-    "value16": {
+    "value21": 1,
+    "value22": {
         "tag": "Test Entity"
     },
-    "value17": 2,
-    "value18": {
+    "value23": 2,
+    "value24": {
+        "tag": "Nav Test"
+    },
+    "value25": 3,
+    "value26": {
         "tag": "Floor"
     },
-    "value19": 3,
-    "value20": 0,
-    "value21": {
-        "guid": "770289c6-43e1-4777-9eb6-42f19d715212"
+    "value27": 4,
+    "value28": {
+        "tag": "wall"
     },
-    "value22": 1,
-    "value23": {
-        "guid": "ac83d7aa-3135-43a1-93b1-181cc8fff57d"
+    "value29": 5,
+    "value30": 0,
+    "value31": {
+        "guid": "2dd92059-3101-46ce-8995-1d0613ee9c21"
     },
-    "value24": 2,
-    "value25": {
-        "guid": "83056096-c869-4065-b4d3-d57bc9f1d6cb"
+    "value32": 1,
+    "value33": {
+        "guid": "f935503d-f3fd-441e-b2ec-50f47a788a68"
+    },
+    "value34": 2,
+    "value35": {
+        "guid": "b5f0d1f9-d892-4839-b01d-ba685b017240"
+    },
+    "value36": 3,
+    "value37": {
+        "guid": "c91638f7-93e9-47d2-9a03-c1700985b6d6"
+    },
+    "value38": 4,
+    "value39": {
+        "guid": "8f872e5b-4c09-41da-b89b-b1b4d2f4e810"
     }
 }
