@@ -153,9 +153,7 @@ namespace Vakol
 
             if (m_sceneManager.SceneChanged())
             {
-
-                m_sceneManager.GetActiveScene().GetCamera().SetAspect(
-                    static_cast<float>(GetWidth()) / (GetHeight() != 0 ? static_cast<float>(GetHeight()) : 1.0f));
+                m_sceneManager.GetActiveScene().GetCamera().SetAspect(GetWidth(), GetHeight());
 
                 // ignore the current frame, and next frame on scene change
                 // on scene change, ignore rest of the current frame, delta time will be low (current frame)

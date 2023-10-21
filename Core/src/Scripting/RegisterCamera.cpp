@@ -17,6 +17,8 @@ namespace Vakol
 
         camera_type.set_function("get_yaw", &Camera::GetYaw);
         camera_type.set_function("set_yaw", &Camera::SetYaw);
+
+        camera_type.set_function("screen_to_world", &Camera::ScreenToWorldPoint);
     }
 
 } // namespace Vakol

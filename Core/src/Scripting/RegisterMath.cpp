@@ -15,6 +15,8 @@ namespace Vakol
 {
     void RegisterMath(sol::state& lua)
     {
+        lua.set_function("rad2deg", [](const Math::Vec3& v) -> Math::Vec3 { return Math::RadToDeg(v); });
+
         {
             sol::constructors<Math::Vec2(), Math::Vec2(float), Math::Vec2(float, float)> ctor; // allow for constructors
 

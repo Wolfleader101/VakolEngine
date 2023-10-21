@@ -55,7 +55,7 @@ namespace Vakol::Rendering
 
     void RenderEngine::ResizeScreen(Camera& camera, const unsigned int width, const unsigned int height)
     {
-        camera.SetAspect(static_cast<float>(width) / (height != 0 ? static_cast<float>(height) : 1.0f));
+        camera.SetAspect(width, height);
 
         if (height != 0)
             RenderAPI::ResizeScreen(0, 0, static_cast<int>(width), static_cast<int>(height));

@@ -160,7 +160,7 @@ namespace Vakol
         entity_type.set_function("get_script", [&](Entity* ent, const std::string& name) -> LuaTable {
             if (!ent->HasComponent<ScriptComp>())
             {
-                VK_ERROR("No script component found on entity {}", ent->GetComponent<Components::Tag>().tag);
+                //VK_ERROR("No script component found on entity {}", ent->GetComponent<Components::Tag>().tag);
 
                 return LuaTable();
             }
@@ -185,7 +185,7 @@ namespace Vakol
                 }
             }
 
-            VK_ERROR("No script with name {} found on entity {}", name, ent->GetComponent<Components::Tag>().tag);
+            //VK_ERROR("No script with name {} found on entity {}", name, ent->GetComponent<Components::Tag>().tag);
 
             return LuaTable(); // Return an empty sol::table or sol::nil
         });

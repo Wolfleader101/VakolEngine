@@ -147,16 +147,16 @@ namespace Vakol
                         GLVersion.major, GLVersion.minor);
         }
 
-        // enable OpenGL debug context if context allows for debug context
-        int flags;
-        glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
-        if (flags & GL_CONTEXT_FLAG_DEBUG_BIT)
-        {
-            glEnable(GL_DEBUG_OUTPUT);
-            glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS); // makes sure errors are displayed synchronously
-            // glDebugMessageCallback(DebugOutput, nullptr);
-            glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
-        }
+        //// enable OpenGL debug context if context allows for debug context
+        //int flags;
+        //glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
+        //if (flags & GL_CONTEXT_FLAG_DEBUG_BIT)
+        //{
+        //    glEnable(GL_DEBUG_OUTPUT);
+        //    glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS); // makes sure errors are displayed synchronously
+        //    // glDebugMessageCallback(DebugOutput, nullptr);
+        //    glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
+        //}
 
         glfwSetWindowUserPointer(m_window, this);
 

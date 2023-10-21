@@ -1,5 +1,8 @@
 local is_sprinting = false;
 
+local is_dragging = false;
+local dragged_object = nil;
+
 function init()
     entity:get_transform().rot = Vector3.new(0.0, 0.0, 0.0);
 
@@ -72,16 +75,24 @@ function update()
 
     camera:set_pitch(pitch);
 
-    if (Input:get_key_down(KEYS["KEY_E"])) then
-        local obj = test_raycast(camera:get_forward(), 1.0);
+    if (Input:get_key(KEYS["KEY_E"])) then
+        local obj, hit_info = test_raycast(camera:get_forward(), 0.75);
 
         if (obj ~= nil) then
             local rb = obj:get_rigid();
+            local it_script = obj:get_script("interactable");
 
-            if (rb ~= nil and obj:get_tag() ~= "Floor") then
-                rb.position = entity:get_transform().pos;
+            if (rb ~= nil and it_script ~= nil) then
+                is_dragging = true;
+                dragged_object = rb;
             end
         end
+    else
+        is_dragging = false;
+    end
+
+    if (is_dragging and dragged_object ~= nil) then
+        dragged_object.position = camera:get_pos() + camera:get_forward() * 4.0;
     end
 end
 
@@ -93,6 +104,6 @@ function test_raycast(direction, max_distance)
     local obj = scene:raycast(origin, direction, max_distance, hit_info);
 
     if (obj ~= nil) then
-        return obj;
+        return obj, hit_info;
     end
 end

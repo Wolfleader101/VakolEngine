@@ -8,6 +8,8 @@ function init()
     rb.hasGravity = false;
 
     entity:add_box_collider(entity:get_transform().scale / 2);
+
+    entity:add_script("interactable", "components/interactable.lua");
 end
 
 function update()

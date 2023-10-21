@@ -40,14 +40,22 @@ namespace Vakol
         /**
          * @brief Set the aspect ratio of the camera.
          *
-         * @param _aspect The aspect ratio.
+         * @param width the width of the screen
+         * @param height the height of the screen
          */
-        void SetAspect(float _aspect);
+        void SetAspect(unsigned int width, unsigned int height);
 
         /**
          * @brief Update the camera.
          */
         void Update();
+
+        /**
+         * \brief convert stuff :p
+         * \param screenSpace a screen-space point
+         * \return the world point
+         */
+        Math::Vec3 ScreenToWorldPoint(const Math::Vec2& screenSpace) const;
 
         /**
          * @brief Get the position of the camera.
@@ -178,6 +186,16 @@ namespace Vakol
          *
          */
         float far = 10000.0f;
+
+        /**
+         * \brief the width of the screen
+         */
+        unsigned int SCREEN_WIDTH = 0;
+
+        /**
+         * \brief the height of the screen
+         */
+        unsigned int SCREEN_HEIGHT = 0;
 
         /**
          * @brief The projection matrix of the camera.
