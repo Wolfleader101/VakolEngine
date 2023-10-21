@@ -15,7 +15,7 @@ function init()
 
     target = Vector3.new(0, 0, 0);
 
-    nav.NAVIGATE = false
+    nav.NAVIGATE = true
     nav.DESTINATION.x = target.x
     nav.DESTINATION.y = target.y
     nav.DESTINATION.z = target.z

@@ -37,6 +37,8 @@ function tick()
 
         if dist < MAX_DIST then
             NAVIGATE = false;
+            rb = entity:get_rigid();
+            rb.linearVelocity = Vector3.new(0,0,0);
         else
 
             info = RayCastHitInfo.new();
@@ -51,14 +53,14 @@ function tick()
             end
         end
     else --wander state
-
+        
         
         if wanderCount >= WANDER_TICKS then
             local randomAngle = math.random() * 2 * math.pi;
             dir = Vector3.new(math.cos(randomAngle), 0, math.sin(randomAngle));
             wanderCount = 0;
         else
-            wanderCount = wanderCount + 1;
+            wanderCount = wanderCount + 1;    
         end
     
         targetRotation = math.atan(dir.x, dir.z) * (180 / math.pi);
@@ -71,8 +73,7 @@ function tick()
             slideDir = Vector3.new(-info.normal.z, 0, info.normal.x);
             dir = slideDir;
         end
-    
-        
+
     end
 
         rb = entity:get_rigid();
@@ -82,5 +83,6 @@ function tick()
             rb:apply_impulse(dir);
         end
 
-
+        str = dir.x .. " " .. dir.z;
+        print(str);
 end
