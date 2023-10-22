@@ -37,7 +37,7 @@ local currentRotation = 0;
 local targetRotation = 0;
 local ROTATION_LERP_SPEED = 0.05; -- lerping bruvva
 
-function tick()
+function phys_update()
 
     if state == "navigate" then
 

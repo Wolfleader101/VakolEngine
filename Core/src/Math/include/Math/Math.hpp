@@ -8,6 +8,7 @@ namespace Vakol::Math
     //! glm usage is currently just here for backwards compatability reasons
     using Vec2 = glm::vec2;
     using Vec3 = glm::vec3;
+    using BVec3 = glm::bvec3;
     using Vec4 = glm::vec4;
 
     using Point = Vec3;

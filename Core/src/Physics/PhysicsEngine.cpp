@@ -214,9 +214,17 @@ namespace Vakol
         rb.linearVelocity += linearAcceleration * m_timeStep;
         rb.linearVelocity = rb.linearVelocity * velocityDamping;
 
+        rb.linearVelocity.x = rb.lockPosition.x ? 0.0f : rb.linearVelocity.x;
+        rb.linearVelocity.y = rb.lockPosition.y ? 0.0f : rb.linearVelocity.y;
+        rb.linearVelocity.z = rb.lockPosition.z ? 0.0f : rb.linearVelocity.z;
+
         Math::Vec3 angularAcceleration = rb.invInertiaTensor * rb.torque;
         rb.angularVelocity += angularAcceleration * m_timeStep;
         rb.angularVelocity = rb.angularVelocity * velocityDamping;
+
+        rb.angularVelocity.x = rb.lockRotation.x ? 0.0f : rb.angularVelocity.x;
+        rb.angularVelocity.y = rb.lockRotation.y ? 0.0f : rb.angularVelocity.y;
+        rb.angularVelocity.z = rb.lockRotation.z ? 0.0f : rb.angularVelocity.z;
 
         pos += rb.linearVelocity * m_timeStep;
         quatRot = quatRot + (Math::Quat(0.0f, rb.angularVelocity * m_timeStep * 0.5f) * quatRot);

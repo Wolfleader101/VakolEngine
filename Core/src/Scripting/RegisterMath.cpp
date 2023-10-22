@@ -83,6 +83,16 @@ namespace Vakol
         }
 
         {
+            sol::constructors<Math::BVec3(), Math::BVec3(bool), Math::BVec3(bool, bool, bool)>
+                ctor; // allow for constructors
+            auto vec3 = lua.new_usertype<Math::BVec3>("BVector3", ctor);
+
+            vec3["x"] = &Math::BVec3::x;
+            vec3["y"] = &Math::BVec3::y;
+            vec3["z"] = &Math::BVec3::z;
+        }
+
+        {
             sol::constructors<Math::Vec4(), Math::Vec4(float), Math::Vec4(float, float, float, float)>
                 ctor; // allow for constructors
 
