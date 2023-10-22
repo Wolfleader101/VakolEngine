@@ -196,13 +196,9 @@ namespace Vakol
                         [&](Components::Transform& transform, RigidBody& rb) {
                             if (rb.isSleeping)
                                 return;
-                            m_physicsEngine.ApplyForces(rb.position, transform.rot, rb);
+                            m_physicsEngine.ApplyForces(transform.pos, transform.rot, rb);
 
                             transform.eulerAngles = Math::RadToDeg(Math::EulerFromQuat(transform.rot));
-
-                            if (rb.type == BodyType::Static)
-                                return;
-                            transform.pos = rb.position;
                         });
 
                     // detect collisions

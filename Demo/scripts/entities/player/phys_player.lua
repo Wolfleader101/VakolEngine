@@ -7,7 +7,7 @@ function init()
     entity:get_transform().pos.y = 2.0;
 
     local rb = entity:add_rigid();
-    rb.bounciness = Vector3.new(0.8, 0.3, 0.9);
+    rb.bounciness = 0.3;
 	rb.mass = 1;
 	entity:add_box_collider(Vector3.new(1.0, 1.0, 1.0));
 end

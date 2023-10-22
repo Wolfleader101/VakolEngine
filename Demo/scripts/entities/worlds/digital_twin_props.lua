@@ -4,8 +4,11 @@ function init()
 	local tables = {};
 	local rubbishBins = {};
 	local recyclingBins = {};
+	local apples = {};
+	local drinkCups = {};
+	local beerCans = {};
 
-	GLOBAL_SCALE = 0.02;
+	local soccerBall;
 
 	--OBJECT POSITIONS
 	local benchPositions = 
@@ -45,12 +48,34 @@ function init()
 
 	local rubbishBinPositions = 
 	{
-		Vector3.new(33.0, 1.221, 39.0), Vector3.new(-16.3, 1.221, 84.0)
+		Vector3.new(33.0, 1.221, 39.0), Vector3.new(-16.3, 1.321, 84.0)
+	}
+
+	local recyclingBinPositions = 
+	{
+		Vector3.new(31.4, 1.221, 39.0), Vector3.new(-16.3, 1.321, 85.6)
 	}
 
 	local recyclingBinPositions = 
 	{
 		Vector3.new(31.4, 1.221, 39.0), Vector3.new(-16.3, 1.221, 85.6)
+	}
+
+	local applePositions = 
+	{
+		Vector3.new(18.8, 1.0, 22.9), Vector3.new(-11.3, 1.0, -32.9), Vector3.new(15.5, 1.0, -12.8),
+		Vector3.new(-21.4, 1.0, 42.4), Vector3.new(-24.3, 1.0, 98.4), Vector3.new(2.0, 1.0, 3.0)
+	}
+
+	local drinkCupPositions = 
+	{
+		Vector3.new(12.5, 1.0, 4.0), Vector3.new(0.9, 1.0, 28.9), Vector3.new(4.4, 1.0, -13.3),
+		Vector3.new(-26.0, 1.0, 56.7)
+	}
+
+	local beerCanPositions = 
+	{
+		Vector3.new(9.2, 1.0, 12.2), Vector3.new(-13.0, 1.0, 2.0)
 	}
 
 	--ENTITY CREATION & SETUP
@@ -103,4 +128,35 @@ function init()
 			recyclingBins[i]:get_transform().rot = Vector3.new(0.0, 90.0, 0.0);
 		end
 	end
+
+	for i = 1, 6 do
+		local entityName = "Apple";
+		entityName = entityName .. " " .. i;
+	
+		apples[i] = scene:create_entity(entityName, "entities/objects/apple.lua");
+
+		apples[i]:get_transform().pos = applePositions[i];
+	end
+
+	for i = 1, 4 do
+		local entityName = "Drink Cup";
+		entityName = entityName .. " " .. i;
+	
+		drinkCups[i] = scene:create_entity(entityName, "entities/objects/drink_cup.lua");
+
+		drinkCups[i]:get_transform().pos = drinkCupPositions[i];
+	end
+
+	for i = 1,2 do
+		local entityName = "Beer Can";
+		entityName = entityName .. " " .. i;
+	
+		beerCans[i] = scene:create_entity(entityName, "entities/objects/beer_can.lua");
+
+		beerCans[i]:get_transform().pos = beerCanPositions[i];
+	end
+	
+	soccerBall = scene:create_entity("Soccer Ball", "entities/objects/soccer_ball.lua");
+
+	soccerBall:get_transform().pos = Vector3.new(0.0, 2.0, 0.0);
 end

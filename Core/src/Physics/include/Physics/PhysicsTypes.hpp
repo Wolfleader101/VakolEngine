@@ -22,6 +22,11 @@ namespace Vakol
         return rp3d::Vector3(vec.x, vec.y, vec.z);
     }
 
+    namespace Components
+    {
+        struct Transform;
+    }
+
     struct RayCastHitInfo
     {
         Math::Vec3 point = Math::Vec3(0.0f, 0.0f, 0.0f);
@@ -69,8 +74,7 @@ namespace Vakol
         bool isSleeping = false;
         int sleepCounter = 0;
 
-        Math::Vec3 position = Math::Vec3(0.0f, 0.0f, 0.0f);
-        Math::Quat rotation = Math::Quat(1.0f, 0.0f, 0.0f, 0.0f);
+        Components::Transform* transform = nullptr;
 
         Math::Vec3 centerOfMass = Math::Vec3(0.0f, 0.0f, 0.0f); // will have to be calculated
 
