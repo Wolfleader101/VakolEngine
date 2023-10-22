@@ -30,7 +30,7 @@ local wanderChanges = 0; -- used to switch to wait state
 local WAIT_TICKS = 600; -- 10 seconds 
 local waitCount = 0;
 
-local DIR_CHANGE_COOLDOWN = 300; -- 1 second
+local DIR_CHANGE_COOLDOWN = 300; -- 5 second
 local dirChangeCounter = 0;
 
 local currentRotation = 0;
@@ -38,8 +38,6 @@ local targetRotation = 0;
 local ROTATION_LERP_SPEED = 0.05; -- lerping bruvva
 
 function tick()
-
-    print(state);
 
     if state == "navigate" then
 
@@ -86,7 +84,7 @@ function tick()
             if dirChangeCounter == 0 then
                 local randomAngle = math.random() * 2 * math.pi;
                 local newDir = Vector3.new(math.cos(randomAngle), 0, math.sin(randomAngle));
-                dir = dir * 0.8 + newDir * 0.2; -- Interpolate to smooth direction change
+                dir = dir * 0.8 + newDir * 0.2; -- smooth turn w Interpolate
                 wanderCount = 0;
                 dirChangeCounter = DIR_CHANGE_COOLDOWN;
                 wanderChanges = wanderChanges + 1;
@@ -100,18 +98,20 @@ function tick()
 
         info = RayCastHitInfo.new();
 
-        -- If there's an obstacle in the wander direction, slide along it
+        -- slide along obstacle
         if scene:raycast(trans.pos, dir, CHECK_DIST, info) and info.hit and dirChangeCounter == 0 then
             slideDir = Vector3.new(-info.normal.z, 0, info.normal.x);
-            dir = dir * 0.8 + slideDir * 0.2; -- Interpolate to smooth direction change
+            dir = dir * 0.8 + slideDir * 0.2; -- Interpolate
             dirChangeCounter = DIR_CHANGE_COOLDOWN;
         end
 
         targetRotation = math.atan(dir.x, dir.z) * (180 / math.pi);
 
-        if wanderChanges == 5 then
+        if wanderChanges == 3 then
             state = "wait";
             wanderChanges = 0;
+            rb = entity:get_rigid();
+            rb.linearVelocity = Vector3.new(0, 0, 0);
         end
 
     end

@@ -1,7 +1,7 @@
 function init()
 
     entity:add_model("assets/models/agents/bob.glb", 1.0e-02);
-    entity:get_transform().pos = Vector3.new(-40, 5, -40); -- shouldnt be here 
+    entity:get_transform().pos = Vector3.new(0, 5, 0); -- shouldnt be here 
     local rb = entity:add_rigid();
     rb.mass = 1;
     entity:add_box_collider(Vector3.new(1.0, 1.0, 1.0));
@@ -17,6 +17,6 @@ function init()
     nav.DESTINATION.y = target.y
     nav.DESTINATION.z = target.z
 
-    nav.set_state("navigate");
+    nav.set_state("wander");
 
 end
