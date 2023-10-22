@@ -196,6 +196,8 @@ namespace Vakol
                         [&](Components::Transform& transform, RigidBody& rb) {
                             if (rb.isSleeping)
                                 return;
+
+                            transform.rot = Math::Quat(Math::DegToRad(transform.eulerAngles));
                             m_physicsEngine.ApplyForces(transform.pos, transform.rot, rb);
 
                             transform.eulerAngles = Math::RadToDeg(Math::EulerFromQuat(transform.rot));
