@@ -5,8 +5,8 @@ function init()
     scene:create_entity("Nav Test", "entities/test/nav_test.lua");
     -- scene:create_entity("Player", "entities/player/phys_player.lua")
 
-    scene:create_entity("Digital Twin", "entities/worlds/digital_twin.lua");
-    scene:create_entity("290 World", "entities/worlds/290_world.lua");
+    -- scene:create_entity("Digital Twin", "entities/worlds/digital_twin.lua");
+    -- scene:create_entity("290 World", "entities/worlds/290_world.lua");
 
     local path = "coreAssets/textures/Skybox/";
     local extension = ".png";
@@ -16,26 +16,26 @@ function init()
 
     scene:generate_skybox(faces);
 
-    -- local floor = scene:create_entity("Floor", "");
-    -- floor:get_transform().scale = Vector3.new(100.0, 1.0, 100.0);
-    -- floor:add_model("coreAssets/models/cube.obj", 1);
+    local floor = scene:create_entity("Floor", "");
+    floor:get_transform().scale = Vector3.new(100.0, 1.0, 100.0);
+    floor:add_model("coreAssets/models/cube.obj", 1);
 
-    -- local rb1 = floor:add_rigid();
-    -- rb1.mass = 1;
-    -- rb1.bounciness = 0.4;
-    -- rb1.type = BodyType.Static;
-    -- floor:add_box_collider(floor:get_transform().scale / 2);
+    local rb1 = floor:add_rigid();
+    rb1.mass = 1;
+    rb1.bounciness = 0.4;
+    rb1.type = BodyType.Static;
+    floor:add_box_collider(floor:get_transform().scale / 2);
 
-    -- local wall = scene:create_entity("wall", "");
+    local wall = scene:create_entity("wall", "");
 
-    -- wall:get_transform().scale = Vector3.new(10, 10, 10);
-    -- wall:get_transform().pos.y = -10;
+    wall:get_transform().scale = Vector3.new(10, 10, 10);
+    wall:get_transform().pos.y = -10;
 
-    -- local rb2 = wall:add_rigid();
-    -- rb2.mass = 1;
-    -- rb2.bounciness = 0.4;
-    -- rb2.type = BodyType.Static;
-    -- wall:add_box_collider(wall:get_transform().scale);
+    local rb2 = wall:add_rigid();
+    rb2.mass = 1;
+    rb2.bounciness = 0.4;
+    rb2.type = BodyType.Static;
+    wall:add_box_collider(wall:get_transform().scale);
 
     -- phys_objs();
     -- falling_objs();

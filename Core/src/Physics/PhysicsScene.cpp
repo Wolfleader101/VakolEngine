@@ -57,6 +57,11 @@ namespace Vakol
 
         info = callback.hit;
 
+        if (info.hit)
+        {
+            int x = 0;
+        }
+
         return info.hit;
     }
 
