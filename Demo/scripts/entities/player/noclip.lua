@@ -1,6 +1,8 @@
 local is_sprinting = false;
 
 local is_dragging = false;
+local was_dragging = false;
+local impulse_applied = false;
 local dragged_object = nil;
 
 function init()
@@ -75,6 +77,7 @@ function update()
 
     camera:set_pitch(pitch);
 
+ -- Check if the E key is pressed
     if (Input:get_key(KEYS["KEY_E"])) then
         local obj, hit_info = test_raycast(camera:get_forward(), 0.75);
 
@@ -85,13 +88,25 @@ function update()
             if (rb ~= nil and it_script ~= nil) then
                 is_dragging = true;
                 dragged_object = rb;
+
+                -- Apply impulse only once when transitioning into the dragging state
+                if not impulse_applied then
+                    dragged_object:apply_impulse(rad2deg(camera:get_forward()));
+                    dragged_object.hasGravity = true;
+                    impulse_applied = true;
+                end
             end
         end
     else
         is_dragging = false;
+        impulse_applied = false;  -- Reset impulse application when "E" key is released
     end
 
-    if (is_dragging and dragged_object ~= nil) then
+    -- Update the previous state
+    was_dragging = is_dragging
+
+    -- Update the position of the dragged object every frame when it's being dragged
+    if is_dragging and dragged_object then
         dragged_object.position = camera:get_pos() + camera:get_forward() * 4.0;
     end
 end
