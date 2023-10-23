@@ -12,12 +12,12 @@ function init()
     entity:add_script("navigation", "components/navigation.lua");
     nav = entity:get_script("navigation");
 
-    target = Vector3.new(-80, 0, 80);
+    target = Vector3.new(40, 0, 40);
 
     nav.DESTINATION.x = target.x
     nav.DESTINATION.y = target.y
     nav.DESTINATION.z = target.z
 
-    nav.set_state("wander");
+    nav.set_state("navigate");
 
 end
