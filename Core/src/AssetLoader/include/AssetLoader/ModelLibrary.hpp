@@ -39,22 +39,28 @@ namespace Vakol
          */
         Rendering::Assets::Model& GetModel(const GUID& ID, const std::string& path, float scale = 1.0f);
 
-      private:
+        /**
+         * \brief Check whether a model library is empty or not.
+         * \return whether the model library contains no models in its map
+         */
+        bool IsEmpty() const;
+
         /**
          * @brief Check if a model exists in the library with the specified GUID.
          *
          * @param ID The unique identifier (GUID) to check for the existence of the associated model.
          * @return True if the model exists in the library, false otherwise.
          */
-        [[nodiscard]] bool ModelExists(const GUID& ID) const;
+        bool ModelExists(const GUID& ID) const;
 
+      private:
         /**
          * @brief Check if a unique model exists in the library with the specified path.
          *
          * @param path The file path to check for the existence of the associated unique model.
          * @return True if the unique model exists in the library, false otherwise.
          */
-        [[nodiscard]] bool UniqueModelExists(const std::string& path) const;
+        bool UniqueModelExists(const std::string& path) const;
 
         /**
          * @brief Get the model associated with the given file path and scale.

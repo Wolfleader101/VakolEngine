@@ -454,8 +454,3 @@ FodyWeavers.xsd
 out/
 
 .vscode/
-
-# Vakol Specific Files/Folders
-
-!**/[Aa]ssets/*
-!**/[Cc]ore[Aa]ssets/*

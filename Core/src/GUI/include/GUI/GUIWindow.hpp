@@ -2,6 +2,7 @@
 
 #include <imgui.h>
 
+#include <fstream>
 #include <functional>
 #include <memory>
 #include <string>
@@ -32,11 +33,11 @@ namespace Vakol
          */
         void CreateNewFrame() const;
         /**
-         * @brief Changes the default font being used in Dear ImGui
+         * @brief Changes the default font of the UI window and returns whether it was successful
          *
          * @param inputPath The path to the font file
          */
-        void ChangeFontDefault(std::string inputPath) const;
+        bool ChangeFontDefault(std::string inputPath) const;
         /**
          * @brief Ends the current frame
          */
@@ -55,6 +56,16 @@ namespace Vakol
          */
         float DisplayWindowHeight() const;
         /**
+         * @brief Returns the width of the GUI window
+         */
+        float GUIWindow::GUIWindowWidth() const;
+        /**
+         * @brief Returns the height of the GUI window
+         *
+         * @param addTitleBarHeight Whether to add the title bar height to the height or not
+         */
+        float GUIWindow::GUIWindowHeight(bool addTitleBarHeight) const;
+        /**
          * @brief Starts the creation of a GUI window
          *
          * @param windowName The name of the window (Will also be the title given to the window)
@@ -66,11 +77,19 @@ namespace Vakol
          * @param yOffset The y position of the window will be offset by
          */
         void StartWindowCreation(const std::string& windowName, bool centerX, bool centerY, float width, float height,
-                                 const float xOffset, float yOffset) const;
+                                 float xOffset, float yOffset) const;
+        /**
+         * @brief Checks to see if the most recent window has been created and is displayed
+         */
+        bool IsWindowCreated() const;
         /**
          * @brief Returns the FPS of the current window
          */
         float GetFramesPerSecond() const;
+        /**
+         * @brief Returns the current ImGui style
+         */
+        ImGuiStyle* GetStyle() const;
         /**
          * @brief An update function to call new frame
          *
@@ -177,18 +196,33 @@ namespace Vakol
         /**
          * @brief Ends the creation of a GUI window
          */
-        void EndWindowCreation() const;
+        void EndWindowCreation();
         /**
          * @brief A basic deconstructor for the GUI
          */
         ~GUIWindow();
 
       private:
+        /**
+         * @brief Validates the GUI variables to ensure they are within the given range
+         *
+         * @param inputValue The value to be validated
+         * @param minValue The minimum value of the variable
+         * @param maxValue The maximum value of the variable
+         * @param valueName The name of the variable
+         * @param windowName The name of the window
+         */
+        void ValidateGUIFloatVariables(float& inputValue, float minValue, float maxValue, const std::string& valueName,
+                                       const std::string& windowName) const;
         void SetAsContext() const;
 
-        std::vector<ImFont*> fonts;  /**< Fonts used in the GUI window */
-        bool is_initialised = false; /**< Flag indicating whether the GUI window is initialized */
-        std::string scriptName;      /**< Name of the script */
-        ImGuiContext* m_context;     /**< The context of the GUI window */
+        std::vector<ImFont*> fonts;              /**< Fonts used in the GUI window */
+        bool is_initialised = false;             /**< Flag indicating whether the GUI window is initialized */
+        std::string scriptName;                  /**< Name of the script */
+        ImGuiContext* m_context;                 /**< The context of the GUI window */
+        ImGuiStyle* m_style;                     /**< The style of the GUI window */
+        std::shared_ptr<Vakol::Window> m_window; /**< The window the GUI is displayed in */
+        float m_currentGUIWidth;                 /**< The current width of the GUI window */
+        float m_currentGUIHeight;                /**< The current height of the GUI window */
     };
 } // namespace Vakol

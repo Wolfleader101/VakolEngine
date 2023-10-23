@@ -72,8 +72,16 @@ namespace Vakol
     };
 } // namespace Vakol
 
+#ifdef SUPPRESS_LOGS
+#define VK_TRACE(...)
+#define VK_INFO(...)
+#define VK_WARN(...)
+#define VK_ERROR(...)
+#define VK_CRITICAL(...)
+#else
 #define VK_TRACE(...) ::Vakol::Logger::GetLogger()->trace(__VA_ARGS__)
 #define VK_INFO(...) ::Vakol::Logger::GetLogger()->info(__VA_ARGS__)
 #define VK_WARN(...) ::Vakol::Logger::GetLogger()->warn(__VA_ARGS__)
 #define VK_ERROR(...) ::Vakol::Logger::GetLogger()->error(__VA_ARGS__)
 #define VK_CRITICAL(...) ::Vakol::Logger::GetLogger()->critical(__VA_ARGS__)
+#endif

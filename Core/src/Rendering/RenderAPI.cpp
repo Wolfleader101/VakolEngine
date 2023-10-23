@@ -31,6 +31,9 @@ namespace Vakol::Rendering
 
     void RenderAPI::BeginDraw(const GUID& modelID, const std::string& shaderID)
     {
+        if (!IsExistingShader(shaderID) || !AssetLoader::IsExistingModel(modelID))
+            return;
+
         const auto shader = GetShader(shaderID);
 
         OpenGL::BindShaderProgram(shader);
@@ -52,6 +55,9 @@ namespace Vakol::Rendering
                 OpenGL::BindTexture(texture.ID);
             }
 
+            if (!IsExistingVertexArray(mesh.ID))
+                return;
+
             const auto& vertexArray = m_vertexLibrary.at(mesh.ID);
 
             OpenGL::BindVertexArray(vertexArray.vertexArray);
@@ -68,6 +74,9 @@ namespace Vakol::Rendering
     void RenderAPI::BeginSkyboxDraw(const std::string& vertexID, const std::string& shaderID,
                                     const unsigned int textureID)
     {
+        if (!IsExistingVertexArray(vertexID) || !IsExistingShader(shaderID) || textureID == 0u)
+            return;
+
         OpenGL::BindShaderProgram(GetShader(shaderID));
 
         OpenGL::DepthLEQUAL();
@@ -86,6 +95,9 @@ namespace Vakol::Rendering
 
     void RenderAPI::BeginDebugSceneDraw(const std::string& vertexID, const std::string& shaderID)
     {
+        if (!IsExistingVertexArray(vertexID) || !IsExistingShader(shaderID))
+            return;
+
         OpenGL::BindShaderProgram(GetShader(shaderID));
 
         const auto& vertexArray = m_vertexLibrary.at(vertexID);
@@ -207,6 +219,9 @@ namespace Vakol::Rendering
 
     void RenderAPI::GenerateShader(Assets::Shader&& shader, Drawable& drawable)
     {
+        if (shader.vertSrc.empty() || shader.fragSrc.empty())
+            return;
+
         drawable.shaderID = GenerateID();
 
         const unsigned int program =
@@ -217,6 +232,9 @@ namespace Vakol::Rendering
 
     void RenderAPI::GenerateSkyboxShader(Assets::Shader&& shader, Skybox& skybox)
     {
+        if (shader.vertSrc.empty() || shader.fragSrc.empty())
+            return;
+
         skybox.shaderID = GenerateID();
 
         const unsigned int program =
@@ -227,6 +245,9 @@ namespace Vakol::Rendering
 
     void RenderAPI::GenerateDebugShader(Assets::Shader&& shader, DebugScene& debugScene)
     {
+        if (shader.vertSrc.empty() || shader.fragSrc.empty())
+            return;
+
         debugScene.shaderID = GenerateID();
 
         const unsigned int program =
@@ -238,11 +259,23 @@ namespace Vakol::Rendering
     unsigned int RenderAPI::GenerateTexture(const int levels, const int width, const int height, const int channels,
                                             const unsigned char* pixels)
     {
+        if (pixels == nullptr || (width <= 0 && height <= 0) || channels < 1)
+            return 0u;
+
         return OpenGL::GenerateTexture(levels, width, height, channels, pixels);
     }
 
-    unsigned RenderAPI::GenerateTexture(std::vector<std::string>&& faces)
+    unsigned int RenderAPI::GenerateTexture(std::vector<std::string>&& faces)
     {
+        for (const std::string& face : faces)
+        {
+            if (face.empty())
+                return 0u;
+        }
+
+        if (faces.empty())
+            return 0u;
+
         return OpenGL::GenerateTexture(std::move(faces));
     }
 
@@ -429,8 +462,26 @@ namespace Vakol::Rendering
         return transform_matrix;
     }
 
+    const RenderConfig& RenderAPI::GetConfig()
+    {
+        return m_config;
+    }
+
+    bool RenderAPI::IsExistingVertexArray(const std::string& vertexArrayID)
+    {
+        return m_vertexLibrary.find(vertexArrayID) != m_vertexLibrary.end();
+    }
+
+    bool RenderAPI::IsExistingShader(const std::string& shaderID)
+    {
+        return m_shaderLibrary.GetShader(shaderID) != 0u;
+    }
+
     void RenderAPI::SetMaterial(const unsigned int shader, const Assets::Material& material)
     {
+        if (shader == 0u)
+            return;
+
         const auto& properties = material.properties;
 
         SetVec4(shader, "material.ambient_color", properties.ambient_color, false);

@@ -9,6 +9,7 @@ namespace Vakol
 
     void LayerManager::PushLayer(std::shared_ptr<Layer> layer, LayerSubscription flags)
     {
+        layer->OnAttach();
         m_layers.push_front(layer);
 
         if (flags & LayerFlags::UPDATES)

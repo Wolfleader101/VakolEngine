@@ -1,6 +1,6 @@
 
 function end_menu()
-    GUI:start_window("End Menu", true, true, 1000.0, 800.0 , 0.0, 100); 
+    GUI:start_window("End Menu", true, true); 
 
     GUI:add_text("Thanks for playing", true, false, 2.0, 1.0, 1.0, 1.0, 1.0);
     GUI:add_text(" ", true, false, 2.0, 1.0, 1.0, 1.0, 1.0);

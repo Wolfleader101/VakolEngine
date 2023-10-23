@@ -71,6 +71,9 @@ namespace Vakol::Rendering
 
     void RenderEngine::Draw(const Camera& camera, Components::Transform& transform, const Drawable& drawable)
     {
+        if (!RenderAPI::IsExistingShader(drawable.shaderID) || !AssetLoader::IsExistingModel(drawable.ID))
+            return;
+
         RenderAPI::BeginDraw(drawable.ID, drawable.shaderID);
 
         RenderAPI::SetMat4(RenderAPI::GetShader(drawable.shaderID), "PV_MATRIX", false,
@@ -94,6 +97,9 @@ namespace Vakol::Rendering
 
     void RenderEngine::DrawSkybox(const Camera& camera, const Skybox& skybox)
     {
+        if (!RenderAPI::IsExistingShader(skybox.shaderID))
+            return;
+
         RenderAPI::BeginSkyboxDraw(skybox.vertexID, skybox.shaderID, skybox.textureID);
 
         RenderAPI::SetMat4(RenderAPI::GetShader(skybox.shaderID), "PV_MATRIX", false,
@@ -104,6 +110,9 @@ namespace Vakol::Rendering
 
     void RenderEngine::DrawDebugScene(const Camera& camera, const DebugScene& debugScene)
     {
+        if (!RenderAPI::IsExistingShader(debugScene.shaderID))
+            return;
+
         RenderAPI::BeginDebugSceneDraw(debugScene.ID, debugScene.shaderID);
 
         RenderAPI::SetMat4(RenderAPI::GetShader(debugScene.shaderID), "PV_MATRIX", false,

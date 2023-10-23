@@ -1,4 +1,5 @@
 #include "GUI/GUIWindow.hpp"
+#include "Window/Window.hpp"
 
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
@@ -10,20 +11,36 @@ namespace Vakol
     GUIWindow::GUIWindow()
     {
         IMGUI_CHECKVERSION(); // Checks the version of IMGUI
+
+        m_currentGUIWidth = 0.0f;
+        m_currentGUIHeight = 0.0f;
     };
 
-    void GUIWindow::ChangeFontDefault(std::string inputPath) const
+    bool GUIWindow::ChangeFontDefault(std::string inputPath) const
     {
-        ImFontConfig font_cfg;
+        std::ifstream infile(inputPath); // Check if the file exists
+
+        if (!infile.good()) // If the file does not exist, use the default font
+        {
+            VK_WARN("Font file not found at '" + inputPath + "'. Using default font.");
+
+            return false; // Returns false if the font was not successfully changed
+        }
+
+        ImFontConfig font_cfg; // Configures the font
+
         font_cfg.OversampleH = 8;
         font_cfg.OversampleV = 8;
 
-        ImGui::GetIO().FontDefault = ImGui::GetIO().Fonts->AddFontFromFileTTF(inputPath.c_str(), 16.0f, &font_cfg);
-    };
+        ImGui::GetIO().FontDefault =
+            ImGui::GetIO().Fonts->AddFontFromFileTTF(inputPath.c_str(), 16.0f, &font_cfg); // Adds the font to the UI
+
+        return true; // Returns true if the font was successfully changed
+    }
 
     void GUIWindow::Init(const std::shared_ptr<Window>& window)
     {
-        m_context = ImGui::CreateContext();
+        m_context = ImGui::CreateContext(); // Creates a new context (Window)
 
         if (!m_context)
         {
@@ -31,7 +48,7 @@ namespace Vakol
             return;
         }
 
-        SetAsContext();
+        SetAsContext(); // Sets the current context (Window)
 
         ImGuiIO& io = ImGui::GetIO();
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;   // Enable Docking
@@ -42,21 +59,25 @@ namespace Vakol
         ImGui_ImplGlfw_InitForOpenGL(window->GetWindow(), true); // Takes in the GLFW Window
         ImGui_ImplOpenGL3_Init("#version 460");                  // Sets the version of GLSL being used
 
-        ImGuiStyle& style = ImGui::GetStyle(); // Gets the current style of the ImGui window
-        style.Colors[ImGuiCol_WindowBg] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
-        style.Colors[ImGuiCol_Border] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
-        style.Colors[ImGuiCol_BorderShadow] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
-        style.Colors[ImGuiCol_FrameBg] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
-        style.Colors[ImGuiCol_FrameBgHovered] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
-        style.Colors[ImGuiCol_FrameBgActive] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
-        style.Colors[ImGuiCol_TitleBg] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
-        style.Colors[ImGuiCol_TitleBgCollapsed] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
-        style.Colors[ImGuiCol_TitleBgActive] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
-        style.Colors[ImGuiCol_ResizeGrip] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
-        style.Colors[ImGuiCol_ResizeGripHovered] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
-        style.Colors[ImGuiCol_ResizeGripActive] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
+        m_style = &ImGui::GetStyle(); // Gets the current style of the ImGui window
+
+        // Sets the styling options for the ImGui window
+        m_style->Colors[ImGuiCol_WindowBg] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
+        m_style->Colors[ImGuiCol_Border] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
+        m_style->Colors[ImGuiCol_BorderShadow] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
+        m_style->Colors[ImGuiCol_FrameBg] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
+        m_style->Colors[ImGuiCol_FrameBgHovered] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
+        m_style->Colors[ImGuiCol_FrameBgActive] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
+        m_style->Colors[ImGuiCol_TitleBg] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
+        m_style->Colors[ImGuiCol_TitleBgCollapsed] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
+        m_style->Colors[ImGuiCol_TitleBgActive] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
+        m_style->Colors[ImGuiCol_ResizeGrip] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
+        m_style->Colors[ImGuiCol_ResizeGripHovered] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
+        m_style->Colors[ImGuiCol_ResizeGripActive] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
 
         ChangeFontDefault("coreAssets/fonts/GidoleFont/Gidole-Regular.ttf");
+
+        m_window = window; // Sets the window to the given window
     }
 
     void GUIWindow::CreateNewFrame() const
@@ -76,61 +97,109 @@ namespace Vakol
 
     float GUIWindow::DisplayWindowWidth() const
     {
-        return (ImGui::GetIO().DisplaySize.x);
+        return ((float)m_window->GetWidth());
     }
 
     float GUIWindow::DisplayWindowHeight() const
     {
-        return (ImGui::GetIO().DisplaySize.y);
+        return ((float)m_window->GetHeight());
     }
 
-    void GUIWindow::StartWindowCreation(const std::string& windowName, bool centerX, bool centerY, const float width,
-                                        const float height, const float xOffset, float yOffset) const
+    float GUIWindow::GUIWindowWidth() const
     {
-        ImGuiViewport* main_viewport = ImGui::GetMainViewport();
+        return (ImGui::GetWindowWidth());
+    }
 
-        // We will calculate the final position first
-        ImVec2 finalPosition = {main_viewport->Pos.x + xOffset, main_viewport->Pos.y + yOffset};
+    float GUIWindow::GUIWindowHeight(bool addTitleBarHeight) const
+    {
+        if (addTitleBarHeight) // If the title bar height is to be added
+        {
+            return (ImGui::GetWindowHeight() + ImGui::GetFrameHeight()); // Add the title bar height
+        }
+        else
+            return (ImGui::GetWindowHeight()); // Return the window height without the title bar height
+    }
 
-        // Only consider centering if width and height are not zero
-        if (width == 0)
-        {
-            centerX = false;
-        }
-        if (height == 0)
-        {
-            centerY = false;
-        }
+    void GUIWindow::StartWindowCreation(const std::string& windowName, bool centerX, bool centerY, float width = 0.0f,
+                                        float height = 0.0f, float xOffset = 0.0f, float yOffset = 0.0f) const
+    {
+        ImGuiIO& io = ImGui::GetIO(); // Gets the ImGui IO
+        float buffer = 35.0f;         // The buffer between the GUI window and the edge of the screen
+
+        // Get the position of the window
+        int windowX = 0, windowY = 0;
+        m_window->GetPosition(windowX, windowY);
+
+        ValidateGUIFloatVariables(height, 0.0f, DisplayWindowHeight(), "Height", windowName);
+        ValidateGUIFloatVariables(width, 0.0f, DisplayWindowWidth(), "Width", windowName);
+
+        // Create a final position variable
+        ImVec2 finalPosition = {0.0f, 0.0f};
 
         // Adjust finalPosition based on centering flags
         if (centerX && centerY)
         {
-            finalPosition.x = main_viewport->Pos.x + (DisplayWindowWidth() - width) / 2 + xOffset;
-            finalPosition.y = main_viewport->Pos.y + (DisplayWindowHeight() - height) / 2 + yOffset;
+            finalPosition.x = (io.DisplaySize.x * 0.5f) + xOffset;
+            finalPosition.y = (io.DisplaySize.y * 0.5f) + yOffset;
         }
         else if (centerX)
         {
-            finalPosition.x = main_viewport->Pos.x + (DisplayWindowWidth() - width) / 2 + xOffset;
+            finalPosition.x = (io.DisplaySize.x * 0.5f) + xOffset;
         }
         else if (centerY)
         {
-            finalPosition.y = main_viewport->Pos.y + (DisplayWindowHeight() - height) / 2 + yOffset;
+            finalPosition.y = (io.DisplaySize.y * 0.5f) + yOffset;
         }
 
-        // Now set the final position
-        ImGui::SetNextWindowPos(finalPosition);
+        // Add the window position to the final position
+        finalPosition.x += (float)windowX;
+        finalPosition.y += (float)windowY;
+
+        // Validate the GUI variables and adjust them if they are invalid
+        if (m_currentGUIWidth == 0.0f)
+        {
+            ValidateGUIFloatVariables(finalPosition.x, 0.0f + (width / 2.0f) + buffer,
+                                      DisplayWindowWidth() - (width / 2.0f) - buffer, "X-Position", windowName);
+        }
+        else
+            ValidateGUIFloatVariables(finalPosition.x, 0.0f + (m_currentGUIWidth / 2.0f) + buffer,
+                                      DisplayWindowWidth() - (m_currentGUIWidth / 2.0f) - buffer, "X-Position",
+                                      windowName);
+
+        if (m_currentGUIHeight == 0.0f)
+        {
+            ValidateGUIFloatVariables(finalPosition.y, 0.0f + (height / 2.0f) + buffer,
+                                      DisplayWindowHeight() - (height / 2.0f) - buffer, "Y-Position", windowName);
+        }
+        else
+            ValidateGUIFloatVariables(finalPosition.y, 0.0f + (m_currentGUIHeight / 2.0f) + buffer,
+                                      DisplayWindowHeight() - (m_currentGUIHeight / 2.0f) - buffer, "Y-Position",
+                                      windowName);
+
+        // Set the next window position and size (Sets the pivot point to the center of the GUI window)
+        ImGui::SetNextWindowPos(finalPosition, ImGuiCond_Always, {0.5f, 0.5f});
+        ImGui::SetNextWindowSize({width, height}, ImGuiCond_Always);
 
         // Begin the window
         ImGui::Begin(windowName.c_str(), nullptr,
                      ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize |
                          ImGuiWindowFlags_NoDocking);
-
-        ImGui::SetWindowSize({width, height}, ImGuiCond_Always);
     }
+
+    bool GUIWindow::IsWindowCreated() const
+    {
+        return ImGui::IsWindowAppearing();
+    }
+
     float GUIWindow::GetFramesPerSecond() const
     {
         return ImGui::GetIO().Framerate;
     };
+
+    ImGuiStyle* GUIWindow::GetStyle() const
+    {
+        return m_style;
+    }
 
     void GUIWindow::Update() const
     {
@@ -301,19 +370,50 @@ namespace Vakol
     void GUIWindow::WindowBackgroundStyle(const float inputRed, const float inputGreen, const float inputBlue,
                                           const float inputAlpha) const
     {
-        ImGui::GetStyle().Colors[ImGuiCol_WindowBg] =
+        m_style->Colors[ImGuiCol_WindowBg] =
             ImVec4(inputRed, inputGreen, inputBlue, inputAlpha); // Sets the background colour of the window
+
+        ImGui::GetStyle() = *m_style; // Sets the ImGui Style to the current style
     }
 
     void GUIWindow::WindowRoundingStyle(const float inputValue) const
     {
-        ImGui::GetStyle().WindowRounding = inputValue;
+        m_style->WindowRounding = inputValue; // Sets the rounding style of the window
+
+        ImGui::GetStyle() = *m_style; // Sets the ImGui Style to the current style
     }
 
-    void GUIWindow::EndWindowCreation() const
+    void GUIWindow::EndWindowCreation()
     {
+        m_currentGUIWidth = GUIWindow::GUIWindowWidth();
+        m_currentGUIHeight = GUIWindow::GUIWindowHeight(false);
+
         ImGui::End(); // Ends the creation of the window
     };
+
+    void GUIWindow::ValidateGUIFloatVariables(float& inputValue, float minValue, float maxValue,
+                                              const std::string& valueName, const std::string& windowName) const
+    {
+        if (inputValue < minValue)
+        {
+            VK_WARN(valueName + " of GUI window '" + windowName + "' is less than " + std::to_string(minValue) +
+                    ". Setting " + valueName + " to " + std::to_string(minValue) + ".");
+
+            inputValue = minValue;
+        }
+        else if (inputValue > maxValue)
+        {
+            VK_WARN(valueName + " of GUI window '" + windowName + "' is greater than " + std::to_string(maxValue) +
+                    ". Setting " + valueName + " to " + std::to_string(maxValue) + ".");
+
+            inputValue = maxValue;
+        }
+    }
+
+    void GUIWindow::SetAsContext() const
+    {
+        ImGui::SetCurrentContext(m_context); // Sets the current context (Window)
+    }
 
     GUIWindow::~GUIWindow()
     {
@@ -330,9 +430,4 @@ namespace Vakol
         ImGui_ImplGlfw_Shutdown();        // Shuts down GLFW support
         ImGui::DestroyContext(m_context); // Destroys the Window
     };
-
-    void GUIWindow::SetAsContext() const
-    {
-        ImGui::SetCurrentContext(m_context); // Sets the current context (Window)
-    }
 } // namespace Vakol

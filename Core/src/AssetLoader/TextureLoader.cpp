@@ -5,6 +5,7 @@
 #include "AssetLoader/FileLoader.hpp"
 #include "Logger/Logger.hpp"
 
+#include <iostream>
 #include <stb_image.h>
 
 namespace Vakol

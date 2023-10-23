@@ -43,9 +43,10 @@ namespace Vakol
       public:
         /**
          * @brief Construct a new Application object
+         * @param configPath path to the config file
          *
          */
-        Application();
+        Application(const std::string& configPath = "scripts/game_config.lua");
 
         /**
          * @brief destructor of the application
@@ -153,9 +154,10 @@ namespace Vakol
         const std::shared_ptr<Window> GetWindow() const;
 
         /**
-         * @brief Get the Script Engine object
+         * @brief Push a layer to the top of the stack
          *
-         * @return ScriptEngine&
+         * @param layer to push
+         * @param flags to subscribe to
          */
         void PushLayer(std::shared_ptr<Layer> layer, LayerSubscription flags);
 
@@ -200,7 +202,7 @@ namespace Vakol
          * @brief Init function for application
          *
          */
-        void Init();
+        void Init(GameConfig& config);
 
         /**
          * @brief on window close event
@@ -261,7 +263,7 @@ namespace Vakol
          *
          * @return std::optional<GameConfig> return the config
          */
-        std::optional<GameConfig> LoadConfig();
+        std::optional<GameConfig> LoadConfig(const std::string& configPath);
 
         /**
          * @brief the window of the application
