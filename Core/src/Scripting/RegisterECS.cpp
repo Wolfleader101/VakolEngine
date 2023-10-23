@@ -111,6 +111,24 @@ namespace Vakol
             return &ent->GetComponent<SphereCollider>();
         });
 
+        entity_type.set_function("add_capsule_collider", [&](Entity* ent, const float radius, const float height) {
+            PhysicsEngine& physEngine = lua["PhysicsEngine"];
+
+            if (!ent->HasComponent<RigidBody>())
+            {
+                VK_CRITICAL("No rigid body component found on entity");
+
+                return static_cast<CapsuleCollider*>(nullptr);
+            }
+
+            CapsuleCollider collider = physEngine.CreateCapsuleCollider(radius, height);
+
+            ent->AddComponent<CapsuleCollider>(collider);
+            physEngine.AttachCollider(ent->GetComponent<RigidBody>(), collider);
+
+            return &ent->GetComponent<CapsuleCollider>();
+        });
+
         entity_type.set_function("add_box_collider", [&](Entity* ent, Math::Vec3& halfExtents) {
             PhysicsEngine& physEngine = lua["PhysicsEngine"];
 

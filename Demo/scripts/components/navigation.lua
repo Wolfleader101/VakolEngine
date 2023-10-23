@@ -1,14 +1,20 @@
 DESTINATION = Vector3.new();
 
-local state = "wander"; -- states: "navigate", "wander", "wait"
+local state = "wander"; -- states: "flee", "chase", "wander", "wait"
 
-local forward = Vector3.new(0.0, 0.0, -1.0);
+local targetDir = Vector3.new();
 
 local can_move = false;
+local can_rotate = false;
 
 local agent = nil;
+local target = Vector3.new();
 
-local move_speed = 0.1;
+local position = Vector3.new();
+local rotation = Vector3.new();
+
+local move_speed = 0.05;
+local rotate_speed = 0.1;
 
 function set_state(new_state)
     state = new_state;
@@ -18,44 +24,69 @@ function init()
     agent = entity:get_rigid();
 end
 
-function gen_rand_position()
-    local minX, maxX, minZ, maxZ = -25, 25, -25, 25;
+function flee()
+    can_move = true;
 
-    local x = math.random(minX, maxX);
-    local y = entity:get_transform().pos.y;
-    local z = math.random(minZ, maxZ);
+    targetDir = normalize(position - target);
+    targetDir.y = 0.0;
 
-    return Vector3.new(x, y, z);    
+    local targetAngle = math.deg(atan2(targetDir.x, targetDir.z));
+
+    rotation.y = targetAngle;
+end
+
+function chase()
+    can_move = true;
+
+    targetDir = normalize(target - position);
+    targetDir.y = 0.0;
+
+    local targetAngle = math.deg(atan2(targetDir.x, targetDir.z));
+
+    rotation.y = targetAngle;
+end
+
+function idle()
+    can_move = false;
 end
 
 function update()
     trans = entity:get_transform();
+
+    target = scene:get_camera():get_pos();
     
-    local pos = trans.pos;
-    local rot = trans.rot;
+    position = trans.pos;
+    rotation = trans.rot;
     forward = trans.forward;
 
-    if (Input:get_key_down(KEYS["KEY_SPACE"])) then
-        local target = scene:get_camera():get_pos();
-
-        local direction = normalize(target - pos);
-        direction.y = 0.0;
-
-        local angle = math.deg(atan2(direction.x, direction.z));
-
-        rot.y = angle;
+    if (Input:get_key_down(KEYS["KEY_1"])) then
+        set_state("flee");
     end
-    
-    if (Input:get_key(KEYS["KEY_E"])) then
-        can_move = true;
-    else
-        can_move = false;
+
+    if (Input:get_key_down(KEYS["KEY_2"])) then
+        set_state("chase");
+    end
+
+    if (Input:get_key_down(KEYS["KEY_3"])) then
+        set_state("wander");
+    end
+
+    if (Input:get_key_down(KEYS["KEY_4"])) then
+        set_state("idle");
+    end
+
+    if (state == "flee") then
+        flee();
+    elseif (state == "chase") then
+        chase();
+    elseif (state == "idle") then
+        idle();
     end
 end
 
 function phys_update()
     if (can_move) then
-        local movement = forward * move_speed;
+        local movement = targetDir * move_speed;
         agent:apply_impulse(movement);
     end
 end

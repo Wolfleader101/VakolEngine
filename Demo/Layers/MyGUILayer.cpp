@@ -109,13 +109,13 @@ void MyGUILayer::OnUpdate()
 
             ImGui::Separator();
 
-            //if (ImGui::CollapsingHeader("Camera Debug"))
+            // if (ImGui::CollapsingHeader("Camera Debug"))
             //{
-            //    if (const Vakol::Camera* camera = &m_app.GetSceneManager().GetActiveScene().GetCamera())
-            //    {
-            //        const Vakol::Math::Vec3 pos = camera->GetPos();
-            //        const Vakol::Math::Vec3 fwd = camera->GetForward();
-            //        const Vakol::Math::Vec3 rgt = camera->GetRight();
+            //     if (const Vakol::Camera* camera = &m_app.GetSceneManager().GetActiveScene().GetCamera())
+            //     {
+            //         const Vakol::Math::Vec3 pos = camera->GetPos();
+            //         const Vakol::Math::Vec3 fwd = camera->GetForward();
+            //         const Vakol::Math::Vec3 rgt = camera->GetRight();
 
             //        ImGui::Text("Camera Position");
             //        ImGui::Text("x: %f, y: %f, z: %f", pos.x, pos.y, pos.z);
@@ -161,7 +161,7 @@ void MyGUILayer::OnUpdate()
             //    }
             //}
 
-            //ImGui::Separator();
+            // ImGui::Separator();
 
             if (ImGui::CollapsingHeader("Entity List"))
             {
@@ -224,12 +224,22 @@ void MyGUILayer::OnUpdate()
                             ImGui::DragFloat3("Scale", &trans.scale.x, 0.1f);
 
                             ImGui::Spacing();
+
+                            ImGui::Text("Quaternion Rotation");
+                            ImGui::Text("x: %f, y: %f, z: %f, w: %f", trans.rot.x, trans.rot.y, trans.rot.z,
+                                        trans.rot.w);
+
+                            ImGui::Spacing();
                             ImGui::SeparatorText("Transformation Matrix");
 
-                            ImGui::Text("x: %f, %f, %f, %f", trans.transformMatrix[0][0], trans.transformMatrix[0][1], trans.transformMatrix[0][2], trans.transformMatrix[0][3]);
-                            ImGui::Text("y: %f, %f, %f, %f", trans.transformMatrix[1][0], trans.transformMatrix[1][1], trans.transformMatrix[1][2], trans.transformMatrix[1][3]);
-                            ImGui::Text("z: %f, %f, %f, %f", trans.transformMatrix[2][0], trans.transformMatrix[2][1], trans.transformMatrix[2][2], trans.transformMatrix[2][3]);
-                            ImGui::Text("w: %f, %f, %f, %f", trans.transformMatrix[3][0], trans.transformMatrix[3][1], trans.transformMatrix[3][2], trans.transformMatrix[3][3]);
+                            ImGui::Text("x: %f, %f, %f, %f", trans.transformMatrix[0][0], trans.transformMatrix[0][1],
+                                        trans.transformMatrix[0][2], trans.transformMatrix[0][3]);
+                            ImGui::Text("y: %f, %f, %f, %f", trans.transformMatrix[1][0], trans.transformMatrix[1][1],
+                                        trans.transformMatrix[1][2], trans.transformMatrix[1][3]);
+                            ImGui::Text("z: %f, %f, %f, %f", trans.transformMatrix[2][0], trans.transformMatrix[2][1],
+                                        trans.transformMatrix[2][2], trans.transformMatrix[2][3]);
+                            ImGui::Text("w: %f, %f, %f, %f", trans.transformMatrix[3][0], trans.transformMatrix[3][1],
+                                        trans.transformMatrix[3][2], trans.transformMatrix[3][3]);
                         }
 
                         if (entity.HasComponent<Vakol::Rendering::Drawable>() && ImGui::CollapsingHeader("Drawable"))

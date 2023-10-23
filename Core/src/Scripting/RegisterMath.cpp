@@ -15,6 +15,10 @@ namespace Vakol
 {
     void RegisterMath(sol::state& lua)
     {
+        lua.set_function("slerp", [](const Math::Quat& a, const Math::Quat& b, const float t) -> Math::Quat {
+            return Math::Slerp(a, b, t);
+        });
+
         lua.set_function("normalize", [](const Math::Vec3& v) -> Math::Vec3 { return Math::Normalized(v); });
         lua.set_function("atan2", [](const float y, const float x) -> float { return std::atan2f(y, x); });
 
@@ -175,7 +179,8 @@ namespace Vakol
         }
 
         {
-            sol::constructors<Math::Quat(), Math::Quat(float, Math::Vec3)> ctor;
+            sol::constructors<Math::Quat(), Math::Quat(Math::Vec3), Math::Quat(float, Math::Vec3),
+                              Math::Quat(float, float, float, float)> ctor;
 
             auto mul_overload =
                 sol::overload([](const Math::Quat& lhs, const Math::Quat& rhs) -> Math::Quat { return lhs * rhs; },

@@ -138,7 +138,11 @@ namespace Vakol
 
     void PhysicsEngine::AttachCollider(RigidBody& rb, CapsuleCollider& collider)
     {
-        collider.collider = rb.collisionBody->addCollider(collider.shape, rp3d::Transform::identity());
+        const float height = collider.shape->getHeight();
+
+        const rp3d::Transform trans = rp3d::Transform(rp3d::Vector3(0.0f, height - 0.125f, 0.0f), rp3d::Quaternion::identity());
+
+        collider.collider = rb.collisionBody->addCollider(collider.shape, trans);
 
         Math::Vec3 rpJ = FromRPVec3(collider.shape->getLocalInertiaTensor(rb.mass));
         Math::Mat3 inertiaTensor = Math::Mat3(0.0f);
