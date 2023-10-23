@@ -41,20 +41,26 @@ namespace Vakol
          * @brief Called every frame
          *
          */
-        virtual void OnUpdate() = 0;
+        virtual inline void OnUpdate()
+        {
+        }
 
         /**
          * @brief Called when an event is triggered
          *
          * @param event to handle
          */
-        virtual void OnEvent(Event& event) = 0;
+        virtual inline void OnEvent(Event& event)
+        {
+        }
 
         /**
          * @brief Called every tick
          *
          */
-        virtual void OnTick() = 0;
+        virtual inline void OnTick()
+        {
+        }
 
       protected:
         /**

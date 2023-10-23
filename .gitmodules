@@ -32,3 +32,6 @@
 [submodule "Core/lib/catch2"]
 	path = Core/lib/catch2
 	url = https://github.com/catchorg/Catch2
+[submodule "Demo/lib/implot"]
+	path = Demo/lib/implot
+	url = https://github.com/epezent/implot.git

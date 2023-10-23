@@ -4,8 +4,11 @@ function init()
 	local tables = {};
 	local rubbishBins = {};
 	local recyclingBins = {};
+	local apples = {};
+	local drinkCups = {};
+	local beerCans = {};
 
-	GLOBAL_SCALE = 0.02;
+	local soccerBall;
 
 	--OBJECT POSITIONS
 	local benchPositions = 
@@ -45,7 +48,12 @@ function init()
 
 	local rubbishBinPositions = 
 	{
-		Vector3.new(33.0, 1.221, 39.0), Vector3.new(-16.3, 1.221, 84.0)
+		Vector3.new(33.0, 1.221, 39.0), Vector3.new(-16.3, 1.321, 84.0)
+	}
+
+	local recyclingBinPositions = 
+	{
+		Vector3.new(31.4, 1.221, 39.0), Vector3.new(-16.3, 1.321, 85.6)
 	}
 
 	local recyclingBinPositions = 
@@ -53,11 +61,22 @@ function init()
 		Vector3.new(31.4, 1.221, 39.0), Vector3.new(-16.3, 1.221, 85.6)
 	}
 
-	local extra = scene:create_entity("Chairs Collider", "");
-	extra:get_transform().pos = Vector3.new(-17.2, 1.1, 59.3);
-	local rb = extra:add_rigid();
-	rb.type = BodyType.Static;
-	extra:add_box_collider(Vector3.new(0.6, 1.0, 3.2));
+	local applePositions = 
+	{
+		Vector3.new(18.8, 1.0, 22.9), Vector3.new(-11.3, 1.0, -32.9), Vector3.new(15.5, 1.0, -12.8),
+		Vector3.new(-21.4, 1.0, 42.4), Vector3.new(-24.3, 1.0, 98.4), Vector3.new(2.0, 1.0, 3.0)
+	}
+
+	local drinkCupPositions = 
+	{
+		Vector3.new(12.5, 1.0, 4.0), Vector3.new(0.9, 1.0, 28.9), Vector3.new(4.4, 1.0, -13.3),
+		Vector3.new(-26.0, 1.0, 56.7)
+	}
+
+	local beerCanPositions = 
+	{
+		Vector3.new(9.2, 1.0, 12.2), Vector3.new(-13.0, 1.0, 2.0)
+	}
 
 	--ENTITY CREATION & SETUP
 	--Digital Twin Prop Entities
@@ -65,70 +84,41 @@ function init()
 		local entityName = "Bench";
 		entityName = entityName .. " " .. i;
 	
-		benches[i] = scene:create_entity(entityName, "");
-
-		benches[i]:add_model("assets/models/imported/OpenGameArt/Teh_Bucket/Bench/bench.fbx", GLOBAL_SCALE);
+		benches[i] = scene:create_entity(entityName, "entities/objects/bench.lua");
 
 		benches[i]:get_transform().pos = benchPositions[i];
-
-		local benchesRigid = benches[i]:add_rigid();
-
-		benchesRigid.type = BodyType.Static;
-
-		benches[i]:add_box_collider(Vector3.new(2.64, 1.016, 2.158));
 	end
 
 	for i = 1, 20 do
 		local entityName = "Chair";
 		entityName = entityName .. " " .. i;
 	
-		chairs[i] = scene:create_entity(entityName, "");
-
-		chairs[i]:add_model("assets/models/imported/OpenGameArt/loafbrr_1/Furniture/Furniture_Chair_1.fbx", GLOBAL_SCALE);
+		chairs[i] = scene:create_entity(entityName, "entities/objects/chair.lua");
 
 		chairs[i]:get_transform().pos = chairPositions[i];
 		chairs[i]:get_transform().rot = chairRotations[i];
 
-		--local chairsRigid = chairs[i]:add_rigid();
-
-		--chairsRigid.type = BodyType.Static;
-
-		--chairs[i]:add_box_collider(Vector3.new(0.7, 1.15, 0.5));
 	end
 
 	for i = 1, 4 do
 		local entityName = "Table";
 		entityName = entityName .. " " .. i;
 	
-		tables[i] = scene:create_entity(entityName, "");
-
-		tables[i]:add_model("assets/models/imported/OpenGameArt/loafbrr_1/Furniture/Furniture_Table_2.fbx", GLOBAL_SCALE);
+		tables[i] = scene:create_entity(entityName, "entities/objects/table.lua");
 
 		tables[i]:get_transform().pos = tablePositions[i];
-
-		local tablesRigid = tables[i]:add_rigid();
-
-		tablesRigid.type = BodyType.Static;
 	end
-
-	tables[1]:add_box_collider(Vector3.new(1.9, 1.03, 2.0));
-	tables[2]:add_box_collider(Vector3.new(1.9, 1.03, 1.7));
-	tables[3]:add_box_collider(Vector3.new(1.8, 1.03, 1.5));
-	tables[4]:add_box_collider(Vector3.new(1.9, 1.03, 1.6));
 
 	for i = 1, 2 do
 		local entityName = "Rubbish Bin";
 		entityName = entityName .. " " .. i;
 	
-		rubbishBins[i] = scene:create_entity(entityName, "");
+		rubbishBins[i] = scene:create_entity(entityName, "entities/objects/rubbish_bin.lua");
 
 		entityName = "Recycling Bin";
 		entityName = entityName .. " " .. i;
 
-		recyclingBins[i] = scene:create_entity(entityName, "");
-
-		rubbishBins[i]:add_model("assets/models/imported/OpenGameArt/PagDev/Trashcan/rubbishBin_Rubbish.fbx", GLOBAL_SCALE);
-		recyclingBins[i]:add_model("assets/models/imported/OpenGameArt/PagDev/Trashcan/rubbishBin_Recycling.fbx", GLOBAL_SCALE);
+		recyclingBins[i] = scene:create_entity(entityName, "entities/objects/recycle_bin.lua");
 
 		rubbishBins[i]:get_transform().pos = rubbishBinPositions[i];
 		recyclingBins[i]:get_transform().pos = recyclingBinPositions[i];
@@ -137,14 +127,36 @@ function init()
 			rubbishBins[i]:get_transform().rot = Vector3.new(0.0, 90.0, 0.0);
 			recyclingBins[i]:get_transform().rot = Vector3.new(0.0, 90.0, 0.0);
 		end
-
-		local rubbishRigid = rubbishBins[i]:add_rigid();
-		local recyclingRigid = recyclingBins[i]:add_rigid();
-
-		rubbishRigid.type = BodyType.Static;
-		recyclingRigid.type = BodyType.Static;
-
-		rubbishBins[i]:add_box_collider(Vector3.new(0.6, 1.2, 0.9));
-		recyclingBins[i]:add_box_collider(Vector3.new(0.6, 1.2, 0.9));
 	end
+
+	for i = 1, 6 do
+		local entityName = "Apple";
+		entityName = entityName .. " " .. i;
+	
+		apples[i] = scene:create_entity(entityName, "entities/objects/apple.lua");
+
+		apples[i]:get_transform().pos = applePositions[i];
+	end
+
+	for i = 1, 4 do
+		local entityName = "Drink Cup";
+		entityName = entityName .. " " .. i;
+	
+		drinkCups[i] = scene:create_entity(entityName, "entities/objects/drink_cup.lua");
+
+		drinkCups[i]:get_transform().pos = drinkCupPositions[i];
+	end
+
+	for i = 1,2 do
+		local entityName = "Beer Can";
+		entityName = entityName .. " " .. i;
+	
+		beerCans[i] = scene:create_entity(entityName, "entities/objects/beer_can.lua");
+
+		beerCans[i]:get_transform().pos = beerCanPositions[i];
+	end
+	
+	soccerBall = scene:create_entity("Soccer Ball", "entities/objects/soccer_ball.lua");
+
+	soccerBall:get_transform().pos = Vector3.new(0.0, 2.0, 0.0);
 end

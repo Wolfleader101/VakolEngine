@@ -148,7 +148,7 @@ namespace Vakol
 
     void Application::Run()
     {
-        double physicsAccumulator = 0.0;
+        float physicsAccumulator = 0.0;
 
         while (m_running)
         {
@@ -169,7 +169,6 @@ namespace Vakol
             }
 
             m_time.accumulator += m_time.deltaTime;
-
             m_gui.CreateNewFrame();
 
             if (IsSystemActive(SystemFlag::Rendering))
@@ -179,14 +178,15 @@ namespace Vakol
 
             Scene& activeScene = m_sceneManager.GetActiveScene();
 
-            // While there is enough accumulated time take one or several physics steps
             if (IsSystemActive(SystemFlag::Physics))
             {
                 // Add the time difference in the accumulator
                 physicsAccumulator += m_time.deltaTime;
 
+                // While there is enough accumulated time take one or several physics steps
                 while (physicsAccumulator >= m_physicsEngine.GetTimeStep())
                 {
+
                     if (IsSystemActive(SystemFlag::Scripting))
                     {
                         activeScene.GetEntityList().Iterate<ScriptComp>([&](auto& scriptComp) {
@@ -199,6 +199,8 @@ namespace Vakol
                     // apply forces
                     activeScene.GetEntityList().Iterate<Components::Transform, RigidBody>(
                         [&](Components::Transform& transform, RigidBody& rb) {
+                            if (rb.isSleeping)
+                                return;
                             m_physicsEngine.ApplyForces(transform.pos, transform.rot, rb);
 
                             transform.eulerAngles = Math::RadToDeg(Math::EulerFromQuat(transform.rot));
@@ -206,15 +208,6 @@ namespace Vakol
 
                     // detect collisions
                     m_physicsEngine.DetectCollisions(activeScene.GetPhysicsScene());
-
-                    // resolve collisions
-                    activeScene.GetEntityList().Iterate<Components::Transform, RigidBody>(
-                        [&](Components::Transform& trans, RigidBody& rb) {
-                            m_physicsEngine.ResolveCollisions(trans.pos, rb);
-                        });
-
-                    activeScene.GetEntityList().Iterate<RigidBody>(
-                        [&](RigidBody& rb) { rb.collisionData->lambda = 0.0; });
 
                     // Decrease the accumulated time
                     physicsAccumulator -= m_physicsEngine.GetTimeStep();
@@ -362,6 +355,7 @@ namespace Vakol
 
     bool Application::OnWindowResize(const WindowResizeEvent& ev)
     {
+        glViewport(0, 0, ev.GetWidth(), ev.GetHeight());
         Rendering::RenderEngine::ResizeScreen(m_sceneManager.GetActiveScene().GetCamera(), ev.GetWidth(),
                                               ev.GetHeight());
 

@@ -1,5 +1,7 @@
 #include "MyGUILayer.hpp"
 
+#include <cstring>
+
 #include "AssetLoader/AssetLoader.hpp"
 #include "Rendering/RenderEngine.hpp"
 
@@ -101,6 +103,8 @@ void MyGUILayer::OnUpdate()
                     m_app.GetSceneManager().GetActiveScene().SetDebug(
                         !m_app.GetSceneManager().GetActiveScene().IsDebugEnabled());
                 }
+                ImGui::DragFloat("Velocity Damping", &m_app.GetPhysicsEngine().velocityDamping, 0.001f);
+                ImGui::DragFloat3("Gravity", &m_app.GetPhysicsEngine().gravity.x, 0.1f);
             }
 
             ImGui::Separator();
@@ -173,7 +177,7 @@ void MyGUILayer::OnUpdate()
                         {
                             Vakol::Rendering::Drawable& drawable = entity.GetComponent<Vakol::Rendering::Drawable>();
 
-                            ImGui::Text("Drawable ID: %s", drawable.ID.ConvertToString().c_str());
+                            ImGui::Text("Drawable ID: %s", drawable.ID.ToString().c_str());
                             ImGui::Spacing();
 
                             ImGui::SeparatorText("Material");
@@ -254,9 +258,9 @@ void MyGUILayer::OnUpdate()
                             }
 
                             ImGui::Checkbox("Has Gravity", &rb.hasGravity);
-                            ImGui::DragScalar("Mass", ImGuiDataType_Double, &rb.mass, 0.1f);
-                            // ImGui::DragScalar("Bounciness", ImGuiDataType_Double, &rb.bounciness, 0.1f);
-                            ImGui::DragFloat3("Bounciness", &rb.bounciness.x, 0.1f);
+                            ImGui::Checkbox("Is Sleeping", &rb.isSleeping);
+                            ImGui::DragFloat("Mass", &rb.mass, 0.1f);
+                            ImGui::DragFloat("Bounciness", &rb.bounciness, 0.1f);
                             ImGui::DragFloat3("Center of Mass", &rb.centerOfMass.x, 0.1f);
 
                             ImGui::DragFloat3("Force", &rb.force.x, 0.1f);
@@ -264,36 +268,21 @@ void MyGUILayer::OnUpdate()
                             ImGui::DragFloat3("Linear Velocity", &rb.linearVelocity.x, 0.1f);
                             ImGui::DragFloat3("Angular Velocity", &rb.angularVelocity.x, 0.1f);
 
-                            ImGui::Spacing();
-                            ImGui::SeparatorText("Rotiation Matrix");
+                            // ImGui::Spacing();
+                            // ImGui::SeparatorText("Rotiation Matrix");
 
                             // ImGui::Text("Rotation Matrix");
-                            ImGui::Text("x: %f, %f, %f", rb.rotationMatrix[0][0], rb.rotationMatrix[0][1],
-                                        rb.rotationMatrix[0][2]);
-                            ImGui::Text("y: %f, %f, %f", rb.rotationMatrix[1][0], rb.rotationMatrix[1][1],
-                                        rb.rotationMatrix[1][2]);
-                            ImGui::Text("z: %f, %f, %f", rb.rotationMatrix[2][0], rb.rotationMatrix[2][1],
-                                        rb.rotationMatrix[2][2]);
+                            // ImGui::Text("x: %f, %f, %f", rb.rotationMatrix[0][0], rb.rotationMatrix[0][1],
+                            //             rb.rotationMatrix[0][2]);
+                            // ImGui::Text("y: %f, %f, %f", rb.rotationMatrix[1][0], rb.rotationMatrix[1][1],
+                            //             rb.rotationMatrix[1][2]);
+                            // ImGui::Text("z: %f, %f, %f", rb.rotationMatrix[2][0], rb.rotationMatrix[2][1],
+                            //             rb.rotationMatrix[2][2]);
 
                             ImGui::Spacing();
-                            ImGui::SeparatorText("World Interia Tensor");
+                            ImGui::SeparatorText("Inverse Interia Tensor");
 
-                            ImGui::Text("x: %f, %f, %f", rb.worldInertiaTensor[0][0], rb.worldInertiaTensor[0][1],
-                                        rb.worldInertiaTensor[0][2]);
-                            ImGui::Text("y: %f, %f, %f", rb.worldInertiaTensor[1][0], rb.worldInertiaTensor[1][1],
-                                        rb.worldInertiaTensor[1][2]);
-                            ImGui::Text("z: %f, %f, %f", rb.worldInertiaTensor[2][0], rb.worldInertiaTensor[2][1],
-                                        rb.worldInertiaTensor[2][2]);
-
-                            ImGui::Spacing();
-                            ImGui::SeparatorText("Interia Tensor");
-
-                            ImGui::Text("x: %f, %f, %f", rb.inertiaTensor[0][0], rb.inertiaTensor[0][1],
-                                        rb.inertiaTensor[0][2]);
-                            ImGui::Text("y: %f, %f, %f", rb.inertiaTensor[1][0], rb.inertiaTensor[1][1],
-                                        rb.inertiaTensor[1][2]);
-                            ImGui::Text("z: %f, %f, %f", rb.inertiaTensor[2][0], rb.inertiaTensor[2][1],
-                                        rb.inertiaTensor[2][2]);
+                            ImGui::DragFloat3("Inverse Interia Tensor", &rb.invInertiaTensor.x, 0.0f);
 
                             if (rb.collisionData)
                             {
@@ -424,6 +413,54 @@ void MyGUILayer::OnUpdate()
                             }
                         }
 
+                        if (entity.HasComponent<Vakol::ScriptComp>() && ImGui::CollapsingHeader("Scripts"))
+                        {
+                            Vakol::ScriptComp& scriptComp = entity.GetComponent<Vakol::ScriptComp>();
+
+                            for (auto& script : scriptComp.scripts)
+                            {
+                                ImGui::SeparatorText(script.name.c_str());
+
+                                for (const auto& kv : script.env)
+                                {
+                                    if (!kv.first.valid() || !kv.second.valid())
+                                        continue;
+
+                                    if (kv.first.is<std::string>())
+                                    {
+                                        if (kv.second.is<std::string>())
+                                        {
+                                            ImGui::TextColored(ImVec4(0.37f, 0.66f, 0.69f, 1.0f), "%s",
+                                                               kv.first.as<std::string>().c_str());
+                                            ImGui::Text("%s", kv.second.as<std::string>().c_str());
+                                            ImGui::Dummy(ImVec2(0.0f, 10.0f));
+                                        }
+                                        else if (kv.second.is<float>())
+                                        {
+                                            ImGui::TextColored(ImVec4(1.f, 0.33f, 0.33f, 1.0f), "%s",
+                                                               kv.first.as<std::string>().c_str());
+                                            ImGui::Text("%.2f", kv.second.as<float>());
+                                            ImGui::Dummy(ImVec2(0.0f, 10.0f));
+                                        }
+                                        else if (kv.second.is<int>())
+                                        {
+                                            ImGui::TextColored(ImVec4(0.83f, 0.88f, 0.18f, 1.0f), "%s",
+                                                               kv.first.as<std::string>().c_str());
+                                            ImGui::Text("%d", kv.second.as<int>());
+                                            ImGui::Dummy(ImVec2(0.0f, 10.0f));
+                                        }
+                                        else if (kv.second.is<bool>())
+                                        {
+                                            ImGui::TextColored(ImVec4(0.28f, 0.88f, 0.35f, 1.0f), "%s",
+                                                               kv.first.as<std::string>().c_str());
+                                            ImGui::Text("%s", kv.second.as<bool>() ? "true" : "false");
+                                            ImGui::Dummy(ImVec2(0.0f, 10.0f));
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
                         ImGui::PopStyleColor();
                         ImGui::Unindent(20.0f);
                     }
@@ -480,8 +517,4 @@ void MyGUILayer::OnEvent(Vakol::Event& event) // toggle editor view
             event.Handled = true;
         }
     }
-}
-
-void MyGUILayer::OnTick()
-{
 }
