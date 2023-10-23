@@ -14,15 +14,15 @@ TEST_CASE("GUID class tests", "[GUID]")
 
     SECTION("Test GenNewGUID function")
     {
-        auto old_guid_str = guid1.ConvertToString();
+        auto old_guid_str = guid1.ToString();
         guid1.GenNewGUID();
-        auto new_guid_str = guid1.ConvertToString();
+        auto new_guid_str = guid1.ToString();
         REQUIRE(old_guid_str != new_guid_str);
     }
 
     SECTION("Test ConvertToString function")
     {
-        auto guid_str = guid1.ConvertToString();
+        auto guid_str = guid1.ToString();
         REQUIRE(guid_str.length() == 36); // Typically a GUID is 36 characters long
     }
 
