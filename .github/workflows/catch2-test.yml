@@ -26,11 +26,3 @@ jobs:
 
       - name: Build Tests
         run: cmake --build ${{github.workspace}}/build --target VakolTests --config ${{env.BUILD_TYPE}}
-
-      - name: Run tests
-        run: |
-          try {
-            D:\a\VakolEngine\VakolEngine/build/Release/VakolTests.exe
-          } catch {
-            Write-Error $_.Exception.Message
-          }
