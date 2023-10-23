@@ -194,9 +194,10 @@ namespace Vakol
                         [&](Components::Transform& transform, RigidBody& rb) {
                             if (rb.isSleeping)
                                 return;
+
                             m_physicsEngine.ApplyForces(rb.position, transform.rot, rb);
 
-                            transform.eulerAngles = Math::RadToDeg(Math::EulerFromQuat(transform.rot));
+                            // transform.eulerAngles = Math::RadToDeg(Math::EulerFromQuat(transform.rot));
 
                             if (rb.type == BodyType::Static)
                                 return;
@@ -270,6 +271,8 @@ namespace Vakol
 
             activeScene.GetEntityList().Iterate<Components::Transform>([](Components::Transform& transform) {
                 transform.rot = Math::Quat(Math::DegToRad(transform.eulerAngles));
+                transform.forward = Math::Vec3(transform.transformMatrix[2][0], transform.transformMatrix[2][1],
+                                               transform.transformMatrix[2][2]);
             });
 
             activeScene.GetCamera().Update();

@@ -5,6 +5,8 @@ local was_dragging = false;
 local impulse_applied = false;
 local dragged_object = nil;
 
+local throw_force = 0.4;
+
 function init()
     entity:get_transform().rot = Vector3.new(0.0, 0.0, 0.0);
 
@@ -91,8 +93,12 @@ function update()
 
                 -- Apply impulse only once when transitioning into the dragging state
                 if not impulse_applied then
-                    dragged_object:apply_impulse(rad2deg(camera:get_forward()));
-                    dragged_object.hasGravity = true;
+
+                    dragged_object.hasGravity = false;
+
+                    local dir = normalize(dragged_object.position - camera:get_pos());
+
+                    dragged_object:apply_impulse(rad2deg(dir) * throw_force);
                     impulse_applied = true;
                 end
             end
@@ -107,6 +113,8 @@ function update()
 
     -- Update the position of the dragged object every frame when it's being dragged
     if is_dragging and dragged_object then
+        dragged_object.hasGravity = true;
+
         dragged_object.position = camera:get_pos() + camera:get_forward() * 4.0;
     end
 end

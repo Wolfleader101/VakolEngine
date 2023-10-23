@@ -7,7 +7,6 @@ THROWABLE =
 	hold = function(self, parent)
 		if not self.is_holding then
 			entity:get_transform().pos = parent;
-			print("test");
 		end
 	end,
 

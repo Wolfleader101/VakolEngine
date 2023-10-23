@@ -52,9 +52,13 @@ namespace Vakol::Components
 
         Math::Vec3 eulerAngles = Math::Vec3(0.0f, 0.0f, 0.0f);
 
-        Math::Quat rot = Math::Quat(1.0f, 0.0f, 0.0f, 0.0f); /**< WXYZ rotation */
+        Math::Quat rot = Math::Quat(1.0f, 0.0f, 0.0f, 0.0f); /**< WXYZ rotation **/
 
-        Math::Vec3 scale = Math::Vec3(1.0f, 1.0f, 1.0f); /**< XYZ scale */
+        Math::Vec3 scale = Math::Vec3(1.0f, 1.0f, 1.0f); /**< XYZ scale **/
+
+        Math::Vec3 forward = Math::Vec3(0.0f, 0.0f, -1.0f); /** The forward vector **/
+
+        Math::Mat4 transformMatrix = Math::Mat4(1.0f); /** The transformation matrix **/
 
         template <class Archive>
         void serialize(Archive& ar)

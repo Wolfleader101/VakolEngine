@@ -170,7 +170,17 @@ void MyGUILayer::OnUpdate()
                             ImGui::DragFloat3("Rotation", &trans.eulerAngles.x, 0.1f);
                             ImGui::DragFloat3("Scale", &trans.scale.x, 0.1f);
 
-                            trans.rot = Vakol::Math::Quat(Vakol::Math::DegToRad(trans.eulerAngles));
+                            ImGui::Spacing();
+                            ImGui::SeparatorText("Transformation Matrix");
+
+                            ImGui::Text("x: %f, %f, %f, %f", trans.transformMatrix[0][0], trans.transformMatrix[0][1],
+                                        trans.transformMatrix[0][2], trans.transformMatrix[0][3]);
+                            ImGui::Text("y: %f, %f, %f, %f", trans.transformMatrix[1][0], trans.transformMatrix[1][1],
+                                        trans.transformMatrix[1][2], trans.transformMatrix[1][3]);
+                            ImGui::Text("z: %f, %f, %f, %f", trans.transformMatrix[2][0], trans.transformMatrix[2][1],
+                                        trans.transformMatrix[2][2], trans.transformMatrix[2][3]);
+                            ImGui::Text("w: %f, %f, %f, %f", trans.transformMatrix[3][0], trans.transformMatrix[3][1],
+                                        trans.transformMatrix[3][2], trans.transformMatrix[3][3]);
                         }
 
                         if (entity.HasComponent<Vakol::Rendering::Drawable>() && ImGui::CollapsingHeader("Drawable"))
