@@ -109,9 +109,62 @@ void MyGUILayer::OnUpdate()
 
             ImGui::Separator();
 
+            //if (ImGui::CollapsingHeader("Camera Debug"))
+            //{
+            //    if (const Vakol::Camera* camera = &m_app.GetSceneManager().GetActiveScene().GetCamera())
+            //    {
+            //        const Vakol::Math::Vec3 pos = camera->GetPos();
+            //        const Vakol::Math::Vec3 fwd = camera->GetForward();
+            //        const Vakol::Math::Vec3 rgt = camera->GetRight();
+
+            //        ImGui::Text("Camera Position");
+            //        ImGui::Text("x: %f, y: %f, z: %f", pos.x, pos.y, pos.z);
+
+            //        ImGui::Spacing();
+
+            //        ImGui::Text("Camera Forward");
+            //        ImGui::Text("x: %f, y: %f, z: %f", fwd.x, fwd.y, fwd.z);
+
+            //        ImGui::Spacing();
+
+            //        ImGui::Text("Camera Right");
+            //        ImGui::Text("x: %f, y: %f, z: %f", rgt.x, fwd.y, fwd.z);
+
+            //        ImGui::Spacing();
+
+            //        ImGui::Text("Camera Pitch");
+            //        ImGui::Text("%f", camera->GetPitch());
+
+            //        ImGui::Spacing();
+
+            //        ImGui::Text("Camera Yaw");
+            //        ImGui::Text("%f", camera->GetYaw());
+
+            //        const Vakol::Math::Mat4& proj = camera->GetProjectionMatrix();
+            //        const Vakol::Math::Mat4& view = camera->GetViewMatrix();
+
+            //        ImGui::Spacing();
+            //        ImGui::SeparatorText("Projection Matrix");
+
+            //        ImGui::Text("x: %f, %f, %f, %f", proj[0][0], proj[0][1], proj[0][2], proj[0][3]);
+            //        ImGui::Text("y: %f, %f, %f, %f", proj[1][0], proj[1][1], proj[1][2], proj[1][3]);
+            //        ImGui::Text("z: %f, %f, %f, %f", proj[2][0], proj[2][1], proj[2][2], proj[2][3]);
+            //        ImGui::Text("w: %f, %f, %f, %f", proj[3][0], proj[3][1], proj[3][2], proj[3][3]);
+
+            //        ImGui::Spacing();
+            //        ImGui::SeparatorText("View Matrix");
+
+            //        ImGui::Text("x: %f, %f, %f, %f", view[0][0], view[0][1], view[0][2], view[0][3]);
+            //        ImGui::Text("y: %f, %f, %f, %f", view[1][0], view[1][1], view[1][2], view[1][3]);
+            //        ImGui::Text("z: %f, %f, %f, %f", view[2][0], view[2][1], view[2][2], view[2][3]);
+            //        ImGui::Text("w: %f, %f, %f, %f", view[3][0], view[3][1], view[3][2], view[3][3]);
+            //    }
+            //}
+
+            //ImGui::Separator();
+
             if (ImGui::CollapsingHeader("Entity List"))
             {
-
                 ImGui::SeparatorText("Add Entities");
 
                 if (ImGui::Button("Add Empty Entity"))
@@ -170,7 +223,13 @@ void MyGUILayer::OnUpdate()
                             ImGui::DragFloat3("Rotation", &trans.eulerAngles.x, 0.1f);
                             ImGui::DragFloat3("Scale", &trans.scale.x, 0.1f);
 
-                            trans.rot = Vakol::Math::Quat(Vakol::Math::DegToRad(trans.eulerAngles));
+                            ImGui::Spacing();
+                            ImGui::SeparatorText("Transformation Matrix");
+
+                            ImGui::Text("x: %f, %f, %f, %f", trans.transformMatrix[0][0], trans.transformMatrix[0][1], trans.transformMatrix[0][2], trans.transformMatrix[0][3]);
+                            ImGui::Text("y: %f, %f, %f, %f", trans.transformMatrix[1][0], trans.transformMatrix[1][1], trans.transformMatrix[1][2], trans.transformMatrix[1][3]);
+                            ImGui::Text("z: %f, %f, %f, %f", trans.transformMatrix[2][0], trans.transformMatrix[2][1], trans.transformMatrix[2][2], trans.transformMatrix[2][3]);
+                            ImGui::Text("w: %f, %f, %f, %f", trans.transformMatrix[3][0], trans.transformMatrix[3][1], trans.transformMatrix[3][2], trans.transformMatrix[3][3]);
                         }
 
                         if (entity.HasComponent<Vakol::Rendering::Drawable>() && ImGui::CollapsingHeader("Drawable"))
@@ -267,17 +326,6 @@ void MyGUILayer::OnUpdate()
                             ImGui::DragFloat3("Torque", &rb.torque.x, 0.1f);
                             ImGui::DragFloat3("Linear Velocity", &rb.linearVelocity.x, 0.1f);
                             ImGui::DragFloat3("Angular Velocity", &rb.angularVelocity.x, 0.1f);
-
-                            // ImGui::Spacing();
-                            // ImGui::SeparatorText("Rotiation Matrix");
-
-                            // ImGui::Text("Rotation Matrix");
-                            // ImGui::Text("x: %f, %f, %f", rb.rotationMatrix[0][0], rb.rotationMatrix[0][1],
-                            //             rb.rotationMatrix[0][2]);
-                            // ImGui::Text("y: %f, %f, %f", rb.rotationMatrix[1][0], rb.rotationMatrix[1][1],
-                            //             rb.rotationMatrix[1][2]);
-                            // ImGui::Text("z: %f, %f, %f", rb.rotationMatrix[2][0], rb.rotationMatrix[2][1],
-                            //             rb.rotationMatrix[2][2]);
 
                             ImGui::Spacing();
                             ImGui::SeparatorText("Inverse Interia Tensor");

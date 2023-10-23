@@ -1,6 +1,6 @@
 function init()
 
-    entity:add_model("assets/models/agents/bob.glb", 1.0e-01);
+    entity:add_model("assets/models/agents/bob.glb", 1.0e-02);
     entity:get_transform().pos = Vector3.new(0, 5, 0); -- shouldnt be here
     local rb = entity:add_rigid();
     rb.mass = 1;

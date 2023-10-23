@@ -238,6 +238,11 @@ namespace Vakol::Math
         return glm::lookAt(eye, center, up);
     }
 
+    Quat LookAt(const Vec3& direction, const Vec3& up)
+    {
+        return glm::quatLookAt(direction, up);   
+    }
+
     const float* AsArray(const Vec2& v)
     {
         return glm::value_ptr(v);
@@ -286,6 +291,11 @@ namespace Vakol::Math
     Mat4 Rotate(const Mat4& mat, const float angle, const Vec3& axis)
     {
         return glm::rotate(mat, angle, axis);
+    }
+
+    Quat Rotate(const Quat& quat, const float angle, const Vec3& axis)
+    {
+        return glm::rotate(quat, angle, axis);
     }
 
     Quat Slerp(const Quat& x, const Quat& y, const float a)

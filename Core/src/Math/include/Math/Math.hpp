@@ -405,6 +405,8 @@ namespace Vakol::Math
      */
     Mat4 LookAt(const Vec3& eye, const Vec3& center, const Vec3& up);
 
+    Quat LookAt(const Vec3& direction, const Vec3& up);
+
     const float* AsArray(const Vec2& v);
     const float* AsArray(const Vec3& v);
     const float* AsArray(const Vec4& v);
@@ -447,6 +449,8 @@ namespace Vakol::Math
      * @return The rotated matrix.
      */
     Mat4 Rotate(const Mat4& mat, float angle, const Vec3& axis);
+
+    Quat Rotate(const Quat& quat, float angle, const Vec3& axis);
 
     /**
      * @brief Spherically interpolates between two quaternions.

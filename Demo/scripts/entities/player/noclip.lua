@@ -5,11 +5,13 @@ function init()
 
     entity:get_transform().rot = Vector3.new(0.0, 0.0, 0.0);
 
-    scene.globals.player = {
+    scene.globals.player = 
+    {
         pos = Vector3.new(0.0, 0.0, 0.0)
     }
+
     local camera = scene:get_camera();
-    camera:set_pos(0, 5, -50);
+    camera:set_pos(0, 2, -10);
     camera:set_yaw(90);
     entity:get_transform().pos = camera:get_pos();
     scene.globals.player.pos = entity:get_transform().pos;

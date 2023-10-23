@@ -15,6 +15,9 @@ namespace Vakol
 {
     void RegisterMath(sol::state& lua)
     {
+        lua.set_function("normalize", [](const Math::Vec3& v) -> Math::Vec3 { return Math::Normalized(v); });
+        lua.set_function("atan2", [](const float y, const float x) -> float { return std::atan2f(y, x); });
+
         {
             sol::constructors<Math::Vec2(), Math::Vec2(float), Math::Vec2(float, float)> ctor; // allow for constructors
 
@@ -56,7 +59,9 @@ namespace Vakol
             auto mul_overload =
                 sol::overload([](const Math::Vec3& u, const Math::Vec3& v) -> Math::Vec3 { return u * v; },
                               [](const Math::Vec3& v, const float k) -> Math::Vec3 { return v * k; },
-                              [](const float k, const Math::Vec3& v) -> Math::Vec3 { return k * v; });
+                              [](const float k, const Math::Vec3& v) -> Math::Vec3 { return k * v; },
+                              [](const Math::Vec3& v, const Math::Mat3& m) -> Math::Vec3 { return v * m; },
+                              [](const Math::Mat3& m, const Math::Vec3& v) -> Math::Vec3 { return m * v; });
 
             auto add_overload =
                 sol::overload([](const Math::Vec3& u, const Math::Vec3& v) -> Math::Vec3 { return u + v; });
@@ -76,10 +81,6 @@ namespace Vakol
             vec3["r"] = &Math::Vec3::r;
             vec3["g"] = &Math::Vec3::g;
             vec3["b"] = &Math::Vec3::b;
-
-            vec3.set_function("magnitude", [](const Math::Vec3& v) -> float { return Math::Magnitude(v); });
-            vec3.set_function("normalize", [](const Math::Vec3& v) -> Math::Vec3 { return Math::Normalized(v); });
-            vec3.set_function("dot", [](const Math::Vec3& u, const Math::Vec3& v) -> float { return Math::Dot(u, v); });
         }
 
         {
@@ -158,12 +159,40 @@ namespace Vakol
         }
 
         {
-            sol::constructors<Math::Quat(), Math::Quat(Math::Vec3)> ctor;
+            sol::constructors<Math::Mat3(), Math::Mat3(float), Math::Mat3(Math::Vec3, Math::Vec3, Math::Vec3)> ctor;
 
-            auto quat = lua.new_usertype<Math::Quat>("Quaternion", ctor);
+            auto mul_overload =
+                sol::overload([](const Math::Mat3& lhs, const Math::Mat3& rhs) -> Math::Mat4 { return lhs * rhs; },
+                              [](const Math::Mat3& m, const float k) -> Math::Mat3 { return m * k; },
+                              [](const float k, const Math::Mat3& m) -> Math::Mat3 { return k * m; });
+
+            auto mat3 =
+                lua.new_usertype<Math::Mat3>("Matrix3x3", ctor, sol::meta_function::multiplication, mul_overload);
+
+            lua.set_function("inverse", [](const Math::Mat3& matrix) { return inverse(matrix); });
+
+            lua.set_function("transpose", [](const Math::Mat3& matrix) { return transpose(matrix); });
+        }
+
+        {
+            sol::constructors<Math::Quat(), Math::Quat(float, Math::Vec3)> ctor;
+
+            auto mul_overload =
+                sol::overload([](const Math::Quat& lhs, const Math::Quat& rhs) -> Math::Quat { return lhs * rhs; },
+                              [](const Math::Quat& q, const float k) -> Math::Quat { return q * k; },
+                              [](const float k, const Math::Quat& q) -> Math::Quat { return k * q; });
+
+            auto quat =
+                lua.new_usertype<Math::Quat>("Quaternion", ctor, sol::meta_function::multiplication, mul_overload);
 
             quat.set_function("Euler", [](const Math::Quat& rot) { return eulerAngles(rot); });
+
+            quat["x"] = &Math::Quat::x;
+            quat["y"] = &Math::Quat::y;
+            quat["z"] = &Math::Quat::z;
+            quat["w"] = &Math::Quat::w;
         }
+
         lua.set_function("vector_mat4", &create_mat4_vector);
     }
 
