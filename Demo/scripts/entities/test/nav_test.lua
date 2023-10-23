@@ -1,7 +1,7 @@
 function init()
 
-    entity:add_model("assets/models/agents/bob.glb", 1.0e-02);
-    entity:get_transform().pos = Vector3.new(0, 5, 0); -- shouldnt be here 
+    entity:add_model("assets/models/agents/bob.glb", 1.0e-01);
+    entity:get_transform().pos = Vector3.new(0, 5, 0); -- shouldnt be here
     local rb = entity:add_rigid();
     rb.mass = 1;
     rb.rot_lock = BVector3.new(true, true, true);
@@ -12,7 +12,7 @@ function init()
     entity:add_script("navigation", "components/navigation.lua");
     nav = entity:get_script("navigation");
 
-    target = Vector3.new(0, 0, 0);
+    target = Vector3.new(-80, 0, 80);
 
     nav.DESTINATION.x = target.x
     nav.DESTINATION.y = target.y

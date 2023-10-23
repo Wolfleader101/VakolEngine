@@ -15,22 +15,31 @@ local function distance()
     return (DESTINATION - trans.pos):magnitude();
 end
 
-function lerpAngle(a, b, t)
-    local result = a + (math.angleDifference(b, a) * t)
-    return result % 360
+local function wrapAngle(angle)
+    while angle <= -180 do
+        angle = angle + 360
+    end
+    while angle > 180 do
+        angle = angle - 360
+    end
+    return angle
 end
 
-function math.angleDifference(a, b)
-    local diff = b - a
-    if diff > 180 then
-        diff = diff - 360
-    elseif diff < -180 then
+function angleDifference(a, b)
+    local diff = (b - a + 180) % 360 - 180
+    if diff < -180 then
         diff = diff + 360
     end
     return diff
 end
 
-function atan2(y, x)
+local function lerpAngle(a, b, t)
+    local delta = angleDifference(a, b)
+    local result = a + delta * t
+    return wrapAngle(result)
+end
+
+local function atan2(y, x)
     if x > 0 then
         return math.atan(y / x)
     elseif y >= 0 and x < 0 then
@@ -54,7 +63,7 @@ function init()
 
 end
 
-local WANDER_TICKS = 300; -- 3 seconds
+local WANDER_TICKS = 360; -- 3 seconds
 local wanderCount = 0;
 local wanderChanges = 0; -- used to switch to wait state
 
@@ -68,13 +77,24 @@ local currentRotation = 0;
 local targetRotation = 0;
 
 local ROTATION_LERP_SPEED = 0.05; -- lerping bruvva
+local ROTATION_THRESHOLD = 5;
 
-function phys_update()
+function tick()
     trans = entity:get_transform();
 
     if state == "navigate" then
         dir = get_direction();
-        targetRotation = math.atan(dir.x, dir.z) * (180 / math.pi);
+        targetRotation = atan2(dir.x, dir.z) * (180 / math.pi);
+
+        -- Lerp the rotation
+        currentRotation = lerpAngle(currentRotation, targetRotation, ROTATION_LERP_SPEED);
+        entity:get_transform().rot.y = currentRotation;
+
+        print("dir.x:           " .. dir.x);
+        print("dir.z:           " .. dir.z);
+
+        print("target:          " .. targetRotation);
+        print("currentRotation: " .. currentRotation);
 
         if distance() < MAX_DIST then
             state = "wander";
@@ -101,24 +121,35 @@ function phys_update()
         end
 
         if wanderCount >= WANDER_TICKS and dirChangeCounter == 0 then
-            local randomX = math.random() -- Random value between 0 and 1
-            local randomZ = math.random() -- Random value between 0 and 1
-            dir = Vector3.new(randomX, 0, randomZ):normalize()
+            local newAngle = math.random() * 2 * math.pi; -- Random angle between 0 and 2π
+            dir = Vector3.new(math.cos(newAngle), 0, math.sin(newAngle));
+
+            print(dir.x .. " " .. dir.z);
 
             wanderCount = 0;
             dirChangeCounter = DIR_CHANGE_COOLDOWN;
             wanderChanges = wanderChanges + 1;
 
-            targetRotation = (atan2(dir.z, dir.x) * (180 / math.pi)) % 360;
-            if targetRotation < 0 then
-                targetRotation = targetRotation + 360
-            end
-
-            currentRotation = targetRotation;
             rb = entity:get_rigid();
             rb.linearVelocity = Vector3.new(0, 0, 0);
         else
             wanderCount = wanderCount + 1;
+        end
+
+        -- Rotate to face the wander direction
+        targetRotation = math.atan(dir.x, dir.z) * (180 / math.pi);
+
+        -- Lerp the rotation
+        local rotationDiff = math.abs(angleDifference(currentRotation, targetRotation));
+        if rotationDiff > ROTATION_THRESHOLD then
+            -- Lerp the rotation
+            currentRotation = lerpAngle(currentRotation, targetRotation, ROTATION_LERP_SPEED);
+        end
+        entity:get_transform().rot.y = wrapAngle(currentRotation);
+
+        if wanderChanges == 3 then
+            state = "wait";
+            wanderChanges = 0;
         end
 
         -- local info = RayCastHitInfo.new();
@@ -130,9 +161,11 @@ function phys_update()
         --     dirChangeCounter = DIR_CHANGE_COOLDOWN;
         -- end
 
+        print("dir.x:           " .. dir.x);
+        print("dir.z:           " .. dir.z);
+
         print("target:          " .. targetRotation);
         print("currentRotation: " .. currentRotation);
-        print("trans.rot:       " .. entity:get_transform().rot.y);
 
         if wanderChanges == 3 then
             state = "wait";
@@ -140,7 +173,7 @@ function phys_update()
         end
     end
 
-    entity:get_transform().rot.y = currentRotation;
+    -- print("trans.rot:       " .. entity:get_transform().rot.y);
     rb = entity:get_rigid();
     vel = Vector2.new(rb.linearVelocity.x, rb.linearVelocity.z):magnitude();
 
