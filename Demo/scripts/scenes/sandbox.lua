@@ -26,16 +26,16 @@ function init()
     rb1.type = BodyType.Static;
     floor:add_box_collider(floor:get_transform().scale / 2);
 
-    local wall = scene:create_entity("wall", "");
+    --local wall = scene:create_entity("wall", "");
 
-    wall:get_transform().scale = Vector3.new(10, 10, 10);
-    wall:get_transform().pos.y = 0;
+    --wall:get_transform().scale = Vector3.new(10, 10, 10);
+    --wall:get_transform().pos.y = -10;
 
-    local rb2 = wall:add_rigid();
-    rb2.mass = 1;
-    rb2.bounciness = 0.4;
-    rb2.type = BodyType.Static;
-    wall:add_box_collider(wall:get_transform().scale);
+    --local rb2 = wall:add_rigid();
+    --rb2.mass = 1;
+    --rb2.bounciness = 0.4;
+    --rb2.type = BodyType.Static;
+    --wall:add_box_collider(wall:get_transform().scale);
 
     -- phys_objs();
     -- falling_objs();
