@@ -5,7 +5,7 @@ local dir = Vector3.new();
 
 local CHECK_DIST = 1;
 local MAX_DIST = 5;
-MAX_SPEED = 3;
+MAX_SPEED = 5;
 
 local function get_direction()
     return (DESTINATION - trans.pos):normalize();
@@ -28,6 +28,22 @@ function math.angleDifference(a, b)
         diff = diff + 360
     end
     return diff
+end
+
+function atan2(y, x)
+    if x > 0 then
+        return math.atan(y / x)
+    elseif y >= 0 and x < 0 then
+        return math.atan(y / x) + math.pi
+    elseif y < 0 and x < 0 then
+        return math.atan(y / x) - math.pi
+    elseif y > 0 and x == 0 then
+        return math.pi / 2
+    elseif y < 0 and x == 0 then
+        return -math.pi / 2
+    elseif y == 0 and x == 0 then
+        return 0
+    end
 end
 
 function set_state(new_state)
@@ -85,26 +101,38 @@ function phys_update()
         end
 
         if wanderCount >= WANDER_TICKS and dirChangeCounter == 0 then
-            local randomAngle = math.random() * 2 * math.pi;
-            dir = dir * 0.8 + Vector3.new(math.cos(randomAngle), 0, math.sin(randomAngle)) * 0.2;
+            local randomX = math.random() -- Random value between 0 and 1
+            local randomZ = math.random() -- Random value between 0 and 1
+            dir = Vector3.new(randomX, 0, randomZ):normalize()
+
             wanderCount = 0;
             dirChangeCounter = DIR_CHANGE_COOLDOWN;
             wanderChanges = wanderChanges + 1;
+
+            targetRotation = (atan2(dir.z, dir.x) * (180 / math.pi)) % 360;
+            if targetRotation < 0 then
+                targetRotation = targetRotation + 360
+            end
+
+            currentRotation = targetRotation;
+            rb = entity:get_rigid();
+            rb.linearVelocity = Vector3.new(0, 0, 0);
         else
             wanderCount = wanderCount + 1;
         end
 
-        local info = RayCastHitInfo.new();
-        local rayOrigin = trans.pos + dir * 0.5;
+        -- local info = RayCastHitInfo.new();
+        -- local rayOrigin = trans.pos + dir * 0.5;
 
-        if scene:raycast(rayOrigin, dir, 0.25, info) then
-            dir = Vector3.new(info.normal.x + math.sin(math.random() * 0.5 - 0.25), 0,
-                info.normal.z + math.cos(math.random() * 0.5 - 0.25));
-            dirChangeCounter = DIR_CHANGE_COOLDOWN;
-        end
+        -- if scene:raycast(rayOrigin, dir, 0.25, info) then
+        --     local offsetAngle = math.random() * 0.5 - 0.25;
+        --     dir = Vector3.new(info.normal.x + math.sin(offsetAngle), 0, info.normal.z + math.cos(offsetAngle));
+        --     dirChangeCounter = DIR_CHANGE_COOLDOWN;
+        -- end
 
-        targetRotation = math.atan(dir.z, dir.x) * (180 / math.pi);
-        currentRotation = lerpAngle(currentRotation, targetRotation, ROTATION_LERP_SPEED);
+        print("target:          " .. targetRotation);
+        print("currentRotation: " .. currentRotation);
+        print("trans.rot:       " .. entity:get_transform().rot.y);
 
         if wanderChanges == 3 then
             state = "wait";

@@ -17,7 +17,7 @@ function init()
     scene:generate_skybox(faces);
 
     local floor = scene:create_entity("Floor", "");
-    floor:get_transform().scale = Vector3.new(100.0, 1.0, 100.0);
+    floor:get_transform().scale = Vector3.new(200.0, 1.0, 200.0);
     floor:add_model("coreAssets/models/cube.obj", 1);
 
     local rb1 = floor:add_rigid();
