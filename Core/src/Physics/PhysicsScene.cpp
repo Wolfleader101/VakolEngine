@@ -4,17 +4,24 @@
 
 class RayCastCallback : public rp3d::RaycastCallback
 {
-
   public:
-    virtual rp3d::decimal notifyRaycastHit(const rp3d::RaycastInfo& info)
-    {
-        hit.distance = info.hitFraction;
-        hit.point = Vakol::Math::Vec3(info.worldPoint.x, info.worldPoint.y, info.worldPoint.z);
-        hit.normal = Vakol::Math::Vec3(info.worldNormal.x, info.worldNormal.y, info.worldNormal.z);
-        hit.hit = true;
+    bool firstHit = true;
 
-        // Return a fraction of 1.0 to gather all hits
-        return rp3d::decimal(1.0);
+    rp3d::decimal notifyRaycastHit(const rp3d::RaycastInfo& info) override
+    {
+        if (firstHit || info.hitFraction < hit.distance)
+        {
+            hit.distance = info.hitFraction;
+
+            hit.point = Vakol::Math::Vec3(info.worldPoint.x, info.worldPoint.y, info.worldPoint.z);
+            hit.normal = Vakol::Math::Vec3(info.worldNormal.x, info.worldNormal.y, info.worldNormal.z);
+            hit.isHit = true;
+
+            hit.rigidbody = static_cast<Vakol::CollisionData*>(info.body->getUserData())->parentBody;
+            firstHit = false;
+        }
+
+        return hit.distance;
     }
 
     Vakol::RayCastHitInfo hit;
@@ -46,10 +53,14 @@ namespace Vakol
         return rb;
     }
 
-    bool PhysicsScene::RayCast(Math::Vec3& origin, Math::Vec3& direction, double maxDistance,
+    bool PhysicsScene::RayCast(Math::Vec3& origin, Math::Vec3& direction, const float maxDistance,
                                RayCastHitInfo& info) const
     {
-        rp3d::Ray ray(ToRPVec3(origin), ToRPVec3(direction), maxDistance);
+        Math::Normalize(direction);
+
+        Math::Vec3 endPoint = origin + direction * maxDistance;
+
+        const rp3d::Ray ray(ToRPVec3(origin), ToRPVec3(endPoint));
 
         RayCastCallback callback;
 
@@ -57,7 +68,7 @@ namespace Vakol
 
         info = callback.hit;
 
-        return info.hit;
+        return info.isHit;
     }
 
     void PhysicsScene::EnableDebug() const

@@ -19,6 +19,9 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     implot
 )
 
+setup_mylib_resources(VakolEngine)
+
+
 if(NOT CopyResources)
     add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E create_symlink

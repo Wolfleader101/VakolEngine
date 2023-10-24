@@ -288,6 +288,11 @@ namespace Vakol::Math
         return glm::rotate(mat, angle, axis);
     }
 
+    Vec3 Rotate(const Quat& quat, const Vec3& vec)
+    {
+        return glm::rotate(quat, vec);
+    }
+
     Quat Slerp(const Quat& x, const Quat& y, const float a)
     {
         return glm::slerp(x, y, a);
