@@ -16,5 +16,7 @@ function move_to_position(target)
 end
 
 function update()
-    
+    if()
+        
+    end
 end
