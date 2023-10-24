@@ -1,17 +1,17 @@
 local is_sprinting = false;
 
 function init()
-    print("Initialising NoClip");
-
     entity:get_transform().rot = Vector3.new(0.0, 0.0, 0.0);
 
-
-        scene.globals.player = {
+    scene.globals.player = 
+    {
         pos = Vector3.new(0.0, 0.0, 0.0)
-        }
+    }
+
     local camera = scene:get_camera();
-    camera:set_pos(3, 5, -22);
-    camera:set_yaw(90);
+
+    camera:set_pos(0, 5.0, 0.0);
+
     entity:get_transform().pos = camera:get_pos();
     scene.globals.player.pos = entity:get_transform().pos;
 end
@@ -71,4 +71,26 @@ function update()
     end
 
     camera:set_pitch(pitch);
+    entity:get_transform().rot.x = -pitch;
+
+    -- Check if the E key is pressed
+    if (Input:get_key_down(KEYS["KEY_E"])) then
+        local obj, _ = test_raycast(camera:get_forward(), 20.0);
+
+        if (obj ~= nil) then
+            print(obj:get_tag())
+            local interactable = obj:get_script("interactable");
+            if (interactable ~= nil) then
+                interactable.interact(entity);
+            end
+        end
+    end
+end
+
+function test_raycast(direction, max_distance)
+    local origin = entity:get_transform().pos;
+    local hit_info = RayCastHitInfo.new();
+
+    local obj = scene:raycast(origin, direction, max_distance, hit_info);
+    return obj, hit_info;
 end

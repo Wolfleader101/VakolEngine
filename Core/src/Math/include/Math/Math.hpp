@@ -252,6 +252,8 @@ namespace Vakol::Math
 
     Mat3 Transpose(const Mat3& mat);
 
+    Vec3 Rotate(const Quat& quat, const Vec3& vec);
+
     /**
      * @brief Represents a line in 3D space defined by two points.
      */

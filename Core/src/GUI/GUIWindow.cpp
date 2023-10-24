@@ -396,15 +396,15 @@ namespace Vakol
     {
         if (inputValue < minValue)
         {
-            VK_WARN(valueName + " of GUI window '" + windowName + "' is less than " + std::to_string(minValue) +
-                    ". Setting " + valueName + " to " + std::to_string(minValue) + ".");
+            // VK_WARN(valueName + " of GUI window '" + windowName + "' is less than " + std::to_string(minValue) +
+            //         ". Setting " + valueName + " to " + std::to_string(minValue) + ".");
 
             inputValue = minValue;
         }
         else if (inputValue > maxValue)
         {
-            VK_WARN(valueName + " of GUI window '" + windowName + "' is greater than " + std::to_string(maxValue) +
-                    ". Setting " + valueName + " to " + std::to_string(maxValue) + ".");
+            // VK_WARN(valueName + " of GUI window '" + windowName + "' is greater than " + std::to_string(maxValue) +
+            //         ". Setting " + valueName + " to " + std::to_string(maxValue) + ".");
 
             inputValue = maxValue;
         }

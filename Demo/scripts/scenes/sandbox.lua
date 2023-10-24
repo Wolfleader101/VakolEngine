@@ -17,15 +17,9 @@ function init()
 
     scene:generate_skybox(faces);
 
-    -- local floor = scene:create_entity("Floor", "");
-    -- floor:get_transform().scale = Vector3.new(100.0, 1.0, 100.0);
-    -- floor:add_model("coreAssets/models/cube.obj", 1);
 
-    -- local rb1 = floor:add_rigid();
-    -- rb1.mass = 1;
-    -- rb1.bounciness = 0.4;
-    -- rb1.type = BodyType.Static;
-    -- floor:add_box_collider(floor:get_transform().scale / 2);
+    -- scene:create_entity("Cube", "entities/test/cube.lua");
+    -- add_floor();
 
     -- phys_objs();
     -- falling_objs();
@@ -55,6 +49,18 @@ function init()
     -- rb2.bounciness = 0.3;
     -- rb2.type = BodyType.Dynamic;
     -- cube2:add_box_collider(Vector3.new(1.0, 1.0, 1.0));
+end
+
+function add_floor()
+    local floor = scene:create_entity("Floor", "");
+    floor:get_transform().scale = Vector3.new(100.0, 1.0, 100.0);
+    floor:add_model("coreAssets/models/cube.obj", 1);
+
+    local rb1 = floor:add_rigid();
+    rb1.mass = 1;
+    rb1.bounciness = 0.4;
+    rb1.type = BodyType.Static;
+    floor:add_box_collider(floor:get_transform().scale / 2);
 end
 
 function randomFloat(lower, greater)
