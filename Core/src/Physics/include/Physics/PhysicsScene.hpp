@@ -41,7 +41,7 @@ namespace Vakol
          * @return true If the ray hit an object within maxDistance.
          * @return false If the ray did not hit any object within maxDistance.
          */
-        bool RayCast(Math::Vec3& origin, Math::Vec3& direction, double maxDistance, RayCastHitInfo& info) const;
+        bool RayCast(Math::Vec3& origin, Math::Vec3& direction, float maxDistance, RayCastHitInfo& info) const;
 
         /**
          * @brief Enables debug mode, providing more detailed information for debugging purposes.

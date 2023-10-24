@@ -71,4 +71,30 @@ function update()
     end
 
     camera:set_pitch(pitch);
+
+    
+    -- Check if the E key is pressed
+    if (Input:get_key_down(KEYS["KEY_E"])) then
+        local obj, _ = test_raycast(camera:get_forward(), 20.0);
+
+        if (obj ~= nil) then
+            print(obj:get_tag())
+            local interactable = obj:get_script("interactable");
+            if (interactable ~= nil) then
+                interactable.interact(entity);
+            end
+        end
+    end
+end
+
+function test_raycast(direction, max_distance)
+    local origin = entity:get_transform().pos;
+    local hit_info = RayCastHitInfo.new();
+
+    local obj = scene:raycast(origin, direction, max_distance, hit_info);
+    print(hit_info.distance)
+    print(hit_info.is_hit)
+    print(hit_info.normal.x .. ", " .. hit_info.normal.y .. ", " .. hit_info.normal.z)
+
+    return obj, hit_info;
 end
