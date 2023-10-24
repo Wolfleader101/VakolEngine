@@ -199,8 +199,6 @@ namespace Vakol
                     // apply forces
                     activeScene.GetEntityList().Iterate<Components::Transform, RigidBody>(
                         [&](Components::Transform& transform, RigidBody& rb) {
-                            if (rb.isSleeping)
-                                return;
                             m_physicsEngine.ApplyForces(transform.pos, transform.rot, rb);
 
                             transform.eulerAngles = Math::RadToDeg(Math::EulerFromQuat(transform.rot));

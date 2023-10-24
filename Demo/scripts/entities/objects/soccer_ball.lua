@@ -13,4 +13,9 @@ function init()
         HOLDING = 1.0,
         THROWING = 1.0
     }
+
+    entity:add_script("interactable", "components/interactable.lua");
+
+    local interactable = entity:get_script("interactable");
+    interactable.is_throwable = true;
 end

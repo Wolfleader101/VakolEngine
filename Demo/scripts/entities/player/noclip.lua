@@ -71,6 +71,7 @@ function update()
     end
 
     camera:set_pitch(pitch);
+    entity:get_transform().rot.x = -pitch;
 
     -- Check if the E key is pressed
     if (Input:get_key_down(KEYS["KEY_E"])) then
