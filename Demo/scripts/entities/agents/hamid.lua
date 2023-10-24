@@ -12,7 +12,7 @@ function init()
 end
 
 function move_to_position(target)
-    navigation.DESTINATION = target;
+    --navigation.DESTINATION = target;
 end
 
 function update()
