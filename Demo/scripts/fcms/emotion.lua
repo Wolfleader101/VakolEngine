@@ -1,4 +1,3 @@
-
 ANGER = 1;
 ANTICIPATION = 2;
 JOY = 3;
@@ -55,8 +54,6 @@ function print_emotions()
     end
     print(output)
 end
-
-
 
 function get_emotion(emotion_index)
     
@@ -139,14 +136,11 @@ local function iterate()
     L2Normalize();
 end
 
-
-
 -- ================== VAKOL FUNCS
 
 function init()
 
 end
-
 
 function update()
 
