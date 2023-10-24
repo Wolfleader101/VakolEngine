@@ -4,9 +4,6 @@ THROWABLE =
 };
 
 local is_held = false;
--- local was_held = false;
-
--- local impulse_applied = false;
 
 local rigidbody = nil;
 local transform = nil;
@@ -28,17 +25,8 @@ function interact(parent)
 end
 
 function throw()
-    -- if (not impulse_applied) then
-    print("throw")
-
     local throwDir = parent_transform.forward;
     rigidbody:apply_impulse(throwDir * THROWABLE.throw_force);
-
-
-        -- impulse_applied = true;
-    -- end
-
-    -- impulse_applied = false;
 end
 
 local function hold()
