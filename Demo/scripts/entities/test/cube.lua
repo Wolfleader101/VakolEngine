@@ -2,14 +2,18 @@ BLAKE = "IS GAY"
 
 function init()
 	print("cube")
-	entity:add_model("coreAssets/models/cube.obj", 1);
+    entity:add_model("coreAssets/models/cube.obj", 1);
+	entity:get_transform().pos = Vector3.new(0.0, 10.0, -7.5);
 
     local rb = entity:add_rigid();
-	rb.mass = 1;
-    entity:add_box_collider(Vector3.new(1.0, 1.0, 1.0));
-	
-    local root = entity:get_script("root")
-	print(root.CALEB)
+	rb.hasGravity = true;
+
+    entity:add_box_collider(entity:get_transform().scale / 2);
+
+    entity:add_script("interactable", "components/interactable.lua");
+
+    local interactable = entity:get_script("interactable");
+    interactable.is_throwable = true;
 end
 
 
