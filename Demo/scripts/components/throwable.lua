@@ -1,6 +1,6 @@
 THROWABLE = 
 {
-    throw_force = 0.5
+    throw_force = 50
 };
 
 local is_held = false;
@@ -31,8 +31,9 @@ function throw()
     -- if (not impulse_applied) then
     print("throw")
 
-    local throwDir = normalize(parent_transform.pos - transform.pos);
-    rigidbody:apply_impulse(rad2deg(throwDir) * THROWABLE.throw_force);
+    local throwDir = parent_transform.forward;
+    rigidbody:apply_impulse(throwDir * THROWABLE.throw_force);
+
 
         -- impulse_applied = true;
     -- end

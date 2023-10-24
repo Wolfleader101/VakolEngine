@@ -91,9 +91,5 @@ function test_raycast(direction, max_distance)
     local hit_info = RayCastHitInfo.new();
 
     local obj = scene:raycast(origin, direction, max_distance, hit_info);
-    print(hit_info.distance)
-    print(hit_info.is_hit)
-    print(hit_info.normal.x .. ", " .. hit_info.normal.y .. ", " .. hit_info.normal.z)
-
     return obj, hit_info;
 end

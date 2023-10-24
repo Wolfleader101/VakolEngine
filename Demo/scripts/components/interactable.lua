@@ -24,7 +24,15 @@ function interact(parent)
             is_activated = false;
             interacting_agent = nil;
 			entity:get_rigid().hasGravity = true; -- TODO use locks instead of this hack
-			entity:get_rigid().type = BodyType.Static; -- TODO use locks instead of this hack
+            entity:get_rigid().type = BodyType.Dynamic; -- TODO use locks instead of this hack
+            
+            if (is_throwable) then
+                if (entity:get_script("throwable") == nil) then
+                    entity:add_script("throwable", "components/throwable.lua");
+                end
+            
+                entity:get_script("throwable").interact(parent)
+            end
         end
     end
 end
