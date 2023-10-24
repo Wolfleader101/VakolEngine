@@ -2,8 +2,17 @@ function init()
     scene:create_entity("Player", "entities/player/noclip.lua")
     -- scene:create_entity("Player", "entities/player/phys_player.lua")
 
+
     scene:create_entity("Digital Twin", "entities/worlds/digital_twin.lua");
     scene:create_entity("290 World", "entities/worlds/290_world.lua");
+
+
+    -- AI 
+
+    local shri = scene:create_entity("shri", "entities/agents/shri_rai.lua");
+    shri:get_transform().pos = Vector3.new(-10, 5, -10);
+    
+
 
     local path = "coreAssets/textures/Skybox/";
     local extension = ".png";
@@ -16,6 +25,11 @@ function init()
         path .. "back" .. extension };
 
     scene:generate_skybox(faces);
+
+    local big_shri = scene:create_entity("big shri", "");
+    big_shri:get_transform().pos = Vector3.new(0,5,-205);
+    big_shri:get_transform().rot = Vector3.new(-20, 180, 0);
+    big_shri:add_model("assets/models/ai/shri/shri.fbx", 1);
 
     -- local floor = scene:create_entity("Floor", "");
     -- floor:get_transform().scale = Vector3.new(100.0, 1.0, 100.0);
