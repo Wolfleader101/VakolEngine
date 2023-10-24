@@ -169,26 +169,14 @@ void MyGUILayer::OnUpdate()
                             ImGui::DragFloat3("Position", &trans.pos.x, 0.1f);
                             ImGui::DragFloat3("Rotation", &trans.eulerAngles.x, 0.1f);
                             ImGui::DragFloat3("Scale", &trans.scale.x, 0.1f);
-
-                            ImGui::Spacing();
-                            ImGui::SeparatorText("Transformation Matrix");
-
-                            ImGui::Text("x: %f, %f, %f, %f", trans.transformMatrix[0][0], trans.transformMatrix[0][1],
-                                        trans.transformMatrix[0][2], trans.transformMatrix[0][3]);
-                            ImGui::Text("y: %f, %f, %f, %f", trans.transformMatrix[1][0], trans.transformMatrix[1][1],
-                                        trans.transformMatrix[1][2], trans.transformMatrix[1][3]);
-                            ImGui::Text("z: %f, %f, %f, %f", trans.transformMatrix[2][0], trans.transformMatrix[2][1],
-                                        trans.transformMatrix[2][2], trans.transformMatrix[2][3]);
-                            ImGui::Text("w: %f, %f, %f, %f", trans.transformMatrix[3][0], trans.transformMatrix[3][1],
-                                        trans.transformMatrix[3][2], trans.transformMatrix[3][3]);
                         }
 
                         if (entity.HasComponent<Vakol::Rendering::Drawable>() && ImGui::CollapsingHeader("Drawable"))
                         {
                             Vakol::Rendering::Drawable& drawable = entity.GetComponent<Vakol::Rendering::Drawable>();
 
-                            //ImGui::Text("Drawable ID: %s", drawable.ID.ToString().c_str());
-                            //ImGui::Spacing();
+                            // ImGui::Text("Drawable ID: %s", drawable.ID.ToString().c_str());
+                            // ImGui::Spacing();
 
                             ImGui::SeparatorText("Material");
 
@@ -196,11 +184,11 @@ void MyGUILayer::OnUpdate()
 
                             for (Vakol::Rendering::Assets::Mesh& mesh : model.meshes)
                             {
-                                //ImGui::Text("Mesh ID: %s", mesh.ID.c_str());
+                                // ImGui::Text("Mesh ID: %s", mesh.ID.c_str());
 
                                 Vakol::Rendering::Assets::Material& material = mesh.material;
 
-                                //ImGui::Text("Material ID: %s", material.ID.c_str());
+                                // ImGui::Text("Material ID: %s", material.ID.c_str());
 
                                 ImGui::Checkbox(("Use Lighting##" + material.ID).c_str(),
                                                 &material.properties.use_lighting);

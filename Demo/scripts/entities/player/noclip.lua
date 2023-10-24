@@ -74,16 +74,13 @@ function update()
 
     -- Check if the E key is pressed
     if (Input:get_key_down(KEYS["KEY_E"])) then
-        local obj, hit_info = test_raycast(camera:get_forward(), 1.0);
+        local obj, _ = test_raycast(camera:get_forward(), 20.0);
 
         if (obj ~= nil) then
-            local script = obj:get_script("interactable");
-
-            if (script ~= nil) then
-                local interactable = script.INTERACTABLE;
-
-                interactable.is_throwable = true;
-                interactable:interact(entity);
+            print(obj:get_tag())
+            local interactable = obj:get_script("interactable");
+            if (interactable ~= nil) then
+                interactable.interact(entity);
             end
         end
     end
@@ -94,6 +91,9 @@ function test_raycast(direction, max_distance)
     local hit_info = RayCastHitInfo.new();
 
     local obj = scene:raycast(origin, direction, max_distance, hit_info);
+    print(hit_info.distance)
+    print(hit_info.is_hit)
+    print(hit_info.normal.x .. ", " .. hit_info.normal.y .. ", " .. hit_info.normal.z)
 
     return obj, hit_info;
 end

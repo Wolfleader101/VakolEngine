@@ -5,11 +5,14 @@ function init()
 
     local rb = entity:add_rigid();
 
-    rb.hasGravity = false;
+    rb.hasGravity = true;
 
     entity:add_box_collider(entity:get_transform().scale / 2);
 
     entity:add_script("interactable", "components/interactable.lua");
+
+    local interactable = entity:get_script("interactable");
+    interactable.is_throwable = true;
 end
 
 function update()

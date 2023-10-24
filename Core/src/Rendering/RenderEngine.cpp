@@ -76,12 +76,12 @@ namespace Vakol::Rendering
         RenderAPI::SetMat4(RenderAPI::GetShader(drawable.shaderID), "PV_MATRIX", false,
                            camera.GetProjectionMatrix() * camera.GetViewMatrix());
 
-        transform.transformMatrix = RenderAPI::GetModelMatrix(transform);
+        const auto& modelMatrix = RenderAPI::GetModelMatrix(transform);
 
-        RenderAPI::SetMat4(RenderAPI::GetShader(drawable.shaderID), "MODEL_MATRIX", false, transform.transformMatrix);
+        RenderAPI::SetMat4(RenderAPI::GetShader(drawable.shaderID), "MODEL_MATRIX", false, modelMatrix);
 
         RenderAPI::SetMat3(RenderAPI::GetShader(drawable.shaderID), "NORMAL_MATRIX", true,
-                           Math::Inverse(Math::Mat3(transform.transformMatrix)));
+                           Math::Inverse(Math::Mat3(modelMatrix)));
 
         RenderAPI::SetVec3(RenderAPI::GetShader(drawable.shaderID), "VIEW_POSITION", camera.GetPos());
 
