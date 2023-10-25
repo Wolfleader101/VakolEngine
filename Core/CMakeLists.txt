@@ -7,7 +7,7 @@ find_package(OpenGL REQUIRED)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(SUPPRESS_LOGS TRUE)
+set(SUPPRESS_LOGS FALSE)
 
 
 # Add source and test directories
@@ -64,13 +64,13 @@ SET(CopyResources FALSE)
 function(setup_mylib_resources target_name)
     if(NOT CopyResources)
         add_custom_command(TARGET ${target_name} POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E create_symlink
-            ${CMAKE_CURRENT_SOURCE_DIR}/assets $<TARGET_FILE_DIR:${target_name}>/coreAssets)
+        COMMAND ${CMAKE_COMMAND} -E create_symlink
+        ${CMAKE_SOURCE_DIR}/Core/assets $<TARGET_FILE_DIR:${target_name}>/coreAssets)
     else()
         add_custom_command(TARGET ${target_name} POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_directory
-            ${CMAKE_CURRENT_SOURCE_DIR}/assets $<TARGET_FILE_DIR:${target_name}>/coreAssets)
-    endif()
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/Core/assets $<TARGET_FILE_DIR:${target_name}>/coreAssets)
+endif()
 endfunction()
 
 ########### TESTING ###########

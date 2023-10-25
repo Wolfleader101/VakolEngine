@@ -8,6 +8,7 @@ namespace Vakol::Math
     //! glm usage is currently just here for backwards compatability reasons
     using Vec2 = glm::vec2;
     using Vec3 = glm::vec3;
+    using BVec3 = glm::bvec3;
     using Vec4 = glm::vec4;
 
     using Point = Vec3;
@@ -252,6 +253,8 @@ namespace Vakol::Math
 
     Mat3 Transpose(const Mat3& mat);
 
+    Vec3 Rotate(const Quat& quat, const Vec3& vec);
+
     /**
      * @brief Represents a line in 3D space defined by two points.
      */
@@ -404,6 +407,8 @@ namespace Vakol::Math
      */
     Mat4 LookAt(const Vec3& eye, const Vec3& center, const Vec3& up);
 
+    Quat LookAt(const Vec3& direction, const Vec3& up);
+
     const float* AsArray(const Vec2& v);
     const float* AsArray(const Vec3& v);
     const float* AsArray(const Vec4& v);
@@ -446,6 +451,8 @@ namespace Vakol::Math
      * @return The rotated matrix.
      */
     Mat4 Rotate(const Mat4& mat, float angle, const Vec3& axis);
+
+    Quat Rotate(const Quat& quat, float angle, const Vec3& axis);
 
     /**
      * @brief Spherically interpolates between two quaternions.

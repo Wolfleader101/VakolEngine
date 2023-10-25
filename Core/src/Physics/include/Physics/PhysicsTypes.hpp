@@ -27,12 +27,17 @@ namespace Vakol
         struct Transform;
     }
 
+    struct RigidBody;
+
     struct RayCastHitInfo
     {
         Math::Vec3 point = Math::Vec3(0.0f, 0.0f, 0.0f);
         Math::Vec3 normal = Math::Vec3(0.0f, 0.0f, 0.0f);
-        double distance = 0.0;
-        bool hit = false;
+
+        float distance = 0.0f;
+        bool isHit = false;
+
+        RigidBody* rigidbody = nullptr;
     };
 
     /**
@@ -45,8 +50,6 @@ namespace Vakol
         Kinematic,
         Dynamic
     };
-
-    struct RigidBody;
 
     /**
      * @brief Collision data of rigidbody
@@ -83,11 +86,16 @@ namespace Vakol
         Math::Vec3 linearVelocity = Math::Vec3(0.0f, 0.0f, 0.0f);
         Math::Vec3 angularVelocity = Math::Vec3(0.0f, 0.0f, 0.0f);
 
+        Math::BVec3 lockPosition = Math::BVec3(false, false, false);
+        Math::BVec3 lockRotation = Math::BVec3(false, false, false);
+
         Math::Vec3 invInertiaTensor = Math::Vec3(0.0f);
 
         rp3d::CollisionBody* collisionBody = nullptr;
 
         std::shared_ptr<CollisionData> collisionData = nullptr;
+
+        std::string tag;
     };
 
     /**

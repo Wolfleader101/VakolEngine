@@ -13,6 +13,12 @@ function init()
     local affordComp = entity:get_script("affordance");
 
     affordComp.AFFORDANCES = {
-        SITTABLE = 1.0
+        SITTABLE = 1.0,
+        THROWING = 1.0,
     }
+
+    entity:add_script("interactable", "components/interactable.lua");
+
+    local interactable = entity:get_script("interactable");
+    interactable.is_throwable = true;
 end

@@ -1,5 +1,8 @@
 function init()
     scene:create_entity("Player", "entities/player/noclip.lua")
+
+    scene:create_entity("Test Entity", "entities/test/multi_script.lua");
+    scene:create_entity("Nav Test", "entities/test/nav_test.lua");
     -- scene:create_entity("Player", "entities/player/phys_player.lua")
 
     scene:create_entity("Digital Twin", "entities/worlds/digital_twin.lua");
@@ -8,31 +11,20 @@ function init()
     local path = "coreAssets/textures/Skybox/";
     local extension = ".png";
 
-    local faces = { path .. "right" .. extension,
-        path .. "left" .. extension,
-        path .. "top" .. extension,
-        path .. "bottom" .. extension,
-        path .. "front" .. extension,
-        path .. "back" .. extension };
+    local faces = { path .. "right" .. extension, path .. "left" .. extension, path .. "top" .. extension,
+        path .. "bottom" .. extension, path .. "front" .. extension, path .. "back" .. extension };
 
     scene:generate_skybox(faces);
 
-    -- local floor = scene:create_entity("Floor", "");
-    -- floor:get_transform().scale = Vector3.new(100.0, 1.0, 100.0);
-    -- floor:add_model("coreAssets/models/cube.obj", 1);
 
-    -- local rb1 = floor:add_rigid();
-    -- rb1.mass = 1;
-    -- rb1.bounciness = 0.4;
-    -- rb1.type = BodyType.Static;
-    -- floor:add_box_collider(floor:get_transform().scale / 2);
+    -- scene:create_entity("Cube", "entities/test/cube.lua");
+    -- add_floor();
 
     -- phys_objs();
     -- falling_objs();
     -- stress_test();
     -- ramps();
     -- particles();
-
 
     -- local cube = scene:create_entity("Cube", "");
     -- cube:get_transform().pos = Vector3.new(10.0, 20.0, 0.0);
@@ -57,8 +49,20 @@ function init()
     -- cube2:add_box_collider(Vector3.new(1.0, 1.0, 1.0));
 end
 
+function add_floor()
+    local floor = scene:create_entity("Floor", "");
+    floor:get_transform().scale = Vector3.new(100.0, 1.0, 100.0);
+    floor:add_model("coreAssets/models/cube.obj", 1);
+
+    local rb1 = floor:add_rigid();
+    rb1.mass = 1;
+    rb1.bounciness = 0.4;
+    rb1.type = BodyType.Static;
+    floor:add_box_collider(floor:get_transform().scale / 2);
+end
+
 function randomFloat(lower, greater)
-    return lower + math.random()  * (greater - lower);
+    return lower + math.random() * (greater - lower);
 end
 
 function falling_objs()
@@ -84,7 +88,6 @@ function falling_objs()
     rb2.type = BodyType.Dynamic;
     cube2:add_box_collider(Vector3.new(0.5, 0.5, 0.5));
 
-
     local sphere = scene:create_entity("Sphere", "");
     sphere:get_transform().pos = Vector3.new(10.0, 50.0, 0.0);
     sphere:get_transform().rot = Vector3.new(0.0, 0.0, 0.0);
@@ -96,8 +99,6 @@ function falling_objs()
     rb1.type = BodyType.Dynamic;
     sphere:add_sphere_collider(0.5);
 
-
-
     local sphere2 = scene:create_entity("Sphere 2", "");
     sphere2:get_transform().pos = Vector3.new(10.0, 70.0, 0.0);
     sphere2:get_transform().rot = Vector3.new(0.0, 0.0, 0.0);
@@ -108,7 +109,6 @@ function falling_objs()
     rb3.bounciness = 0.9;
     rb3.type = BodyType.Dynamic;
     sphere2:add_sphere_collider(0.5);
-
 end
 
 local wallRb = nil;
@@ -239,8 +239,6 @@ function ramps()
     rb4.hasGravity = false;
     ramp4:add_box_collider(ramp4:get_transform().scale / 2);
 
-
-
     for i = 1, 400 do
         local entityName = "Cube" .. " " .. i;
 
@@ -348,20 +346,20 @@ function update()
     if (sphereRb ~= nil and Input:get_key_down(KEYS["KEY_1"])) then
         sphereRb:apply_impulse(Vector3.new(-75.0, 0.0, 00.0));
     end
-    
-    if (wallRb ~=nil and Input:get_key_down(KEYS["KEY_2"])) then
+
+    if (wallRb ~= nil and Input:get_key_down(KEYS["KEY_2"])) then
         wallRb:apply_angular_impulse(Vector3.new(0.0, 0.0, 5.0), Vector3.new(0.0, 1.0, 0.0));
     end
-    
-    if(Input:get_key_down(KEYS["KEY_P"])) then
-        scene:serialize("assets/scenes/".. scene:get_name());
+
+    if (Input:get_key_down(KEYS["KEY_P"])) then
+        scene:serialize("assets/scenes/" .. scene:get_name());
     end
 
-    if(Input:get_key_down(KEYS["KEY_O"])) then
-        scene:deserialize("assets/scenes/" .. scene:get_name()); 
+    if (Input:get_key_down(KEYS["KEY_O"])) then
+        scene:deserialize("assets/scenes/" .. scene:get_name());
     end
-    
-    GUI:start_window("Stats", false, false, 0.0, 0.0 , 25, 25); 
+
+    GUI:start_window("Stats", false, false, 0.0, 0.0, 25, 25);
 
     GUI:add_text("GAME FPS: " .. Time.fps, false, false, 1.0, 0.0, 1.0, 0.0, 1.0);
 

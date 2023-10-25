@@ -19,7 +19,6 @@ namespace Vakol
 
         entity_type.set_function("get_tag", [](Entity* ent) { return ent->GetComponent<Components::Tag>().tag; });
         entity_type.set_function("get_transform", &Entity::GetComponent<Components::Transform>);
-        entity_type.set_function("get_fsm", &Entity::GetComponent<Components::FSM>);
 
         entity_type.set_function(
             "add_model",
@@ -80,6 +79,7 @@ namespace Vakol
             auto& newRb = ent->GetComponent<RigidBody>();
             newRb.transform = &ent->GetComponent<Components::Transform>();
             newRb.collisionData->parentBody = &newRb;
+            newRb.tag = ent->GetComponent<Components::Tag>().tag;
 
             return newRb;
         });
@@ -109,6 +109,24 @@ namespace Vakol
             physEngine.AttachCollider(ent->GetComponent<RigidBody>(), collider);
 
             return &ent->GetComponent<SphereCollider>();
+        });
+
+        entity_type.set_function("add_capsule_collider", [&](Entity* ent, const float radius, const float height) {
+            PhysicsEngine& physEngine = lua["PhysicsEngine"];
+
+            if (!ent->HasComponent<RigidBody>())
+            {
+                VK_CRITICAL("No rigid body component found on entity");
+
+                return static_cast<CapsuleCollider*>(nullptr);
+            }
+
+            CapsuleCollider collider = physEngine.CreateCapsuleCollider(radius, height);
+
+            ent->AddComponent<CapsuleCollider>(collider);
+            physEngine.AttachCollider(ent->GetComponent<RigidBody>(), collider);
+
+            return &ent->GetComponent<CapsuleCollider>();
         });
 
         entity_type.set_function("add_box_collider", [&](Entity* ent, Math::Vec3& halfExtents) {
@@ -159,7 +177,7 @@ namespace Vakol
         entity_type.set_function("get_script", [&](Entity* ent, const std::string& name) -> LuaTable {
             if (!ent->HasComponent<ScriptComp>())
             {
-                VK_ERROR("No script component found on entity {}", ent->GetComponent<Components::Tag>().tag);
+                // VK_ERROR("No script component found on entity {}", ent->GetComponent<Components::Tag>().tag);
 
                 return LuaTable();
             }
@@ -184,7 +202,7 @@ namespace Vakol
                 }
             }
 
-            VK_ERROR("No script with name {} found on entity {}", name, ent->GetComponent<Components::Tag>().tag);
+            // VK_ERROR("No script with name {} found on entity {}", name, ent->GetComponent<Components::Tag>().tag);
 
             return LuaTable(); // Return an empty sol::table or sol::nil
         });
