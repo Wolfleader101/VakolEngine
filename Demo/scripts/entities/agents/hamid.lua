@@ -13,7 +13,7 @@ local recyclingBins = {};
 
 local yDifference = nil;
 
-local distance = nil;
+local entityDistance = nil;
 
 local currentFear = nil;
 
@@ -61,10 +61,10 @@ function rubbish_behaviour()
                 -- Getting the distance between the AI and the entity
                 yDifference = math.abs(entity:get_transform().pos.y - value:get_transform().pos.y);
 
-                distance = Distance(entity:get_transform().pos, value:get_transform().pos);
+                entityDistance = distance(entity:get_transform().pos, value:get_transform().pos);
 
                 -- Checking to see that the distance between the AI and the entity is within the interact distance
-                if ((distance < interactDistance) and yDifference < 0.5) then
+                if ((entityDistance < interactDistance) and yDifference < 0.5) then
                     navigation.DESTINATION = value:get_transform().pos;
 
                     wandering = false;
@@ -77,10 +77,10 @@ function rubbish_behaviour()
         if (travellingToObject == true and holdingRubbish == false) then
             yDifference = math.abs(entity:get_transform().pos.y - value:get_transform().pos.y);
 
-            distance = Distance(entity:get_transform().pos, value:get_transform().pos);
+            entityDistance = distance(entity:get_transform().pos, value:get_transform().pos);
         
             -- Checking to see if the AI is close enough to the object to grab it
-            if ((distance < minInteractDistance) and yDifference < 0.5) then
+            if ((entityDistance < minInteractDistance) and yDifference < 0.5) then
                 -- GRAB OBJECT 
 
                 holdingRubbish = true;
@@ -94,9 +94,9 @@ function rubbish_behaviour()
                 -- Getting the distance between the AI and the entity
                 yDifference = math.abs(entity:get_transform().pos.y - value:get_transform().pos.y);
 
-                distance = Distance(entity:get_transform().pos, value:get_transform().pos);
+                entityDistance = distance(entity:get_transform().pos, value:get_transform().pos);
 
-                if ((distance < minInteractDistance) and yDifference < 0.5) then
+                if ((entityDistance < minInteractDistance) and yDifference < 0.5) then
                     -- DEPOSIT rubbish
 
                     emotions.add_emotion_value(emotions.JOY, 0.2);
