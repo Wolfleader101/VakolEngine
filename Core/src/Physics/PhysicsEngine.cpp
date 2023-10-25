@@ -140,7 +140,7 @@ namespace Vakol
     {
         const float height = collider.shape->getHeight();
 
-        const rp3d::Transform trans =
+        rp3d::Transform trans =
             rp3d::Transform(rp3d::Vector3(0.0f, height - 0.125f, 0.0f), rp3d::Quaternion::identity());
 
         collider.collider = rb.collisionBody->addCollider(collider.shape, trans);
