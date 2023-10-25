@@ -14,9 +14,9 @@ out VS_OUT {
     vec3 TangentFragPos;
 } vs_out;
 
-uniform mat3 NORMAL_MATRIX;
 uniform mat4 PV_MATRIX;
 uniform mat4 MODEL_MATRIX;
+uniform mat3 NORMAL_MATRIX;
 
 uniform vec3 LIGHT_POSITION = vec3(0.0, 10.0, 0.0);
 uniform vec3 VIEW_POSITION;

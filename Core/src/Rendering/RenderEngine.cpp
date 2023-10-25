@@ -48,7 +48,7 @@ namespace Vakol::Rendering
         RenderAPI::EnableDepth();
         RenderAPI::EnableMultisample();
         RenderAPI::EnableBlending();
-        // RenderAPI::EnableCulling();
+        //RenderAPI::EnableCulling();
 
         RenderAPI::ResizeScreen(0, 0, width, height);
     }
@@ -69,7 +69,7 @@ namespace Vakol::Rendering
         RenderAPI::Clear(VK_COLOR_BUFFER | VK_DEPTH_BUFFER);
     }
 
-    void RenderEngine::Draw(const Camera& camera, Components::Transform& transform, const Drawable& drawable)
+    void RenderEngine::Draw(const Camera& camera, const Components::Transform& transform, const Drawable& drawable)
     {
         if (!RenderAPI::IsExistingShader(drawable.shaderID) || !AssetLoader::IsExistingModel(drawable.ID))
             return;
@@ -79,7 +79,7 @@ namespace Vakol::Rendering
         RenderAPI::SetMat4(RenderAPI::GetShader(drawable.shaderID), "PV_MATRIX", false,
                            camera.GetProjectionMatrix() * camera.GetViewMatrix());
 
-        Math::Mat4 transformMatrix = RenderAPI::GetModelMatrix(transform);
+        const Math::Mat4& transformMatrix = RenderAPI::GetModelMatrix(transform);
 
         RenderAPI::SetMat4(RenderAPI::GetShader(drawable.shaderID), "MODEL_MATRIX", false, transformMatrix);
 

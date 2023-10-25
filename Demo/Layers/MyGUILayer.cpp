@@ -249,6 +249,8 @@ void MyGUILayer::OnUpdate()
 
                                 ImGui::Text("Material ID: %s", material.ID.c_str());
 
+                                ImGui::DragFloat3("Light Position", &material.properties.light_position.x, 0.1f);
+
                                 ImGui::Checkbox(("Use Lighting##" + material.ID).c_str(),
                                                 &material.properties.use_lighting);
                                 ImGui::Checkbox(("Use Textures##" + material.ID).c_str(),

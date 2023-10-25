@@ -63,8 +63,6 @@ uniform Material material;
 uniform float AMBIENT_STRENGTH = 0.2;
 uniform float SPECULAR_STRENGTH = 0.3;
 
-uniform vec3 LIGHT_DIRECTION = vec3(0.0, -0.25, 0.0);
-
 vec4 BlinnPhong(const vec3 normal, const vec4 color)
 {
     vec4 ambient = AMBIENT_STRENGTH * color;
@@ -87,8 +85,8 @@ void main()
 {
     vec4 color = texture(material.diffuse_map, fs_in.TexCoords);
 
-    if ((color.r >= 0.99 && color.g >= 0.99 && color.b >= 0.99) || !material.use_textures)
-        color = material.diffuse_color;
+//    if ((color.r >= 0.99 && color.g >= 0.99 && color.b >= 0.99) || !material.use_textures)
+//        color = material.diffuse_color;
 
     vec3 normal = texture(material.normal_map, fs_in.TexCoords).rgb;
 

@@ -39,6 +39,8 @@ namespace Vakol::Rendering::Assets
 
         bool use_lighting = true;
         bool use_textures = true;
+
+        Math::Vec3 light_position = Math::Vec3(0.0f, 1.0f, 0.0f);
     };
 
     struct Material
