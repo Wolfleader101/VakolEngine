@@ -218,9 +218,10 @@ namespace Vakol
 
                             for (auto& script : scriptComp.scripts)
                             {
-
                                 m_scriptEngine.PhysContactCallback(script, otherEnt);
                             }
+                            rb.collisionData->isColliding = false;
+                            rb.collisionData->otherBody = nullptr;
                         });
 
                     // Decrease the accumulated time
