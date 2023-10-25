@@ -30,8 +30,13 @@ function tick()
 
     if pissing == true then
         trans = entity:get_transform();
-        print("before" .. trans.pos.y)
-        piss.piss(trans.pos, trans.forward);
+        pos = Vector3.new();
+
+        pos.x = trans.pos.x;
+        pos.y = trans.pos.y - 0.8;
+        pos.z = trans.pos.z;
+
+        piss.piss(pos, trans.forward * -1);
     end
 end
 
@@ -42,4 +47,14 @@ function update()
         pissing = false;
     end
 
+    -- if (Input:get_key(KEYS["KEY_X"])) then
+    --     piss.clean();
+    -- end
+
+end
+
+function phys_update()
+    if (Input:get_key(KEYS["KEY_X"])) then
+        piss.clean();
+    end
 end

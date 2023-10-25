@@ -23,7 +23,8 @@ function init()
         rb = piss_particle:add_rigid();
         piss_particle:add_sphere_collider(0.025);
         piss_particles[i] = piss_particle;
-        rb.type = BodyType.Static;
+        rb.hasGravity = false;
+        rb.is_sleeping = true;
     end
 end
 
@@ -37,23 +38,21 @@ function piss(pos, forward)
     particle = piss_particles[piss_index];
     particle:get_transform().pos = pos;
 
-    -- print(particle:get_transform().pos.x .. " " .. particle:get_transform().pos.z)
-    print("after: " .. particle:get_transform().pos.y);
-
     rb = particle:get_rigid();
     rb.type = BodyType.Dynamic;
 
-    randVec = Vector3.new(randomFloat(-0.5, 0.5), randomFloat(0, 1), randomFloat(-0.5, 0.5));
-    rb:apply_impulse((forward * 0.1) + randVec);
+    randVec = Vector3.new(randomFloat(0, 1), randomFloat(0, 1), randomFloat(0, 1));
+    rb:apply_impulse((forward * 1.2) + randVec);
 end
 
-function clean_up_piss()
+function clean()
 
     for i = 1, MAX_PISS do
         trans = piss_particles[i]:get_transform();
         trans = Vector3.new(i, y_storage, i);
 
         rb = piss_particles[i]:get_rigid();
-        rb.type = BodyType.Static;
+        rb.hasGravity = false;
+        rb.is_sleeping = true;
     end
 end
