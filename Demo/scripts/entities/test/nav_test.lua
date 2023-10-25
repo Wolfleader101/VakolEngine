@@ -16,11 +16,11 @@ function init()
     target = scene:get_camera():get_pos();
 
     nav.TARGET = target;
-    nav.MAX_DISTANCE = 0.7;
+    nav.MAX_DISTANCE = 0.8;
 
     nav.MOVE_SPEED = 0.025;
     nav.ROTATE_SPEED = 2.5;
     nav.BRAKE_FORCE = 1.0;
 
-    nav.set_state("wander");
+    nav.set_state("chase");
 end
