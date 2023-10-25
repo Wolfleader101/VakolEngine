@@ -109,7 +109,6 @@ namespace Vakol
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
         glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, false);
         glfwWindowHint(GLFW_SAMPLES, 4);
-        glfwWindowHint(GLFW_MAXIMIZED, true);
 
         /* Initialize the library */
         if (!glfwInit())

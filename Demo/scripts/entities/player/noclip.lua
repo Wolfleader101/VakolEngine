@@ -3,7 +3,7 @@ local is_sprinting = false;
 function init()
     entity:get_transform().rot = Vector3.new(0.0, 0.0, 0.0);
 
-    scene.globals.player = 
+    scene.globals.player =
     {
         pos = Vector3.new(0.0, 0.0, 0.0)
     }
@@ -17,7 +17,11 @@ function init()
 end
 
 function update()
-    local dir = { x = 0, y = 0, z = 0 };
+    local dir = {
+        x = 0,
+        y = 0,
+        z = 0
+    };
     local velocity = 0;
 
     if (Input:get_key(KEYS["KEY_W"])) then
@@ -48,11 +52,9 @@ function update()
     local forward = camera:get_forward();
     local right = camera:get_right();
 
-    local new_pos = Vector3.new(
-        old_pos.x + (forward.x * dir.z + right.x * dir.x) * velocity,
+    local new_pos = Vector3.new(old_pos.x + (forward.x * dir.z + right.x * dir.x) * velocity,
         old_pos.y + (forward.y * dir.z + right.y * dir.x) * velocity,
-        old_pos.z + (forward.z * dir.z + right.z * dir.x) * velocity
-    )
+        old_pos.z + (forward.z * dir.z + right.z * dir.x) * velocity)
 
     entity:get_transform().pos = Vector3.new(new_pos.x, new_pos.y, new_pos.z);
 
