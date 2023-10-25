@@ -25,7 +25,9 @@ namespace Vakol
         rbT.set("torque", &RigidBody::torque);
         rbT.set("linearVelocity", &RigidBody::linearVelocity);
         rbT.set("angularVelocity", &RigidBody::angularVelocity);
-        rbT.set("is_colliding", sol::property([](const RigidBody& rb) { return rb.collisionData->isColliding; }));
+        rbT.set("pos_lock", &RigidBody::lockPosition);
+        rbT.set("rot_lock", &RigidBody::lockRotation);
+        rbT.set("is_colliding", sol::property([](RigidBody& rb) { return rb.collisionData->isColliding; }));
         rbT.set("is_sleeping", &RigidBody::isSleeping);
 
         rbT.set_function("add_force", [](RigidBody& rb, Math::Vec3& force) {

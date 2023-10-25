@@ -198,13 +198,9 @@ namespace Vakol
         RegisterShader(m_state);
         RegisterEntity(m_state, *this);
         RegisterTransform(m_state);
-        RegisterTerrain(m_state);
-        RegisterFSM(m_state);
         RegisterCamera(m_state);
         RegisterScene(m_state, *this);
         RegisterGUIWindow(m_state);
-        RegisterRigidBody(m_state);
-        RegisterCollider(m_state);
         RegisterPhysics(m_state);
     }
 
