@@ -240,7 +240,7 @@ namespace Vakol::Math
 
     Quat LookAt(const Vec3& direction, const Vec3& up)
     {
-        return glm::quatLookAt(direction, up);   
+        return glm::quatLookAt(direction, up);
     }
 
     const float* AsArray(const Vec2& v)

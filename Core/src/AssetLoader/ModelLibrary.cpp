@@ -32,9 +32,7 @@ namespace Vakol
                 GetModel(path, scale); // load the model and put it into the loaded models map
 
             for (Rendering::Assets::Mesh& mesh : model.meshes)
-            {
                 mesh.material.ID = Rendering::GenerateID();
-            }
 
             m_models[ID] = model;
         }
@@ -77,6 +75,11 @@ namespace Vakol
     bool ModelLibrary::ModelExists(const GUID& ID) const
     {
         return m_models.find(ID) != m_models.end();
+    }
+
+    bool ModelLibrary::IsEmpty() const
+    {
+        return m_models.empty();
     }
 
 } // namespace Vakol

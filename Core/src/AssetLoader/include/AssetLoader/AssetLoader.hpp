@@ -80,8 +80,8 @@ namespace Vakol
          * \param channels
          * \param pixels
          */
-        static void GetTexture(const std::string& path, unsigned int type, int& width, int& height, int& channels,
-                               unsigned char*& pixels);
+        static Rendering::Assets::Texture& GetTexture(const std::string& path, unsigned int type, int& width,
+                                                      int& height, int& channels, unsigned char*& pixels);
 
         /**
          * \brief
@@ -93,6 +93,13 @@ namespace Vakol
          */
         static void ReplaceTexture(const GUID& modelID, const std::string& srcPath, unsigned int srcType,
                                    const std::string& dstPath, unsigned int dstType);
+
+        /**
+         * \brief returns the status of a model, whether it exists or not.
+         * \param modelID the model id
+         * \return true or false
+         */
+        static bool IsExistingModel(const GUID& modelID);
 
       private:
         /**

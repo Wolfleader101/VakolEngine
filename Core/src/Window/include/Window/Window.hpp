@@ -72,6 +72,16 @@ namespace Vakol
             return m_height;
         }
 
+        /**
+         * @brief Get the position of the window
+         *
+         * @param x The X position of the window
+         * @param y The Y position of the window
+         *
+         * @return void
+         */
+        void GetPosition(int& x, int& y) const;
+
       private:
         /**
          * @brief glfw window ptr

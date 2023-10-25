@@ -74,13 +74,13 @@ namespace Vakol
         bool SceneChanged() const;
 
         /**
-         * @brief Used to check if scene manager is valid to use.
+         * @brief Checks if scene manager is valid to use.
          *        Checks if empty, and if current scene is set.
          *
          * @return true
          * @return false
          */
-        bool operator!() const;
+        bool IsValid() const;
 
       private:
         void ThrowRuntime(const std::string& str) const;

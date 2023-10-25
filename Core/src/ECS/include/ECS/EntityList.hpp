@@ -13,7 +13,6 @@ namespace Vakol
 {
 
     class Entity; // pre declared to prevent recursive include
-    class System;
     class Scene;
 
     /**
@@ -63,6 +62,13 @@ namespace Vakol
          * @brief Clears the list and registry of all entities.
          */
         void Clear();
+
+        /**
+         * @brief Get the number of entities in the list.
+         *
+         * @return unsigned int Number of entities.
+         */
+        unsigned int GetEntityCount() const;
 
         /**
          * @brief Checks the registry for the existence of an entity handle.
@@ -199,8 +205,7 @@ namespace Vakol
                 inp.close();
             }
         }
-
-        friend class Entity; // friend to allow the API for entities to be clean
+        friend class Entity; // friend to allow the API for entities to be clean.
         friend class Scene;
     };
 

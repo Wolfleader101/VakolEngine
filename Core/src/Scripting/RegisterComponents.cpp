@@ -10,7 +10,9 @@ namespace Vakol
         transform_type["pos"] = &Components::Transform::pos;
         transform_type["rot"] = &Components::Transform::eulerAngles;
         transform_type["scale"] = &Components::Transform::scale;
-        transform_type["forward"] = &Components::Transform::forward;
+        transform_type.set("forward", sol::property([](const Components::Transform& transform) {
+                               return transform.rot * Math::Vec3(0.0f, 0.0f, 1.0f);
+                           }));
     }
 
     void RegisterTerrain(sol::state& lua)

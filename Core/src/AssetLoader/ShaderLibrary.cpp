@@ -3,7 +3,6 @@
 #include "Rendering/Platform/OpenGL/Shader.hpp"
 
 #include "Logger/Logger.hpp"
-#include "Rendering/RenderData.hpp"
 
 namespace Vakol
 {
@@ -193,4 +192,10 @@ namespace Vakol
     {
         return m_uniforms.at(shader).find(name) != m_uniforms.at(shader).end();
     }
+
+    bool ShaderLibrary::IsEmpty() const
+    {
+        return m_shaders.empty();
+    }
+
 } // namespace Vakol

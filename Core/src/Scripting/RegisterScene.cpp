@@ -50,10 +50,15 @@ namespace Vakol
         scene_type.set_function("get_entity", &Scene::GetEntity);
 
         scene_type.set_function("raycast", [](Scene& scene, Math::Vec3& origin, Math::Vec3& direction,
-                                              double maxDistance, RayCastHitInfo& info) {
+                                              float maxDistance, RayCastHitInfo& info) {
             PhysicsScene& physicsScene = scene.GetPhysicsScene();
 
-            return physicsScene.RayCast(origin, direction, maxDistance, info);
+            const bool hit = physicsScene.RayCast(origin, direction, maxDistance, info);
+
+            if (hit)
+                return scene.GetEntity(info.rigidbody->tag);
+
+            return std::shared_ptr<Entity>(nullptr);
         });
 
         scene_type.set_function("serialize",

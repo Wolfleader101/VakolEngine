@@ -28,6 +28,7 @@ namespace Vakol
         rbT.set("pos_lock", &RigidBody::lockPosition);
         rbT.set("rot_lock", &RigidBody::lockRotation);
         rbT.set("is_colliding", sol::property([](RigidBody& rb) { return rb.collisionData->isColliding; }));
+        rbT.set("is_sleeping", &RigidBody::isSleeping);
 
         rbT.set_function("add_force", [](RigidBody& rb, Math::Vec3& force) {
             rb.force += force;
@@ -59,7 +60,8 @@ namespace Vakol
         rct.set("point", &RayCastHitInfo::point);
         rct.set("normal", &RayCastHitInfo::normal);
         rct.set("distance", &RayCastHitInfo::distance);
-        rct.set("hit", &RayCastHitInfo::hit);
+        rct.set("is_hit", &RayCastHitInfo::isHit);
+        rct.set("rigidbody", &RayCastHitInfo::rigidbody);
     }
 
 } // namespace Vakol

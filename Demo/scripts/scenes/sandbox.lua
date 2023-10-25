@@ -11,31 +11,14 @@ function init()
     local path = "coreAssets/textures/Skybox/";
     local extension = ".png";
 
-    local faces = {path .. "right" .. extension, path .. "left" .. extension, path .. "top" .. extension,
-                   path .. "bottom" .. extension, path .. "front" .. extension, path .. "back" .. extension};
+    local faces = { path .. "right" .. extension, path .. "left" .. extension, path .. "top" .. extension,
+        path .. "bottom" .. extension, path .. "front" .. extension, path .. "back" .. extension };
 
     scene:generate_skybox(faces);
 
-    local floor = scene:create_entity("Floor", "");
-    floor:get_transform().scale = Vector3.new(200.0, 1.0, 200.0);
-    floor:add_model("coreAssets/models/cube.obj", 1);
 
-    local rb1 = floor:add_rigid();
-    rb1.mass = 1;
-    rb1.bounciness = 0.4;
-    rb1.type = BodyType.Static;
-    floor:add_box_collider(floor:get_transform().scale / 2);
-
-    --local wall = scene:create_entity("wall", "");
-
-    --wall:get_transform().scale = Vector3.new(10, 10, 10);
-    --wall:get_transform().pos.y = -10;
-
-    --local rb2 = wall:add_rigid();
-    --rb2.mass = 1;
-    --rb2.bounciness = 0.4;
-    --rb2.type = BodyType.Static;
-    --wall:add_box_collider(wall:get_transform().scale);
+    -- scene:create_entity("Cube", "entities/test/cube.lua");
+    -- add_floor();
 
     -- phys_objs();
     -- falling_objs();
@@ -64,6 +47,18 @@ function init()
     -- rb2.bounciness = 0.3;
     -- rb2.type = BodyType.Dynamic;
     -- cube2:add_box_collider(Vector3.new(1.0, 1.0, 1.0));
+end
+
+function add_floor()
+    local floor = scene:create_entity("Floor", "");
+    floor:get_transform().scale = Vector3.new(100.0, 1.0, 100.0);
+    floor:add_model("coreAssets/models/cube.obj", 1);
+
+    local rb1 = floor:add_rigid();
+    rb1.mass = 1;
+    rb1.bounciness = 0.4;
+    rb1.type = BodyType.Static;
+    floor:add_box_collider(floor:get_transform().scale / 2);
 end
 
 function randomFloat(lower, greater)
@@ -114,7 +109,6 @@ function falling_objs()
     rb3.bounciness = 0.9;
     rb3.type = BodyType.Dynamic;
     sphere2:add_sphere_collider(0.5);
-
 end
 
 local wallRb = nil;

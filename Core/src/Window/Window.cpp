@@ -109,6 +109,7 @@ namespace Vakol
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
         glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, false);
         glfwWindowHint(GLFW_SAMPLES, 4);
+        glfwWindowHint(GLFW_MAXIMIZED, true);
 
         /* Initialize the library */
         if (!glfwInit())
@@ -272,5 +273,10 @@ namespace Vakol
     void Window::SetEventCallback(const EventCallbackFn& callback)
     {
         m_eventCallback = callback;
+    }
+
+    void Window::GetPosition(int& x, int& y) const
+    {
+        glfwGetWindowPos(m_window, &x, &y);
     }
 } // namespace Vakol
