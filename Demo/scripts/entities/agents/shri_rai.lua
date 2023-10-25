@@ -29,6 +29,9 @@ function init()
     nav.BRAKE_FORCE = 1.0;
 end
 
+local piss_locations = { Vector3.new(17, 2.2, 137), Vector3.new(1.4, 1.5, 36.5), Vector3.new(32, 2.5, 20) };
+local piss_lookat = { Vector3.new(-6, 4.5, 148), Vector3.new(7.7, 2.7, 41.721), Vector3.new(-32, 2.5, 45) };
+
 local pissing = false;
 function tick()
     if pissing == true then
