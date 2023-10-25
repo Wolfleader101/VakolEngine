@@ -27,6 +27,8 @@ namespace Vakol
          */
         RigidBody CreateRigidBody(Math::Vec3& pos, Math::Quat& orientation);
 
+        void DestroyRigidBody(RigidBody& rigidBody);
+
         /**
          * @brief Performs a raycast in the scene from a specified origin in a given direction, up to a maximum
          * distance.

@@ -52,6 +52,10 @@ namespace Vakol
 
         return rb;
     }
+    void PhysicsScene::DestroyRigidBody(RigidBody& rigidBody)
+    {
+        m_world->destroyCollisionBody(rigidBody.collisionBody);
+    }
 
     bool PhysicsScene::RayCast(Math::Vec3& origin, Math::Vec3& direction, const float maxDistance,
                                RayCastHitInfo& info) const
