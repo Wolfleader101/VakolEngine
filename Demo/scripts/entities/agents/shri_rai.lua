@@ -5,13 +5,17 @@ local emotions;
 
 local piss_particles = {}
 local piss_count = 0;
+local <const> MAX_PISS = 100;
+
 
 local function piss()
     
+    piss_count = piss_count + 1;
+    piss_particles[piss_count] = scene:create_entity("piss" .. piss_count, "");
 end
 
 function init()
-    
+
     entity:add_model("assets/models/ai/shri/shri.fbx", 1);
     entity:get_transform().scale = Vector3.new(0.015, 0.015, 0.015);
 
