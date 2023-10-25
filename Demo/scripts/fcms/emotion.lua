@@ -66,18 +66,17 @@ function get_emotion(emotion_index)
 end
 
 function set_emotion(emotion_index, value)
-
     if emotion_index < 0 or emotion_index > 7 then
         return
     end
 
     emotion_concepts[emotion_index] = value
-
 end
 
 function tanh(x)
     local epx = math.exp(x)
     local enx = math.exp(-x)
+
     return (epx - enx) / (epx + enx)
 end
 
@@ -101,7 +100,6 @@ local function normalize()
 end
 
 local function L2Normalize()
-    
     L2Norm = 0;
 
     for i = 1, #emotion_concepts do
@@ -116,7 +114,6 @@ local function L2Normalize()
 end
 
 local function iterate()
-
     new_concepts = {};
 
     for i = 1, 8 do

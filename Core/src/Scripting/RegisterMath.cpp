@@ -152,7 +152,12 @@ namespace Vakol
 
             quat.set_function("Euler", [](const Math::Quat& rot) { return eulerAngles(rot); });
         }
+
         lua.set_function("vector_mat4", &create_mat4_vector);
+
+        lua.set_function("distance", [](const Math::Vec3& p1, const Math::Vec3& p2) -> float {
+            return Math::Distance(p1, p2);
+        });
     }
 
 } // namespace Vakol
