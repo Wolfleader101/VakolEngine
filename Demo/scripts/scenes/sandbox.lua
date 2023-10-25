@@ -1,11 +1,14 @@
 function init()
     scene:create_entity("Player", "entities/player/noclip.lua")
+
+    scene:create_entity("Test Entity", "entities/test/multi_script.lua");
+    scene:create_entity("Nav Test", "entities/test/nav_test.lua");
     -- scene:create_entity("Player", "entities/player/phys_player.lua")
 
     -- scene:create_entity("Digital Twin", "entities/worlds/digital_twin.lua");
     -- scene:create_entity("290 World", "entities/worlds/290_world.lua");
 
-    -- AI 
+    -- AI
 
     local shri = scene:create_entity("shri", "entities/agents/shri_rai.lua");
     -- shri:get_transform().pos = Vector3.new(-10, 5, -10);
@@ -17,8 +20,8 @@ function init()
     local path = "coreAssets/textures/Skybox/";
     local extension = ".png";
 
-    local faces = {path .. "right" .. extension, path .. "left" .. extension, path .. "top" .. extension,
-                   path .. "bottom" .. extension, path .. "front" .. extension, path .. "back" .. extension};
+    local faces = { path .. "right" .. extension, path .. "left" .. extension, path .. "top" .. extension,
+        path .. "bottom" .. extension, path .. "front" .. extension, path .. "back" .. extension };
 
     scene:generate_skybox(faces);
 
@@ -119,7 +122,6 @@ function falling_objs()
     rb3.bounciness = 0.9;
     rb3.type = BodyType.Dynamic;
     sphere2:add_sphere_collider(0.5);
-
 end
 
 local wallRb = nil;

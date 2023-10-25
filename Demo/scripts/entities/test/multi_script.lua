@@ -5,11 +5,10 @@ function init()
     entity:add_script("cube", "entities/test/cube.lua");
 
     --entity:add_script("emotions", "fcms/emotion.lua");
-    	
-    local cube = entity:get_script("cube")
-	print(cube.BLAKE)
-end
 
+    local cube = entity:get_script("cube")
+    print(cube.BLAKE)
+end
 
 function phys_update()
     -- local rb = entity:get_rigid();
