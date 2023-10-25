@@ -140,12 +140,6 @@ namespace Vakol
         void DetectCollisions(PhysicsScene& scene);
 
         /**
-         * \brief 
-         * \return 
-         */
-        static Math::Vec3 CalculateFrictionImpulse(const CollisionPair& cpair, const Math::Vec3& normal, float frictionA, float frictionB);
-
-        /**
          * @brief handle collision resolution for two colliding rigidbodies
          *
          * @param bodyA

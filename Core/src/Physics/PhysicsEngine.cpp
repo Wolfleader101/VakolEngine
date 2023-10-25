@@ -251,117 +251,65 @@ namespace Vakol
         scene.Update(m_timeStep);
     }
 
-    Math::Vec3 PhysicsEngine::CalculateFrictionImpulse(const CollisionPair& cpair, const Math::Vec3& normal, const float frictionA, const float frictionB)
-    {
-        Math::Vec3 tangent = cpair.relativeVelocity - cpair.rVN * normal;
-
-        if (Math::MagnitudeSq(tangent) == 0.0f)
-            return Math::Vec3(0.0f);
-
-        Math::Normalize(tangent);
-
-        const Math::Vec3 r1xT = Math::Cross(cpair.r1, tangent);
-        const Math::Vec3 r2xT = Math::Cross(cpair.r2, tangent);
-
-        const float n1 = Math::Dot(tangent, cpair.v1 - cpair.v2);
-
-        const float n2a = Math::Dot(cpair.w1, r1xT);
-        const float n2b = Math::Dot(cpair.w2, r2xT);
-
-        const float n2 = n2a - n2b;
-
-        const float numerator = n1 + n2;
-
-        const float d1a = Math::Dot(r1xT, cpair.J1 * r1xT);
-        const float d1b = Math::Dot(r2xT, cpair.J2 * r2xT);
-        const float d1 = d1a + d1b;
-
-        const float denominator = cpair.mSum + d1;
-
-        float lambda = numerator / denominator;
-
-        if (lambda <= 0.0f)
-            return Math::Vec3(0.0f);
-
-        const float friction = sqrtf(frictionA * frictionB);
-
-        if (lambda > cpair.lambda * friction)
-            lambda = cpair.lambda * friction;
-        else if (lambda < -cpair.lambda * friction)
-            lambda = -cpair.lambda * friction;
-
-        return lambda * tangent;
-    }
-
     void PhysicsEngine::ResolveCollisions(RigidBody& bodyA, RigidBody& bodyB, const Math::Vec3& normal, const Math::Vec3& cPointA, const Math::Vec3& cPointB)
     {
-        CollisionPair cpair = {};
+        const Math::Vec3 v1 = bodyA.linearVelocity;
+        const Math::Vec3 v2 = bodyB.linearVelocity;
 
-        cpair.v1 = bodyA.linearVelocity;
-        cpair.v2 = bodyB.linearVelocity;
+        const Math::Vec3 w1 = bodyA.angularVelocity;
+        const Math::Vec3 w2 = bodyB.angularVelocity;
 
-        cpair.w1 = bodyA.angularVelocity;
-        cpair.w2 = bodyB.angularVelocity;
+        const Math::Vec3 J1 = bodyA.inverseInertiaTensor;
+        const Math::Vec3 J2 = bodyB.inverseInertiaTensor;
 
-        cpair.J1 = bodyA.inverseInertiaTensor;
-        cpair.J2 = bodyB.inverseInertiaTensor;
+        const Math::Vec3 r1 = cPointA - bodyA.centreOfMass;
+        const Math::Vec3 r2 = cPointB - bodyB.centreOfMass;
 
-        cpair.r1 = cPointA - bodyA.centreOfMass;
-        cpair.r2 = cPointB - bodyB.centreOfMass;
+        const Math::Vec3 rVelA = v1 + Math::Cross(w1, r1);
+        const Math::Vec3 rVelB = v2 + Math::Cross(w2, r2);
 
-        const Math::Vec3 rVelA = cpair.v1 + Math::Cross(cpair.w1, cpair.r1);
-        const Math::Vec3 rVelB = cpair.v2 + Math::Cross(cpair.w2, cpair.r2);
-
-        cpair.relativeVelocity = rVelB - rVelA;
-        cpair.rVN = Math::Dot(cpair.relativeVelocity, normal);
-
-        // objects moving away from each other
-        if (cpair.rVN > 0.0f)
-            return;
-
-        const Math::Vec3 r1xN = Math::Cross(cpair.r1, normal);
-        const Math::Vec3 r2xN = Math::Cross(cpair.r2, normal);
+        const Math::Vec3 r1xN = Math::Cross(r1, normal);
+        const Math::Vec3 r2xN = Math::Cross(r2, normal);
 
         // clamp between 0 and 1 to avoid unexpected results
         const float e = std::clamp((bodyA.bounciness + bodyB.bounciness) / 2.0f, 0.0f, 1.0f);
         const float n1 = -(1.0f + e);
 
-        const float n2 = Math::Dot(normal, cpair.v1 - cpair.v2);
+        const float n2 = Math::Dot(normal, v1 - v2);
 
-        const float n3a = Math::Dot(cpair.w1, r1xN);
-        const float n3b = Math::Dot(cpair.w2, r2xN);
+        const float n3a = Math::Dot(w1, r1xN);
+        const float n3b = Math::Dot(w2, r2xN);
         const float n3 = n3a - n3b;
 
         const float numerator = n1 * (n2 + n3);
 
         //inverse mass sum
-        cpair.mSum = bodyA.GetInverseMass() + bodyB.GetInverseMass();
+        const float mSum = bodyA.GetInverseMass() + bodyB.GetInverseMass();
 
-        const float d2a = Math::Dot(r1xN, cpair.J1 * r1xN);
-        const float d2b = Math::Dot(r2xN, cpair.J2 * r2xN);
+        const float d2a = Math::Dot(r1xN, J1 * r1xN);
+        const float d2b = Math::Dot(r2xN, J2 * r2xN);
         const float d2 = d2a + d2b;
 
-        const float denominator = cpair.mSum + d2;
+        const float denominator = mSum + d2;
 
-        cpair.lambda = numerator / denominator;
+        const float lambda = numerator / denominator;
 
         // bodies are separating; no collision impulse is needed.
-        if (cpair.lambda >= 0.0f)
+        if (lambda >= 0.0f)
             return;
 
-        const Math::Vec3 impulse = cpair.lambda * normal;
-        //const Math::Vec3 frictionImpulse = CalculateFrictionImpulse(cpair, normal, bodyA.friction, bodyB.friction);
+        const Math::Vec3 impulse = lambda * normal;
 
         if (bodyA.type != BodyType::Static)
         {
-            bodyA.linearVelocity = cpair.v1 + impulse * bodyA.GetInverseMass();
-            bodyA.angularVelocity = cpair.w1 + cpair.lambda * bodyA.inverseInertiaTensor * r1xN;
+            bodyA.linearVelocity = v1 + impulse * bodyA.GetInverseMass();
+            bodyA.angularVelocity = w1 + lambda * bodyA.inverseInertiaTensor * r1xN;
         }
 
         if (bodyB.type != BodyType::Static)
         {
-            bodyB.linearVelocity = cpair.v2 - impulse * bodyB.GetInverseMass();
-            bodyB.angularVelocity = cpair.w2 - cpair.lambda * bodyB.inverseInertiaTensor * r2xN;
+            bodyB.linearVelocity = v2 - impulse * bodyB.GetInverseMass();
+            bodyB.angularVelocity = w2 - lambda * bodyB.inverseInertiaTensor * r2xN;
         }
     }
 
