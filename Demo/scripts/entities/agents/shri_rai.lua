@@ -1,6 +1,8 @@
 local emotions;
 local piss;
--- local nav;
+local nav;
+
+local target;
 -- local ...
 
 function init()
@@ -14,7 +16,17 @@ function init()
 
     rb = entity:add_rigid();
     rb.type = BodyType.Dynamic;
+    rb.rot_lock = BVector3.new(true, true, true);
     entity:add_box_collider(Vector3.new(0.9, 1.75, 0.3));
+
+    entity:add_script("navigation", "components/navigation.lua");
+    nav = entity:get_script("navigation");
+
+    nav.set_state("wander");
+
+    nav.MOVE_SPEED = 0.025;
+    nav.ROTATE_SPEED = 2.5;
+    nav.BRAKE_FORCE = 1.0;
 end
 
 local pissing = false;
@@ -27,7 +39,13 @@ function tick()
         pos.y = trans.pos.y - 0.8;
         pos.z = trans.pos.z;
 
-        piss.piss(pos, trans.forward);
+        local forward = Vector3.new();
+
+        forward.x = trans.forward.x;
+        forward.y = trans.forward.y;
+        forward.z = trans.forward.z;
+
+        piss.piss(pos + (forward * 0.3), forward);
         -- piss.piss(pos, trans.forward * -3);
     end
 end

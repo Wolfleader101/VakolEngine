@@ -6,7 +6,7 @@ local y_storage;
 
 function init()
     local tag = entity:get_tag();
-    y_storage = randomFloat(-100, -20);
+    y_storage = randomFloat(-1000, -100);
     for i = 1, MAX_PISS do
         piss_particle = scene:create_entity(tag .. " piss " .. i, "");
 

@@ -1,12 +1,12 @@
 function init()
     scene:create_entity("Player", "entities/player/noclip.lua")
 
-    scene:create_entity("Test Entity", "entities/test/multi_script.lua");
-    scene:create_entity("Nav Test", "entities/test/nav_test.lua");
+    --scene:create_entity("Test Entity", "entities/test/multi_script.lua");
+    --scene:create_entity("Nav Test", "entities/test/nav_test.lua");
     -- scene:create_entity("Player", "entities/player/phys_player.lua")
 
-    -- scene:create_entity("Digital Twin", "entities/worlds/digital_twin.lua");
-    -- scene:create_entity("290 World", "entities/worlds/290_world.lua");
+    scene:create_entity("Digital Twin", "entities/worlds/digital_twin.lua");
+    scene:create_entity("290 World", "entities/worlds/290_world.lua");
 
     -- AI
 
@@ -28,11 +28,11 @@ function init()
 
     local big_shri = scene:create_entity("big shri", "");
     big_shri:get_transform().pos = Vector3.new(0, 5, -205);
-    big_shri:get_transform().rot = Vector3.new(-20, 180, 0);
+    big_shri:get_transform().rot.x = 20;
     big_shri:add_model("assets/models/ai/shri/shri.fbx", 1);
 
     -- scene:create_entity("Cube", "entities/test/cube.lua");
-    add_floor();
+    --add_floor();
 
     -- phys_objs();
     -- falling_objs();

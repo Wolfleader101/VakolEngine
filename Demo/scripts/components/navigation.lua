@@ -31,6 +31,7 @@ function wrap_angle(angle)
 end
 
 function set_state(new_state)
+    print(new_state);
     state = new_state;
 end
 
@@ -58,7 +59,7 @@ function look_at(target, away)
     target_direction.y = 0.0;
 
     local prevRotY = rotation.y;
-    
+
     local targetAngle = math.deg(atan2(target_direction.x, target_direction.z));
 
     local angleDiff = (targetAngle - prevRotY);
@@ -126,24 +127,24 @@ end
 
 function tick()
     trans = entity:get_transform();
-    
+
     position = trans.pos;
     rotation = trans.rot;
 
     if (Input:get_key_down(KEYS["KEY_1"])) then
-       set_state("flee");
+        set_state("flee");
     end
 
     if (Input:get_key_down(KEYS["KEY_2"])) then
-       set_state("chase");
+        set_state("chase");
     end
 
     if (Input:get_key_down(KEYS["KEY_3"])) then
-       set_state("wander");
+        set_state("wander");
     end
 
     if (Input:get_key_down(KEYS["KEY_4"])) then
-       set_state("idle");
+        set_state("idle");
     end
 
     if (state == "wander") then
