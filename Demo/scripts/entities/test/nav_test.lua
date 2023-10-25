@@ -24,3 +24,9 @@ function init()
 
     nav.set_state("chase");
 end
+
+function tick()
+    target = scene:get_camera():get_pos();
+    nav = entity:get_script("navigation");
+    nav.TARGET = target;
+end
