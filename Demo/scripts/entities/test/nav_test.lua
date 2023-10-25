@@ -13,9 +13,13 @@ function init()
 
     nav = entity:get_script("navigation");
 
-    target = Vector3.new(-80, 0, 80);
+    target = scene:get_camera():get_pos();
 
-    nav.DESTINATION = target;
+    nav.TARGET = target;
+    nav.MAX_DISTANCE = 0.6;
 
-    nav.set_state("flee");
+    nav.MOVE_SPEED = 0.05;
+    nav.BRAKE_FORCE = 1.0;
+
+    nav.set_state("wander");
 end
