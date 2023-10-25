@@ -60,6 +60,7 @@ namespace Vakol
         bool isColliding = false;
 
         RigidBody* parentBody = nullptr;
+        RigidBody* otherBody = nullptr;
     };
 
     /**

@@ -207,6 +207,22 @@ namespace Vakol
                     // detect collisions
                     m_physicsEngine.DetectCollisions(activeScene.GetPhysicsScene());
 
+                    // call script on_contact functions
+                    activeScene.GetEntityList().Iterate<Components::Transform, RigidBody, ScriptComp>(
+                        [&](Components::Transform& transform, RigidBody& rb, ScriptComp& scriptComp) {
+                            if (!rb.collisionData->isColliding)
+                                return;
+
+                            std::shared_ptr<Vakol::Entity> otherEnt =
+                                activeScene.GetEntity(rb.collisionData->otherBody->tag);
+
+                            for (auto& script : scriptComp.scripts)
+                            {
+
+                                m_scriptEngine.PhysContactCallback(script, otherEnt);
+                            }
+                        });
+
                     // Decrease the accumulated time
                     physicsAccumulator -= m_physicsEngine.GetTimeStep();
                 }

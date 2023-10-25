@@ -6,7 +6,9 @@ function init()
 
 	rb.type = BodyType.Dynamic;
 
-	entity:add_box_collider(Vector3.new(0.6, 1.2, 0.9));
+    entity:add_box_collider(Vector3.new(0.6, 1.2, 0.9));
+    
+    entity:add_script("bin contents", "components/binContents.lua");
         
     entity:add_script("affordance", "components/affordance.lua")
 

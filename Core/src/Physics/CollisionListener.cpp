@@ -40,6 +40,10 @@ namespace Vakol
 
             rb1.collisionData->isColliding = true;
             rb2.collisionData->isColliding = true;
+
+            rb1.collisionData->otherBody = &rb2;
+            rb2.collisionData->otherBody = &rb1;
+
             rb1.isSleeping = false;
             rb2.isSleeping = false;
 
