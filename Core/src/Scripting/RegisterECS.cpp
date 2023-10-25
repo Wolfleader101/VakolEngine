@@ -19,7 +19,6 @@ namespace Vakol
 
         entity_type.set_function("get_tag", [](Entity* ent) { return ent->GetComponent<Components::Tag>().tag; });
         entity_type.set_function("get_transform", &Entity::GetComponent<Components::Transform>);
-        entity_type.set_function("get_fsm", &Entity::GetComponent<Components::FSM>);
 
         entity_type.set_function(
             "add_model",

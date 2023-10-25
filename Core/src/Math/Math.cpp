@@ -288,6 +288,11 @@ namespace Vakol::Math
         return glm::scale(mat, vec);
     }
 
+    Vec3 Rotate(const Quat& quat, const Vec3& vec)
+    {
+        return quat * vec;
+    }
+
     Mat4 Rotate(const Mat4& mat, const float angle, const Vec3& axis)
     {
         return glm::rotate(mat, angle, axis);

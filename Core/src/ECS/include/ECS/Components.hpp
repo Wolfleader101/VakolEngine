@@ -56,10 +56,6 @@ namespace Vakol::Components
 
         Math::Vec3 scale = Math::Vec3(1.0f, 1.0f, 1.0f); /**< XYZ scale */
 
-        Math::Vec3 forward = Math::Vec3(0.0f, 0.0f, -1.0f); // forward vector relative to orientation
-
-        Math::Mat4 transformMatrix = Math::Mat4(1.0f);
-
         template <class Archive>
         void serialize(Archive& ar)
         {
@@ -156,80 +152,6 @@ namespace Vakol::Components
 
         Math::Vec4 LIGHT_DIRECTION = Math::Vec4(0.0f);
         Math::Vec4 LIGHT_POSITION = Math::Vec4(0.0f);
-    };
-
-    /**
-     * @brief Struct representing a finite state machine that can be controlled in lua.
-     */
-    struct FSM
-    {
-        /**
-         * @brief Default constructor for the FSM struct.
-         */
-        FSM() = default;
-
-        // TODO probably dont want to store a table in FSM
-        FSM(LuaTable table);
-
-        // The current state of the FSM.
-        std::string currentState;
-
-        // table of FSM states
-        LuaTable states;
-
-        // SolTableData data;  ///< The data to be saved or loaded.
-
-        /**
-         * @brief Adds a new state to the FSM.
-         * @param stateName The name of the new state.
-         * @param callback The function to be executed when this state is active.
-         */
-        void AddState(const std::string& stateName, LuaFunction& callback);
-
-        /**
-         * @brief Changes the current state of the FSM.
-         * @param stateName The name of the state to change to.
-         */
-        void ChangeState(const std::string& stateName);
-
-        /**
-         * @brief Returns the current state of the FSM.
-         * @return A string representing the current state.
-         */
-        std::string GetState();
-
-        /**
-         * @brief Updates the state of the FSM.
-         */
-        void Update();
-
-        /**
-         * @brief Saves the current state of the FSM.
-         * @param ar Archive to save the data to.
-         */
-        template <class Archive>
-        void save(Archive& ar) const
-        {
-            // ar(cereal::make_nvp("Current State", currentState));
-
-            // SolTableData temp;
-            // ConvertSolToMap(states, temp);
-
-            // ar(temp);
-        }
-
-        /**
-         * @brief Loads the state of the FSM from an archive.
-         * @param ar Archive to load the data from.
-         */
-        template <class Archive>
-        void load(Archive& ar)
-        {
-            // ar(cereal::make_nvp("Current State", currentState));
-
-            // data.data.clear();
-            // ar(data);
-        }
     };
 
 } // namespace Vakol::Components
