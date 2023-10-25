@@ -200,7 +200,6 @@ namespace Vakol
         material->Get(AI_MATKEY_COLOR_SPECULAR, specular);
         material->Get(AI_MATKEY_COLOR_EMISSIVE, emissive);
         material->Get(AI_MATKEY_SHININESS, properties.shininess);
-        material->Get(AI_MATKEY_SHININESS_STRENGTH, properties.shininess_strength);
         material->Get(AI_MATKEY_OPACITY, properties.opacity);
 
         properties.ambient_color = ToVec4(ambient);
@@ -209,7 +208,7 @@ namespace Vakol
         properties.emissive_color = ToVec4(emissive);
 
         if (properties.shininess < 1.0f)
-            properties.shininess = 1.0f;
+            properties.shininess = 32.0f;
 
         auto&& diffuse_maps = ExtractTextures(scene, material, aiTextureType_DIFFUSE);
         auto&& specular_maps = ExtractTextures(scene, material, aiTextureType_SPECULAR);
