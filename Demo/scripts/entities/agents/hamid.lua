@@ -15,6 +15,8 @@ local yDifference = nil;
 
 local distance = nil;
 
+local currentFear = nil;
+
 local interactDistance = 5.0;
 local minInteractDistance = 0.5;
 
@@ -97,7 +99,10 @@ function rubbish_behaviour()
                 if ((distance < minInteractDistance) and yDifference < 0.5) then
                     -- DEPOSIT rubbish
 
+                    emotions.add_emotion_value(emotions.JOY, 0.2);
+
                     yDifference = nil;
+                    currentFear = nil;
 
                     travellingToObject = false;
                     holdingRubbish = false;
@@ -114,11 +119,27 @@ function tick()
     -- Check if the AI is wandering around
     if (wandering ==  true) then
         -- WANDER AROUND
+
+        -- Check if the AI has emotions
+        if (emotions ~= nil) then
+            -- Check if the fear of the AI is above a certian amount before performing an action
+            if (emotions.get_emotion(emotions.FEAR) ~= nil and emotions.get_emotion(emotions.FEAR) > 0.1) then
+                -- AVOID AI
+            end
+        end
     else
         -- Check if the AI has emotions
         if (emotions ~= nil) then
             -- Check if the fear of the AI is below a certian amount before performing an action
-            if (emotions.get_emotion(emotions.FEAR)~= nil and emotions.get_emotion(emotions.FEAR) < 0.1) then
+            if (emotions.get_emotion(emotions.FEAR) ~= nil and emotions.get_emotion(emotions.FEAR) < 0.1) then
+                -- AI will be wandering before he hits the rubbish_behaviour, so grab the current fear value and set it
+                if (wandering == true) then
+                    currentFear = emotions.get_emotion(emotions.FEAR);
+                end
+
+                -- This will make sure that while he is doing his rubbish behaviour he will stay at his current fear level
+                emotions.set_emotion(emotions.FEAR, currentFear);
+            
                 rubbish_behaviour();
             end
         end
