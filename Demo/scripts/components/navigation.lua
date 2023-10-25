@@ -2,9 +2,10 @@ TARGET = Vector3.new();
 MAX_DISTANCE = 0.0;
 
 MOVE_SPEED = 0.0;
+ROTATE_SPEED = 0.0;
 BRAKE_FORCE = 0.0;
 
-local state = "wander"; -- states: "flee", "chase", "wander", "wait"
+local state = "chase"; -- states: "flee", "chase", "wander", "wait"
 
 local can_move = false;
 
@@ -19,8 +20,22 @@ local wander_target = Vector3.new();
 local wander_timer = 0.0;
 local wander_duration = 10.0;
 
+function wrap_angle(angle)
+    if (angle > 180) then
+        angle = angle - 360;
+    elseif (angle < -180) then
+        angle = angle + 360;
+    end
+
+    return angle
+end
+
 function set_state(new_state)
     state = new_state;
+end
+
+function get_state()
+    return state;
 end
 
 function gen_random_target()
@@ -31,6 +46,26 @@ function gen_random_target()
     local z = math.random(minZ, maxZ);
 
     return Vector3.new(x, y, z);
+end
+
+function look_at(target, away)
+    if (not away) then
+        target_direction = normalize(target - position);
+    else
+        target_direction = normalize(position - target)
+    end
+
+    target_direction.y = 0.0;
+
+    local prevRotY = rotation.y;
+    
+    local targetAngle = math.deg(atan2(target_direction.x, target_direction.z));
+
+    local angleDiff = (targetAngle - prevRotY);
+
+    local factor = math.min(1, ROTATE_SPEED * Time.delta_time);
+
+    rotation.y = lerp(prevRotY, prevRotY + angleDiff, factor);
 end
 
 function init()
@@ -48,26 +83,16 @@ function init()
     wander_target = gen_random_target();
 end
 
-function flee(target)
+function flee()
     can_move = true;
 
-    local target_direction = normalize(position - target);
-    target_direction.y = 0.0;
-
-    local targetAngle = math.deg(atan2(target_direction.x, target_direction.z));
-
-    rotation.y = targetAngle;
+    look_at(TARGET, true);
 end
 
-function chase(target)
+function chase()
     can_move = true;
 
-    local target_direction = normalize(target - position);
-    target_direction.y = 0.0;
-
-    local targetAngle = math.deg(atan2(target_direction.x, target_direction.z));
-
-    rotation.y = targetAngle;
+    look_at(TARGET, false);
 end
 
 function wander()
@@ -80,16 +105,13 @@ function wander()
         wander_timer = 0.0;
     end
 
-    target_direction = normalize(wander_target - position);
-    target_direction.y = 0.0;
-    
-    local targetAngle = math.deg(atan2(target_direction.x, target_direction.z));
-
-    rotation.y = targetAngle;
+    look_at(wander_target);
 end
 
 function idle()
     can_move = false;
+
+    agent.linearVelocity = Vector3.new();
 end
 
 function move(force)
@@ -102,13 +124,6 @@ function accelerate()
     move(movement);
 end
 
-function brake()
-    local brakeDir = agent.linearVelocity:normalize():negate();
-    local brakeForce = brakeDir * BRAKE_FORCE;
-
-    move(brakeForce);
-end
-
 function update()
     trans = entity:get_transform();
     
@@ -117,12 +132,30 @@ function update()
 
     forward = trans.forward;
 
+    TARGET = scene:get_camera():get_pos();
+
+    if (Input:get_key_down(KEYS["KEY_1"])) then
+        set_state("flee");
+    end
+
+    if (Input:get_key_down(KEYS["KEY_2"])) then
+        set_state("chase");
+    end
+
+    if (Input:get_key_down(KEYS["KEY_3"])) then
+        set_state("wander");
+    end
+
+    if (Input:get_key_down(KEYS["KEY_4"])) then
+        set_state("idle");
+    end
+
     if (state == "wander") then
         wander();
     elseif (state == "flee") then
-        flee(TARGET);
+        flee();
     elseif (state == "chase") then
-        chase(TARGET);
+        chase();
     elseif (state == "idle") then
         idle();
     end
@@ -130,16 +163,12 @@ end
 
 function phys_update()
     if (can_move) then
-        --local speed = agent.linearVelocity:length();
-
         local distance = target_direction:length_sq();
-
-        print("distance to target: " .. distance);
 
         if (distance > MAX_DISTANCE) then
             accelerate();
         else
-            brake();
+            set_state("idle");
         end
     end
 end
