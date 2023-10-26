@@ -154,7 +154,7 @@ namespace Vakol
                 rb2.sleepCounter = 0;
             }
 
-            m_onCollisionCallback(rb1, rb2);
+            ///m_onCollisionCallback(rb1, rb2);
         }
     }
 

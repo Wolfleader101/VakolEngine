@@ -91,6 +91,29 @@ namespace Vakol
                                    [](Rendering::Assets::Material& material, const Math::Vec4& specular) {
                                        material.properties.specular_color = specular;
                                    });
+
+        material_type.set_function("set_emissive_color",
+                                   [](Rendering::Assets::Material& material, const Math::Vec4& emissive) {
+                                       material.properties.emissive_color = emissive;
+                                   });
+
+        material_type.set_function("enable_lighting", [](Rendering::Assets::Material& material, const bool enabled) {
+            material.properties.use_lighting = enabled;
+        });
+
+        material_type.set_function("enable_textures", [](Rendering::Assets::Material& material, const bool enabled) {
+            material.properties.use_textures = enabled;
+        });
+
+        material_type.set_function("set_light_position",
+                                   [](Rendering::Assets::Material& material, const Math::Vec3& position) {
+                                       material.properties.light_position = position;
+                                   });
+
+        material_type.set_function("set_light_direction",
+                                   [](Rendering::Assets::Material& material, const Math::Vec3& direction) {
+                                       material.properties.light_direction = direction;
+                                   });
     }
 
     void RegisterShader(sol::state& lua)
