@@ -295,6 +295,9 @@ namespace Vakol
         std::shared_ptr<Entity> ent1 = m_sceneManager.GetActiveScene().GetEntity(rb1.tag);
         std::shared_ptr<Entity> ent2 = m_sceneManager.GetActiveScene().GetEntity(rb2.tag);
 
+        if (!ent1 || !ent2 || rb1.tag == "" || rb2.tag == "")
+            return;
+
         if (ent1->HasComponent<ScriptComp>())
             for (auto& script : ent1->GetComponent<ScriptComp>().scripts)
             {

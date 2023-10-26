@@ -3,6 +3,7 @@
 
 #include "ECS/Components.hpp" //! EWWW TODO REMOVE THIS
 #include "Logger/Logger.hpp"
+
 namespace Vakol
 {
     constexpr float SLEEP_LINEAR_THRESHOLD = 0.5f;
@@ -22,7 +23,17 @@ namespace Vakol
     {
         for (unsigned int p = 0; p < data.getNbContactPairs(); p++)
         {
+
             const ContactPair& contactPair = data.getContactPair(p);
+
+            if (contactPair.getNbContactPoints() == 0u)
+            {
+                continue;
+            }
+
+            // rp3d::CollisionBody* body1 =
+            // contactPair.mWorld.getCollisionBody(contactPair.mContactPair.body1Entity.id); rp3d::CollisionBody* body2
+            // = contactPair.mWorld.getCollisionBody(contactPair.mContactPair.body2Entity.id);
 
             rp3d::CollisionBody* body1 = contactPair.getBody1();
             rp3d::CollisionBody* body2 = contactPair.getBody2();
@@ -43,16 +54,20 @@ namespace Vakol
             RigidBody& rb1 = *body1Data->parentBody;
             RigidBody& rb2 = *body2Data->parentBody;
 
-            rb1.collisionData->isColliding = true;
-            rb2.collisionData->isColliding = true;
+            if (rb1.collisionData)
+            {
+                rb1.collisionData->isColliding = true;
+                rb1.collisionData->otherBody = &rb2;
+            }
 
-            rb1.collisionData->otherBody = &rb2;
-            rb2.collisionData->otherBody = &rb1;
+            if (rb2.collisionData)
+            {
+                rb2.collisionData->isColliding = true;
+                rb2.collisionData->otherBody = &rb1;
+            }
 
             rb1.isSleeping = false;
             rb2.isSleeping = false;
-
-            m_onCollisionCallback(rb1, rb2);
 
             Math::Vec3 averageLocalPoint1(0.0f, 0.0f, 0.0f);
             Math::Vec3 averageLocalPoint2(0.0f, 0.0f, 0.0f);
@@ -138,6 +153,8 @@ namespace Vakol
             {
                 rb2.sleepCounter = 0;
             }
+
+            m_onCollisionCallback(rb1, rb2);
         }
     }
 
