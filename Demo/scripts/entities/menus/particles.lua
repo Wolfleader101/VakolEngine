@@ -24,7 +24,7 @@ function init()
         --mesh.material:set_diffuse_color(Vector4.new(i / MAX_PARTICLE, MAX_PARTICLE / i, i / MAX_PARTICLE, 1));
 
         local rb = particle:add_rigid();
-        particle:add_sphere_collider(0.025);
+        particle:add_sphere_collider(0.15);
         particles[i] = particle;
         rb.hasGravity = false;
         rb.is_sleeping = true;
