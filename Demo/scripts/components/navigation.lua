@@ -5,7 +5,7 @@ MOVE_SPEED = 0.0;
 ROTATE_SPEED = 0.0;
 BRAKE_FORCE = 0.0;
 
-local state = "chase"; -- states: "flee", "chase", "wander", "wait"
+STATE = "chase"; -- states: "flee", "chase", "wander", "wait"
 
 local can_move = false;
 
@@ -31,15 +31,15 @@ function wrap_angle(angle)
 end
 
 function set_state(new_state)
-    state = new_state;
+    STATE = new_state;
 end
 
 function get_state()
-    return state;
+    return STATE;
 end
 
 function gen_random_target()
-    local minX, maxX, minZ, maxZ = -80, 80, -80, 80;
+    local minX, maxX, minZ, maxZ = -20, 20, -20, 20;
 
     local x = math.random(minX, maxX);
     local y = position.y;
@@ -111,7 +111,7 @@ end
 function idle()
     can_move = false;
 
-    agent.linearVelocity = Vector3.new();
+    --agent.linearVelocity = Vector3.new();
 end
 
 function move(force)
@@ -146,20 +146,20 @@ function tick()
        set_state("idle");
     end
 
-    if (state == "wander") then
+    if (STATE == "wander") then
         wander();
-    elseif (state == "flee") then
+    elseif (STATE == "flee") then
         flee();
-    elseif (state == "chase") then
+    elseif (STATE == "chase") then
         chase();
-    elseif (state == "idle") then
+    elseif (STATE == "idle") then
         idle();
     end
 end
 
 function phys_update()
     if (can_move) then
-        local distance = target_direction:length_sq();
+        local distance = target_direction:length();
 
         if (distance > MAX_DISTANCE) then
             accelerate();
