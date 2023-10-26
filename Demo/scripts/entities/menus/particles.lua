@@ -1,4 +1,7 @@
 local particles = {}
+local rigids = {}
+local transforms = {}
+
 local index = 1;
 local MAX_PARTICLE <const> = 300;
 
@@ -10,10 +13,10 @@ function init()
     for i = 1, MAX_PARTICLE do
         particle = scene:create_entity(" particle " .. i, "");
 
-        local particle_trans = particle:get_transform();
-        particle_trans.pos = Vector3.new(i, y_storage, i);
+        transforms[i] = particle:get_transform();
+        transforms[i].pos = Vector3.new(i, y_storage, i);
         -- particle_trans.scale = Vector3.new(0.05, 0.05, 0.05);
-        particle_trans.scale = Vector3.new(0.3, 0.3, 0.3);
+        transforms[i].scale = Vector3.new(0.3, 0.3, 0.3);
 
         local model = particle:add_model("coreAssets/models/sphere.obj", 1);
         local mesh = model:get_mesh(0);
@@ -23,11 +26,11 @@ function init()
         mesh.material:set_diffuse_color(Vector4.new(randomFloat(0, 1), randomFloat(0, 1), randomFloat(0, 1), 1));
         --mesh.material:set_diffuse_color(Vector4.new(i / MAX_PARTICLE, MAX_PARTICLE / i, i / MAX_PARTICLE, 1));
 
-        local rb = particle:add_rigid();
+        rigids[i] = particle:add_rigid();
         particle:add_sphere_collider(0.15);
         particles[i] = particle;
-        rb.hasGravity = false;
-        rb.is_sleeping = true;
+        rigids[i].hasGravity = false;
+        rigids[i].is_sleeping = true;
     end
 end
 
@@ -37,14 +40,10 @@ end
 
 function shoot_particle(pos, forward)
     index = (index % MAX_PARTICLE) + 1;
-    particle = particles[index];
-    particle:get_transform().pos = pos;
-
-    rb = particle:get_rigid();
+    transforms[index].pos = pos;
 
     randVec = Vector3.new(randomFloat(0, 4), randomFloat(0, 4), randomFloat(0, 4));
-    --rb:apply_impulse(forward);
-    rb:apply_impulse(forward + randVec);
+    rigids[index]:apply_impulse(forward + randVec);
 end
 
 function clean()

@@ -1,16 +1,17 @@
-function init()
+local nav;
 
+function init()
     entity:add_model("assets/models/ai/hong/hong.fbx", 1);
 
     local trans = entity:get_transform();
-    trans.pos = Vector3.new(-10, 3, -10); 
+    trans.pos = Vector3.new(-10, 3, -10);
 
     trans.scale = Vector3.new(0.015, 0.015, 0.015);
 
     entity:add_script("emotions", "components/emotion.lua");
     local emotions = entity:get_script("emotions");
 
-    
+
     local rb = entity:add_rigid();
     rb.rot_lock = BVector3.new(true, true, true);
     rb.type = BodyType.Dynamic;
@@ -30,7 +31,6 @@ function init()
     nav.BRAKE_FORCE = 1.0;
 
     nav.set_state("chase");
-
 end
 
 function tick()
@@ -39,7 +39,7 @@ function tick()
     -- nav.TARGET = target;
 
     bin_1 = get_nearby_bins(entity, 100)[1];
-    if(bin_1 ~= nil) then
+    if (bin_1 ~= nil) then
         nav.TARGET = bin_1:get_transform().pos;
     end
     -- print_err(get_nearby_bins(entity, 100)[1]:get_tag())
@@ -50,7 +50,7 @@ function on_contact(other_ent)
 
     if (affordance ~= nil and affordance.AFFORDANCES.HOLDING == 1.0) then
         print(other_ent:get_tag() .. " Affords Holding")
-        if(other_ent:get_script("interactable") ~= nil) then
+        if (other_ent:get_script("interactable") ~= nil) then
             other_ent:get_script("interactable").interact(entity);
         end
     end

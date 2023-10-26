@@ -4,6 +4,7 @@ local nav;
 
 local target;
 
+local rb;
 
 local states <const> = { "flee", "chase", "wander", "idle" };
 
@@ -39,22 +40,21 @@ function init()
     nav.TARGET = piss_locations[piss_index];
 
     print(nav.TARGET.x .. " " .. nav.TARGET.y .. " " .. nav.TARGET.z)
-    nav.MAX_DISTANCE = 1;
+    nav.MAX_DISTANCE = 0.1;
     nav.set_state("chase");
+    nav.look_at(nav.TARGET, true);
 
 
     --nav.set_state(states[math.random(4)]);
 end
 
 local pos;
---local pissing = false;
-local pissTimer <const> = 300; -- 5 seconds
+local pissTimer <const> = 600; -- 10 seconds
 local pissTicks = 0;
+
 function tick()
-    --check emotions before (once u got that)
-    --pos = entity:get_transform().pos;
     if (nav.get_state() == "idle") then
-        print("here");
+        rb.linearVelocity = Vector3.new();
         pissTicks = pissTicks + 1;
         if (pissTicks < pissTimer) then
             nav.look_at(piss_locations[piss_index]);
@@ -63,21 +63,9 @@ function tick()
             nav.set_state("wander");
             pissTicks = 0;
         end
+    else
+
     end
-end
-
-function update()
-    -- if (Input:get_key(KEYS["KEY_Z"])) then
-    --     pissing = true;
-    -- elseif (Input:get_key(KEYS["KEY_X"])) then
-    --     piss.clean();
-    -- else
-    --     pissing = false;
-    -- end
-
-    -- -- if (Input:get_key(KEYS["KEY_X"])) then
-    -- --     piss.clean();
-    -- -- end
 end
 
 function shoot_piss()

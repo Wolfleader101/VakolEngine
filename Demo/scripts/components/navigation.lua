@@ -5,7 +5,7 @@ MOVE_SPEED = 0.0;
 ROTATE_SPEED = 0.0;
 BRAKE_FORCE = 0.0;
 
-local state = "chase"; -- states: "flee", "chase", "wander", "wait"
+STATE = "chase"; -- states: "flee", "chase", "wander", "wait"
 
 local can_move = false;
 
@@ -144,7 +144,8 @@ end
 
 function phys_update()
     if (can_move) then
-        local distance = target_direction:length_sq();
+        local distance = target_direction:length();
+        --print(distance);
 
         if (distance > MAX_DISTANCE) then
             accelerate();

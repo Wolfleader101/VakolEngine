@@ -10,9 +10,16 @@ function init()
 
     -- AI
 
+    scene.globals.emotional_entities = {};
+
     local shri = scene:create_entity("shri", "entities/agents/shri_rai.lua");
-    shri:get_transform().pos = Vector3.new(-10, 5, -10);
+    shri:get_transform().pos = Vector3.new(-20, 5, -20);
     shri:get_transform().scale = Vector3.new(0.015, 0.015, 0.015);
+    scene.globals.emotional_entities[1] = shri;
+
+    --local hong = scene:create_entity("Hong", "entities/agents/hong.lua");
+    --scene.globals.emotional_entities[2] = hong;
+
 
     -- local test = scene:create_entity("bob", "");
     -- test:add_model("assets/models/agents/bob.glb", 0.01);
@@ -31,7 +38,7 @@ function init()
     big_shri:get_transform().rot.x = 20;
     big_shri:add_model("assets/models/ai/shri/shri.fbx", 1);
 
-    scene:create_entity("Hong", "entities/agents/hong.lua");
+
     -- scene:create_entity("Cube", "entities/test/cube.lua");
     --add_floor();
 
