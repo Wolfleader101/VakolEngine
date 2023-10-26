@@ -50,6 +50,16 @@ function on_contact(other_ent)
     --     nav = entity:get_script("navigation");
     --     nav.set_state("flee");
     -- end
+    -- print(other_ent:get_tag())
+
+    local affordance = other_ent:get_script("affordance");
+
+    if(affordance ~= nil and affordance.AFFORDANCES.HOLDING == 1.0) then
+        print("AFFORDS HOLDING")
+    end
+    if(other_ent:get_script("interactable") ~= nil) then
+        other_ent:get_script("interactable").interact(other_ent);
+    end
 end
 
 function get_nearby_bins(origin_entity, trigger_distance)

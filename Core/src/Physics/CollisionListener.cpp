@@ -13,6 +13,11 @@ namespace Vakol
     void Resolution(RigidBody& rb1, RigidBody& rb2, Math::Vec3& normal, Math::Vec3& localPoint1,
                     Math::Vec3& localPoint2);
 
+    void CollisionListener::setOnCollisionCallback(std::function<void(RigidBody&, RigidBody&)> callback)
+    {
+        m_onCollisionCallback = callback;
+    }
+
     void CollisionListener::onContact(const rp3d::CollisionCallback::CallbackData& data)
     {
         for (unsigned int p = 0; p < data.getNbContactPairs(); p++)
@@ -46,6 +51,8 @@ namespace Vakol
 
             rb1.isSleeping = false;
             rb2.isSleeping = false;
+
+            m_onCollisionCallback(rb1, rb2);
 
             Math::Vec3 averageLocalPoint1(0.0f, 0.0f, 0.0f);
             Math::Vec3 averageLocalPoint2(0.0f, 0.0f, 0.0f);

@@ -29,6 +29,8 @@ namespace Vakol
 
         void DestroyRigidBody(RigidBody& rigidBody);
 
+        void setOnCollisionCallback(std::function<void(RigidBody&, RigidBody&)> callback);
+
         /**
          * @brief Performs a raycast in the scene from a specified origin in a given direction, up to a maximum
          * distance.
