@@ -38,7 +38,7 @@ namespace Vakol
         m_world->setEventListener(&m_collisionListener);
     }
 
-        void PhysicsScene::setOnCollisionCallback(std::function<void(RigidBody&, RigidBody&)> callback)
+    void PhysicsScene::setOnCollisionCallback(std::function<void(RigidBody&, RigidBody&)> callback)
     {
         m_collisionListener.setOnCollisionCallback(callback);
     }
