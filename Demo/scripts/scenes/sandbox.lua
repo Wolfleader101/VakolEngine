@@ -31,6 +31,7 @@ function init()
     big_shri:get_transform().rot.x = 20;
     big_shri:add_model("assets/models/ai/shri/shri.fbx", 1);
 
+    scene:create_entity("Hong", "entities/agents/hong.lua");
     -- scene:create_entity("Cube", "entities/test/cube.lua");
     --add_floor();
 
