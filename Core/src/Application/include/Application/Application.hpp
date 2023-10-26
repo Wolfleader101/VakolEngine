@@ -258,6 +258,8 @@ namespace Vakol
          */
         bool OnMouseButtonReleased(MouseButtonReleasedEvent& mev);
 
+        void OnCollision(RigidBody& rb1, RigidBody& rb2);
+
         /**
          * @brief load the game config
          *

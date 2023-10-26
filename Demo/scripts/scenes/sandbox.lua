@@ -1,8 +1,6 @@
 function init()
     scene:create_entity("Player", "entities/player/noclip.lua")
 
-    scene:create_entity("Test Entity", "entities/test/multi_script.lua");
-    scene:create_entity("Nav Test", "entities/test/nav_test.lua");
     -- scene:create_entity("Player", "entities/player/phys_player.lua")
 
     scene:create_entity("Digital Twin", "entities/worlds/digital_twin.lua");
@@ -17,6 +15,7 @@ function init()
     scene:generate_skybox(faces);
 
 
+    scene:create_entity("Hong", "entities/agents/hong.lua");
     -- scene:create_entity("Cube", "entities/test/cube.lua");
     -- add_floor();
 
