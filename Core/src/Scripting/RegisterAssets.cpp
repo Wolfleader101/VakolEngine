@@ -50,6 +50,16 @@ namespace Vakol
 
                                     return model.meshes.at(0);
                                 });
+
+        model_type.set_function("get_half_extents",
+                                [](const Rendering::Assets::Model& model, const int index) -> Math::Vec3 {
+                                    if (model.meshes.size() > index)
+                                        return model.meshes.at(index).bounds.halfExtents;
+
+                                    VK_ERROR("Unable to fetch half extents at index: {0}", index);
+
+                                    return model.meshes.at(0).bounds.halfExtents;
+                                });
     }
 
     void RegisterMesh(sol::state& lua)

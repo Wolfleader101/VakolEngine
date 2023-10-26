@@ -53,6 +53,10 @@ struct Light
 
 uniform Material material;
 
+uniform vec3 LIGHT_DIRECTION;
+
+uniform vec2 UV_OFFSET = vec2(0.0);
+
 uniform float AMBIENT_STRENGTH = 0.2;
 uniform float SPECULAR_STRENGTH = 0.3;
 
@@ -76,7 +80,7 @@ vec4 BlinnPhong(const vec3 normal, const vec4 color)
 
 void main()
 {
-    vec4 color = texture(material.diffuse_map, fs_in.TexCoords);
+    vec4 color = texture(material.diffuse_map, fs_in.TexCoords + UV_OFFSET);
 
     if (!material.use_textures)
         color = material.diffuse_color;

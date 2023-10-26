@@ -49,7 +49,7 @@ namespace Vakol
         return {v.r, v.g, v.b, 1.0f};
     }
 
-    static Math::Vec3 ToVec3(aiVector3D& v)
+    static Math::Vec3 ToVec3(const aiVector3D& v)
     {
         return {v.x, v.y, v.z};
     }
@@ -149,8 +149,17 @@ namespace Vakol
 
         const auto& material = ProcessMaterial(scene, scene.mMaterials[mesh.mMaterialIndex]);
 
-        return {Rendering::GenerateID(), mesh.mName.C_Str(),  std::move(vertices),
-                std::move(indices),      std::vector<Bone>(), material};
+        Mesh pMesh = {Rendering::GenerateID(),
+                     mesh.mName.C_Str(),
+                     std::move(vertices),
+                     std::move(indices),
+                     std::vector<Bone>(),
+                     material,
+                      {ToVec3(mesh.mAABB.mMin), ToVec3(mesh.mAABB.mMax), Math::Vec3(0.0f)}};
+
+        pMesh.bounds.halfExtents = (pMesh.bounds.max - pMesh.bounds.min) / 2.0f;
+
+        return pMesh;
     }
 
     void ExtractVertices(const aiMesh& mesh, std::vector<Rendering::Vertex>& vertices,

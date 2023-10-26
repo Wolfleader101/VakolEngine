@@ -4,7 +4,8 @@ local nav = nil;
 local target = Vector3.new();
 
 function init()
-    entity:add_model("assets/models/ai/kiki/kiki.obj", 1);
+    local model = entity:add_model("assets/models/ai/kiki/kiki.obj", 0.5);
+    entity:get_transform().pos = Vector3.new(0.0, 5.0, 0.0);
 
     entity:add_script("emotions", "components/emotion.lua");
     emotions = entity:get_script("emotions");
@@ -12,9 +13,8 @@ function init()
     rb = entity:add_rigid();
     rb.type = BodyType.Dynamic;
     rb.rot_lock = BVector3.new(true, true, true);
-    rb.hasGravity = false;
 
-    entity:add_box_collider(Vector3.new(0.9, 1.75, 0.3));
+    entity:add_box_collider(model:get_half_extents(0));
 
     entity:add_script("navigation", "components/navigation.lua");
     nav = entity:get_script("navigation");

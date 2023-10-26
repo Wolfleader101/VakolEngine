@@ -32,15 +32,17 @@ namespace Vakol::Rendering::Assets
          */
         Math::Vec4 emissive_color = Math::Vec4(1.0f);
 
+        Math::Vec3 light_position = Math::Vec3(5.0f);
+        Math::Vec3 light_direction = Math::Vec3(0.0f);
+
+        Math::Vec2 uv_offset = Math::Vec2(0.0f);
+
         float shininess = 32.0f; // the specular exponent (used for Phong shading)
 
         float opacity = 1.0f; // the transparency/alpha of the material
 
         bool use_lighting = true;
         bool use_textures = true;
-
-        Math::Vec3 light_position = Math::Vec3(5.0f);
-        Math::Vec3 light_direction = Math::Vec3(0.0f);
     };
 
     struct Material
