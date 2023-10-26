@@ -33,6 +33,8 @@ namespace Vakol
             return ent;
         });
 
+        scene_type.set_function("destroy_entity", &Scene::DestroyEntity);
+
         scene_type.set_function("generate_skybox", [](Scene* scene, sol::as_table_t<std::vector<std::string>>&& faces) {
             Rendering::Skybox skybox;
 

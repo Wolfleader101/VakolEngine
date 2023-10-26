@@ -45,6 +45,10 @@ namespace Vakol
 
     void Scene::DestroyEntity(const Entity entity)
     {
+        if (entity.HasComponent<RigidBody>())
+        {
+            m_physicsScene.DestroyRigidBody(entity.GetComponent<RigidBody>());
+        }
         m_entityList.RemoveEntity(entity);
     }
 

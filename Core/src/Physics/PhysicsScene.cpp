@@ -38,6 +38,11 @@ namespace Vakol
         m_world->setEventListener(&m_collisionListener);
     }
 
+    void PhysicsScene::setOnCollisionCallback(std::function<void(RigidBody&, RigidBody&)> callback)
+    {
+        m_collisionListener.setOnCollisionCallback(callback);
+    }
+
     RigidBody PhysicsScene::CreateRigidBody(Math::Vec3& pos, Math::Quat& orientation)
     {
         RigidBody rb;
@@ -51,6 +56,10 @@ namespace Vakol
         rb.collisionBody->setUserData(static_cast<void*>(rb.collisionData.get()));
 
         return rb;
+    }
+    void PhysicsScene::DestroyRigidBody(RigidBody& rigidBody)
+    {
+        m_world->destroyCollisionBody(rigidBody.collisionBody);
     }
 
     bool PhysicsScene::RayCast(Math::Vec3& origin, Math::Vec3& direction, const float maxDistance,
