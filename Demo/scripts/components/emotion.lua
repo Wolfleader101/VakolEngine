@@ -7,11 +7,11 @@ SURPRISE = 6;
 SADNESS = 7;
 DISGUST = 8;
 
-local tickSkips<const> = 3;
-local emotion_names = {"Anger", "Anticipation", "Joy", "Trust", "Fear", "Surprise", "Sadness", "Disgust"};
-local emotion_concepts = {0.2, 0.1, 0.6, 0.3, -0.4, 0.1, 0.1, 0.1};
+local tickSkips <const> = 3;
+local emotion_names = { "Anger", "Anticipation", "Joy", "Trust", "Fear", "Surprise", "Sadness", "Disgust" };
+local emotion_concepts = { 0.2, 0.1, 0.6, 0.3, -0.4, 0.1, 0.1, 0.1 };
 
-local decays = {0.01, 0.03, 0.03, 0.03, 0.03, 0.2, 0.01, 0.001};
+local decays = { 0.01, 0.03, 0.03, 0.03, 0.03, 0.2, 0.01, 0.001 };
 
 -- whipped these values out me dot
 -- local weights = {
@@ -26,10 +26,10 @@ local decays = {0.01, 0.03, 0.03, 0.03, 0.03, 0.2, 0.01, 0.001};
 -- }
 
 local weights = { -- symmetrical matrix
-{0.1, 0.02, -0.05, -0.03, -0.08, 0.01, 0.02, 0.03}, {0.02, 0.1, 0.01, 0, 0.05, -0.08, 0, -0.02},
-{-0.05, 0.01, 0, 0.0175, -0.03, 0.02, -0.08, -0.05}, {-0.03, 0, 0.0175, 0, -0.06, -0.01, -0.03, -0.08},
-{-0.08, 0.05, -0.03, -0.06, -0.1, 0, 0.015, 0.03}, {0.01, -0.08, 0.02, -0.01, 0, -0.2, -0.03, 0},
-{0.02, 0, -0.08, -0.03, 0.015, -0.03, -0.1, 0.015}, {0.03, -0.02, -0.05, -0.08, 0.03, 0, 0.015, -0.1}}
+    { 0.1,   0.02, -0.05, -0.03,  -0.08, 0.01, 0.02,  0.03 }, { 0.02, 0.1, 0.01, 0, 0.05, -0.08, 0, -0.02 },
+    { -0.05, 0.01, 0,     0.0175, -0.03, 0.02, -0.08, -0.05 }, { -0.03, 0, 0.0175, 0, -0.06, -0.01, -0.03, -0.08 },
+    { -0.08, 0.05, -0.03, -0.06, -0.1,  0,     0.015, 0.03 }, { 0.01, -0.08, 0.02, -0.01, 0, -0.2, -0.03, 0 },
+    { 0.02,  0,    -0.08, -0.03, 0.015, -0.03, -0.1,  0.015 }, { 0.03, -0.02, -0.05, -0.08, 0.03, 0, 0.015, -0.1 } }
 
 -- local weights = {
 --     {   0   ,  0.02  , -0.05  , -0.03  , -0.08  ,  0.01  ,  0.02  ,  0.03  },
@@ -51,23 +51,19 @@ function print_emotions()
 end
 
 function get_emotion(emotion_index)
-
     if emotion_index < 0 or emotion_index > 7 then
         return -1
     end
 
     return emotion_concepts[emotion_index]
-
 end
 
 function set_emotion(emotion_index, value)
-
     if emotion_index < 0 or emotion_index > 7 then
         return
     end
 
     emotion_concepts[emotion_index] = value
-
 end
 
 function tanh(x)
@@ -96,7 +92,6 @@ local function normalize()
 end
 
 local function L2Normalize()
-
     L2Norm = 0;
 
     for i = 1, #emotion_concepts do
@@ -111,7 +106,6 @@ local function L2Normalize()
 end
 
 local function iterate()
-
     new_concepts = {};
 
     for i = 1, 8 do
@@ -138,7 +132,6 @@ function init()
 end
 
 function update()
-
     -- if (Input:get_key_down(KEYS["KEY_Z"])) then
     --     set_emotion(ANGER, 0.5);
     -- end
@@ -175,14 +168,12 @@ end
 local slow = 0;
 
 function tick()
-
     if (slow == 5) then
         iterate();
         -- print_emotions();
         slow = 0;
     else
         slow = slow + 1;
-
     end
 end
 

@@ -11,13 +11,17 @@ function init()
     -- AI
 
     scene.globals.emotional_entities = {};
+    scene.globals.emotional_rbs = {};
+    scene.globals.emotional_trans = {};
 
     local shri = scene:create_entity("shri", "entities/agents/shri_rai.lua");
     shri:get_transform().pos = Vector3.new(-20, 5, -20);
     shri:get_transform().scale = Vector3.new(0.015, 0.015, 0.015);
     scene.globals.emotional_entities[1] = shri;
+    scene.globals.emotional_rbs[1] = shri:get_rigid();
+    scene.globals.emotional_trans[1] = shri:get_transform();
 
-    --local hong = scene:create_entity("Hong", "entities/agents/hong.lua");
+    local hong = scene:create_entity("Hong", "entities/agents/hong.lua");
     --scene.globals.emotional_entities[2] = hong;
 
 

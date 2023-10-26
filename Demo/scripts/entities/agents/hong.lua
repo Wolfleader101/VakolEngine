@@ -30,13 +30,11 @@ function init()
     nav.ROTATE_SPEED = 2.5;
     nav.BRAKE_FORCE = 1.0;
 
-    nav.set_state("chase");
+    nav.set_state("wander");
 end
 
 function tick()
     target = scene:get_camera():get_pos();
-    nav = entity:get_script("navigation");
-    -- nav.TARGET = target;
 
     bin_1 = get_nearby_bins(entity, 100)[1];
     if (bin_1 ~= nil) then

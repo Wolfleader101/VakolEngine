@@ -31,7 +31,6 @@ function wrap_angle(angle)
 end
 
 function set_state(new_state)
-    print(new_state);
     state = new_state;
 end
 

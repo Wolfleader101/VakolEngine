@@ -5,6 +5,7 @@ local nav;
 local target;
 
 local rb;
+local trans;
 
 local states <const> = { "flee", "chase", "wander", "idle" };
 
@@ -12,10 +13,14 @@ local piss_locations = { Vector3.new(17, 2.2, 137), Vector3.new(1.4, 1.5, 36.5),
 local piss_lookat = { Vector3.new(-6, 4.5, 148), Vector3.new(7.7, 2.7, 41.721), Vector3.new(-32, 2.5, 45) };
 local piss_index = 3;
 
+local ANGER_RAD <const> = 5;
+local ANGER_THRESHOLD <const> = 0.5;
 
 
 function init()
     entity:add_model("assets/models/ai/shri/shri.fbx", 1);
+
+    trans = entity:get_transform();
 
     entity:add_script("emotions", "components/emotion.lua");
     emotions = entity:get_script("emotions");
@@ -52,19 +57,77 @@ local pos;
 local pissTimer <const> = 600; -- 10 seconds
 local pissTicks = 0;
 
+-- function tick()
+--     if (nav.get_state() == "idle") then
+--         rb.linearVelocity = Vector3.new();
+--         pissTicks = pissTicks + 1;
+--         if (pissTicks < pissTimer) then
+--             nav.look_at(piss_locations[piss_index]);
+--             shoot_piss();
+--         else
+--             nav.set_state("wander");
+--             pissTicks = 0;
+--         end
+--     else
+--         for i = 1, #scene.globals.emotional_entities do
+--             if ((scene.globals.emotional_transforms.pos[i] - pos).length() < ANGER_RAD) then
+
+--             end
+--         end
+--     end
+-- end
+
 function tick()
-    if (nav.get_state() == "idle") then
+    pos = trans.pos;
+
+    local currentState = nav.get_state();
+
+    if (currentState == "idle") then
         rb.linearVelocity = Vector3.new();
         pissTicks = pissTicks + 1;
         if (pissTicks < pissTimer) then
             nav.look_at(piss_locations[piss_index]);
             shoot_piss();
         else
-            nav.set_state("wander");
+            -- Find a new piss spot
+            piss_index = (piss_index % #piss_locations) + 1;
+            nav.TARGET = piss_locations[piss_index];
+            nav.set_state("chase");
             pissTicks = 0;
         end
     else
+        local foundAngryEntity = false;
+        local emotionalEntities = scene.globals.emotional_entities;
+        local emotionalTransforms = scene.globals.emotional_transforms;
 
+        for i = 1, #emotionalEntities do
+            local entityPos = emotionalTransforms[i].pos;
+            local distanceToEntity = (entityPos - pos).length();
+            if (distanceToEntity < ANGER_RAD) then
+                local entityEmotion = emotionalEntities[i]:get_script("emotions");
+                if entityEmotion.get_emotion(ANGER) > ANGER_THRESHOLD then
+                    foundAngryEntity = true;
+                    target = entityPos;
+                    break;
+                end
+            end
+        end
+
+        if foundAngryEntity then
+            emotions.set_emotion(ANGER, 1); -- shri angry
+            nav.TARGET = target;
+            nav.set_state("chase");
+        else
+            emotions.set_emotion(ANGER, 0); -- shri happy
+            emotions.set_emotion(JOY, 0.5);
+        end
+    end
+
+    -- need attacking
+    local angerLevel = emotions.get_emotion(ANGER);
+    if angerLevel == 1 and (nav.TARGET - pos).length() < 1 then
+        print("Shri kicks the entity!");
+        nav.set_state("idle");
     end
 end
 
