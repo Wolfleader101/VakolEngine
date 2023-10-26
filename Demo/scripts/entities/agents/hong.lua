@@ -12,7 +12,60 @@ function init()
 
     
     local rb = entity:add_rigid();
-    rb.type = BodyType.Static;
+    rb.rot_lock = BVector3.new(true, true, true);
+    rb.type = BodyType.Dynamic;
     entity:add_box_collider(Vector3.new(0.9, 1.75, 0.3));
 
+    entity:add_script("navigation", "components/navigation.lua");
+
+    nav = entity:get_script("navigation");
+
+    target = scene:get_camera():get_pos();
+
+    nav.TARGET = target;
+    nav.MAX_DISTANCE = 0.8;
+
+    nav.MOVE_SPEED = 0.025;
+    nav.ROTATE_SPEED = 2.5;
+    nav.BRAKE_FORCE = 1.0;
+
+    nav.set_state("chase");
+
+end
+
+function tick()
+    target = scene:get_camera():get_pos();
+    nav = entity:get_script("navigation");
+    -- nav.TARGET = target;
+
+    bin_1 = get_nearby_bins(entity, 100)[1];
+    if(bin_1 ~= nil) then
+        nav.TARGET = bin_1:get_transform().pos;
+    end
+    -- print_err(get_nearby_bins(entity, 100)[1]:get_tag())
+end
+
+function on_contact(other_ent)
+    -- if (other_ent:get_tag() == "player") then
+    --     nav = entity:get_script("navigation");
+    --     nav.set_state("flee");
+    -- end
+end
+
+function get_nearby_bins(origin_entity, trigger_distance)
+    local origin_pos = origin_entity:get_transform().pos
+
+    local nearby_bins = {}
+    local count = 0;
+    for i, bin in ipairs(scene.globals.recyclingBins) do
+        if bin ~= origin_entity then
+            local diff = origin_pos - bin:get_transform().pos
+            if diff:magnitude() <= trigger_distance then
+                nearby_bins[count + 1] = bin;
+                count = count + 1;
+            end
+        end
+    end
+
+    return nearby_bins
 end
