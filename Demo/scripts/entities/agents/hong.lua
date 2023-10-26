@@ -46,19 +46,13 @@ function tick()
 end
 
 function on_contact(other_ent)
-    -- if (other_ent:get_tag() == "player") then
-    --     nav = entity:get_script("navigation");
-    --     nav.set_state("flee");
-    -- end
-    -- print(other_ent:get_tag())
-
     local affordance = other_ent:get_script("affordance");
 
-    if(affordance ~= nil and affordance.AFFORDANCES.HOLDING == 1.0) then
-        print("AFFORDS HOLDING")
-    end
-    if(other_ent:get_script("interactable") ~= nil) then
-        other_ent:get_script("interactable").interact(other_ent);
+    if (affordance ~= nil and affordance.AFFORDANCES.HOLDING == 1.0) then
+        print(other_ent:get_tag() .. " Affords Holding")
+        if(other_ent:get_script("interactable") ~= nil) then
+            other_ent:get_script("interactable").interact(entity);
+        end
     end
 end
 
