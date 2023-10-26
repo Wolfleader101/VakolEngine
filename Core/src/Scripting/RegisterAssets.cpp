@@ -97,14 +97,6 @@ namespace Vakol
                                        material.properties.emissive_color = emissive;
                                    });
 
-        material_type.set_function("enable_lighting", [](Rendering::Assets::Material& material, const bool enabled) {
-            material.properties.use_lighting = enabled;
-        });
-
-        material_type.set_function("enable_textures", [](Rendering::Assets::Material& material, const bool enabled) {
-            material.properties.use_textures = enabled;
-        });
-
         material_type.set_function("set_light_position",
                                    [](Rendering::Assets::Material& material, const Math::Vec3& position) {
                                        material.properties.light_position = position;
@@ -114,6 +106,20 @@ namespace Vakol
                                    [](Rendering::Assets::Material& material, const Math::Vec3& direction) {
                                        material.properties.light_direction = direction;
                                    });
+
+        
+        material_type.set_function("set_uv_offset",
+                                   [](Rendering::Assets::Material& material, const Math::Vec2& offset) {
+                                       material.properties.uv_offset = offset;
+                                   });
+
+        material_type.set_function("enable_lighting", [](Rendering::Assets::Material& material, const bool enabled) {
+            material.properties.use_lighting = enabled;
+        });
+
+        material_type.set_function("enable_textures", [](Rendering::Assets::Material& material, const bool enabled) {
+            material.properties.use_textures = enabled;
+        });
     }
 
     void RegisterShader(sol::state& lua)
