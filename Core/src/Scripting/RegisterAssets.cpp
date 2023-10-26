@@ -106,7 +106,6 @@ namespace Vakol
                                    [](Rendering::Assets::Material& material, const Math::Vec3& direction) {
                                        material.properties.light_direction = direction;
                                    });
-
         
         material_type.set_function("set_uv_offset",
                                    [](Rendering::Assets::Material& material, const Math::Vec2& offset) {

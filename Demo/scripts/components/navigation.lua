@@ -39,7 +39,7 @@ function get_state()
 end
 
 function gen_random_target()
-    local minX, maxX, minZ, maxZ = -20, 20, -20, 20;
+    local minX, maxX, minZ, maxZ = -20, 20, -20, 20 ;
 
     local x = math.random(minX, maxX);
     local y = position.y;
