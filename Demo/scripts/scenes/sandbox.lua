@@ -16,8 +16,9 @@ function init()
     scene:generate_skybox(faces);
 
 
-    --scene:create_entity("Cube", "entities/test/cube.lua");
-    add_floor();
+    scene:create_entity("Hong", "entities/agents/hong.lua");
+    -- scene:create_entity("Cube", "entities/test/cube.lua");
+    -- add_floor();
 
     -- phys_objs();
     -- falling_objs();

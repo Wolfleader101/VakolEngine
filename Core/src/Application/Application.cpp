@@ -12,6 +12,7 @@ namespace Vakol
 {
 
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
+#define BIND_ON_COLLISION_FN(x) std::bind(&Application::x, this, std::placeholders::_1, std::placeholders::_2)
 
     Application::Application(const std::string& configPath)
         : m_window(nullptr), m_scriptEngine(), m_sceneManager(m_scriptEngine, m_physicsEngine), m_running(false),
@@ -162,6 +163,9 @@ namespace Vakol
                 m_sceneManager.GetActiveScene().GetCamera().SetAspect(
                     static_cast<float>(GetWidth()) / (GetHeight() != 0 ? static_cast<float>(GetHeight()) : 1.0f));
 
+                m_sceneManager.GetActiveScene().GetPhysicsScene().setOnCollisionCallback(
+                    BIND_ON_COLLISION_FN(OnCollision));
+
                 // ignore the current frame, and next frame on scene change
                 // on scene change, ignore rest of the current frame, delta time will be low (current frame)
                 // the next frame, the delta time will be large because of how long it took to initialise the scene
@@ -285,6 +289,33 @@ namespace Vakol
         }
     }
 
+    void Application::OnCollision(RigidBody& rb1, RigidBody& rb2)
+    {
+        // call script on_contact functions
+        std::shared_ptr<Entity> ent1 = m_sceneManager.GetActiveScene().GetEntity(rb1.tag);
+        std::shared_ptr<Entity> ent2 = m_sceneManager.GetActiveScene().GetEntity(rb2.tag);
+
+        if (!ent1 || !ent2 || rb1.tag == "" || rb2.tag == "")
+            return;
+
+        if (ent1->HasComponent<ScriptComp>())
+            for (auto& script : ent1->GetComponent<ScriptComp>().scripts)
+            {
+                m_scriptEngine.PhysContactCallback(script, ent2);
+            }
+
+        if (ent2->HasComponent<ScriptComp>())
+            for (auto& script : ent2->GetComponent<ScriptComp>().scripts)
+            {
+                m_scriptEngine.PhysContactCallback(script, ent1);
+            }
+
+        rb1.collisionData->isColliding = false;
+        rb1.collisionData->otherBody = nullptr;
+
+        rb2.collisionData->isColliding = false;
+        rb2.collisionData->otherBody = nullptr;
+    }
     void Application::OnEvent(Event& ev)
     {
         EventDispatcher dispatcher(ev);

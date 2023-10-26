@@ -17,6 +17,8 @@ namespace Vakol
     //     virtual void Tick() = 0;
     // };
 
+    class Entity;
+
     /**
      * @brief ScriptEngine class to manage and manipulate Lua scripts, variables, tables, and functions.
      */
@@ -134,6 +136,8 @@ namespace Vakol
          * @param script The Lua script to update.
          */
         void PhysUpdateScript(LuaScript& script);
+
+        void PhysContactCallback(LuaScript& script, std::shared_ptr<Entity> ent);
 
       private:
         /**

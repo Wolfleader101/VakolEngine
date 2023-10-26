@@ -130,23 +130,7 @@ function tick()
     position = trans.pos;
     rotation = trans.rot;
 
-    if (Input:get_key_down(KEYS["KEY_1"])) then
-       set_state("flee");
-    end
-
-    if (Input:get_key_down(KEYS["KEY_2"])) then
-       set_state("chase");
-    end
-
-    if (Input:get_key_down(KEYS["KEY_3"])) then
-       set_state("wander");
-    end
-
-    if (Input:get_key_down(KEYS["KEY_4"])) then
-       set_state("idle");
-    end
-
-    if (STATE == "wander") then
+    if (state == "wander") then
         wander();
     elseif (STATE == "flee") then
         flee();

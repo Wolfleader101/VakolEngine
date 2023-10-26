@@ -1,5 +1,6 @@
 #include "Scripting/ScriptEngine.hpp"
 
+#include "ECS/Entity.hpp"
 #include "Logger/Logger.hpp"
 #include "LuaAccess.hpp"
 
@@ -60,6 +61,12 @@ namespace Vakol
     void ScriptEngine::PhysUpdateScript(LuaScript& script)
     {
         RunFunction(script.env, "phys_update", true);
+    }
+
+    void ScriptEngine::PhysContactCallback(LuaScript& script, std::shared_ptr<Entity> ent)
+    {
+        sol::object luaEntity = sol::make_object(script.env.lua_state(), ent);
+        RunFunction(script.env, "on_contact", true, std::vector<Vakol::LuaType>{luaEntity});
     }
 
     LuaScript ScriptEngine::CreateScript(const std::string& name, const std::string& scriptPath)
@@ -153,7 +160,18 @@ namespace Vakol
 
         // Call the function with args, and check for errors
         //  TODO look into sol::variadic_args
-        if (sol::protected_function_result result = func(args); !result.valid())
+
+        sol::protected_function_result result;
+        if (args.empty())
+        {
+            result = func();
+        }
+        else
+        {
+            result = func(sol::as_args(args));
+        }
+
+        if (!result.valid())
         {
             sol::error err = result;
             sol::call_status status = result.status();

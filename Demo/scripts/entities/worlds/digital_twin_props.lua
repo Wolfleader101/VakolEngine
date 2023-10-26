@@ -1,12 +1,12 @@
 function init()
-	local benches = {};
-	local chairs = {};
-	local tables = {};
-	local rubbishBins = {};
-	local recyclingBins = {};
-	local apples = {};
-	local drinkCups = {};
-	local beerCans = {};
+    scene.globals.benches = {};
+    scene.globals.chairs = {};
+    scene.globals.tables = {};
+    scene.globals.rubbishBins = {};
+    scene.globals.recyclingBins = {};
+    scene.globals.apples = {};
+    scene.globals.drinkCups = {};
+    scene.globals.beerCans = {};
 
 	local soccerBall;
 
@@ -53,11 +53,6 @@ function init()
 
 	local recyclingBinPositions = 
 	{
-		Vector3.new(31.4, 1.221, 39.0), Vector3.new(-16.3, 1.321, 85.6)
-	}
-
-	local recyclingBinPositions = 
-	{
 		Vector3.new(31.4, 1.221, 39.0), Vector3.new(-16.3, 1.221, 85.6)
 	}
 
@@ -84,19 +79,19 @@ function init()
 		local entityName = "Bench";
 		entityName = entityName .. " " .. i;
 	
-		benches[i] = scene:create_entity(entityName, "entities/objects/bench.lua");
+		scene.globals.benches[i] = scene:create_entity(entityName, "entities/objects/bench.lua");
 
-		benches[i]:get_transform().pos = benchPositions[i];
+		scene.globals.benches[i]:get_transform().pos = benchPositions[i];
 	end
 
 	for i = 1, 20 do
 		local entityName = "Chair";
 		entityName = entityName .. " " .. i;
 	
-		chairs[i] = scene:create_entity(entityName, "entities/objects/chair.lua");
+		scene.globals.chairs[i] = scene:create_entity(entityName, "entities/objects/chair.lua");
 
-		chairs[i]:get_transform().pos = chairPositions[i];
-		chairs[i]:get_transform().rot = chairRotations[i];
+		scene.globals.chairs[i]:get_transform().pos = chairPositions[i];
+		scene.globals.chairs[i]:get_transform().rot = chairRotations[i];
 
 	end
 
@@ -104,28 +99,28 @@ function init()
 		local entityName = "Table";
 		entityName = entityName .. " " .. i;
 	
-		tables[i] = scene:create_entity(entityName, "entities/objects/table.lua");
+		scene.globals.tables[i] = scene:create_entity(entityName, "entities/objects/table.lua");
 
-		tables[i]:get_transform().pos = tablePositions[i];
+		scene.globals.tables[i]:get_transform().pos = tablePositions[i];
 	end
 
 	for i = 1, 2 do
 		local entityName = "Rubbish Bin";
 		entityName = entityName .. " " .. i;
 	
-		rubbishBins[i] = scene:create_entity(entityName, "entities/objects/rubbish_bin.lua");
+		scene.globals.rubbishBins[i] = scene:create_entity(entityName, "entities/objects/rubbish_bin.lua");
 
 		entityName = "Recycling Bin";
 		entityName = entityName .. " " .. i;
 
-		recyclingBins[i] = scene:create_entity(entityName, "entities/objects/recycle_bin.lua");
+		scene.globals.recyclingBins[i] = scene:create_entity(entityName, "entities/objects/recycle_bin.lua");
 
-		rubbishBins[i]:get_transform().pos = rubbishBinPositions[i];
-		recyclingBins[i]:get_transform().pos = recyclingBinPositions[i];
+		scene.globals.rubbishBins[i]:get_transform().pos = rubbishBinPositions[i];
+		scene.globals.recyclingBins[i]:get_transform().pos = recyclingBinPositions[i];
 
 		if i == 2 then
-			rubbishBins[i]:get_transform().rot = Vector3.new(0.0, 90.0, 0.0);
-			recyclingBins[i]:get_transform().rot = Vector3.new(0.0, 90.0, 0.0);
+			scene.globals.rubbishBins[i]:get_transform().rot = Vector3.new(0.0, 90.0, 0.0);
+			scene.globals.recyclingBins[i]:get_transform().rot = Vector3.new(0.0, 90.0, 0.0);
 		end
 	end
 
@@ -133,27 +128,27 @@ function init()
 		local entityName = "Apple";
 		entityName = entityName .. " " .. i;
 	
-		apples[i] = scene:create_entity(entityName, "entities/objects/apple.lua");
+		scene.globals.apples[i] = scene:create_entity(entityName, "entities/objects/apple.lua");
 
-		apples[i]:get_transform().pos = applePositions[i];
+		scene.globals.apples[i]:get_transform().pos = applePositions[i];
 	end
 
 	for i = 1, 4 do
 		local entityName = "Drink Cup";
 		entityName = entityName .. " " .. i;
 	
-		drinkCups[i] = scene:create_entity(entityName, "entities/objects/drink_cup.lua");
+		scene.globals.drinkCups[i] = scene:create_entity(entityName, "entities/objects/drink_cup.lua");
 
-		drinkCups[i]:get_transform().pos = drinkCupPositions[i];
+		scene.globals.drinkCups[i]:get_transform().pos = drinkCupPositions[i];
 	end
 
 	for i = 1,2 do
 		local entityName = "Beer Can";
 		entityName = entityName .. " " .. i;
 	
-		beerCans[i] = scene:create_entity(entityName, "entities/objects/beer_can.lua");
+		scene.globals.beerCans[i] = scene:create_entity(entityName, "entities/objects/beer_can.lua");
 
-		beerCans[i]:get_transform().pos = beerCanPositions[i];
+		scene.globals.beerCans[i]:get_transform().pos = beerCanPositions[i];
 	end
 	
 	soccerBall = scene:create_entity("Soccer Ball", "entities/objects/soccer_ball.lua");
