@@ -2,14 +2,16 @@ local emotions = nil;
 local navigation = nil;
 local rb = nil;
 local transform = nil;
+local target = nil;
 
 local wandering = false;
 local travellingToObject = false;
 local holdingRubbish = false;
+local initialRubbishContact = false;
 
+local rubbishBins = scene.globals.rubbishBins;
+local recyclingBins = scene.globals.recyclingBins;
 local rubbish = {};
-local rubbishBins = {};
-local recyclingBins = {};
 
 local yDifference = nil;
 
@@ -21,41 +23,61 @@ local interactDistance = 5.0;
 local minInteractDistance = 0.5;
 
 function init()
-    rb = entity:add_rigid();
-
-    rb.mass = 10.0;
-    rb.rot_lock = BVector3.new(true, true, true);
+    entity:add_model("assets/models/ai/hamid/hamid.fbx", 0.015);
 
     transform = entity:get_transform();
 
-    -- entity:add_script("navigation", "components/navigation.lua")
-    -- navigation = entity:get_script("navigation");
+    rb = entity:add_rigid();
+    rb.mass = 10.0;
+    rb.rot_lock = BVector3.new(true, true, true);
+    rb.type = BodyType.Dynamic;
+
+    entity:add_box_collider(Vector3.new(0.9, 1.75, 0.3));
 
     entity:add_script("emotions", "fcms/emoiton.lua")
     emotions = entity:get_script("emotions");
+
+    entity:add_script("navigation", "components/navigation.lua")
+    navigation = entity:get_script("navigation");
+
+    target = scene:get_camera():get_pos();
+
+    navigation.TARGET = target;
+    navigation.MAX_DISTANCE = 0.8;
+
+    navigation.MOVE_SPEED = 0.025;
+    navigation.ROTATE_SPEED = 2.5;
+    navigation.BRAKE_FORCE = 1.0;
 end
 
-function add_rubbish_entity(inputEntity)
-    -- table.insert(rubbish, inputEntity);
-end
+function find_closest_bin()
+    local closestBin = nil; -- The closest bin to the AI
+    local shortestDistance = math.huge; -- Initially set to a very high value
 
-function add_rubbish_bin(inputEntity)
-    -- table.insert(rubbishBins, inputEntity);
-end
+    for i, bin in pairs(scene.globals.rubbishBins) do
+        -- Get the distance between the AI and the current bin
+        local distance = distance(entity:get_transform().pos, bin:get_transform().pos);
 
-function add_recycling_bin(inputEntity)
-    -- table.insert(recyclingBins, inputEntity);
-end
+        -- Check to see if the distance is shorter than the current shortest distance
+        if (distance < shortestDistance) then
+            shortestDistance = distance;
 
-function move_to_position(inputTarget)
-    -- navigation.DESTINATION = inputTarget;
+            closestBin = bin;
+        end
+    end
+    
+    return closestBin;  -- Return the closest bin
 end
 
 function rubbish_behaviour()
-	--[[
+    rubbish = {};  -- Reset the rubbish table in case some are removed
+
+    -- Populate the rubbish table with all the rubbish entities
+    for k, v in pairs(scene.globals.apples) do table.insert(rubbish, v) end
+
     -- Checks to see if the rubbish entity has been set
     if (next(rubbish) == nil) then
-        -- Checking to see if the AI is already travelling to the entity
+        -- Checking to see if the AI isn't already travelling to the entity
         if (travellingToObject == false) then
             for key, value in pairs(rubbish) do
                 -- Getting the distance between the AI and the entity
@@ -74,21 +96,26 @@ function rubbish_behaviour()
             end
         end
 
+        -- Checking to see if the AI is already travelling to the entity and is not holding the rubbish
         if (travellingToObject == true and holdingRubbish == false) then
             yDifference = math.abs(entity:get_transform().pos.y - value:get_transform().pos.y);
 
             entityDistance = distance(entity:get_transform().pos, value:get_transform().pos);
         
-            -- Checking to see if the AI is close enough to the object to grab it
+            -- Checking to see if the AI is close enough to the object to grab it (Done in the on_contact function)
             if ((entityDistance < minInteractDistance) and yDifference < 0.5) then
-                -- GRAB OBJECT 
-
                 holdingRubbish = true;
+                initialRubbishContact = true;
 
-                -- move_to_position(CLOSEST RUBBISH BIN);
+                closestBin = find_closest_bin();
+
+                if (closestBin) ~= nil then
+                    navigation.DESTINATION = closestBin:get_transform().pos;  -- Set destination to closest bin
+                end
             end
         end
 
+        -- Checking to see if the AI is already travelling to the entity and is holding the rubbish
         if (travellingToObject == true and holdingRubbish == true) then
             for key, value in pairs(rubbishBins) do
                 -- Getting the distance between the AI and the entity
@@ -97,7 +124,7 @@ function rubbish_behaviour()
                 entityDistance = distance(entity:get_transform().pos, value:get_transform().pos);
 
                 if ((entityDistance < minInteractDistance) and yDifference < 0.5) then
-                    -- DEPOSIT rubbish
+                    destroy_entity(--[[ ADD THE CURRENT RUBBISH ENTITY THAT IS BEING HELD --]]);
 
                     emotions.add_emotion_value(emotions.JOY, 0.2);
 
@@ -111,20 +138,30 @@ function rubbish_behaviour()
             end
         end
     end
-    --]]
+end
+
+function on_contact(other_ent)
+    -- Check to see if the AI has initially contacted a piece of rubbish
+    if (initialRubbishContact == true and holdingRubbish == true) then
+    {
+        -- PUT LOGIC FOR HOLDING THINGS HERE
+    
+        initialRubbishContact = false;
+    }
 end
 
 function tick()
-    --[[
+    target = scene:get_camera():get_pos();
+
     -- Check if the AI is wandering around
     if (wandering ==  true) then
-        -- WANDER AROUND
+        navigation.wander();
 
         -- Check if the AI has emotions
         if (emotions ~= nil) then
             -- Check if the fear of the AI is above a certian amount before performing an action
             if (emotions.get_emotion(emotions.FEAR) ~= nil and emotions.get_emotion(emotions.FEAR) > 0.1) then
-                -- AVOID AI
+                -- AVOID AI LOGIC GOES HERE
             end
         end
     else
@@ -144,5 +181,4 @@ function tick()
             end
         end
     end
-    --]]
 end
