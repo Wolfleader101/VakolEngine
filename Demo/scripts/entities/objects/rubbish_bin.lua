@@ -13,16 +13,10 @@ function init()
 
     affordComp.AFFORDANCES = {
     }
+
+    entity:add_script("bin_content", "components/bin_content.lua")
+
+    local binContentComp = entity:get_script("bin_content");
+    binContentComp.TYPE = "TRASHING"
 end
 
-BIN_CONTENTS = 0
-
-function on_contact(other_ent)
-    local affordanceComp = other_ent:get_script("affordance")
-    if(affordanceComp ~= nil) then
-        if(affordanceComp.AFFORDANCES.TRASHING) then
-            scene:destroy_entity(other_ent)
-            BIN_CONTENTS = BIN_CONTENTS + 1
-        end
-    end
-end
