@@ -4,6 +4,10 @@ function init()
     local rb = entity:add_rigid();
 
     rb.type = BodyType.Dynamic;
+    rb.mass = 50;
+    rb.rot_lock = BVector3.new(true, false, true);
+    rb.type = BodyType.Dynamic;
+    rb.bounciness = 0.05;
 
     entity:add_box_collider(Vector3.new(0.6, 1.2, 0.9));
 

@@ -26,7 +26,7 @@ function init()
     nav.ROTATE_SPEED = 2.5;
     nav.BRAKE_FORCE = 1.0;
 
-    nav.set_state("idle");
+    nav.set_state("wander");
 end
 
 local prev_nearby_bins = {}; -- store {name: rubbishCount} 
@@ -51,8 +51,9 @@ end
 
 function tick()
     -- target = scene:get_camera():get_pos();
-    -- nav = entity:get_script("navigation");
+    local nav = entity:get_script("navigation");
     -- nav.TARGET = target;
+    nav.set_state("wander");
 
 
     -- TODO might only want to check nearby bins every 10 ticks or so???
@@ -97,7 +98,7 @@ function tick()
 
         -- if held time is greater than 100, throw the item
         -- TODO might want to throw this at someone??
-        if (held_time >= 100) then
+        if (held_time >= 90) then
             held_item:get_script("interactable").interact(entity); -- throw the entity
 
             held_item = nil;

@@ -27,14 +27,15 @@ function init()
 
     -- local cube = scene:create_entity("Cube", "");
     -- cube:get_transform().pos = Vector3.new(10.0, 20.0, 0.0);
-    -- cube:get_transform().rot = Vector3.new(00.0, 0.0, 45.0);
+    -- cube:get_transform().rot = Vector3.new(0.0, 0.0, 90.0);
+    -- cube:get_transform().scale = Vector3.new(2, 1, 1);
     -- cube:add_model("coreAssets/models/cube.obj", 1);
 
     -- local rb = cube:add_rigid();
     -- rb.mass = 100;
     -- rb.bounciness = 0.3;
     -- rb.type = BodyType.Dynamic;
-    -- cube:add_box_collider(Vector3.new(0.5, 0.5, 0.5));
+    -- cube:add_box_collider(Vector3.new(1, 0.5, 0.5));
 
     -- local cube2 = scene:create_entity("Cube2", "");
     -- cube2:get_transform().pos = Vector3.new(15, 20.0, 0.0);
