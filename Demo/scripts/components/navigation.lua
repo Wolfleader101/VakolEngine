@@ -31,15 +31,15 @@ function wrap_angle(angle)
 end
 
 function set_state(new_state)
-    STATE = new_state;
+    state = new_state;
 end
 
 function get_state()
-    return STATE;
+    return state;
 end
 
 function gen_random_target()
-    local minX, maxX, minZ, maxZ = -20, 20, -20, 20 ;
+    local minX, maxX, minZ, maxZ = -20, 20, -20, 20;
 
     local x = math.random(minX, maxX);
     local y = position.y;
@@ -58,7 +58,7 @@ function look_at(target, away)
     target_direction.y = 0.0;
 
     local prevRotY = rotation.y;
-    
+
     local targetAngle = math.deg(atan2(target_direction.x, target_direction.z));
 
     local angleDiff = (targetAngle - prevRotY);
@@ -126,17 +126,17 @@ end
 
 function tick()
     trans = entity:get_transform();
-    
+
     position = trans.pos;
     rotation = trans.rot;
 
     if (state == "wander") then
         wander();
-    elseif (STATE == "flee") then
+    elseif (state == "flee") then
         flee();
-    elseif (STATE == "chase") then
+    elseif (state == "chase") then
         chase();
-    elseif (STATE == "idle") then
+    elseif (state == "idle") then
         idle();
     end
 end
@@ -144,6 +144,7 @@ end
 function phys_update()
     if (can_move) then
         local distance = target_direction:length();
+        --print(distance);
 
         if (distance > MAX_DISTANCE) then
             accelerate();

@@ -106,17 +106,22 @@ namespace Vakol
                                    [](Rendering::Assets::Material& material, const Math::Vec3& direction) {
                                        material.properties.light_direction = direction;
                                    });
-        
+
         material_type.set_function("set_uv_offset",
                                    [](Rendering::Assets::Material& material, const Math::Vec2& offset) {
                                        material.properties.uv_offset = offset;
                                    });
 
-        material_type.set_function("enable_lighting", [](Rendering::Assets::Material& material, const bool enabled) {
+        material_type.set_function("set_opacity",
+                                   [](Rendering::Assets::Material& material, const float opacity) {
+                                       material.properties.opacity = opacity;
+                                   });
+
+        material_type.set_function("use_lighting", [](Rendering::Assets::Material& material, const bool enabled) {
             material.properties.use_lighting = enabled;
         });
 
-        material_type.set_function("enable_textures", [](Rendering::Assets::Material& material, const bool enabled) {
+        material_type.set_function("use_textures", [](Rendering::Assets::Material& material, const bool enabled) {
             material.properties.use_textures = enabled;
         });
     }
