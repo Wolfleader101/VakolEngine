@@ -69,9 +69,12 @@ namespace Vakol::Math
 
     float Distance(const Point& p1, const Point& p2)
     {
-        Vec3 t = p1 - p2;
+        return glm::distance(p1, p2);
+    }
 
-        return Magnitude(t);
+    float DistanceSq(const Point& p1, const Point& p2)
+    {
+        return glm::distance2(p1, p2);
     }
 
     void Normalize(Vec2& v)

@@ -114,6 +114,8 @@ namespace Vakol::Math
      */
     float Distance(const Point& p1, const Point& p2);
 
+    float DistanceSq(const Point& p1, const Point& p2);
+
     /**
      * @brief Normalizes a 2D vector, making its length equal to 1.
      *
