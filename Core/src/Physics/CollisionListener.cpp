@@ -7,8 +7,8 @@
 namespace Vakol
 {
     constexpr float SLEEP_LINEAR_THRESHOLD = 0.5f;
-    constexpr float SLEEP_ANGULAR_THRESHOLD = 1.5f;
-    constexpr int SLEEP_COUNTER_THRESHOLD = 30;
+    constexpr float SLEEP_ANGULAR_THRESHOLD = 0.5f;
+    constexpr int SLEEP_COUNTER_THRESHOLD = 45;
 
     void Depenetration(RigidBody& rb1, RigidBody& rb2, Math::Vec3& normal, float penetrationDepth);
     void Resolution(RigidBody& rb1, RigidBody& rb2, Math::Vec3& normal, Math::Vec3& localPoint1,
