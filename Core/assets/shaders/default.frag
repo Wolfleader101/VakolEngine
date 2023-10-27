@@ -82,7 +82,7 @@ void main()
 {
     vec4 color = texture(material.diffuse_map, fs_in.TexCoords + UV_OFFSET);
 
-    if (!material.use_textures)
+    if ((color.r >= 0.99 && color.g >= 0.99 && color.b >= 0.99) || !material.use_textures)
         color = material.diffuse_color;
 
     vec3 normal = texture(material.normal_map, fs_in.TexCoords).rgb;
