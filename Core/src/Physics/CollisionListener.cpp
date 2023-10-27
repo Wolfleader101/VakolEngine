@@ -7,8 +7,8 @@
 namespace Vakol
 {
     constexpr float SLEEP_LINEAR_THRESHOLD = 0.5f;
-    constexpr float SLEEP_ANGULAR_THRESHOLD = 0.5f;
-    constexpr int SLEEP_COUNTER_THRESHOLD = 480;
+    constexpr float SLEEP_ANGULAR_THRESHOLD = 1.5f;
+    constexpr int SLEEP_COUNTER_THRESHOLD = 30;
 
     void Depenetration(RigidBody& rb1, RigidBody& rb2, Math::Vec3& normal, float penetrationDepth);
     void Resolution(RigidBody& rb1, RigidBody& rb2, Math::Vec3& normal, Math::Vec3& localPoint1,
@@ -121,8 +121,8 @@ namespace Vakol
             // VK_WARN("Angular Vel Magnitude Sq: {}", Math::MagnitudeSq(rb2.angularVelocity));
 
             // Check for rb1
-            if (Math::MagnitudeSq(rb1.linearVelocity) < SLEEP_LINEAR_THRESHOLD &&
-                Math::MagnitudeSq(rb1.angularVelocity) < SLEEP_ANGULAR_THRESHOLD)
+            if (Math::MagnitudeSq(Math::RoundToZero(rb1.linearVelocity)) < SLEEP_LINEAR_THRESHOLD &&
+                Math::MagnitudeSq(Math::RoundToZero(rb1.angularVelocity)) < SLEEP_ANGULAR_THRESHOLD)
             {
                 rb1.sleepCounter++;
                 if (rb1.sleepCounter >= SLEEP_COUNTER_THRESHOLD)
@@ -138,8 +138,8 @@ namespace Vakol
             }
 
             // Check for rb2
-            if (Math::MagnitudeSq(rb2.linearVelocity) < SLEEP_LINEAR_THRESHOLD &&
-                Math::MagnitudeSq(rb2.angularVelocity) < SLEEP_ANGULAR_THRESHOLD)
+            if (Math::MagnitudeSq(Math::RoundToZero(rb2.linearVelocity)) < SLEEP_LINEAR_THRESHOLD &&
+                Math::MagnitudeSq(Math::RoundToZero(rb2.angularVelocity)) < SLEEP_ANGULAR_THRESHOLD)
             {
                 rb2.sleepCounter++;
                 if (rb2.sleepCounter >= SLEEP_COUNTER_THRESHOLD)
@@ -209,16 +209,16 @@ namespace Vakol
         Math::Vec3 n = Math::Normalized(normal);
 
         // distance from collision point to center of mass in local space
-        Math::Vec3 r1 = localPoint1 - rb1.centerOfMass;
-        Math::Vec3 r2 = localPoint2 - rb2.centerOfMass;
+        Math::Vec3 r1 = Math::RoundToZero(localPoint1 - rb1.centerOfMass);
+        Math::Vec3 r2 = Math::RoundToZero(localPoint2 - rb2.centerOfMass);
 
         // VK_ERROR("r1: {0} {1} {2}", r1.x, r1.y, r1.z);
         // VK_ERROR("r2: {0} {1} {2}", r2.x, r2.y, r2.z);
 
-        Math::Vec3 v1 = rb1.linearVelocity;
-        Math::Vec3 v2 = rb2.linearVelocity;
-        Math::Vec3 w1 = rb1.angularVelocity;
-        Math::Vec3 w2 = rb2.angularVelocity;
+        Math::Vec3 v1 = Math::RoundToZero(rb1.linearVelocity);
+        Math::Vec3 v2 = Math::RoundToZero(rb2.linearVelocity);
+        Math::Vec3 w1 = Math::RoundToZero(rb1.angularVelocity);
+        Math::Vec3 w2 = Math::RoundToZero(rb2.angularVelocity);
 
         // (r1 x n)
         Math::Vec3 r1CrossN = Math::Cross(r1, n);

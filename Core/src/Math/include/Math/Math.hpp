@@ -3,6 +3,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 
+constexpr const float EPSILON = 1e-6;
+
 namespace Vakol::Math
 {
     //! glm usage is currently just here for backwards compatability reasons
@@ -16,6 +18,8 @@ namespace Vakol::Math
     using Mat3 = glm::mat3;
     using Mat4 = glm::mat4;
     using Quat = glm::quat;
+
+    Math::Vec3 RoundToZero(const Math::Vec3& vec);
 
     /**
      * @brief Converts an angle from degrees to radians.
@@ -256,6 +260,7 @@ namespace Vakol::Math
     Vec3 Rotate(const Quat& quat, const Vec3& vec);
 
     Quat Conjugate(const Quat& quat);
+
     /**
      * @brief Represents a line in 3D space defined by two points.
      */

@@ -207,7 +207,8 @@ namespace Vakol
 
         if (rb.isSleeping)
         {
-            if (Math::MagnitudeSq(rb.force) < 0.01f && Math::MagnitudeSq(rb.torque) < 0.01f)
+            if (Math::MagnitudeSq(Math::RoundToZero(rb.force)) < 0.01f &&
+                Math::MagnitudeSq(Math::RoundToZero(rb.torque)) < 0.01f)
                 return;
 
             rb.isSleeping = false;

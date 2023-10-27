@@ -137,7 +137,7 @@ namespace Vakol
          * @brief damping for velocities
          *
          */
-        float velocityDamping = 0.995f;
+        float velocityDamping = 0.992f;
 
         /**
          * @brief gravity vector
