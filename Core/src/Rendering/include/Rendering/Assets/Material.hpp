@@ -19,16 +19,16 @@ namespace Vakol::Rendering::Assets
      */
     struct Light
     {
-        LIGHT_TYPE type = LIGHT_TYPE::DIRECTIONAL_LIGHT;
+        LIGHT_TYPE TYPE = LIGHT_TYPE::DIRECTIONAL_LIGHT;
 
-        const float LIGHT_ATTENUATION_CONSTANT = 1.0f;
-        float LIGHT_ATTENUATION_LINEAR = 0.045f;
-        float LIGHT_ATTENUATION_QUADRATIC = 0.0075f;
+        Math::Vec4 DIRECTION = Math::Vec4(0.0f);
 
-        float LIGHT_ATTENUATION_CUTOFF = Math::Cos(Math::DegToRad(7.5f));
-        float LIGHT_ATTENUATION_OUTER_CUTOFF = Math::Cos(Math::DegToRad(12.5f));
+        float ATTENUATION_CONSTANT = 1.0f;
+        float ATTENUATION_LINEAR = 0.045f;
+        float ATTENUATION_QUADRATIC = 0.0075f;
 
-        Math::Vec4 LIGHT_DIRECTION = Math::Vec4(0.0f);
+        float ATTENUATION_CUTOFF = Math::Cos(Math::DegToRad(7.5f));
+        float ATTENUATION_OUTER_CUTOFF = Math::Cos(Math::DegToRad(12.5f));
     };
 
     /**

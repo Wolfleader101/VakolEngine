@@ -38,22 +38,20 @@ struct Material
 
 struct Light
 {
-    uint type;
+    uint TYPE;
 
-    float LIGHT_ATTENUATION_CONSTANT;
-    float LIGHT_ATTENUATION_LINEAR;
-    float LIGHT_ATTENUATION_QUADRATIC;
+    vec4 DIRECTION;
 
-    float LIGHT_ATTENUATION_CUTOFF;
-    float LIGHT_ATTENUATION_OUTER_CUTOFF;
+    float ATTENUATION_CONSTANT;
+    float ATTENUATION_LINEAR;
+    float ATTENUATION_QUADRATIC;
 
-    vec4 direction;
-    vec4 position;
+    float ATTENUATION_CUTOFF;
+    float ATTENUATION_OUTER_CUTOFF;
 };
 
 uniform Material material;
-
-uniform vec4 LIGHT_DIRECTION;
+uniform Light light;
 
 uniform vec2 UV_OFFSET = vec2(0.0);
 
@@ -66,9 +64,9 @@ vec4 BlinnPhong(const vec3 normal, const vec4 color)
 
     vec3 lightDir = vec3(0.0);
 
-    if (LIGHT_DIRECTION.w < 0.0)
-        lightDir = normalize(-radians(LIGHT_DIRECTION.xyz));
-    else if (LIGHT_DIRECTION.w > 1.0)
+    if (light.DIRECTION.w < 0.0)
+        lightDir = normalize(-radians(light.DIRECTION.xyz));
+    else if (light.DIRECTION.w > 1.0)
         lightDir = normalize(fs_in.TangentLightPos - fs_in.TangentFragPos);
 
     float diff = max(dot(normal, lightDir), 0.0);

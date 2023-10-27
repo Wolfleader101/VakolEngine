@@ -59,8 +59,6 @@ void main()
     if (color.a < 0.6)
         discard;
 
-    FragColor = color;
-
     if (material.use_lighting)
     {
         vec4 result = ToonShading(fs_in.Normal, color);
