@@ -29,7 +29,7 @@ function init()
     piss = entity:get_script("piss");
 
     rb = entity:add_rigid();
-    rb.type = BodyType.Static;
+    rb.type = BodyType.Dynamic;
     rb.rot_lock = BVector3.new(true, true, true);
     entity:add_box_collider(Vector3.new(0.9, 1.75, 0.3));
 
@@ -46,7 +46,7 @@ function init()
 
     --print(nav.TARGET.x .. " " .. nav.TARGET.y .. " " .. nav.TARGET.z)
     nav.MAX_DISTANCE = 0.1;
-    nav.set_state("idle");
+    nav.set_state("chase");
     nav.look_at(nav.TARGET, true);
 
 

@@ -1,9 +1,8 @@
 ﻿function init()
     scene:create_entity("Player", "entities/player/noclip.lua")
 
-    scene:create_entity("Kiki", "entities/agents/kiki.lua");
-    scene:create_entity("Hong", "entities/agents/hong.lua");
-    scene:create_entity("Player", "entities/player/phys_player.lua")
+
+    --scene:create_entity("Player", "entities/player/phys_player.lua")
 
     scene:create_entity("Digital Twin", "entities/worlds/digital_twin.lua");
     scene:create_entity("290 World", "entities/worlds/290_world.lua");
@@ -19,6 +18,10 @@
 
     local hong = scene:create_entity("Hong", "entities/agents/hong.lua");
     scene.globals.emotional_entities[2] = hong;
+
+    local kiki = scene:create_entity("Kiki", "entities/agents/kiki.lua");
+    scene.globals.emotional_entities[3] = kiki;
+
 
 
     -- local test = scene:create_entity("bob", "");
