@@ -36,7 +36,7 @@ function init()
 
     nav.set_state("wander");
 
-    body_material:set_light_position(Vector3.new(0.0, 1.0, 0.0));
+    body_material:set_light_direction(Vector3.new(0.0, math.rad(90.0), 0.0));
 
     eye_material:set_uv_offset(Vector2.new(0.5, 1.0));
     eye_material:set_opacity(0.0);

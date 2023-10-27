@@ -65,7 +65,7 @@ vec4 BlinnPhong(const vec3 normal, const vec4 color)
     vec3 lightDir = vec3(0.0);
 
     if (light.TYPE == DIRECTIONAL_LIGHT)
-        lightDir = normalize(radians(-light.DIRECTION));
+        lightDir = normalize(-light.DIRECTION);
     else if (light.TYPE == POINT_LIGHT || light.TYPE == SPOT_LIGHT)
         lightDir = normalize(fs_in.TangentLightPos - fs_in.TangentFragPos);
 
@@ -113,15 +113,12 @@ void main()
     if (material.opacity < 1.0)
         color = texture(material.diffuse_map, fs_in.TexCoords + UV_OFFSET);
 
-    vec3 normal = vec3(0.0);
+    vec3 normal = texture(material.normal_map, fs_in.TexCoords).rgb;
 
     if (normal.r >= 0.99 && normal.g >= 0.99 && normal.b >= 0.99)
         normal = normalize(fs_in.Normal);
     else
-    {
-        normal = texture(material.normal_map, fs_in.TexCoords).rgb;
         normal = normalize(normal * 2.0 - 1.0); // this normal is now in tangent space in range [-1, 1]
-    }
 
     if (material.use_lighting)
     {

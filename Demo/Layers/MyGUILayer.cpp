@@ -244,18 +244,6 @@ void MyGUILayer::OnUpdate()
                                 if (!mesh.name.empty())
                                     ImGui::Text("Mesh Name: %s", mesh.name.c_str());
 
-                                ImGui::SeparatorText("AABB Bounds");
-
-                                ImGui::Text("Min: x: %f, y: %f, z: %f", mesh.bounds.min.x, mesh.bounds.min.y,
-                                            mesh.bounds.min.z);
-                                ImGui::Text("Max: x: %f, y: %f, z: %f", mesh.bounds.max.x, mesh.bounds.max.y,
-                                            mesh.bounds.max.z);
-                                ImGui::Text("Half Extents: x: %f, y: %f, z: %f", mesh.bounds.halfExtents.x,
-                                            mesh.bounds.halfExtents.y, mesh.bounds.halfExtents.z);
-
-                                ImGui::Separator();
-                                ImGui::Spacing();
-
                                 ImGui::Checkbox(("Use Lighting##" + material.ID).c_str(),
                                                 &material.properties.use_lighting);
 
@@ -347,11 +335,11 @@ void MyGUILayer::OnUpdate()
                                                          2.0f);
 
                                         ImGui::DragFloat("Light Attenuation Cutoff##Spot",
-                                                         &material.properties.light.ATTENUATION_CUTOFF, 0.001f, 0.0f,
+                                                         &material.properties.light.ATTENUATION_CUTOFF, 0.1f, 0.0f,
                                                          180.0f);
 
                                         ImGui::DragFloat("Light Attenuation Outer Cutoff##Spot",
-                                                         &material.properties.light.ATTENUATION_OUTER_CUTOFF, 0.001f, 0.0f,
+                                                         &material.properties.light.ATTENUATION_OUTER_CUTOFF, 0.1f, 0.0f,
                                                          180.0f);
                                     }
                                 }
