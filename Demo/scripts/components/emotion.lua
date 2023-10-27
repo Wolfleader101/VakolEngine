@@ -51,7 +51,7 @@ function print_emotions()
 end
 
 function get_emotion(emotion_index)
-    if emotion_index < 0 or emotion_index > 7 then
+    if emotion_index < 1 or emotion_index > 8 then
         return -1
     end
 
@@ -59,7 +59,7 @@ function get_emotion(emotion_index)
 end
 
 function set_emotion(emotion_index, value)
-    if emotion_index < 0 or emotion_index > 7 then
+    if emotion_index < 1 or emotion_index > 8 then
         return
     end
 

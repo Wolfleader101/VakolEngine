@@ -98,33 +98,36 @@ function tick()
     else
         local foundAngryEntity = false;
         local emotionalEntities = scene.globals.emotional_entities;
-        local emotionalTransforms = scene.globals.emotional_transforms;
+
 
         for i = 1, #emotionalEntities do
-            local entityPos = emotionalTransforms[i].pos;
-            local distanceToEntity = (entityPos - pos).length();
-            if (distanceToEntity < ANGER_RAD) then
-                local entityEmotion = emotionalEntities[i]:get_script("emotions");
-                if entityEmotion.get_emotion(ANGER) > ANGER_THRESHOLD then
-                    foundAngryEntity = true;
-                    target = entityPos;
-                    break;
+            if (not (emotionalEntities[i] == entity)) then
+                local entityPos = emotionalEntities[i]:get_transform().pos;
+                local distanceToEntity = (entityPos - pos):length();
+                if (distanceToEntity < ANGER_RAD) then
+                    local entityEmotion = emotionalEntities[i]:get_script("emotions");
+                    if entityEmotion.get_emotion(emotions.ANGER) > ANGER_THRESHOLD then
+                        foundAngryEntity = true;
+                        target = entityPos;
+                        break;
+                    end
                 end
             end
-        end
 
-        if foundAngryEntity then
-            emotions.set_emotion(ANGER, 1); -- shri angry
-            nav.TARGET = target;
-            nav.set_state("chase");
-        else
-            emotions.set_emotion(ANGER, 0); -- shri happy
-            emotions.set_emotion(JOY, 0.5);
+            if foundAngryEntity then
+                emotions.set_emotion(emotions.ANGER, 0.7); -- shri angry
+                emotions.set_emotion(emotions.JOY, 0)
+                nav.TARGET = target;
+                nav.set_state("chase");
+            else
+                emotions.set_emotion(emotions.ANGER, 0); -- shri happy
+                emotions.set_emotion(emotions.JOY, 0.5);
+            end
         end
     end
 
     -- need attacking
-    local angerLevel = emotions.get_emotion(ANGER);
+    local angerLevel = emotions.get_emotion(emotions.ANGER);
     if angerLevel == 1 and (nav.TARGET - pos).length() < 1 then
         print("Shri kicks the entity!");
         nav.set_state("idle");
@@ -146,5 +149,4 @@ function shoot_piss()
     forward.z = trans.forward.z;
 
     piss.piss(pos + (forward * 0.3), forward);
-    -- piss.piss(pos, trans.forward * -3);
 end
