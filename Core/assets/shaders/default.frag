@@ -53,7 +53,7 @@ struct Light
 
 uniform Material material;
 
-uniform vec3 LIGHT_DIRECTION;
+uniform vec4 LIGHT_DIRECTION;
 
 uniform vec2 UV_OFFSET = vec2(0.0);
 
@@ -64,8 +64,14 @@ vec4 BlinnPhong(const vec3 normal, const vec4 color)
 {
     vec4 ambient = AMBIENT_STRENGTH * color;
 
-    vec3 lightDir = normalize(fs_in.TangentLightPos - fs_in.TangentFragPos);
-    float diff = max(dot(lightDir, normal), 0.0);
+    vec3 lightDir = vec3(0.0);
+
+    if (LIGHT_DIRECTION.w < 0.0)
+        lightDir = normalize(-radians(LIGHT_DIRECTION.xyz));
+    else if (LIGHT_DIRECTION.w > 1.0)
+        lightDir = normalize(fs_in.TangentLightPos - fs_in.TangentFragPos);
+
+    float diff = max(dot(normal, lightDir), 0.0);
     vec4 diffuse = diff * color;
 
     vec3 viewDir = normalize(fs_in.TangentViewPos - fs_in.TangentFragPos);

@@ -97,14 +97,14 @@ namespace Vakol
                                        material.properties.emissive_color = emissive;
                                    });
 
-        material_type.set_function("set_light_position",
-                                   [](Rendering::Assets::Material& material, const Math::Vec3& position) {
-                                       material.properties.light_position = position;
-                                   });
-
         material_type.set_function("set_light_direction",
                                    [](Rendering::Assets::Material& material, const Math::Vec3& direction) {
-                                       material.properties.light_direction = direction;
+                                       material.properties.light_direction = Math::Vec4(direction, 0.0);
+                                   });
+
+        material_type.set_function("set_light_position",
+                                   [](Rendering::Assets::Material& material, const Math::Vec3& position) {
+                                       material.properties.light_direction = Math::Vec4(position, 1.0f);
                                    });
 
         material_type.set_function("set_uv_offset",

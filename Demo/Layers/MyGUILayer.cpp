@@ -263,10 +263,28 @@ void MyGUILayer::OnUpdate()
                                 {
                                     ImGui::SeparatorText("Lighting");
 
-                                    ImGui::DragFloat3(("Light Position##" + material.ID).c_str(),
-                                                      &material.properties.light_position.x, 0.1f);
+                                    const char* preview_label = nullptr;
+
+                                    if (ImGui::BeginCombo(("Light Type##" + material.ID).c_str(), preview_label))
+                                    {
+                                        switch (material.properties.light.type)
+                                        {
+                                        case Vakol::Rendering::Assets::LIGHT_TYPE::DIRECTIONAL_LIGHT:
+                                            material.properties.light.LIGHT_DIRECTION.w = 0.0f;
+                                            preview_label = "Directional Light";
+                                            break;
+                                        case Vakol::Rendering::Assets::LIGHT_TYPE::SPOT_LIGHT:
+                                            material.properties.light.LIGHT_DIRECTION.w = 1.0f;
+                                            preview_label = "Spot Light";
+                                            break;
+                                        case Vakol::Rendering::Assets::LIGHT_TYPE::POINT_LIGHT:
+                                            preview_label = "Point Light";
+                                            break;
+                                        }
+                                    }
+
                                     ImGui::DragFloat3(("Light Direction##" + material.ID).c_str(),
-                                                      &material.properties.light_direction.x, 0.1f);
+                                                      &material.properties.light.LIGHT_DIRECTION.x, 0.1f);
                                 }
 
                                 ImGui::Spacing();

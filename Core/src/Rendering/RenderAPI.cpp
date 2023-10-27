@@ -489,8 +489,7 @@ namespace Vakol::Rendering
         SetVec4(shader, "material.specular_color", properties.specular_color, false);
         SetVec4(shader, "material.emissive_color", properties.emissive_color, false);
 
-        SetVec3(shader, "LIGHT_POSITION", properties.light_position, false);
-        SetVec3(shader, "LIGHT_DIRECTION", properties.light_direction, false);
+        SetVec4(shader, "LIGHT_DIRECTION", properties.light_direction, false);
 
         SetVec2(shader, "UV_OFFSET", properties.uv_offset, false);
 
