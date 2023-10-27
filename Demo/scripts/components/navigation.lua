@@ -13,21 +13,23 @@ local agent = nil;
 
 local position = Vector3.new();
 local rotation = Vector3.new();
-
-local target_direction = Vector3.new();
+local forward  = Vector3.new();
 
 local wander_target = Vector3.new();
 local wander_timer = 0.0;
 local wander_duration = 10.0;
 
+local idle_timer = 0.0;
+local idle_duration = 1.5;
+
 function wrap_angle(angle)
-    if (angle > 180) then
-        angle = angle - 360;
-    elseif (angle < -180) then
-        angle = angle + 360;
+    if angle > 180.0 then
+        angle = angle - 360.0
+    elseif angle < -180.0 then
+        angle = angle + 360.0
     end
 
-    return angle
+    return angle;
 end
 
 function set_state(new_state)
@@ -39,33 +41,100 @@ function get_state()
 end
 
 function gen_random_target()
-    local minX, maxX, minZ, maxZ = -80, 80, -80, 80;
+    local minX, maxX, minZ, maxZ = -40, 40, -40, 40;
 
     local x = math.random(minX, maxX);
-    local y = position.y;
+    local y = 0.0;
     local z = math.random(minZ, maxZ);
 
     return Vector3.new(x, y, z);
 end
 
-function look_at(target, away)
+
+function smooth_look_at(target, away)
+    local lookDir = Vector3.new();
+    
     if (not away) then
-        target_direction = normalize(target - position);
+        lookDir = normalize(target - position);
     else
-        target_direction = normalize(position - target)
+        lookDir = normalize(position - target);
+    end
+    lookDir.y = 0.0;
+
+    local angle = math.deg(atan2(lookDir.x, lookDir.z));
+    
+    local angleDiff = angle - rotation.y;
+    
+    if (angleDiff > 180.0) then
+        angleDiff = angleDiff - 360.0;
+    elseif (angleDiff < -180.0) then
+        angleDiff = angleDiff + 360.0;
     end
 
-    target_direction.y = 0.0;
+    local factor = ROTATE_SPEED * Time.delta_time;
+    
+    rotation.y = rotation.y + factor * angleDiff;
+end
 
-    local prevRotY = rotation.y;
+function look_at(target)
+    local lookDir = normalize(target - position);
+    lookDir.y = 0.0;
 
-    local targetAngle = math.deg(atan2(target_direction.x, target_direction.z));
+    local angle = math.deg(atan2(lookDir.x, lookDir.z));
 
-    local angleDiff = (targetAngle - prevRotY);
+    rotation.y = angle;
+end
 
-    local factor = math.min(1, ROTATE_SPEED * Time.delta_time);
+function flee()
+    can_move = true;
 
-    rotation.y = lerp(prevRotY, prevRotY + angleDiff, factor);
+    smooth_look_at(TARGET, true);
+end
+
+function chase()
+    can_move = true;
+
+    smooth_look_at(TARGET, false);
+end
+
+function wander()
+    can_move = true;
+
+    wander_timer = wander_timer + Time.delta_time;
+
+    local dst = distance(wander_target, position);
+
+    smooth_look_at(wander_target, false);
+
+    if (wander_timer >= wander_duration or dst < MAX_DISTANCE) then
+        wander_target = gen_random_target();
+        wander_timer = 0.0;
+        set_state("idle");
+        print("wander timer expired: new random target");
+    end
+end
+
+function idle()
+    can_move = false;
+    agent.linearVelocity = Vector3.new();
+
+    idle_timer = idle_timer + Time.delta_time;
+
+    if (idle_timer >= idle_duration) then
+        wander_target = gen_random_target();
+        idle_timer = 0.0;
+        set_state("wander");
+    end
+end
+
+function accelerate()
+    local movement = forward * MOVE_SPEED;
+
+    move(movement);
+end
+
+function move(force)
+    agent:apply_impulse(force);
 end
 
 function init()
@@ -79,56 +148,27 @@ function init()
 
     position = trans.pos;
     rotation = trans.rot;
+    forward  = trans.forward;
 
     wander_target = gen_random_target();
 end
 
-function flee()
-    can_move = true;
-
-    look_at(TARGET, true);
-end
-
-function chase()
-    can_move = true;
-
-    look_at(TARGET, false);
-end
-
-function wander()
-    can_move = true;
-
-    wander_timer = wander_timer + Time.delta_time;
-
-    if (wander_timer >= wander_duration) then
-        wander_target = gen_random_target();
-        wander_timer = 0.0;
-    end
-
-    look_at(wander_target);
-end
-
-function idle()
-    can_move = false;
-
-    agent.linearVelocity = Vector3.new();
-end
-
-function move(force)
-    agent:apply_impulse(force);
-end
-
-function accelerate()
-    local movement = target_direction * MOVE_SPEED;
-
-    move(movement);
-end
-
-function tick()
+function update()
     trans = entity:get_transform();
 
     position = trans.pos;
     rotation = trans.rot;
+    forward  = trans.forward;
+    
+    --if (Input:get_key_down(KEYS["KEY_1"])) then
+    --    look_at(Vector3.new(0.0, 1.0, -40.0));
+    --elseif (Input:get_key_down(KEYS["KEY_2"])) then
+    --    look_at(Vector3.new(0.0, 1.0, 40.0));
+    --elseif (Input:get_key_down(KEYS["KEY_3"])) then
+    --    look_at(Vector3.new(-40.0, 1.0, 0.0));
+    --elseif (Input:get_key_down(KEYS["KEY_4"])) then
+    --    look_at(Vector3.new(40.0, 1.0, 0.0));
+    --end
 
     if (state == "wander") then
         wander();
@@ -143,13 +183,6 @@ end
 
 function phys_update()
     if (can_move) then
-        local distance = target_direction:length();
-        --print(distance);
-
-        if (distance > MAX_DISTANCE) then
-            accelerate();
-        else
-            set_state("idle");
-        end
+        accelerate();
     end
 end

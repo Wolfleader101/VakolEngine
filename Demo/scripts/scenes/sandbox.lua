@@ -1,9 +1,9 @@
-function init()
+﻿function init()
     scene:create_entity("Player", "entities/player/noclip.lua")
 
-    --scene:create_entity("Test Entity", "entities/test/multi_script.lua");
-    --scene:create_entity("Nav Test", "entities/test/nav_test.lua");
-    -- scene:create_entity("Player", "entities/player/phys_player.lua")
+    scene:create_entity("Kiki", "entities/agents/kiki.lua");
+    scene:create_entity("Hong", "entities/agents/hong.lua");
+    scene:create_entity("Player", "entities/player/phys_player.lua")
 
     scene:create_entity("Digital Twin", "entities/worlds/digital_twin.lua");
     scene:create_entity("290 World", "entities/worlds/290_world.lua");
@@ -50,14 +50,15 @@ function init()
 
     -- local cube = scene:create_entity("Cube", "");
     -- cube:get_transform().pos = Vector3.new(10.0, 20.0, 0.0);
-    -- cube:get_transform().rot = Vector3.new(00.0, 0.0, 45.0);
+    -- cube:get_transform().rot = Vector3.new(0.0, 0.0, 90.0);
+    -- cube:get_transform().scale = Vector3.new(2, 1, 1);
     -- cube:add_model("coreAssets/models/cube.obj", 1);
 
     -- local rb = cube:add_rigid();
     -- rb.mass = 100;
     -- rb.bounciness = 0.3;
     -- rb.type = BodyType.Dynamic;
-    -- cube:add_box_collider(Vector3.new(0.5, 0.5, 0.5));
+    -- cube:add_box_collider(Vector3.new(1, 0.5, 0.5));
 
     -- local cube2 = scene:create_entity("Cube2", "");
     -- cube2:get_transform().pos = Vector3.new(15, 20.0, 0.0);
@@ -74,7 +75,8 @@ end
 function add_floor()
     local floor = scene:create_entity("Floor", "");
     floor:get_transform().scale = Vector3.new(100.0, 1.0, 100.0);
-    floor:add_model("coreAssets/models/cube.obj", 1);
+    local mdl = floor:add_model("coreAssets/models/cube.obj", 1);
+    mdl:get_mesh(0).material:set_light_position(Vector3.new(0.0, 100.0, 0.0));
 
     local rb1 = floor:add_rigid();
     rb1.mass = 1;

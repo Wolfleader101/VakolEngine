@@ -45,11 +45,21 @@ namespace Vakol
 
     void Scene::DestroyEntity(const Entity entity)
     {
-        if (entity.HasComponent<RigidBody>())
+        m_entitiesToDestroy.push_back(entity);
+    }
+
+    void Scene::DestroyEntities()
+    {
+        for (auto& entity : m_entitiesToDestroy)
         {
-            m_physicsScene.DestroyRigidBody(entity.GetComponent<RigidBody>());
+            if (entity.HasComponent<RigidBody>())
+            {
+                m_physicsScene.DestroyRigidBody(entity.GetComponent<RigidBody>());
+            }
+            m_entityList.RemoveEntity(entity);
         }
-        m_entityList.RemoveEntity(entity);
+
+        m_entitiesToDestroy.clear();
     }
 
     std::shared_ptr<Entity> Scene::GetEntity(const std::string& tag)

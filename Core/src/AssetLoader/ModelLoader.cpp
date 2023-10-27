@@ -49,7 +49,7 @@ namespace Vakol
         return {v.r, v.g, v.b, 1.0f};
     }
 
-    static Math::Vec3 ToVec3(aiVector3D& v)
+    static Math::Vec3 ToVec3(const aiVector3D& v)
     {
         return {v.x, v.y, v.z};
     }
@@ -149,8 +149,17 @@ namespace Vakol
 
         const auto& material = ProcessMaterial(scene, scene.mMaterials[mesh.mMaterialIndex]);
 
-        return {Rendering::GenerateID(), mesh.mName.C_Str(),  std::move(vertices),
-                std::move(indices),      std::vector<Bone>(), material};
+        Mesh pMesh = {Rendering::GenerateID(),
+                      mesh.mName.C_Str(),
+                      std::move(vertices),
+                      std::move(indices),
+                      std::vector<Bone>(),
+                      material,
+                      {ToVec3(mesh.mAABB.mMin), ToVec3(mesh.mAABB.mMax), Math::Vec3(0.0f)}};
+
+        pMesh.bounds.halfExtents = (pMesh.bounds.max - pMesh.bounds.min) / 2.0f;
+
+        return pMesh;
     }
 
     void ExtractVertices(const aiMesh& mesh, std::vector<Rendering::Vertex>& vertices,
@@ -200,7 +209,6 @@ namespace Vakol
         material->Get(AI_MATKEY_COLOR_SPECULAR, specular);
         material->Get(AI_MATKEY_COLOR_EMISSIVE, emissive);
         material->Get(AI_MATKEY_SHININESS, properties.shininess);
-        material->Get(AI_MATKEY_SHININESS_STRENGTH, properties.shininess_strength);
         material->Get(AI_MATKEY_OPACITY, properties.opacity);
 
         properties.ambient_color = ToVec4(ambient);
@@ -209,7 +217,7 @@ namespace Vakol
         properties.emissive_color = ToVec4(emissive);
 
         if (properties.shininess < 1.0f)
-            properties.shininess = 1.0f;
+            properties.shininess = 32.0f;
 
         auto&& diffuse_maps = ExtractTextures(scene, material, aiTextureType_DIFFUSE);
         auto&& specular_maps = ExtractTextures(scene, material, aiTextureType_SPECULAR);

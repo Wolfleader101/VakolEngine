@@ -10,7 +10,7 @@ function init()
 
     local camera = scene:get_camera();
 
-    camera:set_pos(0, 5.0, 0.0);
+    camera:set_pos(0, 5.0, 25.0);
 
     entity:get_transform().pos = camera:get_pos();
     scene.globals.player.pos = entity:get_transform().pos;
