@@ -112,10 +112,9 @@ namespace Vakol
                                        material.properties.uv_offset = offset;
                                    });
 
-        material_type.set_function("set_opacity",
-                                   [](Rendering::Assets::Material& material, const float opacity) {
-                                       material.properties.opacity = opacity;
-                                   });
+        material_type.set_function("set_opacity", [](Rendering::Assets::Material& material, const float opacity) {
+            material.properties.opacity = opacity;
+        });
 
         material_type.set_function("use_lighting", [](Rendering::Assets::Material& material, const bool enabled) {
             material.properties.use_lighting = enabled;

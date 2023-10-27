@@ -150,11 +150,11 @@ namespace Vakol
         const auto& material = ProcessMaterial(scene, scene.mMaterials[mesh.mMaterialIndex]);
 
         Mesh pMesh = {Rendering::GenerateID(),
-                     mesh.mName.C_Str(),
-                     std::move(vertices),
-                     std::move(indices),
-                     std::vector<Bone>(),
-                     material,
+                      mesh.mName.C_Str(),
+                      std::move(vertices),
+                      std::move(indices),
+                      std::vector<Bone>(),
+                      material,
                       {ToVec3(mesh.mAABB.mMin), ToVec3(mesh.mAABB.mMax), Math::Vec3(0.0f)}};
 
         pMesh.bounds.halfExtents = (pMesh.bounds.max - pMesh.bounds.min) / 2.0f;

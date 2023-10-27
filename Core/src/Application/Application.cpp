@@ -205,7 +205,7 @@ namespace Vakol
                         [&](Components::Transform& transform, RigidBody& rb) {
                             m_physicsEngine.ApplyForces(transform.pos, transform.rot, rb);
 
-                            //transform.eulerAngles = Math::RadToDeg(Math::EulerFromQuat(transform.rot));
+                            // transform.eulerAngles = Math::RadToDeg(Math::EulerFromQuat(transform.rot));
                         });
 
                     // detect collisions
@@ -251,11 +251,11 @@ namespace Vakol
             {
                 activeScene.GetEntityList().Iterate<Components::Transform, Rendering::Drawable>(
                     [&](Components::Transform& transform, const Rendering::Drawable& drawable) {
-                        //activeScene.GetEntityList().Sort<Components::Transform>(
-                        //    [&](const Components::Transform& left, const Components::Transform& right) {
-                        //        return Math::Distance(left.pos, activeScene.GetCamera().GetPos()) >
-                        //               Math::Distance(right.pos, activeScene.GetCamera().GetPos());
-                        //    });
+                        // activeScene.GetEntityList().Sort<Components::Transform>(
+                        //     [&](const Components::Transform& left, const Components::Transform& right) {
+                        //         return Math::Distance(left.pos, activeScene.GetCamera().GetPos()) >
+                        //                Math::Distance(right.pos, activeScene.GetCamera().GetPos());
+                        //     });
 
                         if (drawable.active)
                             Rendering::RenderEngine::Draw(activeScene.GetCamera(), transform, drawable);
