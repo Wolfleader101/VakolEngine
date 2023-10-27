@@ -16,7 +16,18 @@
 
     scene:generate_skybox(faces);
 
-    -- scene:create_entity("Cube", "entities/test/cube.lua");
+    local cube_1 = scene:create_entity("Cube 1", "entities/test/cube.lua");
+    cube_1:get_transform().pos = Vector3.new(0.0, 1.0, -40.0);
+
+    local cube_2 = scene:create_entity("Cube 2", "entities/test/cube.lua");
+    cube_2:get_transform().pos = Vector3.new(0.0, 1.0, 40.0);
+
+    local cube_3 = scene:create_entity("Cube 3", "entities/test/cube.lua");
+    cube_3:get_transform().pos = Vector3.new(-40.0, 1.0, 0.0);
+
+    local cube_4 = scene:create_entity("Cube 4", "entities/test/cube.lua");
+    cube_4:get_transform().pos = Vector3.new(40.0, 1.0, 0.0);
+
     add_floor();
 
     -- phys_objs();
@@ -51,7 +62,8 @@ end
 function add_floor()
     local floor = scene:create_entity("Floor", "");
     floor:get_transform().scale = Vector3.new(100.0, 1.0, 100.0);
-    floor:add_model("coreAssets/models/cube.obj", 1);
+    local mdl = floor:add_model("coreAssets/models/cube.obj", 1);
+    mdl:get_mesh(0).material:set_light_position(Vector3.new(0.0, 100.0, 0.0));
 
     local rb1 = floor:add_rigid();
     rb1.mass = 1;

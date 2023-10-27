@@ -205,7 +205,7 @@ namespace Vakol
                         [&](Components::Transform& transform, RigidBody& rb) {
                             m_physicsEngine.ApplyForces(transform.pos, transform.rot, rb);
 
-                            transform.eulerAngles = Math::RadToDeg(Math::EulerFromQuat(transform.rot));
+                            //transform.eulerAngles = Math::RadToDeg(Math::EulerFromQuat(transform.rot));
                         });
 
                     // detect collisions

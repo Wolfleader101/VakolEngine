@@ -24,10 +24,10 @@ function init()
     target = scene:get_camera():get_pos();
 
     nav.TARGET = target;
-    nav.MAX_DISTANCE = 0.8;
+    nav.MAX_DISTANCE = 5.0;
 
-    nav.MOVE_SPEED = 0.15;
-    nav.ROTATE_SPEED = 2.5;
+    nav.MOVE_SPEED = 0.05;
+    nav.ROTATE_SPEED = 5.0;
     nav.BRAKE_FORCE = 1.0;
 
     nav.set_state("wander");
