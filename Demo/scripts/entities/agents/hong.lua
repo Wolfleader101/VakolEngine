@@ -7,8 +7,6 @@ function init()
     trans.scale = Vector3.new(0.015, 0.015, 0.015);
 
     entity:add_script("emotions", "components/emotion.lua");
-    local emotions = entity:get_script("emotions");
-
 
     local rb = entity:add_rigid();
     rb.rot_lock = BVector3.new(true, true, true);
@@ -56,6 +54,8 @@ function tick()
     -- nav = entity:get_script("navigation");
     -- nav.TARGET = target;
 
+
+    -- TODO might only want to check nearby bins every 10 ticks or so???
     local nearby_bins = get_nearby_bins(entity, 100);
 
     for name, bin in pairs(nearby_bins) do
@@ -72,12 +72,23 @@ function tick()
             if (prev_bin_contents < contents.COUNT) then
                 print("Hong saw someone put something in the bin")
                 -- TODO make hong angry
+                local emotions = entity:get_script("emotions");
+                local angerVal = emotions.get_emotion(emotions.ANGER);
+                emotions.set_emotion(emotions.ANGER, angerVal + 0.8);
             end
 
-            -- if it has gone down, then he has seen someone take something out of the bin and get happier??
+            -- TODO if it has gone down, then he has seen someone take something out of the bin and get happier??
+            if(prev_bin_contents > contents.COUNT) then
+                print("Hong saw someone take something out of the bin")
+                -- TODO make hong happy
+                local emotions = entity:get_script("emotions");
+                local joyVal = emotions.get_emotion(emotions.JOY);
+                emotions.set_emotion(emotions.JOY, joyVal + 0.8);
+            end
         end
 
-        prev_nearby_bins[name] = contents.COUNT; -- this wont delete previous bins that it doesnt see anymore tho which is the downside to this approach
+        --! this wont delete previous bins that it doesnt see anymore tho which is the downside to this approach
+        prev_nearby_bins[name] = contents.COUNT;
     end
     
     -- if holding an item, increment the held time

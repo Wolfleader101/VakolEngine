@@ -69,6 +69,8 @@ namespace Vakol
             rb1.isSleeping = false;
             rb2.isSleeping = false;
 
+            m_onCollisionCallback(rb1, rb2);
+
             Math::Vec3 averageLocalPoint1(0.0f, 0.0f, 0.0f);
             Math::Vec3 averageLocalPoint2(0.0f, 0.0f, 0.0f);
             Math::Vec3 averageNormal(0.0f, 0.0f, 0.0f);
@@ -153,8 +155,6 @@ namespace Vakol
             {
                 rb2.sleepCounter = 0;
             }
-
-            m_onCollisionCallback(rb1, rb2);
         }
     }
 
