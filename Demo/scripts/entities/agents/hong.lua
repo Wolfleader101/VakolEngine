@@ -30,7 +30,9 @@ function init()
     nav.ROTATE_SPEED = 2.5;
     nav.BRAKE_FORCE = 1.0;
 
-    nav.set_state("wander");
+    nav.set_state("idle");
+
+    emotions.set_emotion(emotions.ANGER, 10);
 end
 
 function tick()
