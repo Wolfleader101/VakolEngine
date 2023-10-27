@@ -27,29 +27,33 @@ function init()
     end
 end
 
-function randomFloat(lower, greater)
+local function randomFloat(lower, greater)
     return lower + math.random() * (greater - lower);
 end
 
 function piss(pos, forward)
+    print("pos: " .. pos.x .. " " .. pos.y .. " " .. pos.z);
+    print("forward: " .. forward.x .. " " .. forward.y .. " " .. forward.z);
+
     piss_index = (piss_index % MAX_PISS) + 1;
-    particle = piss_particles[piss_index];
+    local particle = piss_particles[piss_index];
     particle:get_transform().pos = pos;
 
-    rb = particle:get_rigid();
+    local rb = particle:get_rigid();
+    --rb.linearVelocity = Vector3.new(0, 0, 0);
     rb.hasGravity = true;
     rb.is_sleeping = false;
 
-    randVec = Vector3.new(randomFloat(0, 1), randomFloat(0, 1), randomFloat(0, 1));
-    rb:apply_impulse(forward + randVec);
+    local randVec = Vector3.new(randomFloat(0, 1), randomFloat(0, 1), randomFloat(0, 1));
+    rb.linearVelocity = forward + randVec;
 end
 
 function clean()
     for i = 1, MAX_PISS do
-        trans = piss_particles[i]:get_transform();
+        local trans = piss_particles[i]:get_transform();
         trans.pos = Vector3.new(i, y_storage, i);
 
-        rb = piss_particles[i]:get_rigid();
+        local rb = piss_particles[i]:get_rigid();
         rb.hasGravity = false;
         rb.is_sleeping = true;
     end

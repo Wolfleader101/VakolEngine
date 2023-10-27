@@ -29,7 +29,7 @@ function init()
     piss = entity:get_script("piss");
 
     rb = entity:add_rigid();
-    rb.type = BodyType.Dynamic;
+    rb.type = BodyType.Static;
     rb.rot_lock = BVector3.new(true, true, true);
     entity:add_box_collider(Vector3.new(0.9, 1.75, 0.3));
 
@@ -46,7 +46,7 @@ function init()
 
     --print(nav.TARGET.x .. " " .. nav.TARGET.y .. " " .. nav.TARGET.z)
     nav.MAX_DISTANCE = 0.1;
-    nav.set_state("chase");
+    nav.set_state("idle");
     nav.look_at(nav.TARGET, true);
 
 
@@ -54,8 +54,11 @@ function init()
 end
 
 local pos;
-local pissTimer <const> = 600; -- 10 seconds
+local pissTimer <const> = 10 * 60; -- 10 seconds
 local pissTicks = 0;
+
+local attackCooldownTime <const> = 15 * 60;
+local attackCooldown = -1;
 
 local foundAngryEntity = false;
 
@@ -78,9 +81,8 @@ function tick()
             pissTicks = 0;
         end
     else
-        if (not foundAngryEntity) then
+        if (not foundAngryEntity and attackCooldown < 0) then
             local emotionalEntities = scene.globals.emotional_entities;
-
 
             for i = 1, #emotionalEntities do
                 if (not (emotionalEntities[i] == entity)) then
@@ -110,13 +112,15 @@ function tick()
     --local angerLevel = emotions.get_emotion(emotions.ANGER);
 
     --print()
-    if foundAngryEntity and (nav.TARGET - pos):length() < 1 then
+    if foundAngryEntity and (nav.TARGET - pos):length() < 2 then
         print("Shri kicks the entity!");
         nav.set_state("idle");
         emotions.set_emotion(emotions.JOY, 0.5);
         emotions.set_emotion(emotions.ANGER, -0.1);
         foundAngryEntity = false
+        attackCooldown = attackCooldownTime;
     end
+    attackCooldown = attackCooldown - 1;
 end
 
 function shoot_piss()
