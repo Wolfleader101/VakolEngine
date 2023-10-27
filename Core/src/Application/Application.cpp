@@ -277,6 +277,7 @@ namespace Vakol
                 transform.rot = Math::Quat(Math::DegToRad(transform.eulerAngles));
             });
 
+            activeScene.DestroyEntities();
             activeScene.GetCamera().Update();
 
             if (IsSystemActive(SystemFlag::Rendering))

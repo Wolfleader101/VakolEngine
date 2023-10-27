@@ -199,19 +199,16 @@ namespace Vakol
             return;
         }
 
+        // if (rb.isSleeping && rb.hasGravity)
+        // {
+        //     rb.isSleeping = false;
+        //     rb.sleepCounter = 0;
+        // }
+
         if (rb.hasGravity)
         {
             Math::Vec3 weight = rb.mass * gravity;
             rb.force += weight;
-        }
-
-        if (rb.isSleeping)
-        {
-            if (Math::MagnitudeSq(rb.force) < 0.01f && Math::MagnitudeSq(rb.torque) < 0.01f)
-                return;
-
-            rb.isSleeping = false;
-            rb.sleepCounter = 0;
         }
 
         Math::Vec3 linearAcceleration = rb.force * rb.invMass;

@@ -5,6 +5,18 @@
 
 namespace Vakol::Math
 {
+    Math::Vec3 RoundToZero(const Math::Vec3& vec)
+    {
+        Math::Vec3 result = vec;
+        if (std::abs(result.x) < EPSILON)
+            result.x = 0.0f;
+        if (std::abs(result.y) < EPSILON)
+            result.y = 0.0f;
+        if (std::abs(result.z) < EPSILON)
+            result.z = 0.0f;
+        return result;
+    }
+
     float Dot(const Vec2& a, const Vec2& b)
     {
         return glm::dot(a, b);
@@ -321,4 +333,8 @@ namespace Vakol::Math
         return glm::eulerAngles(quat);
     }
 
+    Quat Conjugate(const Quat& quat)
+    {
+        return glm::conjugate(quat);
+    }
 } // namespace Vakol::Math

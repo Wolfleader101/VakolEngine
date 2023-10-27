@@ -4,6 +4,7 @@ function init()
     scene.globals.tables = {};
     scene.globals.rubbishBins = {};
     scene.globals.recyclingBins = {};
+	scene.globals.bins = {};
     scene.globals.apples = {};
     scene.globals.drinkCups = {};
     scene.globals.beerCans = {};
@@ -104,25 +105,28 @@ function init()
 		scene.globals.tables[i]:get_transform().pos = tablePositions[i];
 	end
 
-	for i = 1, 2 do
-		local entityName = "Rubbish Bin";
-		entityName = entityName .. " " .. i;
+    for i = 1, 2 do
+        local rubbishBinName = "Rubbish Bin " .. i;
+
+        scene.globals.rubbishBins[i] = scene:create_entity(rubbishBinName, "entities/objects/rubbish_bin.lua");
+
+        local recyclyingBinName = "Recycling Bin " .. i;
+
+        scene.globals.recyclingBins[i] = scene:create_entity(recyclyingBinName, "entities/objects/recycle_bin.lua");
+
+        scene.globals.rubbishBins[i]:get_transform().pos = rubbishBinPositions[i];
+        scene.globals.recyclingBins[i]:get_transform().pos = recyclingBinPositions[i];
+
+        if i == 2 then
+            scene.globals.rubbishBins[i]:get_transform().rot = Vector3.new(0.0, 90.0, 0.0);
+            scene.globals.recyclingBins[i]:get_transform().rot = Vector3.new(0.0, 90.0, 0.0);
+        end
+
+        -- Add bins to the set of all bins
+        scene.globals.bins[rubbishBinName] = scene.globals.rubbishBins[i];
+        scene.globals.bins[recyclyingBinName] = scene.globals.recyclingBins[i];
+    end
 	
-		scene.globals.rubbishBins[i] = scene:create_entity(entityName, "entities/objects/rubbish_bin.lua");
-
-		entityName = "Recycling Bin";
-		entityName = entityName .. " " .. i;
-
-		scene.globals.recyclingBins[i] = scene:create_entity(entityName, "entities/objects/recycle_bin.lua");
-
-		scene.globals.rubbishBins[i]:get_transform().pos = rubbishBinPositions[i];
-		scene.globals.recyclingBins[i]:get_transform().pos = recyclingBinPositions[i];
-
-		if i == 2 then
-			scene.globals.rubbishBins[i]:get_transform().rot = Vector3.new(0.0, 90.0, 0.0);
-			scene.globals.recyclingBins[i]:get_transform().rot = Vector3.new(0.0, 90.0, 0.0);
-		end
-	end
 
 	for i = 1, 6 do
 		local entityName = "Apple";
