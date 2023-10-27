@@ -22,6 +22,7 @@ local currentFear = nil;
 
 local interactDistance = 5.0;
 local minInteractDistance = 0.5;
+local avoidanceDistance = 3.0;
 
 function init()
     entity:add_model("assets/models/ai/hamid/hamid.fbx", 0.015);
@@ -32,6 +33,9 @@ function init()
     rb.mass = 10.0;
     rb.rot_lock = BVector3.new(true, true, true);
     rb.type = BodyType.Dynamic;
+
+    entity:get_transform().pos = Vector3.new(-30, 5, -20);
+    entity:get_transform().scale = Vector3.new(0.015, 0.015, 0.015);
 
     entity:add_box_collider(Vector3.new(0.9, 1.75, 0.3));
 
@@ -166,6 +170,17 @@ function tick()
             -- Check if the fear of the AI is above a certian amount before performing an action
             if (emotions.get_emotion(emotions.FEAR) ~= nil and emotions.get_emotion(emotions.FEAR) > 0.1) then
                 -- AVOID AI LOGIC GOES HERE
+                for i, aiEntity in pairs(scene.globals.emotional_entities) do
+                    -- Make sure the AI is not itself
+                    if (aiEntity ~= entity) then
+                        local distanceToEntity = distance(entity:get_transform().pos, aiEntity:get_transform().pos);  -- Assuming you have a distance function
+
+                        if (distanceToEntity < avoidanceDistance) then
+                            -- Logic to avoid the AI entity goes here
+                            -- For example, updating the navigation.DESTINATION to a location away from aiEntity
+                        end
+                    end
+                end
             end
         end
     else

@@ -14,38 +14,12 @@ function init()
 
     scene:generate_skybox(faces);
 
+    -- AI Setup
 
     scene:create_entity("Hong", "entities/agents/hong.lua");
-    -- scene:create_entity("Cube", "entities/test/cube.lua");
-    -- add_floor();
-
-    -- phys_objs();
-    -- falling_objs();
-    -- stress_test();
-    -- ramps();
-    -- particles();
-
-    -- local cube = scene:create_entity("Cube", "");
-    -- cube:get_transform().pos = Vector3.new(10.0, 20.0, 0.0);
-    -- cube:get_transform().rot = Vector3.new(00.0, 0.0, 45.0);
-    -- cube:add_model("coreAssets/models/cube.obj", 1);
-
-    -- local rb = cube:add_rigid();
-    -- rb.mass = 100;
-    -- rb.bounciness = 0.3;
-    -- rb.type = BodyType.Dynamic;
-    -- cube:add_box_collider(Vector3.new(0.5, 0.5, 0.5));
-
-    -- local cube2 = scene:create_entity("Cube2", "");
-    -- cube2:get_transform().pos = Vector3.new(15, 20.0, 0.0);
-    -- cube2:get_transform().rot = Vector3.new(0.0, 0.0, 0.0);
-    -- cube2:add_model("coreAssets/models/cube.obj", 1);
-
-    -- local rb2 = cube2:add_rigid();
-    -- rb2.mass = 10;
-    -- rb2.bounciness = 0.3;
-    -- rb2.type = BodyType.Dynamic;
-    -- cube2:add_box_collider(Vector3.new(1.0, 1.0, 1.0));
+    
+    local hamid = scene:create_entity("shri", "entities/agents/hamid.lua");
+    scene.globals.emotional_entities[3] = hamid;
 end
 
 function add_floor()
