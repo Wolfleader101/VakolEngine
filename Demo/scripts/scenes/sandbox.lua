@@ -6,7 +6,7 @@
     -- scene:create_entity("Player", "entities/player/phys_player.lua")
 
     --scene:create_entity("Digital Twin", "entities/worlds/digital_twin.lua");
-    --scene:create_entity("290 World", "entities/worlds/290_world.lua");
+    scene:create_entity("290 World", "entities/worlds/290_world.lua");
 
     local path = "coreAssets/textures/Skybox/";
     local extension = ".png";
