@@ -12,6 +12,7 @@ local initialRubbishContact = false;
 local rubbishBins = scene.globals.rubbishBins;
 local recyclingBins = scene.globals.recyclingBins;
 local rubbish = {};
+local currentRubbish = nil;
 
 local yDifference = nil;
 
@@ -54,6 +55,7 @@ function find_closest_bin()
     local closestBin = nil; -- The closest bin to the AI
     local shortestDistance = math.huge; -- Initially set to a very high value
 
+    -- Loop through all the rubbish bins
     for i, bin in pairs(scene.globals.rubbishBins) do
         -- Get the distance between the AI and the current bin
         local distance = distance(entity:get_transform().pos, bin:get_transform().pos);
@@ -124,7 +126,7 @@ function rubbish_behaviour()
                 entityDistance = distance(entity:get_transform().pos, value:get_transform().pos);
 
                 if ((entityDistance < minInteractDistance) and yDifference < 0.5) then
-                    destroy_entity(--[[ ADD THE CURRENT RUBBISH ENTITY THAT IS BEING HELD --]]);
+                    destroy_entity(currentRubbish);
 
                     emotions.add_emotion_value(emotions.JOY, 0.2);
 
@@ -145,6 +147,8 @@ function on_contact(other_ent)
     if (initialRubbishContact == true and holdingRubbish == true) then
     {
         -- PUT LOGIC FOR HOLDING THINGS HERE
+
+        currentRubbish = other_ent;
     
         initialRubbishContact = false;
     }
