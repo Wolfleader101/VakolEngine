@@ -232,32 +232,76 @@ void MyGUILayer::OnUpdate()
 
                         if (entity.HasComponent<Vakol::Rendering::Drawable>() && ImGui::CollapsingHeader("Drawable"))
                         {
-                            Vakol::Rendering::Drawable& drawable = entity.GetComponent<Vakol::Rendering::Drawable>();
-
-                            ImGui::Text("Drawable ID: %s", drawable.ID.ToString().c_str());
-                            ImGui::Spacing();
-
-                            ImGui::SeparatorText("Material");
+                            const Vakol::Rendering::Drawable& drawable =
+                                entity.GetComponent<Vakol::Rendering::Drawable>();
 
                             Vakol::Rendering::Assets::Model& model = Vakol::AssetLoader::FindModel(drawable.ID);
 
                             for (Vakol::Rendering::Assets::Mesh& mesh : model.meshes)
                             {
-                                ImGui::Text("Mesh ID: %s", mesh.ID.c_str());
-
                                 Vakol::Rendering::Assets::Material& material = mesh.material;
 
-                                ImGui::Text("Material ID: %s", material.ID.c_str());
+                                if (!mesh.name.empty())
+                                    ImGui::Text("Mesh Name: %s", mesh.name.c_str());
+
+                                ImGui::SeparatorText("AABB Bounds");
+
+                                ImGui::Text("Min: x: %f, y: %f, z: %f", mesh.bounds.min.x, mesh.bounds.min.y,
+                                            mesh.bounds.min.z);
+                                ImGui::Text("Max: x: %f, y: %f, z: %f", mesh.bounds.max.x, mesh.bounds.max.y,
+                                            mesh.bounds.max.z);
+                                ImGui::Text("Half Extents: x: %f, y: %f, z: %f", mesh.bounds.halfExtents.x,
+                                            mesh.bounds.halfExtents.y, mesh.bounds.halfExtents.z);
+
+                                ImGui::Separator();
+                                ImGui::Spacing();
 
                                 ImGui::Checkbox(("Use Lighting##" + material.ID).c_str(),
                                                 &material.properties.use_lighting);
+
+                                if (material.properties.use_lighting)
+                                {
+                                    ImGui::SeparatorText("Lighting");
+
+                                    ImGui::DragFloat3(("Light Position##" + material.ID).c_str(),
+                                                      &material.properties.light_position.x, 0.1f);
+                                    ImGui::DragFloat3(("Light Direction##" + material.ID).c_str(),
+                                                      &material.properties.light_direction.x, 0.1f);
+                                }
+
+                                ImGui::Spacing();
+                                ImGui::Spacing();
+
+                                ImGui::SeparatorText("Material");
+
                                 ImGui::Checkbox(("Use Textures##" + material.ID).c_str(),
                                                 &material.properties.use_textures);
 
-                                ImGui::ColorEdit4(("Ambient Color##" + material.ID).c_str(),
-                                                  &material.properties.ambient_color.x);
-                                ImGui::ColorEdit4(("Diffuse Color##" + material.ID).c_str(),
-                                                  &material.properties.diffuse_color.x);
+                                ImGui::Separator();
+                                ImGui::Spacing();
+
+                                if (material.properties.use_textures)
+                                    ImGui::DragFloat2(("UV Offset##" + material.ID).c_str(), &material.properties.uv_offset.x, 0.05f);
+                                else
+                                {
+                                    ImGui::ColorEdit4(("Diffuse Color##" + material.ID).c_str(),
+                                                      &material.properties.diffuse_color.x);
+                                    ImGui::ColorEdit4(("Ambient Color##" + material.ID).c_str(),
+                                                      &material.properties.ambient_color.x);
+                                    ImGui::ColorEdit4(("Specular Color##" + material.ID).c_str(),
+                                                      &material.properties.specular_color.x);
+                                    ImGui::ColorEdit4(("Emissive Color##" + material.ID).c_str(),
+                                                      &material.properties.emissive_color.x);
+                                }
+
+                                ImGui::DragFloat(("Shininess##" + material.ID).c_str(), &material.properties.shininess,
+                                                 0.1f, 32.0f, FLT_MAX);
+
+                                ImGui::DragFloat(("Opacity##" + material.ID).c_str(), &material.properties.opacity,
+                                                 0.1f, 0.0f, 1.0f);
+
+                                ImGui::Separator();
+                                ImGui::Spacing();
                             }
                         }
 
@@ -343,7 +387,7 @@ void MyGUILayer::OnUpdate()
 
                         if (entity.HasComponent<Vakol::BoxCollider>() && ImGui::CollapsingHeader("Box Collider"))
                         {
-                            Vakol::BoxCollider& collider = entity.GetComponent<Vakol::BoxCollider>();
+                            const Vakol::BoxCollider& collider = entity.GetComponent<Vakol::BoxCollider>();
 
                             Vakol::Math::Vec3 halfExtents = Vec3(collider.shape->getHalfExtents());
 
@@ -355,12 +399,12 @@ void MyGUILayer::OnUpdate()
 
                         if (entity.HasComponent<Vakol::SphereCollider>() && ImGui::CollapsingHeader("Sphere Collider"))
                         {
-                            Vakol::SphereCollider& collider = entity.GetComponent<Vakol::SphereCollider>();
+                            const Vakol::SphereCollider& collider = entity.GetComponent<Vakol::SphereCollider>();
 
-                            double min = 0.01;
-                            double max = 100.0;
+                            constexpr float min = 0.01f;
+                            constexpr float max = 100.0f;
 
-                            double radius = collider.shape->getRadius();
+                            float radius = collider.shape->getRadius();
 
                             ImGui::SeparatorText("Size");
                             ImGui::DragScalar("Radius", ImGuiDataType_Double, &radius, 0.1f);
@@ -376,13 +420,13 @@ void MyGUILayer::OnUpdate()
                         if (entity.HasComponent<Vakol::CapsuleCollider>() &&
                             ImGui::CollapsingHeader("Capsule Collider"))
                         {
-                            Vakol::CapsuleCollider& collider = entity.GetComponent<Vakol::CapsuleCollider>();
+                            const Vakol::CapsuleCollider& collider = entity.GetComponent<Vakol::CapsuleCollider>();
 
-                            double min = 0.01;
-                            double max = 100.0;
+                            constexpr float min = 0.01;
+                            constexpr float max = 100.0;
 
-                            double radius = collider.shape->getRadius();
-                            double height = collider.shape->getHeight();
+                            float radius = collider.shape->getRadius();
+                            float height = collider.shape->getHeight();
 
                             ImGui::SeparatorText("Size");
                             ImGui::DragScalar("Radius", ImGuiDataType_Double, &radius, 0.1f);
@@ -436,7 +480,7 @@ void MyGUILayer::OnUpdate()
                             {
                                 Vakol::RigidBody& rb = entity.GetComponent<Vakol::RigidBody>();
 
-                                double radius = 1.0;
+                                constexpr float radius = 1.0;
 
                                 Vakol::SphereCollider collider = m_app.GetPhysicsEngine().CreateSphereCollider(radius);
                                 m_app.GetPhysicsEngine().AttachCollider(rb, collider);
@@ -448,11 +492,12 @@ void MyGUILayer::OnUpdate()
                             {
                                 Vakol::RigidBody& rb = entity.GetComponent<Vakol::RigidBody>();
 
-                                double radius = 0.5;
-                                double height = 1.0;
+                                constexpr float radius = 0.5;
+                                constexpr float height = 1.0;
 
                                 Vakol::CapsuleCollider collider =
                                     m_app.GetPhysicsEngine().CreateCapsuleCollider(radius, height);
+
                                 m_app.GetPhysicsEngine().AttachCollider(rb, collider);
 
                                 entity.AddComponent<Vakol::CapsuleCollider>(collider);

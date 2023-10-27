@@ -1,4 +1,3 @@
-
 ANGER = 1;
 ANTICIPATION = 2;
 JOY = 3;
@@ -105,7 +104,7 @@ end
 
 local function L2Normalize()
     
-    L2Norm = 0;
+    local L2Norm = 0;
 
     for i = 1, #emotion_concepts do
         L2Norm = L2Norm + emotion_concepts[i] * emotion_concepts[i]; --^2
@@ -123,7 +122,7 @@ local function iterate()
     new_concepts = {};
 
     for i = 1, 8 do
-        sum = 0;
+        local sum = 0;
 
         for j = 1, 8 do
             sum = sum + emotion_concepts[j] * weights[j][i] -- accidentally made transpose so reverse indexing gg lmao

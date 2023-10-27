@@ -23,7 +23,6 @@ struct Material
     vec4 emissive_color;
 
     float shininess;
-    float shininess_strength;
     float opacity;
 
     bool use_lighting;
@@ -52,18 +51,14 @@ struct Light
     vec4 position;
 };
 
-layout (std430, binding = 1) buffer Lights
-{
-    int nLights;
-    Light[] lights;
-};
-
 uniform Material material;
+
+uniform vec3 LIGHT_DIRECTION;
+
+uniform vec2 UV_OFFSET = vec2(0.0);
 
 uniform float AMBIENT_STRENGTH = 0.2;
 uniform float SPECULAR_STRENGTH = 0.3;
-
-uniform vec3 LIGHT_DIRECTION = vec3(0.0, -0.25, 0.0);
 
 vec4 BlinnPhong(const vec3 normal, const vec4 color)
 {
@@ -77,7 +72,7 @@ vec4 BlinnPhong(const vec3 normal, const vec4 color)
     vec3 reflectDir = reflect(-lightDir, normal);
     
     vec3 halfwayDir = normalize(lightDir + viewDir);
-    float spec = pow(max(dot(normal, halfwayDir), 0.0), 32.0);
+    float spec = pow(max(dot(normal, halfwayDir), 0.0), material.shininess);
     vec4 specular = vec4(vec3(SPECULAR_STRENGTH), 1.0) * spec;
 
     return ambient + diffuse + specular;
@@ -85,9 +80,9 @@ vec4 BlinnPhong(const vec3 normal, const vec4 color)
 
 void main()
 {
-    vec4 color = texture(material.diffuse_map, fs_in.TexCoords);
+    vec4 color = texture(material.diffuse_map, fs_in.TexCoords + UV_OFFSET);
 
-    if ((color.r >= 0.99 && color.g >= 0.99 && color.b >= 0.99) || !material.use_textures)
+    if (!material.use_textures)
         color = material.diffuse_color;
 
     vec3 normal = texture(material.normal_map, fs_in.TexCoords).rgb;
