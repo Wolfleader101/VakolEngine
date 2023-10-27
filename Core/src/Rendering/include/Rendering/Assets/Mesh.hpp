@@ -24,6 +24,11 @@ namespace Vakol::Rendering::Assets
          * \brief max bounds
          */
         Math::Vec3 max;
+
+        /**
+         * \brief the half extents
+         */
+        Math::Vec3 halfExtents;
     };
 
     struct Bone
@@ -54,6 +59,6 @@ namespace Vakol::Rendering::Assets
 
         Material material; // the material of a mesh.
 
-        Bounds bounds{}; // the AABB bounds of a mesh.
+        Bounds bounds; // the AABB bounds of a mesh.
     };
 } // namespace Vakol::Rendering::Assets

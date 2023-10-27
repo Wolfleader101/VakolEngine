@@ -50,6 +50,16 @@ namespace Vakol
 
                                     return model.meshes.at(0);
                                 });
+
+        model_type.set_function("get_half_extents",
+                                [](const Rendering::Assets::Model& model, const int index) -> Math::Vec3 {
+                                    if (model.meshes.size() > index)
+                                        return model.meshes.at(index).bounds.halfExtents;
+
+                                    VK_ERROR("Unable to fetch half extents at index: {0}", index);
+
+                                    return model.meshes.at(0).bounds.halfExtents;
+                                });
     }
 
     void RegisterMesh(sol::state& lua)
@@ -81,6 +91,38 @@ namespace Vakol
                                    [](Rendering::Assets::Material& material, const Math::Vec4& specular) {
                                        material.properties.specular_color = specular;
                                    });
+
+        material_type.set_function("set_emissive_color",
+                                   [](Rendering::Assets::Material& material, const Math::Vec4& emissive) {
+                                       material.properties.emissive_color = emissive;
+                                   });
+
+        material_type.set_function("set_light_position",
+                                   [](Rendering::Assets::Material& material, const Math::Vec3& position) {
+                                       material.properties.light_position = position;
+                                   });
+
+        material_type.set_function("set_light_direction",
+                                   [](Rendering::Assets::Material& material, const Math::Vec3& direction) {
+                                       material.properties.light_direction = direction;
+                                   });
+
+        material_type.set_function("set_uv_offset",
+                                   [](Rendering::Assets::Material& material, const Math::Vec2& offset) {
+                                       material.properties.uv_offset = offset;
+                                   });
+
+        material_type.set_function("set_opacity", [](Rendering::Assets::Material& material, const float opacity) {
+            material.properties.opacity = opacity;
+        });
+
+        material_type.set_function("use_lighting", [](Rendering::Assets::Material& material, const bool enabled) {
+            material.properties.use_lighting = enabled;
+        });
+
+        material_type.set_function("use_textures", [](Rendering::Assets::Material& material, const bool enabled) {
+            material.properties.use_textures = enabled;
+        });
     }
 
     void RegisterShader(sol::state& lua)

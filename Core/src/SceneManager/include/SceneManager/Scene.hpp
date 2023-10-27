@@ -156,6 +156,8 @@ namespace Vakol
          */
         PhysicsScene& GetPhysicsScene();
 
+        void DestroyEntities();
+
       private:
         bool m_debugEnabled = false;
 
@@ -196,5 +198,7 @@ namespace Vakol
          *
          */
         PhysicsScene& m_physicsScene;
+
+        std::vector<Entity> m_entitiesToDestroy;
     };
 } // namespace Vakol
