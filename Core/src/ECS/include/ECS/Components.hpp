@@ -5,7 +5,6 @@
 
 #include "Entity.hpp"
 #include "Math/Math.hpp"
-#include "Rendering/Assets/Model.hpp"
 #include "Scripting/ScriptTypes.hpp"
 #include "Serialisation/SolSerialize.hpp"
 

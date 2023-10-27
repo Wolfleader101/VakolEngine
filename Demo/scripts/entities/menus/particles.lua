@@ -1,6 +1,6 @@
 local particles = {}
 local index = 1;
-local MAX_PARTICLE <const> = 10;
+local MAX_PARTICLE <const> = 300;
 
 local y_storage;
 
@@ -20,7 +20,8 @@ function init()
 
         -- mesh.material:set_diffuse_color(Vector4.new(randomFloat(0.3, 0.5), randomFloat(0.3, 0.5), randomFloat(0.4, 0.7),
         --     1));
-        mesh.material:set_diffuse_color(Vector4.new(randomFloat(0, 1), randomFloat(0, 1), randomFloat(0, 1), 1));
+        mesh.material:set_diffuse_color(Vector4.new(randomFloat(0.0, 1.0), randomFloat(0.0, 1.0), randomFloat(0.0, 1.0), 1.0));
+        mesh.material:set_light_direction(Vector3.new(randomFloat(-1.0, 1.0), -1.0, 0.0));
         --mesh.material:set_diffuse_color(Vector4.new(i / MAX_PARTICLE, MAX_PARTICLE / i, i / MAX_PARTICLE, 1));
 
         local rb = particle:add_rigid();

@@ -10,8 +10,8 @@ namespace Vakol::Rendering::Assets
     enum class LIGHT_TYPE
     {
         DIRECTIONAL_LIGHT,
-        SPOT_LIGHT,
-        POINT_LIGHT
+        POINT_LIGHT,
+        SPOT_LIGHT
     };
 
     /**
@@ -21,7 +21,7 @@ namespace Vakol::Rendering::Assets
     {
         LIGHT_TYPE TYPE = LIGHT_TYPE::DIRECTIONAL_LIGHT;
 
-        Math::Vec4 DIRECTION = Math::Vec4(0.0f);
+        Math::Vec3 DIRECTION = Math::Vec3(0.0f);
 
         float ATTENUATION_CONSTANT = 1.0f;
         float ATTENUATION_LINEAR = 0.045f;

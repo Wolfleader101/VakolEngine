@@ -20,7 +20,16 @@ uniform mat3 NORMAL_MATRIX;
 
 struct Light
 {
-    vec4 LIGHT_DIRECTION;
+    uint TYPE;
+
+    vec3 DIRECTION;
+
+    float ATTENUATION_CONSTANT;
+    float ATTENUATION_LINEAR;
+    float ATTENUATION_QUADRATIC;
+
+    float ATTENUATION_CUTOFF;
+    float ATTENUATION_OUTER_CUTOFF;
 };
 
 uniform Light light;
@@ -42,7 +51,7 @@ void main()
     vec3 B = cross(N, T);
 
     mat3 TBN = transpose(mat3(T, B, N));
-    vs_out.TangentLightPos =  TBN * light.LIGHT_DIRECTION.xyz;
+    vs_out.TangentLightPos =  TBN * light.DIRECTION;
     vs_out.TangentViewPos  =  TBN * VIEW_POSITION;
     vs_out.TangentFragPos  =  TBN * vs_out.FragPos;
 

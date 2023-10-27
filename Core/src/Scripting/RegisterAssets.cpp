@@ -99,12 +99,12 @@ namespace Vakol
 
         material_type.set_function("set_light_direction",
                                    [](Rendering::Assets::Material& material, const Math::Vec3& direction) {
-                                       material.properties.light.LIGHT_DIRECTION = Math::Vec4(direction, 0.0);
+                                       material.properties.light.DIRECTION = direction;
                                    });
 
         material_type.set_function("set_light_position",
                                    [](Rendering::Assets::Material& material, const Math::Vec3& position) {
-                                       material.properties.light.LIGHT_DIRECTION = Math::Vec4(position, 1.0f);
+                                       material.properties.light.DIRECTION = position;
                                    });
 
         material_type.set_function("set_uv_offset",
