@@ -50,6 +50,7 @@ function gen_random_target()
     return Vector3.new(x, y, z);
 end
 
+
 function smooth_look_at(target, away)
     local lookDir = Vector3.new();
     

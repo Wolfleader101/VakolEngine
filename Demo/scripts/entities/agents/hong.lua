@@ -1,3 +1,5 @@
+local nav = nil;
+
 function init()
     entity:add_model("assets/models/ai/hong/hong.fbx", 1);
 
@@ -15,7 +17,7 @@ function init()
 
     entity:add_script("navigation", "components/navigation.lua");
 
-    local nav = entity:get_script("navigation");
+    nav = entity:get_script("navigation");
 
     local target = scene:get_camera():get_pos();
 
@@ -51,7 +53,6 @@ end
 
 function tick()
     -- target = scene:get_camera():get_pos();
-    local nav = entity:get_script("navigation");
     -- nav.TARGET = target;
     nav.set_state("wander");
 

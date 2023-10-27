@@ -1,6 +1,6 @@
 local particles = {}
 local index = 1;
-local MAX_PARTICLE <const> = 10;
+local MAX_PARTICLE <const> = 300;
 
 local y_storage;
 
