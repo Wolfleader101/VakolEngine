@@ -20,7 +20,7 @@ local wander_timer = 0.0;
 local wander_duration = 10.0;
 
 local idle_timer = 0.0;
-local idle_duration = 2.0;
+local idle_duration = 1.5;
 
 function wrap_angle(angle)
     if angle > 180.0 then
@@ -122,7 +122,6 @@ function idle()
     if (idle_timer >= idle_duration) then
         wander_target = gen_random_target();
         idle_timer = 0.0;
-        look_at(wander_target);
         set_state("wander");
     end
 end
