@@ -255,6 +255,7 @@ namespace Vakol::Math
 
     Vec3 Rotate(const Quat& quat, const Vec3& vec);
 
+    Quat Conjugate(const Quat& quat);
     /**
      * @brief Represents a line in 3D space defined by two points.
      */

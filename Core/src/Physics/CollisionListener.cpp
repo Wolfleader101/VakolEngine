@@ -84,13 +84,11 @@ namespace Vakol
                 // Get the contact point
                 CollisionCallback::ContactPoint contactPoint = contactPair.getContactPoint(c);
 
-                averageLocalPoint1 +=
-                    Math::Vec3(contactPoint.getLocalPointOnCollider1().x, contactPoint.getLocalPointOnCollider1().y,
-                               contactPoint.getLocalPointOnCollider1().z);
+                Math::Vec3 localPoint1 = FromRPVec3(contactPoint.getLocalPointOnCollider1());
+                averageLocalPoint1 += localPoint1 * rb1.transform->rot; // take rotation into account
 
-                averageLocalPoint2 +=
-                    Math::Vec3(contactPoint.getLocalPointOnCollider2().x, contactPoint.getLocalPointOnCollider2().y,
-                               contactPoint.getLocalPointOnCollider2().z);
+                Math::Vec3 localPoint2 = FromRPVec3(contactPoint.getLocalPointOnCollider2());
+                averageLocalPoint2 += localPoint2 * rb2.transform->rot;
 
                 averageNormal += Math::Normalized(FromRPVec3(contactPoint.getWorldNormal()));
 
@@ -271,6 +269,8 @@ namespace Vakol
         {
             rb1.linearVelocity += impulse * rb1.invMass;
             rb1.angularVelocity += lambda * rb1.invInertiaTensor * r1CrossN;
+            // VK_CRITICAL("Angular Velocity: {0} {1} {2}", rb1.angularVelocity.x, rb1.angularVelocity.y,
+            //             rb1.angularVelocity.z);
         }
 
         if (rb2.type != BodyType::Static)

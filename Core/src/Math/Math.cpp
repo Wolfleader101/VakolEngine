@@ -318,4 +318,8 @@ namespace Vakol::Math
         return glm::eulerAngles(quat);
     }
 
+    Quat Conjugate(const Quat& quat)
+    {
+        return glm::conjugate(quat);
+    }
 } // namespace Vakol::Math
