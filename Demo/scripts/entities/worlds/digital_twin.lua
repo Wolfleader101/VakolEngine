@@ -171,7 +171,8 @@ function create_floor_colliders()
 	for i = 1, 5 do
 		colliders[i] = scene:create_entity("Floor Collider " .. i, "");
 
-		local rigid = colliders[i]:add_rigid();
+        local rigid = colliders[i]:add_rigid();
+		rigid.bounciness = 0.02;
 		rigid.type = BodyType.Static;
 	end
 

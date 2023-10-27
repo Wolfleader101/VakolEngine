@@ -101,6 +101,9 @@ function tick()
         if (held_time >= 90) then
             held_item:get_script("interactable").interact(entity); -- throw the entity
 
+            local emotions = entity:get_script("emotions");
+            local joyVal = emotions.get_emotion(emotions.JOY);
+            emotions.set_emotion(emotions.JOY, joyVal + 0.8);
             held_item = nil;
             held_time = 0;
 
@@ -111,6 +114,9 @@ end
 function on_contact(other_ent)
     -- if already holding an item, do nothing
     if (held_item ~= nil) then
+        local emotions = entity:get_script("emotions");
+        local surpiseVal = emotions.get_emotion(emotions.SURPRISE);
+        emotions.set_emotion(emotions.SURPRISE, surpiseVal + 0.7);
         return;
     end
     

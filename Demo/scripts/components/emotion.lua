@@ -1,4 +1,3 @@
-
 ANGER = 1;
 ANTICIPATION = 2;
 JOY = 3;

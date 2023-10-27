@@ -14,6 +14,7 @@ function init()
 
     affordComp.AFFORDANCES = {
         SITTABLE = 1.0,
+        HOLDING = 1.0,
         THROWING = 1.0,
     }
 
