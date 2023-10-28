@@ -59,40 +59,9 @@ namespace Vakol
          *
          * @param rb body to attach too
          * @param compoundCollider to attach too
-         * @param collider to attach
+         * @param relativePos position relative to the rigidbody
          */
-        void AttachCollider(RigidBody& rb, CompoundCollider& compoundCollider, BoxCollider& collider,
-                            Math::Vec3& relativePos);
-
-        /**
-         * @brief Attach a collider to a rigidbody
-         *
-         * @param rb body to attach too
-         * @param compoundCollider to attach too
-         * @param collider to attach
-         */
-        void AttachCollider(RigidBody& rb, CompoundCollider& compoundCollider, SphereCollider& collider,
-                            Math::Vec3& relativePos);
-
-        /**
-         * @brief Attach a collider to a rigidbody
-         *
-         * @param rb body to attach too
-         * @param compoundCollider to attach too
-         * @param collider to attach
-         */
-        void AttachCollider(RigidBody& rb, CompoundCollider& compoundCollider, CapsuleCollider& collider,
-                            Math::Vec3& relativePos);
-
-        /**
-         * @brief Attach a collider to a rigidbody
-         *
-         * @param rb body to attach too
-         * @param compoundCollider to attach too
-         * @param collider to attach
-         */
-        void AttachCollider(RigidBody& rb, CompoundCollider& compoundCollider, MeshCollider& collider,
-                            Math::Vec3& relativePos);
+        void AttachCollider(RigidBody& rb, CompoundCollider& compoundCollider, Math::Vec3& relativePos);
 
         /**
          * @brief Apply forces to a rigidbody

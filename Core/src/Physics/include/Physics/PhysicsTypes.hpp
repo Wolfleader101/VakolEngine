@@ -101,7 +101,7 @@ namespace Vakol
 
     struct ColliderData
     {
-        rp3d::Collider* collider = nullptr;
+        rp3d::Collider* rpCollider = nullptr;
         CollisionShape shape;
         float mass;
     };

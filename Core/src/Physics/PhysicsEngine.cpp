@@ -48,7 +48,7 @@ namespace Vakol
 
     CollisionShape PhysicsEngine::CreateSphereShape(float radius)
     {
-        Shape sphere;
+        CollisionShape sphere;
         sphere.shape = m_rpCommon.createSphereShape(radius);
 
         return sphere;
@@ -97,7 +97,7 @@ namespace Vakol
         for (auto& c : compoundCollider.colliders)
         {
             // you need to get the relative position of the collider to the body
-            combinedCM += FromRPVec3(c.collider->getLocalToBodyTransform().getPosition()) * c.mass;
+            combinedCM += FromRPVec3(c.rpCollider->getLocalToBodyTransform().getPosition()) * c.mass;
             combinedMass += c.mass;
         }
 
@@ -144,79 +144,14 @@ namespace Vakol
         rb.invInertiaTensor = Math::Vec3(invMat[0][0], invMat[1][1], invMat[2][2]);
     }
 
-    void PhysicsEngine::AttachCollider(RigidBody& rb, CompoundCollider& compoundCollider, BoxCollider& collider,
-                                       Math::Vec3& relativePos)
+    void PhysicsEngine::AttachCollider(RigidBody& rb, CompoundCollider& compoundCollider, Math::Vec3& relativePos)
     {
+        // get the latest collider
+        Vakol::ColliderData& collider = compoundCollider.colliders.back();
+
         // add the collider to the rigidbody
-        collider.collider = rb.collisionBody->addCollider(
-            collider.shape, rp3d::Transform(ToRPVec3(relativePos), rp3d::Quaternion::identity()));
-
-        if (rb.type == BodyType::Static)
-        {
-            rb.invMass = 0.0f;
-            rb.centerOfMass = Math::Vec3(0.0f);
-            rb.invInertiaTensor = Math::Vec3(0.0f);
-            return;
-        }
-
-        // calculate the centre of mass with new collider
-        CalculateCentreOfMass(rb, compoundCollider);
-
-        // calculate the inertia tensor
-        CalculateCombinedIntertia(rb, compoundCollider);
-    }
-
-    void PhysicsEngine::AttachCollider(RigidBody& rb, CompoundCollider& compoundCollider, SphereCollider& collider,
-                                       Math::Vec3& relativePos)
-    {
-        // add the collider to the rigidbody
-        collider.collider = rb.collisionBody->addCollider(
-            collider.shape, rp3d::Transform(ToRPVec3(relativePos), rp3d::Quaternion::identity()));
-
-        if (rb.type == BodyType::Static)
-        {
-            rb.invMass = 0.0f;
-            rb.centerOfMass = Math::Vec3(0.0f);
-            rb.invInertiaTensor = Math::Vec3(0.0f);
-            return;
-        }
-
-        // calculate the centre of mass with new collider
-        CalculateCentreOfMass(rb, compoundCollider);
-
-        // calculate the inertia tensor
-        CalculateCombinedIntertia(rb, compoundCollider);
-    }
-
-    void PhysicsEngine::AttachCollider(RigidBody& rb, CompoundCollider& compoundCollider, CapsuleCollider& collider,
-                                       Math::Vec3& relativePos)
-    {
-        // const float height = collider.shape->getHeight();
-
-        rp3d::Transform trans = rp3d::Transform(rp3d::Transform(ToRPVec3(relativePos), rp3d::Quaternion::identity()));
-
-        collider.collider = rb.collisionBody->addCollider(collider.shape, trans);
-
-        if (rb.type == BodyType::Static)
-        {
-            rb.invMass = 0.0f;
-            rb.centerOfMass = Math::Vec3(0.0f);
-            rb.invInertiaTensor = Math::Vec3(0.0f);
-            return;
-        }
-
-        // calculate the centre of mass with new collider
-        CalculateCentreOfMass(rb, compoundCollider);
-
-        // calculate the inertia tensor
-        CalculateCombinedIntertia(rb, compoundCollider);
-    }
-
-    void PhysicsEngine::AttachCollider(RigidBody& rb, CompoundCollider& compoundCollider, MeshCollider& collider,
-                                       Math::Vec3& relativePos)
-    {
-        collider.collider = rb.collisionBody->addCollider(
-            collider.shape, rp3d::Transform(ToRPVec3(relativePos), rp3d::Quaternion::identity()));
+        collider.rpCollider = rb.collisionBody->addCollider(
+            collider.shape.shape, rp3d::Transform(ToRPVec3(relativePos), rp3d::Quaternion::identity()));
 
         if (rb.type == BodyType::Static)
         {

@@ -113,13 +113,13 @@ namespace Vakol
                 CollisionShape shape = physEngine.CreateBoxShape(halfExtents);
 
                 ColliderData data;
-                data.collider = nullptr;
+                data.rpCollider = nullptr;
                 data.shape = shape;
                 data.mass = mass;
 
                 compoundCollider.colliders.push_back(data);
 
-                physEngine.AttachCollider(ent->GetComponent<RigidBody>(), compoundCollider, collider, relativePos);
+                physEngine.AttachCollider(ent->GetComponent<RigidBody>(), compoundCollider, relativePos);
 
                 return &ent->GetComponent<CompoundCollider>();
             });
@@ -140,15 +140,16 @@ namespace Vakol
 
                 CompoundCollider& compoundCollider = ent->GetComponent<CompoundCollider>();
 
-                SphereCollider collider = physEngine.CreateSphereCollider(radius);
+                CollisionShape sphere = physEngine.CreateSphereShape(radius);
 
                 ColliderData data;
-                data.collider = collider.collider;
+                data.rpCollider = nullptr;
+                data.shape = sphere;
                 data.mass = mass;
 
                 compoundCollider.colliders.push_back(data);
 
-                physEngine.AttachCollider(ent->GetComponent<RigidBody>(), compoundCollider, collider, relativePos);
+                physEngine.AttachCollider(ent->GetComponent<RigidBody>(), compoundCollider, relativePos);
 
                 return &ent->GetComponent<CompoundCollider>();
             });
@@ -169,15 +170,16 @@ namespace Vakol
 
             CompoundCollider& compoundCollider = ent->GetComponent<CompoundCollider>();
 
-            CapsuleCollider collider = physEngine.CreateCapsuleCollider(radius, height);
+            CollisionShape capsule = physEngine.CreateCapsuleShape(radius, height);
 
             ColliderData data;
-            data.collider = collider.collider;
+            data.rpCollider = nullptr;
+            data.shape = capsule;
             data.mass = mass;
 
             compoundCollider.colliders.push_back(data);
 
-            physEngine.AttachCollider(ent->GetComponent<RigidBody>(), compoundCollider, collider, relativePos);
+            physEngine.AttachCollider(ent->GetComponent<RigidBody>(), compoundCollider, relativePos);
 
             return &ent->GetComponent<CompoundCollider>();
         });
