@@ -99,9 +99,17 @@ namespace Vakol
         std::string tag;
     };
 
+    enum class ShapeType
+    {
+        Box,
+        Sphere,
+        Capsule,
+        TriangleMesh
+    };
     struct CollisionShape
     {
         rp3d::CollisionShape* shape = nullptr;
+        ShapeType type = ShapeType::Box;
     };
 
     struct ColliderData

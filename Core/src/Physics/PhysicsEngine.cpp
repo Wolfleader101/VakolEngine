@@ -42,6 +42,7 @@ namespace Vakol
     {
         CollisionShape box;
         box.shape = m_rpCommon.createBoxShape(rp3d::Vector3(halfExtents.x, halfExtents.y, halfExtents.z));
+        box.type = ShapeType::Box;
 
         return box;
     }
@@ -50,6 +51,7 @@ namespace Vakol
     {
         CollisionShape sphere;
         sphere.shape = m_rpCommon.createSphereShape(radius);
+        sphere.type = ShapeType::Sphere;
 
         return sphere;
     }
@@ -58,6 +60,7 @@ namespace Vakol
     {
         CollisionShape capsule;
         capsule.shape = m_rpCommon.createCapsuleShape(radius, height);
+        capsule.type = ShapeType::Capsule;
 
         return capsule;
     }
@@ -82,6 +85,7 @@ namespace Vakol
         triangleMesh->addSubpart(triangleArray);
 
         mesh.shape = m_rpCommon.createConcaveMeshShape(triangleMesh);
+        mesh.type = ShapeType::TriangleMesh;
 
         VK_WARN("Mesh Shape not supported!");
 
@@ -102,6 +106,8 @@ namespace Vakol
         }
 
         rb.centerOfMass = combinedCM / combinedMass;
+
+        VK_ERROR("Final COM: {0} {1} {2}", rb.centerOfMass.x, rb.centerOfMass.y, rb.centerOfMass.z);
         rb.mass = combinedMass;
         rb.invMass = 1.0f / rb.mass;
     }
@@ -117,22 +123,52 @@ namespace Vakol
         // you must sum up the inertia tensors of all the colliders
         for (auto& c : compoundCollider.colliders)
         {
-            // calculate the distance from the colliders center of mass to the new common center of mass
-            Math::Vec3 distance = rb.centerOfMass - FromRPVec3(c.rpCollider->getLocalToBodyTransform().getPosition());
-            float distanceSquared = Math::Dot(distance, distance);
+            if (c.shape.type == ShapeType::Box)
+            {
+                rp3d::BoxShape* box = static_cast<rp3d::BoxShape*>(c.shape.shape);
 
-            // the interia tensor for the collider
-            Math::Vec3 rpJ = FromRPVec3(c.rpCollider->getCollisionShape()->getLocalInertiaTensor(c.mass));
+                float w = box->getHalfExtents().x;
+                float h = box->getHalfExtents().y;
+                float d = box->getHalfExtents().z;
+                float mass = c.mass;
 
-            // calculate the inertia tensor of the collider for the new common center of mass
-            // I = I + m * d^2 (for each axis)
-            Math::Vec3 partInertiaTensor = rpJ;
-            partInertiaTensor.x += c.mass * distanceSquared;
-            partInertiaTensor.y += c.mass * distanceSquared;
-            partInertiaTensor.z += c.mass * distanceSquared;
+                // inertia tensor about the center of mass of the box
+                Math::Vec3 localInertia(1.0f / 12.0f * mass * (h * h + d * d), 1.0f / 12.0f * mass * (w * w + d * d),
+                                        1.0f / 12.0f * mass * (w * w + h * h));
 
-            // add to combined inertia tensor
-            combinedInertiaTensor += partInertiaTensor;
+                // pos relative to the combined center of mass
+                Math::Vec3 relativePos =
+                    FromRPVec3(c.rpCollider->getLocalToBodyTransform().getPosition()) - rb.centerOfMass;
+
+                // parallel axis theorem
+                localInertia.x += mass * (relativePos.y * relativePos.y + relativePos.z * relativePos.z);
+                localInertia.y += mass * (relativePos.x * relativePos.x + relativePos.z * relativePos.z);
+                localInertia.z += mass * (relativePos.x * relativePos.x + relativePos.y * relativePos.y);
+
+                // add combined inertia tensor
+                combinedInertiaTensor.x += localInertia.x;
+                combinedInertiaTensor.y += localInertia.y;
+                combinedInertiaTensor.z += localInertia.z;
+            }
+            else
+            {
+                // calculate the distance from the colliders center of mass to the new common center of mass
+                Math::Vec3 distance =
+                    rb.centerOfMass - FromRPVec3(c.rpCollider->getLocalToBodyTransform().getPosition());
+
+                // the interia tensor for the collider
+                Math::Vec3 rpJ = FromRPVec3(c.rpCollider->getCollisionShape()->getLocalInertiaTensor(c.mass));
+
+                // calculate the inertia tensor of the collider for the new common center of mass
+                // I = I + m * d^2 (for each axis)
+                Math::Vec3 partInertiaTensor = rpJ;
+                partInertiaTensor.x += c.mass * (distance.y * distance.y + distance.z * distance.z);
+                partInertiaTensor.y += c.mass * (distance.x * distance.x + distance.z * distance.z);
+                partInertiaTensor.z += c.mass * (distance.x * distance.x + distance.y * distance.y);
+
+                // add to combined inertia tensor
+                combinedInertiaTensor += partInertiaTensor;
+            }
         }
 
         Math::Mat3 inertiaTensor = Math::Mat3(0.0f);

@@ -36,6 +36,9 @@
     rb.type = BodyType.Dynamic;
     cube:add_box_collider(Vector3.new(1, 0.5, 0.5), Vector3.new(0.0, 0.0, 0.0), 100);
 
+    local chair = scene:create_entity("Chair", "entities/objects/chair.lua");
+    chair:get_transform().pos = Vector3.new(0.0, 20.0, 0.0);
+
     -- local cube2 = scene:create_entity("Cube2", "");
     -- cube2:get_transform().pos = Vector3.new(15, 20.0, 0.0);
     -- cube2:get_transform().rot = Vector3.new(0.0, 0.0, 0.0);
