@@ -39,71 +39,60 @@ namespace Vakol
          */
         void DestroyScene(PhysicsScene& scene);
 
-        /**
-         * @brief create an AABB collider
-         *
-         * @param halfExtents of AABB
-         * @return BoxCollider created
-         */
-        BoxCollider CreateBoxCollider(Math::Vec3& halfExtents);
+        CollisionShape CreateBoxShape(Math::Vec3& halfExtents);
+        CollisionShape CreateSphereShape(float radius);
+        CollisionShape CreateCapsuleShape(float radius, float height);
+        CollisionShape CreateMeshShape(std::vector<Math::Point>& vertices, std::vector<unsigned int>& indices);
 
         /**
-         * @brief Create a Sphere Collider object
+         * @brief calculate the centre of mass of a rigidbody
          *
-         * @param radius of sphere
-         * @return SphereCollider
+         * @param rb rigidbody to calculate
+         * @param compoundCollider to calculate
          */
-        SphereCollider CreateSphereCollider(float radius);
+        void CalculateCentreOfMass(RigidBody& rb, CompoundCollider& compoundCollider);
 
-        /**
-         * @brief Create a Capsule Collider object
-         *
-         * @param radius of capsule
-         * @param height of capsule
-         * @return CapsuleCollider
-         */
-        CapsuleCollider CreateCapsuleCollider(float radius, float height);
-
-        /**
-         * @brief Create a Mesh Collider object
-         *
-         * @param vertices vertices of mesh
-         * @param indices indices of mesh
-         * @return MeshCollider
-         */
-        MeshCollider CreateMeshCollider(std::vector<Math::Point>& vertices, std::vector<unsigned int>& indices);
+        void CalculateCombinedIntertia(RigidBody& rb, CompoundCollider& compoundCollider);
 
         /**
          * @brief Attach a collider to a rigidbody
          *
          * @param rb body to attach too
+         * @param compoundCollider to attach too
          * @param collider to attach
          */
-        void AttachCollider(RigidBody& rb, BoxCollider& collider);
+        void AttachCollider(RigidBody& rb, CompoundCollider& compoundCollider, BoxCollider& collider,
+                            Math::Vec3& relativePos);
 
         /**
          * @brief Attach a collider to a rigidbody
          *
          * @param rb body to attach too
+         * @param compoundCollider to attach too
          * @param collider to attach
          */
-        void AttachCollider(RigidBody& rb, SphereCollider& collider);
+        void AttachCollider(RigidBody& rb, CompoundCollider& compoundCollider, SphereCollider& collider,
+                            Math::Vec3& relativePos);
 
         /**
          * @brief Attach a collider to a rigidbody
          *
          * @param rb body to attach too
+         * @param compoundCollider to attach too
          * @param collider to attach
          */
-        void AttachCollider(RigidBody& rb, CapsuleCollider& collider);
+        void AttachCollider(RigidBody& rb, CompoundCollider& compoundCollider, CapsuleCollider& collider,
+                            Math::Vec3& relativePos);
 
         /**
          * @brief Attach a collider to a rigidbody
          *
          * @param rb body to attach too
+         * @param compoundCollider to attach too
          * @param collider to attach
          */
-        void AttachCollider(RigidBody& rb, MeshCollider& collider);
+        void AttachCollider(RigidBody& rb, CompoundCollider& compoundCollider, MeshCollider& collider,
+                            Math::Vec3& relativePos);
 
         /**
          * @brief Apply forces to a rigidbody

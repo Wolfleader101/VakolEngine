@@ -281,7 +281,8 @@ void MyGUILayer::OnUpdate()
                                 ImGui::Spacing();
 
                                 if (material.properties.use_textures)
-                                    ImGui::DragFloat2(("UV Offset##" + material.ID).c_str(), &material.properties.uv_offset.x, 0.05f);
+                                    ImGui::DragFloat2(("UV Offset##" + material.ID).c_str(),
+                                                      &material.properties.uv_offset.x, 0.05f);
                                 else
                                 {
                                     ImGui::ColorEdit4(("Diffuse Color##" + material.ID).c_str(),
@@ -462,47 +463,51 @@ void MyGUILayer::OnUpdate()
 
                         ImGui::Spacing();
 
-                        if (entity.HasComponent<Vakol::RigidBody>())
-                        {
-                            if (!entity.HasComponent<Vakol::BoxCollider>() && ImGui::Button("Add Box Collider"))
-                            {
-                                Vakol::RigidBody& rb = entity.GetComponent<Vakol::RigidBody>();
+                        // TODO might wanna fix this eventually for compound bodies
+                        // if (entity.HasComponent<Vakol::RigidBody>())
+                        // {
+                        //     if (!entity.HasComponent<Vakol::BoxCollider>() && ImGui::Button("Add Box Collider"))
+                        //     {
+                        //         Vakol::RigidBody& rb = entity.GetComponent<Vakol::RigidBody>();
 
-                                Vakol::Math::Vec3 extents = Vakol::Math::Vec3(1.0f);
+                        //         Vakol::Math::Vec3 extents = Vakol::Math::Vec3(1.0f);
 
-                                Vakol::BoxCollider collider = m_app.GetPhysicsEngine().CreateBoxCollider(extents);
-                                m_app.GetPhysicsEngine().AttachCollider(rb, collider);
+                        //         Vakol::BoxCollider collider = m_app.GetPhysicsEngine().CreateBoxCollider(extents);
+                        //         m_app.GetPhysicsEngine().AttachCollider(rb, collider);
 
-                                entity.AddComponent<Vakol::BoxCollider>(collider);
-                            }
+                        //         entity.AddComponent<Vakol::BoxCollider>(collider);
+                        //     }
 
-                            if (!entity.HasComponent<Vakol::SphereCollider>() && ImGui::Button("Add Sphere Collider"))
-                            {
-                                Vakol::RigidBody& rb = entity.GetComponent<Vakol::RigidBody>();
+                        //     if (!entity.HasComponent<Vakol::SphereCollider>() && ImGui::Button("Add Sphere
+                        //     Collider"))
+                        //     {
+                        //         Vakol::RigidBody& rb = entity.GetComponent<Vakol::RigidBody>();
 
-                                constexpr float radius = 1.0;
+                        //         constexpr float radius = 1.0;
 
-                                Vakol::SphereCollider collider = m_app.GetPhysicsEngine().CreateSphereCollider(radius);
-                                m_app.GetPhysicsEngine().AttachCollider(rb, collider);
+                        //         Vakol::SphereCollider collider =
+                        //         m_app.GetPhysicsEngine().CreateSphereCollider(radius);
+                        //         m_app.GetPhysicsEngine().AttachCollider(rb, collider);
 
-                                entity.AddComponent<Vakol::SphereCollider>(collider);
-                            }
+                        //         entity.AddComponent<Vakol::SphereCollider>(collider);
+                        //     }
 
-                            if (!entity.HasComponent<Vakol::CapsuleCollider>() && ImGui::Button("Add Capsule Collider"))
-                            {
-                                Vakol::RigidBody& rb = entity.GetComponent<Vakol::RigidBody>();
+                        //     if (!entity.HasComponent<Vakol::CapsuleCollider>() && ImGui::Button("Add Capsule
+                        //     Collider"))
+                        //     {
+                        //         Vakol::RigidBody& rb = entity.GetComponent<Vakol::RigidBody>();
 
-                                constexpr float radius = 0.5;
-                                constexpr float height = 1.0;
+                        //         constexpr float radius = 0.5;
+                        //         constexpr float height = 1.0;
 
-                                Vakol::CapsuleCollider collider =
-                                    m_app.GetPhysicsEngine().CreateCapsuleCollider(radius, height);
+                        //         Vakol::CapsuleCollider collider =
+                        //             m_app.GetPhysicsEngine().CreateCapsuleCollider(radius, height);
 
-                                m_app.GetPhysicsEngine().AttachCollider(rb, collider);
+                        //         m_app.GetPhysicsEngine().AttachCollider(rb, collider);
 
-                                entity.AddComponent<Vakol::CapsuleCollider>(collider);
-                            }
-                        }
+                        //         entity.AddComponent<Vakol::CapsuleCollider>(collider);
+                        //     }
+                        // }
 
                         if (entity.HasComponent<Vakol::ScriptComp>() && ImGui::CollapsingHeader("Scripts"))
                         {

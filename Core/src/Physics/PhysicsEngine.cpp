@@ -38,35 +38,34 @@ namespace Vakol
         }
     }
 
-    BoxCollider PhysicsEngine::CreateBoxCollider(Math::Vec3& halfExtents)
+    CollisionShape PhysicsEngine::CreateBoxShape(Math::Vec3& halfExtents)
     {
-        BoxCollider collider;
-        collider.shape = m_rpCommon.createBoxShape(rp3d::Vector3(halfExtents.x, halfExtents.y, halfExtents.z));
-        collider.collider = nullptr;
-        return collider;
+        CollisionShape box;
+        box.shape = m_rpCommon.createBoxShape(rp3d::Vector3(halfExtents.x, halfExtents.y, halfExtents.z));
+
+        return box;
     }
 
-    SphereCollider PhysicsEngine::CreateSphereCollider(const float radius)
+    CollisionShape PhysicsEngine::CreateSphereShape(float radius)
     {
-        SphereCollider collider;
-        collider.shape = m_rpCommon.createSphereShape(radius);
-        collider.collider = nullptr;
-        return collider;
+        Shape sphere;
+        sphere.shape = m_rpCommon.createSphereShape(radius);
+
+        return sphere;
     }
 
-    CapsuleCollider PhysicsEngine::CreateCapsuleCollider(const float radius, const float height)
+    CollisionShape PhysicsEngine::CreateCapsuleShape(float radius, float height)
     {
-        CapsuleCollider collider;
-        collider.shape = m_rpCommon.createCapsuleShape(radius, height);
-        collider.collider = nullptr;
-        return collider;
+        CollisionShape capsule;
+        capsule.shape = m_rpCommon.createCapsuleShape(radius, height);
+
+        return capsule;
     }
 
-    MeshCollider PhysicsEngine::CreateMeshCollider(std::vector<Math::Point>& vertices,
-                                                   std::vector<unsigned int>& indices)
+    CollisionShape PhysicsEngine::CreateMeshShape(std::vector<Math::Point>& vertices,
+                                                  std::vector<unsigned int>& indices)
     {
-        MeshCollider collider;
-
+        CollisionShape mesh;
         rp3d::TriangleVertexArray* triangleArray = new rp3d::TriangleVertexArray(
             vertices.size(),          // number of vertices
             vertices.data(),          // start of vertex data
@@ -82,109 +81,156 @@ namespace Vakol
 
         triangleMesh->addSubpart(triangleArray);
 
-        collider.shape = m_rpCommon.createConcaveMeshShape(triangleMesh);
-        collider.collider = nullptr;
+        mesh.shape = m_rpCommon.createConcaveMeshShape(triangleMesh);
 
-        VK_WARN("Mesh Collider not supported!");
+        VK_WARN("Mesh Shape not supported!");
 
-        return collider;
+        return mesh;
     }
 
-    void PhysicsEngine::AttachCollider(RigidBody& rb, BoxCollider& collider)
+    void PhysicsEngine::CalculateCentreOfMass(RigidBody& rb, CompoundCollider& compoundCollider)
     {
-        collider.collider = rb.collisionBody->addCollider(collider.shape, rp3d::Transform::identity());
+        // calculate the centre of mass with new collider
+        Math::Vec3 combinedCM = Math::Vec3(0.0f);
+        float combinedMass = 0.0f;
 
-        Math::Vec3 rpJ = FromRPVec3(collider.shape->getLocalInertiaTensor(rb.mass));
+        for (auto& c : compoundCollider.colliders)
+        {
+            // you need to get the relative position of the collider to the body
+            combinedCM += FromRPVec3(c.collider->getLocalToBodyTransform().getPosition()) * c.mass;
+            combinedMass += c.mass;
+        }
+
+        rb.centerOfMass = combinedCM / combinedMass;
+        rb.mass = combinedMass;
+        rb.invMass = 1.0f / rb.mass;
+    }
+
+    void PhysicsEngine::CalculateCombinedIntertia(RigidBody& rb, CompoundCollider& compoundCollider)
+    {
+        // calculalte parrel axis theorem and second moments of inertia coming up
+        // I = I + m * d^2
+
+        // calculate inertia tensor for each collider and sum them up
+        Math::Vec3 combinedInertiaTensor = Math::Vec3(0.0f);
+
+        // you must sum up the inertia tensors of all the colliders
+        for (auto& c : compoundCollider.colliders)
+        {
+            // calculate the distance from the colliders center of mass to the new common center of mass
+            Math::Vec3 distance = rb.centerOfMass - FromRPVec3(c.collider->getLocalToBodyTransform().getPosition());
+            float distanceSquared = Math::Dot(distance, distance);
+
+            // the interia tensor for the collider
+            Math::Vec3 rpJ = FromRPVec3(c.collider->getCollisionShape()->getLocalInertiaTensor(c.mass));
+
+            // calculate the inertia tensor of the collider for the new common center of mass
+            // I = I + m * d^2 (for each axis)
+            Math::Vec3 partInertiaTensor = rpJ;
+            partInertiaTensor.x += c.mass * distanceSquared;
+            partInertiaTensor.y += c.mass * distanceSquared;
+            partInertiaTensor.z += c.mass * distanceSquared;
+
+            // add to combined inertia tensor
+            combinedInertiaTensor += partInertiaTensor;
+        }
+
         Math::Mat3 inertiaTensor = Math::Mat3(0.0f);
-        inertiaTensor[0][0] = rpJ.x;
-        inertiaTensor[1][1] = rpJ.y;
-        inertiaTensor[2][2] = rpJ.z;
+        inertiaTensor[0][0] = combinedInertiaTensor.x;
+        inertiaTensor[1][1] = combinedInertiaTensor.y;
+        inertiaTensor[2][2] = combinedInertiaTensor.z;
+
+        Math::Mat3 invMat = Math::Inverse(inertiaTensor);
+        rb.invInertiaTensor = Math::Vec3(invMat[0][0], invMat[1][1], invMat[2][2]);
+    }
+
+    void PhysicsEngine::AttachCollider(RigidBody& rb, CompoundCollider& compoundCollider, BoxCollider& collider,
+                                       Math::Vec3& relativePos)
+    {
+        // add the collider to the rigidbody
+        collider.collider = rb.collisionBody->addCollider(
+            collider.shape, rp3d::Transform(ToRPVec3(relativePos), rp3d::Quaternion::identity()));
 
         if (rb.type == BodyType::Static)
         {
+            rb.invMass = 0.0f;
+            rb.centerOfMass = Math::Vec3(0.0f);
             rb.invInertiaTensor = Math::Vec3(0.0f);
-        }
-        else
-        {
-            Math::Mat3 invMat = Math::Inverse(inertiaTensor);
-            rb.invInertiaTensor = Math::Vec3(invMat[0][0], invMat[1][1], invMat[2][2]);
+            return;
         }
 
-        rb.invMass = rb.type == BodyType::Static ? 0.0f : 1.0f / rb.mass;
+        // calculate the centre of mass with new collider
+        CalculateCentreOfMass(rb, compoundCollider);
+
+        // calculate the inertia tensor
+        CalculateCombinedIntertia(rb, compoundCollider);
     }
 
-    void PhysicsEngine::AttachCollider(RigidBody& rb, SphereCollider& collider)
+    void PhysicsEngine::AttachCollider(RigidBody& rb, CompoundCollider& compoundCollider, SphereCollider& collider,
+                                       Math::Vec3& relativePos)
     {
-        collider.collider = rb.collisionBody->addCollider(collider.shape, rp3d::Transform::identity());
-
-        Math::Vec3 rpJ = FromRPVec3(collider.shape->getLocalInertiaTensor(rb.mass));
-        Math::Mat3 inertiaTensor = Math::Mat3(0.0f);
-        inertiaTensor[0][0] = rpJ.x;
-        inertiaTensor[1][1] = rpJ.y;
-        inertiaTensor[2][2] = rpJ.z;
+        // add the collider to the rigidbody
+        collider.collider = rb.collisionBody->addCollider(
+            collider.shape, rp3d::Transform(ToRPVec3(relativePos), rp3d::Quaternion::identity()));
 
         if (rb.type == BodyType::Static)
         {
+            rb.invMass = 0.0f;
+            rb.centerOfMass = Math::Vec3(0.0f);
             rb.invInertiaTensor = Math::Vec3(0.0f);
-        }
-        else
-        {
-            Math::Mat3 invMat = Math::Inverse(inertiaTensor);
-            rb.invInertiaTensor = Math::Vec3(invMat[0][0], invMat[1][1], invMat[2][2]);
+            return;
         }
 
-        rb.invMass = rb.type == BodyType::Static ? 0.0f : 1.0f / rb.mass;
+        // calculate the centre of mass with new collider
+        CalculateCentreOfMass(rb, compoundCollider);
+
+        // calculate the inertia tensor
+        CalculateCombinedIntertia(rb, compoundCollider);
     }
 
-    void PhysicsEngine::AttachCollider(RigidBody& rb, CapsuleCollider& collider)
+    void PhysicsEngine::AttachCollider(RigidBody& rb, CompoundCollider& compoundCollider, CapsuleCollider& collider,
+                                       Math::Vec3& relativePos)
     {
-        const float height = collider.shape->getHeight();
+        // const float height = collider.shape->getHeight();
 
-        rp3d::Transform trans =
-            rp3d::Transform(rp3d::Vector3(0.0f, height - 0.125f, 0.0f), rp3d::Quaternion::identity());
+        rp3d::Transform trans = rp3d::Transform(rp3d::Transform(ToRPVec3(relativePos), rp3d::Quaternion::identity()));
 
         collider.collider = rb.collisionBody->addCollider(collider.shape, trans);
 
-        Math::Vec3 rpJ = FromRPVec3(collider.shape->getLocalInertiaTensor(rb.mass));
-        Math::Mat3 inertiaTensor = Math::Mat3(0.0f);
-        inertiaTensor[0][0] = rpJ.x;
-        inertiaTensor[1][1] = rpJ.y;
-        inertiaTensor[2][2] = rpJ.z;
-
         if (rb.type == BodyType::Static)
         {
+            rb.invMass = 0.0f;
+            rb.centerOfMass = Math::Vec3(0.0f);
             rb.invInertiaTensor = Math::Vec3(0.0f);
-        }
-        else
-        {
-            Math::Mat3 invMat = Math::Inverse(inertiaTensor);
-            rb.invInertiaTensor = Math::Vec3(invMat[0][0], invMat[1][1], invMat[2][2]);
+            return;
         }
 
-        rb.invMass = rb.type == BodyType::Static ? 0.0f : 1.0f / rb.mass;
+        // calculate the centre of mass with new collider
+        CalculateCentreOfMass(rb, compoundCollider);
+
+        // calculate the inertia tensor
+        CalculateCombinedIntertia(rb, compoundCollider);
     }
 
-    void PhysicsEngine::AttachCollider(RigidBody& rb, MeshCollider& collider)
+    void PhysicsEngine::AttachCollider(RigidBody& rb, CompoundCollider& compoundCollider, MeshCollider& collider,
+                                       Math::Vec3& relativePos)
     {
-        collider.collider = rb.collisionBody->addCollider(collider.shape, rp3d::Transform::identity());
-
-        Math::Vec3 rpJ = FromRPVec3(collider.shape->getLocalInertiaTensor(rb.mass));
-        Math::Mat3 inertiaTensor = Math::Mat3(0.0f);
-        inertiaTensor[0][0] = rpJ.x;
-        inertiaTensor[1][1] = rpJ.y;
-        inertiaTensor[2][2] = rpJ.z;
+        collider.collider = rb.collisionBody->addCollider(
+            collider.shape, rp3d::Transform(ToRPVec3(relativePos), rp3d::Quaternion::identity()));
 
         if (rb.type == BodyType::Static)
         {
+            rb.invMass = 0.0f;
+            rb.centerOfMass = Math::Vec3(0.0f);
             rb.invInertiaTensor = Math::Vec3(0.0f);
-        }
-        else
-        {
-            Math::Mat3 invMat = Math::Inverse(inertiaTensor);
-            rb.invInertiaTensor = Math::Vec3(invMat[0][0], invMat[1][1], invMat[2][2]);
+            return;
         }
 
-        rb.invMass = rb.type == BodyType::Static ? 0.0f : 1.0f / rb.mass;
+        // calculate the centre of mass with new collider
+        CalculateCentreOfMass(rb, compoundCollider);
+
+        // calculate the inertia tensor
+        CalculateCombinedIntertia(rb, compoundCollider);
     }
 
     void PhysicsEngine::ApplyForces(Math::Vec3& pos, Math::Quat& quatRot, RigidBody& rb)

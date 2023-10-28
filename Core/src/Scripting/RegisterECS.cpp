@@ -81,6 +81,8 @@ namespace Vakol
             newRb.collisionData->parentBody = &newRb;
             newRb.tag = ent->GetComponent<Components::Tag>().tag;
 
+            ent->AddComponent<CompoundCollider>();
+
             return newRb;
         });
 
@@ -93,58 +95,91 @@ namespace Vakol
             return static_cast<RigidBody*>(nullptr);
         });
 
-        entity_type.set_function("add_sphere_collider", [&](Entity* ent, const float radius) {
+        entity_type.set_function(
+            "add_box_collider", [&](Entity* ent, Math::Vec3& halfExtents, Math::Vec3& relativePos, const float mass) {
+                PhysicsEngine& physEngine = lua["PhysicsEngine"];
+
+                if (!ent->HasComponent<RigidBody>())
+                {
+                    VK_CRITICAL("No rigid body component found on entity");
+
+                    return static_cast<CompoundCollider*>(nullptr);
+                }
+
+                if (!ent->HasComponent<CompoundCollider>())
+                    ent->AddComponent<CompoundCollider>();
+
+                CompoundCollider& compoundCollider = ent->GetComponent<CompoundCollider>();
+                CollisionShape shape = physEngine.CreateBoxShape(halfExtents);
+
+                ColliderData data;
+                data.collider = nullptr;
+                data.shape = shape;
+                data.mass = mass;
+
+                compoundCollider.colliders.push_back(data);
+
+                physEngine.AttachCollider(ent->GetComponent<RigidBody>(), compoundCollider, collider, relativePos);
+
+                return &ent->GetComponent<CompoundCollider>();
+            });
+
+        entity_type.set_function(
+            "add_sphere_collider", [&](Entity* ent, const float radius, Math::Vec3& relativePos, const float mass) {
+                PhysicsEngine& physEngine = lua["PhysicsEngine"];
+
+                if (!ent->HasComponent<RigidBody>())
+                {
+                    VK_CRITICAL("No rigid body component found on entity");
+
+                    return static_cast<CompoundCollider*>(nullptr);
+                }
+
+                if (!ent->HasComponent<CompoundCollider>())
+                    ent->AddComponent<CompoundCollider>();
+
+                CompoundCollider& compoundCollider = ent->GetComponent<CompoundCollider>();
+
+                SphereCollider collider = physEngine.CreateSphereCollider(radius);
+
+                ColliderData data;
+                data.collider = collider.collider;
+                data.mass = mass;
+
+                compoundCollider.colliders.push_back(data);
+
+                physEngine.AttachCollider(ent->GetComponent<RigidBody>(), compoundCollider, collider, relativePos);
+
+                return &ent->GetComponent<CompoundCollider>();
+            });
+
+        entity_type.set_function("add_capsule_collider", [&](Entity* ent, const float radius, const float height,
+                                                             Math::Vec3& relativePos, const float mass) {
             PhysicsEngine& physEngine = lua["PhysicsEngine"];
 
             if (!ent->HasComponent<RigidBody>())
             {
                 VK_CRITICAL("No rigid body component found on entity");
 
-                return static_cast<SphereCollider*>(nullptr);
+                return static_cast<CompoundCollider*>(nullptr);
             }
 
-            SphereCollider collider = physEngine.CreateSphereCollider(radius);
+            if (!ent->HasComponent<CompoundCollider>())
+                ent->AddComponent<CompoundCollider>();
 
-            ent->AddComponent<SphereCollider>(collider);
-            physEngine.AttachCollider(ent->GetComponent<RigidBody>(), collider);
-
-            return &ent->GetComponent<SphereCollider>();
-        });
-
-        entity_type.set_function("add_capsule_collider", [&](Entity* ent, const float radius, const float height) {
-            PhysicsEngine& physEngine = lua["PhysicsEngine"];
-
-            if (!ent->HasComponent<RigidBody>())
-            {
-                VK_CRITICAL("No rigid body component found on entity");
-
-                return static_cast<CapsuleCollider*>(nullptr);
-            }
+            CompoundCollider& compoundCollider = ent->GetComponent<CompoundCollider>();
 
             CapsuleCollider collider = physEngine.CreateCapsuleCollider(radius, height);
 
-            ent->AddComponent<CapsuleCollider>(collider);
-            physEngine.AttachCollider(ent->GetComponent<RigidBody>(), collider);
+            ColliderData data;
+            data.collider = collider.collider;
+            data.mass = mass;
 
-            return &ent->GetComponent<CapsuleCollider>();
-        });
+            compoundCollider.colliders.push_back(data);
 
-        entity_type.set_function("add_box_collider", [&](Entity* ent, Math::Vec3& halfExtents) {
-            PhysicsEngine& physEngine = lua["PhysicsEngine"];
+            physEngine.AttachCollider(ent->GetComponent<RigidBody>(), compoundCollider, collider, relativePos);
 
-            if (!ent->HasComponent<RigidBody>())
-            {
-                VK_CRITICAL("No rigid body component found on entity");
-
-                return static_cast<BoxCollider*>(nullptr);
-            }
-
-            BoxCollider collider = physEngine.CreateBoxCollider(halfExtents);
-
-            ent->AddComponent<BoxCollider>(collider);
-            physEngine.AttachCollider(ent->GetComponent<RigidBody>(), collider);
-
-            return &ent->GetComponent<BoxCollider>();
+            return &ent->GetComponent<CompoundCollider>();
         });
 
         entity_type.set_function("add_script", [&](Entity* ent, const std::string& name, const std::string& path) {

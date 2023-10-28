@@ -99,117 +99,22 @@ namespace Vakol
         std::string tag;
     };
 
-    /**
-     * @brief A structure representing a box collider.
-     *
-     * A box collider is a type of collider used in physics simulations to represent a rectangular prism shaped object.
-     */
-    struct BoxCollider
+    struct ColliderData
     {
-        /**
-         * @brief Pointer to the box shape associated with this collider.
-         *
-         * This holds the geometric and possibly physical properties (like dimensions) of the box shape.
-         */
-        rp3d::BoxShape* shape;
-
-        /**
-         * @brief Pointer to the collider component associated with this box shape.
-         *
-         * This holds the information related to collision properties such as friction, restitution, etc.
-         */
-        rp3d::Collider* collider;
+        rp3d::Collider* collider = nullptr;
+        CollisionShape shape;
+        float mass;
     };
 
-    /**
-     * @brief A structure representing a sphere collider.
-     *
-     * A sphere collider is a type of collider used in physics simulations to represent a spherical shaped object.
-     */
-    struct SphereCollider
+    struct CompoundCollider
     {
-        /**
-         * @brief Pointer to the sphere shape associated with this collider.
-         *
-         * This holds the geometric and possibly physical properties (like radius) of the sphere shape.
-         */
-        rp3d::SphereShape* shape;
-
-        /**
-         * @brief Pointer to the collider component associated with this sphere shape.
-         *
-         * This holds the information related to collision properties such as friction, restitution, etc.
-         */
-        rp3d::Collider* collider;
+        std::vector<ColliderData> colliders;
     };
 
-    /**
-     * @brief A structure representing a capsule collider.
-     *
-     * A capsule collider is a type of collider used in physics simulations to represent a capsule shaped object, which
-     * is a cylinder capped with half-spheres at both ends.
-     */
-    struct CapsuleCollider
+    struct CollisionShape
     {
-        /**
-         * @brief Pointer to the capsule shape associated with this collider.
-         *
-         * This holds the geometric and possibly physical properties (like radius and height) of the capsule shape.
-         */
-        rp3d::CapsuleShape* shape;
-
-        /**
-         * @brief Pointer to the collider component associated with this capsule shape.
-         *
-         * This holds the information related to collision properties such as friction, restitution, etc.
-         */
-        rp3d::Collider* collider;
+        rp3d::CollisionShape* shape = nullptr;
     };
-
-    /**
-     * @brief A structure representing a mesh collider.
-     *
-     * A mesh collider is a type of collider used in physics simulations to represent a collider with a complex shape
-     * defined by a mesh of triangles.
-     */
-    struct MeshCollider
-    {
-        /**
-         * @brief Pointer to the concave mesh shape associated with this collider.
-         *
-         * This holds the geometric and possibly physical properties of the mesh shape defined by a series of vertices
-         * and triangles.
-         */
-        rp3d::ConcaveMeshShape* shape;
-
-        /**
-         * @brief Pointer to the collider component associated with this mesh shape.
-         *
-         * This holds the information related to collision properties such as friction, restitution, etc.
-         */
-        rp3d::Collider* collider;
-    };
-
-    // struct Collider
-    // {
-    //     enum class ShapeType
-    //     {
-    //         AABB,
-    //         Sphere,
-    //         Capsule,
-    //         Mesh
-    //     };
-
-    //     ShapeType type;
-
-    //     union {
-    //         BoxCollider aabb;
-    //         SphereCollider sphere;
-    //         CapsuleCollider capsule;
-    //         TriangleCollider triangle;
-    //         MeshCollider mesh;
-    //     };
-    // };
 } // namespace Vakol
 
 //     /**
