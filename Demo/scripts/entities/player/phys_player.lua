@@ -9,7 +9,8 @@ function init()
     local rb = entity:add_rigid();
     rb.bounciness = 0.3;
 	rb.mass = 1;
-	entity:add_box_collider(Vector3.new(1.0, 1.0, 1.0));
+    entity:add_box_collider(Vector3.new(1.0, 1.0, 1.0));
+    rb.rot_lock = BVector3.new(true, true, true);
 end
 
 function update()
@@ -78,9 +79,9 @@ function phys_update()
     end
 
     -- Multiply by force magnitude here, for example, 100
-    dir = dir * 50;
+    dir = dir * 1.2;
 
-    rb:add_force(dir);
+    rb:apply_impulse(dir);
     dir = Vector3.new(0, 0, 0);
 end
 
@@ -144,12 +145,14 @@ end
 function is_grounded()
     local origin = entity:get_transform().pos;  -- Get entity's current position
     local downward = Vector3.new(0, -1, 0);  -- Downward direction
-    local distance = 0.6;                      -- Length of the ray, you can adjust this value
+    local distance = 1.0;                      -- Length of the ray, you can adjust this value
     local hit_info = RayCastHitInfo.new();
+  
+    local obj = scene:raycast(origin, downward, distance, hit_info);
 
-    -- local didHit = scene:raycast(origin, downward, distance, hit_info);
-
-    -- print(hit_info.distance);
+    if (obj == nil) then
+        return false;
+    end
     
-    return scene:raycast(origin, downward, distance, hit_info);
+   return true;
 end
