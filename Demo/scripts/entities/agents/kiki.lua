@@ -38,7 +38,14 @@ function init()
 
     body_material:set_light_direction(Vector3.new(0.0, math.rad(90.0), 0.0));
 
-    eye_material:set_uv_offset(Vector2.new(0.5, 1.0));
+    -- OH SNAP KIKI EMOTION MATRIX :D
+
+    -- (0.0, 0.0), (0.0, 1.0), (1.0, 0.0), (1.0, 1.0) = neutral
+    -- (0.0, 0.5), (0.0, 1.5), (1.0, 0.5), (1.0, 1.5) = happy
+    -- (0.5, 0.0), (0.5, 1.0), (1.5, 0.0), (1.5, 1.0) = angry
+    -- (0.5, 0.5), (0.5, 1.5), (1.5, 0.5), (1.5, 1.5) = dizzy
+
+    eye_material:set_uv_offset(Vector2.new(0.0, 0.0));
     eye_material:set_opacity(0.0);
     eye_material:use_lighting(false);
 end
