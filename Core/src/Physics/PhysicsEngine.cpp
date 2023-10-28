@@ -102,12 +102,12 @@ namespace Vakol
         {
             // you need to get the relative position of the collider to the body
             combinedCM += FromRPVec3(c.rpCollider->getLocalToBodyTransform().getPosition()) * c.mass;
+
             combinedMass += c.mass;
         }
 
         rb.centerOfMass = combinedCM / combinedMass;
 
-        VK_ERROR("Final COM: {0} {1} {2}", rb.centerOfMass.x, rb.centerOfMass.y, rb.centerOfMass.z);
         rb.mass = combinedMass;
         rb.invMass = 1.0f / rb.mass;
     }
@@ -123,52 +123,21 @@ namespace Vakol
         // you must sum up the inertia tensors of all the colliders
         for (auto& c : compoundCollider.colliders)
         {
-            if (c.shape.type == ShapeType::Box)
-            {
-                rp3d::BoxShape* box = static_cast<rp3d::BoxShape*>(c.shape.shape);
+            // calculate the distance from the colliders center of mass to the new common center of mass
+            Math::Vec3 dist = FromRPVec3(c.rpCollider->getLocalToBodyTransform().getPosition()) - rb.centerOfMass;
+            Math::Vec3 distSq = dist * dist;
 
-                float w = box->getHalfExtents().x;
-                float h = box->getHalfExtents().y;
-                float d = box->getHalfExtents().z;
-                float mass = c.mass;
+            // the inertia tensor for the collider
+            Math::Vec3 rpJ = FromRPVec3(c.rpCollider->getCollisionShape()->getLocalInertiaTensor(c.mass));
 
-                // inertia tensor about the center of mass of the box
-                Math::Vec3 localInertia(1.0f / 12.0f * mass * (h * h + d * d), 1.0f / 12.0f * mass * (w * w + d * d),
-                                        1.0f / 12.0f * mass * (w * w + h * h));
+            // adjust each diagonal element of the inertia tensor
+            Math::Vec3 partInertiaTensor;
+            partInertiaTensor.x = rpJ.x + c.mass * (distSq.y + distSq.z);
+            partInertiaTensor.y = rpJ.y + c.mass * (distSq.x + distSq.z);
+            partInertiaTensor.z = rpJ.z + c.mass * (distSq.x + distSq.y);
 
-                // pos relative to the combined center of mass
-                Math::Vec3 relativePos =
-                    FromRPVec3(c.rpCollider->getLocalToBodyTransform().getPosition()) - rb.centerOfMass;
-
-                // parallel axis theorem
-                localInertia.x += mass * (relativePos.y * relativePos.y + relativePos.z * relativePos.z);
-                localInertia.y += mass * (relativePos.x * relativePos.x + relativePos.z * relativePos.z);
-                localInertia.z += mass * (relativePos.x * relativePos.x + relativePos.y * relativePos.y);
-
-                // add combined inertia tensor
-                combinedInertiaTensor.x += localInertia.x;
-                combinedInertiaTensor.y += localInertia.y;
-                combinedInertiaTensor.z += localInertia.z;
-            }
-            else
-            {
-                // calculate the distance from the colliders center of mass to the new common center of mass
-                Math::Vec3 distance =
-                    rb.centerOfMass - FromRPVec3(c.rpCollider->getLocalToBodyTransform().getPosition());
-
-                // the interia tensor for the collider
-                Math::Vec3 rpJ = FromRPVec3(c.rpCollider->getCollisionShape()->getLocalInertiaTensor(c.mass));
-
-                // calculate the inertia tensor of the collider for the new common center of mass
-                // I = I + m * d^2 (for each axis)
-                Math::Vec3 partInertiaTensor = rpJ;
-                partInertiaTensor.x += c.mass * (distance.y * distance.y + distance.z * distance.z);
-                partInertiaTensor.y += c.mass * (distance.x * distance.x + distance.z * distance.z);
-                partInertiaTensor.z += c.mass * (distance.x * distance.x + distance.y * distance.y);
-
-                // add to combined inertia tensor
-                combinedInertiaTensor += partInertiaTensor;
-            }
+            // add to combined inertia tensor
+            combinedInertiaTensor += partInertiaTensor;
         }
 
         Math::Mat3 inertiaTensor = Math::Mat3(0.0f);
