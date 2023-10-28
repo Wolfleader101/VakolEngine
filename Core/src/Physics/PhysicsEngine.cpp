@@ -118,11 +118,11 @@ namespace Vakol
         for (auto& c : compoundCollider.colliders)
         {
             // calculate the distance from the colliders center of mass to the new common center of mass
-            Math::Vec3 distance = rb.centerOfMass - FromRPVec3(c.collider->getLocalToBodyTransform().getPosition());
+            Math::Vec3 distance = rb.centerOfMass - FromRPVec3(c.rpCollider->getLocalToBodyTransform().getPosition());
             float distanceSquared = Math::Dot(distance, distance);
 
             // the interia tensor for the collider
-            Math::Vec3 rpJ = FromRPVec3(c.collider->getCollisionShape()->getLocalInertiaTensor(c.mass));
+            Math::Vec3 rpJ = FromRPVec3(c.rpCollider->getCollisionShape()->getLocalInertiaTensor(c.mass));
 
             // calculate the inertia tensor of the collider for the new common center of mass
             // I = I + m * d^2 (for each axis)

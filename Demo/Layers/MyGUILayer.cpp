@@ -386,66 +386,68 @@ void MyGUILayer::OnUpdate()
                             }
                         }
 
-                        if (entity.HasComponent<Vakol::BoxCollider>() && ImGui::CollapsingHeader("Box Collider"))
-                        {
-                            const Vakol::BoxCollider& collider = entity.GetComponent<Vakol::BoxCollider>();
+                        // TODO allow it to handle new collider data
+                        // if (entity.HasComponent<Vakol::BoxCollider>() && ImGui::CollapsingHeader("Box Collider"))
+                        // {
+                        //     const Vakol::BoxCollider& collider = entity.GetComponent<Vakol::BoxCollider>();
 
-                            Vakol::Math::Vec3 halfExtents = Vec3(collider.shape->getHalfExtents());
+                        //     Vakol::Math::Vec3 halfExtents = Vec3(collider.shape->getHalfExtents());
 
-                            ImGui::SeparatorText("Size");
-                            ImGui::DragFloat3("Half Extents", &halfExtents.x, 0.1f);
+                        //     ImGui::SeparatorText("Size");
+                        //     ImGui::DragFloat3("Half Extents", &halfExtents.x, 0.1f);
 
-                            collider.shape->setHalfExtents(Vec3(halfExtents));
-                        }
+                        //     collider.shape->setHalfExtents(Vec3(halfExtents));
+                        // }
 
-                        if (entity.HasComponent<Vakol::SphereCollider>() && ImGui::CollapsingHeader("Sphere Collider"))
-                        {
-                            const Vakol::SphereCollider& collider = entity.GetComponent<Vakol::SphereCollider>();
+                        // if (entity.HasComponent<Vakol::SphereCollider>() && ImGui::CollapsingHeader("Sphere
+                        // Collider"))
+                        // {
+                        //     const Vakol::SphereCollider& collider = entity.GetComponent<Vakol::SphereCollider>();
 
-                            constexpr float min = 0.01f;
-                            constexpr float max = 100.0f;
+                        //     constexpr float min = 0.01f;
+                        //     constexpr float max = 100.0f;
 
-                            float radius = collider.shape->getRadius();
+                        //     float radius = collider.shape->getRadius();
 
-                            ImGui::SeparatorText("Size");
-                            ImGui::DragScalar("Radius", ImGuiDataType_Double, &radius, 0.1f);
+                        //     ImGui::SeparatorText("Size");
+                        //     ImGui::DragScalar("Radius", ImGuiDataType_Double, &radius, 0.1f);
 
-                            if (radius < min)
-                                radius = min;
-                            if (radius > max)
-                                radius = max;
+                        //     if (radius < min)
+                        //         radius = min;
+                        //     if (radius > max)
+                        //         radius = max;
 
-                            collider.shape->setRadius(radius);
-                        }
+                        //     collider.shape->setRadius(radius);
+                        // }
 
-                        if (entity.HasComponent<Vakol::CapsuleCollider>() &&
-                            ImGui::CollapsingHeader("Capsule Collider"))
-                        {
-                            const Vakol::CapsuleCollider& collider = entity.GetComponent<Vakol::CapsuleCollider>();
+                        // if (entity.HasComponent<Vakol::CapsuleCollider>() &&
+                        //     ImGui::CollapsingHeader("Capsule Collider"))
+                        // {
+                        //     const Vakol::CapsuleCollider& collider = entity.GetComponent<Vakol::CapsuleCollider>();
 
-                            constexpr float min = 0.01;
-                            constexpr float max = 100.0;
+                        //     constexpr float min = 0.01;
+                        //     constexpr float max = 100.0;
 
-                            float radius = collider.shape->getRadius();
-                            float height = collider.shape->getHeight();
+                        //     float radius = collider.shape->getRadius();
+                        //     float height = collider.shape->getHeight();
 
-                            ImGui::SeparatorText("Size");
-                            ImGui::DragScalar("Radius", ImGuiDataType_Double, &radius, 0.1f);
-                            ImGui::DragScalar("Height", ImGuiDataType_Double, &height, 0.1f);
+                        //     ImGui::SeparatorText("Size");
+                        //     ImGui::DragScalar("Radius", ImGuiDataType_Double, &radius, 0.1f);
+                        //     ImGui::DragScalar("Height", ImGuiDataType_Double, &height, 0.1f);
 
-                            if (radius < min)
-                                radius = min;
-                            if (radius > max)
-                                radius = max;
+                        //     if (radius < min)
+                        //         radius = min;
+                        //     if (radius > max)
+                        //         radius = max;
 
-                            if (height < min)
-                                height = min;
-                            if (height > max)
-                                height = max;
+                        //     if (height < min)
+                        //         height = min;
+                        //     if (height > max)
+                        //         height = max;
 
-                            collider.shape->setRadius(radius);
-                            collider.shape->setHeight(height);
-                        }
+                        //     collider.shape->setRadius(radius);
+                        //     collider.shape->setHeight(height);
+                        // }
 
                         ImGui::Spacing();
 

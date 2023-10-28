@@ -99,6 +99,11 @@ namespace Vakol
         std::string tag;
     };
 
+    struct CollisionShape
+    {
+        rp3d::CollisionShape* shape = nullptr;
+    };
+
     struct ColliderData
     {
         rp3d::Collider* rpCollider = nullptr;
@@ -111,10 +116,6 @@ namespace Vakol
         std::vector<ColliderData> colliders;
     };
 
-    struct CollisionShape
-    {
-        rp3d::CollisionShape* shape = nullptr;
-    };
 } // namespace Vakol
 
 //     /**
