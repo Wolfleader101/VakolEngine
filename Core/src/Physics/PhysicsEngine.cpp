@@ -114,7 +114,7 @@ namespace Vakol
 
     void PhysicsEngine::CalculateCombinedIntertia(RigidBody& rb, CompoundCollider& compoundCollider)
     {
-        // calculalte parrel axis theorem and second moments of inertia coming up
+        // calculalte parallel axis theorem and second moments of inertia coming up
         // I = I + m * d^2
 
         // calculate inertia tensor for each collider and sum them up
@@ -131,13 +131,13 @@ namespace Vakol
             Math::Vec3 rpJ = FromRPVec3(c.rpCollider->getCollisionShape()->getLocalInertiaTensor(c.mass));
 
             // adjust each diagonal element of the inertia tensor
-            Math::Vec3 partInertiaTensor;
-            partInertiaTensor.x = rpJ.x + c.mass * (distSq.y + distSq.z);
-            partInertiaTensor.y = rpJ.y + c.mass * (distSq.x + distSq.z);
-            partInertiaTensor.z = rpJ.z + c.mass * (distSq.x + distSq.y);
+            Math::Vec3 newTensor = Math::Vec3(0.0f);
+            newTensor.x = rpJ.x + c.mass * (distSq.y + distSq.z);
+            newTensor.y = rpJ.y + c.mass * (distSq.x + distSq.z);
+            newTensor.z = rpJ.z + c.mass * (distSq.x + distSq.y);
 
             // add to combined inertia tensor
-            combinedInertiaTensor += partInertiaTensor;
+            combinedInertiaTensor += newTensor;
         }
 
         Math::Mat3 inertiaTensor = Math::Mat3(0.0f);

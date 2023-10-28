@@ -267,16 +267,18 @@ namespace Vakol
 
         if (rb1.type != BodyType::Static)
         {
-            rb1.linearVelocity += impulse * rb1.invMass;
-            rb1.angularVelocity += lambda * rb1.invInertiaTensor * r1CrossN;
-            // VK_CRITICAL("Angular Velocity: {0} {1} {2}", rb1.angularVelocity.x, rb1.angularVelocity.y,
-            //             rb1.angularVelocity.z);
+            // rb1.linearVelocity += impulse * rb1.invMass;
+            // rb1.angularVelocity += lambda * rb1.invInertiaTensor * r1CrossN;
+            rb1.collisionData->tempLinearVelocity += impulse * rb1.invMass;
+            rb1.collisionData->tempAngularVelocity += lambda * rb1.invInertiaTensor * r1CrossN;
         }
 
         if (rb2.type != BodyType::Static)
         {
-            rb2.linearVelocity -= impulse * rb2.invMass;
-            rb2.angularVelocity -= lambda * rb2.invInertiaTensor * r2CrossN;
+            // rb2.linearVelocity -= impulse * rb2.invMass;
+            // rb2.angularVelocity -= lambda * rb2.invInertiaTensor * r2CrossN;
+            rb2.collisionData->tempLinearVelocity -= impulse * rb2.invMass;
+            rb2.collisionData->tempAngularVelocity -= lambda * rb2.invInertiaTensor * r2CrossN;
         }
     }
 } // namespace Vakol

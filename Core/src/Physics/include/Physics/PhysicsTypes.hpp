@@ -61,6 +61,9 @@ namespace Vakol
 
         RigidBody* parentBody = nullptr;
         RigidBody* otherBody = nullptr;
+
+        Math::Vec3 tempLinearVelocity = Math::Vec3(0.0f, 0.0f, 0.0f);
+        Math::Vec3 tempAngularVelocity = Math::Vec3(0.0f, 0.0f, 0.0f);
     };
 
     /**

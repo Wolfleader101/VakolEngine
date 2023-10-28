@@ -212,6 +212,20 @@ namespace Vakol
                     // detect collisions
                     m_physicsEngine.DetectCollisions(activeScene.GetPhysicsScene());
 
+                    activeScene.GetEntityList().Iterate<RigidBody>([&](RigidBody& rb) {
+                        // if (rb.collisionData->isColliding)
+                        // {
+                        if (rb.type != BodyType::Static)
+                        {
+                            rb.linearVelocity += rb.collisionData->tempLinearVelocity;
+                            rb.angularVelocity += rb.collisionData->tempAngularVelocity;
+
+                            rb.collisionData->tempLinearVelocity = Math::Vec3(0.0f, 0.0f, 0.0f);
+                            rb.collisionData->tempAngularVelocity = Math::Vec3(0.0f, 0.0f, 0.0f);
+                        }
+                        // }
+                    });
+
                     // Decrease the accumulated time
                     physicsAccumulator -= m_physicsEngine.GetTimeStep();
                 }
