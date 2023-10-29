@@ -5,7 +5,7 @@ local rb = nil;
 local transform = nil;
 local target = nil;
 
-local wandering = false;
+local wandering = true;
 local travellingToObject = false;
 local holdingRubbish = false;
 local initialRubbishContact = false;
@@ -26,7 +26,7 @@ local minInteractDistance = 0.5;
 local avoidanceDistance = 3.0;
 
 function init()
-    entity:add_model("assets/models/ai/hamid/hamid.fbx", 1.0);
+    entity:add_model("assets/models/ai/hamid/hamid.fbx", 0.015);
 
     transform = entity:get_transform();
 
@@ -36,7 +36,6 @@ function init()
     rb.type = BodyType.Dynamic;
 
     entity:get_transform().pos = Vector3.new(-30, 5, -20);
-    entity:get_transform().scale = Vector3.new(0.015, 0.015, 0.015);
 
     entity:add_box_collider(Vector3.new(0.9, 1.75, 0.3));
 
@@ -89,6 +88,8 @@ function rubbish_behaviour()
 
     -- Checks to see if the rubbish entity has been set
     if (next(rubbish) == nil) then
+        print("RUBBISH");
+    
         -- Checking to see if the AI isn't already travelling to the entity
         if (travellingToObject == false) then
             for key, value in pairs(rubbish) do
