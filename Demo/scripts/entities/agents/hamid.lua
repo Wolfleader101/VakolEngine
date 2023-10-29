@@ -15,13 +15,13 @@ local recyclingBins = scene.globals.recyclingBins;
 local rubbish = {};
 local currentRubbish = nil;
 
-local yDifference = nil;
+local yDifference = 0.0;
 
 local entityDistance = nil;
 
 local currentFear = 0.0;
 
-local interactDistance = 5.0;
+local interactDistance = 100.0;
 local minInteractDistance = 0.5;
 local avoidanceDistance = 3.0;
 
@@ -87,18 +87,20 @@ function rubbish_behaviour()
     end
 
     -- Checks to see if the rubbish entity has been set
-    if (next(rubbish) == nil) then
-        print("RUBBISH");
+    if (next(rubbish) ~= nil) then
+        print("RUBBISH ENTER");
     
         -- Checking to see if the AI isn't already travelling to the entity
         if (travellingToObject == false) then
+            print("NOT TRAVELLING TO RUBBISH");
             for key, value in pairs(rubbish) do
                 -- Getting the distance between the AI and the entity
                 yDifference = math.abs(entity:get_transform().pos.y - value:get_transform().pos.y);
 
                 entityDistance = distance(entity:get_transform().pos, value:get_transform().pos);
                 -- Checking to see that the distance between the AI and the entity is within the interact distance
-                if ((entityDistance < interactDistance) and yDifference < 0.5) then
+                if ((entityDistance < interactDistance) and yDifference < 10.0) then
+                    print("HEADING TO RUBBISH");
                     navigation.DESTINATION = value:get_transform().pos;
 
                     wandering = false;
@@ -110,12 +112,14 @@ function rubbish_behaviour()
 
         -- Checking to see if the AI is already travelling to the entity and is not holding the rubbish
         if (travellingToObject == true and holdingRubbish == false) then
+            print("TRAVELLING TO RUBBISH STILL");
             yDifference = math.abs(entity:get_transform().pos.y - value:get_transform().pos.y);
 
             entityDistance = distance(entity:get_transform().pos, value:get_transform().pos);
         
             -- Checking to see if the AI is close enough to the object to grab it (Done in the on_contact function)
-            if ((entityDistance < minInteractDistance) and yDifference < 0.5) then
+            if ((entityDistance < minInteractDistance) and yDifference < 10.0) then
+                print("ARRIVED AT RUBBISH");
                 holdingRubbish = true;
                 initialRubbishContact = true;
 
@@ -135,7 +139,7 @@ function rubbish_behaviour()
 
                 entityDistance = distance(entity:get_transform().pos, value:get_transform().pos);
 
-                if ((entityDistance < minInteractDistance) and yDifference < 0.5) then
+                if ((entityDistance < minInteractDistance) and yDifference < 10.0) then
                     destroy_entity(currentRubbish);
 
                     emotions.add_emotion_value(emotions.JOY, 0.2);
@@ -198,21 +202,21 @@ function tick()
                 end
             end
         end
-    else
-        -- Check if the AI has emotions
-        if (emotions ~= nil) then
-            -- Check if the fear of the AI is below a certian amount before performing an action
-            if (emotions.get_emotion(emotions.FEAR) ~= nil and emotions.get_emotion(emotions.FEAR) < 0.1) then
-                -- AI will be wandering before he hits the rubbish_behaviour, so grab the current fear value and set it
-                if (wandering == true) then
-                    currentFear = emotions.get_emotion(emotions.FEAR);
-                end
+    end
 
-                -- This will make sure that while he is doing his rubbish behaviour he will stay at his current fear level
-                emotions.set_emotion(emotions.FEAR, currentFear);
-
-                rubbish_behaviour();
+    -- Check if the AI has emotions
+    if (emotions ~= nil) then
+        -- Check if the fear of the AI is below a certian amount before performing an action
+        if (emotions.get_emotion(emotions.FEAR) ~= nil and emotions.get_emotion(emotions.FEAR) < 0.1) then
+            -- AI will be wandering before he hits the rubbish_behaviour, so grab the current fear value and set it
+            if (wandering == true) then
+                currentFear = emotions.get_emotion(emotions.FEAR);
             end
+
+            -- This will make sure that while he is doing his rubbish behaviour he will stay at his current fear level
+            emotions.set_emotion(emotions.FEAR, currentFear);
+
+            rubbish_behaviour();
         end
     end
 end

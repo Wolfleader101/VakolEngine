@@ -3,10 +3,6 @@
 
     scene:create_entity("Player", "entities/player/noclip.lua")
     -- scene:create_entity("Player", "entities/player/phys_player.lua")
-    
-    -- scene:create_entity("Kiki", "entities/agents/kiki.lua");
-    -- scene:create_entity("Hong", "entities/agents/hong.lua");
-    scene:create_entity("Hamid", "entities/agents/hamid.lua");
 
     scene:create_entity("Digital Twin", "entities/worlds/digital_twin.lua");
     scene:create_entity("290 World", "entities/worlds/290_world.lua");
@@ -20,6 +16,10 @@
     scene:generate_skybox(faces);
 
     -- AI Setup
+
+    -- scene:create_entity("Kiki", "entities/agents/kiki.lua");
+    -- scene:create_entity("Hong", "entities/agents/hong.lua");
+    scene:create_entity("Hamid", "entities/agents/hamid.lua");
     
     -- scene.globals.emotional_entities[1] = shri;
     --scene.globals.emotional_entities[2] = hong;
