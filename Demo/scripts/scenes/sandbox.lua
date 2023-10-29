@@ -1,4 +1,6 @@
 ﻿function init()
+    scene.globals.emotional_entities = {};
+
     scene:create_entity("Player", "entities/player/noclip.lua")
     
     scene:create_entity("Kiki", "entities/agents/kiki.lua");
@@ -19,8 +21,9 @@
 
     -- AI Setup
     
-    scene.globals.emotional_entities[1] = hong;
-    scene.globals.emotional_entities[2] = hamid;
+    -- scene.globals.emotional_entities[1] = shri;
+    -- scene.globals.emotional_entities[2] = hong;
+    scene.globals.emotional_entities[3] = hamid;
 
     -- local cube_1 = scene:create_entity("Cube 1", "entities/test/cube.lua");
     -- cube_1:get_transform().pos = Vector3.new(0.0, 1.0, -40.0);

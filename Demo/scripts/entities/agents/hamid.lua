@@ -40,7 +40,7 @@ function init()
 
     entity:add_box_collider(Vector3.new(0.9, 1.75, 0.3));
 
-    entity:add_script("emotions", "fcms/emoiton.lua")
+    entity:add_script("emotions", "components/emotion.lua")
     emotions = entity:get_script("emotions");
 
     entity:add_script("affordance", "components/affordance.lua")
@@ -83,7 +83,9 @@ function rubbish_behaviour()
     rubbish = {};  -- Reset the rubbish table in case some are removed
 
     -- Populate the rubbish table with all the rubbish entities
-    for k, v in pairs(scene.globals.apples) do table.insert(rubbish, v) end
+    for i, v in ipairs(scene.globals.apples) do 
+        rubbish[#rubbish + 1] = v;
+    end
 
     -- Checks to see if the rubbish entity has been set
     if (next(rubbish) == nil) then
@@ -94,7 +96,6 @@ function rubbish_behaviour()
                 yDifference = math.abs(entity:get_transform().pos.y - value:get_transform().pos.y);
 
                 entityDistance = distance(entity:get_transform().pos, value:get_transform().pos);
-
                 -- Checking to see that the distance between the AI and the entity is within the interact distance
                 if ((entityDistance < interactDistance) and yDifference < 0.5) then
                     navigation.DESTINATION = value:get_transform().pos;
@@ -177,6 +178,7 @@ function tick()
     -- Check if the AI is wandering around
     if (wandering ==  true) then
         navigation.wander();
+
         --[[
         -- Check if the AI has emotions
         if (emotions ~= nil) then
@@ -209,6 +211,7 @@ function tick()
 
                 -- This will make sure that while he is doing his rubbish behaviour he will stay at his current fear level
                 emotions.set_emotion(emotions.FEAR, currentFear);
+
             
                 rubbish_behaviour();
             end
