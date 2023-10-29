@@ -1,4 +1,5 @@
 local emotions = nil;
+local affordance = nil;
 local navigation = nil;
 local rb = nil;
 local transform = nil;
@@ -41,6 +42,9 @@ function init()
 
     entity:add_script("emotions", "fcms/emoiton.lua")
     emotions = entity:get_script("emotions");
+
+    entity:add_script("affordance", "components/affordance.lua")
+    affordance = entity:get_script("affordance");
 
     entity:add_script("navigation", "components/navigation.lua")
     navigation = entity:get_script("navigation");
@@ -148,14 +152,23 @@ end
 
 function on_contact(other_ent)
     -- Check to see if the AI has initially contacted a piece of rubbish
-    if (initialRubbishContact == true and holdingRubbish == true) then
-    {
-        -- PUT LOGIC FOR HOLDING THINGS HERE
+    if ((initialRubbishContact == true) and (holdingRubbish == true)) then
+        if (emotions ~= nil) then
+            local entityAffordance = other_ent:get_script("affordance");
 
-        currentRubbish = other_ent;
-    
-        initialRubbishContact = false;
-    }
+            -- Check if the item affords holding
+            if (entityAffordance ~= nil and entityAffordance.AFFORDANCES.HOLDING == 1.0) then
+                currentRubbish = other_ent;
+                holdingRubbish = true;  -- Now the AI is holding rubbish
+                initialRubbishContact = false;  -- Reset initial contact flag
+
+                -- If the item is interactable, interact with it
+                if(other_ent:get_script("interactable") ~= nil) then
+                    other_ent:get_script("interactable").interact(entity);
+                end
+            end
+        end
+    end
 end
 
 function tick()
@@ -164,7 +177,7 @@ function tick()
     -- Check if the AI is wandering around
     if (wandering ==  true) then
         navigation.wander();
-
+        --[[
         -- Check if the AI has emotions
         if (emotions ~= nil) then
             -- Check if the fear of the AI is above a certian amount before performing an action
@@ -183,6 +196,7 @@ function tick()
                 end
             end
         end
+        --]]
     else
         -- Check if the AI has emotions
         if (emotions ~= nil) then
