@@ -57,7 +57,9 @@ end
 
 function get_emotion(emotion_index)
     if emotion_index < 1 or emotion_index > 8 then
-        return -1
+        print("Error: Invalid emotion index in get_emotion: ", emotion_index)
+
+        return
     end
 
     return emotion_concepts[emotion_index]
@@ -65,6 +67,8 @@ end
 
 function set_emotion(emotion_index, value)
     if emotion_index < 1 or emotion_index > 8 then
+        print("Error: Invalid emotion index in set_emotion: ", emotion_index)
+
         return
     end
 
@@ -73,20 +77,23 @@ end
 
 function add_emotion_value(emotion_index, value)
     if emotion_index < 1 or emotion_index > 8 then
+        print("Error: Invalid emotion index in add_emotion_value: ", emotion_index)
         return
     end
 
     if emotion_concepts[emotion_index] + value > 1.0 then
         emotion_concepts[emotion_index] = 1.0
-    
         return
     end
 
     emotion_concepts[emotion_index] = emotion_concepts[emotion_index] + value
 end
 
+
 function subtract_emotion_value(emotion_index, value)
     if emotion_index < 1 or emotion_index > 8 then
+        print("Error: Invalid emotion index in subtract_emotion_value: ", emotion_index)
+
         return
     end
 

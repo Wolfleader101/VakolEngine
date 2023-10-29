@@ -2,11 +2,11 @@
     scene.globals.emotional_entities = {};
 
     scene:create_entity("Player", "entities/player/noclip.lua")
+    -- scene:create_entity("Player", "entities/player/phys_player.lua")
     
-    scene:create_entity("Kiki", "entities/agents/kiki.lua");
-    scene:create_entity("Hong", "entities/agents/hong.lua");
+    -- scene:create_entity("Kiki", "entities/agents/kiki.lua");
+    -- scene:create_entity("Hong", "entities/agents/hong.lua");
     scene:create_entity("Hamid", "entities/agents/hamid.lua");
-    scene:create_entity("Player", "entities/player/phys_player.lua")
 
     scene:create_entity("Digital Twin", "entities/worlds/digital_twin.lua");
     scene:create_entity("290 World", "entities/worlds/290_world.lua");
@@ -22,7 +22,7 @@
     -- AI Setup
     
     -- scene.globals.emotional_entities[1] = shri;
-    -- scene.globals.emotional_entities[2] = hong;
+    --scene.globals.emotional_entities[2] = hong;
     scene.globals.emotional_entities[3] = hamid;
 
     -- local cube_1 = scene:create_entity("Cube 1", "entities/test/cube.lua");
