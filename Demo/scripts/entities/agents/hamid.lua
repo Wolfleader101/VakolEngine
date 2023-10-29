@@ -19,14 +19,14 @@ local yDifference = nil;
 
 local entityDistance = nil;
 
-local currentFear = nil;
+local currentFear = 0.0;
 
 local interactDistance = 5.0;
 local minInteractDistance = 0.5;
 local avoidanceDistance = 3.0;
 
 function init()
-    entity:add_model("assets/models/ai/hamid/hamid.fbx", 0.015);
+    entity:add_model("assets/models/ai/hamid/hamid.fbx", 1.0);
 
     transform = entity:get_transform();
 
@@ -179,7 +179,6 @@ function tick()
     if (wandering ==  true) then
         navigation.wander();
 
-        --[[
         -- Check if the AI has emotions
         if (emotions ~= nil) then
             -- Check if the fear of the AI is above a certian amount before performing an action
@@ -198,7 +197,6 @@ function tick()
                 end
             end
         end
-        --]]
     else
         -- Check if the AI has emotions
         if (emotions ~= nil) then
@@ -212,7 +210,6 @@ function tick()
                 -- This will make sure that while he is doing his rubbish behaviour he will stay at his current fear level
                 emotions.set_emotion(emotions.FEAR, currentFear);
 
-            
                 rubbish_behaviour();
             end
         end
