@@ -19,6 +19,9 @@ local wander_target   = Vector3.new();
 local wander_timer    = 0.0;
 local wander_duration = 10.0;
 
+local hitting_wall    = false;
+local hitting_dir     = Vector3.new();
+
 function wrap_angle(angle)
     if angle > 180.0 then
         angle = angle - 360.0
@@ -118,7 +121,7 @@ function idle()
     agent.linearVelocity = Vector3.new();
 end
 
-function accelerate()
+local function accelerate()
     local movement = forward * MOVE_SPEED;
 
     move(movement);
@@ -160,8 +163,13 @@ function tick()
     --elseif (Input:get_key_down(KEYS["KEY_4"])) then
     --    look_at(Vector3.new(40.0, 1.0, 0.0));
     --end
-
-    if (STATE == "wander") then
+    if(hitting_wall) then
+        local inverse_forward = Vector3.new(-hitting_dir.x, -hitting_dir.y, -hitting_dir.z);
+        look_at(inverse_forward);
+        wander_target = gen_random_target();
+        wander_timer = 0.0;
+        hitting_wall = false;
+    elseif (STATE == "wander") then
         wander();
     elseif (STATE == "flee") then
         flee();
@@ -172,8 +180,34 @@ function tick()
     end
 end
 
+local function check_for_wall()
+    local origin = entity:get_transform().pos;  -- Get entity's current position
+    local dir = entity:get_transform().forward; -- Get entity's current forward direction
+    local distance = 0.5;                      -- Length of the ray, you can adjust this value
+    local hit_info = RayCastHitInfo.new();
+
+    local other_ent = scene:raycast(origin, dir, distance, hit_info);
+
+    if (other_ent ~= nil and hit_info.rigidbody.type == BodyType.Static) then
+        hitting_wall = true;
+        hitting_dir = dir; -- save the direction we hit the wall
+        -- print("Hit a wall!");
+        -- wander_target = gen_random_target();
+        -- wander_timer = 0.0;
+        -- local inverse_normal = Vector3.new(-hit_info.normal.x, -hit_info.normal.y, -hit_info.normal.z);
+        -- smooth_look_at(inverse_normal, false);
+
+        -- move away from the wall
+    else
+        hitting_wall = false;
+    end
+    
+end
+
 function phys_update()
     if (can_move) then
+        check_for_wall();
         accelerate();
     end
 end
+
