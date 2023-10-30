@@ -18,7 +18,8 @@ function create_kikis()
         local eye_mesh = models[i]:get_mesh(1);
 
         body_mesh.material:set_diffuse_color(Vector4.new(random_float(0.0, 1.0), random_float(0.0, 1.0), random_float(0.0, 1.0), 1.0));
-        
+        body_mesh.material:use_colors_and_textures(true);
+
         eye_mesh.material:set_opacity(0.0);
         eye_mesh.material:use_lighting(false);
     end
