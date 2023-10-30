@@ -2,23 +2,23 @@
     scene:create_entity("Player", "entities/player/noclip.lua")
     --scene:create_entity("Player", "entities/player/phys_player.lua")
 
-    --scene:create_entity("Digital Twin", "entities/worlds/digital_twin.lua");
+    scene:create_entity("Digital Twin", "entities/worlds/digital_twin.lua");
     scene:create_entity("290 World", "entities/worlds/290_world.lua");
 
     -- AI
 
     scene.globals.emotional_entities = {};
 
-    local shri = scene:create_entity("shri", "entities/agents/shri_rai.lua");
-    shri:get_transform().pos = Vector3.new(-20, 5, -20);
-    shri:get_transform().scale = Vector3.new(0.015, 0.015, 0.015);
-    scene.globals.emotional_entities[1] = shri;
+    --local shri = scene:create_entity("shri", "entities/agents/shri_rai.lua");
+    --shri:get_transform().pos = Vector3.new(-20, 5, -20);
+    --shri:get_transform().scale = Vector3.new(0.015, 0.015, 0.015);
+    --scene.globals.emotional_entities[1] = shri;
 
-    local hong = scene:create_entity("Hong", "entities/agents/hong.lua");
-    scene.globals.emotional_entities[2] = hong;
+    --local hong = scene:create_entity("Hong", "entities/agents/hong.lua");
+    --scene.globals.emotional_entities[2] = hong;
 
     local kiki = scene:create_entity("Kiki", "entities/agents/kiki.lua");
-    scene.globals.emotional_entities[3] = kiki;
+    scene.globals.emotional_entities[1] = kiki;
 
     -- local test = scene:create_entity("bob", "");
     -- test:add_model("assets/models/agents/bob.glb", 0.01);
@@ -32,7 +32,7 @@
 
     scene:generate_skybox(faces);
 
-    add_floor();
+    --add_floor();
 
     -- phys_objs();
     -- falling_objs();

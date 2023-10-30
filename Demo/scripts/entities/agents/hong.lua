@@ -20,7 +20,6 @@ function init()
 
     entity:add_script("navigation", "components/navigation.lua");
 
-
     nav = entity:get_script("navigation");
 
     local target = scene:get_camera():get_pos();
