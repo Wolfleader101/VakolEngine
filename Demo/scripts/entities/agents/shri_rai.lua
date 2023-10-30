@@ -1,6 +1,7 @@
 local emotions;
 local piss;
 local nav;
+local atk;
 
 local target;
 
@@ -13,7 +14,7 @@ local piss_locations = { Vector3.new(17, 2.2, 137), Vector3.new(1.4, 1.5, 36.5),
 local piss_lookat = { Vector3.new(-6, 4.5, 148), Vector3.new(7.7, 2.7, 41.721), Vector3.new(-32, 2.5, 45) };
 local piss_index = 3;
 
-local ANGER_RAD <const> = 10;
+local ANGER_RAD <const> = 40;
 local ANGER_THRESHOLD <const> = 0.5;
 
 
@@ -28,6 +29,9 @@ function init()
     entity:add_script("piss", "components/piss.lua");
     piss = entity:get_script("piss");
 
+    entity:add_script("attack", "components/attack.lua");
+    atk = entity:get_script("attack");
+
     rb = entity:add_rigid();
     rb.type = BodyType.Dynamic;
     rb.rot_lock = BVector3.new(true, true, true);
@@ -36,9 +40,9 @@ function init()
     entity:add_script("navigation", "components/navigation.lua");
     nav = entity:get_script("navigation");
 
-    nav.MOVE_SPEED = 0.025;
-    nav.ROTATE_SPEED = 2.5;
-    nav.BRAKE_FORCE = 1.0;
+    nav.MOVE_SPEED = 0.03;
+    nav.ROTATE_SPEED = 4;
+    nav.BRAKE_FORCE = 1.5;
 
 
 
@@ -62,6 +66,7 @@ local attackCooldownTime <const> = 15 * 60;
 local attackCooldown = -1;
 
 local foundAngryEntity = false;
+local angryEntity = nil;
 
 function tick()
     pos = trans.pos;
@@ -96,6 +101,7 @@ function tick()
                         local entityEmotion = emotionalEntities[i]:get_script("emotions");
                         if entityEmotion.get_emotion(emotions.ANGER) > ANGER_THRESHOLD then
                             foundAngryEntity = true;
+                            angryEntity = emotionalEntities[i];
                             target = entityPos;
                             print("target spotted: " .. emotionalEntities[i]:get_tag());
                             break;
@@ -112,16 +118,16 @@ function tick()
             end
         end
     end
-    -- need attacking
-    --local angerLevel = emotions.get_emotion(emotions.ANGER);
 
-    --print()
+
     if foundAngryEntity and (nav.TARGET - pos):length() < 3 then
         print("Shri attacks!");
+        atk.attack(angryEntity);
         nav.set_state("idle");
         emotions.set_emotion(emotions.JOY, 0.5);
         emotions.set_emotion(emotions.ANGER, -0.1);
-        foundAngryEntity = false
+        foundAngryEntity = false;
+        angryEntity = nil;
         attackCooldown = attackCooldownTime;
     end
     attackCooldown = attackCooldown - 1;
