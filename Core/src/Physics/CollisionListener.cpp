@@ -21,6 +21,8 @@ namespace Vakol
 
     void CollisionListener::onContact(const rp3d::CollisionCallback::CallbackData& data)
     {
+        std::vector<CollisionData*> bodies;
+
         for (unsigned int p = 0; p < data.getNbContactPairs(); p++)
         {
 
@@ -103,6 +105,9 @@ namespace Vakol
                                      (rb1.linearVelocity + Math::Cross(rb1.angularVelocity, r1));
 
             Depenetration(rb1, rb2, averageNormal, averagePenetrationDepth);
+
+            rb1.collisionData->totalPenetration += averagePenetrationDepth;
+            rb2.collisionData->totalPenetration -= averagePenetrationDepth;
 
             // if moving away from each other dont apply impulse
             if (Math::Dot(relativeVel, averageNormal) > 0.0f)
@@ -208,10 +213,10 @@ namespace Vakol
         Math::Vec3 r1 = Math::RoundToZero(localPoint1 - rb1.centerOfMass);
         Math::Vec3 r2 = Math::RoundToZero(localPoint2 - rb2.centerOfMass);
 
-        VK_CRITICAL("COM1: {0} {1} {2}", rb1.centerOfMass.x, rb1.centerOfMass.y, rb1.centerOfMass.z);
-        VK_CRITICAL("COM2: {0} {1} {2}", rb2.centerOfMass.x, rb2.centerOfMass.y, rb2.centerOfMass.z);
-        VK_ERROR("r1: {0} {1} {2}", r1.x, r1.y, r1.z);
-        VK_ERROR("r2: {0} {1} {2}", r2.x, r2.y, r2.z);
+        // VK_CRITICAL("COM1: {0} {1} {2}", rb1.centerOfMass.x, rb1.centerOfMass.y, rb1.centerOfMass.z);
+        // VK_CRITICAL("COM2: {0} {1} {2}", rb2.centerOfMass.x, rb2.centerOfMass.y, rb2.centerOfMass.z);
+        // VK_ERROR("r1: {0} {1} {2}", r1.x, r1.y, r1.z);
+        // VK_ERROR("r2: {0} {1} {2}", r2.x, r2.y, r2.z);
 
         Math::Vec3 v1 = Math::RoundToZero(rb1.linearVelocity);
         Math::Vec3 v2 = Math::RoundToZero(rb2.linearVelocity);
@@ -224,8 +229,8 @@ namespace Vakol
         // (r2 x n)
         Math::Vec3 r2CrossN = Math::Cross(r2, n);
 
-        VK_INFO("r1crossN: {0} {1} {2}", r1CrossN.x, r1CrossN.y, r1CrossN.z);
-        VK_INFO("r2crossN: {0} {1} {2}", r2CrossN.x, r2CrossN.y, r2CrossN.z);
+        // VK_INFO("r1crossN: {0} {1} {2}", r1CrossN.x, r1CrossN.y, r1CrossN.z);
+        // VK_INFO("r2crossN: {0} {1} {2}", r2CrossN.x, r2CrossN.y, r2CrossN.z);
 
         // n . (v1 - v2)
         float nv = Math::Dot(n, Math::Vec3(v1 - v2));
@@ -242,12 +247,12 @@ namespace Vakol
         // top =  -(1 + e) * (n . (v1 - v2) + w1 . (r1 x n) - w2 . (r2 x n))
         float top = -(1.0f + e) * (nv + wr1 - wr2);
 
-        VK_CRITICAL("Top: {0}", top);
+        // VK_CRITICAL("Top: {0}", top);
 
         // 1/m1 + 1/m2
         float masses = rb1.invMass + rb2.invMass;
-        VK_WARN("Masses: {0}", masses);
-        VK_WARN("InvMasses: {0} {1}", rb1.invMass, rb2.invMass);
+        // VK_WARN("Masses: {0}", masses);
+        // VK_WARN("InvMasses: {0} {1}", rb1.invMass, rb2.invMass);
 
         // (r1 x n)^T * J1^-1 * (r1 x n)
         float r1j = Math::Dot(r1CrossN, rb1.invInertiaTensor * r1CrossN);
@@ -258,18 +263,18 @@ namespace Vakol
         // bottom = 1/m1 + 1/m2 + ((r1 x n)^T J1^-1 . (r1 x n) + (r2 x n)^T . J2^-1 . (r2 x n))
         float bottom = masses + (r1j + r2j);
 
-        VK_CRITICAL("Bottom: {0}", bottom);
+        // VK_CRITICAL("Bottom: {0}", bottom);
 
         // lambda = top/bottom
         float lambda = top / bottom;
 
-        VK_CRITICAL("Lambda: {0}", lambda);
+        // VK_CRITICAL("Lambda: {0}", lambda);
 
         if (lambda > 0.0f)
             return;
 
         Math::Vec3 impulse = lambda * n;
-        VK_CRITICAL("Impulse: {0} {1} {2}", impulse.x, impulse.y, impulse.z);
+        // VK_CRITICAL("Impulse: {0} {1} {2}", impulse.x, impulse.y, impulse.z);
 
         rb1.collisionData->totalImpulse += impulse;
         rb1.collisionData->impulsePoint += localPoint1;

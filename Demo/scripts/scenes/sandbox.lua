@@ -37,7 +37,7 @@
 
     -- local chair = scene:create_entity("Chair", "entities/objects/chair.lua");
     -- chair:get_transform().pos = Vector3.new(0.0, 20.0, 0.0);
-    -- chair:get_transform().rot = Vector3.new(0.0, 0.0, 10.0);
+    -- chair:get_transform().rot = Vector3.new(0.0, 0.0, 45.0);
 
     -- local cube2 = scene:create_entity("Cube2", "");
     -- cube2:get_transform().pos = Vector3.new(15, 20.0, 0.0);
