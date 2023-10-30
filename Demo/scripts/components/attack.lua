@@ -3,7 +3,7 @@ local knocked_timers = {}; --same index as used above
 
 local knock_cooldown <const> = 3 * 60;
 
-FORCE = Vector3.new(30, 30, 30);
+FORCE = Vector3.new(20, 20, 20);
 
 
 function init()
@@ -12,7 +12,8 @@ end
 
 local function re_orient(entity)
     local trans = entity:get_transform();
-    trans.pos.y = trans.pos.y + 5;
+
+    trans.pos.y = trans.pos.y + 2;
     trans.rot = Vector3.new(0, 0, 0);
 
 
@@ -55,7 +56,6 @@ function attack(entity)
 
     local forward = entity:get_transform().forward;
 
-    rb:apply_impulse(FORCE);
-    print(forward.x .. " " .. forward.y .. " " .. forward.z);
-    rb:add_torque(Vector3.new(math.random(-5, 5), math.random(-5, 5), math.random(-5, 5)));
+    rb:apply_impulse(FORCE * forward);
+    rb:add_torque(Vector3.new(math.random(-500, 500), math.random(50, 100), math.random(-500, 500)));
 end
