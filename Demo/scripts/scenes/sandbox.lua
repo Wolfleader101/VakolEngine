@@ -5,7 +5,7 @@
     --scene:create_entity("Hong", "entities/agents/hong.lua");
     -- scene:create_entity("Player", "entities/player/phys_player.lua")
 
-    scene:create_entity("Digital Twin", "entities/worlds/digital_twin.lua");
+    --scene:create_entity("Digital Twin", "entities/worlds/digital_twin.lua");
     scene:create_entity("290 World", "entities/worlds/290_world.lua");
 
     local path = "coreAssets/textures/Skybox/";
@@ -16,7 +16,7 @@
 
     scene:generate_skybox(faces);
 
-    --add_floor();
+    add_floor();
 
     -- phys_objs();
     -- falling_objs();

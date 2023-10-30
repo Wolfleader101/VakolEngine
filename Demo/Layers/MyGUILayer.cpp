@@ -255,6 +255,9 @@ void MyGUILayer::OnUpdate()
 
                                     switch (material.properties.light.TYPE)
                                     {
+                                    case Vakol::Rendering::Assets::LIGHT_TYPE::DEFAULT_LIGHT:
+                                        preview_label = "Default Light";
+                                        break;
                                     case Vakol::Rendering::Assets::LIGHT_TYPE::DIRECTIONAL_LIGHT:
                                         preview_label = "Directional Light";
                                         break;
@@ -268,9 +271,17 @@ void MyGUILayer::OnUpdate()
 
                                     if (ImGui::BeginCombo(("Light Type##" + material.ID).c_str(), preview_label))
                                     {
-                                        const bool is_selected =
-                                            material.properties.light.TYPE ==
-                                            Vakol::Rendering::Assets::LIGHT_TYPE::DIRECTIONAL_LIGHT;
+                                        const bool is_selected = material.properties.light.TYPE ==
+                                                                 Vakol::Rendering::Assets::LIGHT_TYPE::DEFAULT_LIGHT;
+
+                                        if (ImGui::Selectable(("Default Light##" + material.ID).c_str(),
+                                                              is_selected))
+                                        {
+                                            material.properties.light.TYPE =
+                                                Vakol::Rendering::Assets::LIGHT_TYPE::DEFAULT_LIGHT;
+                                        }
+                                        if (is_selected)
+                                            ImGui::SetItemDefaultFocus();
 
                                         if (ImGui::Selectable(("Directional Light##" + material.ID).c_str(),
                                                               is_selected))
@@ -298,6 +309,13 @@ void MyGUILayer::OnUpdate()
                                             ImGui::SetItemDefaultFocus();
 
                                         ImGui::EndCombo();
+                                    }
+
+                                    if (material.properties.light.TYPE ==
+                                        Vakol::Rendering::Assets::LIGHT_TYPE::DEFAULT_LIGHT)
+                                    {
+                                        ImGui::DragFloat3(("Light Position##Default" + material.ID).c_str(),
+                                                          &material.properties.light.DIRECTION.x, 0.1f);
                                     }
 
                                     if (material.properties.light.TYPE ==
@@ -339,8 +357,8 @@ void MyGUILayer::OnUpdate()
                                                          180.0f);
 
                                         ImGui::DragFloat("Light Attenuation Outer Cutoff##Spot",
-                                                         &material.properties.light.ATTENUATION_OUTER_CUTOFF, 0.1f, 0.0f,
-                                                         180.0f);
+                                                         &material.properties.light.ATTENUATION_OUTER_CUTOFF, 0.1f,
+                                                         0.0f, 180.0f);
                                     }
                                 }
 
@@ -352,13 +370,19 @@ void MyGUILayer::OnUpdate()
                                 ImGui::Checkbox(("Use Textures##" + material.ID).c_str(),
                                                 &material.properties.use_textures);
 
+                                ImGui::Checkbox(("Use Color and Textures##" + material.ID).c_str(),
+                                                &material.properties.use_color_and_textures);
+
                                 ImGui::Separator();
                                 ImGui::Spacing();
 
-                                if (material.properties.use_textures)
+                                if (material.properties.use_textures || material.properties.use_color_and_textures)
+                                {
                                     ImGui::DragFloat2(("UV Offset##" + material.ID).c_str(),
                                                       &material.properties.uv_offset.x, 0.05f);
-                                else
+                                }
+
+                                if (material.properties.use_color_and_textures || !material.properties.use_textures)
                                 {
                                     ImGui::ColorEdit4(("Diffuse Color##" + material.ID).c_str(),
                                                       &material.properties.diffuse_color.x);

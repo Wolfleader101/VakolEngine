@@ -9,6 +9,7 @@ namespace Vakol::Rendering::Assets
 {
     enum class LIGHT_TYPE
     {
+        DEFAULT_LIGHT,
         DIRECTIONAL_LIGHT,
         POINT_LIGHT,
         SPOT_LIGHT
@@ -19,7 +20,7 @@ namespace Vakol::Rendering::Assets
      */
     struct Light
     {
-        LIGHT_TYPE TYPE = LIGHT_TYPE::DIRECTIONAL_LIGHT;
+        LIGHT_TYPE TYPE = LIGHT_TYPE::DEFAULT_LIGHT;
 
         Math::Vec3 DIRECTION = Math::Vec3(0.0f);
 
@@ -72,6 +73,8 @@ namespace Vakol::Rendering::Assets
 
         bool use_lighting = true;
         bool use_textures = true;
+
+        bool use_color_and_textures = false;
     };
 
     struct Material

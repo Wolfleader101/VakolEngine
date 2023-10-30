@@ -22,6 +22,7 @@ function init()
         --     1));
         mesh.material:set_diffuse_color(Vector4.new(randomFloat(0.0, 1.0), randomFloat(0.0, 1.0), randomFloat(0.0, 1.0), 1.0));
         mesh.material:set_light_direction(Vector3.new(randomFloat(-1.0, 1.0), -1.0, 0.0));
+        mesh.material:use_textures(false);
         --mesh.material:set_diffuse_color(Vector4.new(i / MAX_PARTICLE, MAX_PARTICLE / i, i / MAX_PARTICLE, 1));
 
         local rb = particle:add_rigid();

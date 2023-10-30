@@ -73,7 +73,7 @@ namespace Vakol
     {
         auto material_type = lua.new_usertype<Rendering::Assets::Material>("Material");
 
-        material_type.set_function("get_shader", [](Rendering::Assets::Material& material) {
+        material_type.set_function("get_shader", [](const Rendering::Assets::Material& material) {
             return Rendering::RenderAPI::GetShader(material.shaderID);
         });
 
@@ -123,6 +123,10 @@ namespace Vakol
 
         material_type.set_function("use_textures", [](Rendering::Assets::Material& material, const bool enabled) {
             material.properties.use_textures = enabled;
+        });
+
+        material_type.set_function("use_color_and_textures", [](Rendering::Assets::Material& material, const bool enabled) {
+            material.properties.use_color_and_textures = enabled;
         });
     }
 

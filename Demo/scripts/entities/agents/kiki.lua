@@ -1,60 +1,29 @@
-local emotions = nil;
-local nav = nil;
+local kikis = {};
+local MAX_KIKIS <const> = 2;
 
-local target = Vector3.new();
+function random_float(lower, greater)
+    return lower + math.random() * (greater - lower);
+end
 
-local eye_material = nil;
+function create_kikis()
+    local models = {};
+
+    for i = 1, MAX_KIKIS do
+        kikis[i] = scene:create_entity("Kiki " .. i, "");
+        kikis[i]:get_transform().pos = Vector3.new(i * 5.0, 5.0, 0.0);
+
+        models[i] = kikis[i]:add_model("assets/models/ai/kiki/kiki.obj", 0.5);
+        
+        local body_mesh = models[i]:get_mesh(0);
+        local eye_mesh = models[i]:get_mesh(1);
+
+        body_mesh.material:set_diffuse_color(Vector4.new(random_float(0.0, 1.0), random_float(0.0, 1.0), random_float(0.0, 1.0), 1.0));
+        
+        eye_mesh.material:set_opacity(0.0);
+        eye_mesh.material:use_lighting(false);
+    end
+end
 
 function init()
-    local model = entity:add_model("assets/models/ai/kiki/kiki.obj", 0.5);
-
-    local body_material = model:get_mesh(0).material;
-    eye_material = model:get_mesh(1).material;
-
-    entity:get_transform().pos = Vector3.new(0.0, 5.0, 0.0);
-
-    entity:add_script("emotions", "components/emotion.lua");
-    emotions = entity:get_script("emotions");
-
-    rb = entity:add_rigid();
-    rb.type = BodyType.Dynamic;
-    rb.rot_lock = BVector3.new(true, true, true);
-
-    entity:add_box_collider(model:get_half_extents(0));
-
-    entity:add_script("navigation", "components/navigation.lua");
-    nav = entity:get_script("navigation");
-
-    target = scene:get_camera():get_pos();
-
-    nav.TARGET = target;
-    nav.MAX_DISTANCE = 5.0;
-
-    nav.MOVE_SPEED = 0.05;
-    nav.ROTATE_SPEED = 5.0;
-    nav.BRAKE_FORCE = 1.0;
-
-    nav.set_state("wander");
-
-    body_material:set_light_direction(Vector3.new(0.0, math.rad(90.0), 0.0));
-
-    -- OH SNAP KIKI EMOTION MATRIX :D
-
-    -- (0.0, 0.0), (0.0, 1.0), (1.0, 0.0), (1.0, 1.0) = neutral
-    -- (0.0, 0.5), (0.0, 1.5), (1.0, 0.5), (1.0, 1.5) = happy
-    -- (0.5, 0.0), (0.5, 1.0), (1.5, 0.0), (1.5, 1.0) = angry
-    -- (0.5, 0.5), (0.5, 1.5), (1.5, 0.5), (1.5, 1.5) = dizzy
-
-    eye_material:set_uv_offset(Vector2.new(0.0, 0.0));
-    eye_material:set_opacity(0.0);
-    eye_material:use_lighting(false);
-end
-
-function tick()
-    
-end
-
-
-function update()
-    
+    create_kikis();
 end
