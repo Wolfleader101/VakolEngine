@@ -506,6 +506,7 @@ namespace Vakol::Rendering
 
         SetBool(shader, "material.use_lighting", properties.use_lighting, false);
         SetBool(shader, "material.use_textures", properties.use_textures, false);
+        SetBool(shader, "material.use_colors_and_textures", properties.use_colors_and_textures, false);
     }
 
     void RenderAPI::AddShader(const std::string& shaderID, const unsigned int shader)

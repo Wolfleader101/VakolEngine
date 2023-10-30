@@ -125,8 +125,8 @@ namespace Vakol
             material.properties.use_textures = enabled;
         });
 
-        material_type.set_function("use_color_and_textures", [](Rendering::Assets::Material& material, const bool enabled) {
-            material.properties.use_color_and_textures = enabled;
+        material_type.set_function("use_colors_and_textures", [](Rendering::Assets::Material& material, const bool enabled) {
+            material.properties.use_colors_and_textures = enabled;
         });
     }
 

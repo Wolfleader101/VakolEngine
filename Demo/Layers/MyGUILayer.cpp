@@ -367,22 +367,25 @@ void MyGUILayer::OnUpdate()
 
                                 ImGui::SeparatorText("Material");
 
-                                ImGui::Checkbox(("Use Textures##" + material.ID).c_str(),
+                                if (!material.properties.use_colors_and_textures)
+                                {
+                                    ImGui::Checkbox(("Use Textures##" + material.ID).c_str(),
                                                 &material.properties.use_textures);
+                                }
 
-                                ImGui::Checkbox(("Use Color and Textures##" + material.ID).c_str(),
-                                                &material.properties.use_color_and_textures);
+                                ImGui::Checkbox(("Use Colors and Textures##" + material.ID).c_str(),
+                                                &material.properties.use_colors_and_textures);
 
                                 ImGui::Separator();
                                 ImGui::Spacing();
 
-                                if (material.properties.use_textures || material.properties.use_color_and_textures)
+                                if (material.properties.use_textures || material.properties.use_colors_and_textures)
                                 {
                                     ImGui::DragFloat2(("UV Offset##" + material.ID).c_str(),
                                                       &material.properties.uv_offset.x, 0.05f);
                                 }
 
-                                if (material.properties.use_color_and_textures || !material.properties.use_textures)
+                                if (material.properties.use_colors_and_textures || !material.properties.use_textures)
                                 {
                                     ImGui::ColorEdit4(("Diffuse Color##" + material.ID).c_str(),
                                                       &material.properties.diffuse_color.x);

@@ -29,7 +29,7 @@ struct Material
     bool use_lighting;
     bool use_textures;
 
-    bool use_color_and_texture;
+    bool use_colors_and_textures;
 
     sampler2D diffuse_map;
 	sampler2D specular_map;
@@ -111,10 +111,10 @@ void main()
 {
     vec4 color = texture(material.diffuse_map, fs_in.TexCoords + UV_OFFSET);
 
-    if (material.use_color_and_texture && material.opacity > 0.0)
+    if (material.use_colors_and_textures && material.opacity > 0.0)
         color *= material.diffuse_color;
 
-    if ((color.r >= 0.99 && color.g >= 0.99 && color.b >= 0.99) || !material.use_textures)
+    if ((color.r >= 0.99 && color.g >= 0.99 && color.b >= 0.99) || (!material.use_textures && !material.use_colors_and_textures))
         color = material.diffuse_color;
 
     // Kiki eye hack
@@ -123,7 +123,7 @@ void main()
 
     vec3 normal = texture(material.normal_map, fs_in.TexCoords).rgb;
 
-    if (normal.r >= 0.99 && normal.g >= 0.99 && normal.b >= 0.99)
+    if ((normal.r >= 0.99 && normal.g >= 0.99 && normal.b >= 0.99) )
         normal = normalize(fs_in.Normal);
     else
         normal = normalize(normal * 2.0 - 1.0); // this normal is now in tangent space in range [-1, 1]

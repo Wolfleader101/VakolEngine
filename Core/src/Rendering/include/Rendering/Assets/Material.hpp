@@ -74,7 +74,7 @@ namespace Vakol::Rendering::Assets
         bool use_lighting = true;
         bool use_textures = true;
 
-        bool use_color_and_textures = false;
+        bool use_colors_and_textures = false;
     };
 
     struct Material
