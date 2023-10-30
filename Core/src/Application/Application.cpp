@@ -224,6 +224,8 @@ namespace Vakol
                             VK_CRITICAL("Count: {0}", count);
                             VK_ERROR("Impulse: {0} {1} {2}", impulse.x, impulse.y, impulse.z);
                             VK_WARN("r1: {0} {1} {2}", r1.x, r1.y, r1.z);
+                            VK_WARN("normal: {0} {1} {2}", rb.collisionData->normal.x, rb.collisionData->normal.y,
+                                    rb.collisionData->normal.z);
                             VK_INFO("r1CrossN: {0} {1} {2}", r1CrossN.x, r1CrossN.y, r1CrossN.z);
                             VK_TRACE("lambda: {0}", lambda);
 

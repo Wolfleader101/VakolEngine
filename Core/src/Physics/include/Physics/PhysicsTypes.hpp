@@ -66,7 +66,6 @@ namespace Vakol
         Math::Vec3 impulsePoint = Math::Vec3(0.0f, 0.0f, 0.0f);
         Math::Vec3 normal = Math::Vec3(0.0f, 0.0f, 0.0f);
         float totalLambda = 0.0f;
-        // float totalPenetration = 0.0f;
         int count = 0;
     };
 
