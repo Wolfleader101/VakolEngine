@@ -70,7 +70,7 @@ vec4 BlinnPhong(const vec3 normal, const vec4 color)
     if (light.TYPE == DIRECTIONAL_LIGHT)
         lightDir = normalize(-light.DIRECTION);
     else
-        lightDir = normalize(-fs_in.TangentLightPos - fs_in.TangentFragPos);
+        lightDir = normalize(fs_in.TangentLightPos - fs_in.TangentFragPos);
 
     float diff = max(dot(normal, lightDir), 0.0);
     vec4 diffuse = diff * color;

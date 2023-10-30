@@ -9,13 +9,13 @@
 
     scene.globals.emotional_entities = {};
 
-    --local shri = scene:create_entity("shri", "entities/agents/shri_rai.lua");
-    --shri:get_transform().pos = Vector3.new(-20, 5, -20);
-    --shri:get_transform().scale = Vector3.new(0.015, 0.015, 0.015);
-    --scene.globals.emotional_entities[1] = shri;
+    local shri = scene:create_entity("shri", "entities/agents/shri_rai.lua");
+    shri:get_transform().pos = Vector3.new(-20, 5, -20);
+    shri:get_transform().scale = Vector3.new(0.015, 0.015, 0.015);
+    scene.globals.emotional_entities[1] = shri;
 
-    --local hong = scene:create_entity("Hong", "entities/agents/hong.lua");
-    --scene.globals.emotional_entities[2] = hong;
+    local hong = scene:create_entity("Hong", "entities/agents/hong.lua");
+    scene.globals.emotional_entities[2] = hong;
 
     local kiki = scene:create_entity("Kiki", "entities/agents/kiki.lua");
     scene.globals.emotional_entities[1] = kiki;
