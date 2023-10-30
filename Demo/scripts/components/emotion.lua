@@ -8,12 +8,12 @@ SADNESS = 7;
 DISGUST = 8;
 
 local tickSkips <const> = 3;
-local emotion_names = {"Anger", "Anticipation", "Joy", "Trust", "Fear", "Surprise", "Sadness", "Disgust"};
-local emotion_concepts = { 0.2  ,     0.1   ,    0.6  ,   0.3  ,  -0.4  ,    0.1  ,      0.1  ,     0.1   };
+local emotion_names = { "Anger", "Anticipation", "Joy", "Trust", "Fear", "Surprise", "Sadness", "Disgust" };
+local emotion_concepts = { 0.2, 0.1, 0.6, 0.3, -0.4, 0.1, 0.1, 0.1 };
 
-local decays           = { 0.01  ,     0.03   ,    0.03  ,   0.03  ,  0.03  ,    0.2   ,     0.01  ,     0.001 };
+local decays = { 0.01, 0.03, 0.03, 0.03, 0.03, 0.2, 0.01, 0.001 };
 
---whipped these values out me dot
+-- whipped these values out me dot
 -- local weights = {
 --     {  0.1   ,  0.02  , -0.05  , -0.03  , -0.08  ,  0.01  ,  0.02  ,  0.03  },
 --     { -0.01  ,  -0.1  ,  0.01  ,  0     ,  0.05  , -0.08  ,  0     , -0.02  },
@@ -25,16 +25,11 @@ local decays           = { 0.01  ,     0.03   ,    0.03  ,   0.03  ,  0.03  ,   
 --     {  0.01  ,  0.02  , -0.045 , -0.08  ,  0.01  ,  0     ,  0.01  ,  -0.1  }
 -- }
 
-local weights = { --symmetrical matrix
-    {  0.1   ,  0.02  , -0.05  , -0.03  , -0.08  ,  0.01  ,  0.02  ,  0.03  },
-    {  0.02  , 0.1    ,  0.01  ,  0     ,  0.05  , -0.08  ,  0     , -0.02  },
-    { -0.05  ,  0.01  ,    0   ,  0.0175, -0.03  ,  0.02  , -0.08  , -0.05  },
-    { -0.03  ,  0     ,  0.0175,    0   , -0.06  , -0.01  , -0.03  , -0.08  },
-    { -0.08  ,  0.05  , -0.03  , -0.06  , -0.1   ,  0     ,  0.015 ,  0.03  },
-    {  0.01  , -0.08  ,  0.02  , -0.01  ,  0     , -0.2   , -0.03  ,  0     },
-    {  0.02  ,  0     , -0.08  , -0.03  ,  0.015 , -0.03  , -0.1   ,  0.015 },
-    {  0.03  , -0.02  , -0.05  , -0.08  ,  0.03  ,  0     ,  0.015 , -0.1   }
-}
+local weights = { -- symmetrical matrix
+    { 0.1,   0.02, -0.05, -0.03,  -0.08, 0.01, 0.02,  0.03 }, { 0.02, 0.1, 0.01, 0, 0.05, -0.08, 0, -0.02 },
+    { -0.05, 0.01, 0,     0.0175, -0.03, 0.02, -0.08, -0.05 }, { -0.03, 0, 0.0175, 0, -0.06, -0.01, -0.03, -0.08 },
+    { -0.08, 0.05, -0.03, -0.06, -0.1,  0,     0.015, 0.03 }, { 0.01, -0.08, 0.02, -0.01, 0, -0.2, -0.03, 0 },
+    { 0.02,  0,    -0.08, -0.03, 0.015, -0.03, -0.1,  0.015 }, { 0.03, -0.02, -0.05, -0.08, 0.03, 0, 0.015, -0.1 } }
 
 -- local weights = {
 --     {   0   ,  0.02  , -0.05  , -0.03  , -0.08  ,  0.01  ,  0.02  ,  0.03  },
@@ -126,24 +121,23 @@ local function normalize()
     end
 
     local range = max_val - min_val
-    
+
     for i = 1, 8 do
         emotion_concepts[i] = 2 * ((emotion_concepts[i] - min_val) / range) - 1
     end
 end
 
 local function L2Normalize()
-    
     local L2Norm = 0;
 
     for i = 1, #emotion_concepts do
-        L2Norm = L2Norm + emotion_concepts[i] * emotion_concepts[i]; --^2
+        L2Norm = L2Norm + emotion_concepts[i] * emotion_concepts[i]; -- ^2
     end
 
     L2Norm = math.sqrt(L2Norm);
 
     for i = 1, #emotion_concepts do
-         emotion_concepts[i] = (emotion_concepts[i] / L2Norm);
+        emotion_concepts[i] = (emotion_concepts[i] / L2Norm);
     end
 end
 
@@ -156,8 +150,8 @@ local function iterate()
         for j = 1, 8 do
             sum = sum + emotion_concepts[j] * weights[j][i] -- accidentally made transpose so reverse indexing gg lmao
         end
-        
-        new_concepts[i] = (emotion_concepts[i] + sum) * ( 1 - decays[i] );
+
+        new_concepts[i] = (emotion_concepts[i] + sum) * (1 - decays[i]);
     end
 
     for i = 1, 8 do
@@ -211,14 +205,12 @@ end
 local slow = 0;
 
 function tick()
-
     if (slow == 5) then
         iterate();
-        --print_emotions();
+        -- print_emotions();
         slow = 0;
     else
         slow = slow + 1;
-
     end
 end
 
