@@ -33,7 +33,7 @@
     local rb = cube:add_rigid();
     rb.bounciness = 0.3;
     rb.type = BodyType.Dynamic;
-    cube:add_box_collider(Vector3.new(1, 0.5, 0.5), Vector3.new(0.0, 0.0, 0.0), 10);
+    cube:add_box_collider(Vector3.new(1, 0.5, 0.5), Vector3.new(0.0, 0.0, 0.0), 100);
 
     -- local chair = scene:create_entity("Chair", "entities/objects/chair.lua");
     -- chair:get_transform().pos = Vector3.new(0.0, 20.0, 0.0);
