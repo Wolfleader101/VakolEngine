@@ -92,6 +92,7 @@ function look_at(target)
         -- Apply torque
         agent:add_torque(torque);
     else
+        -- if its rotated too far try to center it, idk if this logic is correct tho it probs isnt
         local inv_current_angular_velocity = Vector3.new(-agent.angularVelocity.x, -agent.angularVelocity.y, -agent.angularVelocity.z);
         local damping_torque = inv_current_angular_velocity * 0.003
         agent:add_torque(damping_torque)
