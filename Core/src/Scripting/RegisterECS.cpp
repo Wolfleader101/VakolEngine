@@ -15,7 +15,9 @@ namespace Vakol
 
     void RegisterEntity(sol::state& lua, ScriptEngine& scriptEngine)
     {
-        auto entity_type = lua.new_usertype<Entity>("Entity");
+        auto equal_overload =
+            sol::overload([](const Entity& e1, const Entity& e2) -> bool { return e1.GetHandle() == e2.GetHandle(); });
+        auto entity_type = lua.new_usertype<Entity>("Entity", sol::meta_function::equal_to, equal_overload);
 
         entity_type.set_function("get_tag", [](Entity* ent) { return ent->GetComponent<Components::Tag>().tag; });
         entity_type.set_function("get_transform", &Entity::GetComponent<Components::Transform>);

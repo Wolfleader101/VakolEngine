@@ -1,12 +1,32 @@
 ﻿function init()
     scene:create_entity("Player", "entities/player/noclip.lua")
-    
-    scene:create_entity("Kiki", "entities/agents/kiki.lua");
-    scene:create_entity("Hong", "entities/agents/hong.lua");
-    scene:create_entity("Player", "entities/player/phys_player.lua")
+
+
+    --scene:create_entity("Player", "entities/player/phys_player.lua")
 
     scene:create_entity("Digital Twin", "entities/worlds/digital_twin.lua");
     scene:create_entity("290 World", "entities/worlds/290_world.lua");
+
+    -- AI
+
+    scene.globals.emotional_entities = {};
+
+    local shri = scene:create_entity("shri", "entities/agents/shri_rai.lua");
+    shri:get_transform().pos = Vector3.new(-20, 5, -20);
+    shri:get_transform().scale = Vector3.new(0.015, 0.015, 0.015);
+    scene.globals.emotional_entities[1] = shri;
+
+    local hong = scene:create_entity("Hong", "entities/agents/hong.lua");
+    scene.globals.emotional_entities[2] = hong;
+
+    local kiki = scene:create_entity("Kiki", "entities/agents/kiki.lua");
+    scene.globals.emotional_entities[3] = kiki;
+
+
+
+    -- local test = scene:create_entity("bob", "");
+    -- test:add_model("assets/models/agents/bob.glb", 0.01);
+    -- shri:get_transform().pos = Vector3.new(-8, 5, -9);
 
     local path = "coreAssets/textures/Skybox/";
     local extension = ".png";
@@ -16,19 +36,14 @@
 
     scene:generate_skybox(faces);
 
-    -- local cube_1 = scene:create_entity("Cube 1", "entities/test/cube.lua");
-    -- cube_1:get_transform().pos = Vector3.new(0.0, 1.0, -40.0);
+    local big_shri = scene:create_entity("big shri", "");
+    big_shri:get_transform().pos = Vector3.new(0, 5, -205);
+    big_shri:get_transform().rot.x = 20;
+    big_shri:add_model("assets/models/ai/shri/shri.fbx", 1);
 
-    -- local cube_2 = scene:create_entity("Cube 2", "entities/test/cube.lua");
-    -- cube_2:get_transform().pos = Vector3.new(0.0, 1.0, 40.0);
 
-    -- local cube_3 = scene:create_entity("Cube 3", "entities/test/cube.lua");
-    -- cube_3:get_transform().pos = Vector3.new(-40.0, 1.0, 0.0);
-
-    -- local cube_4 = scene:create_entity("Cube 4", "entities/test/cube.lua");
-    -- cube_4:get_transform().pos = Vector3.new(40.0, 1.0, 0.0);
-
-    -- add_floor();
+    -- scene:create_entity("Cube", "entities/test/cube.lua");
+    --add_floor();
 
     -- phys_objs();
     -- falling_objs();

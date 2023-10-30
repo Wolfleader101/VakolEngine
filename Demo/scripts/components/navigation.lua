@@ -1,26 +1,23 @@
-TARGET = Vector3.new();
-MAX_DISTANCE = 0.0;
+TARGET                = Vector3.new();
+MAX_DISTANCE          = 0.0;
 
-MOVE_SPEED = 0.0;
-ROTATE_SPEED = 0.0;
-BRAKE_FORCE = 0.0;
+MOVE_SPEED            = 0.0;
+ROTATE_SPEED          = 0.0;
+BRAKE_FORCE           = 0.0;
 
-STATE = "chase"; -- states: "flee", "chase", "wander", "wait"
+STATE                 = "chase"; -- states: "flee", "chase", "wander", "wait"
 
-local can_move = false;
+local can_move        = false;
 
-local agent = nil;
+local agent           = nil;
 
-local position = Vector3.new();
-local rotation = Vector3.new();
-local forward  = Vector3.new();
+local position        = Vector3.new();
+local rotation        = Vector3.new();
+local forward         = Vector3.new();
 
-local wander_target = Vector3.new();
-local wander_timer = 0.0;
+local wander_target   = Vector3.new();
+local wander_timer    = 0.0;
 local wander_duration = 10.0;
-
-local idle_timer = 0.0;
-local idle_duration = 1.5;
 
 function wrap_angle(angle)
     if angle > 180.0 then
@@ -33,11 +30,11 @@ function wrap_angle(angle)
 end
 
 function set_state(new_state)
-    state = new_state;
+    STATE = new_state;
 end
 
 function get_state()
-    return state;
+    return STATE;
 end
 
 function gen_random_target()
@@ -50,10 +47,9 @@ function gen_random_target()
     return Vector3.new(x, y, z);
 end
 
-
 function smooth_look_at(target, away)
     local lookDir = Vector3.new();
-    
+
     if (not away) then
         lookDir = normalize(target - position);
     else
@@ -62,9 +58,9 @@ function smooth_look_at(target, away)
     lookDir.y = 0.0;
 
     local angle = math.deg(atan2(lookDir.x, lookDir.z));
-    
+
     local angleDiff = angle - rotation.y;
-    
+
     if (angleDiff > 180.0) then
         angleDiff = angleDiff - 360.0;
     elseif (angleDiff < -180.0) then
@@ -72,7 +68,7 @@ function smooth_look_at(target, away)
     end
 
     local factor = ROTATE_SPEED * Time.delta_time;
-    
+
     rotation.y = rotation.y + factor * angleDiff;
 end
 
@@ -92,6 +88,9 @@ function flee()
 end
 
 function chase()
+    if (distance(TARGET, position) < MAX_DISTANCE) then
+        STATE = "idle"
+    end
     can_move = true;
 
     smooth_look_at(TARGET, false);
@@ -117,14 +116,6 @@ end
 function idle()
     can_move = false;
     agent.linearVelocity = Vector3.new();
-
-    idle_timer = idle_timer + Time.delta_time;
-
-    if (idle_timer >= idle_duration) then
-        wander_target = gen_random_target();
-        idle_timer = 0.0;
-        set_state("wander");
-    end
 end
 
 function accelerate()
@@ -144,22 +135,22 @@ function init()
         print_warn("No rigidbody component detected on agent!");
     end
 
-    trans = entity:get_transform();
+    trans         = entity:get_transform();
 
-    position = trans.pos;
-    rotation = trans.rot;
-    forward  = trans.forward;
+    position      = trans.pos;
+    rotation      = trans.rot;
+    forward       = trans.forward;
 
     wander_target = gen_random_target();
 end
 
-function update()
-    trans = entity:get_transform();
+function tick()
+    trans    = entity:get_transform();
 
     position = trans.pos;
     rotation = trans.rot;
     forward  = trans.forward;
-    
+
     --if (Input:get_key_down(KEYS["KEY_1"])) then
     --    look_at(Vector3.new(0.0, 1.0, -40.0));
     --elseif (Input:get_key_down(KEYS["KEY_2"])) then
@@ -170,13 +161,13 @@ function update()
     --    look_at(Vector3.new(40.0, 1.0, 0.0));
     --end
 
-    if (state == "wander") then
+    if (STATE == "wander") then
         wander();
-    elseif (state == "flee") then
+    elseif (STATE == "flee") then
         flee();
-    elseif (state == "chase") then
+    elseif (STATE == "chase") then
         chase();
-    elseif (state == "idle") then
+    elseif (STATE == "idle") then
         idle();
     end
 end

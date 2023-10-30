@@ -1,4 +1,5 @@
 local nav = nil;
+local emotions = nil;
 
 function init()
     entity:add_model("assets/models/ai/hong/hong.fbx", 1);
@@ -9,6 +10,8 @@ function init()
     trans.scale = Vector3.new(0.015, 0.015, 0.015);
 
     entity:add_script("emotions", "components/emotion.lua");
+    emotions = entity:get_script("emotions");
+    emotions.set_emotion(emotions.ANGER, 2);
 
     local rb = entity:add_rigid();
     rb.rot_lock = BVector3.new(true, true, true);
@@ -16,6 +19,7 @@ function init()
     entity:add_box_collider(Vector3.new(0.9, 1.75, 0.3));
 
     entity:add_script("navigation", "components/navigation.lua");
+
 
     nav = entity:get_script("navigation");
 
@@ -31,7 +35,7 @@ function init()
     nav.set_state("wander");
 end
 
-local prev_nearby_bins = {}; -- store {name: rubbishCount} 
+local prev_nearby_bins = {}; -- store {name: rubbishCount}
 local held_item = nil;
 local held_time = 0;
 
@@ -54,7 +58,7 @@ end
 function tick()
     -- target = scene:get_camera():get_pos();
     -- nav.TARGET = target;
-    nav.set_state("wander");
+    --nav.set_state("wander");
 
 
     -- TODO might only want to check nearby bins every 10 ticks or so???
@@ -80,7 +84,7 @@ function tick()
             end
 
             -- TODO if it has gone down, then he has seen someone take something out of the bin and get happier??
-            if(prev_bin_contents > contents.COUNT) then
+            if (prev_bin_contents > contents.COUNT) then
                 print("Hong saw someone take something out of the bin")
                 -- TODO make hong happy
                 local emotions = entity:get_script("emotions");
@@ -92,7 +96,7 @@ function tick()
         --! this wont delete previous bins that it doesnt see anymore tho which is the downside to this approach
         prev_nearby_bins[name] = contents.COUNT;
     end
-    
+
     -- if holding an item, increment the held time
     if (held_item ~= nil) then
         held_time = held_time + 1;
@@ -107,7 +111,6 @@ function tick()
             emotions.set_emotion(emotions.JOY, joyVal + 0.8);
             held_item = nil;
             held_time = 0;
-
         end
     end
 end
@@ -120,7 +123,7 @@ function on_contact(other_ent)
         emotions.set_emotion(emotions.SURPRISE, surpiseVal + 0.7);
         return;
     end
-    
+
     local affordance = other_ent:get_script("affordance");
 
     -- only if the item affords holding, pick it up
@@ -128,7 +131,7 @@ function on_contact(other_ent)
     if (affordance ~= nil and affordance.AFFORDANCES.HOLDING == 1.0) then
         print(other_ent:get_tag() .. " Affords Holding")
         held_item = other_ent;
-        if(held_item:get_script("interactable") ~= nil) then
+        if (held_item:get_script("interactable") ~= nil) then
             held_item:get_script("interactable").interact(entity);
         end
     end

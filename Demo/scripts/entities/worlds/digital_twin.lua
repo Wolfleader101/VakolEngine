@@ -7,18 +7,18 @@ function init()
 
 	local roof = scene:create_entity("Roof", "");
 	local roof_supports = scene:create_entity("Roof Supports", "");
-	
+
 	local building = scene:create_entity("Building", "");
-	
+
 	local barriers = {};
-	
+
 	local left_pillars = scene:create_entity("Left Pillars", "");
 	local right_pillars = scene:create_entity("Right Pillars", "");
 
 	local balcony = scene:create_entity("Balcony", "");
 
 	local table_top = scene:create_entity("Table Top", "");
-	
+
 	local windowsill = scene:create_entity("Windowsill", "");
 
 	barriers[1] = scene:create_entity("Glass Barrier Left", "");
@@ -96,7 +96,7 @@ function create_pillar_colliders()
 		colliders[i] = scene:create_entity("Left Pillar Collider " .. i, "");
 
 		local rigid = colliders[i]:add_rigid();
-        rigid.type = BodyType.Static;
+		rigid.type = BodyType.Static;
 
 		colliders[i]:add_box_collider(Vector3.new(1.0, 9.0, 0.7));
 
@@ -127,7 +127,7 @@ function create_pillar_colliders()
 
 	colliders[9]:get_transform().pos = Vector3.new(-38.0, 11.0, 18.5);
 	colliders[9]:add_box_collider(Vector3.new(1.0, 7.0, 0.7));
-	
+
 	colliders[10]:get_transform().pos = Vector3.new(-38.0, 7.85, 30.85);
 	colliders[10]:add_box_collider(Vector3.new(1.0, 9.25, 0.7));
 
@@ -136,7 +136,7 @@ function create_pillar_colliders()
 
 	colliders[12]:get_transform().pos = Vector3.new(-38.0, 5.0, 55.55);
 	colliders[12]:add_box_collider(Vector3.new(1.0, 12.0, 0.7));
-	
+
 	colliders[13]:get_transform().pos = Vector3.new(-38.0, 5.0, 67.9);
 	colliders[13]:add_box_collider(Vector3.new(1.0, 12.0, 0.7));
 
@@ -176,11 +176,11 @@ function create_floor_colliders()
 		rigid.type = BodyType.Static;
 	end
 
-	colliders[1]:get_transform().pos = Vector3.new(4.6, 0.0, 30.0);
-	colliders[1]:add_box_collider(Vector3.new(32.0, 0.001, 115.0));
+	colliders[1]:get_transform().pos = Vector3.new(5, 0.0, 30.0);
+	colliders[1]:add_box_collider(Vector3.new(32.7, 0.001, 115.0));
 
 	colliders[2]:get_transform().pos = Vector3.new(-45.0, 0.0, -31.7);
-	colliders[2]:add_box_collider(Vector3.new(17.0, 0.001, 53.4));
+	colliders[2]:add_box_collider(Vector3.new(17.3, 0.001, 53.4));
 
 	colliders[3]:get_transform().pos = Vector3.new(-34.01, 0.01, 124.3);
 	colliders[3]:add_box_collider(Vector3.new(6.0, 0.001, 15.2));
@@ -207,10 +207,10 @@ function create_building_colliders()
 
 	colliders[2]:get_transform().pos = Vector3.new(14.8, 14.05, 38.6);
 	colliders[2]:add_box_collider(Vector3.new(10.4, 14.0, 2.0));
-	
+
 	colliders[3]:get_transform().pos = Vector3.new(32.3, 14.05, 41.3);
 	colliders[3]:add_box_collider(Vector3.new(6.8, 14.0, 1.0));
-	
+
 	colliders[4]:get_transform().pos = Vector3.new(-25.0, 5.1, 139.5);
 	colliders[4]:add_box_collider(Vector3.new(10.0, 5.0, 0.1));
 
