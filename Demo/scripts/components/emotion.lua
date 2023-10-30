@@ -131,40 +131,6 @@ function init()
 
 end
 
-function update()
-    -- if (Input:get_key_down(KEYS["KEY_Z"])) then
-    --     set_emotion(ANGER, 0.5);
-    -- end
-
-    -- if (Input:get_key_down(KEYS["KEY_X"])) then
-    --     set_emotion(ANTICIPATION, 5);
-    -- end
-
-    -- if (Input:get_key_down(KEYS["KEY_C"])) then
-    --     set_emotion(JOY, 5);
-    -- end
-
-    -- if (Input:get_key_down(KEYS["KEY_V"])) then
-    --     set_emotion(TRUST, 5);
-    -- end
-
-    -- if (Input:get_key_down(KEYS["KEY_B"])) then
-    --     set_emotion(FEAR, 5);
-    -- end
-
-    -- if (Input:get_key_down(KEYS["KEY_N"])) then
-    --     set_emotion(SURPRISE, 5);
-    -- end
-
-    -- if (Input:get_key_down(KEYS["KEY_M"])) then
-    --     set_emotion(SADNESS, 5);
-    -- end
-
-    -- if (Input:get_key_down(KEYS["KEY_L"])) then
-    --     set_emotion(DISGUST, 10);
-    -- end
-end
-
 local slow = 0;
 
 function tick()
