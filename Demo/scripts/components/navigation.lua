@@ -5,7 +5,7 @@ MOVE_SPEED            = 0.0;
 ROTATE_SPEED          = 0.0;
 BRAKE_FORCE           = 0.0;
 
-STATE                 = "chase"; -- states: "flee", "chase", "wander", "wait"
+STATE                 = "idle"; -- states: "flee", "chase", "wander", "idle"
 
 local can_move        = false;
 
@@ -85,6 +85,9 @@ function look_at(target)
 end
 
 function flee()
+    if (distance(TARGET, position) < MAX_DISTANCE) then
+        STATE = "idle"
+    end
     can_move = true;
 
     smooth_look_at(TARGET, true);
