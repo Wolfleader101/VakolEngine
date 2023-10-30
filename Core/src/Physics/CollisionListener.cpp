@@ -31,10 +31,6 @@ namespace Vakol
                 continue;
             }
 
-            // rp3d::CollisionBody* body1 =
-            // contactPair.mWorld.getCollisionBody(contactPair.mContactPair.body1Entity.id); rp3d::CollisionBody* body2
-            // = contactPair.mWorld.getCollisionBody(contactPair.mContactPair.body2Entity.id);
-
             rp3d::CollisionBody* body1 = contactPair.getBody1();
             rp3d::CollisionBody* body2 = contactPair.getBody2();
 
@@ -265,20 +261,32 @@ namespace Vakol
         Math::Vec3 impulse = lambda * n;
         // VK_CRITICAL("Impulse: {0} {1} {2}", impulse.x, impulse.y, impulse.z);
 
-        if (rb1.type != BodyType::Static)
-        {
-            // rb1.linearVelocity += impulse * rb1.invMass;
-            // rb1.angularVelocity += lambda * rb1.invInertiaTensor * r1CrossN;
-            rb1.collisionData->tempLinearVelocity += impulse * rb1.invMass;
-            rb1.collisionData->tempAngularVelocity += lambda * rb1.invInertiaTensor * r1CrossN;
-        }
+        rb1.collisionData->totalImpulse += impulse;
+        rb1.collisionData->impulsePoint += localPoint1;
+        rb1.collisionData->totalLambda += lambda;
+        rb1.collisionData->normal += normal;
+        rb1.collisionData->count++;
 
-        if (rb2.type != BodyType::Static)
-        {
-            // rb2.linearVelocity -= impulse * rb2.invMass;
-            // rb2.angularVelocity -= lambda * rb2.invInertiaTensor * r2CrossN;
-            rb2.collisionData->tempLinearVelocity -= impulse * rb2.invMass;
-            rb2.collisionData->tempAngularVelocity -= lambda * rb2.invInertiaTensor * r2CrossN;
-        }
+        rb2.collisionData->totalImpulse -= impulse;
+        rb2.collisionData->impulsePoint += localPoint2;
+        rb2.collisionData->totalLambda -= lambda;
+        rb2.collisionData->normal += normal;
+        rb2.collisionData->count++;
+
+        // if (rb1.type != BodyType::Static)
+        // {
+        //     // rb1.linearVelocity += impulse * rb1.invMass;
+        //     // rb1.angularVelocity += lambda * rb1.invInertiaTensor * r1CrossN;
+        //     rb1.collisionData->tempLinearVelocity += impulse * rb1.invMass;
+        //     rb1.collisionData->tempAngularVelocity += lambda * rb1.invInertiaTensor * r1CrossN;
+        // }
+
+        // if (rb2.type != BodyType::Static)
+        // {
+        //     // rb2.linearVelocity -= impulse * rb2.invMass;
+        //     // rb2.angularVelocity -= lambda * rb2.invInertiaTensor * r2CrossN;
+        //     rb2.collisionData->tempLinearVelocity -= impulse * rb2.invMass;
+        //     rb2.collisionData->tempAngularVelocity -= lambda * rb2.invInertiaTensor * r2CrossN;
+        // }
     }
 } // namespace Vakol

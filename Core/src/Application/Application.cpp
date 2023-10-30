@@ -213,17 +213,25 @@ namespace Vakol
                     m_physicsEngine.DetectCollisions(activeScene.GetPhysicsScene());
 
                     activeScene.GetEntityList().Iterate<RigidBody>([&](RigidBody& rb) {
-                        // if (rb.collisionData->isColliding)
-                        // {
                         if (rb.type != BodyType::Static)
                         {
-                            rb.linearVelocity += rb.collisionData->tempLinearVelocity;
-                            rb.angularVelocity += rb.collisionData->tempAngularVelocity;
+                            Math::Vec3 impulse = rb.collisionData->totalImpulse;
+                            Math::Vec3 r1 =
+                                (rb.collisionData->impulsePoint / static_cast<float>(rb.collisionData->count)) -
+                                rb.transform->pos;
+                            Math::Vec3 r1CrossN = Math::Cross(r1, (Math::Normalized(rb.collisionData->normal) /
+                                                                   static_cast<float>(rb.collisionData->count)));
+                            float lambda = rb.collisionData->totalLambda;
 
-                            rb.collisionData->tempLinearVelocity = Math::Vec3(0.0f, 0.0f, 0.0f);
-                            rb.collisionData->tempAngularVelocity = Math::Vec3(0.0f, 0.0f, 0.0f);
+                            rb.linearVelocity += impulse * rb.invMass;
+                            rb.angularVelocity += lambda * rb.invInertiaTensor * r1CrossN;
+
+                            rb.collisionData->totalImpulse = Math::Vec3(0.0f, 0.0f, 0.0f);
+                            rb.collisionData->impulsePoint = Math::Vec3(0.0f, 0.0f, 0.0f);
+                            rb.collisionData->normal = Math::Vec3(0.0f, 0.0f, 0.0f);
+                            rb.collisionData->totalLambda = 0.0f;
+                            rb.collisionData->count = 0;
                         }
-                        // }
                     });
 
                     // Decrease the accumulated time
