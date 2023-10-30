@@ -213,15 +213,19 @@ namespace Vakol
                     m_physicsEngine.DetectCollisions(activeScene.GetPhysicsScene());
 
                     activeScene.GetEntityList().Iterate<RigidBody>([&](RigidBody& rb) {
-                        if (rb.type != BodyType::Static)
+                        if (rb.type != BodyType::Static && rb.collisionData->isColliding && rb.collisionData->count > 0)
                         {
-                            Math::Vec3 impulse = rb.collisionData->totalImpulse;
-                            Math::Vec3 r1 =
-                                (rb.collisionData->impulsePoint / static_cast<float>(rb.collisionData->count)) -
-                                rb.transform->pos;
-                            Math::Vec3 r1CrossN = Math::Cross(r1, (Math::Normalized(rb.collisionData->normal) /
-                                                                   static_cast<float>(rb.collisionData->count)));
-                            float lambda = rb.collisionData->totalLambda;
+                            float count = static_cast<float>(rb.collisionData->count);
+                            Math::Vec3 impulse = rb.collisionData->totalImpulse / count;
+                            Math::Vec3 r1 = (rb.collisionData->impulsePoint / count) - rb.transform->pos;
+                            Math::Vec3 r1CrossN = Math::Cross(r1, (Math::Normalized(rb.collisionData->normal)));
+                            float lambda = rb.collisionData->totalLambda / count;
+
+                            VK_CRITICAL("Count: {0}", count);
+                            VK_ERROR("Impulse: {0} {1} {2}", impulse.x, impulse.y, impulse.z);
+                            VK_WARN("r1: {0} {1} {2}", r1.x, r1.y, r1.z);
+                            VK_INFO("r1CrossN: {0} {1} {2}", r1CrossN.x, r1CrossN.y, r1CrossN.z);
+                            VK_TRACE("lambda: {0}", lambda);
 
                             rb.linearVelocity += impulse * rb.invMass;
                             rb.angularVelocity += lambda * rb.invInertiaTensor * r1CrossN;
@@ -231,6 +235,8 @@ namespace Vakol
                             rb.collisionData->normal = Math::Vec3(0.0f, 0.0f, 0.0f);
                             rb.collisionData->totalLambda = 0.0f;
                             rb.collisionData->count = 0;
+                            rb.collisionData->isColliding = false;
+                            rb.collisionData->otherBody = nullptr;
                         }
                     });
 
@@ -334,11 +340,11 @@ namespace Vakol
                 m_scriptEngine.PhysContactCallback(script, ent1);
             }
 
-        rb1.collisionData->isColliding = false;
-        rb1.collisionData->otherBody = nullptr;
+        // rb1.collisionData->isColliding = false;
+        // rb1.collisionData->otherBody = nullptr;
 
-        rb2.collisionData->isColliding = false;
-        rb2.collisionData->otherBody = nullptr;
+        // rb2.collisionData->isColliding = false;
+        // rb2.collisionData->otherBody = nullptr;
     }
     void Application::OnEvent(Event& ev)
     {
