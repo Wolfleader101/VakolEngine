@@ -205,7 +205,8 @@ namespace Vakol
                         [&](Components::Transform& transform, RigidBody& rb) {
                             m_physicsEngine.ApplyForces(transform.pos, transform.rot, rb);
 
-                            //transform.eulerAngles = Math::RadToDeg(Math::EulerFromQuat(transform.rot));
+                            // Don't say I didn't warn you :p
+                            transform.eulerAngles = Math::RadToDeg(Math::EulerFromQuat(transform.rot));
                         });
 
                     // detect collisions
@@ -276,6 +277,7 @@ namespace Vakol
                 transform.rot = Math::Quat(Math::DegToRad(transform.eulerAngles));
             });
 
+            activeScene.DestroyEntities();
             activeScene.GetCamera().Update();
 
             if (IsSystemActive(SystemFlag::Rendering))

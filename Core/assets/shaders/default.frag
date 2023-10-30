@@ -58,6 +58,10 @@ uniform Light light;
 
 uniform vec2 UV_OFFSET = vec2(0.0);
 
+uniform vec3 LIGHT_DIRECTION;
+
+uniform vec2 UV_OFFSET = vec2(0.0);
+
 uniform float AMBIENT_STRENGTH = 0.2;
 uniform float SPECULAR_STRENGTH = 0.3;
 

@@ -4,12 +4,11 @@ function init()
     print("Multi Script Root");
     entity:add_script("cube", "entities/test/cube.lua");
 
-    entity:add_script("emotions", "components/emotion.lua");
-    	
-    local cube = entity:get_script("cube")
-	print(cube.BLAKE)
-end
+    --entity:add_script("emotions", "fcms/emotion.lua");
 
+    local cube = entity:get_script("cube")
+    print(cube.BLAKE)
+end
 
 function phys_update()
     -- local rb = entity:get_rigid();
