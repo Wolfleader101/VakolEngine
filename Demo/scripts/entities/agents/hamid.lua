@@ -22,7 +22,7 @@ local entityDistance = nil;
 local currentFear = 0.0;
 
 local interactDistance = 1000.0;
-local minInteractDistance = 0.5;
+local minInteractDistance = 2.0;
 local avoidanceDistance = 3.0;
 
 function init()
@@ -48,7 +48,9 @@ function init()
     entity:add_script("navigation", "components/navigation.lua")
     navigation = entity:get_script("navigation");
 
-    navigation.MAX_DISTANCE = 0.8;
+    navigation.TARGET = scene:get_camera():get_pos();
+
+    navigation.MAX_DISTANCE = 0.01;
 
     navigation.MOVE_SPEED = 0.025;
     navigation.ROTATE_SPEED = 2.5;
@@ -99,7 +101,7 @@ function rubbish_behaviour()
                     if ((entityDistance < interactDistance) and yDifference < 10.0) then
                         navigation.set_state("chase");
 
-                        navigation.DESTINATION = value:get_transform().pos;
+                        navigation.TARGET = value:get_transform().pos;
 
                         currentRubbish = value;
 
@@ -113,20 +115,10 @@ function rubbish_behaviour()
 
         -- Checking to see if the AI is already travelling to the entity and is not holding the rubbish
         if (travellingToObject == true and holdingRubbish == false) then
-            yDifference = math.abs(entity:get_transform().pos.y - currentRubbish:get_transform().pos.y);
-
             entityDistance = distance(entity:get_transform().pos, currentRubbish:get_transform().pos);
 
-            print(string.format("Current Rubbish: %s", currentRubbish:get_tag()))
-            print(string.format("Rubbish Location: %.2f, %.2f, %.2f", currentRubbish:get_transform().pos.x, currentRubbish:get_transform().pos.y, currentRubbish:get_transform().pos.z))
-            print(string.format("Destination: %.2f, %.2f, %.2f", navigation.DESTINATION.x, navigation.DESTINATION.y, navigation.DESTINATION.z))
-
-            navigation.DESTINATION = currentRubbish:get_transform().pos;
-
-            -- print(currentRubbish:get_tag());
-        
             -- Checking to see if the AI is close enough to the object to grab it (Done in the on_contact function)
-            if ((entityDistance < minInteractDistance) and yDifference < 10.0) then
+            if (entityDistance < minInteractDistance) then
                 holdingRubbish = true;
                 initialRubbishContact = true;
 
@@ -135,7 +127,7 @@ function rubbish_behaviour()
                 print(closestBin:get_tag());
 
                 if (closestBin ~= nil) then
-                    navigation.DESTINATION = closestBin:get_transform().pos;  -- Set destination to closest bin
+                    navigation.TARGET = closestBin:get_transform().pos;  -- Set destination to closest bin
                 end
             end
         end
@@ -149,7 +141,7 @@ function rubbish_behaviour()
                 entityDistance = distance(entity:get_transform().pos, value:get_transform().pos);
 
                 if ((entityDistance < minInteractDistance) and yDifference < 10.0) then
-                    destroy_entity(currentRubbish);
+                    scene:destroy_entity(currentRubbish);
 
                     currentRubbish = nil;
 
@@ -160,16 +152,19 @@ function rubbish_behaviour()
 
                     travellingToObject = false;
                     holdingRubbish = false;
-                    wandering =  true;
+                    wandering = true;
+
+                    navigation.set_state("wander");
                 end
             end
         end
     end
 end
---[[
+
 function on_contact(other_ent)
     -- Check to see if the AI has initially contacted a piece of rubbish
     if ((initialRubbishContact == true) and (holdingRubbish == true)) then
+        
         if (emotions ~= nil) then
             local entityAffordance = other_ent:get_script("affordance");
 
@@ -187,10 +182,10 @@ function on_contact(other_ent)
         end
     end
 end
---]]
+
 function tick()
     -- Check if the AI is wandering around
-    if (wandering ==  true) then
+    if (wandering == true) then
         navigation.set_state("wander");
 
         -- Check if the AI has emotions
