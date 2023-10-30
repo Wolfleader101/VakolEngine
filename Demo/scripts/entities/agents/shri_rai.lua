@@ -78,15 +78,13 @@ function tick()
             -- Find a new piss spot
             piss_index = math.random(#piss_locations);
             nav.TARGET = piss_locations[piss_index];
-            nav.set_state("chase");
+            nav.set_state("wander");
             pissTicks = 0;
             piss.clean();
+
+            print("new piss target: " .. piss_index .. "\nCleaned up piss");
         end
     else
-        if (currentState == "chase" and not foundAngryEntity) then
-            nav.TARGET = piss_locations[piss_index];
-        end
-
         if (not foundAngryEntity and attackCooldown < 0) then
             local emotionalEntities = scene.globals.emotional_entities;
 
