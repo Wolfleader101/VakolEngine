@@ -14,7 +14,7 @@ function init()
     emotions.set_emotion(emotions.ANGER, 2);
 
     local rb = entity:add_rigid();
-    rb.rot_lock = BVector3.new(true, true, true);
+    rb.rot_lock = BVector3.new(true, false, true);
     rb.type = BodyType.Dynamic;
     entity:add_box_collider(Vector3.new(0.9, 1.75, 0.3));
 
@@ -58,7 +58,7 @@ end
 function tick()
     -- target = scene:get_camera():get_pos();
     -- nav.TARGET = target;
-    --nav.set_state("wander");
+    nav.set_state("wander");
 
 
     -- TODO might only want to check nearby bins every 10 ticks or so???

@@ -30,7 +30,7 @@ function init()
 
     rb = entity:add_rigid();
     rb.type = BodyType.Dynamic;
-    rb.rot_lock = BVector3.new(true, true, true);
+    rb.rot_lock = BVector3.new(true, false, true);
     entity:add_box_collider(Vector3.new(0.9, 1.75, 0.3));
 
     entity:add_script("navigation", "components/navigation.lua");

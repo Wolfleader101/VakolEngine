@@ -20,7 +20,7 @@ local wander_timer    = 0.0;
 local wander_duration = 10.0;
 
 local hitting_wall    = false;
-local hitting_dir     = Vector3.new();
+
 
 function wrap_angle(angle)
     if angle > 180.0 then
@@ -50,39 +50,55 @@ function gen_random_target()
     return Vector3.new(x, y, z);
 end
 
-function smooth_look_at(target, away)
-    local lookDir = Vector3.new();
-
-    if (not away) then
-        lookDir = normalize(target - position);
-    else
-        lookDir = normalize(position - target);
-    end
-    lookDir.y = 0.0;
-
-    local angle = math.deg(atan2(lookDir.x, lookDir.z));
-
-    local angleDiff = angle - rotation.y;
-
-    if (angleDiff > 180.0) then
-        angleDiff = angleDiff - 360.0;
-    elseif (angleDiff < -180.0) then
-        angleDiff = angleDiff + 360.0;
-    end
-
-    local factor = ROTATE_SPEED * Time.delta_time;
-
-    rotation.y = rotation.y + factor * angleDiff;
-end
-
 function look_at(target)
     local lookDir = normalize(target - position);
     lookDir.y = 0.0;
 
-    local angle = math.deg(atan2(lookDir.x, lookDir.z));
+    local desired_angle = math.deg(atan2(lookDir.x, lookDir.z));
+    local current_angle = rotation.y;
 
-    rotation.y = angle;
+    -- angle wrapping
+    desired_angle = (desired_angle + 180) % 360 - 180;
+    current_angle = (current_angle + 180) % 360 - 180;
+
+    local angleDiff = desired_angle - current_angle;
+    
+    -- angle difference is within -180 to 180 degrees
+    if angleDiff > 180 then
+        angleDiff = angleDiff - 360;
+    elseif angleDiff < -180 then
+        angleDiff = angleDiff + 360;
+    end
+
+    local proportionalFactor = 0.01;
+    local dampingFactor = 0.4;     -- closer to 1 for less damping
+    local maxTorque = 4;
+    local deadZone = 35;             -- (degrees)
+
+    -- if the angle difference is within the dead zone
+    if math.abs(angleDiff) > deadZone then
+        -- proportional control
+        local torqueValue = angleDiff * proportionalFactor;
+
+        -- clamping the torque
+        torqueValue = math.min(math.abs(torqueValue), maxTorque);
+
+        -- damping
+        torqueValue = torqueValue * dampingFactor;
+
+        -- Create torque vector
+        local torque = Vector3.new(0, torqueValue, 0);
+
+        -- Apply torque
+        agent:add_torque(torque);
+    else
+        local inv_current_angular_velocity = Vector3.new(-agent.angularVelocity.x, -agent.angularVelocity.y, -agent.angularVelocity.z);
+        local damping_torque = inv_current_angular_velocity * 0.003
+        agent:add_torque(damping_torque)
+    end
 end
+
+
 
 function flee()
     if (distance(TARGET, position) < MAX_DISTANCE) then
@@ -99,17 +115,17 @@ function chase()
     end
     can_move = true;
 
-    smooth_look_at(TARGET, false);
+    look_at(TARGET);
 end
 
 function wander()
     can_move = true;
 
-    wander_timer = wander_timer + Time.delta_time;
+    wander_timer = wander_timer + Time.tick_rate;
 
     local dst = distance(wander_target, position);
 
-    smooth_look_at(wander_target, false);
+    look_at(wander_target);
 
     if (wander_timer >= wander_duration or dst < MAX_DISTANCE) then
         wander_target = gen_random_target();
@@ -121,7 +137,7 @@ end
 
 function idle()
     can_move = false;
-    agent.linearVelocity = Vector3.new();
+    -- agent.linearVelocity = Vector3.new();
 end
 
 local function accelerate()
@@ -167,8 +183,17 @@ function tick()
     --    look_at(Vector3.new(40.0, 1.0, 0.0));
     --end
     if(hitting_wall) then
-        local inverse_forward = Vector3.new(-hitting_dir.x, -hitting_dir.y, -hitting_dir.z);
-        look_at(inverse_forward);
+        -- local inverse_forward = Vector3.new(-hitting_dir.x, -hitting_dir.y, -hitting_dir.z);
+        local hitting_dir = entity:get_transform().forward;
+        local rotated_dir =  Vector3.new(-hitting_dir.x, -hitting_dir.y, -hitting_dir.z)-- rotate_vec3(entity:get_transform().forward, 180.0, Vector3.new(0.0, 1.0, 0.0));
+        
+        -- look_at(rotated_dir);
+        local impulse = rotated_dir * 1.5;
+        agent:apply_angular_impulse(Vector3.new(1.0, 0.0, 0.0), Vector3.new(0.0, 1.0, 0.0))
+        agent:apply_impulse(impulse);
+        
+
+        
         wander_target = gen_random_target();
         wander_timer = 0.0;
         hitting_wall = false;
@@ -186,14 +211,22 @@ end
 local function check_for_wall()
     local origin = entity:get_transform().pos;  -- Get entity's current position
     local dir = entity:get_transform().forward; -- Get entity's current forward direction
-    local distance = 0.5;                      -- Length of the ray, you can adjust this value
+    local distance = 2.0;                      -- Length of the ray, you can adjust this value
     local hit_info = RayCastHitInfo.new();
 
     local other_ent = scene:raycast(origin, dir, distance, hit_info);
 
-    if (other_ent ~= nil and hit_info.rigidbody.type == BodyType.Static) then
+    if (other_ent == nil) then
+        return;
+    end
+    
+    local affordanceComp = other_ent:get_script("affordance");
+    if(affordanceComp ~= nil and affordanceComp.AFFORDANCES.WALKING == 1.0) then
+        return;
+    end
+
+    if (hit_info.rigidbody.type == BodyType.Static) then
         hitting_wall = true;
-        hitting_dir = dir; -- save the direction we hit the wall
         -- print("Hit a wall!");
         -- wander_target = gen_random_target();
         -- wander_timer = 0.0;

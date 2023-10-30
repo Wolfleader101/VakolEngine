@@ -16,7 +16,7 @@ function init()
 
     rb = entity:add_rigid();
     rb.type = BodyType.Dynamic;
-    rb.rot_lock = BVector3.new(true, true, true);
+    rb.rot_lock = BVector3.new(true, false, true);
 
     entity:add_box_collider(model:get_half_extents(0));
 

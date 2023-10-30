@@ -29,6 +29,13 @@ namespace Vakol
         lua.set_function("distance_sq",
                          [](const Math::Vec3& u, const Math::Vec3& v) -> float { return Math::DistanceSq(u, v); });
 
+        lua.set_function("rotate_vec3",
+                         [](const Math::Vec3& v, const float angle, const Math::Vec3& axis) -> Math::Vec3 {
+                             Math::Quat rotQuat = Math::Rotate(v, angle, axis);
+
+                             return Math::RadToDeg(Math::EulerFromQuat(rotQuat));
+                         });
+
         {
             sol::constructors<Math::Vec2(), Math::Vec2(float), Math::Vec2(float, float)> ctor; // allow for constructors
 
