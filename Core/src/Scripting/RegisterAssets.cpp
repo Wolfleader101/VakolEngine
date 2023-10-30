@@ -71,6 +71,15 @@ namespace Vakol
 
     void RegisterMaterial(sol::state& lua)
     {
+        lua.new_enum("LightType", "Default", Rendering::Assets::LIGHT_TYPE::DEFAULT_LIGHT, "Directional",
+                     Rendering::Assets::LIGHT_TYPE::DIRECTIONAL_LIGHT, "Point",
+                     Rendering::Assets::LIGHT_TYPE::POINT_LIGHT, "Spot", Rendering::Assets::LIGHT_TYPE::SPOT_LIGHT);
+
+        lua["LightType"] = lua.create_table_with("Default", Rendering::Assets::LIGHT_TYPE::DEFAULT_LIGHT, "Directional",
+                                                 Rendering::Assets::LIGHT_TYPE::DIRECTIONAL_LIGHT, "Point",
+                                                 Rendering::Assets::LIGHT_TYPE::POINT_LIGHT, "Spot",
+                                                 Rendering::Assets::LIGHT_TYPE::SPOT_LIGHT);
+
         auto material_type = lua.new_usertype<Rendering::Assets::Material>("Material");
 
         material_type.set_function("get_shader", [](const Rendering::Assets::Material& material) {
@@ -112,10 +121,14 @@ namespace Vakol
                                        material.properties.uv_offset = offset;
                                    });
 
-        material_type.set_function("set_opacity",
-                                   [](Rendering::Assets::Material& material, const float opacity) {
-                                       material.properties.opacity = opacity;
+        material_type.set_function("set_light_type",
+                                   [](Rendering::Assets::Material& material, const Rendering::Assets::LIGHT_TYPE type) {
+                                       material.properties.light.TYPE = type;
                                    });
+
+        material_type.set_function("set_opacity", [](Rendering::Assets::Material& material, const float opacity) {
+            material.properties.opacity = opacity;
+        });
 
         material_type.set_function("use_lighting", [](Rendering::Assets::Material& material, const bool enabled) {
             material.properties.use_lighting = enabled;
@@ -125,9 +138,10 @@ namespace Vakol
             material.properties.use_textures = enabled;
         });
 
-        material_type.set_function("use_colors_and_textures", [](Rendering::Assets::Material& material, const bool enabled) {
-            material.properties.use_colors_and_textures = enabled;
-        });
+        material_type.set_function("use_colors_and_textures",
+                                   [](Rendering::Assets::Material& material, const bool enabled) {
+                                       material.properties.use_colors_and_textures = enabled;
+                                   });
     }
 
     void RegisterShader(sol::state& lua)

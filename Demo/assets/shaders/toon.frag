@@ -1,9 +1,10 @@
 #version 460 core
 out vec4 FragColor;
 
-const uint DIRECTIONAL_LIGHT = 0;
-const uint POINT_LIGHT = 1;
-const uint SPOT_LIGHT = 2;
+const uint DEFAULT_LIGHT = 0;
+const uint DIRECTIONAL_LIGHT = 1;
+const uint POINT_LIGHT = 2;
+const uint SPOT_LIGHT = 3;
 
 in VS_OUT {
     vec3 FragPos;
@@ -59,8 +60,8 @@ vec4 ToonShading(const vec3 normal, const vec4 color)
     vec3 lightDir = vec3(0.0);
 
     if (light.TYPE == DIRECTIONAL_LIGHT)
-        lightDir = normalize(-radians(light.DIRECTION));
-    else if (light.TYPE == POINT_LIGHT || light.TYPE == SPOT_LIGHT)
+        lightDir = normalize(-light.DIRECTION);
+    else
         lightDir = normalize(light.DIRECTION - fs_in.FragPos);
 
     float diff = max(dot(normal, lightDir), 0.0);

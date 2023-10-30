@@ -205,7 +205,6 @@ namespace Vakol
                         [&](Components::Transform& transform, RigidBody& rb) {
                             m_physicsEngine.ApplyForces(transform.pos, transform.rot, rb);
 
-                            // Don't say I didn't warn you :p
                             transform.eulerAngles = Math::RadToDeg(Math::EulerFromQuat(transform.rot));
                         });
 
@@ -251,7 +250,7 @@ namespace Vakol
             if (IsSystemActive(SystemFlag::Rendering))
             {
                 activeScene.GetEntityList().Iterate<Components::Transform, Rendering::Drawable>(
-                    [&](Components::Transform& transform, const Rendering::Drawable& drawable) {
+                    [&](const Components::Transform& transform, const Rendering::Drawable& drawable) {
                         //activeScene.GetEntityList().Sort<Components::Transform>(
                         //    [&](const Components::Transform& left, const Components::Transform& right) {
                         //        return Math::Distance(left.pos, activeScene.GetCamera().GetPos()) >

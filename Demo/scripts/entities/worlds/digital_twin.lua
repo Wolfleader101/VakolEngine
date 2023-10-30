@@ -35,18 +35,36 @@ function init()
 
 	--MODEL FILE ACQUISITION
 	--Digital Twin Geometry Models
-	floor:add_model("assets/models/digital_twin/GROUND.fbx", GLOBAL_SCALE);
+	local flr_mdl = floor:add_model("assets/models/digital_twin/GROUND.fbx", GLOBAL_SCALE);
+	
+	local flr_msh_1 = flr_mdl:get_mesh(0);
+	local flr_msh_3 = flr_mdl:get_mesh(3);
+	
+	flr_msh_1.material:set_light_position(Vector3.new(0.0, 15.0, 0.0));
+	
+	flr_msh_3.material:set_light_type(LightType.Directional);
+	flr_msh_3.material:set_light_direction(Vector3.new(2.0, 0.0, -0.25));
 
 	roof:add_model("assets/models/digital_twin/ROOF.fbx", GLOBAL_SCALE);
 	roof_supports:add_model("assets/models/digital_twin/ROOF-SUPPORTS.fbx", GLOBAL_SCALE);
 
-	building:add_model("assets/models/digital_twin/BUILDING.fbx", GLOBAL_SCALE);
+	local bld_mdl = building:add_model("assets/models/digital_twin/BUILDING.fbx", GLOBAL_SCALE);
+	
+	local bld_msh_1 = bld_mdl:get_mesh(5);
+	bld_msh_1.material:set_light_type(LightType.Directional);
+	bld_msh_1.material:set_light_direction(Vector3.new(10.0, 8.0, -4.0));
+
+	local bld_msh_10 = bld_mdl:get_mesh(10);
+	bld_msh_10.material:set_light_type(LightType.Directional);
+	bld_msh_10.material:set_light_direction(Vector3.new(0.1, 0.0, 0.0));
 
 	barriers[1]:add_model("assets/models/digital_twin/GLASS-BARRIERS-LEFT.fbx", GLOBAL_SCALE);
 	barriers[2]:add_model("assets/models/digital_twin/GLASS-BARRIERS-RIGHT.fbx", GLOBAL_SCALE);
 	barriers[3]:add_model("assets/models/digital_twin/GLASS-BARRIERS-LEFT.fbx", GLOBAL_SCALE);
-	local b_mdl_4 = barriers[4]:add_model("assets/models/digital_twin/GLASS-BARRIERS-LEFT.fbx", GLOBAL_SCALE);
-	b_mdl_4:get_mesh(0).material:set_light_position(Vector3.new(180.0, 0.0, -180.0));
+	
+	local bar_mdl_4 = barriers[4]:add_model("assets/models/digital_twin/GLASS-BARRIERS-LEFT.fbx", GLOBAL_SCALE);
+	bar_mdl_4:get_mesh(0).material:set_light_position(Vector3.new(180.0, 0.0, -180.0));
+
 	barriers[5]:add_model("assets/models/digital_twin/GLASS-BARRIERS-LEFT.fbx", GLOBAL_SCALE);
 	barriers[6]:add_model("assets/models/digital_twin/GLASS-BARRIERS-LEFT.fbx", GLOBAL_SCALE);
 	barriers[7]:add_model("assets/models/digital_twin/GLASS-BARRIERS-LEFT.fbx", GLOBAL_SCALE);
