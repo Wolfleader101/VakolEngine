@@ -42,6 +42,7 @@ function init()
 
 
 
+    --nav.TARGET = Vector3.new(0, 0, 0);
     nav.TARGET = piss_locations[piss_index];
 
     --print(nav.TARGET.x .. " " .. nav.TARGET.y .. " " .. nav.TARGET.z)
@@ -54,7 +55,7 @@ function init()
 end
 
 local pos;
-local pissTimer <const> = 10 * 60; -- 10 seconds
+local pissTimer <const> = 7 * 60; -- 7 seconds
 local pissTicks = 0;
 
 local attackCooldownTime <const> = 15 * 60;
@@ -71,16 +72,21 @@ function tick()
         rb.linearVelocity = Vector3.new();
         pissTicks = pissTicks + 1;
         if (pissTicks < pissTimer) then
-            nav.look_at(piss_locations[piss_index]);
+            nav.smooth_look_at(piss_lookat[piss_index], false);
             shoot_piss();
         else
             -- Find a new piss spot
-            piss_index = (piss_index % #piss_locations) + 1;
+            piss_index = math.random(#piss_locations);
             nav.TARGET = piss_locations[piss_index];
             nav.set_state("chase");
             pissTicks = 0;
+            piss.clean();
         end
     else
+        if (currentState == "chase" and not foundAngryEntity) then
+            nav.TARGET = piss_locations[piss_index];
+        end
+
         if (not foundAngryEntity and attackCooldown < 0) then
             local emotionalEntities = scene.globals.emotional_entities;
 
@@ -112,7 +118,7 @@ function tick()
     --local angerLevel = emotions.get_emotion(emotions.ANGER);
 
     --print()
-    if foundAngryEntity and (nav.TARGET - pos):length() < 2 then
+    if foundAngryEntity and (nav.TARGET - pos):length() < 3 then
         print("Shri kicks the entity!");
         nav.set_state("idle");
         emotions.set_emotion(emotions.JOY, 0.5);
