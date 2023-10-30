@@ -99,8 +99,6 @@ function rubbish_behaviour()
                     if ((entityDistance < interactDistance) and yDifference < 10.0) then
                         navigation.set_state("chase");
 
-                        print("FOUND RUBBISH");
-                
                         navigation.DESTINATION = value:get_transform().pos;
 
                         currentRubbish = value;
@@ -115,11 +113,17 @@ function rubbish_behaviour()
 
         -- Checking to see if the AI is already travelling to the entity and is not holding the rubbish
         if (travellingToObject == true and holdingRubbish == false) then
-            print("TRAVELLING TO RUBBISH");
-        
             yDifference = math.abs(entity:get_transform().pos.y - currentRubbish:get_transform().pos.y);
 
             entityDistance = distance(entity:get_transform().pos, currentRubbish:get_transform().pos);
+
+            print(string.format("Current Rubbish: %s", currentRubbish:get_tag()))
+            print(string.format("Rubbish Location: %.2f, %.2f, %.2f", currentRubbish:get_transform().pos.x, currentRubbish:get_transform().pos.y, currentRubbish:get_transform().pos.z))
+            print(string.format("Destination: %.2f, %.2f, %.2f", navigation.DESTINATION.x, navigation.DESTINATION.y, navigation.DESTINATION.z))
+
+            navigation.DESTINATION = currentRubbish:get_transform().pos;
+
+            -- print(currentRubbish:get_tag());
         
             -- Checking to see if the AI is close enough to the object to grab it (Done in the on_contact function)
             if ((entityDistance < minInteractDistance) and yDifference < 10.0) then
@@ -128,7 +132,9 @@ function rubbish_behaviour()
 
                 closestBin = find_closest_bin();
 
-                if (closestBin) ~= nil then
+                print(closestBin:get_tag());
+
+                if (closestBin ~= nil) then
                     navigation.DESTINATION = closestBin:get_transform().pos;  -- Set destination to closest bin
                 end
             end
