@@ -80,30 +80,26 @@ function rubbish_behaviour()
     -- Checks to see if the rubbish entity has been set
     if (next(scene.globals.apples) ~= nil) then
         entityDistance = math.huge;
-        yDifference = math.huge;
 
-        local currentYDifference = 0.0;
         local currentDistance = 0.0;
 
         -- Checking to see if the AI isn't already travelling to the entity
         if (travellingToObject == false) then
             for key, value in pairs(scene.globals.apples) do
-                    -- Getting the distance between the AI and the entity
+                -- Getting the distance between the AI and the entity
+                currentDistance = distance(entity:get_transform().pos, value:get_transform().pos);
+
+                if (currentDistance < entityDistance) then
+                    entityDistance = currentDistance;
+
                     yDifference = math.abs(entity:get_transform().pos.y - value:get_transform().pos.y);
 
-                    currentDistance = distance(entity:get_transform().pos, value:get_transform().pos);
-
-                    if (currentDistance < entityDistance) then
-                        entityDistance = currentDistance;
-
-                        yDifference = currentYDifference;
-
-                        currentTarget = value;
-                    end
+                    currentTarget = value;
+                end
             end
 
             -- Checking to see that the distance between the AI and the entity is within the interact distance
-            if ((entityDistance < interactDistance) and yDifference < 5.0) then
+            if ((entityDistance < interactDistance) and yDifference < 10.0) then
                 navigation.set_state("chase");
 
                 navigation.TARGET = currentTarget:get_transform().pos;
@@ -138,7 +134,7 @@ function rubbish_behaviour()
 
                 entityDistance = distance(entity:get_transform().pos, value:get_transform().pos);
 
-                if ((entityDistance < minInteractDistance) and yDifference < 5.0) then
+                if ((entityDistance < minInteractDistance) and yDifference < 10.0) then
                     currentTarget = nil;
 
                     emotions.add_emotion_value(emotions.JOY, 0.2);
@@ -159,7 +155,6 @@ end
 
 function on_contact(other_ent)
     if(heldRubbish.item == nil) then
-        
         local affordanceComp = other_ent:get_script("affordance");
         local interactableComp = other_ent:get_script("interactable");
 
@@ -186,8 +181,6 @@ function on_contact(other_ent)
             if (type ~= nil) then
                 heldRubbish.item = other_ent;
                 heldRubbish.type = type;
-
-
 
                 interactableComp.interact(entity);
             end
