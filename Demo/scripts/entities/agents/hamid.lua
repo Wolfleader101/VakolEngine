@@ -45,7 +45,7 @@ function init()
     entity:add_script("navigation", "components/navigation.lua")
     navigation = entity:get_script("navigation");
 
-    navigation.set_target(scene:get_camera():get_pos());
+    navigation.set_target(scene:get_camera():get_pos(), false);
 
     navigation.MAX_DISTANCE = 0.01;
 
@@ -149,7 +149,7 @@ function on_contact(other_ent)
 
                 currentBin = find_closest_bin();
 
-                navigation.set_target(currentBin:get_transform().pos);  -- Set destination to closest bin
+                navigation.set_target(currentBin:get_transform().pos, false);  -- Set destination to closest bin
 
                 print("Hamid has grabbed '" .. other_ent:get_tag() .. "'");
                 print("Hamid is heading to '" .. currentBin:get_tag() .. "'");
