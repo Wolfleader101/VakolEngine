@@ -110,7 +110,7 @@ function tick()
             held_item:get_script("interactable").interact(entity); -- throw the entity
 
             local joyVal = emotions.get_emotion(emotions.JOY);
-            --emotions.set_emotion(emotions.JOY, joyVal + 0.6);
+            emotions.set_emotion(emotions.JOY, joyVal + 0.6);
             held_item = nil;
             held_time = 0;
         end
@@ -163,12 +163,14 @@ function tick()
     -- Set the eye appearance based on the emotion with the highest value
     local eyeOffset = Vector2.new(0.0, 0.0)
 
-    if maxEmotion == emotions.JOY or maxEmotion == emotions.ANTICIPATION then
-        eyeOffset = Vector2.new(0.0, 0.5)
-    elseif maxEmotion == emotions.ANGER then
-        eyeOffset = Vector2.new(0.5, 0.0)
-    elseif maxEmotion == emotions.DISGUST or maxEmotion == emotions.SURPRISE then
-        eyeOffset = Vector2.new(0.5, 0.5)
+    if (maxEmotion == emotions.ANTICIPATION) then
+        eyeOffset = Vector2.new(0.0, 0.0);
+    elseif (maxEmotion == emotions.JOY) then
+        eyeOffset = Vector2.new(0.0, 0.5);
+    elseif (maxEmotion == emotions.ANGER) then
+        eyeOffset = Vector2.new(0.5, 0.0);
+    elseif (maxEmotion == emotions.DISGUST or maxEmotion == emotions.SURPRISE) then
+        eyeOffset = Vector2.new(0.5, 0.5);
     end
 
     -- Apply the eye appearance based on the calculated offset
