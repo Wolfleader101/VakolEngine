@@ -107,7 +107,7 @@ end
 
 local search_time = 0;
 
-local function get_nearby_interactables()
+local function get_nearby_interactables(trigger_distance)
    
     search_time = search_time + 1;
 
@@ -116,7 +116,12 @@ local function get_nearby_interactables()
         local randomIndex = math.random(1, #interactable_items - 1);
 
         if (interactable_items[randIndex] ~= nil) then
-            nav.set_target(interactable_items[randomIndex]:get_transform().pos, false);
+            
+            local itemPos = interactable_items[randIndex]:get_transform().pos;
+
+
+
+            nav.set_target(itemPos, false);
         end
 
 
@@ -152,7 +157,7 @@ function tick()
     -- TODO might only want to check nearby bins every 10 ticks or so???
     local nearby_bins = get_nearby_bins(entity, 100);
     get_nearby_emotional_agents(entity, 100);
-    get_nearby_interactables();
+    get_nearby_interactables(50);
 
     for name, bin in pairs(nearby_bins) do
         local prev_bin_contents = prev_nearby_bins[name];
