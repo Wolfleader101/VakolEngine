@@ -85,7 +85,7 @@ function chase()
     can_move = true;
 
     -- FORCE target every time chase is called
-    set_target(target, false);
+    -- set_target(target, false);
 end
 
 function wander()
