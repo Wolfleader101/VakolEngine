@@ -25,7 +25,7 @@ function init()
 
     local target = scene:get_camera():get_pos();
 
-    nav.TARGET = target;
+    nav.set_target(target, false);
     nav.MAX_DISTANCE = 0.8;
 
     nav.MOVE_SPEED = 0.025;
@@ -57,7 +57,6 @@ end
 
 function tick()
     -- target = scene:get_camera():get_pos();
-    -- nav.TARGET = target;
     nav.set_state("wander");
 
 

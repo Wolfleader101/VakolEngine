@@ -49,13 +49,11 @@ function init()
 
 
 
-    --nav.TARGET = Vector3.new(0, 0, 0);
-    nav.TARGET = piss_locations[piss_index];
+    nav.set_target(piss_locations[piss_index], false);
 
-    --print(nav.TARGET.x .. " " .. nav.TARGET.y .. " " .. nav.TARGET.z)
     nav.MAX_DISTANCE = 0.3;
     nav.set_state("chase");
-    nav.look_at(nav.TARGET, true);
+    nav.set_target(nav.get_target(), true);
 
 
     --nav.set_state(states[math.random(4)]);
@@ -85,7 +83,7 @@ function tick()
         else
             -- Find a new piss spot
             piss_index = math.random(#piss_locations);
-            nav.TARGET = piss_locations[piss_index];
+            nav.set_target(piss_locations[piss_index], false);
             nav.set_state("wander");
             pissTicks = 0;
             piss.clean();
@@ -115,14 +113,14 @@ function tick()
             if foundAngryEntity then
                 emotions.set_emotion(emotions.ANGER, 0.7); -- shri angry
                 emotions.set_emotion(emotions.JOY, 0)
-                nav.TARGET = target;
+                nav.set_target(target, false);
                 nav.set_state("chase");
             end
         end
     end
 
 
-    if foundAngryEntity and (nav.TARGET - pos):length() < 3 then
+    if foundAngryEntity and (nav.get_target() - pos):length() < 3 then
         print("Shri attacks!");
         atk.attack(angryEntity);
         nav.set_state("idle");

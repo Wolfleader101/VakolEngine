@@ -25,7 +25,7 @@ function init()
 
     target = scene:get_camera():get_pos();
 
-    nav.TARGET = target;
+    nav.set_target(target, false);
     nav.MAX_DISTANCE = 5.0;
 
     nav.MOVE_SPEED = 0.05;
