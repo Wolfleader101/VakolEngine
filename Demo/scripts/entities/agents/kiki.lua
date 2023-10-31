@@ -94,7 +94,7 @@ local function get_nearby_emotional_agents(origin_entity, trigger_distance)
                 if (agentEmotionalState ~= nil) then
                     if (agentEmotionalState:get_emotion(emotions.JOY)) then
                         local angerValue = emotions.get_emotion(emotions.ANGER);
-                        emotions.set_emotion(emotions.ANGER, angerValue + 0.6);
+                        emotions.set_emotion(emotions.ANGER, angerValue + 0.7);
                     end
                 end
 
@@ -114,8 +114,6 @@ local function get_nearby_interactables()
     if (search_time >= 300) then
         local randomIndex = math.random(1, #interactable_items);
 
-        print('hello');
-
         nav.set_target(interactable_items[randomIndex]:get_transform().pos, false);
 
         search_time = 0;
@@ -134,12 +132,16 @@ function tick()
         -- if held time is greater than 100, throw the item
         -- TODO might want to throw this at someone??
         if (held_time >= 90) then
-            held_item:get_script("interactable").interact(entity); -- throw the entity
+            local i_script = held_item:get_script("interactable");
+            
+            if (i_script ~= nil) then
+                held_item:get_script("interactable").interact(entity); -- throw the entity
 
-            local joyVal = emotions.get_emotion(emotions.JOY);
-            emotions.set_emotion(emotions.JOY, joyVal + 0.6);
-            held_item = nil;
-            held_time = 0;
+                local joyVal = emotions.get_emotion(emotions.JOY);
+                emotions.set_emotion(emotions.JOY, joyVal + 0.1);
+                held_item = nil;
+                held_time = 0;
+            end
         end
     end
 
@@ -158,7 +160,7 @@ function tick()
             if (prev_bin_contents < contents.COUNT) then
                 print("Kiki saw someone put something in the bin")
                 local angerVal = emotions.get_emotion(emotions.ANGER);
-                emotions.set_emotion(emotions.ANGER, angerVal + 0.9);
+                emotions.set_emotion(emotions.ANGER, angerVal + 0.7);
             end
 
             -- TODO if it has gone down, then he has seen someone take something out of the bin and get happier??
@@ -166,7 +168,7 @@ function tick()
                 print("Kiki saw someone take something out of the bin")
 
                 local joyVal = emotions.get_emotion(emotions.JOY);
-                emotions.set_emotion(emotions.JOY, joyVal + 0.8);
+                emotions.set_emotion(emotions.JOY, joyVal + 0.5);
             end
         end
 

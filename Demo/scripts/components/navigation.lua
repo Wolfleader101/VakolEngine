@@ -106,7 +106,7 @@ function wander()
         set_target(gen_random_target(), false);
         wander_timer = 0.0;
         set_state("idle");
-        print("wander timer expired: new random target");
+        --print("wander timer expired: new random target");
     end
 end
 
