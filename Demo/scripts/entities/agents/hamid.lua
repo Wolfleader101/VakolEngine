@@ -45,7 +45,7 @@ function init()
     entity:add_script("navigation", "components/navigation.lua")
     navigation = entity:get_script("navigation");
 
-    navigation.TARGET = scene:get_camera():get_pos();
+    navigation.set_target(scene:get_camera():get_pos());
 
     navigation.MAX_DISTANCE = 0.01;
 
@@ -81,34 +81,26 @@ function rubbish_behaviour()
     if (next(scene.globals.apples) ~= nil) then
         local currentDistance = 0.0;
 
-        -- Checking to see if the AI isn't already travelling to the entity
         if (travellingToObject == false) then
-            entityDistance = math.huge;
-
             for key, value in pairs(scene.globals.apples) do
-                -- Getting the distance between the AI and the entity
-                currentDistance = distance(entity:get_transform().pos, value:get_transform().pos);
-
-                if (currentDistance < entityDistance) then
-                    entityDistance = currentDistance;
-
+                if ((value:get_script("affordance").AFFORDANCES.HOLDING == 1.0) and (value:get_script("affordance").AFFORDANCES.TRASHING == 1.0)) then
+                    -- Getting the distance between the AI and the entity
                     yDifference = math.abs(entity:get_transform().pos.y - value:get_transform().pos.y);
 
-                    currentTarget = value;
+                    entityDistance = distance(entity:get_transform().pos, value:get_transform().pos);
+
+                    -- Checking to see that the distance between the AI and the entity is within the interact distance
+                    if ((entityDistance < interactDistance) and yDifference < 10.0) then
+                        navigation.set_state("chase");
+
+                        navigation.set_target(value:get_transform().pos, false);
+
+                        currentTarget = value;
+
+                        wandering = false;
+                        travellingToObject = true;
+                    end
                 end
-            end
-
-            -- Checking to see that the distance between the AI and the entity is within the interact distance
-            if ((entityDistance < interactDistance) and yDifference < 10.0) then
-                navigation.set_state("chase");
-
-                navigation.TARGET = currentTarget:get_transform().pos;
-
-                wandering = false;
-
-                travellingToObject = true;
-
-                print("Hamid is heading to '" .. currentTarget:get_tag() .. "'");
             end
         end
 
@@ -120,7 +112,7 @@ function rubbish_behaviour()
             if (entityDistance < minInteractDistance) then
                 currentBin = find_closest_bin();
 
-                navigation.TARGET = currentBin:get_transform().pos;  -- Set destination to closest bin
+                navigation.set_target(currentBin:get_transform().pos);  -- Set destination to closest bin
 
                 print("Hamid is heading to '" .. currentBin:get_tag() .. "'");
             end
