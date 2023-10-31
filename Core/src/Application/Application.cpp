@@ -276,7 +276,12 @@ namespace Vakol
             }
 
             activeScene.GetEntityList().Iterate<Components::Transform>([](Components::Transform& transform) {
-                transform.rot = Math::Quat(Math::DegToRad(transform.eulerAngles));
+                Math::Vec3 wrappedDegrees = transform.eulerAngles;
+                while (wrappedDegrees.y > 90.0f)
+                    wrappedDegrees.y -= 180.0f;
+                while (wrappedDegrees.y < -90.0f)
+                    wrappedDegrees.y += 180.0f;
+                transform.rot = Math::Normalized(Math::Quat(Math::DegToRad(transform.eulerAngles)));
             });
 
             activeScene.DestroyEntities();

@@ -20,3 +20,6 @@ function init()
     local interactable = entity:get_script("interactable");
     interactable.is_throwable = true;
 end
+
+
+
