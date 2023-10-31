@@ -90,9 +90,6 @@ function flee()
 end
 
 function chase()
-    if (distance(TARGET, position) < MAX_DISTANCE) then
-        STATE = "idle"
-    end
     can_move = true;
 
     smooth_look_at(TARGET, false);

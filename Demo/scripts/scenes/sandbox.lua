@@ -8,28 +8,19 @@
     -- AI
 
     scene.globals.emotional_entities = {};
-    
-    local kikis = {};
-    local MAX_KIKIS <const> = 4;
 
-    --local shri = scene:create_entity("shri", "entities/agents/shri_rai.lua");
-    --shri:get_transform().pos = Vector3.new(-20, 5, -20);
-    --shri:get_transform().scale = Vector3.new(0.015, 0.015, 0.015);
-    --scene.globals.emotional_entities[1] = shri;
+    local shri = scene:create_entity("shri", "entities/agents/shri_rai.lua");
+    shri:get_transform().pos = Vector3.new(-20, 5, -20);
+    shri:get_transform().scale = Vector3.new(0.015, 0.015, 0.015);
+    scene.globals.emotional_entities[1] = shri;
 
-    --local hong = scene:create_entity("Hong", "entities/agents/hong.lua");
-    --scene.globals.emotional_entities[2] = hong;
+    local hong = scene:create_entity("Hong", "entities/agents/hong.lua");
+    scene.globals.emotional_entities[2] = hong;
 
-    for i = 1, MAX_KIKIS do
-        kikis[i] = scene:create_entity("Kiki " .. i, "entities/agents/kiki.lua");
-        kikis[i]:get_transform().pos = Vector3.new(i * 5.0, 2.0, 0.0);
-
-        scene.globals.emotional_entities[i] = kiki;
-    end
-
-    -- local test = scene:create_entity("bob", "");
-    -- test:add_model("assets/models/agents/bob.glb", 0.01);
-    -- shri:get_transform().pos = Vector3.new(-8, 5, -9);
+    local green_kiki = scene:create_entity("Green Kiki", "entities/agents/kiki.lua");
+    green_kiki:get_transform().pos = Vector3.new(-5.0, 2.0, 0.0);
+    green_kiki:get_model():get_mesh(0).material:set_diffuse_color(Vector4.new(0.0, 1.0, 0.0, 1.0));
+    scene.globals.emotional_entities[3] = green_kiki;
 
     local path = "coreAssets/textures/Skybox/";
     local extension = ".png";
