@@ -489,16 +489,24 @@ namespace Vakol::Rendering
         SetVec4(shader, "material.specular_color", properties.specular_color, false);
         SetVec4(shader, "material.emissive_color", properties.emissive_color, false);
 
-        SetVec3(shader, "LIGHT_POSITION", properties.light_position, false);
-        SetVec3(shader, "LIGHT_DIRECTION", properties.light_direction, false);
+        SetVec3(shader, "light.DIRECTION", properties.light.DIRECTION, false);
 
         SetVec2(shader, "UV_OFFSET", properties.uv_offset, false);
+
+        SetFloat(shader, "light.ATTENUATION_CONSTANT", properties.light.ATTENUATION_CONSTANT, false);
+        SetFloat(shader, "light.ATTENUATION_LINEAR", properties.light.ATTENUATION_LINEAR, false);
+        SetFloat(shader, "light.ATTENUATION_QUADRATIC", properties.light.ATTENUATION_QUADRATIC, false);
+        SetFloat(shader, "light.ATTENUATION_CUTOFF", properties.light.ATTENUATION_CUTOFF, false);
+        SetFloat(shader, "light.ATTENUATION_OUTER_CUTOFF", properties.light.ATTENUATION_OUTER_CUTOFF, false);
+
+        SetUInt(shader, "light.TYPE", static_cast<unsigned int>(properties.light.TYPE), false);
 
         SetFloat(shader, "material.shininess", properties.shininess, false);
         SetFloat(shader, "material.opacity", properties.opacity, false);
 
-        SetFloat(shader, "material.use_lighting", properties.use_lighting, false);
-        SetFloat(shader, "material.use_textures", properties.use_textures, false);
+        SetBool(shader, "material.use_lighting", properties.use_lighting, false);
+        SetBool(shader, "material.use_textures", properties.use_textures, false);
+        SetBool(shader, "material.use_colors_and_textures", properties.use_colors_and_textures, false);
     }
 
     void RenderAPI::AddShader(const std::string& shaderID, const unsigned int shader)
@@ -519,6 +527,11 @@ namespace Vakol::Rendering
     void RenderAPI::SetInt(const unsigned int shader, const char* name, const int value, const bool binding)
     {
         m_shaderLibrary.SetInt(shader, name, value, binding);
+    }
+
+    void RenderAPI::SetUInt(const unsigned int shader, const char* name, const unsigned int value, const bool binding)
+    {
+        m_shaderLibrary.SetUInt(shader, name, value, binding);
     }
 
     void RenderAPI::SetFloat(const unsigned shader, const char* name, const float value, const bool binding)

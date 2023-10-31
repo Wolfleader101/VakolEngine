@@ -73,7 +73,7 @@ function tick()
         end
     end
     -- target = scene:get_camera():get_pos();
-    --nav.set_state("wander");
+    -- nav.set_state("wander");
 
 
     -- TODO might only want to check nearby bins every 10 ticks or so???

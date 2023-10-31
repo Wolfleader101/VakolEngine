@@ -236,6 +236,14 @@ namespace Vakol::Rendering
          */
         static void SetInt(unsigned int shader, const char* name, int value, bool binding = true);
         /**
+         * \brief sets a int shader uniform
+         * \param shader the shader program
+         * \param name the name of the uniform int
+         * \param value the value of the uniform int
+         * \param binding
+         */
+        static void SetUInt(unsigned int shader, const char* name, unsigned int value, bool binding = true);
+        /**
          * \brief sets a float shader uniform
          * \param shader the shader program
          * \param name the name of the uniform float

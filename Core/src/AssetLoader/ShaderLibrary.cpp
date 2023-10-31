@@ -76,6 +76,24 @@ namespace Vakol
         }
     }
 
+    void ShaderLibrary::SetUInt(const unsigned int shader, const char* name, const unsigned int value,
+                                const bool binding)
+    {
+        if (UniformExists(shader, name))
+        {
+            const auto& [location, count] = GetUniform(shader, name);
+
+            if (binding)
+            {
+                Rendering::OpenGL::BindShaderProgram(shader);
+                Rendering::OpenGL::SetUInt(location, value);
+                Rendering::OpenGL::UnbindShaderProgram();
+            }
+            else
+                Rendering::OpenGL::SetUInt(location, value);
+        }
+    }
+
     void ShaderLibrary::SetFloat(const unsigned int shader, const char* name, const float value, const bool binding)
     {
         if (UniformExists(shader, name))

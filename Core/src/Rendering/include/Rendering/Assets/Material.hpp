@@ -7,6 +7,31 @@
 
 namespace Vakol::Rendering::Assets
 {
+    enum class LIGHT_TYPE
+    {
+        DEFAULT_LIGHT,
+        DIRECTIONAL_LIGHT,
+        POINT_LIGHT,
+        SPOT_LIGHT
+    };
+
+    /**
+     * \brief A struct containing information about a light
+     */
+    struct Light
+    {
+        LIGHT_TYPE TYPE = LIGHT_TYPE::DEFAULT_LIGHT;
+
+        Math::Vec3 DIRECTION = Math::Vec3(0.0f);
+
+        float ATTENUATION_CONSTANT = 1.0f;
+        float ATTENUATION_LINEAR = 0.045f;
+        float ATTENUATION_QUADRATIC = 0.0075f;
+
+        float ATTENUATION_CUTOFF = Math::Cos(Math::DegToRad(7.5f));
+        float ATTENUATION_OUTER_CUTOFF = Math::Cos(Math::DegToRad(12.5f));
+    };
+
     /**
      * \brief The various properties of a material.
      */
@@ -32,10 +57,15 @@ namespace Vakol::Rendering::Assets
          */
         Math::Vec4 emissive_color = Math::Vec4(1.0f);
 
-        Math::Vec3 light_position = Math::Vec3(5.0f);
-        Math::Vec3 light_direction = Math::Vec3(0.0f);
-
+        /**
+         * \brief the offset of uv coordinates
+         */
         Math::Vec2 uv_offset = Math::Vec2(0.0f);
+
+        /**
+         * \brief the light component
+         */
+        Light light;
 
         float shininess = 32.0f; // the specular exponent (used for Phong shading)
 
@@ -43,6 +73,8 @@ namespace Vakol::Rendering::Assets
 
         bool use_lighting = true;
         bool use_textures = true;
+
+        bool use_colors_and_textures = false;
     };
 
     struct Material

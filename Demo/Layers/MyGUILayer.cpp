@@ -244,18 +244,6 @@ void MyGUILayer::OnUpdate()
                                 if (!mesh.name.empty())
                                     ImGui::Text("Mesh Name: %s", mesh.name.c_str());
 
-                                ImGui::SeparatorText("AABB Bounds");
-
-                                ImGui::Text("Min: x: %f, y: %f, z: %f", mesh.bounds.min.x, mesh.bounds.min.y,
-                                            mesh.bounds.min.z);
-                                ImGui::Text("Max: x: %f, y: %f, z: %f", mesh.bounds.max.x, mesh.bounds.max.y,
-                                            mesh.bounds.max.z);
-                                ImGui::Text("Half Extents: x: %f, y: %f, z: %f", mesh.bounds.halfExtents.x,
-                                            mesh.bounds.halfExtents.y, mesh.bounds.halfExtents.z);
-
-                                ImGui::Separator();
-                                ImGui::Spacing();
-
                                 ImGui::Checkbox(("Use Lighting##" + material.ID).c_str(),
                                                 &material.properties.use_lighting);
 
@@ -263,10 +251,115 @@ void MyGUILayer::OnUpdate()
                                 {
                                     ImGui::SeparatorText("Lighting");
 
-                                    ImGui::DragFloat3(("Light Position##" + material.ID).c_str(),
-                                                      &material.properties.light_position.x, 0.1f);
-                                    ImGui::DragFloat3(("Light Direction##" + material.ID).c_str(),
-                                                      &material.properties.light_direction.x, 0.1f);
+                                    const char* preview_label;
+
+                                    switch (material.properties.light.TYPE)
+                                    {
+                                    case Vakol::Rendering::Assets::LIGHT_TYPE::DEFAULT_LIGHT:
+                                        preview_label = "Default Light";
+                                        break;
+                                    case Vakol::Rendering::Assets::LIGHT_TYPE::DIRECTIONAL_LIGHT:
+                                        preview_label = "Directional Light";
+                                        break;
+                                    case Vakol::Rendering::Assets::LIGHT_TYPE::SPOT_LIGHT:
+                                        preview_label = "Spot Light";
+                                        break;
+                                    case Vakol::Rendering::Assets::LIGHT_TYPE::POINT_LIGHT:
+                                        preview_label = "Point Light";
+                                        break;
+                                    }
+
+                                    if (ImGui::BeginCombo(("Light Type##" + material.ID).c_str(), preview_label))
+                                    {
+                                        const bool is_selected = material.properties.light.TYPE ==
+                                                                 Vakol::Rendering::Assets::LIGHT_TYPE::DEFAULT_LIGHT;
+
+                                        if (ImGui::Selectable(("Default Light##" + material.ID).c_str(),
+                                                              is_selected))
+                                        {
+                                            material.properties.light.TYPE =
+                                                Vakol::Rendering::Assets::LIGHT_TYPE::DEFAULT_LIGHT;
+                                        }
+                                        if (is_selected)
+                                            ImGui::SetItemDefaultFocus();
+
+                                        if (ImGui::Selectable(("Directional Light##" + material.ID).c_str(),
+                                                              is_selected))
+                                        {
+                                            material.properties.light.TYPE =
+                                                Vakol::Rendering::Assets::LIGHT_TYPE::DIRECTIONAL_LIGHT;
+                                        }
+                                        if (is_selected)
+                                            ImGui::SetItemDefaultFocus();
+
+                                        if (ImGui::Selectable(("Point Light##" + material.ID).c_str(), is_selected))
+                                        {
+                                            material.properties.light.TYPE =
+                                                Vakol::Rendering::Assets::LIGHT_TYPE::POINT_LIGHT;
+                                        }
+                                        if (is_selected)
+                                            ImGui::SetItemDefaultFocus();
+
+                                        if (ImGui::Selectable(("Spot Light##" + material.ID).c_str(), is_selected))
+                                        {
+                                            material.properties.light.TYPE =
+                                                Vakol::Rendering::Assets::LIGHT_TYPE::SPOT_LIGHT;
+                                        }
+                                        if (is_selected)
+                                            ImGui::SetItemDefaultFocus();
+
+                                        ImGui::EndCombo();
+                                    }
+
+                                    if (material.properties.light.TYPE ==
+                                        Vakol::Rendering::Assets::LIGHT_TYPE::DEFAULT_LIGHT)
+                                    {
+                                        ImGui::DragFloat3(("Light Position##Default" + material.ID).c_str(),
+                                                          &material.properties.light.DIRECTION.x, 0.1f);
+                                    }
+
+                                    if (material.properties.light.TYPE ==
+                                        Vakol::Rendering::Assets::LIGHT_TYPE::DIRECTIONAL_LIGHT)
+                                    {
+                                        ImGui::DragFloat3(("Light Direction##" + material.ID).c_str(),
+                                                          &material.properties.light.DIRECTION.x, 0.1f);
+                                    }
+                                    else if (material.properties.light.TYPE ==
+                                             Vakol::Rendering::Assets::LIGHT_TYPE::POINT_LIGHT)
+                                    {
+                                        ImGui::DragFloat3(("Light Position##Point" + material.ID).c_str(),
+                                                          &material.properties.light.DIRECTION.x, 0.1f);
+
+                                        ImGui::DragFloat("Light Attenuation Linear##Point",
+                                                         &material.properties.light.ATTENUATION_LINEAR, 0.01f, 0.0f,
+                                                         1.0f);
+
+                                        ImGui::DragFloat("Light Attenuation Quadratic##Point",
+                                                         &material.properties.light.ATTENUATION_QUADRATIC, 0.01f, 0.0f,
+                                                         2.0f);
+                                    }
+                                    else if (material.properties.light.TYPE ==
+                                             Vakol::Rendering::Assets::LIGHT_TYPE::SPOT_LIGHT)
+                                    {
+                                        ImGui::DragFloat3(("Light Position##Spot" + material.ID).c_str(),
+                                                          &material.properties.light.DIRECTION.x, 0.1f);
+
+                                        ImGui::DragFloat("Light Attenuation Linear##Spot",
+                                                         &material.properties.light.ATTENUATION_LINEAR, 0.001f, 0.0f,
+                                                         1.0f);
+
+                                        ImGui::DragFloat("Light Attenuation Quadratic##Spot",
+                                                         &material.properties.light.ATTENUATION_QUADRATIC, 0.001f, 0.0f,
+                                                         2.0f);
+
+                                        ImGui::DragFloat("Light Attenuation Cutoff##Spot",
+                                                         &material.properties.light.ATTENUATION_CUTOFF, 0.1f, 0.0f,
+                                                         180.0f);
+
+                                        ImGui::DragFloat("Light Attenuation Outer Cutoff##Spot",
+                                                         &material.properties.light.ATTENUATION_OUTER_CUTOFF, 0.1f,
+                                                         0.0f, 180.0f);
+                                    }
                                 }
 
                                 ImGui::Spacing();
@@ -274,15 +367,25 @@ void MyGUILayer::OnUpdate()
 
                                 ImGui::SeparatorText("Material");
 
-                                ImGui::Checkbox(("Use Textures##" + material.ID).c_str(),
+                                if (!material.properties.use_colors_and_textures)
+                                {
+                                    ImGui::Checkbox(("Use Textures##" + material.ID).c_str(),
                                                 &material.properties.use_textures);
+                                }
+
+                                ImGui::Checkbox(("Use Colors and Textures##" + material.ID).c_str(),
+                                                &material.properties.use_colors_and_textures);
 
                                 ImGui::Separator();
                                 ImGui::Spacing();
 
-                                if (material.properties.use_textures)
-                                    ImGui::DragFloat2(("UV Offset##" + material.ID).c_str(), &material.properties.uv_offset.x, 0.05f);
-                                else
+                                if (material.properties.use_textures || material.properties.use_colors_and_textures)
+                                {
+                                    ImGui::DragFloat2(("UV Offset##" + material.ID).c_str(),
+                                                      &material.properties.uv_offset.x, 0.05f);
+                                }
+
+                                if (material.properties.use_colors_and_textures || !material.properties.use_textures)
                                 {
                                     ImGui::ColorEdit4(("Diffuse Color##" + material.ID).c_str(),
                                                       &material.properties.diffuse_color.x);
