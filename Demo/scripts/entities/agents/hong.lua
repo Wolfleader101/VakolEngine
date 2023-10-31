@@ -73,7 +73,7 @@ function tick()
         end
     end
     -- target = scene:get_camera():get_pos();
-    nav.set_state("wander");
+    --nav.set_state("wander");
 
 
     -- TODO might only want to check nearby bins every 10 ticks or so???
@@ -95,7 +95,9 @@ function tick()
                 -- TODO make hong angry
                 local emotions = entity:get_script("emotions");
                 local angerVal = emotions.get_emotion(emotions.ANGER);
+
                 emotions.set_emotion(emotions.ANGER, angerVal + 0.8);
+                emotions.set_emotion(emotions.ANTICIPATION, 0.8);
 
                 local prevDistance = 1000000;
                 for i = 1, #scene.globals.emotional_entities do --find closest agent to beat;
