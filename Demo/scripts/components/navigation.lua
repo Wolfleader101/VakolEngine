@@ -18,6 +18,9 @@ local forward         = Vector3.new();
 local wander_timer    = 0.0;
 local wander_duration = 10.0;
 
+local chase_timer     = 0.0;
+local chase_update_interval = 2.0;
+
 local hitting_wall    = false;
 
 function set_target(new_target, lookAway)
@@ -84,8 +87,12 @@ function chase()
     end
     can_move = true;
 
-    -- FORCE target every time chase is called
-    -- set_target(target, false);
+    chase_timer = chase_timer + Time.tick_rate;
+
+    if (chase_timer >= chase_update_interval) then
+        set_target(target, false);
+        chase_timer = 0.0; -- reset the timer
+    end
 end
 
 function wander()
