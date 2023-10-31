@@ -112,7 +112,7 @@ local function iterate()
         local sum = 0;
 
         for j = 1, 8 do
-            sum = sum + emotion_concepts[j] * weights[j][i] -- accidentally made transpose so reverse indexing gg lmao
+            sum = sum + emotion_concepts[j] * weights[j][i] -- accidentally made transpose so reverse indexing
         end
 
         new_concepts[i] = (emotion_concepts[i] + sum) * (1 - decays[i]);
@@ -141,8 +141,4 @@ function tick()
     else
         slow = slow + 1;
     end
-end
-
-function phys_update()
-
 end

@@ -1,5 +1,6 @@
 local nav = nil;
 local emotions = nil;
+local atk = nil;
 
 function init()
     entity:add_model("assets/models/ai/hong/hong.fbx", 1);
@@ -19,9 +20,10 @@ function init()
     entity:add_box_collider(Vector3.new(0.9, 1.75, 0.3));
 
     entity:add_script("navigation", "components/navigation.lua");
-
-
     nav = entity:get_script("navigation");
+
+    entity:add_script("attack", "components/attack.lua");
+    atk = entity:get_script("attack");
 
     local target = scene:get_camera():get_pos();
 
@@ -55,9 +57,23 @@ local function get_nearby_bins(origin_entity, trigger_distance)
     return nearby_bins
 end
 
+local entityToAttack = nil;
+
+local ATTACK_DIST <const> = 3;
+
 function tick()
+    if (entityToAttack ~= nil) then
+        local atkTrans = entityToAttack:get_transform();
+        nav.set_target(atkTrans.pos, false)
+        if (distance(entity:get_transform().pos, entityToAttack:get_transform().pos) < ATTACK_DIST) then
+            atk.attack(entityToAttack);
+            entityToAttack = nil;
+        else
+            return
+        end
+    end
     -- target = scene:get_camera():get_pos();
-    nav.set_state("wander");
+    --nav.set_state("wander");
 
 
     -- TODO might only want to check nearby bins every 10 ticks or so???
@@ -79,7 +95,24 @@ function tick()
                 -- TODO make hong angry
                 local emotions = entity:get_script("emotions");
                 local angerVal = emotions.get_emotion(emotions.ANGER);
+
                 emotions.set_emotion(emotions.ANGER, angerVal + 0.8);
+                emotions.set_emotion(emotions.ANTICIPATION, 0.8);
+
+                local prevDistance = 1000000;
+                for i = 1, #scene.globals.emotional_entities do --find closest agent to beat;
+                    tempEnt = scene.globals.emotional_entities[i];
+                    local dist = distance(entity:get_transform().pos, tempEnt:get_transform().pos);
+
+                    if (not (tempEnt == entity) and dist < prevDistance) then
+                        entityToAttack = tempEnt; --above tick
+                        prevDistance = dist;
+                    end
+                end
+
+                nav.set_target(entityToAttack:get_transform().pos, false);
+                nav.set_state("chase");
+                print(entity:get_tag() .. " has spotted " .. entityToAttack:get_tag() .. " as his victim");
             end
 
             -- TODO if it has gone down, then he has seen someone take something out of the bin and get happier??
