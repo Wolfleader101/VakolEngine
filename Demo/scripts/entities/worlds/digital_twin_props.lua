@@ -59,19 +59,19 @@ function init()
 
 	local applePositions = 
 	{
-		Vector3.new(18.8, 1.0, 22.9), Vector3.new(-11.3, 1.0, -32.9), Vector3.new(15.5, 1.0, -12.8),
-		Vector3.new(-21.4, 1.0, 42.4), Vector3.new(-24.3, 1.0, 98.4), Vector3.new(2.0, 1.0, 3.0)
+		Vector3.new(18.8, 2.0, 22.9), Vector3.new(-11.3, 2.0, -32.9), Vector3.new(15.5, 1.0, -12.8),
+		Vector3.new(-21.4, 2.0, 42.4), Vector3.new(-24.3, 2.0, 98.4), Vector3.new(2.0, 1.0, 3.0)
 	}
 
 	local drinkCupPositions = 
 	{
-		Vector3.new(12.5, 1.0, 4.0), Vector3.new(0.9, 1.0, 28.9), Vector3.new(4.4, 1.0, -13.3),
-		Vector3.new(-26.0, 1.0, 56.7)
+		Vector3.new(12.5, 2.0, 4.0), Vector3.new(0.9, 2.0, 28.9), Vector3.new(4.4, 2.0, -13.3),
+		Vector3.new(-26.0, 2.0, 56.7)
 	}
 
 	local beerCanPositions = 
 	{
-		Vector3.new(9.2, 1.0, 12.2), Vector3.new(-13.0, 1.0, 2.0)
+		Vector3.new(9.2, 2.0, 12.2), Vector3.new(-13.0, 2.0, 2.0)
 	}
 
 	--ENTITY CREATION & SETUP

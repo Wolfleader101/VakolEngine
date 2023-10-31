@@ -84,7 +84,14 @@ local function get_nearby_emotional_agents(origin_entity, trigger_distance)
             if (distanceToEntity < trigger_distance) then
                 nav.TARGET = entityPos;
 
-                print("target spotted: " .. emotional_agents[i]:get_tag());
+                local agentEmotionalState = emotional_agents[i]:get_script("components/emotions.lua");
+
+                if (agentEmotionalState ~= nil) then
+                    if (agentEmotionalState:get_emotion(emotions.JOY)) then
+                        local angerValue = emotions.get_emotion(emotions.ANGER);
+                        emotions.set_emotion(emotions.ANGER, angerValue + 0.6);
+                    end
+                end
 
                 break;
             end
@@ -103,7 +110,7 @@ function tick()
             held_item:get_script("interactable").interact(entity); -- throw the entity
 
             local joyVal = emotions.get_emotion(emotions.JOY);
-            emotions.set_emotion(emotions.JOY, joyVal + 1.0);
+            --emotions.set_emotion(emotions.JOY, joyVal + 0.6);
             held_item = nil;
             held_time = 0;
         end
@@ -117,18 +124,13 @@ function tick()
         local prev_bin_contents = prev_nearby_bins[name];
         local contents = bin:get_script("bin_content");
 
-        -- if prev bin is not nil, meaning it was a bin he's previously checked nearby, see if the count has gone up
-        -- memory should only store whats near him, as that can be percived that he is watching someone put it in the bin
         if (prev_bin_contents ~= nil) then
-            -- print("Hong has seen this bin before")
-            -- print_err(prev_bin_contents .. " " .. contents.COUNT)
 
             -- if the count has gone up, then he has seen someone put something in the bin and get angry
             if (prev_bin_contents < contents.COUNT) then
                 print("Kiki saw someone put something in the bin")
-                -- TODO make hong angry
                 local angerVal = emotions.get_emotion(emotions.ANGER);
-                emotions.set_emotion(emotions.ANGER, angerVal + 1.2);
+                emotions.set_emotion(emotions.ANGER, angerVal + 0.9);
             end
 
             -- TODO if it has gone down, then he has seen someone take something out of the bin and get happier??

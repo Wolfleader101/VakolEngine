@@ -92,7 +92,7 @@ end
 function chase()
     can_move = true;
 
-    smooth_look_at(TARGET, false);
+    look_at(TARGET);
 end
 
 function wander()
