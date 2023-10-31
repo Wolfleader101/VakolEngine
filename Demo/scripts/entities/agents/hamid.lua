@@ -23,6 +23,10 @@ local interactDistance = 1000.0;
 local minInteractDistance = 5.0;
 local avoidanceDistance = 3.0;
 
+local tickCounter = 0;
+local tickWaitAmount = 5;
+local tickCounterEngage = false;
+
 function init()
     entity:add_model("assets/models/ai/hamid/hamid.fbx", 0.015);
 
@@ -49,9 +53,9 @@ function init()
 
     navigation.MAX_DISTANCE = 0.01;
 
-    navigation.MOVE_SPEED = 0.025;
+    navigation.MOVE_SPEED = 0.035;
     navigation.ROTATE_SPEED = 2.5;
-    navigation.BRAKE_FORCE = 1.0;
+    navigation.BRAKE_FORCE = 1.5;
 
     navigation.set_state("wander");
 end
@@ -77,12 +81,6 @@ function find_closest_bin()
 end
 
 function rubbish_behaviour()
-    if (travellingToObject == true) then
-        print("Current Target: " .. currentTarget:get_tag())
-
-        print("Target Position: " .. currentTarget:get_transform().pos.x .. ", " .. currentTarget:get_transform().pos.y .. ", " .. currentTarget:get_transform().pos.z);
-    end
-
     -- Checks to see if the rubbish entity has been set
     if (next(scene.globals.apples) ~= nil) then
         local currentDistance = 0.0;
@@ -159,6 +157,8 @@ function on_contact(other_ent)
 
                 print("Hamid has grabbed '" .. other_ent:get_tag() .. "'");
                 print("Hamid is heading to '" .. currentTarget:get_tag() .. "'");
+
+                tickCounterEngage = true;
             end
 
             if (affordanceComp.AFFORDANCES.RECYCLING == 1.0) then
@@ -169,7 +169,7 @@ function on_contact(other_ent)
                 heldRubbish.item = other_ent;
                 heldRubbish.type = type;
 
-                interactableComp.interact(entity);
+                interactableComp.interact(other_ent);
             end
                 
         end
@@ -177,43 +177,60 @@ function on_contact(other_ent)
 end
 
 function tick()
-    -- Check if the AI is wandering around
-    if (wandering == true) then
-        navigation.set_state("wander");
+    if (tickCounterEngage == false) then
+        -- Check if the AI is wandering around
+        if (wandering == true) then
+            navigation.set_state("wander");
 
-        -- Check if the AI has emotions
-        if (emotions ~= nil) then
-            -- Check if the fear of the AI is above a certian amount before performing an action
-            if (emotions.get_emotion(emotions.FEAR) ~= nil and emotions.get_emotion(emotions.FEAR) > 0.1) then
-                -- AVOID AI LOGIC GOES HERE
-                for i, aiEntity in pairs(scene.globals.emotional_entities) do
-                    -- Make sure the AI is not itself
-                    if (aiEntity ~= entity) then
-                        local distanceToEntity = distance(entity:get_transform().pos, aiEntity:get_transform().pos);  -- Assuming you have a distance function
+            -- Check if the AI has emotions
+            if (emotions ~= nil) then
+                -- Check if the fear of the AI is above a certian amount before performing an action
+                if (emotions.get_emotion(emotions.FEAR) ~= nil and emotions.get_emotion(emotions.FEAR) > 0.1) then
+                    -- AVOID AI LOGIC GOES HERE
+                    for i, aiEntity in pairs(scene.globals.emotional_entities) do
+                        -- Make sure the AI is not itself
+                        if (aiEntity ~= entity) then
+                            local distanceToEntity = distance(entity:get_transform().pos, aiEntity:get_transform().pos);  -- Assuming you have a distance function
 
-                        if (distanceToEntity < avoidanceDistance) then
-                            -- Logic to avoid the AI entity goes here
-                            -- For example, updating the navigation.DESTINATION to a location away from aiEntity
+                            if (distanceToEntity < avoidanceDistance) then
+                                -- Logic to avoid the AI entity goes here
+                                -- For example, updating the navigation.DESTINATION to a location away from aiEntity
+                            end
                         end
                     end
                 end
             end
         end
-    end
 
-    -- Check if the AI has emotions
-    if (emotions ~= nil) then
-        -- Check if the fear of the AI is below a certian amount before performing an action
-        if (emotions.get_emotion(emotions.FEAR) ~= nil and emotions.get_emotion(emotions.FEAR) < 0.1) then
-            -- AI will be wandering before he hits the rubbish_behaviour, so grab the current fear value and set it
-            if (wandering == true) then
-                currentFear = emotions.get_emotion(emotions.FEAR);
+        -- Check if the AI has emotions
+        if (emotions ~= nil) then
+            -- Check if the fear of the AI is below a certian amount before performing an action
+            if (emotions.get_emotion(emotions.FEAR) ~= nil and emotions.get_emotion(emotions.FEAR) < 0.1) then
+                -- AI will be wandering before he hits the rubbish_behaviour, so grab the current fear value and set it
+                if (wandering == true) then
+                    currentFear = emotions.get_emotion(emotions.FEAR);
+                end
+
+                -- This will make sure that while he is doing his rubbish behaviour he will stay at his current fear level
+                emotions.set_emotion(emotions.FEAR, currentFear);
+
+                rubbish_behaviour();
             end
-
-            -- This will make sure that while he is doing his rubbish behaviour he will stay at his current fear level
-            emotions.set_emotion(emotions.FEAR, currentFear);
-
-            rubbish_behaviour();
         end
+    else
+        tickCounter = tickCounter + 1;
+
+        rb.rot_lock = BVector3.new(true, true, true);
+        rb.angularVelocity = Vector3.new(0.0, 0.0, 0.0);
+
+        print("Tick Counter: " .. tickCounter);
+
+		if (tickCounter >= tickWaitAmount) then
+			tickCounter = 0;
+
+			tickCounterEngage = false;
+
+            rb.rot_lock = BVector3.new(true, false, true);
+		end
     end
 end
