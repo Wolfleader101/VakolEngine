@@ -7,19 +7,17 @@ local target = nil;
 
 local wandering = true;
 local travellingToObject = false;
-
-local rubbishBins = scene.globals.rubbishBins;
-local recyclingBins = scene.globals.recyclingBins;
-local rubbish = {};
+local holdingRubbish = false;
 
 local held_rubbish = {
     item = nil,
     type = ""
 }
 
-local yDifference = 0.0;
+local currentBin = nil;
 
 local entityDistance = nil;
+local yDifference = nil;
 
 local currentFear = 0.0;
 
@@ -66,7 +64,7 @@ function find_closest_bin()
     local shortestDistance = math.huge; -- Initially set to a very high value
 
     -- Loop through all the rubbish bins
-    for i, bin in pairs(rubbishBins) do
+    for i, bin in pairs(scene.globals.rubbishBins) do
         -- Get the distance between the AI and the current bin
         local distance = distance(entity:get_transform().pos, bin:get_transform().pos);
 
@@ -82,36 +80,42 @@ function find_closest_bin()
 end
 
 function rubbish_behaviour()
-    rubbish = {};  -- Reset the rubbish table in case some are removed
-
-    -- Populate the rubbish table with all the rubbish entities
-    for i, v in ipairs(scene.globals.apples) do
-        rubbish[#rubbish + 1] = v;
-    end
-
     -- Checks to see if the rubbish entity has been set
-    if (next(rubbish) ~= nil) then
+    if (next(scene.globals.apples) ~= nil) then
+        entityDistance = math.huge;
+        yDifference = math.huge;
+
+        local currentYDifference = 0.0;
+        local currentDistance = 0.0;
+
         -- Checking to see if the AI isn't already travelling to the entity
         if (travellingToObject == false) then
-            for key, value in pairs(rubbish) do
-                if ((value:get_script("affordance").AFFORDANCES.HOLDING == 1.0) and (value:get_script("affordance").AFFORDANCES.TRASHING == 1.0)) then
+            for key, value in pairs(scene.globals.apples) do
                     -- Getting the distance between the AI and the entity
                     yDifference = math.abs(entity:get_transform().pos.y - value:get_transform().pos.y);
 
-                    entityDistance = distance(entity:get_transform().pos, value:get_transform().pos);
-                    -- Checking to see that the distance between the AI and the entity is within the interact distance
-                    if ((entityDistance < interactDistance) and yDifference < 10.0) then
-                        navigation.set_state("chase");
+                    currentDistance = distance(entity:get_transform().pos, value:get_transform().pos);
 
-                        navigation.TARGET = value:get_transform().pos;
+                    if (currentDistance < entityDistance) then
+                        entityDistance = currentDistance;
+
+                        yDifference = currentYDifference;
 
                         currentRubbish = value;
-
-                        wandering = false;
-
-                        travellingToObject = true;
                     end
-                end
+            end
+
+            -- Checking to see that the distance between the AI and the entity is within the interact distance
+            if ((entityDistance < interactDistance) and yDifference < 5.0) then
+                navigation.set_state("chase");
+
+                navigation.TARGET = currentRubbish:get_transform().pos;
+
+                wandering = false;
+
+                travellingToObject = true;
+
+                print("Hamid is heading to '" .. currentRubbish:get_tag() .. "'");
             end
         end
 
@@ -121,29 +125,23 @@ function rubbish_behaviour()
 
             -- Checking to see if the AI is close enough to the object to grab it (Done in the on_contact function)
             if (entityDistance < minInteractDistance) then
-                holdingRubbish = true;
+                currentBin = find_closest_bin();
 
-                closestBin = find_closest_bin();
+                navigation.TARGET = currentBin:get_transform().pos;  -- Set destination to closest bin
 
-                print(closestBin:get_tag());
-
-                if (closestBin ~= nil) then
-                    navigation.TARGET = closestBin:get_transform().pos;  -- Set destination to closest bin
-                end
+                print("Hamid is heading to '" .. currentBin:get_tag() .. "'");
             end
         end
 
         -- Checking to see if the AI is already travelling to the entity and is holding the rubbish
         if (travellingToObject == true and holdingRubbish == true) then
-            for key, value in pairs(rubbishBins) do
+            for key, value in pairs(scene.globals.rubbishBins) do
                 -- Getting the distance between the AI and the entity
                 yDifference = math.abs(entity:get_transform().pos.y - value:get_transform().pos.y);
 
                 entityDistance = distance(entity:get_transform().pos, value:get_transform().pos);
 
-                if ((entityDistance < minInteractDistance) and yDifference < 10.0) then
-                    scene:destroy_entity(currentRubbish);
-
+                if ((entityDistance < minInteractDistance) and yDifference < 5.0) then
                     currentRubbish = nil;
 
                     emotions.add_emotion_value(emotions.JOY, 0.2);
@@ -174,12 +172,18 @@ function on_contact(other_ent)
         
         if(affordanceComp.AFFORDANCES.HOLDING == 1.0) then
             local type = nil;
-            if (entityAffordance.AFFORDANCES.TRASHING == 1.0) then
+            if (affordanceComp.AFFORDANCES.TRASHING == 1.0) then
                 type = "trash";
+
+                holdingRubbish = true;
+
+                print("Hamid has grabbed '" .. other_ent:get_tag() .. "'");
             end
 
-            if (entityAffordance.AFFORDANCES.RECYCLING == 1.0) then
+            if (affordanceComp.AFFORDANCES.RECYCLING == 1.0) then
                 type = "recycling";
+
+                holdingRubbish = true;
             end
             
             if (type ~= nil) then
