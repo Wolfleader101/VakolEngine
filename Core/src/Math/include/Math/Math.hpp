@@ -164,6 +164,9 @@ namespace Vakol::Math
      */
     float Angle(const Vec2& a, const Vec2& b);
 
+    float WrapAngle(float angle);
+    Vec3 WrapEulerAngles(Vec3 euler);
+
     /**
      * @brief Calculates the angle between two 3D vectors in radians.
      *

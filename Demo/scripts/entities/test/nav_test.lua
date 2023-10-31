@@ -15,7 +15,7 @@ function init()
 
     target = scene:get_camera():get_pos();
 
-    nav.TARGET = target;
+    nav.set_target(target, false);
     nav.MAX_DISTANCE = 0.8;
 
     nav.MOVE_SPEED = 0.025;
@@ -28,5 +28,5 @@ end
 function tick()
     target = scene:get_camera():get_pos();
     nav = entity:get_script("navigation");
-    nav.TARGET = target;
+    nav.set_target(target, false);
 end
