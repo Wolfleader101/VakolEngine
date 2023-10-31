@@ -169,7 +169,7 @@ function on_contact(other_ent)
                 heldRubbish.item = other_ent;
                 heldRubbish.type = type;
 
-                interactableComp.interact(other_ent);
+                interactableComp.interact(entity);
             end
                 
         end

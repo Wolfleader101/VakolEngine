@@ -19,7 +19,7 @@ local wander_timer    = 0.0;
 local wander_duration = 10.0;
 
 local chase_timer     = 0.0;
-local chase_update_interval = 2.0;
+local chase_update_interval = 0.2;
 
 local hitting_wall    = false;
 
