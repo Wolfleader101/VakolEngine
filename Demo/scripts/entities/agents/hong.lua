@@ -1,5 +1,6 @@
 local nav = nil;
 local emotions = nil;
+local atk = nil;
 
 function init()
     entity:add_model("assets/models/ai/hong/hong.fbx", 1);
@@ -19,9 +20,10 @@ function init()
     entity:add_box_collider(Vector3.new(0.9, 1.75, 0.3));
 
     entity:add_script("navigation", "components/navigation.lua");
-
-
     nav = entity:get_script("navigation");
+
+    entity:add_script("attack", "components/attack.lua");
+    atk = entity:get_script("attack");
 
     local target = scene:get_camera():get_pos();
 
@@ -55,7 +57,19 @@ local function get_nearby_bins(origin_entity, trigger_distance)
     return nearby_bins
 end
 
+local entityToAttack = nil;
+
+local ATTACK_DIST <const> = 0.5;
+
 function tick()
+    if (entityToAttack ~= nil) then
+        if (distance(entity:get_transform().pos, entityToAttack:get_transform().pos) < ATTACK_DIST) then
+            atk.attack(angryEntity);
+            entityToAttack = nil;
+        else
+            return
+        end
+    end
     -- target = scene:get_camera():get_pos();
     nav.set_state("wander");
 
@@ -80,6 +94,21 @@ function tick()
                 local emotions = entity:get_script("emotions");
                 local angerVal = emotions.get_emotion(emotions.ANGER);
                 emotions.set_emotion(emotions.ANGER, angerVal + 0.8);
+
+                entityToAttack = scene.globals.emotional_entities[1];
+                local prevDistance = 1000000;
+                for i = 2, #scene.globals.emotional_entities do --find closest agent to beat;
+                    tempEnt = scene.globals.emotional_entities[i];
+                    local dist = distance(entity:get_transform().pos, tempEnt:get_transform().pos);
+
+                    if (not (tempEnt == entity) and dist < prevDistance) then
+                        entityToAttack = tempEnt;
+                        prevDistance = dist;
+                    end
+                end
+
+                nav.set_target(entityToAttack:get_transform().pos, false);
+                nav.set_state("chase");
             end
 
             -- TODO if it has gone down, then he has seen someone take something out of the bin and get happier??
