@@ -107,7 +107,7 @@ end
 
 local search_time = 0;
 
-local function get_nearby_interactables()
+local function get_nearby_interactables(trigger_distance)
    
     search_time = search_time + 1;
 
@@ -153,7 +153,7 @@ function tick()
     -- TODO might only want to check nearby bins every 10 ticks or so???
     local nearby_bins = get_nearby_bins(entity, 100);
     get_nearby_emotional_agents(entity, 100);
-    get_nearby_interactables();
+    get_nearby_interactables(50);
 
     for name, bin in pairs(nearby_bins) do
         local prev_bin_contents = prev_nearby_bins[name];
