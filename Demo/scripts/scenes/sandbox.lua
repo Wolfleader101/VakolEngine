@@ -378,7 +378,7 @@ function update()
     end
 
     if (wallRb ~= nil and Input:get_key_down(KEYS["KEY_2"])) then
-        wallRb:apply_angular_impulse(Vector3.new(0.0, 0.0, 5.0), Vector3.new(0.0, 1.0, 0.0));
+        wallRb:apply_angular_impulse(Vector3.new(0.0, 0.0, 5.0), Vector3.new(0.0, 0.0, 0.0));
     end
 
     if (Input:get_key_down(KEYS["KEY_P"])) then

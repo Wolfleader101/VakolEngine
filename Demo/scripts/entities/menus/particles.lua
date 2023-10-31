@@ -44,6 +44,7 @@ function shoot_particle(pos, forward)
 
     randVec = Vector3.new(randomFloat(0, 4), randomFloat(0, 4), randomFloat(0, 4));
     rigids[index]:apply_impulse(forward + randVec);
+    rigids[index]:add_torque(randVec * Vector3.new(math.random(-2, 2), math.random(-2, 1), math.random(-2, 1)))
 end
 
 function clean()
