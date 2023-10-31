@@ -128,6 +128,7 @@ local function normalize()
 end
 
 local function L2Normalize()
+    
     local L2Norm = 0;
 
     for i = 1, #emotion_concepts do

@@ -2,6 +2,7 @@
 
 out vec4 FragColor;
 
+const uint DEFAULT_LIGHT = 0;
 const uint DIRECTIONAL_LIGHT = 1;
 const uint POINT_LIGHT = 2;
 const uint SPOT_LIGHT = 3;
@@ -28,6 +29,8 @@ struct Material
     bool use_lighting;
     bool use_textures;
 
+    bool use_colors_and_textures;
+
     sampler2D diffuse_map;
 	sampler2D specular_map;
 	sampler2D ambient_map;
@@ -38,22 +41,20 @@ struct Material
 
 struct Light
 {
-    uint type;
+    uint TYPE;
 
-    float LIGHT_ATTENUATION_CONSTANT;
-    float LIGHT_ATTENUATION_LINEAR;
-    float LIGHT_ATTENUATION_QUADRATIC;
+    vec3 DIRECTION;
 
-    float LIGHT_ATTENUATION_CUTOFF;
-    float LIGHT_ATTENUATION_OUTER_CUTOFF;
+    float ATTENUATION_CONSTANT;
+    float ATTENUATION_LINEAR;
+    float ATTENUATION_QUADRATIC;
 
-    vec4 direction;
-    vec4 position;
+    float ATTENUATION_CUTOFF;
+    float ATTENUATION_OUTER_CUTOFF;
 };
 
 uniform Material material;
-
-uniform vec3 LIGHT_DIRECTION;
+uniform Light light;
 
 uniform vec2 UV_OFFSET = vec2(0.0);
 
@@ -64,8 +65,14 @@ vec4 BlinnPhong(const vec3 normal, const vec4 color)
 {
     vec4 ambient = AMBIENT_STRENGTH * color;
 
-    vec3 lightDir = normalize(fs_in.TangentLightPos - fs_in.TangentFragPos);
-    float diff = max(dot(lightDir, normal), 0.0);
+    vec3 lightDir = vec3(0.0);
+
+    if (light.TYPE == DIRECTIONAL_LIGHT)
+        lightDir = normalize(-light.DIRECTION);
+    else
+        lightDir = normalize(fs_in.TangentLightPos - fs_in.TangentFragPos);
+
+    float diff = max(dot(normal, lightDir), 0.0);
     vec4 diffuse = diff * color;
 
     vec3 viewDir = normalize(fs_in.TangentViewPos - fs_in.TangentFragPos);
@@ -75,6 +82,28 @@ vec4 BlinnPhong(const vec3 normal, const vec4 color)
     float spec = pow(max(dot(normal, halfwayDir), 0.0), material.shininess);
     vec4 specular = vec4(vec3(SPECULAR_STRENGTH), 1.0) * spec;
 
+    if (light.TYPE == POINT_LIGHT || light.TYPE == SPOT_LIGHT)
+    {
+        float distance = length(fs_in.TangentLightPos - fs_in.TangentFragPos);
+        float attenuation = 1.0 / (light.ATTENUATION_CONSTANT + light.ATTENUATION_LINEAR * distance + light.ATTENUATION_QUADRATIC * (distance * distance));
+
+        if (light.TYPE != SPOT_LIGHT)
+            ambient *= attenuation;
+
+        diffuse *= attenuation;
+        specular *= attenuation;
+    }
+
+    if (light.TYPE == SPOT_LIGHT)
+    {
+        float theta = dot(lightDir, normalize(radians(-light.DIRECTION)));
+        float epsilon = radians(light.ATTENUATION_CUTOFF) - radians(light.ATTENUATION_OUTER_CUTOFF);
+        float intensity = clamp((theta - radians(light.ATTENUATION_OUTER_CUTOFF)) / epsilon, 0.0, 1.0);
+        
+        diffuse *= intensity;
+        specular *= intensity;
+    }
+
     return ambient + diffuse + specular;
 }
 
@@ -82,12 +111,19 @@ void main()
 {
     vec4 color = texture(material.diffuse_map, fs_in.TexCoords + UV_OFFSET);
 
-    if ((color.r >= 0.99 && color.g >= 0.99 && color.b >= 0.99) || !material.use_textures)
+    if (material.use_colors_and_textures && material.opacity > 0.0)
+        color *= material.diffuse_color;
+
+    if ((color.r >= 0.99 && color.g >= 0.99 && color.b >= 0.99) || (!material.use_textures && !material.use_colors_and_textures))
         color = material.diffuse_color;
+
+    // Kiki eye hack
+    if (material.opacity < 1.0)
+        color = texture(material.diffuse_map, fs_in.TexCoords + UV_OFFSET);
 
     vec3 normal = texture(material.normal_map, fs_in.TexCoords).rgb;
 
-    if (normal.r >= 0.99 && normal.g >= 0.99 && normal.b >= 0.99)
+    if ((normal.r >= 0.99 && normal.g >= 0.99 && normal.b >= 0.99) )
         normal = normalize(fs_in.Normal);
     else
         normal = normalize(normal * 2.0 - 1.0); // this normal is now in tangent space in range [-1, 1]
