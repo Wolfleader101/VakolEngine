@@ -12,7 +12,6 @@ local heldRubbish = {
     type = ""
 }
 
-local currentBin = nil;
 local currentTarget = nil;
 
 local entityDistance = math.huge;
@@ -31,6 +30,7 @@ function init()
     rb.mass = 10.0;
     rb.rot_lock = BVector3.new(true, false, true);
     rb.type = BodyType.Dynamic;
+    rb.angularVelocity = Vector3.new(0.0, 0.0, 0.0);
 
     entity:get_transform().pos = Vector3.new(-25, 5, -15);
 
@@ -77,6 +77,12 @@ function find_closest_bin()
 end
 
 function rubbish_behaviour()
+    if (travellingToObject == true) then
+        print("Current Target: " .. currentTarget:get_tag())
+
+        print("Target Position: " .. currentTarget:get_transform().pos.x .. ", " .. currentTarget:get_transform().pos.y .. ", " .. currentTarget:get_transform().pos.z);
+    end
+
     -- Checks to see if the rubbish entity has been set
     if (next(scene.globals.apples) ~= nil) then
         local currentDistance = 0.0;
@@ -93,9 +99,9 @@ function rubbish_behaviour()
                     if ((entityDistance < interactDistance) and yDifference < 10.0) then
                         navigation.set_state("chase");
 
-                        navigation.set_target(value:get_transform().pos, false);
-
                         currentTarget = value;
+
+                        navigation.set_target(currentTarget:get_transform().pos, false);
 
                         wandering = false;
                         travellingToObject = true;
@@ -147,12 +153,15 @@ function on_contact(other_ent)
 
                 holdingRubbish = true;
 
-                currentBin = find_closest_bin();
+                currentTarget = find_closest_bin();
 
-                navigation.set_target(currentBin:get_transform().pos, false);  -- Set destination to closest bin
+                navigation.set_target(currentTarget:get_transform().pos, false);  -- Set destination to closest bin
 
                 print("Hamid has grabbed '" .. other_ent:get_tag() .. "'");
-                print("Hamid is heading to '" .. currentBin:get_tag() .. "'");
+                print("Hamid is heading to '" .. currentTarget:get_tag() .. "'");
+
+                rb.angularVelocity = Vector3.new(0.0, 0.0, 0.0);
+                rb.rot_lock = BVector3.new(true, true, true);
             end
 
             if (affordanceComp.AFFORDANCES.RECYCLING == 1.0) then
