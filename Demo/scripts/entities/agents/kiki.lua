@@ -5,6 +5,7 @@ local body_mesh = nil;
 local eye_mesh = nil;
 
 local emotional_agents = nil;
+local interactable_items = nil;
 
 function random_float(lower, greater)
     return lower + math.random() * (greater - lower);
@@ -43,6 +44,10 @@ function init()
     -- (0.5, 0.5), (0.5, 1.5), (1.5, 0.5), (1.5, 1.5) = dizzy
 
     emotional_agents = scene.globals.emotional_entities;
+    interactable_items = scene.globals.interactables;
+
+    local randIndex = math.random(1, #interactable_items);
+    nav.TARGET = interactable_items[randIndex]:get_transform().pos;
 
     nav.MAX_DISTANCE = 1.0;
  
@@ -54,9 +59,6 @@ function init()
 end
 
 local prev_nearby_bins = {}; -- store {name: rubbishCount}
-
-local held_item = nil;
-local held_time = 0;
 
 local function get_nearby_bins(origin_entity, trigger_distance)
     local origin_pos = origin_entity:get_transform().pos
@@ -82,7 +84,6 @@ local function get_nearby_emotional_agents(origin_entity, trigger_distance)
             local distanceToEntity = distance(entityPos, entity:get_transform().pos)
 
             if (distanceToEntity < trigger_distance) then
-                nav.TARGET = entityPos;
 
                 local agentEmotionalState = emotional_agents[i]:get_script("components/emotions.lua");
 
@@ -98,6 +99,28 @@ local function get_nearby_emotional_agents(origin_entity, trigger_distance)
         end
     end
 end
+
+
+local search_time = 0;
+
+local function get_nearby_interactables()
+   
+    search_time = search_time + 1;
+
+    if (search_time >= 300) then
+        local randomIndex = math.random(1, #interactable_items);
+
+        print('hello');
+
+        nav.TARGET = interactable_items[randomIndex]:get_transform().pos;
+
+        search_time = 0;
+    end
+
+end
+
+local held_item = nil;
+local held_time = 0;
 
 function tick()
     -- if holding an item, increment the held time
@@ -119,6 +142,7 @@ function tick()
     -- TODO might only want to check nearby bins every 10 ticks or so???
     local nearby_bins = get_nearby_bins(entity, 100);
     get_nearby_emotional_agents(entity, 100);
+    get_nearby_interactables();
 
     for name, bin in pairs(nearby_bins) do
         local prev_bin_contents = prev_nearby_bins[name];

@@ -8,6 +8,7 @@ function init()
     scene.globals.apples = {};
     scene.globals.drinkCups = {};
     scene.globals.beerCans = {};
+	scene.globals.interactables = {};
 
 	local soccerBall;
 
@@ -158,4 +159,56 @@ function init()
 	soccerBall = scene:create_entity("Soccer Ball", "entities/objects/soccer_ball.lua");
 
 	soccerBall:get_transform().pos = Vector3.new(0.0, 2.0, 0.0);
+
+	local index_offset = 0;
+
+	for i = 1, #scene.globals.benches do
+		scene.globals.interactables[i] = scene.globals.benches[i];
+	end
+	
+	index_offset = index_offset + #scene.globals.benches;
+
+	for i = 1, #scene.globals.chairs do
+		scene.globals.interactables[i + index_offset] = scene.globals.chairs[i];
+	end
+	
+	index_offset = index_offset + #scene.globals.chairs;
+
+	for i = 1, #scene.globals.tables do
+		scene.globals.interactables[i + index_offset] = scene.globals.rubbishBins[i];
+	end
+
+	index_offset = index_offset + #scene.globals.tables;
+
+	for i = 1, #scene.globals.rubbishBins do
+		scene.globals.interactables[i + index_offset] = scene.globals.rubbishBins[i];
+	end
+
+	index_offset = index_offset + #scene.globals.rubbishBins;
+
+	for i = 1, #scene.globals.recyclingBins do
+		scene.globals.interactables[i + index_offset] = scene.globals.recyclingBins[i];
+	end
+	
+	index_offset = index_offset + #scene.globals.recyclingBins;
+
+	for i = 1, #scene.globals.apples do
+		scene.globals.interactables[i + index_offset] = scene.globals.apples[i];
+	end
+	
+	index_offset = index_offset + #scene.globals.apples;
+
+	for i = 1, #scene.globals.drinkCups do
+		scene.globals.interactables[i + index_offset] = scene.globals.drinkCups[i];
+	end
+	
+	index_offset = index_offset + #scene.globals.drinkCups;
+
+	for i = 1, #scene.globals.beerCans do
+		scene.globals.interactables[i + index_offset] = scene.globals.beerCans[i];
+	end
+	
+	index_offset = index_offset + #scene.globals.beerCans;
+
+	scene.globals.interactables[index_offset + 1] = soccerBall;
 end
