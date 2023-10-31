@@ -123,7 +123,7 @@ function tick()
 
 
     if foundAngryEntity and (nav.get_target() - pos):length() < 3 then
-        print("Shri attacks!");
+        print("Shri attacks " .. angryEntity:get_tag() .. "!");
         atk.attack(angryEntity);
         nav.set_state("idle");
         emotions.set_emotion(emotions.JOY, 0.5);
