@@ -59,12 +59,14 @@ end
 
 local entityToAttack = nil;
 
-local ATTACK_DIST <const> = 0.5;
+local ATTACK_DIST <const> = 3;
 
 function tick()
     if (entityToAttack ~= nil) then
+        local atkTrans = entityToAttack:get_transform();
+        nav.set_target(atkTrans.pos, false)
         if (distance(entity:get_transform().pos, entityToAttack:get_transform().pos) < ATTACK_DIST) then
-            atk.attack(angryEntity);
+            atk.attack(entityToAttack);
             entityToAttack = nil;
         else
             return
@@ -95,20 +97,20 @@ function tick()
                 local angerVal = emotions.get_emotion(emotions.ANGER);
                 emotions.set_emotion(emotions.ANGER, angerVal + 0.8);
 
-                entityToAttack = scene.globals.emotional_entities[1];
                 local prevDistance = 1000000;
-                for i = 2, #scene.globals.emotional_entities do --find closest agent to beat;
+                for i = 1, #scene.globals.emotional_entities do --find closest agent to beat;
                     tempEnt = scene.globals.emotional_entities[i];
                     local dist = distance(entity:get_transform().pos, tempEnt:get_transform().pos);
 
                     if (not (tempEnt == entity) and dist < prevDistance) then
-                        entityToAttack = tempEnt;
+                        entityToAttack = tempEnt; --above tick
                         prevDistance = dist;
                     end
                 end
 
                 nav.set_target(entityToAttack:get_transform().pos, false);
                 nav.set_state("chase");
+                print(entity:get_tag() .. " has spotted " .. entityToAttack:get_tag() .. " as his victim");
             end
 
             -- TODO if it has gone down, then he has seen someone take something out of the bin and get happier??
