@@ -78,7 +78,7 @@ function tick()
         rb.linearVelocity = Vector3.new();
         pissTicks = pissTicks + 1;
         if (pissTicks < pissTimer) then
-            nav.smooth_look_at(piss_lookat[piss_index], false);
+            nav.look_at(piss_lookat[piss_index], false);
             shoot_piss();
         else
             -- Find a new piss spot
