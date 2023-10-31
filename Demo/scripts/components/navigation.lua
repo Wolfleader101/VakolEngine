@@ -146,15 +146,13 @@ function tick()
     forward  = trans.forward;
 
     if(hitting_wall) then
-        -- local inverse_forward = Vector3.new(-hitting_dir.x, -hitting_dir.y, -hitting_dir.z);
         local hitting_dir = entity:get_transform().forward;
-        local rotated_dir =  Vector3.new(-hitting_dir.x, -hitting_dir.y, -hitting_dir.z)-- rotate_vec3(entity:get_transform().forward, 180.0, Vector3.new(0.0, 1.0, 0.0));
-        
-        local impulse = rotated_dir * 1.5;
-        agent:apply_angular_impulse(Vector3.new(1.0, 0.0, 0.0), Vector3.new(0.0, 1.0, 0.0))
-        agent:apply_impulse(impulse);
-        
+        local rotated_dir = Vector3.new(-hitting_dir.x, -hitting_dir.y, -hitting_dir.z)
 
+        rotation.y = wrap_angle(rotation.y + 180.0);
+
+        local impulse = rotated_dir * 1.5;
+        agent:apply_impulse(impulse);
         
         set_target(gen_random_target(), false);
         wander_timer = 0.0;
