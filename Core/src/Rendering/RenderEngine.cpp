@@ -48,7 +48,7 @@ namespace Vakol::Rendering
         RenderAPI::EnableDepth();
         RenderAPI::EnableMultisample();
         RenderAPI::EnableBlending();
-        //RenderAPI::EnableCulling();
+        // RenderAPI::EnableCulling();
 
         RenderAPI::ResizeScreen(0, 0, width, height);
     }

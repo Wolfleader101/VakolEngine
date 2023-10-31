@@ -76,7 +76,8 @@ namespace Vakol
         }
     }
 
-    void ShaderLibrary::SetUInt(const unsigned int shader, const char* name, const unsigned int value, const bool binding)
+    void ShaderLibrary::SetUInt(const unsigned int shader, const char* name, const unsigned int value,
+                                const bool binding)
     {
         if (UniformExists(shader, name))
         {
