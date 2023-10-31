@@ -21,7 +21,7 @@ local yDifference = nil;
 local currentFear = 0.0;
 
 local interactDistance = 1000.0;
-local minInteractDistance = 2.0;
+local minInteractDistance = 5.0;
 local avoidanceDistance = 3.0;
 
 function init()
@@ -29,7 +29,7 @@ function init()
 
     rb = entity:add_rigid();
     rb.mass = 10.0;
-    rb.rot_lock = BVector3.new(true, true, true);
+    rb.rot_lock = BVector3.new(true, false, true);
     rb.type = BodyType.Dynamic;
 
     entity:get_transform().pos = Vector3.new(-25, 5, -15);
@@ -104,20 +104,6 @@ function rubbish_behaviour()
             end
         end
 
-        -- Checking to see if the AI is already travelling to the entity and is not holding the rubbish
-        if (travellingToObject == true and holdingRubbish == false) then
-            entityDistance = distance(entity:get_transform().pos, currentTarget:get_transform().pos);
-
-            -- Checking to see if the AI is close enough to the object to grab it (Done in the on_contact function)
-            if (entityDistance < minInteractDistance) then
-                currentBin = find_closest_bin();
-
-                navigation.set_target(currentBin:get_transform().pos);  -- Set destination to closest bin
-
-                print("Hamid is heading to '" .. currentBin:get_tag() .. "'");
-            end
-        end
-
         -- Checking to see if the AI is already travelling to the entity and is holding the rubbish
         if (travellingToObject == true and holdingRubbish == true) then
             for key, value in pairs(scene.globals.rubbishBins) do
@@ -161,13 +147,16 @@ function on_contact(other_ent)
 
                 holdingRubbish = true;
 
+                currentBin = find_closest_bin();
+
+                navigation.set_target(currentBin:get_transform().pos);  -- Set destination to closest bin
+
                 print("Hamid has grabbed '" .. other_ent:get_tag() .. "'");
+                print("Hamid is heading to '" .. currentBin:get_tag() .. "'");
             end
 
             if (affordanceComp.AFFORDANCES.RECYCLING == 1.0) then
                 type = "recycling";
-
-                holdingRubbish = true;
             end
             
             if (type ~= nil) then
