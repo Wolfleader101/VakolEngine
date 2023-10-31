@@ -159,9 +159,6 @@ function on_contact(other_ent)
 
                 print("Hamid has grabbed '" .. other_ent:get_tag() .. "'");
                 print("Hamid is heading to '" .. currentTarget:get_tag() .. "'");
-
-                rb.angularVelocity = Vector3.new(0.0, 0.0, 0.0);
-                rb.rot_lock = BVector3.new(true, true, true);
             end
 
             if (affordanceComp.AFFORDANCES.RECYCLING == 1.0) then
