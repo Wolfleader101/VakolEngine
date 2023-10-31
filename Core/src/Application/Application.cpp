@@ -253,7 +253,7 @@ namespace Vakol
             if (IsSystemActive(SystemFlag::Rendering))
             {
                 activeScene.GetEntityList().Iterate<Components::Transform, Rendering::Drawable>(
-                    [&](Components::Transform& transform, const Rendering::Drawable& drawable) {
+                    [&](const Components::Transform& transform, const Rendering::Drawable& drawable) {
                         // activeScene.GetEntityList().Sort<Components::Transform>(
                         //     [&](const Components::Transform& left, const Components::Transform& right) {
                         //         return Math::Distance(left.pos, activeScene.GetCamera().GetPos()) >
@@ -276,7 +276,12 @@ namespace Vakol
             }
 
             activeScene.GetEntityList().Iterate<Components::Transform>([](Components::Transform& transform) {
-                transform.rot = Math::Quat(Math::DegToRad(transform.eulerAngles));
+                Math::Vec3 wrappedDegrees = transform.eulerAngles;
+                while (wrappedDegrees.y > 90.0f)
+                    wrappedDegrees.y -= 180.0f;
+                while (wrappedDegrees.y < -90.0f)
+                    wrappedDegrees.y += 180.0f;
+                transform.rot = Math::Normalized(Math::Quat(Math::DegToRad(transform.eulerAngles)));
             });
 
             activeScene.DestroyEntities();

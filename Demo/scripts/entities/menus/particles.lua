@@ -21,10 +21,9 @@ function init()
         local model = particle:add_model("coreAssets/models/sphere.obj", 1);
         local mesh = model:get_mesh(0);
 
-        -- mesh.material:set_diffuse_color(Vector4.new(randomFloat(0.3, 0.5), randomFloat(0.3, 0.5), randomFloat(0.4, 0.7),
-        --     1));
         mesh.material:set_diffuse_color(Vector4.new(randomFloat(0, 1), randomFloat(0, 1), randomFloat(0, 1), 1));
-        --mesh.material:set_diffuse_color(Vector4.new(i / MAX_PARTICLE, MAX_PARTICLE / i, i / MAX_PARTICLE, 1));
+        mesh.material:set_light_type(LightType.Directional);
+        mesh.material:set_light_direction(Vector3.new(0.0, -1.0, 0.0));
 
         rigids[i] = particle:add_rigid();
         particle:add_sphere_collider(0.15);

@@ -179,6 +179,11 @@ namespace Vakol::Rendering::OpenGL
         glUniform1i(location, value);
     }
 
+    void SetUInt(const int location, const unsigned int value)
+    {
+        glUniform1ui(location, value);
+    }
+
     void SetVec2(const int location, const int count, const float* value)
     {
         glUniform2fv(location, count, value);

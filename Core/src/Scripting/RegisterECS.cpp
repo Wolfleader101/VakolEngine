@@ -36,6 +36,16 @@ namespace Vakol
                 return model;
             });
 
+        entity_type.set_function("get_model", [](const Entity* ent) {
+            if (!ent->HasComponent<Rendering::Drawable>())
+                VK_ERROR("No Model found on entity!");
+
+            const auto& drawable = ent->GetComponent<Rendering::Drawable>();
+            const auto& model = AssetLoader::FindModel(drawable.ID);
+
+            return &model;
+        });
+
         entity_type.set_function("add_shaded_model",
                                  [](Entity* ent, const std::string& path, const float scale,
                                     const std::string& shaderPath) -> Rendering::Assets::Model& {

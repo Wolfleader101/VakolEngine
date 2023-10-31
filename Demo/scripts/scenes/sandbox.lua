@@ -20,13 +20,8 @@
     scene.globals.emotional_entities[2] = hong;
 
     local kiki = scene:create_entity("Kiki", "entities/agents/kiki.lua");
+    kiki:get_transform().pos = Vector3.new(-15.0, 2.0, 0.0);
     scene.globals.emotional_entities[3] = kiki;
-
-
-
-    -- local test = scene:create_entity("bob", "");
-    -- test:add_model("assets/models/agents/bob.glb", 0.01);
-    -- shri:get_transform().pos = Vector3.new(-8, 5, -9);
 
     local path = "coreAssets/textures/Skybox/";
     local extension = ".png";
@@ -36,13 +31,6 @@
 
     scene:generate_skybox(faces);
 
-    local big_shri = scene:create_entity("big shri", "");
-    big_shri:get_transform().pos = Vector3.new(0, 5, -205);
-    big_shri:get_transform().rot.x = 20;
-    big_shri:add_model("assets/models/ai/shri/shri.fbx", 1);
-
-
-    -- scene:create_entity("Cube", "entities/test/cube.lua");
     --add_floor();
 
     -- phys_objs();

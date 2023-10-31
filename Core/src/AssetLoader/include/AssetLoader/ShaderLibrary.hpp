@@ -52,6 +52,15 @@ namespace Vakol
          * \param value
          * \param binding
          */
+        void SetUInt(unsigned int shader, const char* name, unsigned int value, bool binding = true);
+
+        /**
+         * \brief
+         * \param shader
+         * \param name
+         * \param value
+         * \param binding
+         */
         void SetFloat(unsigned int shader, const char* name, float value, bool binding = true);
         /**
          * \brief

@@ -71,9 +71,18 @@ namespace Vakol
 
     void RegisterMaterial(sol::state& lua)
     {
+        lua.new_enum("LightType", "Default", Rendering::Assets::LIGHT_TYPE::DEFAULT_LIGHT, "Directional",
+                     Rendering::Assets::LIGHT_TYPE::DIRECTIONAL_LIGHT, "Point",
+                     Rendering::Assets::LIGHT_TYPE::POINT_LIGHT, "Spot", Rendering::Assets::LIGHT_TYPE::SPOT_LIGHT);
+
+        lua["LightType"] = lua.create_table_with("Default", Rendering::Assets::LIGHT_TYPE::DEFAULT_LIGHT, "Directional",
+                                                 Rendering::Assets::LIGHT_TYPE::DIRECTIONAL_LIGHT, "Point",
+                                                 Rendering::Assets::LIGHT_TYPE::POINT_LIGHT, "Spot",
+                                                 Rendering::Assets::LIGHT_TYPE::SPOT_LIGHT);
+
         auto material_type = lua.new_usertype<Rendering::Assets::Material>("Material");
 
-        material_type.set_function("get_shader", [](Rendering::Assets::Material& material) {
+        material_type.set_function("get_shader", [](const Rendering::Assets::Material& material) {
             return Rendering::RenderAPI::GetShader(material.shaderID);
         });
 
@@ -97,19 +106,24 @@ namespace Vakol
                                        material.properties.emissive_color = emissive;
                                    });
 
-        material_type.set_function("set_light_position",
-                                   [](Rendering::Assets::Material& material, const Math::Vec3& position) {
-                                       material.properties.light_position = position;
-                                   });
-
         material_type.set_function("set_light_direction",
                                    [](Rendering::Assets::Material& material, const Math::Vec3& direction) {
-                                       material.properties.light_direction = direction;
+                                       material.properties.light.DIRECTION = direction;
+                                   });
+
+        material_type.set_function("set_light_position",
+                                   [](Rendering::Assets::Material& material, const Math::Vec3& position) {
+                                       material.properties.light.DIRECTION = position;
                                    });
 
         material_type.set_function("set_uv_offset",
                                    [](Rendering::Assets::Material& material, const Math::Vec2& offset) {
                                        material.properties.uv_offset = offset;
+                                   });
+
+        material_type.set_function("set_light_type",
+                                   [](Rendering::Assets::Material& material, const Rendering::Assets::LIGHT_TYPE type) {
+                                       material.properties.light.TYPE = type;
                                    });
 
         material_type.set_function("set_opacity", [](Rendering::Assets::Material& material, const float opacity) {
@@ -123,6 +137,11 @@ namespace Vakol
         material_type.set_function("use_textures", [](Rendering::Assets::Material& material, const bool enabled) {
             material.properties.use_textures = enabled;
         });
+
+        material_type.set_function("use_colors_and_textures",
+                                   [](Rendering::Assets::Material& material, const bool enabled) {
+                                       material.properties.use_colors_and_textures = enabled;
+                                   });
     }
 
     void RegisterShader(sol::state& lua)

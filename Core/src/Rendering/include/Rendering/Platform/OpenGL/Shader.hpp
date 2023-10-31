@@ -57,6 +57,13 @@ namespace Vakol::Rendering::OpenGL
     void SetInt(int location, int value);
 
     /**
+     * \brief sets a unsigned int uniform
+     * \param location the location of the uniform
+     * \param value the value of the uniform
+     */
+    void SetUInt(int location, unsigned int value);
+
+    /**
      * \brief sets a vector uniform of 2 values.
      * \param location the location of the uniform
      * \param count the count of the uniform
