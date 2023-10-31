@@ -50,9 +50,7 @@ namespace Vakol
 
         rbT.set_function("apply_angular_impulse", [](RigidBody& rb, Math::Vec3& impulse, Math::Vec3& point) {
             Math::Vec3 torque = Math::Cross(point, impulse);
-            VK_CRITICAL("Torque: {0} {1} {2}", torque.x, torque.y, torque.z);
             rb.angularVelocity += torque * rb.invInertiaTensor;
-            VK_CRITICAL("Angular Vel: {0} {1} {2}", rb.angularVelocity.x, rb.angularVelocity.y, rb.angularVelocity.z);
             rb.isSleeping = false;
             rb.sleepCounter = 0;
         });
