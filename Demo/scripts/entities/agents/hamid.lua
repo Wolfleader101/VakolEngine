@@ -15,7 +15,7 @@ local heldRubbish = {
 local currentBin = nil;
 local currentTarget = nil;
 
-local entityDistance = nil;
+local entityDistance = math.huge;
 local yDifference = nil;
 
 local currentFear = 0.0;
@@ -79,12 +79,12 @@ end
 function rubbish_behaviour()
     -- Checks to see if the rubbish entity has been set
     if (next(scene.globals.apples) ~= nil) then
-        entityDistance = math.huge;
-
         local currentDistance = 0.0;
 
         -- Checking to see if the AI isn't already travelling to the entity
         if (travellingToObject == false) then
+            entityDistance = math.huge;
+
             for key, value in pairs(scene.globals.apples) do
                 -- Getting the distance between the AI and the entity
                 currentDistance = distance(entity:get_transform().pos, value:get_transform().pos);
