@@ -112,9 +112,13 @@ local function get_nearby_interactables()
     search_time = search_time + 1;
 
     if (search_time >= 300) then
-        local randomIndex = math.random(1, #interactable_items);
 
-        nav.set_target(interactable_items[randomIndex]:get_transform().pos, false);
+        local randomIndex = math.random(1, #interactable_items - 1);
+
+        if (interactable_items[randIndex] ~= nil) then
+            nav.set_target(interactable_items[randomIndex]:get_transform().pos, false);
+        end
+
 
         search_time = 0;
     end
