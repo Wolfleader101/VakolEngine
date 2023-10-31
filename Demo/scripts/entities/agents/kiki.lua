@@ -28,8 +28,9 @@ function init()
     entity:add_script("emotions", "components/emotion.lua");
     emotions = entity:get_script("emotions");
 
-    local rb = entity:add_rigid();
-    rb.rot_lock = BVector3.new(true, true, true);
+    rb = entity:add_rigid();
+    rb.type = BodyType.Dynamic;
+    rb.rot_lock = BVector3.new(true, false, true);
 
     entity:add_box_collider(model:get_half_extents(0));
 
@@ -45,9 +46,12 @@ function init()
 
     emotional_agents = scene.globals.emotional_entities;
     interactable_items = scene.globals.interactables;
-
+    nav.MAX_DISTANCE = 5.0;
+    
     local randIndex = math.random(1, #interactable_items);
-    nav.TARGET = interactable_items[randIndex]:get_transform().pos;
+    local target = interactable_items[randIndex]:get_transform().pos;
+    
+    nav.set_target(target, false);
 
     nav.MAX_DISTANCE = 1.0;
  
@@ -112,7 +116,7 @@ local function get_nearby_interactables()
 
         print('hello');
 
-        nav.TARGET = interactable_items[randomIndex]:get_transform().pos;
+        nav.set_target(interactable_items[randomIndex]:get_transform().pos, false);
 
         search_time = 0;
     end

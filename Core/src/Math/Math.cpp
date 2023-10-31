@@ -328,9 +328,24 @@ namespace Vakol::Math
         return glm::normalize(x);
     }
 
+    float WrapAngle(float angle)
+    {
+        while (angle > 180)
+            angle -= 360;
+        while (angle < -180)
+            angle += 360;
+        return angle;
+    }
+
+    Vec3 WrapEulerAngles(Vec3 euler)
+    {
+        return Vec3(WrapAngle(euler.x), WrapAngle(euler.y), WrapAngle(euler.z));
+    }
+
     Vec3 EulerFromQuat(const Quat& quat)
     {
-        return glm::eulerAngles(quat);
+
+        return glm::eulerAngles(glm::normalize(quat));
     }
 
     Quat Conjugate(const Quat& quat)

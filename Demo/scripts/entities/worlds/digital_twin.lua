@@ -200,7 +200,14 @@ function create_floor_colliders()
 	local colliders = {};
 
 	for i = 1, 5 do
-		colliders[i] = scene:create_entity("Floor Collider " .. i, "");
+        colliders[i] = scene:create_entity("Floor Collider " .. i, "");
+		colliders[i]:add_script("affordance", "components/affordance.lua")	
+		
+		local affordComp = colliders[i]:get_script("affordance");
+
+    	affordComp.AFFORDANCES = {
+        WALKING = 1.0
+		}
 
         local rigid = colliders[i]:add_rigid();
 		rigid.bounciness = 0.02;
@@ -351,6 +358,15 @@ function create_stair_colliders()
 
 	for i = 1, 2 do
 		colliders[i] = scene:create_entity("Stair Collider " .. i, "");
+
+		colliders[i]:add_script("affordance", "components/affordance.lua")	
+		
+		local affordComp = colliders[i]:get_script("affordance");
+
+    	affordComp.AFFORDANCES = {
+        WALKING = 1.0
+		}
+
 
 		local rigid = colliders[i]:add_rigid();
 		rigid.type = BodyType.Static;
