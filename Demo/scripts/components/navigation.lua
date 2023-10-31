@@ -149,10 +149,7 @@ function tick()
         local hitting_dir = entity:get_transform().forward;
         local rotated_dir = Vector3.new(-hitting_dir.x, -hitting_dir.y, -hitting_dir.z)
 
-        rotation.y = wrap_angle(rotation.y + 180.0);  -- Directly set new rotation angle
-        
-        -- local torque_amount = Vector3.new(0.0, 1.0, 0.0) * some_torque_value;
-        -- agent:apply_torque(torque_amount);
+        rotation.y = wrap_angle(rotation.y + 180.0);
 
         local impulse = rotated_dir * 1.5;
         agent:apply_impulse(impulse);
