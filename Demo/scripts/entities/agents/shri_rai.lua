@@ -48,12 +48,13 @@ function init()
     nav.BRAKE_FORCE = 1.5;
 
 
-
-    nav.set_target(piss_locations[piss_index], false);
+    local target = piss_locations[piss_index]
+    nav.set_target(target, false);
 
     nav.MAX_DISTANCE = 0.3;
     nav.set_state("chase");
-    nav.set_target(nav.get_target(), true);
+    target = nav.get_target();
+    nav.set_target(target, true);
 
 
     --nav.set_state(states[math.random(4)]);
@@ -83,7 +84,8 @@ function tick()
         else
             -- Find a new piss spot
             piss_index = math.random(#piss_locations);
-            nav.set_target(piss_locations[piss_index], false);
+            local target = piss_locations[piss_index]
+            nav.set_target(target, false);
             nav.set_state("wander");
             pissTicks = 0;
             piss.clean();

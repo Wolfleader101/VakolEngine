@@ -103,7 +103,8 @@ function wander()
     local dst = distance(target, position);
 
     if (wander_timer >= wander_duration or dst < MAX_DISTANCE) then
-        set_target(gen_random_target(), false);
+        local rand_target = gen_random_target();
+        set_target(rand_target, false);
         wander_timer = 0.0;
         set_state("idle");
         --print("wander timer expired: new random target");
@@ -153,8 +154,9 @@ function tick()
 
         local impulse = rotated_dir * 1.5;
         agent:apply_impulse(impulse);
+        local rand_target = gen_random_target();
         
-        set_target(gen_random_target(), false);
+        set_target(rand_target, false);
         wander_timer = 0.0;
         hitting_wall = false;
     elseif (STATE == "wander") then

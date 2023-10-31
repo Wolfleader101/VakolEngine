@@ -116,7 +116,8 @@ local function get_nearby_interactables()
         local randomIndex = math.random(1, #interactable_items - 1);
 
         if (interactable_items[randIndex] ~= nil) then
-            nav.set_target(interactable_items[randomIndex]:get_transform().pos, false);
+            local target = interactable_items[randomIndex]:get_transform().pos;
+            nav.set_target(target, false);
         end
 
 
