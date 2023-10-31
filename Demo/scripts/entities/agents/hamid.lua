@@ -7,13 +7,15 @@ local target = nil;
 
 local wandering = true;
 local travellingToObject = false;
-local holdingRubbish = false;
-local initialRubbishContact = false;
 
 local rubbishBins = scene.globals.rubbishBins;
 local recyclingBins = scene.globals.recyclingBins;
 local rubbish = {};
-local currentRubbish = nil;
+
+local held_rubbish = {
+    item = nil,
+    type = ""
+}
 
 local yDifference = 0.0;
 
@@ -120,7 +122,6 @@ function rubbish_behaviour()
             -- Checking to see if the AI is close enough to the object to grab it (Done in the on_contact function)
             if (entityDistance < minInteractDistance) then
                 holdingRubbish = true;
-                initialRubbishContact = true;
 
                 closestBin = find_closest_bin();
 
@@ -162,23 +163,31 @@ function rubbish_behaviour()
 end
 
 function on_contact(other_ent)
-    -- Check to see if the AI has initially contacted a piece of rubbish
-    if ((initialRubbishContact == true) and (holdingRubbish == true)) then
+    if(held_rubbish.item == nil) then
         
-        if (emotions ~= nil) then
-            local entityAffordance = other_ent:get_script("affordance");
+        local affordanceComp = other_ent:get_script("affordance");
+        local interactableComp = other_ent:get_script("interactable");
 
-            -- Check if the item affords holding
-            if (entityAffordance ~= nil and entityAffordance.AFFORDANCES.HOLDING ~= nil and entityAffordance.AFFORDANCES.TRASHING ~= nil) then
-                currentRubbish = other_ent;
-                holdingRubbish = true;  -- Now the AI is holding rubbish
-                initialRubbishContact = false;  -- Reset initial contact flag
-
-                -- If the item is interactable, interact with it
-                if(other_ent:get_script("interactable") ~= nil) then
-                    other_ent:get_script("interactable").interact(entity);
-                end
+        if(interactableComp == nil or affordanceComp == nil) then
+            return;
+        end
+        
+        if(affordanceComp.AFFORDANCES.HOLDING == 1.0) then
+            local type = nil;
+            if (entityAffordance.AFFORDANCES.TRASHING == 1.0) then
+                type = "trash";
             end
+
+            if (entityAffordance.AFFORDANCES.RECYCLING == 1.0) then
+                type = "recycling";
+            end
+            
+            if (type ~= nil) then
+                held_rubbish.item = other_ent;
+                held_rubbish.type = type;
+                interactableComp.interact(entity);
+            end
+                
         end
     end
 end

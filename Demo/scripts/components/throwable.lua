@@ -31,7 +31,7 @@ end
 
 local function hold()
     if (is_held) then
-        transform.pos = parent_transform.pos + parent_transform.forward * 4;
+        transform.pos = parent_transform.pos + parent_transform.forward * 1.2;
         transform.rot = parent_transform.rot;
     end
 end
