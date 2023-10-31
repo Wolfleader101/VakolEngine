@@ -42,7 +42,7 @@ function update()
 
     local new_pos = entity:get_transform().pos
 
-    camera:set_pos(new_pos.x, new_pos.y + 1.75, new_pos.z);
+    camera:set_pos(new_pos.x, new_pos.y + 4, new_pos.z);
 
     entity:get_transform().rot.y = math.deg(math.atan(forward.x, forward.z));
 
@@ -167,7 +167,9 @@ function no_clip_move()
 end
 
 function test_raycast(direction, max_distance)
-    local origin = entity:get_transform().pos;
+    local origin = camera:get_pos();
+
+    print(origin.x .. " " .. origin.y .. " " .. origin.z);
     local hit_info = RayCastHitInfo.new();
 
     local obj = scene:raycast(origin, direction, max_distance, hit_info);
