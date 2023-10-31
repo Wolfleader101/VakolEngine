@@ -2,19 +2,18 @@ local emotions = nil;
 local affordance = nil;
 local navigation = nil;
 local rb = nil;
-local transform = nil;
-local target = nil;
 
 local wandering = true;
 local travellingToObject = false;
 local holdingRubbish = false;
 
-local held_rubbish = {
+local heldRubbish = {
     item = nil,
     type = ""
 }
 
 local currentBin = nil;
+local currentTarget = nil;
 
 local entityDistance = nil;
 local yDifference = nil;
@@ -27,8 +26,6 @@ local avoidanceDistance = 3.0;
 
 function init()
     entity:add_model("assets/models/ai/hamid/hamid.fbx", 0.015);
-
-    transform = entity:get_transform();
 
     rb = entity:add_rigid();
     rb.mass = 10.0;
@@ -101,7 +98,7 @@ function rubbish_behaviour()
 
                         yDifference = currentYDifference;
 
-                        currentRubbish = value;
+                        currentTarget = value;
                     end
             end
 
@@ -109,19 +106,19 @@ function rubbish_behaviour()
             if ((entityDistance < interactDistance) and yDifference < 5.0) then
                 navigation.set_state("chase");
 
-                navigation.TARGET = currentRubbish:get_transform().pos;
+                navigation.TARGET = currentTarget:get_transform().pos;
 
                 wandering = false;
 
                 travellingToObject = true;
 
-                print("Hamid is heading to '" .. currentRubbish:get_tag() .. "'");
+                print("Hamid is heading to '" .. currentTarget:get_tag() .. "'");
             end
         end
 
         -- Checking to see if the AI is already travelling to the entity and is not holding the rubbish
         if (travellingToObject == true and holdingRubbish == false) then
-            entityDistance = distance(entity:get_transform().pos, currentRubbish:get_transform().pos);
+            entityDistance = distance(entity:get_transform().pos, currentTarget:get_transform().pos);
 
             -- Checking to see if the AI is close enough to the object to grab it (Done in the on_contact function)
             if (entityDistance < minInteractDistance) then
@@ -142,7 +139,7 @@ function rubbish_behaviour()
                 entityDistance = distance(entity:get_transform().pos, value:get_transform().pos);
 
                 if ((entityDistance < minInteractDistance) and yDifference < 5.0) then
-                    currentRubbish = nil;
+                    currentTarget = nil;
 
                     emotions.add_emotion_value(emotions.JOY, 0.2);
 
@@ -161,7 +158,7 @@ function rubbish_behaviour()
 end
 
 function on_contact(other_ent)
-    if(held_rubbish.item == nil) then
+    if(heldRubbish.item == nil) then
         
         local affordanceComp = other_ent:get_script("affordance");
         local interactableComp = other_ent:get_script("interactable");
@@ -187,8 +184,11 @@ function on_contact(other_ent)
             end
             
             if (type ~= nil) then
-                held_rubbish.item = other_ent;
-                held_rubbish.type = type;
+                heldRubbish.item = other_ent;
+                heldRubbish.type = type;
+
+
+
                 interactableComp.interact(entity);
             end
                 
