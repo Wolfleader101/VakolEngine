@@ -117,7 +117,7 @@ end
 
 function idle()
     can_move = false;
-    agent.linearVelocity = Vector3.new();
+    --agent.linearVelocity = Vector3.new();
 end
 
 function accelerate()
