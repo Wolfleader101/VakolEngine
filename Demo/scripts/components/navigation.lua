@@ -18,13 +18,10 @@ local forward         = Vector3.new();
 local wander_timer    = 0.0;
 local wander_duration = 10.0;
 
--- local target_updated  = false;
-
 local hitting_wall    = false;
 
 function set_target(new_target, lookAway)
     target = new_target;
-    -- target_updated = true;
     look_at(target, lookAway)
 end
 
@@ -86,6 +83,9 @@ function chase()
         STATE = "idle"
     end
     can_move = true;
+
+    -- FORCE target every time chase is called
+    set_target(target, false);
 end
 
 function wander()
@@ -105,7 +105,6 @@ end
 
 function idle()
     can_move = false;
-    -- agent.linearVelocity = Vector3.new();
 end
 
 local function accelerate()
