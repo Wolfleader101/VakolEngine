@@ -162,35 +162,11 @@ function init()
 
 	local index_offset = 0;
 
-	for i = 1, #scene.globals.benches do
-		scene.globals.interactables[i] = scene.globals.benches[i];
-	end
-	
-	index_offset = index_offset + #scene.globals.benches;
-
 	for i = 1, #scene.globals.chairs do
 		scene.globals.interactables[i + index_offset] = scene.globals.chairs[i];
 	end
 	
 	index_offset = index_offset + #scene.globals.chairs;
-
-	for i = 1, #scene.globals.tables do
-		scene.globals.interactables[i + index_offset] = scene.globals.rubbishBins[i];
-	end
-
-	index_offset = index_offset + #scene.globals.tables;
-
-	for i = 1, #scene.globals.rubbishBins do
-		scene.globals.interactables[i + index_offset] = scene.globals.rubbishBins[i];
-	end
-
-	index_offset = index_offset + #scene.globals.rubbishBins;
-
-	for i = 1, #scene.globals.recyclingBins do
-		scene.globals.interactables[i + index_offset] = scene.globals.recyclingBins[i];
-	end
-	
-	index_offset = index_offset + #scene.globals.recyclingBins;
 
 	for i = 1, #scene.globals.apples do
 		scene.globals.interactables[i + index_offset] = scene.globals.apples[i];
@@ -209,6 +185,4 @@ function init()
 	end
 	
 	index_offset = index_offset + #scene.globals.beerCans;
-
-	scene.globals.interactables[index_offset + 1] = soccerBall;
 end

@@ -16,8 +16,6 @@ function init()
         
     body_mesh = model:get_mesh(0);
     eye_mesh = model:get_mesh(1);
-
-    body_mesh.material:use_colors_and_textures(true);
         
     body_mesh.material:set_light_type(LightType.Directional);
     body_mesh.material:set_light_direction(Vector3.new(0.0, 1.0, 0.0));
@@ -111,7 +109,7 @@ local function get_nearby_interactables(trigger_distance)
    
     search_time = search_time + 1;
 
-    if (search_time >= 300) then
+    if (search_time >= 360) then
 
         local randomIndex = math.random(1, #interactable_items - 1);
 
