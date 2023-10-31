@@ -17,20 +17,10 @@
     local hong = scene:create_entity("Hong", "entities/agents/hong.lua");
     scene.globals.emotional_entities[2] = hong;
 
-    local red_kiki = scene:create_entity("Red Kiki", "entities/agents/kiki.lua");
-    red_kiki:get_transform().pos = Vector3.new(-5.0, 2.0, 0.0);
-    red_kiki:get_model():get_mesh(0).material:set_diffuse_color(Vector4.new(1.0, 0.0, 0.0, 1.0));
-    scene.globals.emotional_entities[3] = red_kiki;
-
-    local green_kiki = scene:create_entity("Green Kiki", "entities/agents/kiki.lua");
-    green_kiki:get_transform().pos = Vector3.new(0.0, 2.0, 0.0);
-    green_kiki:get_model():get_mesh(0).material:set_diffuse_color(Vector4.new(0.0, 1.0, 0.0, 1.0));
-    scene.globals.emotional_entities[4] = green_kiki;
-
-    local blue_kiki = scene:create_entity("Blue Kiki", "entities/agents/kiki.lua");
-    blue_kiki:get_transform().pos = Vector3.new(5.0, 2.0, 0.0);
-    blue_kiki:get_model():get_mesh(0).material:set_diffuse_color(Vector4.new(0.0, 0.0, 1.0, 1.0));
-    scene.globals.emotional_entities[5] = blue_kiki;
+    local kiki = scene:create_entity("Kiki", "entities/agents/kiki.lua");
+    kiki:get_transform().pos = Vector3.new(-5.0, 2.0, 0.0);
+    kiki:get_model():get_mesh(0).material:set_diffuse_color(Vector4.new(1.0, 0.0, 0.0, 1.0));
+    scene.globals.emotional_entities[3] = kiki;
 
     local path = "coreAssets/textures/Skybox/";
     local extension = ".png";
