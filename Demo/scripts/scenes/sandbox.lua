@@ -8,6 +8,9 @@
     -- AI
 
     scene.globals.emotional_entities = {};
+    
+    local kikis = {};
+    local MAX_KIKIS <const> = 4;
 
     --local shri = scene:create_entity("shri", "entities/agents/shri_rai.lua");
     --shri:get_transform().pos = Vector3.new(-20, 5, -20);
@@ -17,8 +20,12 @@
     --local hong = scene:create_entity("Hong", "entities/agents/hong.lua");
     --scene.globals.emotional_entities[2] = hong;
 
-    local kiki = scene:create_entity("Kiki", "entities/agents/kiki.lua");
-    scene.globals.emotional_entities[1] = kiki;
+    for i = 1, MAX_KIKIS do
+        kikis[i] = scene:create_entity("Kiki " .. i, "entities/agents/kiki.lua");
+        kikis[i]:get_transform().pos = Vector3.new(i * 5.0, 2.0, 0.0);
+
+        scene.globals.emotional_entities[i] = kiki;
+    end
 
     -- local test = scene:create_entity("bob", "");
     -- test:add_model("assets/models/agents/bob.glb", 0.01);

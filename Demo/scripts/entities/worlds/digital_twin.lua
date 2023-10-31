@@ -59,14 +59,27 @@ function init()
 	bld_msh_10.material:set_light_direction(Vector3.new(0.1, 0.0, 0.0));
 
 	barriers[1]:add_model("assets/models/digital_twin/GLASS-BARRIERS-LEFT.fbx", GLOBAL_SCALE);
-	barriers[2]:add_model("assets/models/digital_twin/GLASS-BARRIERS-RIGHT.fbx", GLOBAL_SCALE);
+	
+	local bar_mdl_2 = barriers[2]:add_model("assets/models/digital_twin/GLASS-BARRIERS-RIGHT.fbx", GLOBAL_SCALE);
+	local bar_msh_2 = bar_mdl_2:get_mesh(0);
+
+	bar_msh_2.material:set_light_type(LightType.Directional);
+	bar_msh_2.material:set_light_direction(Vector3.new(-0.1, -0.5, 0.0));
+	bar_msh_2.material:set_opacity(1.0);
+
 	barriers[3]:add_model("assets/models/digital_twin/GLASS-BARRIERS-LEFT.fbx", GLOBAL_SCALE);
 	
 	local bar_mdl_4 = barriers[4]:add_model("assets/models/digital_twin/GLASS-BARRIERS-LEFT.fbx", GLOBAL_SCALE);
 	bar_mdl_4:get_mesh(0).material:set_light_position(Vector3.new(180.0, 0.0, -180.0));
 
 	barriers[5]:add_model("assets/models/digital_twin/GLASS-BARRIERS-LEFT.fbx", GLOBAL_SCALE);
-	barriers[6]:add_model("assets/models/digital_twin/GLASS-BARRIERS-LEFT.fbx", GLOBAL_SCALE);
+	
+	local bar_mdl_6 = barriers[6]:add_model("assets/models/digital_twin/GLASS-BARRIERS-LEFT.fbx", GLOBAL_SCALE);
+	local bar_msh_6 = bar_mdl_6:get_mesh(0);
+
+	bar_msh_6.material:set_light_type(LightType.Directional);
+	bar_msh_6.material:set_light_direction(Vector3.new(1.0, 0.0, 0.0));
+
 	barriers[7]:add_model("assets/models/digital_twin/GLASS-BARRIERS-LEFT.fbx", GLOBAL_SCALE);
 
 	left_pillars:add_model("assets/models/digital_twin/WOODEN-PILLARS-LEFT.fbx", GLOBAL_SCALE);
