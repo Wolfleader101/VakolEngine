@@ -1,19 +1,23 @@
+--components
 local emotions;
 local piss;
 local nav;
+local atk;
 
 local target;
 
+--vakol components
 local rb;
 local trans;
 
+--shri specific
 local states <const> = { "flee", "chase", "wander", "idle" };
 
 local piss_locations = { Vector3.new(17, 2.2, 137), Vector3.new(1.4, 1.5, 36.5), Vector3.new(32, 2.5, 20) };
 local piss_lookat = { Vector3.new(-6, 4.5, 148), Vector3.new(7.7, 2.7, 41.721), Vector3.new(-32, 2.5, 45) };
 local piss_index = 3;
 
-local ANGER_RAD <const> = 10;
+local ANGER_RAD <const> = 15;
 local ANGER_THRESHOLD <const> = 0.5;
 
 
@@ -28,6 +32,9 @@ function init()
     entity:add_script("piss", "components/piss.lua");
     piss = entity:get_script("piss");
 
+    entity:add_script("attack", "components/attack.lua");
+    atk = entity:get_script("attack");
+
     rb = entity:add_rigid();
     rb.type = BodyType.Dynamic;
     rb.rot_lock = BVector3.new(true, false, true);
@@ -36,9 +43,9 @@ function init()
     entity:add_script("navigation", "components/navigation.lua");
     nav = entity:get_script("navigation");
 
-    nav.MOVE_SPEED = 0.025;
-    nav.ROTATE_SPEED = 2.5;
-    nav.BRAKE_FORCE = 1.0;
+    nav.MOVE_SPEED = 0.03;
+    nav.ROTATE_SPEED = 5;
+    nav.BRAKE_FORCE = 1.5;
 
 
 
@@ -46,7 +53,7 @@ function init()
     nav.TARGET = piss_locations[piss_index];
 
     --print(nav.TARGET.x .. " " .. nav.TARGET.y .. " " .. nav.TARGET.z)
-    nav.MAX_DISTANCE = 0.1;
+    nav.MAX_DISTANCE = 0.3;
     nav.set_state("chase");
     nav.look_at(nav.TARGET, true);
 
@@ -62,6 +69,7 @@ local attackCooldownTime <const> = 15 * 60;
 local attackCooldown = -1;
 
 local foundAngryEntity = false;
+local angryEntity = nil;
 
 function tick()
     pos = trans.pos;
@@ -81,8 +89,6 @@ function tick()
             nav.set_state("wander");
             pissTicks = 0;
             piss.clean();
-
-            print("new piss target: " .. piss_index .. "\nCleaned up piss");
         end
     else
         if (not foundAngryEntity and attackCooldown < 0) then
@@ -96,6 +102,8 @@ function tick()
                         local entityEmotion = emotionalEntities[i]:get_script("emotions");
                         if entityEmotion.get_emotion(emotions.ANGER) > ANGER_THRESHOLD then
                             foundAngryEntity = true;
+                            emotions.set_emotion(emotions.ANTICIPATION, 0.7);
+                            angryEntity = emotionalEntities[i];
                             target = entityPos;
                             print("target spotted: " .. emotionalEntities[i]:get_tag());
                             break;
@@ -112,16 +120,16 @@ function tick()
             end
         end
     end
-    -- need attacking
-    --local angerLevel = emotions.get_emotion(emotions.ANGER);
 
-    --print()
+
     if foundAngryEntity and (nav.TARGET - pos):length() < 3 then
         print("Shri attacks!");
+        atk.attack(angryEntity);
         nav.set_state("idle");
         emotions.set_emotion(emotions.JOY, 0.5);
         emotions.set_emotion(emotions.ANGER, -0.1);
-        foundAngryEntity = false
+        foundAngryEntity = false;
+        angryEntity = nil;
         attackCooldown = attackCooldownTime;
     end
     attackCooldown = attackCooldown - 1;
