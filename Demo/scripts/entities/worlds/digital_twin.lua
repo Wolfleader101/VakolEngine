@@ -127,6 +127,14 @@ function init()
 	rb.type = BodyType.Static;
 
 	headCheck:add_box_collider(Vector3.new(3.5, 1.9, 35));
+
+
+	local headCheckEnd = scene:create_entity("HeadCheckEndCollider", "");
+	headCheckEnd:get_transform().pos = Vector3.new(-25.5, 9.7, 123);
+	local rb = headCheckEnd:add_rigid();
+	rb.type = BodyType.Static;
+
+	headCheckEnd:add_box_collider(Vector3.new(9.9, 1, 14.2));
 end
 
 function create_pillar_colliders()
