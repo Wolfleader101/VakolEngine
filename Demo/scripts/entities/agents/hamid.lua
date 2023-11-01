@@ -127,7 +127,7 @@ function rubbish_behaviour()
                 end
             end
 
-            if closestTarget ~= nil then
+            if currentTarget ~= nil then
                 navigation.set_state("chase");
                 navigation.set_target(currentTarget:get_transform().pos, false);
             end
