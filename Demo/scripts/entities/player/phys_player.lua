@@ -1,5 +1,6 @@
 local dir = Vector3.new(0, 0, 0);
 local use_noclip = false;
+local held_item = nil;
 
 function init()
     print("Initialising Physics Player");
@@ -21,15 +22,16 @@ function update()
     end
 
     if (Input:get_key_down(KEYS["KEY_E"])) then
-        local obj, _ = test_raycast(camera:get_forward(), 20.0);
-
-        if (obj ~= nil) then
-            print(obj:get_tag())
-            local interactable = obj:get_script("interactable");
-            if (interactable ~= nil) then
-                interactable.interact(entity);
+        if (held_item ~= nil) then
+            if (held_item:get_script("interactable") ~= nil) then
+                held_item:get_script("interactable").interact(entity);
             end
+            held_item = nil;
+            return;
+
         end
+        
+        check_for_object();
     end
 
     if (use_noclip) then
@@ -42,7 +44,7 @@ function update()
 
     local new_pos = entity:get_transform().pos
 
-    camera:set_pos(new_pos.x, new_pos.y + 4, new_pos.z);
+    camera:set_pos(new_pos.x, new_pos.y + 2, new_pos.z);
 
     entity:get_transform().rot.y = math.deg(math.atan(forward.x, forward.z));
 
@@ -166,12 +168,25 @@ function no_clip_move()
     camera:set_pitch(pitch);
 end
 
-function test_raycast(direction, max_distance)
-    local origin = camera:get_pos();
 
-    print(origin.x .. " " .. origin.y .. " " .. origin.z);
+function check_for_object()
+    -- start origin from camera pos + add some distance so that it doenst hit player
+    local origin = camera:get_pos() + camera:get_forward() * 2;
+    local dir = camera:get_forward(); 
+    local distance = 10.0;
     local hit_info = RayCastHitInfo.new();
 
-    local obj = scene:raycast(origin, direction, max_distance, hit_info);
-    return obj, hit_info;
+    local obj = scene:raycast(origin, dir, distance, hit_info);
+
+    if (obj ~= nil) then
+        print(obj:get_tag())
+        local affordance = obj:get_script("affordance");
+        local interactable = obj:get_script("interactable");
+
+        if (affordance ~= nil and affordance.AFFORDANCES.HOLDING == 1.0 and interactable ~= nil) then
+        print(obj:get_tag() .. " Affords Holding")
+        held_item = obj;
+        interactable.interact(entity);
+    end
+    end
 end
