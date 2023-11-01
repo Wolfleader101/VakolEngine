@@ -20,7 +20,7 @@ local yDifference = nil;
 local currentFear = 0.0;
 
 local interactDistance = 1000.0;
-local minInteractDistance = 5.0;
+local minInteractDistance = 2.5;
 local avoidanceDistance = 3.0;
 
 local tickCounter = 0;
@@ -60,20 +60,41 @@ function init()
     navigation.set_state("wander");
 end
 
-function find_closest_bin()
+function find_closest_bin(rubbishType)
     local closestBin = nil; -- The closest bin to the AI
     local shortestDistance = math.huge; -- Initially set to a very high value
 
-    -- Loop through all the rubbish bins
-    for i, bin in pairs(scene.globals.rubbishBins) do
-        -- Get the distance between the AI and the current bin
-        local distance = distance(entity:get_transform().pos, bin:get_transform().pos);
+    if (rubbishType == nil) then
+        print("ERROR: No type given for the bin in 'find_closest_bin'!");
+	end
 
-        -- Check to see if the distance is shorter than the current shortest distance
-        if (distance < shortestDistance) then
-            shortestDistance = distance;
+    if (rubbishType == "rubbish") then
+        -- Loop through all the rubbish bins
+        for i, bin in pairs(scene.globals.rubbishBins) do
+            -- Get the distance between the AI and the current bin
+            local distance = distance(entity:get_transform().pos, bin:get_transform().pos);
 
-            closestBin = bin;
+            -- Check to see if the distance is shorter than the current shortest distance
+            if (distance < shortestDistance) then
+                shortestDistance = distance;
+
+                closestBin = bin;
+            end
+        end
+    end
+
+    if (rubbishType == "recycling") then
+        -- Loop through all the rubbish bins
+        for i, bin in pairs(scene.globals.recyclingBins) do
+            -- Get the distance between the AI and the current bin
+            local distance = distance(entity:get_transform().pos, bin:get_transform().pos);
+
+            -- Check to see if the distance is shorter than the current shortest distance
+            if (distance < shortestDistance) then
+                shortestDistance = distance;
+
+                closestBin = bin;
+            end
         end
     end
     
@@ -132,6 +153,10 @@ function rubbish_behaviour()
                 end
             end
         end
+
+        if (heldRubbish.item ~= nil) then
+            print(heldRubbish.item:get_tag())
+        end
     end
 end
 
@@ -151,7 +176,7 @@ function on_contact(other_ent)
 
                 holdingRubbish = true;
 
-                currentTarget = find_closest_bin();
+                currentTarget = find_closest_bin("rubbish");
 
                 navigation.set_target(currentTarget:get_transform().pos, false);  -- Set destination to closest bin
 
@@ -171,7 +196,6 @@ function on_contact(other_ent)
 
                 interactableComp.interact(entity);
             end
-                
         end
     end
 end
