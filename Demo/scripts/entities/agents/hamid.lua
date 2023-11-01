@@ -107,6 +107,9 @@ function rubbish_behaviour()
         local currentDistance = 0.0;
 
         if (travellingToObject == false) then
+            closestDistance = math.huge;
+            currentTarget = nil; -- Initialize to nil
+
             for key, value in pairs(scene.globals.apples) do
                 -- Getting the distance between the AI and the entity
                 yDifference = math.abs(entity:get_transform().pos.y - value:get_transform().pos.y);
@@ -114,16 +117,19 @@ function rubbish_behaviour()
                 entityDistance = distance(entity:get_transform().pos, value:get_transform().pos);
 
                 -- Checking to see that the distance between the AI and the entity is within the interact distance
-                if ((entityDistance < interactDistance) and yDifference < 10.0) then
-                    navigation.set_state("chase");
+                if ((entityDistance < closestDistance) and yDifference < 10.0) then
+                    closestDistance = entityDistance;
 
                     currentTarget = value;
-
-                    navigation.set_target(currentTarget:get_transform().pos, false);
 
                     wandering = false;
                     travellingToObject = true;
                 end
+            end
+
+            if closestTarget ~= nil then
+                navigation.set_state("chase");
+                navigation.set_target(currentTarget:get_transform().pos, false);
             end
         end
 
@@ -148,6 +154,8 @@ function rubbish_behaviour()
                     wandering = true;
 
                     navigation.set_state("wander");
+
+                    print("PRINT")
 
                     navigation.set_target(Vector3.new(0.0, 0.0, 0.0), false);
                 end
