@@ -148,6 +148,8 @@ function rubbish_behaviour()
                     wandering = true;
 
                     navigation.set_state("wander");
+
+                    navigation.set_target(Vector3.new(0.0, 0.0, 0.0), false);
                 end
             end
         end
@@ -240,8 +242,6 @@ function tick()
 
         rb.rot_lock = BVector3.new(true, true, true);
         rb.angularVelocity = Vector3.new(0.0, 0.0, 0.0);
-
-        print("Tick Counter: " .. tickCounter);
 
 		if (tickCounter >= tickWaitAmount) then
 			tickCounter = 0;
