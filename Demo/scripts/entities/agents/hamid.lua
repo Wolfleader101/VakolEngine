@@ -20,7 +20,7 @@ local yDifference = nil;
 local currentFear = 0.0;
 
 local interactDistance = 1000.0;
-local minInteractDistance = 2.5;
+local minInteractDistance = 4.0;
 local avoidanceDistance = 3.0;
 
 local tickCounter = 0;
@@ -108,23 +108,21 @@ function rubbish_behaviour()
 
         if (travellingToObject == false) then
             for key, value in pairs(scene.globals.apples) do
-                if ((value:get_script("affordance").AFFORDANCES.HOLDING == 1.0) and (value:get_script("affordance").AFFORDANCES.TRASHING == 1.0)) then
-                    -- Getting the distance between the AI and the entity
-                    yDifference = math.abs(entity:get_transform().pos.y - value:get_transform().pos.y);
+                -- Getting the distance between the AI and the entity
+                yDifference = math.abs(entity:get_transform().pos.y - value:get_transform().pos.y);
 
-                    entityDistance = distance(entity:get_transform().pos, value:get_transform().pos);
+                entityDistance = distance(entity:get_transform().pos, value:get_transform().pos);
 
-                    -- Checking to see that the distance between the AI and the entity is within the interact distance
-                    if ((entityDistance < interactDistance) and yDifference < 10.0) then
-                        navigation.set_state("chase");
+                -- Checking to see that the distance between the AI and the entity is within the interact distance
+                if ((entityDistance < interactDistance) and yDifference < 10.0) then
+                    navigation.set_state("chase");
 
-                        currentTarget = value;
+                    currentTarget = value;
 
-                        navigation.set_target(currentTarget:get_transform().pos, false);
+                    navigation.set_target(currentTarget:get_transform().pos, false);
 
-                        wandering = false;
-                        travellingToObject = true;
-                    end
+                    wandering = false;
+                    travellingToObject = true;
                 end
             end
         end
@@ -152,10 +150,6 @@ function rubbish_behaviour()
                     navigation.set_state("wander");
                 end
             end
-        end
-
-        if (heldRubbish.item ~= nil) then
-            print(heldRubbish.item:get_tag())
         end
     end
 end
