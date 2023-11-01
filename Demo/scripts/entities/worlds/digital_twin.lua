@@ -36,12 +36,12 @@ function init()
 	--MODEL FILE ACQUISITION
 	--Digital Twin Geometry Models
 	local flr_mdl = floor:add_model("assets/models/digital_twin/GROUND.fbx", GLOBAL_SCALE);
-	
+
 	local flr_msh_1 = flr_mdl:get_mesh(0);
 	local flr_msh_3 = flr_mdl:get_mesh(3);
-	
+
 	flr_msh_1.material:set_light_position(Vector3.new(0.0, 15.0, 0.0));
-	
+
 	flr_msh_3.material:set_light_type(LightType.Directional);
 	flr_msh_3.material:set_light_direction(Vector3.new(2.0, 0.0, -0.25));
 
@@ -49,7 +49,7 @@ function init()
 	roof_supports:add_model("assets/models/digital_twin/ROOF-SUPPORTS.fbx", GLOBAL_SCALE);
 
 	local bld_mdl = building:add_model("assets/models/digital_twin/BUILDING.fbx", GLOBAL_SCALE);
-	
+
 	local bld_msh_1 = bld_mdl:get_mesh(5);
 	bld_msh_1.material:set_light_type(LightType.Directional);
 	bld_msh_1.material:set_light_direction(Vector3.new(10.0, 8.0, -4.0));
@@ -59,7 +59,7 @@ function init()
 	bld_msh_10.material:set_light_direction(Vector3.new(0.1, 0.0, 0.0));
 
 	barriers[1]:add_model("assets/models/digital_twin/GLASS-BARRIERS-LEFT.fbx", GLOBAL_SCALE);
-	
+
 	local bar_mdl_2 = barriers[2]:add_model("assets/models/digital_twin/GLASS-BARRIERS-RIGHT.fbx", GLOBAL_SCALE);
 	local bar_msh_2 = bar_mdl_2:get_mesh(0);
 
@@ -68,12 +68,12 @@ function init()
 	bar_msh_2.material:set_opacity(1.0);
 
 	barriers[3]:add_model("assets/models/digital_twin/GLASS-BARRIERS-LEFT.fbx", GLOBAL_SCALE);
-	
+
 	local bar_mdl_4 = barriers[4]:add_model("assets/models/digital_twin/GLASS-BARRIERS-LEFT.fbx", GLOBAL_SCALE);
 	bar_mdl_4:get_mesh(0).material:set_light_position(Vector3.new(180.0, 0.0, -180.0));
 
 	barriers[5]:add_model("assets/models/digital_twin/GLASS-BARRIERS-LEFT.fbx", GLOBAL_SCALE);
-	
+
 	local bar_mdl_6 = barriers[6]:add_model("assets/models/digital_twin/GLASS-BARRIERS-LEFT.fbx", GLOBAL_SCALE);
 	local bar_msh_6 = bar_mdl_6:get_mesh(0);
 
@@ -119,6 +119,14 @@ function init()
 	barriers[7]:get_transform().pos = Vector3.new(-18.5, -10.56, 70.3);
 	barriers[7]:get_transform().rot = Vector3.new(0.0, 270.0, 0.0);
 	barriers[7]:get_transform().scale = Vector3.new(1.0, 1.0, 1.0);
+
+
+	local headCheck = scene:create_entity("HeadCheckCollider", "");
+	headCheck:get_transform().pos = Vector3.new(-19, 8.5, 73.7);
+	local rb = headCheck:add_rigid();
+	rb.type = BodyType.Static;
+
+	headCheck:add_box_collider(Vector3.new(3.5, 1.9, 35));
 end
 
 function create_pillar_colliders()
@@ -201,16 +209,16 @@ function create_floor_colliders()
 	local colliders = {};
 
 	for i = 1, 5 do
-        colliders[i] = scene:create_entity("Floor Collider " .. i, "");
-		colliders[i]:add_script("affordance", "components/affordance.lua")	
-		
+		colliders[i] = scene:create_entity("Floor Collider " .. i, "");
+		colliders[i]:add_script("affordance", "components/affordance.lua")
+
 		local affordComp = colliders[i]:get_script("affordance");
 
-    	affordComp.AFFORDANCES = {
-        WALKING = 1.0
+		affordComp.AFFORDANCES = {
+			WALKING = 1.0
 		}
 
-        local rigid = colliders[i]:add_rigid();
+		local rigid = colliders[i]:add_rigid();
 		rigid.bounciness = 0.02;
 		rigid.type = BodyType.Static;
 	end
@@ -379,12 +387,12 @@ function create_stair_colliders()
 	for i = 1, 2 do
 		colliders[i] = scene:create_entity("Stair Collider " .. i, "");
 
-		colliders[i]:add_script("affordance", "components/affordance.lua")	
-		
+		colliders[i]:add_script("affordance", "components/affordance.lua")
+
 		local affordComp = colliders[i]:get_script("affordance");
 
-    	affordComp.AFFORDANCES = {
-        WALKING = 1.0
+		affordComp.AFFORDANCES = {
+			WALKING = 1.0
 		}
 
 
