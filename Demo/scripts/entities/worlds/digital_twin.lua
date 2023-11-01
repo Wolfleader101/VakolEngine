@@ -188,29 +188,29 @@ function create_pillar_colliders()
 	colliders[13]:get_transform().pos = Vector3.new(-38.0, 5.0, 67.9);
 	colliders[13]:add_box_collider(Vector3.new(1.0, 12.0, 0.7));
 
-	colliders[14]:get_transform().pos = Vector3.new(-38, 2.05, -18.5);
-	colliders[14]:add_sphere_collider(2.0);
+	colliders[14]:get_transform().pos = Vector3.new(-38, 1.3, -18.5);
+	colliders[14]:add_capsule_collider(2.71, 0.5);
 
-	colliders[15]:get_transform().pos = Vector3.new(-38.0, 2.05, -6.2);
-	colliders[15]:add_sphere_collider(2.0);
+	colliders[15]:get_transform().pos = Vector3.new(-38.0, 1.3, -6.2);
+	colliders[15]:add_capsule_collider(2.71, 0.5);
 
-	colliders[16]:get_transform().pos = Vector3.new(-38.0, 2.05, 6.2);
-	colliders[16]:add_sphere_collider(2.0);
+	colliders[16]:get_transform().pos = Vector3.new(-38.0, 1.3, 6.2);
+	colliders[16]:add_capsule_collider(2.71, 0.5);
 
-	colliders[17]:get_transform().pos = Vector3.new(-38.0, 2.05, 18.5);
-	colliders[17]:add_sphere_collider(2.0);
+	colliders[17]:get_transform().pos = Vector3.new(-38.0, 1.3, 18.5);
+	colliders[17]:add_capsule_collider(2.71, 0.5);
 
-	colliders[18]:get_transform().pos = Vector3.new(-38.0, -3.05, 30.85);
-	colliders[18]:add_sphere_collider(2.0);
+	colliders[18]:get_transform().pos = Vector3.new(-38.0, -3.2, 30.85);
+	colliders[18]:add_capsule_collider(2.71, 0.5);
 
-	colliders[19]:get_transform().pos = Vector3.new(-38.0, -8.5, 43.25);
-	colliders[19]:add_sphere_collider(2.0);
+	colliders[19]:get_transform().pos = Vector3.new(-38.0, -8.8, 43.25);
+	colliders[19]:add_capsule_collider(2.71, 0.5);
 
-	colliders[20]:get_transform().pos = Vector3.new(-38.0, -8.5, 55.55);
-	colliders[20]:add_sphere_collider(2.0);
+	colliders[20]:get_transform().pos = Vector3.new(-38.0, -8.8, 55.55);
+	colliders[20]:add_capsule_collider(2.71, 0.5);
 
-	colliders[21]:get_transform().pos = Vector3.new(-38.0, -8.5, 67.9);
-	colliders[21]:add_sphere_collider(2.0);
+	colliders[21]:get_transform().pos = Vector3.new(-38.0, -8.8, 67.9);
+	colliders[21]:add_capsule_collider(2.71, 0.5);
 end
 
 function create_floor_colliders()
@@ -257,11 +257,11 @@ function create_roof_colliders()
 		rigid.type = BodyType.Static;
 	end
 
-	colliders[1]:get_transform().pos = Vector3.new(-21.8, 26.4, 60.0);
+	colliders[1]:get_transform().pos = Vector3.new(-21.8, 26.2, 60.0);
 	colliders[1]:get_transform().rot = Vector3.new(90.0, 0.0, 20.0);
 	colliders[1]:add_box_collider(Vector3.new(23.0, 83.2, 1.0));
 
-	colliders[2]:get_transform().pos = Vector3.new(21.8, 26.4, 60.0);
+	colliders[2]:get_transform().pos = Vector3.new(21.8, 26.2, 60.0);
 	colliders[2]:get_transform().rot = Vector3.new(90.0, 0.0, -20.0);
 	colliders[2]:add_box_collider(Vector3.new(23.0, 83.2, 1.0));
 end
@@ -331,19 +331,19 @@ function create_barrier_colliders()
 	end
 
 	colliders[1]:get_transform().pos.z = -12.5;
-	colliders[1]:add_box_collider(Vector3.new(0.3, 1.3, 5.1));
+	colliders[1]:add_box_collider(Vector3.new(0.3, 1.5, 5.1));
 
 	colliders[2]:get_transform().pos.z = 0.0;
-	colliders[2]:add_box_collider(Vector3.new(0.3, 1.3, 5.1));
+	colliders[2]:add_box_collider(Vector3.new(0.3, 1.5, 5.1));
 
 	colliders[3]:get_transform().pos.z = 12.5;
-	colliders[3]:add_box_collider(Vector3.new(0.3, 1.3, 5.1));
+	colliders[3]:add_box_collider(Vector3.new(0.3, 1.5, 5.1));
 
 	colliders[4]:get_transform().pos.z = 24.5;
-	colliders[4]:add_box_collider(Vector3.new(0.3, 1.3, 5.1));
+	colliders[4]:add_box_collider(Vector3.new(0.3, 1.5, 5.1));
 
 	colliders[5]:get_transform().pos = Vector3.new(37.9, 1.5, 35.9);
-	colliders[5]:add_box_collider(Vector3.new(0.3, 1.3, 4.3));
+	colliders[5]:add_box_collider(Vector3.new(0.3, 1.5, 4.3));
 
 	local count = 1;
 
