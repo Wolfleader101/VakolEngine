@@ -23,6 +23,13 @@
     kiki:get_transform().pos = Vector3.new(-15.0, 2.0, 0.0);
     scene.globals.emotional_entities[3] = kiki;
 
+
+
+    local big_shri = scene:create_entity("big shri", "");
+    big_shri:get_transform().pos = Vector3.new(0, 5, -205);
+    big_shri:get_transform().rot.x = 20;
+    big_shri:add_model("assets/models/ai/shri/shri.fbx", 1);
+
     local path = "coreAssets/textures/Skybox/";
     local extension = ".png";
 
