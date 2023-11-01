@@ -73,6 +73,7 @@ function phys_update()
     local rb = entity:get_rigid();
     local camera = scene:get_camera();
     local camera_forward = camera:get_forward():normalize();
+    camera_forward.y = 0;
 
     local camera_right = camera:get_right():normalize();
 
