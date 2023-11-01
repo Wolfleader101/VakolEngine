@@ -35,19 +35,23 @@ function throw()
     rigidbody:apply_impulse(throwDir * THROWABLE.throw_force);
 end
 
+local lerp_speed = 0.1
+
 local function hold()
     if (is_held) then
-        if(ent_parent:get_tag() == "Player") then 
-            transform.pos = scene:get_camera():get_pos() + scene:get_camera():get_forward() * 4;
+        local target_pos
+        if (ent_parent:get_tag() == "Player") then
+            target_pos = scene:get_camera():get_pos() + scene:get_camera():get_forward() * 4
         else
-        transform.pos = parent_transform.pos + parent_transform.forward * 4;
+            target_pos = parent_transform.pos + parent_transform.forward * 4
         end
-        transform.rot = parent_transform.rot;
 
+        transform.pos = transform.pos + (target_pos - transform.pos) * lerp_speed
     end
 end
 
-function update()
+
+function tick()
     if(is_held) then
         hold()
     end
