@@ -95,6 +95,7 @@ function init()
 	--COLLIDER FUNCTIONS
 	create_pillar_colliders();
 	create_floor_colliders();
+	create_roof_colliders();
 	create_building_colliders();
 	create_barrier_colliders();
 	create_stair_colliders();
@@ -228,6 +229,25 @@ function create_floor_colliders()
 
 	colliders[5]:get_transform().pos = Vector3.new(-45.3, -10.56, 74.5);
 	colliders[5]:add_box_collider(Vector3.new(15.8, 0.001, 34.1));
+end
+
+function create_roof_colliders()
+	local colliders = {};
+
+	for i = 1, 2 do
+		colliders[i] = scene:create_entity("Roof Collider " .. i, "");
+
+		local rigid = colliders[i]:add_rigid();
+		rigid.type = BodyType.Static;
+	end
+
+	colliders[1]:get_transform().pos = Vector3.new(-21.8, 26.4, 60.0);
+	colliders[1]:get_transform().rot = Vector3.new(90.0, 0.0, 20.0);
+	colliders[1]:add_box_collider(Vector3.new(23.0, 83.2, 1.0));
+
+	colliders[2]:get_transform().pos = Vector3.new(21.8, 26.4, 60.0);
+	colliders[2]:get_transform().rot = Vector3.new(90.0, 0.0, -20.0);
+	colliders[2]:add_box_collider(Vector3.new(23.0, 83.2, 1.0));
 end
 
 function create_building_colliders()
