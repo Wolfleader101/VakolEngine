@@ -1,24 +1,40 @@
 local dir = Vector3.new(0, 0, 0);
 local use_noclip = false;
+local held_item = nil;
 
 function init()
     print("Initialising Physics Player");
 
-    entity:get_transform().pos.y = 2.0;
+    entity:get_transform().pos = Vector3.new(5, 5, -15);
 
     local rb = entity:add_rigid();
+    rb.rot_lock = BVector3.new(true, true, true);
     rb.bounciness = 0.3;
-	rb.mass = 1;
-	entity:add_box_collider(Vector3.new(1.0, 1.0, 1.0));
+    rb.mass = 1;
+    entity:add_box_collider(Vector3.new(1.0, 1.0, 1.0));
 end
 
-function update()
+local camera = scene:get_camera();
 
+function update()
     if (Input:get_key_down(KEYS["KEY_Z"])) then
         use_noclip = not use_noclip;
     end
 
-    if(use_noclip) then
+    if (Input:get_key_down(KEYS["KEY_E"])) then
+        if (held_item ~= nil) then
+            if (held_item:get_script("interactable") ~= nil) then
+                held_item:get_script("interactable").interact(entity);
+            end
+            held_item = nil;
+            return;
+
+        end
+        
+        check_for_object();
+    end
+
+    if (use_noclip) then
         no_clip_move();
         return;
     end
@@ -28,7 +44,7 @@ function update()
 
     local new_pos = entity:get_transform().pos
 
-    camera:set_pos(new_pos.x, new_pos.y + 1.75, new_pos.z);
+    camera:set_pos(new_pos.x, new_pos.y + 2, new_pos.z);
 
     entity:get_transform().rot.y = math.deg(math.atan(forward.x, forward.z));
 
@@ -43,14 +59,10 @@ function update()
     end
 
     camera:set_pitch(pitch);
-
-    local is_grounded = is_grounded();
-
-    local jump_force = 5;
-    if (Input:get_key_down(KEYS["KEY_SPACE"]) and is_grounded) then
-        dir.y = dir.y + jump_force;
-    end
 end
+
+local MAX_VEL <const> = 20;
+local keyHit = false;
 
 function phys_update()
     if (use_noclip) then
@@ -61,27 +73,43 @@ function phys_update()
     local rb = entity:get_rigid();
     local camera = scene:get_camera();
     local camera_forward = camera:get_forward():normalize();
+    camera_forward.y = 0;
+
     local camera_right = camera:get_right():normalize();
-    local is_grounded = is_grounded();
 
-    if (Input:get_key(KEYS["KEY_W"]) and is_grounded) then
+
+    if (Input:get_key(KEYS["KEY_W"])) then
         dir = dir + camera_forward;
+        keyHit = true;
     end
-    if (Input:get_key(KEYS["KEY_S"]) and is_grounded) then
+    if (Input:get_key(KEYS["KEY_S"])) then
         dir = dir - camera_forward;
+        keyHit = true;
     end
-    if (Input:get_key(KEYS["KEY_A"]) and is_grounded) then
+    if (Input:get_key(KEYS["KEY_A"])) then
         dir = dir - camera_right;
+        keyHit = true;
     end
-    if (Input:get_key(KEYS["KEY_D"]) and is_grounded) then
+    if (Input:get_key(KEYS["KEY_D"])) then
         dir = dir + camera_right;
+        keyHit = true;
     end
 
-    -- Multiply by force magnitude here, for example, 100
-    dir = dir * 50;
+    if (keyHit) then
+        -- Multiply by force magnitude here, for example, 100
+        dir = dir * 1.5;
+        if (rb.linearVelocity:magnitude() < MAX_VEL) then
+            --print(dir.x .. " " .. dir.y .. " " .. dir.z);
+            rb:apply_impulse(dir);
+        end
 
-    rb:add_force(dir);
-    dir = Vector3.new(0, 0, 0);
+        dir = Vector3.new(0, 0, 0);
+        keyHit = false;
+        return
+    end
+
+    rb.linearVelocity.x = 0;
+    rb.linearVelocity.z = 0;
 end
 
 function no_clip_move()
@@ -141,15 +169,25 @@ function no_clip_move()
     camera:set_pitch(pitch);
 end
 
-function is_grounded()
-    local origin = entity:get_transform().pos;  -- Get entity's current position
-    local downward = Vector3.new(0, -1, 0);  -- Downward direction
-    local distance = 0.6;                      -- Length of the ray, you can adjust this value
+
+function check_for_object()
+    -- start origin from camera pos + add some distance so that it doenst hit player
+    local origin = camera:get_pos() + camera:get_forward() * 2;
+    local dir = camera:get_forward(); 
+    local distance = 10.0;
     local hit_info = RayCastHitInfo.new();
 
-    -- local didHit = scene:raycast(origin, downward, distance, hit_info);
+    local obj = scene:raycast(origin, dir, distance, hit_info);
 
-    -- print(hit_info.distance);
-    
-    return scene:raycast(origin, downward, distance, hit_info);
+    if (obj ~= nil) then
+        print(obj:get_tag())
+        local affordance = obj:get_script("affordance");
+        local interactable = obj:get_script("interactable");
+
+        if (affordance ~= nil and affordance.AFFORDANCES.HOLDING == 1.0 and interactable ~= nil) then
+        print(obj:get_tag() .. " Affords Holding")
+        held_item = obj;
+        interactable.interact(entity);
+    end
+    end
 end
