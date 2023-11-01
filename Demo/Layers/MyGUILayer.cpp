@@ -510,7 +510,7 @@ void MyGUILayer::OnUpdate()
                             float radius = collider.shape->getRadius();
 
                             ImGui::SeparatorText("Size");
-                            ImGui::DragScalar("Radius", ImGuiDataType_Double, &radius, 0.1f);
+                            ImGui::DragFloat("Radius", &radius, 0.1f);
 
                             if (radius < min)
                                 radius = min;
@@ -525,15 +525,15 @@ void MyGUILayer::OnUpdate()
                         {
                             const Vakol::CapsuleCollider& collider = entity.GetComponent<Vakol::CapsuleCollider>();
 
-                            constexpr float min = 0.01;
-                            constexpr float max = 100.0;
+                            constexpr float min = 0.01f;
+                            constexpr float max = 100.0f;
 
                             float radius = collider.shape->getRadius();
                             float height = collider.shape->getHeight();
 
                             ImGui::SeparatorText("Size");
-                            ImGui::DragScalar("Radius", ImGuiDataType_Double, &radius, 0.1f);
-                            ImGui::DragScalar("Height", ImGuiDataType_Double, &height, 0.1f);
+                            ImGui::DragFloat("Radius", &radius, 0.1f);
+                            ImGui::DragFloat("Height", &height, 0.1f);
 
                             if (radius < min)
                                 radius = min;

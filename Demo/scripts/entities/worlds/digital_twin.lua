@@ -36,12 +36,12 @@ function init()
 	--MODEL FILE ACQUISITION
 	--Digital Twin Geometry Models
 	local flr_mdl = floor:add_model("assets/models/digital_twin/GROUND.fbx", GLOBAL_SCALE);
-	
+
 	local flr_msh_1 = flr_mdl:get_mesh(0);
 	local flr_msh_3 = flr_mdl:get_mesh(3);
-	
+
 	flr_msh_1.material:set_light_position(Vector3.new(0.0, 15.0, 0.0));
-	
+
 	flr_msh_3.material:set_light_type(LightType.Directional);
 	flr_msh_3.material:set_light_direction(Vector3.new(2.0, 0.0, -0.25));
 
@@ -49,7 +49,7 @@ function init()
 	roof_supports:add_model("assets/models/digital_twin/ROOF-SUPPORTS.fbx", GLOBAL_SCALE);
 
 	local bld_mdl = building:add_model("assets/models/digital_twin/BUILDING.fbx", GLOBAL_SCALE);
-	
+
 	local bld_msh_1 = bld_mdl:get_mesh(5);
 	bld_msh_1.material:set_light_type(LightType.Directional);
 	bld_msh_1.material:set_light_direction(Vector3.new(10.0, 8.0, -4.0));
@@ -59,7 +59,7 @@ function init()
 	bld_msh_10.material:set_light_direction(Vector3.new(0.1, 0.0, 0.0));
 
 	barriers[1]:add_model("assets/models/digital_twin/GLASS-BARRIERS-LEFT.fbx", GLOBAL_SCALE);
-	
+
 	local bar_mdl_2 = barriers[2]:add_model("assets/models/digital_twin/GLASS-BARRIERS-RIGHT.fbx", GLOBAL_SCALE);
 	local bar_msh_2 = bar_mdl_2:get_mesh(0);
 
@@ -68,12 +68,12 @@ function init()
 	bar_msh_2.material:set_opacity(1.0);
 
 	barriers[3]:add_model("assets/models/digital_twin/GLASS-BARRIERS-LEFT.fbx", GLOBAL_SCALE);
-	
+
 	local bar_mdl_4 = barriers[4]:add_model("assets/models/digital_twin/GLASS-BARRIERS-LEFT.fbx", GLOBAL_SCALE);
 	bar_mdl_4:get_mesh(0).material:set_light_position(Vector3.new(180.0, 0.0, -180.0));
 
 	barriers[5]:add_model("assets/models/digital_twin/GLASS-BARRIERS-LEFT.fbx", GLOBAL_SCALE);
-	
+
 	local bar_mdl_6 = barriers[6]:add_model("assets/models/digital_twin/GLASS-BARRIERS-LEFT.fbx", GLOBAL_SCALE);
 	local bar_msh_6 = bar_mdl_6:get_mesh(0);
 
@@ -95,6 +95,7 @@ function init()
 	--COLLIDER FUNCTIONS
 	create_pillar_colliders();
 	create_floor_colliders();
+	create_roof_colliders();
 	create_building_colliders();
 	create_barrier_colliders();
 	create_stair_colliders();
@@ -118,6 +119,22 @@ function init()
 	barriers[7]:get_transform().pos = Vector3.new(-18.5, -10.56, 70.3);
 	barriers[7]:get_transform().rot = Vector3.new(0.0, 270.0, 0.0);
 	barriers[7]:get_transform().scale = Vector3.new(1.0, 1.0, 1.0);
+
+
+	local headCheck = scene:create_entity("HeadCheckCollider", "");
+	headCheck:get_transform().pos = Vector3.new(-19, 8.5, 73.7);
+	local rb = headCheck:add_rigid();
+	rb.type = BodyType.Static;
+
+	headCheck:add_box_collider(Vector3.new(3.5, 1.9, 35));
+
+
+	local headCheckEnd = scene:create_entity("HeadCheckEndCollider", "");
+	headCheckEnd:get_transform().pos = Vector3.new(-25.5, 9.7, 123);
+	local rb = headCheckEnd:add_rigid();
+	rb.type = BodyType.Static;
+
+	headCheckEnd:add_box_collider(Vector3.new(9.9, 1, 14.2));
 end
 
 function create_pillar_colliders()
@@ -171,45 +188,45 @@ function create_pillar_colliders()
 	colliders[13]:get_transform().pos = Vector3.new(-38.0, 5.0, 67.9);
 	colliders[13]:add_box_collider(Vector3.new(1.0, 12.0, 0.7));
 
-	colliders[14]:get_transform().pos = Vector3.new(-38, 2.05, -18.5);
-	colliders[14]:add_sphere_collider(2.0);
+	colliders[14]:get_transform().pos = Vector3.new(-38, 1.3, -18.5);
+	colliders[14]:add_capsule_collider(2.71, 0.5);
 
-	colliders[15]:get_transform().pos = Vector3.new(-38.0, 2.05, -6.2);
-	colliders[15]:add_sphere_collider(2.0);
+	colliders[15]:get_transform().pos = Vector3.new(-38.0, 1.3, -6.2);
+	colliders[15]:add_capsule_collider(2.71, 0.5);
 
-	colliders[16]:get_transform().pos = Vector3.new(-38.0, 2.05, 6.2);
-	colliders[16]:add_sphere_collider(2.0);
+	colliders[16]:get_transform().pos = Vector3.new(-38.0, 1.3, 6.2);
+	colliders[16]:add_capsule_collider(2.71, 0.5);
 
-	colliders[17]:get_transform().pos = Vector3.new(-38.0, 2.05, 18.5);
-	colliders[17]:add_sphere_collider(2.0);
+	colliders[17]:get_transform().pos = Vector3.new(-38.0, 1.3, 18.5);
+	colliders[17]:add_capsule_collider(2.71, 0.5);
 
-	colliders[18]:get_transform().pos = Vector3.new(-38.0, -3.05, 30.85);
-	colliders[18]:add_sphere_collider(2.0);
+	colliders[18]:get_transform().pos = Vector3.new(-38.0, -3.2, 30.85);
+	colliders[18]:add_capsule_collider(2.71, 0.5);
 
-	colliders[19]:get_transform().pos = Vector3.new(-38.0, -8.5, 43.25);
-	colliders[19]:add_sphere_collider(2.0);
+	colliders[19]:get_transform().pos = Vector3.new(-38.0, -8.8, 43.25);
+	colliders[19]:add_capsule_collider(2.71, 0.5);
 
-	colliders[20]:get_transform().pos = Vector3.new(-38.0, -8.5, 55.55);
-	colliders[20]:add_sphere_collider(2.0);
+	colliders[20]:get_transform().pos = Vector3.new(-38.0, -8.8, 55.55);
+	colliders[20]:add_capsule_collider(2.71, 0.5);
 
-	colliders[21]:get_transform().pos = Vector3.new(-38.0, -8.5, 67.9);
-	colliders[21]:add_sphere_collider(2.0);
+	colliders[21]:get_transform().pos = Vector3.new(-38.0, -8.8, 67.9);
+	colliders[21]:add_capsule_collider(2.71, 0.5);
 end
 
 function create_floor_colliders()
 	local colliders = {};
 
 	for i = 1, 5 do
-        colliders[i] = scene:create_entity("Floor Collider " .. i, "");
-		colliders[i]:add_script("affordance", "components/affordance.lua")	
-		
+		colliders[i] = scene:create_entity("Floor Collider " .. i, "");
+		colliders[i]:add_script("affordance", "components/affordance.lua")
+
 		local affordComp = colliders[i]:get_script("affordance");
 
-    	affordComp.AFFORDANCES = {
-        WALKING = 1.0
+		affordComp.AFFORDANCES = {
+			WALKING = 1.0
 		}
 
-        local rigid = colliders[i]:add_rigid();
+		local rigid = colliders[i]:add_rigid();
 		rigid.bounciness = 0.02;
 		rigid.type = BodyType.Static;
 	end
@@ -228,6 +245,25 @@ function create_floor_colliders()
 
 	colliders[5]:get_transform().pos = Vector3.new(-45.3, -10.56, 74.5);
 	colliders[5]:add_box_collider(Vector3.new(15.8, 0.001, 34.1));
+end
+
+function create_roof_colliders()
+	local colliders = {};
+
+	for i = 1, 2 do
+		colliders[i] = scene:create_entity("Roof Collider " .. i, "");
+
+		local rigid = colliders[i]:add_rigid();
+		rigid.type = BodyType.Static;
+	end
+
+	colliders[1]:get_transform().pos = Vector3.new(-21.8, 26.2, 60.0);
+	colliders[1]:get_transform().rot = Vector3.new(90.0, 0.0, 20.0);
+	colliders[1]:add_box_collider(Vector3.new(23.0, 83.2, 1.0));
+
+	colliders[2]:get_transform().pos = Vector3.new(21.8, 26.2, 60.0);
+	colliders[2]:get_transform().rot = Vector3.new(90.0, 0.0, -20.0);
+	colliders[2]:add_box_collider(Vector3.new(23.0, 83.2, 1.0));
 end
 
 function create_building_colliders()
@@ -295,19 +331,19 @@ function create_barrier_colliders()
 	end
 
 	colliders[1]:get_transform().pos.z = -12.5;
-	colliders[1]:add_box_collider(Vector3.new(0.3, 1.3, 5.1));
+	colliders[1]:add_box_collider(Vector3.new(0.3, 1.5, 5.1));
 
 	colliders[2]:get_transform().pos.z = 0.0;
-	colliders[2]:add_box_collider(Vector3.new(0.3, 1.3, 5.1));
+	colliders[2]:add_box_collider(Vector3.new(0.3, 1.5, 5.1));
 
 	colliders[3]:get_transform().pos.z = 12.5;
-	colliders[3]:add_box_collider(Vector3.new(0.3, 1.3, 5.1));
+	colliders[3]:add_box_collider(Vector3.new(0.3, 1.5, 5.1));
 
 	colliders[4]:get_transform().pos.z = 24.5;
-	colliders[4]:add_box_collider(Vector3.new(0.3, 1.3, 5.1));
+	colliders[4]:add_box_collider(Vector3.new(0.3, 1.5, 5.1));
 
 	colliders[5]:get_transform().pos = Vector3.new(37.9, 1.5, 35.9);
-	colliders[5]:add_box_collider(Vector3.new(0.3, 1.3, 4.3));
+	colliders[5]:add_box_collider(Vector3.new(0.3, 1.5, 4.3));
 
 	local count = 1;
 
@@ -359,12 +395,12 @@ function create_stair_colliders()
 	for i = 1, 2 do
 		colliders[i] = scene:create_entity("Stair Collider " .. i, "");
 
-		colliders[i]:add_script("affordance", "components/affordance.lua")	
-		
+		colliders[i]:add_script("affordance", "components/affordance.lua")
+
 		local affordComp = colliders[i]:get_script("affordance");
 
-    	affordComp.AFFORDANCES = {
-        WALKING = 1.0
+		affordComp.AFFORDANCES = {
+			WALKING = 1.0
 		}
 
 
