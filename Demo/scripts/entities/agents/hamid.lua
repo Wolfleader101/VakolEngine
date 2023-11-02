@@ -107,7 +107,7 @@ function rubbish_behaviour()
         local currentDistance = 0.0;
 
         if (travellingToObject == false) then
-            closestDistance = math.huge;
+            local closestDistance = math.huge;
             currentTarget = nil; -- Initialize to nil
 
             for key, value in pairs(scene.globals.apples) do
