@@ -1,12 +1,5 @@
 #include "AssetLoader/ModelLibrary.hpp"
 
-#include "AssetLoader/ModelLoader.hpp"
-
-#include "Rendering/Assets/Model.hpp"
-
-#include "Logger/Logger.hpp"
-#include "Rendering/RenderCommand.hpp"
-
 namespace Vakol
 {
     const std::string ERROR_MODEL_PATH = "coreAssets/models/error.obj";

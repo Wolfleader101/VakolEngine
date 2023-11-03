@@ -4,6 +4,13 @@
 #include <string>
 #include <unordered_map>
 
+#include "AssetLoader/ModelLoader.hpp"
+
+#include "Logger/Logger.hpp"
+
+#include "Rendering/Assets/Model.hpp"
+#include "Rendering/RenderCommand.hpp"
+
 namespace Vakol::Rendering::Assets
 {
     struct Model;

@@ -1,0 +1,205 @@
+#pragma once
+
+// Standard C++ libraries
+#include <string>
+#include <vector>
+
+// Imported Libraries
+
+// Vakol Libraries
+#include "AssetLoader/FileLoader.hpp"
+#include "AssetLoader/ModelLoader.hpp"
+#include "AssetLoader/ShaderLoader.hpp"
+#include "AssetLoader/TextureLoader.hpp"
+
+#include "Rendering/Assets/Model.hpp"
+#include "Rendering/Assets/Texture.hpp"
+
+#include "Logger/Logger.hpp"
+
+namespace Vakol
+{
+    /**
+     * @class AssetManager
+     * @brief A manager for all imported assets that are used in the engine
+     */
+    class AssetManager
+    {
+      public:
+        /**
+         * @enum FileType
+         * @brief The FileType enum specifies the types of file resources used in the application.
+         *
+         * This enumeration is used throughout the AssetManager class to differentiate between
+         * different kinds of file assets, such as models, textures, and shaders.
+         */
+        enum FileType
+        {
+            MODELS,   /**< Enum value MODELS. Used for model file assets. */
+            TEXTURES, /**< Enum value TEXTURES. Used for texture file assets. */
+            SHADERS   /**< Enum value SHADERS. Used for shader file assets. */
+        };
+
+        /**
+         * @brief The AssetManager constructor
+         */
+        AssetManager();
+
+        /**
+         * @brief The AssetManager destructor
+         */
+        ~AssetManager();
+
+        /**
+         * @brief A function to return the path to an asset types folder
+         * @param outputType The type of asset folder path to return
+         * @return The path to the asset folder that was requested
+         */
+        static std::string GetFolderPath(AssetManager::FileType outputType);
+
+        /**
+         * @brief Finds a model based on it's GUID
+         * @param ID The path of the model
+         * @return The model if found, else an error model
+         */
+        static Rendering::Assets::Model& FindModel(const GUID& ID);
+
+        /**
+         * @brief Adds and returns a model
+         * @param ID The drawable ID of the model
+         * @param path The path of the model
+         * @param scale The uniform scale of the model
+         * @return The model that was just added
+         */
+
+        static Rendering::Assets::Model& GetModel(const GUID& ID, const std::string& path, float scale = 1.0f);
+        /**
+         * @brief Returns The meshes of a model
+         * @param ID The drawable ID of the model
+         * @return The meshes of the model
+         */
+
+        static const std::vector<Rendering::Assets::Mesh>& GetMeshes(const GUID& ID);
+        /**
+         * @brief Adds and returns a texture
+         * @param Path The path of the texture
+         * @param Type The type of texture
+         * @return The texture that was just added
+         */
+
+        static Rendering::Assets::Texture& GetTexture(const std::string& path, unsigned int type);
+        /**
+         * @brief Adds and returns a texture, but with a buffer
+         * @param path The path of the texture
+         * @param type The type of the texture
+         * @param size The size of the buffer
+         * @param data The buffer data address of the texture
+         * @return The texture that was just added
+         */
+
+        static Rendering::Assets::Texture& GetTexture(const std::string& path, unsigned int type, int size,
+                                                      const void* data);
+
+        /**
+         * @brief Adds and returns a texture, but with the width, height, channels, and pixel data
+         * @param path The path of the texture
+         * @param type The type of the texture
+         * @param width The width of the texture
+         * @param height The height of the texture
+         * @param channels The number of channels in the texture
+         * @param pixels The pixel data of the texture
+         */
+        static Rendering::Assets::Texture& GetTexture(const std::string& path, unsigned int type, int& width,
+                                                      int& height, int& channels, unsigned char*& pixels);
+
+        /**
+         * @brief Replaces the texture of a model
+         * @param modelID The ID of the model
+         * @param srcPath The path of the texture you want to replace
+         * @param srcType The type of texture you want to replace
+         * @param dstPath The new path of the texture
+         * @param dstType The new type of texture
+         */
+        static void ReplaceTexture(const GUID& modelID, const std::string& srcPath, unsigned int srcType,
+                                   const std::string& dstPath, unsigned int dstType);
+
+        /**
+         * @brief Returns the status of a model, whether it exists or not
+         * @param modelID The model id
+         * @return Returns a boolean value, true if the model exists, false if it doesn't
+         */
+        static bool IsExistingModel(const GUID& modelID);
+
+      private:
+        /**
+         * @param modelPath
+         * @brief The filepath to the model files
+         */
+        static std::string modelPath;
+
+        /**
+         * @param texturePath
+         * @brief The filepath to the texture files
+         */
+        static std::string texturePath;
+
+        /**
+         * @param shaderPath
+         * @brief Path to the shader files.
+         */
+        static std::string shaderPath;
+
+        /**
+         * @param m_modelLibrary
+         * @brief The model library containg the core functionality of loading, replacing and deleting models
+         */
+        static ModelLibrary m_modelLibrary;
+
+        /**
+         * @param m_modelIdentifier
+         * @brief A map which stores the GUID and vector position of a model in m_models
+         */
+        static std::map<GUID, unsigned> m_modelIdentifier;
+
+        /**
+         * @param m_models
+         * @brief A vector which contains the different models loaded into the engine
+         */
+        static vector<ModelLibrary> m_models;
+
+        /**
+         * @param m_textureLibrary
+         * @brief The texture library containg the core functionality of loading, replacing and deleting textures
+         */
+        static TextureLibrary m_textureLibrary;
+
+        /**
+         * @param m_textureIdentifier
+         * @brief A map which stores the GUID and vector position of a texture in m_textures
+         */
+        static std::map<GUID, unsigned> m_textureIdentifier;
+
+        /**
+         * @param m_textures
+         * @brief A vector which contains the different textures loaded into the engine
+         */
+        static vector<TextureLibrary> m_textures;
+
+        /**
+         * @param m_shaderLibrary
+         * @brief The shader library containg the core functionality of loading, replacing and deleting shaders
+         */
+        static ShaderLibrary m_shaderLibrary;
+
+        /**
+         * @param m_shaderIdentifier
+         * @brief A map which stores the GUID and vector position of a shader in m_shaders
+         */
+        static std::map<GUID, unsigned> m_shaderIdentifier;
+
+        /**
+         * @param m_shaders
+         * @brief A vector which contains the different shaders loaded into the engine
+         */
+        static vector<ShaderLibrary> m_shaders;
+    } // namespace Vakol
