@@ -1,9 +1,5 @@
 #include "AssetLoader/ShaderLibrary.hpp"
 
-#include "Rendering/Platform/OpenGL/Shader.hpp"
-
-#include "Logger/Logger.hpp"
-
 namespace Vakol
 {
     void ShaderLibrary::AddShader(const std::string& shaderID, const unsigned int shader)

@@ -1,12 +1,5 @@
 #include "AssetLoader/ShaderLoader.hpp"
 
-#include "AssetLoader/FileLoader.hpp"
-#include "Logger/Logger.hpp"
-
-#include "Rendering/Assets/Shader.hpp"
-
-#include <vector>
-
 namespace Vakol
 {
     bool GetShaderSources(std::vector<std::string>&& paths, Rendering::Assets::Shader& shader);

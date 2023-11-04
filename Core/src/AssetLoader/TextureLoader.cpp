@@ -1,12 +1,4 @@
-#define STB_IMAGE_IMPLEMENTATION
-
 #include "AssetLoader/TextureLoader.hpp"
-
-#include "AssetLoader/FileLoader.hpp"
-#include "Logger/Logger.hpp"
-
-#include <iostream>
-#include <stb_image.h>
 
 namespace Vakol
 {

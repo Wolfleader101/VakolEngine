@@ -1,23 +1,5 @@
 #include "AssetLoader/ModelLoader.hpp"
 
-#include <assimp/Importer.hpp>
-#include <assimp/postprocess.h>
-#include <assimp/scene.h>
-
-#include "AssetLoader/FileLoader.hpp"
-#include "Logger/Logger.hpp"
-
-#include "Rendering/Assets/Animation.hpp"
-#include "Rendering/Assets/Material.hpp"
-#include "Rendering/Assets/Texture.hpp"
-
-#include "Rendering/RenderData.hpp"
-
-#include "Math/Math.hpp"
-
-#include "AssetLoader/AssetLoader.hpp"
-#include "Rendering/RenderCommand.hpp"
-
 using namespace Vakol::Rendering::Assets;
 
 constexpr int ASSIMP_LOADER_OPTIONS =

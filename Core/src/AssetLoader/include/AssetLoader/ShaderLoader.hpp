@@ -1,8 +1,13 @@
 #pragma once
 
+#include <string>
+#include <vector>
+
 #include "Rendering/Assets/Shader.hpp"
 
-#include <string>
+#include "AssetLoader/FileLoader.hpp"
+
+#include "Logger/Logger.hpp"
 
 namespace Vakol
 {

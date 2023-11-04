@@ -1,5 +1,10 @@
 #pragma once
 
+#include <filesystem>
+#include <fstream>
+
+#include "Logger/Logger.hpp"
+
 #include <string>
 /**
  * @brief Load a file as a string.

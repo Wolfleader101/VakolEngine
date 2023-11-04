@@ -132,6 +132,30 @@ namespace Vakol
 
       private:
         /**
+         * @struct AssetIdentifier
+         * @brief Holds information about an asset's usage and position in the cache.
+         *
+         * This structure is designed to keep track of the number of active references
+         * to an asset, its position in the asset cache for quick lookup, and a list of
+         * all GUIDs that reference this asset. Its to be used in conjunction with a map.
+         */
+        struct
+        {
+            /**
+             * @brief Count of how many instances of this asset is currently being used
+             */
+            unsigned activeAssetCount = 0;
+            /**
+             * @brief The position of the asset in the cache vector
+             */
+            unsigned assetCachePosition = 0;
+            /**
+             * @brief A vector of GUIDs that reference the active instances of this asset
+             */
+            vector<GUID> assetIDs;
+        } AssetIdentifier;
+
+        /**
          * @param modelPath
          * @brief The filepath to the model files
          */
@@ -158,8 +182,11 @@ namespace Vakol
         /**
          * @param m_modelIdentifier
          * @brief A map which stores the GUID and vector position of a model in m_models
+         * 
+         * The key is the file path of the model, and the value is the AssetIdentifier struct which
+         * contains the data needed to keep track of the model in the m_models vector and its active instances.
          */
-        static std::map<GUID, unsigned> m_modelIdentifier;
+        static std::map<std::string, AssetIdentifier> m_modelIdentifier;
 
         /**
          * @param m_models
@@ -176,8 +203,11 @@ namespace Vakol
         /**
          * @param m_textureIdentifier
          * @brief A map which stores the GUID and vector position of a texture in m_textures
+         * 
+         * The key is the file path of the texture, and the value is the AssetIdentifier struct which
+         * contains the data needed to keep track of the texture in the m_textures vector and its active instances.
          */
-        static std::map<GUID, unsigned> m_textureIdentifier;
+        static std::map<std::string, AssetIdentifier> m_textureIdentifier;
 
         /**
          * @param m_textures
@@ -194,8 +224,11 @@ namespace Vakol
         /**
          * @param m_shaderIdentifier
          * @brief A map which stores the GUID and vector position of a shader in m_shaders
+         * 
+         * The key is the file path of the shader, and the value is the AssetIdentifier struct which
+         * contains the data needed to keep track of the shader in the m_shaders vector and its active instances.
          */
-        static std::map<GUID, unsigned> m_shaderIdentifier;
+        static std::map<std::string, AssetIdentifier> m_shaderIdentifier;
 
         /**
          * @param m_shaders

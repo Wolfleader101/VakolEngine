@@ -2,8 +2,15 @@
 
 #include <string>
 #include <vector>
-
 #include <unordered_map>
+
+#include "AssetLoader/FileLoader.hpp"
+#include "AssetLoader/TextureLoader.hpp"
+
+#include "Rendering/RenderAPI.hpp"
+#include "Rendering/Assets/Texture.hpp"
+
+#include "Logger/Logger.hpp"
 
 /**
  * \brief In order to use an unordered map with a std::pair as a key, you need to create a custom hashing function

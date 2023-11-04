@@ -7,6 +7,9 @@
 #include "Math/Math.hpp"
 
 #include "Rendering/RenderData.hpp"
+#include "Rendering/Platform/OpenGL/Shader.hpp"
+
+#include "Logger/Logger.hpp"
 
 namespace Vakol
 {

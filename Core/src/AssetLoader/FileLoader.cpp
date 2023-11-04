@@ -1,10 +1,5 @@
 #include "AssetLoader/FileLoader.hpp"
 
-#include <filesystem>
-#include <fstream>
-
-#include "Logger/Logger.hpp"
-
 std::string LoadFile(const std::string& path)
 {
     std::string result;

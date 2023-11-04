@@ -1,6 +1,14 @@
 #pragma once
 
+#define STB_IMAGE_IMPLEMENTATION
+
 #include <string>
+#include <iostream>
+
+#include <stb_image.h>
+
+#include "AssetLoader/FileLoader.hpp"
+#include "Logger/Logger.hpp"
 
 namespace Vakol
 {

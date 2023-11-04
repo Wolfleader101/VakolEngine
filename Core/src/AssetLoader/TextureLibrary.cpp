@@ -1,13 +1,5 @@
 #include "AssetLoader/TextureLibrary.hpp"
 
-#include "AssetLoader/FileLoader.hpp"
-#include "AssetLoader/TextureLoader.hpp"
-#include "Logger/Logger.hpp"
-
-#include "Rendering/RenderAPI.hpp"
-
-#include "Rendering/Assets/Texture.hpp"
-
 namespace Vakol
 {
     Rendering::Assets::Texture& TextureLibrary::GetTexture(const std::string& path, const unsigned int type)
