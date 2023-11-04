@@ -178,7 +178,7 @@ namespace Vakol
          * @param name The name of the uniform
          * @return The uniform
          */
-        Rendering::Uniform& GetUniform(unsigned int shader, const char* name);
+        Rendering::Uniform* GetUniform(const unsigned int shader, const char* name);
 
         /**
          * @brief Check if a uniform exists in a shader

@@ -35,180 +35,196 @@ namespace Vakol
 
     void ShaderProcessing::SetBool(const unsigned int shader, const char* name, const bool value, const bool binding)
     {
-        if (UniformExists(shader, name))
-        {
-            const auto& [location, count] = GetUniform(shader, name);
+        Rendering::Uniform* uniform = GetUniform(shader, name);
 
+        if (uniform)
+        {
             if (binding)
             {
                 Rendering::OpenGL::BindShaderProgram(shader);
-                Rendering::OpenGL::SetBool(location, value);
+                Rendering::OpenGL::SetBool(uniform->location, value);
                 Rendering::OpenGL::UnbindShaderProgram();
             }
             else
-                Rendering::OpenGL::SetBool(location, value);
+            {
+                Rendering::OpenGL::SetBool(uniform->location, value);
+            }
         }
     }
 
     void ShaderProcessing::SetInt(const unsigned int shader, const char* name, const int value, const bool binding)
     {
-        if (UniformExists(shader, name))
-        {
-            const auto& [location, count] = GetUniform(shader, name);
+        Rendering::Uniform* uniform = GetUniform(shader, name);
 
+        if (uniform)
+        {
             if (binding)
             {
                 Rendering::OpenGL::BindShaderProgram(shader);
-                Rendering::OpenGL::SetInt(location, value);
+                Rendering::OpenGL::SetInt(uniform->location, value);
                 Rendering::OpenGL::UnbindShaderProgram();
             }
             else
-                Rendering::OpenGL::SetInt(location, value);
+            {
+                Rendering::OpenGL::SetInt(uniform->location, value);
+            }
         }
     }
 
     void ShaderProcessing::SetUInt(const unsigned int shader, const char* name, const unsigned int value,
                                    const bool binding)
     {
-        if (UniformExists(shader, name))
-        {
-            const auto& [location, count] = GetUniform(shader, name);
+        Rendering::Uniform* uniform = GetUniform(shader, name);
 
+        if (uniform)
+        {
             if (binding)
             {
                 Rendering::OpenGL::BindShaderProgram(shader);
-                Rendering::OpenGL::SetUInt(location, value);
+                Rendering::OpenGL::SetUInt(uniform->location, value);
                 Rendering::OpenGL::UnbindShaderProgram();
             }
             else
-                Rendering::OpenGL::SetUInt(location, value);
+            {
+                Rendering::OpenGL::SetUInt(uniform->location, value);
+            }
         }
     }
 
     void ShaderProcessing::SetFloat(const unsigned int shader, const char* name, const float value, const bool binding)
     {
-        if (UniformExists(shader, name))
-        {
-            const auto& [location, count] = GetUniform(shader, name);
+        Rendering::Uniform* uniform = GetUniform(shader, name);
 
+        if (uniform)
+        {
             if (binding)
             {
                 Rendering::OpenGL::BindShaderProgram(shader);
-                Rendering::OpenGL::SetFloat(location, value);
+                Rendering::OpenGL::SetFloat(uniform->location, value);
                 Rendering::OpenGL::UnbindShaderProgram();
             }
             else
-                Rendering::OpenGL::SetFloat(location, value);
+            {
+                Rendering::OpenGL::SetFloat(uniform->location, value);
+            }
         }
     }
 
     void ShaderProcessing::SetVec2(const unsigned int shader, const char* name, const Math::Vec2& value,
                                    const bool binding)
     {
-        if (UniformExists(shader, name))
-        {
-            const auto& [location, count] = GetUniform(shader, name);
+        Rendering::Uniform* uniform = GetUniform(shader, name);
 
+        if (uniform)
+        {
             if (binding)
             {
                 Rendering::OpenGL::BindShaderProgram(shader);
-                Rendering::OpenGL::SetVec2(location, count, Math::AsArray(value));
+                Rendering::OpenGL::SetVec2(uniform->location, uniform->count, Math::AsArray(value));
                 Rendering::OpenGL::UnbindShaderProgram();
             }
             else
-                Rendering::OpenGL::SetVec2(location, count, Math::AsArray(value));
+            {
+                Rendering::OpenGL::SetVec2(uniform->location, uniform->count, Math::AsArray(value));
+            }
         }
     }
 
     void ShaderProcessing::SetVec3(const unsigned int shader, const char* name, const Math::Vec3& value,
                                    const bool binding)
     {
-        if (UniformExists(shader, name))
-        {
-            const auto& [location, count] = GetUniform(shader, name);
+        Rendering::Uniform* uniform = GetUniform(shader, name);
 
+        if (uniform)
+        {
             if (binding)
             {
                 Rendering::OpenGL::BindShaderProgram(shader);
-                Rendering::OpenGL::SetVec3(location, count, Math::AsArray(value));
+                Rendering::OpenGL::SetVec3(uniform->location, uniform->count, Math::AsArray(value));
                 Rendering::OpenGL::UnbindShaderProgram();
             }
             else
-                Rendering::OpenGL::SetVec3(location, count, Math::AsArray(value));
+            {
+                Rendering::OpenGL::SetVec3(uniform->location, uniform->count, Math::AsArray(value));
+            }
         }
     }
 
     void ShaderProcessing::SetVec4(const unsigned int shader, const char* name, const Math::Vec4& value,
                                    const bool binding)
     {
-        if (UniformExists(shader, name))
-        {
-            const auto& [location, count] = GetUniform(shader, name);
+        Rendering::Uniform* uniform = GetUniform(shader, name);
 
+        if (uniform)
+        {
             if (binding)
             {
                 Rendering::OpenGL::BindShaderProgram(shader);
-                Rendering::OpenGL::SetVec4(location, count, Math::AsArray(value));
+                Rendering::OpenGL::SetVec4(uniform->location, uniform->count, Math::AsArray(value));
                 Rendering::OpenGL::UnbindShaderProgram();
             }
             else
-                Rendering::OpenGL::SetVec4(location, count, Math::AsArray(value));
+            {
+                Rendering::OpenGL::SetVec4(uniform->location, uniform->count, Math::AsArray(value));
+            }
         }
     }
 
     void ShaderProcessing::SetMat3(const unsigned int shader, const char* name, const bool transpose,
                                    const Math::Mat3& value, const bool binding)
     {
-        if (UniformExists(shader, name))
-        {
-            const auto& [location, count] = GetUniform(shader, name);
+        Rendering::Uniform* uniform = GetUniform(shader, name);
 
+        if (uniform)
+        {
             if (binding)
             {
                 Rendering::OpenGL::BindShaderProgram(shader);
-                Rendering::OpenGL::SetMat3(location, count, name, transpose, Math::AsArray(value));
+                Rendering::OpenGL::SetMat3(uniform->location, uniform->count, name, transpose, Math::AsArray(value));
                 Rendering::OpenGL::UnbindShaderProgram();
             }
             else
-                Rendering::OpenGL::SetMat3(location, count, name, transpose, Math::AsArray(value));
+            {
+                Rendering::OpenGL::SetMat3(uniform->location, uniform->count, name, transpose, Math::AsArray(value));
+            }
         }
     }
 
     void ShaderProcessing::SetMat4(const unsigned int shader, const char* name, const bool transpose,
                                    const Math::Mat4& value, const bool binding)
     {
-        if (UniformExists(shader, name))
-        {
-            const auto& [location, count] = GetUniform(shader, name);
+        Rendering::Uniform* uniform = GetUniform(shader, name);
 
+        if (uniform)
+        {
             if (binding)
             {
                 Rendering::OpenGL::BindShaderProgram(shader);
-                Rendering::OpenGL::SetMat4(location, count, name, transpose, Math::AsArray(value));
+                Rendering::OpenGL::SetMat4(uniform->location, uniform->count, name, transpose, Math::AsArray(value));
                 Rendering::OpenGL::UnbindShaderProgram();
             }
             else
-                Rendering::OpenGL::SetMat4(location, count, name, transpose, Math::AsArray(value));
+            {
+                Rendering::OpenGL::SetMat4(uniform->location, uniform->count, name, transpose, Math::AsArray(value));
+            }
         }
     }
 
-    Rendering::Uniform& ShaderProcessing::GetUniform(const unsigned int shader, const char* name)
+    Rendering::Uniform* ShaderProcessing::GetUniform(const unsigned int shader, const char* name)
     {
-        Rendering::Uniform defaultUniform{}; // Empty Uniform to return if uniform is not found
-
         std::vector<UniformIdentifier>& uniformIdentifiers = m_uniforms.at(shader);
 
         for (UniformIdentifier& uniformIdentifier : uniformIdentifiers)
         {
             if (uniformIdentifier.uniformName == name)
             {
-                return uniformIdentifier.uniformVariable;
+                return &uniformIdentifier.uniformVariable;
             }
         }
 
-        VK_ERROR("Uniform '" + std::string(name) + "' not found! Returning empty uniform...");
+        VK_ERROR("Uniform '" + std::string(name) + "' not found! Returning nullptr...");
 
-        return defaultUniform;
+        return nullptr;
     }
 
     bool ShaderProcessing::UniformExists(const unsigned int shader, const char* name)
