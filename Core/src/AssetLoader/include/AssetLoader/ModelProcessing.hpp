@@ -13,13 +13,15 @@
 // Vakol Libraries
 #include "Rendering/Assets/Animation.hpp"
 #include "Rendering/Assets/Material.hpp"
+#include "Rendering/Assets/Mesh.hpp"
 #include "Rendering/Assets/Model.hpp"
 #include "Rendering/Assets/Texture.hpp"
 #include "Rendering/RenderCommand.hpp"
 #include "Rendering/RenderData.hpp"
 
 #include "AssetLoader/FileLoader.hpp"
-#include "AssetLoader/ModelLoader.hpp"
+#include "AssetLoader/TextureProcessing.hpp"
+#include "AssetLoader/AssetManager.hpp" 
 
 #include "Logger/Logger.hpp"
 
@@ -82,7 +84,7 @@ namespace Vakol
          * @param scene The scene to extract the meshes from
          * @param meshes The vector to store the extracted meshes in
          */
-        static void ExtractMeshes(const aiScene& scene, std::vector<Mesh>& meshes);
+        static void ExtractMeshes(const aiScene& scene, std::vector<Rendering::Assets::Mesh>& meshes);
 
         /**
          * @brief Process the given mesh and return a Mesh object
@@ -90,7 +92,7 @@ namespace Vakol
          * @param scene The scene to process the mesh from
          * @param mesh The mesh to process
          */
-        static Mesh ProcessMesh(const aiScene& scene, const aiMesh& mesh);
+        static Rendering::Assets::Mesh ProcessMesh(const aiScene& scene, const aiMesh& mesh);
 
         /**
          * @brief Extract the vertices from the given mesh and store them in the given vectors of vertices and indices
@@ -108,7 +110,7 @@ namespace Vakol
          * @param scene The scene to extract the material from
          * @param material The material to extract
          */
-        static Material ProcessMaterial(const aiScene& scene, const aiMaterial* material);
+        static Rendering::Assets::Material ProcessMaterial(const aiScene& scene, const aiMaterial* material);
 
         /**
          * @brief Extract the textures from the given scene and store them in the given vector
@@ -117,8 +119,8 @@ namespace Vakol
          * @param material The material to extract the textures from
          * @param type The type of texture to extract
          */
-        static std::vector<Texture> ExtractTextures(const aiScene& scene, const aiMaterial* material,
-                                                    aiTextureType type);
+        static std::vector<Rendering::Assets::Texture> ExtractTextures(const aiScene& scene, const aiMaterial* material,
+                                                                       aiTextureType type);
 
         /**
          * @brief Import the model from the given path and store it in the given model

@@ -1,7 +1,5 @@
 #include "AssetLoader/ModelProcessing.hpp"
 
-using namespace Vakol::Rendering::Assets; 
-
 constexpr int ASSIMP_LOADER_OPTIONS =
     aiProcess_Triangulate | aiProcess_CalcTangentSpace | aiProcess_GenSmoothNormals | aiProcess_GenBoundingBoxes |
     aiProcess_JoinIdenticalVertices | aiProcess_ImproveCacheLocality | aiProcess_SplitLargeMeshes |
@@ -46,24 +44,24 @@ namespace Vakol
         switch (type)
         {
         case aiTextureType_DIFFUSE:
-            return VK_TEXTURE_DIFFUSE;
+            return Rendering::Assets::VK_TEXTURE_DIFFUSE;
         case aiTextureType_SPECULAR:
-            return VK_TEXTURE_SPECULAR;
+            return Rendering::Assets::VK_TEXTURE_SPECULAR;
         case aiTextureType_AMBIENT:
-            return VK_TEXTURE_AMBIENT;
+            return Rendering::Assets::VK_TEXTURE_AMBIENT;
         case aiTextureType_EMISSIVE:
-            return VK_TEXTURE_EMISSION;
+            return Rendering::Assets::VK_TEXTURE_EMISSION;
         case aiTextureType_HEIGHT:
-            return VK_TEXTURE_HEIGHT;
+            return Rendering::Assets::VK_TEXTURE_HEIGHT;
         case aiTextureType_NORMALS:
-            return VK_TEXTURE_NORMAL;
+            return Rendering::Assets::VK_TEXTURE_NORMAL;
         case aiTextureType_UNKNOWN:
-            return VK_TEXTURE_NONE;
+            return Rendering::Assets::VK_TEXTURE_NONE;
         default:
             break;
         }
 
-        return VK_TEXTURE_NONE;
+        return Rendering::Assets::VK_TEXTURE_NONE;
     }
 
     Rendering::Assets::Model& ModelProcessing::FindModel(const GUID& ID)
@@ -73,8 +71,6 @@ namespace Vakol
             VK_ERROR("Unable to find unique model at ID: {0}", ID.ToString());
             return GetErrorModel(1.0f);
         }
-
-        // VK_TRACE(m_models.at(ID).meshes.at(0).material.ID);
 
         return m_models.at(ID);
     }
@@ -137,7 +133,7 @@ namespace Vakol
         return m_models.empty();
     }
 
-    bool ImportModel(Model& model, const char* path, const float scale)
+    bool ModelProcessing::ImportModel(Rendering::Assets::Model& model, const char* path, const float scale)
     {
         auto importer = Assimp::Importer{};
 
@@ -162,7 +158,7 @@ namespace Vakol
         return true;
     }
 
-    void ExtractMeshes(const aiScene& scene, std::vector<Mesh>& meshes)
+    void ModelProcessing::ExtractMeshes(const aiScene& scene, std::vector<Rendering::Assets::Mesh>& meshes)
     {
         // Fetch meshes in current node
         for (unsigned int i = 0; i < scene.mNumMeshes; ++i)
@@ -173,7 +169,7 @@ namespace Vakol
         }
     }
 
-    Mesh ProcessMesh(const aiScene& scene, const aiMesh& mesh)
+    Rendering::Assets::Mesh ModelProcessing::ProcessMesh(const aiScene& scene, const aiMesh& mesh)
     {
         std::vector<Rendering::Vertex> vertices;
         std::vector<unsigned int> indices;
@@ -182,21 +178,21 @@ namespace Vakol
 
         const auto& material = ProcessMaterial(scene, scene.mMaterials[mesh.mMaterialIndex]);
 
-        Mesh pMesh = {Rendering::GenerateID(),
-                      mesh.mName.C_Str(),
-                      std::move(vertices),
-                      std::move(indices),
-                      std::vector<Bone>(),
-                      material,
-                      {ToVec3(mesh.mAABB.mMin), ToVec3(mesh.mAABB.mMax), Math::Vec3(0.0f)}};
+        Rendering::Assets::Mesh pMesh = {Rendering::GenerateID(),
+                                         mesh.mName.C_Str(),
+                                         std::move(vertices),
+                                         std::move(indices),
+                                         std::vector<Rendering::Assets::Bone>(),
+                                         material,
+                                         {ToVec3(mesh.mAABB.mMin), ToVec3(mesh.mAABB.mMax), Math::Vec3(0.0f)}};
 
         pMesh.bounds.halfExtents = (pMesh.bounds.max - pMesh.bounds.min) / 2.0f;
 
         return pMesh;
     }
 
-    void ExtractVertices(const aiMesh& mesh, std::vector<Rendering::Vertex>& vertices,
-                         std::vector<unsigned int>& indices)
+    void ModelProcessing::ExtractVertices(const aiMesh& mesh, std::vector<Rendering::Vertex>& vertices,
+                                          std::vector<unsigned int>& indices)
     {
         vertices.reserve(mesh.mNumVertices);
 
@@ -229,11 +225,11 @@ namespace Vakol
                            mesh.mFaces[i].mIndices + mesh.mFaces[i].mNumIndices);
     }
 
-    Material ProcessMaterial(const aiScene& scene, const aiMaterial* material)
+    Rendering::Assets::Material ModelProcessing::ProcessMaterial(const aiScene& scene, const aiMaterial* material)
     {
-        std::vector<Texture> textures;
+        std::vector<Rendering::Assets::Texture> textures;
 
-        MaterialProperties properties;
+        Rendering::Assets::MaterialProperties properties;
 
         aiColor3D ambient, diffuse, specular, emissive;
 
@@ -275,9 +271,11 @@ namespace Vakol
         return {material->GetName().C_Str(), "null", "null", std::move(textures), properties};
     }
 
-    std::vector<Texture> ExtractTextures(const aiScene& scene, const aiMaterial* material, const aiTextureType type)
+    std::vector<Rendering::Assets::Texture> ModelProcessing::ExtractTextures(const aiScene& scene,
+                                                                             const aiMaterial* material,
+                                                                             const aiTextureType type)
     {
-        std::vector<Texture> textures;
+        std::vector<Rendering::Assets::Texture> textures;
 
         const auto count = material->GetTextureCount(type);
 
@@ -291,19 +289,19 @@ namespace Vakol
             {
                 const std::string path = imported_path.C_Str();
 
-                auto&& texture = Texture{};
+                auto&& texture = Rendering::Assets::Texture{};
 
                 if (const auto& embedded_texture = scene.GetEmbeddedTexture(path.c_str()))
                 {
                     const auto size = static_cast<int>(embedded_texture->mWidth);
 
-                    texture = AssetLoader::GetTexture(embedded_texture->mFilename.C_Str(), GetTextureType(type), size,
-                                                      embedded_texture->pcData);
+                    texture = AssetManager::GetTexture(embedded_texture->mFilename.C_Str(), GetTextureType(type), size,
+                                                       embedded_texture->pcData);
                     textures.emplace_back(texture);
                 }
                 else
                 {
-                    texture = AssetLoader::GetTexture(imported_path.C_Str(), GetTextureType(type));
+                    texture = AssetManager::GetTexture(imported_path.C_Str(), GetTextureType(type));
 
                     textures.emplace_back(texture);
                 }

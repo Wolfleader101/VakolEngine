@@ -14,7 +14,6 @@
 
 // Vakol Libraries
 #include "AssetLoader/FileLoader.hpp"
-#include "AssetLoader/TextureLoader.hpp"
 
 #include "Rendering/Assets/Texture.hpp"
 #include "Rendering/RenderAPI.hpp"

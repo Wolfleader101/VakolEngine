@@ -240,4 +240,5 @@ namespace Vakol
          * @brief A vector which contains the different shaders loaded into the engine
          */
         static std::vector<Rendering::Assets::Shader> m_shaders;
-    } // namespace Vakol
+    }; // namespace Vakol
+} // namespace Vakol
