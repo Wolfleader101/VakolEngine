@@ -1,8 +1,13 @@
-#include "AssetLoader/TextureLibrary.hpp"
+#include "AssetLoader/TextureProcessing.hpp"
 
 namespace Vakol
 {
-    Rendering::Assets::Texture& TextureLibrary::GetTexture(const std::string& path, const unsigned int type)
+    TextureProcessing::TextureProcessing()
+	{
+        ERROR_TEXTURE_PATH = "coreAssets/textures/error.png";
+	}
+    
+    Rendering::Assets::Texture& TextureProcessing::GetTexture(const std::string& path, const unsigned int type)
     {
         if (!FileExists(path))
         {
@@ -43,8 +48,8 @@ namespace Vakol
         return m_textures.at(std::make_pair(path, type));
     }
 
-    Rendering::Assets::Texture& TextureLibrary::GetTexture(const std::string& path, const unsigned int type,
-                                                           const int size, const void* data)
+    Rendering::Assets::Texture& TextureProcessing::GetTexture(const std::string& path, const unsigned int type,
+                                                             const int size, const void* data)
     {
         if (!FindTexture(path, type))
         {
@@ -91,8 +96,9 @@ namespace Vakol
         return m_textures.at(std::make_pair(path, type));
     }
 
-    Rendering::Assets::Texture& TextureLibrary::GetTexture(const std::string& path, const unsigned int type, int& width,
-                                                           int& height, int& channels, unsigned char*& pixels)
+    Rendering::Assets::Texture& TextureProcessing::GetTexture(const std::string& path, const unsigned int type,
+                                                             int& width, int& height, int& channels,
+                                                             unsigned char*& pixels)
     {
         if (!FindTexture(path, type))
         {
@@ -135,7 +141,7 @@ namespace Vakol
         return m_textures.at(std::make_pair(path, type));
     }
 
-    std::vector<Rendering::Assets::Texture> TextureLibrary::GetTextures(std::vector<std::string>&& paths)
+    std::vector<Rendering::Assets::Texture> TextureProcessing::GetTextures(std::vector<std::string>&& paths)
     {
         std::vector<Rendering::Assets::Texture> textures;
 
@@ -148,7 +154,7 @@ namespace Vakol
         return textures;
     }
 
-    Rendering::Assets::Texture& TextureLibrary::GetErrorTexture(const unsigned int type)
+    Rendering::Assets::Texture& TextureProcessing::GetErrorTexture(const unsigned int type)
     {
         const auto& error = GetTexture(ERROR_TEXTURE_PATH, type);
 
@@ -160,14 +166,54 @@ namespace Vakol
         return m_textures.at(std::make_pair(ERROR_TEXTURE_PATH, type));
     }
 
-    bool TextureLibrary::FindTexture(const std::string& path, const unsigned int type) const
+    bool TextureProcessing::FindTexture(const std::string& path, const unsigned int type) const
     {
         return m_textures.find(std::make_pair(path, type)) != m_textures.end();
     }
 
-    bool TextureLibrary::IsEmpty() const
+    bool TextureProcessing::IsEmpty() const
     {
         return m_textures.empty();
     }
 
+    void TextureProcessing::ImportTexture(const std::string& path, int& width, int& height, int& channels,
+                                         unsigned char*& pixels)
+    {
+        if (!FileExists(path))
+        {
+            VK_ERROR("Could not find texture file at path: {0}", path);
+
+            return;
+        }
+
+        pixels = stbi_load(path.c_str(), &width, &height, &channels, 0);
+
+        if (!pixels)
+        {
+            VK_ERROR("Unable to Import Texture at path: {0}", path);
+
+            stbi_image_free(pixels);
+            pixels = nullptr;
+        }
+    }
+
+    void TextureProcessing::ImportTexture(const void* data, const int length, int& width, int& height, int& channels,
+                                         unsigned char*& pixels)
+    {
+        pixels = stbi_load_from_memory(static_cast<const stbi_uc* const>(data), length, &width, &height, &channels, 0);
+
+        if (!pixels)
+        {
+            VK_ERROR("Unable to import embedded texture");
+
+            stbi_image_free(pixels);
+            pixels = nullptr;
+        }
+    }
+
+    void TextureProcessing::FreeTexture(void* pixels)
+    {
+        stbi_image_free(pixels);
+        pixels = nullptr;
+    }
 } // namespace Vakol
