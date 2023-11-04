@@ -1,9 +1,9 @@
 #include <catch2/catch_all.hpp>
 
-#include "AssetLoader/ShaderLibrary.hpp"
+#include "AssetLoader/ShaderProcessing.hpp"
 #include "Rendering/Assets/Shader.hpp"
 
-Vakol::ShaderLibrary shaderLibrary;
+Vakol::ShaderProcessing shaderLibrary;
 
 TEST_CASE("Add Shader", "[ShaderLibrary]")
 {

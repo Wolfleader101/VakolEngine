@@ -187,7 +187,7 @@ namespace Vakol
          * @brief The model processing class which contains the core functionality of loading, replacing and deleting
          * models
          */
-        static ModelProcessing m_modelProcessing;
+        static ModelProcessing m_modelProcessing; 
 
         /**
          * @param m_modelIdentifier
