@@ -68,7 +68,7 @@ namespace Vakol
     }
 
     void ShaderProcessing::SetUInt(const unsigned int shader, const char* name, const unsigned int value,
-                                const bool binding)
+                                   const bool binding)
     {
         if (UniformExists(shader, name))
         {
@@ -103,7 +103,7 @@ namespace Vakol
     }
 
     void ShaderProcessing::SetVec2(const unsigned int shader, const char* name, const Math::Vec2& value,
-                                const bool binding)
+                                   const bool binding)
     {
         if (UniformExists(shader, name))
         {
@@ -121,7 +121,7 @@ namespace Vakol
     }
 
     void ShaderProcessing::SetVec3(const unsigned int shader, const char* name, const Math::Vec3& value,
-                                const bool binding)
+                                   const bool binding)
     {
         if (UniformExists(shader, name))
         {
@@ -139,7 +139,7 @@ namespace Vakol
     }
 
     void ShaderProcessing::SetVec4(const unsigned int shader, const char* name, const Math::Vec4& value,
-                                const bool binding)
+                                   const bool binding)
     {
         if (UniformExists(shader, name))
         {
@@ -157,7 +157,7 @@ namespace Vakol
     }
 
     void ShaderProcessing::SetMat3(const unsigned int shader, const char* name, const bool transpose,
-                                const Math::Mat3& value, const bool binding)
+                                   const Math::Mat3& value, const bool binding)
     {
         if (UniformExists(shader, name))
         {
@@ -175,7 +175,7 @@ namespace Vakol
     }
 
     void ShaderProcessing::SetMat4(const unsigned int shader, const char* name, const bool transpose,
-                                const Math::Mat4& value, const bool binding)
+                                   const Math::Mat4& value, const bool binding)
     {
         if (UniformExists(shader, name))
         {
@@ -194,12 +194,40 @@ namespace Vakol
 
     Rendering::Uniform& ShaderProcessing::GetUniform(const unsigned int shader, const char* name)
     {
-        return m_uniforms.at(shader).at(name);
+        Rendering::Uniform defaultUniform{}; // Empty Uniform to return if uniform is not found
+
+        std::vector<UniformIdentifier>& uniformIdentifiers = m_uniforms.at(shader);
+
+        for (UniformIdentifier& uniformIdentifier : uniformIdentifiers)
+        {
+            if (uniformIdentifier.uniformName == name)
+            {
+                return uniformIdentifier.uniformVariable;
+            }
+        }
+
+        VK_ERROR("Uniform '" + std::string(name) + "' not found! Returning empty uniform...");
+
+        return defaultUniform;
     }
 
     bool ShaderProcessing::UniformExists(const unsigned int shader, const char* name)
     {
-        return m_uniforms.at(shader).find(name) != m_uniforms.at(shader).end();
+        const std::vector<UniformIdentifier>& uniformIdentifiers = m_uniforms.at(shader);
+
+        for (const UniformIdentifier& uniformIdentifier : uniformIdentifiers)
+        {
+            if (uniformIdentifier.uniformName == name)
+            {
+                VK_INFO("Uniform '" + std::string(name) + "' exists!");
+
+                return true;
+            }
+        }
+
+        VK_ERROR("Uniform '" + std::string(name) + "' does not exist!");
+
+        return false;
     }
 
     bool ShaderProcessing::IsEmpty() const
@@ -207,7 +235,7 @@ namespace Vakol
         return m_shaders.empty();
     }
 
-    Rendering::Assets::Shader ShaderProcessing::ImportShader(const std::string& path, bool& success) 
+    Rendering::Assets::Shader ShaderProcessing::ImportShader(const std::string& path, bool& success)
     {
         Rendering::Assets::Shader shader;
 
@@ -231,7 +259,7 @@ namespace Vakol
         return shader;
     }
 
-    bool ShaderProcessing::GetShaderSources(std::vector<std::string>&& paths, Rendering::Assets::Shader& shader) 
+    bool ShaderProcessing::GetShaderSources(std::vector<std::string>&& paths, Rendering::Assets::Shader& shader)
     {
         std::vector<std::string> sources;
 
