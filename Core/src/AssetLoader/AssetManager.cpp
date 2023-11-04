@@ -34,6 +34,28 @@ namespace Vakol
         }
     }
 
+    void AssetManager::SetFolderPath(AssetManager::FileType outputType, std::string newPath)
+    {
+        // Check the type of folder path that is being given and return it
+        switch (outputType)
+        {
+        case MODELS:
+            modelPath = newPath;
+
+            break;
+        case TEXTURES:
+            texturePath = newPath;
+
+            break;
+        case SHADERS:
+            shaderPath = newPath;
+
+            break;
+        default:
+            VK_ERROR("The Filepath type is incorrect!");
+        }
+    }
+
     Rendering::Assets::Model& AssetManager::FindModel(const GUID& ID)
     {
         return m_modelProcessing.FindModel(ID);

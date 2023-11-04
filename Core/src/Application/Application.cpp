@@ -5,7 +5,7 @@
 
 #include "Rendering/RenderEngine.hpp"
 
-#include "AssetLoader/AssetLoader.hpp"
+#include "AssetLoader/AssetManager.hpp"
 #include "ECS/Components.hpp"
 
 namespace Vakol
@@ -117,29 +117,32 @@ namespace Vakol
 
         if (sol::optional<std::string> model_dir = config["model_dir"]; !model_dir)
         {
-            VK_WARN("CONFIG WARNING: No Model Directory Set, Using Default {0}", AssetLoader::model_path);
+            VK_WARN("CONFIG WARNING: No Model Directory Set, Using Default {0}",
+                    AssetManager::GetFolderPath(AssetManager::MODELS));
         }
         else
         {
-            AssetLoader::model_path = model_dir.value();
+            AssetManager::SetFolderPath(AssetManager::MODELS, model_dir.value());
         }
 
         if (sol::optional<std::string> texture_dir = config["texture_dir"]; !texture_dir)
         {
-            VK_WARN("CONFIG WARNING: No Texture Directory Set, Using Default {0}", AssetLoader::texture_path);
+            VK_WARN("CONFIG WARNING: No Texture Directory Set, Using Default {0}",
+                    AssetManager::GetFolderPath(AssetManager::TEXTURES));
         }
         else
         {
-            AssetLoader::texture_path = texture_dir.value();
+            AssetManager::SetFolderPath(AssetManager::TEXTURES, texture_dir.value());
         }
 
         if (sol::optional<std::string> shader_dir = config["shader_dir"]; !shader_dir)
         {
-            VK_WARN("CONFIG WARNING: No Shader Directory Set, Using Default {0}", AssetLoader::shader_path);
+            VK_WARN("CONFIG WARNING: No Shader Directory Set, Using Default {0}",
+                    AssetManager::GetFolderPath(AssetManager::SHADERS));
         }
         else
         {
-            AssetLoader::shader_path = shader_dir.value();
+            AssetManager::SetFolderPath(AssetManager::SHADERS, shader_dir.value());
         }
 
         GameConfig cfg = {name.value(), window_width.value(), window_height.value(), renderer_type.value()};

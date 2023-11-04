@@ -84,6 +84,13 @@ namespace Vakol
         static std::string GetFolderPath(AssetManager::FileType outputType);
 
         /**
+         * @brief A function to set the path to an asset types folder
+         * @param outputType The type of asset folder path to return
+         * @param newPath The new path to the asset folder
+         */
+        static void SetFolderPath(AssetManager::FileType outputType, std::string newPath);
+
+        /**
          * @brief Finds a model based on it's GUID
          * @param ID The path of the model
          * @return The model if found, else an error model
