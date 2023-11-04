@@ -1,15 +1,11 @@
 SET(ASSET_LOADER_SRC
-    ${CMAKE_CURRENT_SOURCE_DIR}/AssetLoader.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/AssetManager.cpp
     
     ${CMAKE_CURRENT_SOURCE_DIR}/FileLoader.cpp
     
-    ${CMAKE_CURRENT_SOURCE_DIR}/ModelLoader.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/ShaderLoader.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/TextureLoader.cpp
-
-    ${CMAKE_CURRENT_SOURCE_DIR}/ModelLibrary.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/TextureLibrary.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/ShaderLibrary.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/ModelProcessing.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/ShaderProcessing.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/TextureProcessing.cpp
 
     PARENT_SCOPE
 )

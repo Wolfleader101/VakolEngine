@@ -1,6 +1,7 @@
 #pragma once
 
 // Standard C++ libraries
+#include <algorithm>
 #include <string>
 #include <vector>
 
@@ -8,11 +9,12 @@
 
 // Vakol Libraries
 #include "AssetLoader/FileLoader.hpp"
-#include "AssetLoader/ModelLoader.hpp"
-#include "AssetLoader/ShaderLoader.hpp"
-#include "AssetLoader/TextureLoader.hpp"
+#include "AssetLoader/ModelProcessing.hpp"
+#include "AssetLoader/ShaderProcessing.hpp"
+#include "AssetLoader/TextureProcessing.hpp"
 
 #include "Rendering/Assets/Model.hpp"
+#include "Rendering/Assets/Shader.hpp"
 #include "Rendering/Assets/Texture.hpp"
 
 #include "Logger/Logger.hpp"
@@ -38,6 +40,30 @@ namespace Vakol
             MODELS,   /**< Enum value MODELS. Used for model file assets. */
             TEXTURES, /**< Enum value TEXTURES. Used for texture file assets. */
             SHADERS   /**< Enum value SHADERS. Used for shader file assets. */
+        };
+
+        /**
+         * @struct AssetIdentifier
+         * @brief Holds information about an asset's usage and position in the cache.
+         *
+         * This structure is designed to keep track of the number of active references
+         * to an asset, its position in the asset cache for quick lookup, and a list of
+         * all GUIDs that reference this asset. Its to be used in conjunction with a map.
+         */
+        struct AssetIdentifier
+        {
+            /**
+             * @brief Count of how many instances of this asset is currently being used
+             */
+            unsigned activeAssetCount = 0;
+            /**
+             * @brief The position of the asset in the cache vector
+             */
+            unsigned assetCachePosition = 0;
+            /**
+             * @brief A vector of GUIDs that reference the active instances of this asset
+             */
+            std::vector<GUID> assetIDs;
         };
 
         /**
@@ -132,30 +158,6 @@ namespace Vakol
 
       private:
         /**
-         * @struct AssetIdentifier
-         * @brief Holds information about an asset's usage and position in the cache.
-         *
-         * This structure is designed to keep track of the number of active references
-         * to an asset, its position in the asset cache for quick lookup, and a list of
-         * all GUIDs that reference this asset. Its to be used in conjunction with a map.
-         */
-        struct
-        {
-            /**
-             * @brief Count of how many instances of this asset is currently being used
-             */
-            unsigned activeAssetCount = 0;
-            /**
-             * @brief The position of the asset in the cache vector
-             */
-            unsigned assetCachePosition = 0;
-            /**
-             * @brief A vector of GUIDs that reference the active instances of this asset
-             */
-            vector<GUID> assetIDs;
-        } AssetIdentifier;
-
-        /**
          * @param modelPath
          * @brief The filepath to the model files
          */
@@ -174,15 +176,16 @@ namespace Vakol
         static std::string shaderPath;
 
         /**
-         * @param m_modelLibrary
-         * @brief The model library containg the core functionality of loading, replacing and deleting models
+         * @param m_modelProcessing
+         * @brief The model processing class which contains the core functionality of loading, replacing and deleting
+         * models
          */
-        static ModelLibrary m_modelLibrary;
+        static ModelProcessing m_modelProcessing;
 
         /**
          * @param m_modelIdentifier
          * @brief A map which stores the GUID and vector position of a model in m_models
-         * 
+         *
          * The key is the file path of the model, and the value is the AssetIdentifier struct which
          * contains the data needed to keep track of the model in the m_models vector and its active instances.
          */
@@ -192,18 +195,19 @@ namespace Vakol
          * @param m_models
          * @brief A vector which contains the different models loaded into the engine
          */
-        static vector<ModelLibrary> m_models;
+        static std::vector<Rendering::Assets::Model> m_models;
 
         /**
-         * @param m_textureLibrary
-         * @brief The texture library containg the core functionality of loading, replacing and deleting textures
+         * @param m_textureProcessing
+         * @brief The texture processing class which contains the core functionality of loading, replacing and deleting
+         * textures
          */
-        static TextureLibrary m_textureLibrary;
+        static TextureProcessing m_textureProcessing;
 
         /**
          * @param m_textureIdentifier
          * @brief A map which stores the GUID and vector position of a texture in m_textures
-         * 
+         *
          * The key is the file path of the texture, and the value is the AssetIdentifier struct which
          * contains the data needed to keep track of the texture in the m_textures vector and its active instances.
          */
@@ -213,18 +217,19 @@ namespace Vakol
          * @param m_textures
          * @brief A vector which contains the different textures loaded into the engine
          */
-        static vector<TextureLibrary> m_textures;
+        static std::vector<Rendering::Assets::Texture> m_textures;
 
         /**
-         * @param m_shaderLibrary
-         * @brief The shader library containg the core functionality of loading, replacing and deleting shaders
+         * @param m_shaderProcessing
+         * @brief The shader processing class which contains the core functionality of loading, replacing and deleting
+         * shaders
          */
-        static ShaderLibrary m_shaderLibrary;
+        static ShaderProcessing m_shaderProcessing;
 
         /**
          * @param m_shaderIdentifier
          * @brief A map which stores the GUID and vector position of a shader in m_shaders
-         * 
+         *
          * The key is the file path of the shader, and the value is the AssetIdentifier struct which
          * contains the data needed to keep track of the shader in the m_shaders vector and its active instances.
          */
@@ -234,5 +239,5 @@ namespace Vakol
          * @param m_shaders
          * @brief A vector which contains the different shaders loaded into the engine
          */
-        static vector<ShaderLibrary> m_shaders;
+        static std::vector<Rendering::Assets::Shader> m_shaders;
     } // namespace Vakol

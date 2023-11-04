@@ -1,11 +1,15 @@
 #pragma once
 
+// C++ Standard Libraries
 #include <filesystem>
 #include <fstream>
+#include <string>
 
+// Imported Libraries
+
+// Vakol Libraries
 #include "Logger/Logger.hpp"
 
-#include <string>
 /**
  * @brief Load a file as a string.
  *

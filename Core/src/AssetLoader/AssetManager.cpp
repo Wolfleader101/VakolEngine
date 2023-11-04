@@ -36,34 +36,34 @@ namespace Vakol
 
     Rendering::Assets::Model& AssetManager::FindModel(const GUID& ID)
     {
-        return m_modelLibrary.FindModel(ID);
+        return m_modelProcessing.FindModel(ID);
     }
 
     Rendering::Assets::Model& AssetManager::GetModel(const GUID& ID, const std::string& path, const float scale)
     {
-        return m_modelLibrary.GetModel(ID, path, scale);
+        return m_modelProcessing.GetModel(ID, path, scale);
     }
 
     const std::vector<Rendering::Assets::Mesh>& AssetManager::GetMeshes(const GUID& ID)
     {
-        return m_modelLibrary.FindModel(ID).meshes;
+        return m_modelProcessing.FindModel(ID).meshes;
     }
 
     Rendering::Assets::Texture& AssetManager::GetTexture(const std::string& path, const unsigned int type)
     {
-        return m_textureLibrary.GetTexture(path, type);
+        return m_textureProcessing.GetTexture(path, type);
     }
 
     Rendering::Assets::Texture& AssetManager::GetTexture(const std::string& path, const unsigned int type, int& width,
                                                          int& height, int& channels, unsigned char*& pixels)
     {
-        return m_textureLibrary.GetTexture(path, type, width, height, channels, pixels);
+        return m_textureProcessing.GetTexture(path, type, width, height, channels, pixels);
     }
 
     Rendering::Assets::Texture& AssetManager::GetTexture(const std::string& path, const unsigned int type,
                                                          const int size, const void* data)
     {
-        return m_textureLibrary.GetTexture(path, type, size, data);
+        return m_textureProcessing.GetTexture(path, type, size, data);
     }
 
     void AssetManager::ReplaceTexture(const GUID& modelID, const std::string& srcPath, const unsigned int srcType,
@@ -86,7 +86,7 @@ namespace Vakol
 
     bool AssetManager::IsExistingModel(const GUID& modelID)
     {
-        return m_modelLibrary.ModelExists(modelID);
+        return m_modelProcessing.ModelExists(modelID);
     }
 
     AssetManager::~AssetManager()
