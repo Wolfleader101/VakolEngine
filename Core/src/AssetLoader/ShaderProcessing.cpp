@@ -23,12 +23,7 @@ namespace Vakol
 
     void ShaderProcessing::GetShaderUniforms(const unsigned int shader)
     {
-        if (m_uniforms.find(shader) == m_uniforms.end())
-        {
-            m_uniforms[shader].emplace();
-        }
-
-        Rendering::OpenGL::GetUniforms(shader, m_uniforms.at(shader));
+        Rendering::OpenGL::GetUniforms(shader, m_uniforms[shader]);
 
         SetInt(shader, "material.diffuse_map", 1);
         SetInt(shader, "material.specular_map", 2);
@@ -212,7 +207,7 @@ namespace Vakol
         return m_shaders.empty();
     }
 
-    Rendering::Assets::Shader ImportShader(const std::string& path, bool& success)
+    Rendering::Assets::Shader ShaderProcessing::ImportShader(const std::string& path, bool& success) 
     {
         Rendering::Assets::Shader shader;
 
@@ -236,7 +231,7 @@ namespace Vakol
         return shader;
     }
 
-    bool GetShaderSources(std::vector<std::string>&& paths, Rendering::Assets::Shader& shader)
+    bool ShaderProcessing::GetShaderSources(std::vector<std::string>&& paths, Rendering::Assets::Shader& shader) 
     {
         std::vector<std::string> sources;
 

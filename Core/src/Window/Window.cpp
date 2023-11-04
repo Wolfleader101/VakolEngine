@@ -7,7 +7,7 @@
 #include "Window/Events/MouseEvent.hpp"
 #include "Window/Events/WindowEvent.hpp"
 
-#include "AssetLoader/TextureLoader.hpp"
+#include "AssetLoader/AssetManager.hpp"
 
 using namespace Vakol;
 

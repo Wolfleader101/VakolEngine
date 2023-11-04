@@ -7,7 +7,7 @@
 
 #include "AssetLoader/ShaderLoader.hpp"
 
-#include "AssetLoader/AssetLoader.hpp"
+#include "AssetLoader/AssetManager.hpp"
 
 #include "Logger/Logger.hpp"
 

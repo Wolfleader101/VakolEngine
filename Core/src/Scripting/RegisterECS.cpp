@@ -1,4 +1,4 @@
-#include "AssetLoader/AssetLoader.hpp"
+#include "AssetLoader/AssetManager.hpp"
 #include "ECS/Components.hpp"
 #include "ECS/Entity.hpp"
 #include "LuaAccess.hpp"
@@ -30,7 +30,7 @@ namespace Vakol
 
                 auto& drawable = ent->GetComponent<Rendering::Drawable>();
 
-                auto& model = AssetLoader::GetModel(drawable.ID, path, scale);
+                auto& model = AssetManager::GetModel(drawable.ID, path, scale);
                 Rendering::RenderEngine::GenerateModel(model, drawable, "coreAssets/shaders/default.shader");
 
                 return model;
@@ -41,7 +41,7 @@ namespace Vakol
                 VK_ERROR("No Model found on entity!");
 
             const auto& drawable = ent->GetComponent<Rendering::Drawable>();
-            const auto& model = AssetLoader::FindModel(drawable.ID);
+            const auto& model = AssetManager::FindModel(drawable.ID);
 
             return &model;
         });
@@ -54,7 +54,7 @@ namespace Vakol
 
                                      auto& drawable = ent->GetComponent<Rendering::Drawable>();
 
-                                     auto& model = AssetLoader::GetModel(drawable.ID, path, scale);
+                                     auto& model = AssetManager::GetModel(drawable.ID, path, scale);
                                      Rendering::RenderEngine::GenerateModel(model, drawable, shaderPath);
 
                                      return model;
@@ -70,7 +70,7 @@ namespace Vakol
                                          return;
                                      }
 
-                                     AssetLoader::ReplaceTexture(ent->GetComponent<Rendering::Drawable>().ID, srcPath,
+                                     AssetManager::ReplaceTexture(ent->GetComponent<Rendering::Drawable>().ID, srcPath,
                                                                  Rendering::Assets::ToTextureType(srcType), dstPath,
                                                                  Rendering::Assets::ToTextureType(dstType));
                                  });

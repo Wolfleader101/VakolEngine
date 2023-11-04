@@ -25,6 +25,22 @@ namespace Vakol
     {
       public:
         /**
+         * @struct UniformIdentifier
+         * @brief A struct to identify a uniform variable in a shader
+         */
+        struct UniformIdentifier
+        {
+            /**
+             * @brief The name of the uniform variable
+             */
+            std::string uniformName = "";
+            /**
+             * @brief The uniform varibale itself, containing the type and the value
+             */
+            Rendering::Uniform uniformVariable;
+        };
+          
+          /**
          * @brief Add a shader to the shader map
          * @param shaderID The ID of the shader
          * @param shader The shader to add
@@ -144,10 +160,11 @@ namespace Vakol
          * @brief The shader map
          */
         std::unordered_map<std::string, unsigned int> m_shaders;
+
         /**
-         * @brief The uniform map
+         * @brief A map of all the uniforms in a shader
          */
-        std::map<unsigned int, std::unordered_map<std::string, Rendering::Uniform>> m_uniforms;
+        std::map<unsigned int, std::vector<UniformIdentifier>> m_uniforms;
 
         /**
          * @brief Get the shader uniforms

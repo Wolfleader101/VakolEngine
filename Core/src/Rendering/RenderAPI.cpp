@@ -1,6 +1,6 @@
 #include "Rendering/RenderAPI.hpp"
 
-#include "AssetLoader/AssetLoader.hpp"
+#include "AssetLoader/AssetManager.hpp"
 #include "Rendering/RenderCommand.hpp"
 #include "Rendering/RenderData.hpp"
 
@@ -31,14 +31,14 @@ namespace Vakol::Rendering
 
     void RenderAPI::BeginDraw(const GUID& modelID, const std::string& shaderID)
     {
-        if (!IsExistingShader(shaderID) || !AssetLoader::IsExistingModel(modelID))
+        if (!IsExistingShader(shaderID) || !AssetManager::IsExistingModel(modelID))
             return;
 
         const auto shader = GetShader(shaderID);
 
         OpenGL::BindShaderProgram(shader);
 
-        for (const auto& mesh : AssetLoader::GetMeshes(modelID))
+        for (const auto& mesh : AssetManager::GetMeshes(modelID))
         {
             const auto& material = mesh.material;
 

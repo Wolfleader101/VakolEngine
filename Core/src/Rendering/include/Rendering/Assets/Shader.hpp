@@ -3,6 +3,12 @@
 #include <string>
 #include <vector>
 
+#include <glad/glad.h>
+
+#include "Logger/Logger.hpp"
+#include "Rendering/RenderData.hpp"
+#include "AssetLoader/ShaderProcessing.hpp"
+
 namespace Vakol::Rendering::Assets
 {
     struct Shader

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "AssetLoader/ShaderLibrary.hpp"
+#include "AssetLoader/ShaderProcessing.hpp"
 #include "Math/Math.hpp"
 #include "RenderData.hpp"
 

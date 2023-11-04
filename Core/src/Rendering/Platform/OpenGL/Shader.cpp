@@ -1,10 +1,5 @@
 #include "Rendering/Assets/Shader.hpp"
 
-#include <glad/glad.h>
-
-#include "Logger/Logger.hpp"
-#include "Rendering/RenderData.hpp"
-
 std::string ToString(unsigned int shader);
 
 namespace Vakol::Rendering::OpenGL
@@ -134,7 +129,7 @@ namespace Vakol::Rendering::OpenGL
         glUseProgram(0);
     }
 
-    void GetUniforms(const unsigned int shader, std::unordered_map<std::string, Uniform>& uniforms)
+    void GetUniforms(const unsigned int shader, std::vector<ShaderProcessing::UniformIdentifier>& uniforms)
     {
         GLint uniformCount = 0;
 
@@ -159,7 +154,11 @@ namespace Vakol::Rendering::OpenGL
                 info.location = glGetUniformLocation(shader, uniformName.get());
                 info.count = count;
 
-                uniforms.emplace(std::make_pair(std::string(uniformName.get(), length), info));
+                ShaderProcessing::UniformIdentifier uniformIdentifier;
+                uniformIdentifier.uniformName = std::string(uniformName.get(), length);
+                uniformIdentifier.uniformVariable = info;
+
+                uniforms.emplace_back(uniformIdentifier);
             }
         }
     }

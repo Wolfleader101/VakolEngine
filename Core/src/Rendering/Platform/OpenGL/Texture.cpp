@@ -1,12 +1,12 @@
 #include "Rendering/Platform/OpenGL/Texture.hpp"
 #include "Rendering/Assets/Texture.hpp"
 
-#include "AssetLoader/AssetLoader.hpp"
+#include "AssetLoader/AssetManager.hpp"
 #include "Logger/Logger.hpp"
 
 #include <glad/glad.h>
 
-#include "AssetLoader/TextureLoader.hpp"
+#include "AssetLoader/TextureProcessing.hpp"
 
 namespace Vakol::Rendering::OpenGL
 {
@@ -52,7 +52,7 @@ namespace Vakol::Rendering::OpenGL
         {
             unsigned char* pixels = nullptr;
 
-            AssetLoader::GetTexture(faces.at(i), Assets::VK_TEXTURE_DIFFUSE, width, height, channels, pixels);
+            AssetManager::GetTexture(faces.at(i), Assets::VK_TEXTURE_DIFFUSE, width, height, channels, pixels);
 
             const GLint internal_format = channels == 1 ? GL_R8 : channels > 3 ? GL_RGBA8 : GL_RGB8;
             const GLenum format = channels == 1 ? GL_RED : channels > 3 ? GL_RGBA : GL_RGB;
