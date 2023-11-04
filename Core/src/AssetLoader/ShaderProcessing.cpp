@@ -1,8 +1,8 @@
-#include "AssetLoader/ShaderLibrary.hpp"
+#include "AssetLoader/ShaderProcessing.hpp"
 
 namespace Vakol
 {
-    void ShaderLibrary::AddShader(const std::string& shaderID, const unsigned int shader)
+    void ShaderProcessing::AddShader(const std::string& shaderID, const unsigned int shader)
     {
         if (m_shaders.find(shaderID) == m_shaders.end())
         {
@@ -11,7 +11,7 @@ namespace Vakol
         }
     }
 
-    unsigned int ShaderLibrary::GetShader(const std::string& shaderID)
+    unsigned int ShaderProcessing::GetShader(const std::string& shaderID)
     {
         if (m_shaders.find(shaderID) != m_shaders.end())
             return m_shaders.at(shaderID);
@@ -21,7 +21,7 @@ namespace Vakol
         return 0u;
     }
 
-    void ShaderLibrary::GetShaderUniforms(const unsigned int shader)
+    void ShaderProcessing::GetShaderUniforms(const unsigned int shader)
     {
         if (m_uniforms.find(shader) == m_uniforms.end())
         {
@@ -38,7 +38,7 @@ namespace Vakol
         SetInt(shader, "material.normal_map", 6);
     }
 
-    void ShaderLibrary::SetBool(const unsigned int shader, const char* name, const bool value, const bool binding)
+    void ShaderProcessing::SetBool(const unsigned int shader, const char* name, const bool value, const bool binding)
     {
         if (UniformExists(shader, name))
         {
@@ -55,7 +55,7 @@ namespace Vakol
         }
     }
 
-    void ShaderLibrary::SetInt(const unsigned int shader, const char* name, const int value, const bool binding)
+    void ShaderProcessing::SetInt(const unsigned int shader, const char* name, const int value, const bool binding)
     {
         if (UniformExists(shader, name))
         {
@@ -72,7 +72,7 @@ namespace Vakol
         }
     }
 
-    void ShaderLibrary::SetUInt(const unsigned int shader, const char* name, const unsigned int value,
+    void ShaderProcessing::SetUInt(const unsigned int shader, const char* name, const unsigned int value,
                                 const bool binding)
     {
         if (UniformExists(shader, name))
@@ -90,7 +90,7 @@ namespace Vakol
         }
     }
 
-    void ShaderLibrary::SetFloat(const unsigned int shader, const char* name, const float value, const bool binding)
+    void ShaderProcessing::SetFloat(const unsigned int shader, const char* name, const float value, const bool binding)
     {
         if (UniformExists(shader, name))
         {
@@ -107,7 +107,7 @@ namespace Vakol
         }
     }
 
-    void ShaderLibrary::SetVec2(const unsigned int shader, const char* name, const Math::Vec2& value,
+    void ShaderProcessing::SetVec2(const unsigned int shader, const char* name, const Math::Vec2& value,
                                 const bool binding)
     {
         if (UniformExists(shader, name))
@@ -125,7 +125,7 @@ namespace Vakol
         }
     }
 
-    void ShaderLibrary::SetVec3(const unsigned int shader, const char* name, const Math::Vec3& value,
+    void ShaderProcessing::SetVec3(const unsigned int shader, const char* name, const Math::Vec3& value,
                                 const bool binding)
     {
         if (UniformExists(shader, name))
@@ -143,7 +143,7 @@ namespace Vakol
         }
     }
 
-    void ShaderLibrary::SetVec4(const unsigned int shader, const char* name, const Math::Vec4& value,
+    void ShaderProcessing::SetVec4(const unsigned int shader, const char* name, const Math::Vec4& value,
                                 const bool binding)
     {
         if (UniformExists(shader, name))
@@ -161,7 +161,7 @@ namespace Vakol
         }
     }
 
-    void ShaderLibrary::SetMat3(const unsigned int shader, const char* name, const bool transpose,
+    void ShaderProcessing::SetMat3(const unsigned int shader, const char* name, const bool transpose,
                                 const Math::Mat3& value, const bool binding)
     {
         if (UniformExists(shader, name))
@@ -179,7 +179,7 @@ namespace Vakol
         }
     }
 
-    void ShaderLibrary::SetMat4(const unsigned int shader, const char* name, const bool transpose,
+    void ShaderProcessing::SetMat4(const unsigned int shader, const char* name, const bool transpose,
                                 const Math::Mat4& value, const bool binding)
     {
         if (UniformExists(shader, name))
@@ -197,19 +197,87 @@ namespace Vakol
         }
     }
 
-    Rendering::Uniform& ShaderLibrary::GetUniform(const unsigned int shader, const char* name)
+    Rendering::Uniform& ShaderProcessing::GetUniform(const unsigned int shader, const char* name)
     {
         return m_uniforms.at(shader).at(name);
     }
 
-    bool ShaderLibrary::UniformExists(const unsigned int shader, const char* name)
+    bool ShaderProcessing::UniformExists(const unsigned int shader, const char* name)
     {
         return m_uniforms.at(shader).find(name) != m_uniforms.at(shader).end();
     }
 
-    bool ShaderLibrary::IsEmpty() const
+    bool ShaderProcessing::IsEmpty() const
     {
         return m_shaders.empty();
     }
 
+    Rendering::Assets::Shader ImportShader(const std::string& path, bool& success)
+    {
+        Rendering::Assets::Shader shader;
+
+        std::vector<std::string> paths;
+
+        const auto directory = path.substr(0, path.find_last_of('.'));
+
+        const char* extensions[] = {".vert", ".geom", ".tesc", ".tese", ".frag"};
+
+        for (const auto& extension : extensions)
+        {
+            if (const auto shaderPath = directory + extension; FileExists(shaderPath))
+                paths.emplace_back(shaderPath);
+            else
+                paths.emplace_back("");
+        }
+
+        shader.path = path;
+        success = GetShaderSources(std::move(paths), shader);
+
+        return shader;
+    }
+
+    bool GetShaderSources(std::vector<std::string>&& paths, Rendering::Assets::Shader& shader)
+    {
+        std::vector<std::string> sources;
+
+        if (paths[0].empty() || paths[4].empty())
+        {
+            VK_ERROR("VERTEX AND/OR FRAGMENT SHADER WAS NOT FOUND!");
+
+            return false;
+        }
+
+        sources.emplace_back(LoadFile(paths[0]));
+
+        if (paths[1].empty())
+        {
+            sources.emplace_back("");
+        }
+        else
+            sources.emplace_back(LoadFile(paths[1]));
+
+        if (paths[2].empty())
+        {
+            sources.emplace_back("");
+        }
+        else
+            sources.emplace_back(LoadFile(paths[2]));
+
+        if (paths[3].empty())
+        {
+            sources.emplace_back("");
+        }
+        else
+            sources.emplace_back(LoadFile(paths[3]));
+
+        sources.emplace_back(LoadFile(paths[4]));
+
+        shader.vertSrc = std::move(sources[0]);
+        shader.geomSrc = std::move(sources[1]);
+        shader.tscSrc = std::move(sources[2]);
+        shader.tseSrc = std::move(sources[3]);
+        shader.fragSrc = std::move(sources[4]);
+
+        return true;
+    }
 } // namespace Vakol
