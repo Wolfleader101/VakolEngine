@@ -1,6 +1,6 @@
-#include "AssetLoader/ModelLoader.hpp"
+#include "AssetLoader/ModelProcessing.hpp"
 
-using namespace Vakol::Rendering::Assets;
+using namespace Vakol::Rendering::Assets; 
 
 constexpr int ASSIMP_LOADER_OPTIONS =
     aiProcess_Triangulate | aiProcess_CalcTangentSpace | aiProcess_GenSmoothNormals | aiProcess_GenBoundingBoxes |
@@ -10,6 +10,11 @@ constexpr int ASSIMP_LOADER_OPTIONS =
 
 namespace Vakol
 {
+    ModelProcessing::ModelProcessing()
+    {
+        ERROR_MODEL_PATH = "coreAssets/models/error.obj";
+    }
+
     /*Helper Functions*/
     static Math::Mat4 ToMat4(const aiMatrix4x4& m)
     {
@@ -61,28 +66,76 @@ namespace Vakol
         return VK_TEXTURE_NONE;
     }
 
-    static void ExtractMeshes(const aiScene& scene, std::vector<Mesh>& meshes);
-    static Mesh ProcessMesh(const aiScene& scene, const aiMesh& mesh);
+    Rendering::Assets::Model& ModelProcessing::FindModel(const GUID& ID)
+    {
+        if (!ModelExists(ID))
+        {
+            VK_ERROR("Unable to find unique model at ID: {0}", ID.ToString());
+            return GetErrorModel(1.0f);
+        }
 
-    /*Mesh Internals*/
-    static void ExtractVertices(const aiMesh& mesh, std::vector<Rendering::Vertex>& vertices,
-                                std::vector<unsigned int>& indices);
+        // VK_TRACE(m_models.at(ID).meshes.at(0).material.ID);
 
-    // static void ExtractBones(unsigned int count, aiBone** const& in, std::vector<Bone>& bones);
-    // static void ProcessBone(aiBone* const& in, Bone& bone);
+        return m_models.at(ID);
+    }
 
-    /*Material*/
-    static Material ProcessMaterial(const aiScene& scene, const aiMaterial* material);
+    Rendering::Assets::Model& ModelProcessing::GetModel(const GUID& ID, const std::string& path, const float scale)
+    {
+        if (!ModelExists(ID))
+        {
+            Rendering::Assets::Model& model =
+                GetModel(path, scale); // load the model and put it into the loaded models map
 
-    /*Material Internals*/
-    static std::vector<Texture> ExtractTextures(const aiScene& scene, const aiMaterial* material, aiTextureType type);
+            for (Rendering::Assets::Mesh& mesh : model.meshes)
+                mesh.material.ID = Rendering::GenerateID();
 
-    /*Animations*/
-    // static void ExtractAnimations(unsigned int count, aiAnimation** const& in);
-    // static void ProcessAnimation(aiAnimation* const& in, Animation& animation);
+            m_models[ID] = model;
+        }
 
-    // static void ExtractChannels(unsigned int count, aiNodeAnim** const& in, std::vector<Channel>& channels);
-    // static void ProcessChannel(aiNodeAnim* const& in, Channel& channel);
+        return m_models.at(ID);
+    }
+
+    Rendering::Assets::Model& ModelProcessing::GetModel(const std::string& path, const float scale)
+    {
+        if (!UniqueModelExists(path))
+        {
+            if (!ImportModel(m_loadedModels[path], path.c_str(), scale))
+            {
+                VK_ERROR("Unable to get model at path {0}", path);
+                return GetErrorModel(scale);
+            }
+        }
+
+        return m_loadedModels.at(path);
+    }
+
+    Rendering::Assets::Model& ModelProcessing::GetErrorModel(const float scale)
+    {
+        if (!UniqueModelExists(ERROR_MODEL_PATH))
+        {
+            if (!ImportModel(m_loadedModels[ERROR_MODEL_PATH], ERROR_MODEL_PATH.c_str(), scale))
+            {
+                VK_CRITICAL("ERROR MODEL NOT FOUND!");
+            }
+        }
+
+        return m_loadedModels.at(ERROR_MODEL_PATH);
+    }
+
+    bool ModelProcessing::UniqueModelExists(const std::string& path) const
+    {
+        return m_loadedModels.find(path) != m_loadedModels.end();
+    }
+
+    bool ModelProcessing::ModelExists(const GUID& ID) const
+    {
+        return m_models.find(ID) != m_models.end();
+    }
+
+    bool ModelProcessing::IsEmpty() const
+    {
+        return m_models.empty();
+    }
 
     bool ImportModel(Model& model, const char* path, const float scale)
     {
@@ -101,8 +154,6 @@ namespace Vakol
 
             return false;
         }
-
-        // VK_TRACE("Stats for Model: {0}", path);
 
         model.path = path;
 
@@ -260,93 +311,5 @@ namespace Vakol
         }
 
         return textures;
-    }
-
-    // void ExtractAnimations(const unsigned int count, aiAnimation** const& in)
-    //{
-    //     Animation animation;
-
-    //    //for (auto i = 0u; i < count; ++i)
-    //    //    ProcessAnimation(in[i], animation);
-    //}
-
-    // void ProcessAnimation(aiAnimation* const& in, Animation& animation)
-    //{
-    //     animation.name = in->mName.C_Str();
-
-    //    animation.duration = in->mDuration;
-    //    animation.ticksPerSecond = in->mTicksPerSecond;
-
-    //    //ExtractChannels(in->mNumChannels, in->mChannels, animation.channels);
-    //}
-
-    // void ExtractBones(const unsigned int count, aiBone** const& in, std::vector<Bone>& bones)
-    //{
-    //     Bone bone;
-
-    //    ProcessBone(in[0], bone);
-    //}
-
-    // void ProcessBone(aiBone* const& in, Bone& bone)
-    //{
-    //     const auto& root = in->mNode;
-
-    //    if (root == nullptr)
-    //    {
-    //        VK_ERROR("Root bone node is nullptr");
-    //        return;
-    //    }
-
-    //    std::stack<aiNode*> stack;
-    //    stack.emplace(root);
-    //}
-
-    // void ExtractChannels(const unsigned int count, aiNodeAnim** const& in, std::vector<Channel>& channels)
-    //{
-    //     Channel channel;
-
-    //    for (auto i = 0u; i < count; ++i)
-    //    {
-    //        ProcessChannel(in[i], channel);
-    //        channels.emplace_back(channel);
-    //    }
-    //}
-
-    void ProcessChannel(aiNodeAnim* const& in, Channel& channel)
-    {
-        channel.name = in->mNodeName.C_Str();
-
-        channel.positions.reserve(in->mNumPositionKeys);
-        Channel::Position position{};
-
-        for (auto i = 0u; i < in->mNumPositionKeys; ++i)
-        {
-            position.position = ToVec3(in->mPositionKeys[i].mValue);
-            position.timestamp = in->mPositionKeys[i].mTime;
-
-            channel.positions.emplace_back(position);
-        }
-
-        channel.rotations.reserve(in->mNumRotationKeys);
-        Channel::Rotation rotation{};
-
-        for (auto i = 0u; i < in->mNumRotationKeys; ++i)
-        {
-            rotation.rotation = ToQuat(in->mRotationKeys[i].mValue);
-            rotation.timestamp = in->mRotationKeys[i].mTime;
-
-            channel.rotations.emplace_back(rotation);
-        }
-
-        channel.scales.reserve(in->mNumScalingKeys);
-        Channel::Scale scale{};
-
-        for (auto i = 0u; i < in->mNumScalingKeys; ++i)
-        {
-            scale.scale = ToVec3(in->mScalingKeys[i].mValue);
-            scale.timestamp = in->mScalingKeys[i].mTime;
-
-            channel.scales.emplace_back(scale);
-        }
     }
 } // namespace Vakol
