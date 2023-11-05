@@ -111,6 +111,40 @@ namespace Vakol
         return m_modelProcessing.ModelExists(modelID);
     }
 
+    bool AssetManager::IsEmpty(AssetManager::FileType outputType) const
+    {
+        // Check the type of folder path that is being given and return it
+        switch (outputType)
+        {
+        case MODELS:
+            return m_models.empty();
+
+            break;
+        case TEXTURES:
+            return m_textures.empty();
+
+            break;
+        case SHADERS:
+            return m_shaders.empty();
+
+            break;
+        default:
+            VK_ERROR("The asset type is incorrect!");
+        }
+    }
+
+    bool AssetManager::FindTexture(const std::string& path, const unsigned int type) const
+    {
+        for (const auto& texture : m_textures)
+        {
+            if (texture.path == path && texture.type == type)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     AssetManager::~AssetManager()
     {
         VK_INFO("AssetManager cleanup started.");

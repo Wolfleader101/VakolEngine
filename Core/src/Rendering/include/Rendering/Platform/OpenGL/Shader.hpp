@@ -3,7 +3,7 @@
 #include <string>
 #include <unordered_map>
 
-#include "AssetLoader/ShaderProcessing.hpp"
+#include "AssetLoader/AssetManager.hpp"
 
 struct Uniform;
 

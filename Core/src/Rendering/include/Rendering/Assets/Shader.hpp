@@ -5,9 +5,9 @@
 
 #include <glad/glad.h>
 
+#include "AssetLoader/AssetManager.hpp"
 #include "Logger/Logger.hpp"
 #include "Rendering/RenderData.hpp"
-#include "AssetLoader/ShaderProcessing.hpp"
 
 namespace Vakol::Rendering::Assets
 {

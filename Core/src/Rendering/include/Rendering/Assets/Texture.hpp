@@ -73,20 +73,55 @@ namespace Vakol::Rendering::Assets
         return VK_TEXTURE_NONE;
     }
 
+    /**
+     * @struct Texture
+     * @brief Contains the data needed to render a texture
+     */
     struct Texture
     {
+        /**
+         * @brief The filepath of the texture
+         */
         std::string path;
 
+        /**
+         * @brief The ID of the texture
+         */
         unsigned int ID = 0;
 
+        /**
+         * @brief The width of the texture in pixels
+         */
         int width = 0;
+
+        /**
+         * @brief The height of the texture in pixels
+         */
         int height = 0;
 
-        int channels = 0; // bytes-per-pixel (number of color channels in an image) R = 1, RG = 2, RGB = 3, RGBA = 4
+        /**
+         * @brief The bytes-per-pixel (number of color channels in an image) R = 1, RG = 2, RGB = 3, RGBA = 4
+         */
+        int channels = 0;
+
+        /**
+         * @brief The number of levels within the texture
+         */
         int levels = 1;
 
+        /**
+         * @brief A boolean to tell the engine whether the texture is embedded in memory or not
+         */
         bool embedded = false; // is the texture embedded in memory?
 
+        /**
+         * @brief The type of texture
+         */
         unsigned int type = VK_TEXTURE_NONE;
+
+        /**
+         * @brief The pixel data of the texture
+         */
+        unsigned char* pixels = nullptr;
     };
 } // namespace Vakol::Rendering::Assets

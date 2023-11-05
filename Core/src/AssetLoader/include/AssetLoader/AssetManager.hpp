@@ -104,23 +104,23 @@ namespace Vakol
          * @param scale The uniform scale of the model
          * @return The model that was just added
          */
-
         static Rendering::Assets::Model& GetModel(const GUID& ID, const std::string& path, float scale = 1.0f);
+
         /**
          * @brief Returns The meshes of a model
          * @param ID The drawable ID of the model
          * @return The meshes of the model
          */
-
         static const std::vector<Rendering::Assets::Mesh>& GetMeshes(const GUID& ID);
+
         /**
          * @brief Adds and returns a texture
          * @param Path The path of the texture
          * @param Type The type of texture
          * @return The texture that was just added
          */
-
         static Rendering::Assets::Texture& GetTexture(const std::string& path, unsigned int type);
+
         /**
          * @brief Adds and returns a texture, but with a buffer
          * @param path The path of the texture
@@ -129,7 +129,6 @@ namespace Vakol
          * @param data The buffer data address of the texture
          * @return The texture that was just added
          */
-
         static Rendering::Assets::Texture& GetTexture(const std::string& path, unsigned int type, int size,
                                                       const void* data);
 
@@ -163,6 +162,21 @@ namespace Vakol
          */
         static bool IsExistingModel(const GUID& modelID);
 
+        /**
+         * @brief Finds out if a given cache is empty or not
+         * @param outputType The type of asset
+         * @return Returns a boolean value, true if the cache is empty, false if it isn't
+         */
+        bool IsEmpty(AssetManager::FileType outputType) const;
+
+        /**
+         * @brief Finds out if a given texture exists or not
+         * @param path The path of the texture
+         * @param type The type of the texture
+         * @return Returns a boolean value, true if the texture exists, false if it doesn't
+         */
+        [[nodiscard]] bool FindTexture(const std::string& path, const unsigned int type) const;
+
       private:
         /**
          * @param modelPath
@@ -187,7 +201,7 @@ namespace Vakol
          * @brief The model processing class which contains the core functionality of loading, replacing and deleting
          * models
          */
-        static ModelProcessing m_modelProcessing; 
+        static ModelProcessing m_modelProcessing;
 
         /**
          * @param m_modelIdentifier
@@ -247,5 +261,5 @@ namespace Vakol
          * @brief A vector which contains the different shaders loaded into the engine
          */
         static std::vector<Rendering::Assets::Shader> m_shaders;
-    }; // namespace Vakol
+    };
 } // namespace Vakol

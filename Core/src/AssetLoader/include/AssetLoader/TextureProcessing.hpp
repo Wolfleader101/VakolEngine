@@ -20,21 +20,6 @@
 
 #include "Logger/Logger.hpp"
 
-/**
- * @brief In order to use an unordered map with a std::pair as a key, you need to create a custom hashing function
- */
-struct PairHash
-{
-    template <class T1, class T2>
-    std::size_t operator()(const std::pair<T1, T2>& pair) const
-    {
-        const auto& v1 = std::hash<T1>{}(pair.first);
-        const auto& v2 = std::hash<T2>{}(pair.second);
-
-        return v1 ^ v2;
-    }
-};
-
 namespace Vakol
 {
     namespace Rendering::Assets
@@ -82,12 +67,6 @@ namespace Vakol
         std::vector<Rendering::Assets::Texture> GetTextures(std::vector<std::string>&& paths);
 
         /**
-         * @brief Checks if a texture library is empty or not.
-         * @return Returns a boolean value indicating if the texture library is empty or not.
-         */
-        bool IsEmpty() const;
-
-        /**
          * @brief Import a texture based on it's filepath.
          * @param path The path of the texture
          * @param width Output width of the texture
@@ -123,22 +102,8 @@ namespace Vakol
         Rendering::Assets::Texture& GetErrorTexture(unsigned int type);
 
         /**
-         * @brief A map of textures
-         */
-        std::unordered_map<std::pair<std::string, unsigned int>, Rendering::Assets::Texture, PairHash> m_textures;
-
-        /**
          * @brief The path of the error texture
          */
         std::string ERROR_TEXTURE_PATH;
-
-        /**
-         * @brief Finds a texture in the texture library based on it's path and type and returns a boolean value
-         * @param path The path of the texture
-         * @param type The type of texture
-         * @return Returns a boolean value indicating if the texture was found or not and returns the texture by
-         * reference
-         */
-        [[nodiscard]] bool FindTexture(const std::string& path, unsigned int type) const;
     };
 } // namespace Vakol
